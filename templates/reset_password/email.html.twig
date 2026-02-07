@@ -1,0 +1,47 @@
+{% block body %}
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #0463f1 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+        <h1 style="color: white; margin: 0;">HMA Market</h1>
+        <p style="color: rgba(255,255,255,0.8); margin: 10px 0 0 0;">Réinitialisation de mot de passe</p>
+    </div>
+    
+    <div style="background: white; padding: 40px 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <h2 style="color: #333; margin-top: 0;">Bonjour,</h2>
+        
+        <p style="color: #666; line-height: 1.6; margin-bottom: 25px;">
+            Vous avez demandé la réinitialisation de votre mot de passe pour votre compte HMA Market.
+        </p>
+        
+        <p style="color: #666; line-height: 1.6; margin-bottom: 30px;">
+            Pour créer un nouveau mot de passe, cliquez sur le bouton ci-dessous :
+        </p>
+        
+        <div style="text-align: center; margin: 40px 0;">
+            <a href="{{ url('app_reset_password', {token: resetToken.token}) }}" 
+               style="background: linear-gradient(135deg, #667eea 0%, #0463f1 100%); 
+                      color: white; 
+                      padding: 15px 30px; 
+                      text-decoration: none; 
+                      border-radius: 8px; 
+                      font-weight: bold; 
+                      display: inline-block;
+                      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                Réinitialiser mon mot de passe
+            </a>
+        </div>
+        
+        <p style="color: #666; line-height: 1.6; margin-bottom: 10px;">
+            Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+        </p>
+        
+        <p style="color: #999; font-size: 14px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+            Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet email.
+        </p>
+    </div>
+    
+    <div style="text-align: center; color: #999; font-size: 12px; margin-top: 20px; padding: 20px;">
+        <p>© {{ "now"|date("Y") }} HMA Market. Tous droits réservés.</p>
+        <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+    </div>
+</div>
+{% endblock %}

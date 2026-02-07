@@ -1,0 +1,363 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'utilisateur - {{ user.fullName }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <!-- Header avec boutons d'action -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-user-circle me-2 text-primary"></i>
+                Détails de l'utilisateur
+            </h1>
+            <p class="text-muted">Consultez les informations détaillées de l'utilisateur</p>
+        </div>
+        <div class="btn-group">
+            <a href="{{ path('app_user_index') }}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-2"></i> Retour à la liste
+            </a>
+            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-warning">
+                <i class="fas fa-edit me-2"></i> Modifier
+            </a>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                <i class="fas fa-trash me-2"></i> Supprimer
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de suppression -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i> Confirmation de suppression
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Cette action est irréversible !
+                    </div>
+                    <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{{ user.fullName }}</strong> ?</p>
+                    <p class="text-danger small">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Toutes les données associées à cet utilisateur seront également supprimées.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Annuler
+                    </button>
+                    <form action="{{ path('app_user_delete', {'id': user.id}) }}" method="post" class="d-inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i> Supprimer définitivement
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Carte de profil -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-header bg-gradient-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-id-card me-2"></i> Profil
+                    </h5>
+                </div>
+                <div class="card-body text-center p-4">
+                    <!-- Photo de profil -->
+                    <div class="mb-4">
+                        {% if user.photo %}
+                            <img src="{{ asset('uploads/users/' ~ user.photo) }}" 
+                                 alt="{{ user.fullName }}" 
+                                 class="rounded-circle shadow-lg"
+                                 style="width: 180px; height: 180px; object-fit: cover; border: 5px solid #f8f9fa;"
+                                 onerror="this.onerror=null; this.src='{{ asset('assets/images/default-avatar.png') }}'">
+                        {% else %}
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg"
+                                 style="width: 180px; height: 180px; border: 5px solid #f8f9fa;">
+                                <div class="text-center">
+                                    <i class="fas fa-user fa-5x"></i>
+                                    <div class="mt-2 fw-bold">{{ user.fullName|first|upper }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Nom et rôle -->
+                    <h4 class="card-title mb-2">{{ user.fullName }}</h4>
+                    
+                    <div class="mb-3">
+                        {% if 'ROLE_ADMIN' in user.roles %}
+                            <span class="badge bg-danger bg-gradient px-3 py-2">
+                                <i class="fas fa-crown me-1"></i> Administrateur
+                            </span>
+                        {% elseif 'ROLE_MANAGER' in user.roles %}
+                            <span class="badge bg-primary bg-gradient px-3 py-2">
+                                <i class="fas fa-chart-line me-1"></i> Gestionnaire
+                            </span>
+                        {% elseif 'ROLE_STOCK_MANAGER' in user.roles %}
+                            <span class="badge bg-warning bg-gradient px-3 py-2 text-dark">
+                                <i class="fas fa-warehouse me-1"></i> Responsable Stock
+                            </span>
+                        {% elseif 'ROLE_CASHIER' in user.roles %}
+                            <span class="badge bg-success bg-gradient px-3 py-2">
+                                <i class="fas fa-cash-register me-1"></i> Caissier
+                            </span>
+                        {% else %}
+                            <span class="badge bg-secondary bg-gradient px-3 py-2">
+                                <i class="fas fa-user me-1"></i> Utilisateur
+                            </span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Statut -->
+                    <div class="mb-4">
+                        {% if user.isActive %}
+                            <span class="badge bg-success px-3 py-2">
+                                <i class="fas fa-check-circle me-1"></i> Actif
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger px-3 py-2">
+                                <i class="fas fa-times-circle me-1"></i> Inactif
+                            </span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Boutons d'action rapides -->
+                    <div class="d-grid gap-2">
+                        <a href="mailto:{{ user.email }}" class="btn btn-outline-primary">
+                            <i class="fas fa-envelope me-2"></i> Envoyer un email
+                        </a>
+                        <a href="tel:{{ user.phone }}" class="btn btn-outline-success">
+                            <i class="fas fa-phone me-2"></i> Appeler
+                        </a>
+                    </div>
+                </div>
+                <div class="card-footer bg-light text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-user-plus me-1"></i>
+                        Membre depuis {{ user.createdAt ? user.createdAt|date('d/m/Y') : 'N/A' }}
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carte des informations détaillées -->
+        <div class="col-lg-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-gradient-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i> Informations détaillées
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Informations personnelles -->
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light mb-4">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary mb-3">
+                                        <i class="fas fa-user me-2"></i> Informations personnelles
+                                    </h6>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td class="text-muted" width="40%">Nom complet</td>
+                                            <td class="fw-semibold">{{ user.fullName }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Email</td>
+                                            <td>
+                                                <a href="mailto:{{ user.email }}" class="text-decoration-none">
+                                                    {{ user.email }}
+                                                    <i class="fas fa-external-link-alt ms-1 small"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Téléphone</td>
+                                            <td>
+                                                <a href="tel:{{ user.phone }}" class="text-decoration-none">
+                                                    {{ user.phone }}
+                                                    <i class="fas fa-external-link-alt ms-1 small"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Informations système -->
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light mb-4">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary mb-3">
+                                        <i class="fas fa-cog me-2"></i> Informations système
+                                    </h6>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td class="text-muted" width="40%">ID Utilisateur</td>
+                                            <td class="fw-semibold">#{{ user.id }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Statut</td>
+                                            <td>
+                                                {% if user.isActive %}
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check-circle me-1"></i> Actif
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">
+                                                        <i class="fas fa-times-circle me-1"></i> Inactif
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Rôles</td>
+                                            <td>
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    {% for role in user.roles %}
+                                                        {% if role != 'ROLE_USER' %}
+                                                            <span class="badge bg-info">
+                                                                {{ role|replace({'ROLE_': ''})|lower|title }}
+                                                            </span>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dates -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary mb-3">
+                                        <i class="fas fa-calendar-alt me-2"></i> Dates importantes
+                                    </h6>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td class="text-muted" width="40%">Date de création</td>
+                                            <td>
+                                                <i class="far fa-calendar-plus me-2 text-success"></i>
+                                                {{ user.createdAt ? user.createdAt|date('d/m/Y à H:i') : 'N/A' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Dernière modification</td>
+                                            <td>
+                                                <i class="far fa-edit me-2 text-warning"></i>
+                                                {{ user.updatedAt ? user.updatedAt|date('d/m/Y à H:i') : 'N/A' }}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statistiques (optionnel) -->
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary mb-3">
+                                        <i class="fas fa-chart-bar me-2"></i> Statistiques
+                                    </h6>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td class="text-muted" width="40%">Produits créés</td>
+                                            <td>
+                                                <span class="badge bg-primary">
+                                                    {{ user.products|length }} produit(s)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Commandes</td>
+                                            <td>
+                                                <span class="badge bg-success">
+                                                    {{ user.orders|length }} commande(s)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Mouvements stock</td>
+                                            <td>
+                                                <span class="badge bg-warning text-dark">
+                                                    {{ user.stockMovements|length }} mouvement(s)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Boutons d'action en bas -->
+                <div class="card-footer bg-light">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Retour à la liste
+                        </a>
+                        <div class="btn-group">
+                            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-warning">
+                                <i class="fas fa-edit me-2"></i> Modifier
+                            </a>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="fas fa-trash me-2"></i> Supprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+}
+
+.badge {
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.table-borderless td {
+    padding: 12px 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.btn-outline-primary:hover, .btn-outline-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}

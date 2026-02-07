@@ -1,0 +1,132 @@
+<!-- ========== App Menu ========== -->
+<div class="app-menu navbar-menu">
+    <!-- LOGO -->
+    <div class="navbar-brand-box">
+        <!-- Dark Logo-->
+        <a href="{{ path('app_home') }}" class="logo logo-dark">
+            <span class="logo-sm">
+                <i class="fas fa-store"></i>
+            </span>
+            <span class="logo-lg">
+                HMA MARKET
+            </span>
+        </a>
+        <!-- Light Logo-->
+        <a href="{{ path('app_home') }}" class="logo logo-light">
+            <span class="logo-sm">
+                <i class="fas fa-store"></i>
+            </span>
+            <span class="logo-lg">
+                HMA MARKET
+            </span>
+        </a>
+        <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
+                id="vertical-hover">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <div id="scrollbar">
+        <div class="container-fluid">
+            <div id="two-column-menu"></div>
+            <ul class="navbar-nav" id="navbar-nav">
+                {# Dashboard commun #}
+                <li class="menu-title">
+                    <span>Tableau de bord</span>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('app_home') }}" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                {# Menu selon le rôle #}
+                {% if is_granted('ROLE_ADMIN') %}
+                    {{ include('partials/menu/_menu_admin.html.twig') }}
+                {% endif %}
+
+                {% if is_granted('ROLE_MANAGER') %}
+                    {{ include('partials/menu/_menu_manager.html.twig') }}
+                {% endif %}
+
+                {% if is_granted('ROLE_STOCK_MANAGER') %}
+                    {{ include('partials/menu/_menu_stock_manager.html.twig') }}
+                {% endif %}
+
+                {% if is_granted('ROLE_CASHIER') %}
+                    {{ include('partials/menu/_menu_cashier.html.twig') }}
+                {% endif %}
+
+                {# Rapports (pour plusieurs rôles) #}
+                {% if is_granted('ROLE_MANAGER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_STOCK_MANAGER') %}
+                    <li class="menu-title">
+                        <span>Rapports</span>
+                    </li>
+                    <li class="nav-item">
+                        <a href="javascript: void(0);" class="nav-link has-arrow">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Analytiques</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-coins me-1"></i> Rapport financier
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-shopping-cart me-1"></i> Rapport des ventes
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-box me-1"></i> Rapport de stock
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-calculator me-1"></i> Rapport de caisse
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+
+                {# Menu Profil (commun à tous) #}
+                <li class="menu-title">
+                    <span>Mon Compte</span>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript: void(0);" class="nav-link has-arrow">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Mon Profil</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-user-edit me-1"></i> Modifier mon profil
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ path('app_forgot_password_request') }}" class="nav-link">
+                                <i class="fas fa-key me-1"></i> Changer mot de passe
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ path('app_logout') }}" class="nav-link">
+                                <i class="fas fa-sign-out-alt me-1"></i> Déconnexion
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Left Sidebar End -->
+
+<!-- Vertical Overlay-->
+<div class="vertical-overlay"></div>

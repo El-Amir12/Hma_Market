@@ -1,0 +1,70 @@
+{# templates/components/_form.html.twig #}
+{% set form_class = form_class|default('row g-3 needs-validation') %}
+{% set show_labels = show_labels|default(true) %}
+{% set show_help = show_help|default(true) %}
+{% set disabled = disabled|default(false) %}
+
+<form 
+    method="{{ method|default('POST') }}" 
+    action="{{ action|default('') }}" 
+    class="{{ form_class }}"
+    {% if enctype is defined %}enctype="{{ enctype }}"{% endif %}
+    novalidate
+>
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Veuillez corriger les erreurs ci-dessous.
+        </div>
+    {% endif %}
+
+    {% for child in form %}
+        {% if child.vars.name != '_token' %}
+            {% if child.vars.compound %}
+                {# Pour les types composés #}
+                <div class="col-12">
+                    {{ form_row(child, {
+                        'row_class': 'mb-3',
+                        'label_class': 'form-label',
+                        'widget_class': 'form-control',
+                        'help_class': 'form-text'
+                    }) }}
+                </div>
+            {% else %}
+                {# Déterminer la taille de colonne #}
+                {% set col_class = 'col-md-6' %}
+                {% if child.vars.name in ['email', 'phone', 'description'] %}
+                    {% set col_class = 'col-md-12' %}
+                {% endif %}
+                
+                <div class="{{ col_class }}">
+                    {{ form_row(child, {
+                        'row_class': 'mb-3',
+                        'label_class': 'form-label fw-semibold',
+                        'widget_class': 'form-control' ~ (disabled ? ' bg-light' : ''),
+                        'attr': disabled ? {'disabled': 'disabled'} : {},
+                        'help_class': 'form-text text-muted'
+                    }) }}
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    
+    {{ form_widget(form._token) }}
+    
+    {% block form_actions %}
+        <div class="col-12">
+            <div class="mt-4 d-flex justify-content-end gap-2">
+                {% if cancel_path is defined %}
+                    <a href="{{ cancel_path }}" class="btn btn-light">
+                        <i class="fas fa-times me-1"></i> Annuler
+                    </a>
+                {% endif %}
+                <button type="submit" class="btn btn-primary" {{ disabled ? 'disabled' : '' }}>
+                    <i class="fas fa-{{ submit_icon|default('save') }} me-1"></i>
+                    {{ submit_label|default('Enregistrer') }}
+                </button>
+            </div>
+        </div>
+    {% endblock %}
+</form>

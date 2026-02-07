@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la commande {{ purchase.purchaseNumber }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1><i class="fas fa-edit"></i> Modifier la commande</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ path('admin_purchase_index') }}">Achats</a></li>
+                            <li class="breadcrumb-item"><a href="{{ path('admin_purchase_show', {'id': purchase.id}) }}">
+                                {{ purchase.purchaseNumber }}
+                            </a></li>
+                            <li class="breadcrumb-item active">Modifier</li>
+                        </ol>
+                    </nav>
+                </div>
+                <a href="{{ path('admin_purchase_show', {'id': purchase.id}) }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0"><i class="fas fa-edit"></i> Modifier les informations</h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.purchase_number) }}
+                            {{ form_widget(form.purchase_number, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.purchase_number) }}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.supplier) }}
+                            {{ form_widget(form.supplier, {'attr': {'class': 'form-select'}}) }}
+                            {{ form_errors(form.supplier) }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form_label(form.notes) }}
+                        {{ form_widget(form.notes, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+                        {{ form_errors(form.notes) }}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ path('admin_purchase_show', {'id': purchase.id}) }}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-times"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save"></i> Enregistrer les modifications
+                        </button>
+                    </div>
+                    
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            
+            {% if not purchase.canEdit %}
+                <div class="alert alert-warning mt-3">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    Cette commande ne peut normalement plus être modifiée car son statut est "{{ purchase.status }}". 
+                    En tant qu'administrateur, vous pouvez toujours la modifier.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

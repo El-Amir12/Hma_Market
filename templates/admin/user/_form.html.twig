@@ -1,0 +1,514 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+<div class="row g-4">
+    <!-- Carte Photo de profil -->
+    <div class="col-lg-4">
+        <div class="card shadow-lg border-0 h-100">
+            <div class="card-header bg-gradient-primary text-white py-3">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-image me-2"></i>Photo de profil
+                </h5>
+            </div>
+            <div class="card-body text-center d-flex flex-column">
+                <!-- Preview de la photo -->
+                <div class="profile-photo-preview mb-4 flex-grow-1 d-flex flex-column justify-content-center">
+                    {% if user.photo %}
+                        <div class="position-relative mx-auto" style="width: 200px; height: 200px;">
+                            <img src="{{ asset('uploads/users/' ~ user.photo) }}" 
+                                 alt="{{ user.fullName }}" 
+                                 class="img-fluid rounded-circle shadow profile-preview"
+                                 style="width: 100%; height: 100%; object-fit: cover; border: 5px solid #f8f9fa;">
+                            {% if form.vars.name != 'new' %}
+                                <button type="button" 
+                                        class="btn btn-danger btn-sm position-absolute rounded-circle shadow"
+                                        style="bottom: 10px; right: 10px; width: 36px; height: 36px;"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deletePhotoModal"
+                                        title="Supprimer la photo">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="profile-placeholder rounded-circle d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg"
+                             style="width: 200px; height: 200px; border: 5px solid #f8f9fa;">
+                            <i class="fas fa-user fa-5x"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Champ de téléchargement de photo -->
+                <div class="mt-auto">
+                    <div class="file-upload-wrapper">
+                        {{ form_widget(form.photo, {'attr': {
+                            'class': 'form-control', 
+                            'onchange': 'previewPhoto(this)',
+                            'accept': 'image/*'
+                        }}) }}
+                        <div class="form-text mt-2">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Formats acceptés : JPG, PNG, GIF, WebP. Taille max : 2MB
+                        </div>
+                        <div class="invalid-feedback d-block">
+                            {{ form_errors(form.photo) }}
+                        </div>
+                    </div>
+                    
+                    <!-- Bouton de sélection stylé -->
+                    <div class="mt-3">
+                        <label for="{{ form.photo.vars.id }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-cloud-upload-alt me-2"></i>
+                            {{ user.photo ? 'Changer la photo' : 'Choisir une photo' }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Carte Informations personnelles -->
+    <div class="col-lg-8">
+        <div class="card shadow-lg border-0 h-100">
+            <div class="card-header bg-gradient-primary text-white py-3">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-user-edit me-2"></i>
+                    {{ form.vars.name == 'new' ? 'Nouvel utilisateur' : 'Modifier l\'utilisateur' }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Informations de base -->
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            {{ form_widget(form.full_name, {'attr': {
+                                'class': 'form-control',
+                                'placeholder': ' ',
+                                'autocomplete': 'name'
+                            }}) }}
+                            <label for="{{ form.full_name.vars.id }}">
+                                <i class="fas fa-user me-1"></i> Nom complet
+                            </label>
+                            <div class="invalid-feedback d-block">
+                                {{ form_errors(form.full_name) }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            {{ form_widget(form.email, {'attr': {
+                                'class': 'form-control',
+                                'placeholder': ' ',
+                                'autocomplete': 'email'
+                            }}) }}
+                            <label for="{{ form.email.vars.id }}">
+                                <i class="fas fa-envelope me-1"></i> Adresse email
+                            </label>
+                            <div class="invalid-feedback d-block">
+                                {{ form_errors(form.email) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            {{ form_widget(form.phone, {'attr': {
+                                'class': 'form-control',
+                                'placeholder': ' ',
+                                'autocomplete': 'tel'
+                            }}) }}
+                            <label for="{{ form.phone.vars.id }}">
+                                <i class="fas fa-phone me-1"></i> Numéro de téléphone
+                            </label>
+                            <div class="invalid-feedback d-block">
+                                {{ form_errors(form.phone) }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            {{ form_widget(form.roles, {'attr': {
+                                'class': 'form-select',
+                                'placeholder': ' '
+                            }}) }}
+                            <label for="{{ form.roles.vars.id }}">
+                                <i class="fas fa-user-tag me-1"></i> Rôle
+                            </label>
+                            <div class="invalid-feedback d-block">
+                                {{ form_errors(form.roles) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <!-- Mot de passe -->
+                <div class="card border-0 bg-light mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title text-primary mb-3">
+                            <i class="fas fa-key me-2"></i>
+                            {{ form.vars.name == 'new' ? 'Définir le mot de passe' : 'Changer le mot de passe' }}
+                        </h6>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    {{ form_widget(form.plainPassword.first, {'attr': {
+                                        'class': 'form-control password-toggle',
+                                        'placeholder': ' ',
+                                        'autocomplete': form.vars.name == 'new' ? 'new-password' : 'off'
+                                    }}) }}
+                                    <label for="{{ form.plainPassword.first.vars.id }}">
+                                        <i class="fas fa-lock me-1"></i>
+                                        {{ form.vars.name == 'new' ? 'Mot de passe' : 'Nouveau mot de passe' }}
+                                    </label>
+                                    <div class="invalid-feedback d-block">
+                                        {{ form_errors(form.plainPassword.first) }}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    {{ form_widget(form.plainPassword.second, {'attr': {
+                                        'class': 'form-control password-toggle',
+                                        'placeholder': ' ',
+                                        'autocomplete': form.vars.name == 'new' ? 'new-password' : 'off'
+                                    }}) }}
+                                    <label for="{{ form.plainPassword.second.vars.id }}">
+                                        <i class="fas fa-lock me-1"></i>
+                                        {{ form.vars.name == 'new' ? 'Confirmation' : 'Confirmer le nouveau mot de passe' }}
+                                    </label>
+                                    <div class="invalid-feedback d-block">
+                                        {{ form_errors(form.plainPassword.second) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Indicateur de force du mot de passe -->
+                        <div class="mt-3">
+                            <div class="password-strength d-none">
+                                <div class="progress" style="height: 5px;">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted d-block mt-1" id="passwordStrengthText">
+                                    La force du mot de passe apparaîtra ici
+                                </small>
+                            </div>
+                            
+                            <!-- Option pour afficher/masquer le mot de passe -->
+                            <div class="form-check form-switch mt-3">
+                                <input class="form-check-input" type="checkbox" id="showPassword">
+                                <label class="form-check-label" for="showPassword">
+                                    <i class="fas fa-eye me-1"></i> Afficher le mot de passe
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Statut (uniquement pour l'édition) -->
+                {% if form.vars.name != 'new' %}
+                <div class="card border-0 bg-light mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title text-primary mb-3">
+                            <i class="fas fa-toggle-on me-2"></i> Statut de l'utilisateur
+                        </h6>
+                        <div class="d-flex align-items-center">
+                            <div class="form-check form-switch me-3">
+                                {{ form_widget(form.is_active, {'attr': {
+                                    'class': 'form-check-input',
+                                    'role': 'switch'
+                                }}) }}
+                                <label class="form-check-label" for="{{ form.is_active.vars.id }}">
+                                    {{ user.isActive ? 'Utilisateur actif' : 'Utilisateur inactif' }}
+                                </label>
+                            </div>
+                            <span class="badge {{ user.isActive ? 'bg-success' : 'bg-danger' }}">
+                                {{ user.isActive ? 'ACTIF' : 'INACTIF' }}
+                            </span>
+                        </div>
+                        <small class="text-muted mt-2 d-block">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Les utilisateurs inactifs ne peuvent pas se connecter au système.
+                        </small>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Footer avec boutons d'action -->
+            <div class="card-footer bg-light py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i> Annuler
+                    </a>
+                    
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary btn-lg px-4">
+                            <i class="fas fa-save me-2"></i> 
+                            {{ button_label|default('Enregistrer') }}
+                        </button>
+                        
+                        {% if form.vars.name != 'new' and user.id is defined and user.id is not null %}
+    <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-info btn-lg">
+        <i class="fas fa-eye me-2"></i> Voir
+    </a>
+{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ form_end(form) }}
+
+<!-- Modal pour supprimer la photo -->
+{% if form.vars.name != 'new' and user.photo %}
+<div class="modal fade" id="deletePhotoModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Supprimer la photo
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
+                    <h5>Êtes-vous sûr de vouloir supprimer cette photo ?</h5>
+                    <p class="text-muted">Cette action ne peut pas être annulée.</p>
+                </div>
+                <div class="mb-3">
+                    <img src="{{ asset('uploads/users/' ~ user.photo) }}" 
+                         alt="{{ user.fullName }}" 
+                         class="rounded-circle shadow"
+                         style="width: 100px; height: 100px; object-fit: cover;">
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i> Annuler
+                </button>
+                <form action="{{ path('app_user_delete_photo', {'id': user.id}) }}" method="post" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-photo' ~ user.id) }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i> Supprimer la photo
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% block javascripts %}
+<script>
+function previewPhoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        const preview = document.querySelector('.profile-preview') || 
+                       document.querySelector('.profile-placeholder');
+        
+        reader.onload = function(e) {
+            if (preview.classList.contains('profile-placeholder')) {
+                // Remplacer le placeholder par une image
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'img-fluid rounded-circle shadow profile-preview';
+                img.style = 'width: 200px; height: 200px; object-fit: cover; border: 5px solid #f8f9fa;';
+                preview.parentNode.replaceChild(img, preview);
+            } else {
+                // Mettre à jour l'image existante
+                preview.src = e.target.result;
+            }
+        };
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Afficher/Masquer le mot de passe
+document.addEventListener('DOMContentLoaded', function() {
+    const showPasswordCheckbox = document.getElementById('showPassword');
+    if (showPasswordCheckbox) {
+        showPasswordCheckbox.addEventListener('change', function() {
+            const passwordFields = document.querySelectorAll('.password-toggle');
+            const eyeIcon = this.parentNode.querySelector('i');
+            
+            passwordFields.forEach(field => {
+                field.type = this.checked ? 'text' : 'password';
+            });
+            
+            // Changer l'icône
+            if (eyeIcon) {
+                eyeIcon.className = this.checked ? 'fas fa-eye-slash me-1' : 'fas fa-eye me-1';
+            }
+        });
+    }
+    
+    // Validation Bootstrap
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+    
+    // Force du mot de passe (optionnel)
+    const passwordField = document.querySelector('input[name$="[first]"]');
+    const passwordStrength = document.querySelector('.password-strength');
+    const progressBar = passwordStrength?.querySelector('.progress-bar');
+    const strengthText = document.getElementById('passwordStrengthText');
+    
+    if (passwordField && passwordStrength && progressBar && strengthText) {
+        passwordField.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            if (password.length > 0) {
+                passwordStrength.classList.remove('d-none');
+                
+                // Calcul basique de la force
+                if (password.length >= 8) strength += 25;
+                if (/[A-Z]/.test(password)) strength += 25;
+                if (/[0-9]/.test(password)) strength += 25;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+                
+                // Mettre à jour la barre de progression
+                progressBar.style.width = strength + '%';
+                
+                // Changer la couleur et le texte
+                if (strength < 50) {
+                    progressBar.className = 'progress-bar bg-danger';
+                    strengthText.textContent = 'Mot de passe faible';
+                } else if (strength < 75) {
+                    progressBar.className = 'progress-bar bg-warning';
+                    strengthText.textContent = 'Mot de passe moyen';
+                } else {
+                    progressBar.className = 'progress-bar bg-success';
+                    strengthText.textContent = 'Mot de passe fort';
+                }
+            } else {
+                passwordStrength.classList.add('d-none');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+}
+
+.form-floating > label {
+    padding-left: 2.5rem;
+}
+
+.form-floating > .form-control,
+.form-floating > .form-select {
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+    padding: 1rem 0.75rem 0.5rem 2.5rem;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
+    color: #667eea;
+}
+
+.form-floating > .form-control,
+.form-floating > .form-select {
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+}
+
+.form-floating > .form-control:focus,
+.form-floating > .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+.form-switch .form-check-input {
+    width: 3em;
+    height: 1.5em;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-outline-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.profile-preview {
+    transition: all 0.3s ease;
+}
+
+.profile-preview:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.file-upload-wrapper {
+    position: relative;
+}
+
+.file-upload-wrapper input[type="file"] {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.modal-content {
+    border-radius: 15px;
+    border: none;
+}
+
+.badge {
+    font-size: 0.85em;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+</style>
+{% endblock %}

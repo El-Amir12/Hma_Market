@@ -1,0 +1,728 @@
+{# templates/admin/product/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }} - Détails du produit{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <!-- En-tête avec navigation -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_product_index') }}" class="text-decoration-none">
+                            <i class="fas fa-boxes me-1"></i> Produits
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {{ product.name|u.truncate(30, '...') }}
+                    </li>
+                </ol>
+            </nav>
+            
+            <div class="d-flex align-items-center">
+                <a href="{{ path('app_admin_product_index') }}" class="btn btn-outline-secondary me-3 btn-hover-scale">
+                    <i class="fas fa-arrow-left me-1"></i> Retour
+                </a>
+                <h1 class="h3 mb-0 text-gray-800 slide-in-left">
+                    <i class="fas fa-box me-2"></i> {{ product.name }}
+                </h1>
+            </div>
+        </div>
+        <div class="float-up">
+            <i class="fas fa-box fa-3x text-primary opacity-75"></i>
+        </div>
+    </div>
+
+    <!-- Stats rapides -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 bg-primary bg-opacity-10 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="text-muted mb-1">Stock actuel</h6>
+                            <h3 class="mb-0 fw-bold">{{ product.stockQuantity }}</h3>
+                        </div>
+                        <div class="bg-primary bg-opacity-25 p-3 rounded">
+                            <i class="fas fa-boxes fa-lg text-primary"></i>
+                        </div>
+                    </div>
+                    {% if product.minQuantity > 0 %}
+                        <small class="text-muted">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            Seuil d'alerte: {{ product.minQuantity }}
+                        </small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 bg-success bg-opacity-10 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="text-muted mb-1">Valeur stock</h6>
+                            <h3 class="mb-0 fw-bold">
+                                {{ (product.stockQuantity * product.purchasePrice)|number_format(0, ',', ' ') }} FCFA
+                            </h3>
+                        </div>
+                        <div class="bg-success bg-opacity-25 p-3 rounded">
+                            <i class="fas fa-coins fa-lg text-success"></i>
+                        </div>
+                    </div>
+                    <small class="text-muted">
+                        <i class="fas fa-calculator me-1"></i>
+                        {{ product.purchasePrice|number_format(0, ',', ' ') }} FCFA × {{ product.stockQuantity }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 bg-info bg-opacity-10 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="text-muted mb-1">Marge</h6>
+                            <h3 class="mb-0 fw-bold">
+                                {% set margin = product.salePrice - product.purchasePrice %}
+                                {% set marginPercentage = product.purchasePrice > 0 ? (margin / product.purchasePrice * 100)|round(1) : 0 %}
+                                {{ marginPercentage }}%
+                            </h3>
+                        </div>
+                        <div class="bg-info bg-opacity-25 p-3 rounded">
+                            <i class="fas fa-chart-line fa-lg text-info"></i>
+                        </div>
+                    </div>
+                    <small class="text-muted">
+                        <i class="fas fa-arrow-up me-1"></i>
+                        {{ margin|number_format(0, ',', ' ') }} FCFA par unité
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 {{ product.isActive ? 'bg-success' : 'bg-danger' }} bg-opacity-10 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="text-muted mb-1">Statut</h6>
+                            <h3 class="mb-0 fw-bold">
+                                <span class="badge {{ product.isActive ? 'bg-success' : 'bg-danger' }}">
+                                    {{ product.isActive ? 'ACTIF' : 'INACTIF' }}
+                                </span>
+                            </h3>
+                        </div>
+                        <div class="{{ product.isActive ? 'bg-success' : 'bg-danger' }} bg-opacity-25 p-3 rounded">
+                            <i class="fas {{ product.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }} fa-lg {{ product.isActive ? 'text-success' : 'text-danger' }}"></i>
+                        </div>
+                    </div>
+                    <small class="text-muted">
+                        <i class="fas fa-calendar me-1"></i>
+                        Créé le {{ product.createdAt|date('d/m/Y') }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Colonne gauche: Informations produit -->
+        <div class="col-lg-8">
+            <div class="row">
+                <!-- Informations produit -->
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-info-circle me-2"></i> Informations du produit
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-5 text-muted">Nom</dt>
+                                <dd class="col-sm-7 fw-bold">{{ product.name }}</dd>
+                                
+                                <dt class="col-sm-5 text-muted">Code-barres</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge bg-secondary">{{ product.barcode }}</span>
+                                </dd>
+                                
+                                <dt class="col-sm-5 text-muted">Catégorie</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge bg-primary">
+                                        <i class="fas fa-folder me-1"></i>{{ product.category.name }}
+                                    </span>
+                                    {% if product.category.parent %}
+                                        <br>
+                                        <small class="text-muted">
+                                            <i class="fas fa-level-up-alt me-1"></i>
+                                            Catégorie principale: {{ product.category.parent.name }}
+                                        </small>
+                                    {% endif %}
+                                </dd>
+                                
+                                <dt class="col-sm-5 text-muted">Type de produit</dt>
+                                <dd class="col-sm-7">
+                                    {% if product.hasExpiryDate() %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-calendar-alt me-1"></i> Périssable
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-infinity me-1"></i> Non périssable
+                                        </span>
+                                    {% endif %}
+                                </dd>
+                                
+                                <dt class="col-sm-5 text-muted">Prix d'achat</dt>
+                                <dd class="col-sm-7">
+                                    <span class="text-primary fw-bold">
+                                        {{ product.purchasePrice|number_format(0, ',', ' ') }} FCFA
+                                    </span>
+                                </dd>
+                                
+                                <dt class="col-sm-5 text-muted">Prix de vente</dt>
+                                <dd class="col-sm-7">
+                                    <span class="text-success fw-bold">
+                                        {{ product.salePrice|number_format(0, ',', ' ') }} FCFA
+                                    </span>
+                                </dd>
+                                
+                                <dt class="col-sm-5 text-muted">Stock min.</dt>
+                                <dd class="col-sm-7">
+                                    {% if product.minQuantity > 0 %}
+                                        <span class="badge bg-warning text-dark">
+                                            {{ product.minQuantity }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">Non défini</span>
+                                    {% endif %}
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Image du produit -->
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-image me-2"></i> Image du produit
+                            </h5>
+                        </div>
+                        <div class="card-body d-flex align-items-center justify-content-center">
+                            {% if product.image and product.image != 'default-product.png' %}
+                                <img src="{{ asset('uploads/products/' ~ product.image) }}" 
+                                     alt="{{ product.name }}" 
+                                     class="img-fluid rounded shadow-lg"
+                                     style="max-height: 250px; object-fit: contain;">
+                            {% else %}
+                                <div class="text-center text-muted py-5">
+                                    <i class="fas fa-box fa-5x mb-3"></i>
+                                    <p class="mb-0">Aucune image disponible</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Description du produit -->
+                {% if product.description %}
+                <div class="col-12 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-align-left me-2"></i> Description du produit
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="product-description-container" style="max-height: 300px; overflow-y: auto;">
+                                {{ product.description|nl2br }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Timeline des mouvements récents -->
+                <div class="col-12 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-history me-2"></i> Derniers mouvements de stock
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if product.stockBatches|length > 0 %}
+                                <div class="timeline">
+                                    {% for batch in product.stockBatches|slice(0, 5)|sort((a, b) => b.createdAt <=> a.createdAt) %}
+                                        <div class="timeline-item {{ loop.index is odd ? 'timeline-item-left' : 'timeline-item-right' }}">
+                                            <div class="timeline-date">
+                                                {{ batch.createdAt|date('d/m/Y') }}
+                                            </div>
+                                            <div class="timeline-content">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-1">Lot {{ batch.batchNumber }}</h6>
+                                                        <p class="mb-0 text-muted small">
+                                                            <i class="fas fa-box me-1"></i>
+                                                            Quantité: {{ batch.quantity }}
+                                                            {% if batch.expiryDate %}
+                                                                <span class="ms-2">
+                                                                    <i class="fas fa-calendar-alt me-1"></i>
+                                                                    Exp: {{ batch.expiryDate|date('d/m/Y') }}
+                                                                </span>
+                                                            {% endif %}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <span class="badge {{ batch.isActive ? 'bg-success' : 'bg-secondary' }}">
+                                                            {{ batch.isActive ? 'Actif' : 'Inactif' }}
+                                                        </span>
+                                                        {% if batch.expiryDate and batch.expiryDate < date() %}
+                                                            <span class="badge bg-danger ms-1">Expiré</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% if product.stockBatches|length > 5 %}
+                                    <div class="text-center mt-3">
+                                        <a href="{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}" class="btn btn-sm btn-outline-primary">
+                                            Voir tous les lots ({{ product.stockBatches|length }})
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted mb-0">Aucun mouvement de stock enregistré</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Colonne droite: Actions et lots -->
+        <div class="col-lg-4">
+            <!-- Actions rapides -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-bolt me-2"></i> Actions rapides
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('app_admin_product_edit', {'id': product.id}) }}" 
+                           class="btn btn-warning">
+                            <i class="fas fa-edit me-2"></i> Modifier le produit
+                        </a>
+                        
+                        <a href="{{ path('app_admin_purchase_new', {'productId': product.id}) }}" 
+                           class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i> Nouvel achat
+                        </a>
+                        
+                        <!-- Bouton qui ouvre le modal de confirmation -->
+                        <button type="button" 
+                                class="btn btn-outline-secondary toggle-status-btn w-100"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#toggleStatusModal"
+                                data-product-id="{{ product.id }}"
+                                data-product-name="{{ product.name }}"
+                                data-is-active="{{ product.isActive ? '1' : '0' }}">
+                            <i class="fas {{ product.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }} me-2"></i>
+                            {{ product.isActive ? 'Désactiver le produit' : 'Activer le produit' }}
+                        </button>
+                        
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-print me-2"></i> Imprimer
+                            </button>
+                            <ul class="dropdown-menu w-100">
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-barcode me-2"></i> Étiquette code-barres
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-file-alt me-2"></i> Fiche produit
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Liste des lots actifs -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-boxes me-2"></i> Lots en stock
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% set activeBatches = product.stockBatches|filter(b => b.isActive and b.remainingQuantity > 0)|sort((a, b) => a.expiryDate <=> b.expiryDate) %}
+                    
+                    {% if activeBatches|length > 0 %}
+                        <div class="list-group list-group-flush">
+                            {% for batch in activeBatches|slice(0, 3) %}
+                                <div class="list-group-item border-0 px-0 py-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">Lot {{ batch.batchNumber }}</h6>
+                                            <small class="text-muted">
+                                                <i class="fas fa-box me-1"></i>
+                                                {{ batch.remainingQuantity }}/{{ batch.quantity }}
+                                            </small>
+                                        </div>
+                                        <div class="text-end">
+                                            {% if batch.expiryDate %}
+                                                <div class="mb-1">
+                                                    <small class="{{ batch.expiryDate < date('+30 days') ? 'text-danger' : 'text-muted' }}">
+                                                        <i class="fas fa-calendar-alt me-1"></i>
+                                                        {{ batch.expiryDate|date('d/m/Y') }}
+                                                    </small>
+                                                </div>
+                                            {% endif %}
+                                            <span class="badge {{ batch.remainingQuantity <= 10 ? 'bg-warning' : 'bg-success' }}">
+                                                {{ batch.remainingQuantity }} restants
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {% if batch.expiryDate and batch.expiryDate < date('+30 days') %}
+                                        <div class="mt-2">
+                                            <div class="progress" style="height: 5px;">
+                                                {% set daysLeft = batch.expiryDate.diff(date()).days %}
+                                                {% set progress = (daysLeft / 30) * 100 %}
+                                                <div class="progress-bar bg-danger" 
+                                                     style="width: {{ progress > 100 ? 100 : progress }}%"
+                                                     role="progressbar">
+                                                </div>
+                                            </div>
+                                            <small class="text-danger">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                                Expire dans {{ daysLeft }} jour{{ daysLeft > 1 ? 's' : '' }}
+                                            </small>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if activeBatches|length > 3 %}
+                            <div class="text-center mt-3">
+                                <a href="{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}" class="btn btn-sm btn-outline-primary">
+                                    Voir tous les lots ({{ activeBatches|length }})
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-box-open fa-2x text-muted mb-2"></i>
+                            <p class="text-muted mb-0">Aucun lot actif en stock</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Informations dates -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-calendar-alt me-2"></i> Historique
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item border-0 px-0 py-1">
+                            <small class="text-muted d-flex justify-content-between">
+                                <span><i class="fas fa-plus-circle me-2"></i> Création</span>
+                                <span>{{ product.createdAt|date('d/m/Y H:i') }}</span>
+                            </small>
+                        </div>
+                        {% if product.updatedAt %}
+                            <div class="list-group-item border-0 px-0 py-1">
+                                <small class="text-muted d-flex justify-content-between">
+                                    <span><i class="fas fa-edit me-2"></i> Dernière modification</span>
+                                    <span>{{ product.updatedAt|date('d/m/Y H:i') }}</span>
+                                </small>
+                            </div>
+                        {% endif %}
+                        {% if product.stockBatches|length > 0 %}
+                            <div class="list-group-item border-0 px-0 py-1">
+                                <small class="text-muted d-flex justify-content-between">
+                                    <span><i class="fas fa-cart-plus me-2"></i> Dernier achat</span>
+                                    <span>{{ product.stockBatches|first.createdAt|date('d/m/Y') }}</span>
+                                </small>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour confirmer la désactivation/activation - CORRIGÉ -->
+<div class="modal fade" id="toggleStatusModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="toggleStatusModalLabel">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="toggleStatusModalMessage">Êtes-vous sûr de vouloir modifier le statut de ce produit ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form id="toggleStatusForm" method="post" action="">
+                    <!-- CORRECTION : Token CSRF avec 'toggle-status' SANS l'ID du produit -->
+                    <input type="hidden" name="_token" value="{{ csrf_token('toggle-status') }}">
+                    <button type="submit" class="btn" id="toggleStatusModalButton">
+                        <i class="fas fa-check me-2"></i> Confirmer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block stylesheets %}
+<style>
+.slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.float-up {
+    animation: floatUp 3s ease-in-out infinite;
+}
+
+@keyframes floatUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.btn-hover-scale {
+    transition: all 0.2s ease;
+}
+
+.btn-hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* Timeline styles */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #667eea;
+    border: 2px solid white;
+    box-shadow: 0 0 0 3px #667eea33;
+}
+
+.timeline-date {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 3px solid #667eea;
+}
+
+/* Card hover effects */
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1) !important;
+}
+
+/* Progress bar for expiry */
+.progress {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    border-radius: 10px;
+}
+
+/* Description container with scroll */
+.product-description-container {
+    line-height: 1.6;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.product-description-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.product-description-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.product-description-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.product-description-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Badge colors */
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+}
+
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+/* Modal button styles */
+#toggleStatusModalButton.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+#toggleStatusModalButton.btn-success {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+#toggleStatusModalButton:hover {
+    opacity: 0.9;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .d-flex.align-items-center {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .btn-hover-scale {
+        margin-top: 10px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion du modal de désactivation/activation
+    const toggleStatusModal = document.getElementById('toggleStatusModal');
+    
+    if (toggleStatusModal) {
+        toggleStatusModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const productId = button.getAttribute('data-product-id');
+            const productName = button.getAttribute('data-product-name');
+            const isActive = button.getAttribute('data-is-active') === '1';
+            
+            const modalTitle = toggleStatusModal.querySelector('.modal-title');
+            const modalMessage = toggleStatusModal.querySelector('#toggleStatusModalMessage');
+            const modalButton = toggleStatusModal.querySelector('#toggleStatusModalButton');
+            const modalForm = toggleStatusModal.querySelector('#toggleStatusForm');
+            
+            // Mettre à jour le contenu du modal
+            if (isActive) {
+                modalTitle.textContent = 'Désactiver le produit';
+                modalMessage.textContent = `Êtes-vous sûr de vouloir désactiver le produit "${productName}" ?`;
+                modalButton.textContent = 'Désactiver';
+                modalButton.className = 'btn btn-danger';
+            } else {
+                modalTitle.textContent = 'Activer le produit';
+                modalMessage.textContent = `Êtes-vous sûr de vouloir activer le produit "${productName}" ?`;
+                modalButton.textContent = 'Activer';
+                modalButton.className = 'btn btn-success';
+            }
+            
+            // Mettre à jour l'action du formulaire avec l'ID du produit
+            modalForm.action = `/admin/product/${productId}/toggle-status`;
+        });
+        
+        // Ajouter un indicateur de chargement lors de la soumission
+        const toggleStatusForm = document.getElementById('toggleStatusForm');
+        if (toggleStatusForm) {
+            toggleStatusForm.addEventListener('submit', function(event) {
+                const submitButton = this.querySelector('button[type="submit"]');
+                const originalText = submitButton.innerHTML;
+                
+                // Ajouter un spinner et désactiver le bouton
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Traitement...';
+            });
+        }
+    }
+    
+    // Fermer automatiquement les alertes après 5 secondes
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            if (alert && alert.style.display !== 'none') {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }
+        }, 5000);
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

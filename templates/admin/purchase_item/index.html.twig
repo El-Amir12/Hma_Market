@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PurchaseItem index{% endblock %}
+
+{% block body %}
+    <h1>PurchaseItem index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Stock_batch_id</th>
+                <th>Batch_number</th>
+                <th>Quantity</th>
+                <th>Unit_price</th>
+                <th>Total_price</th>
+                <th>Expiry_date</th>
+                <th>Manufacturing_date</th>
+                <th>Created_at</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for purchase_item in purchase_items %}
+            <tr>
+                <td>{{ purchase_item.id }}</td>
+                <td>{{ purchase_item.stockBatchId }}</td>
+                <td>{{ purchase_item.batchNumber }}</td>
+                <td>{{ purchase_item.quantity }}</td>
+                <td>{{ purchase_item.unitPrice }}</td>
+                <td>{{ purchase_item.totalPrice }}</td>
+                <td>{{ purchase_item.expiryDate ? purchase_item.expiryDate|date('Y-m-d') : '' }}</td>
+                <td>{{ purchase_item.manufacturingDate ? purchase_item.manufacturingDate|date('Y-m-d') : '' }}</td>
+                <td>{{ purchase_item.createdAt ? purchase_item.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_admin_purchase_item_show', {'id': purchase_item.id}) }}">show</a>
+                    <a href="{{ path('app_admin_purchase_item_edit', {'id': purchase_item.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_purchase_item_new') }}">Create new</a>
+{% endblock %}
