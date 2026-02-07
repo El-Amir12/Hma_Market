@@ -1,0 +1,543 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Catégories - HMA Market{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-list-alt me-2"></i>Gestion des Catégories
+            </h1>
+            <p class="text-muted">Organisez vos produits par catégories et sous-catégories</p>
+        </div>
+        <a href="{{ path('app_admin_category_new') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i> Nouvelle Catégorie
+        </a>
+    </div>
+
+    <!-- Alertes -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+    
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <!-- Statistiques -->
+    {% set activeCategories = categories|filter(c => c.isActive)|length %}
+    {% set inactiveCategories = categories|filter(c => not c.isActive)|length %}
+    {% set categoriesWithProducts = categories|filter(c => c.products|length > 0)|length %}
+    {% set mainCategories = categories|filter(c => c.parent is null)|length %}
+    {% set subCategories = categories|filter(c => c.parent is not null)|length %}
+    
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Catégories
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ totalItems }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-folder fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Catégories Actives
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ activeCategories }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Catégories Principales
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ mainCategories }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-sitemap fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Sous-catégories
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ subCategories }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-folder-tree fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barre de recherche et filtres -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <form method="get" class="d-flex">
+                        <input type="text" 
+                               name="search" 
+                               value="{{ search }}" 
+                               class="form-control me-2" 
+                               placeholder="Rechercher une catégorie...">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        {% if search %}
+                            <a href="{{ path('app_admin_category_index') }}" class="btn btn-outline-secondary ms-2">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        {% endif %}
+                    </form>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="btn-group" role="group">
+                        <a href="{{ path('app_admin_category_index') }}" 
+                           class="btn btn-outline-secondary {{ not app.request.query.has('status') ? 'active' : '' }}">
+                            Toutes
+                        </a>
+                        <a href="{{ path('app_admin_category_index', {status: 'active'}) }}" 
+                           class="btn btn-outline-success">
+                            Actives
+                        </a>
+                        <a href="{{ path('app_admin_category_index', {status: 'inactive'}) }}" 
+                           class="btn btn-outline-danger">
+                            Inactives
+                        </a>
+                        <a href="{{ path('app_admin_category_index', {type: 'main'}) }}" 
+                           class="btn btn-outline-info">
+                            Principales
+                        </a>
+                        <a href="{{ path('app_admin_category_index', {type: 'sub'}) }}" 
+                           class="btn btn-outline-warning">
+                            Sous-catégories
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grille de cartes -->
+    <div class="row">
+        {% for category in categories %}
+        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+            <div class="card category-card shadow h-100">
+                <!-- Image -->
+                <div class="category-image-container">
+                    {% if category.image %}
+                        <img src="{{ asset('uploads/categories/' ~ category.image) }}" 
+                             alt="{{ category.name }}"
+                             class="card-img-top category-image">
+                    {% else %}
+                        <div class="category-image-placeholder">
+                            <i class="fas fa-folder fa-4x text-muted"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Badge statut -->
+                    <div class="category-status-badge">
+                        {% if category.isActive %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i> Active
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger">
+                                <i class="fas fa-pause-circle me-1"></i> Inactive
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Contenu -->
+                <div class="card-body">
+                    <h5 class="card-title text-truncate">
+                        {{ category.name }}
+                        {% if category.parent %}
+                            <small class="text-muted d-block">
+                                <i class="fas fa-level-up-alt me-1"></i>
+                                {{ category.parent.name }}
+                            </small>
+                        {% endif %}
+                    </h5>
+                    
+                    <p class="card-text text-muted small mb-3">
+                        {{ category.description|default('Aucune description')|u.truncate(80, '...') }}
+                    </p>
+                    
+                    <div class="category-meta mb-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <i class="fas fa-box me-1 text-primary"></i>
+                                <small>{{ category.products|length }} produit(s)</small>
+                            </div>
+                            <div>
+                                <i class="fas fa-sitemap me-1 text-info"></i>
+                                <small>{{ category.children|length }} sous-catégorie(s)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Boutons d'action -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ path('app_admin_category_show', {'id': category.id}) }}" 
+                           class="btn btn-sm btn-outline-info" title="Voir détails">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        
+                        <a href="{{ path('app_admin_category_edit', {'id': category.id}) }}" 
+                           class="btn btn-sm btn-outline-warning" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        
+                        <form method="post" 
+                              action="{{ path('app_admin_category_toggle_status', {'id': category.id}) }}"
+                              class="d-inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('toggle-status' ~ category.id) }}">
+                            <button type="submit" 
+                                    class="btn btn-sm {% if category.isActive %}btn-outline-danger{% else %}btn-outline-success{% endif %}"
+                                    title="{{ category.isActive ? 'Désactiver' : 'Activer' }}">
+                                {% if category.isActive %}
+                                    <i class="fas fa-toggle-on"></i>
+                                {% else %}
+                                    <i class="fas fa-toggle-off"></i>
+                                {% endif %}
+                            </button>
+                        </form>
+                        
+                        <button type="button" 
+                                class="btn btn-sm btn-outline-danger delete-category-btn"
+                                data-category-id="{{ category.id }}"
+                                data-category-name="{{ category.name }}"
+                                {% if category.products|length > 0 or category.children|length > 0 %}disabled title="Impossible de supprimer (contient des produits ou sous-catégories)"{% else %}title="Supprimer"{% endif %}>
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">Aucune catégorie trouvée</h4>
+                    {% if search %}
+                        <p class="text-muted mb-3">Aucun résultat pour "{{ search }}"</p>
+                        <a href="{{ path('admin_categories_index') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-times me-1"></i> Effacer la recherche
+                        </a>
+                    {% else %}
+                        <p class="text-muted mb-3">Commencez par créer votre première catégorie</p>
+                        <a href="{{ path('app_admin_category_new') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i> Créer une catégorie
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if totalPages > 1 %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center">
+                    <!-- Premier & Précédent -->
+                    {% if currentPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_admin_category_index', app.request.query.all|merge({'page': 1})) }}">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_admin_category_index', app.request.query.all|merge({'page': currentPage - 1})) }}">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fas fa-angle-double-left"></i></span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+                        </li>
+                    {% endif %}
+
+                    <!-- Pages numérotées -->
+                    {% set startPage = max(1, currentPage - 2) %}
+                    {% set endPage = min(totalPages, startPage + 4) %}
+                    
+                    {% if startPage > 1 %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                    
+                    {% for page in startPage..endPage %}
+                        <li class="page-item {% if page == currentPage %}active{% endif %}">
+                            <a class="page-link" href="{{ path('app_admin_category_index', app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
+                        </li>
+                    {% endfor %}
+                    
+                    {% if endPage < totalPages %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+
+                    <!-- Suivant & Dernier -->
+                    {% if currentPage < totalPages %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('admin_categories_index', app.request.query.all|merge({'page': currentPage + 1})) }}">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_admin_category_index', app.request.query.all|merge({'page': totalPages})) }}">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fas fa-angle-double-right"></i></span>
+                        </li>
+                    {% endif %}
+                </ul>
+                
+                <div class="text-center text-muted small mt-2">
+                    Page {{ currentPage }} sur {{ totalPages }} - 
+                    Affichage de {{ categories|length }} catégorie(s) sur {{ totalItems }} au total
+                </div>
+            </nav>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal suppression -->
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation de suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="deleteCategoryMessage"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form id="deleteCategoryForm" method="post">
+                    <input type="hidden" name="_token" id="deleteCategoryCsrfToken">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+.category-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+}
+
+.category-image-container {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+}
+
+.category-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.category-card:hover .category-image {
+    transform: scale(1.05);
+}
+
+.category-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.category-status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.category-meta small {
+    font-size: 0.8rem;
+}
+
+.btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 6px;
+}
+
+.stat-card {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
+    border-color: #667eea;
+}
+
+.btn-outline-secondary.active {
+    background-color: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
+</style>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion de la suppression
+    const deleteButtons = document.querySelectorAll('.delete-category-btn:not([disabled])');
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteCategoryModal'));
+    const deleteForm = document.getElementById('deleteCategoryForm');
+    const deleteMessage = document.getElementById('deleteCategoryMessage');
+    const deleteCsrfToken = document.getElementById('deleteCategoryCsrfToken');
+    
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const categoryId = this.dataset.categoryId;
+            const categoryName = this.dataset.categoryName;
+            
+            deleteMessage.innerHTML = `
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Cette action est irréversible.
+                </div>
+                <p>Êtes-vous sûr de vouloir supprimer la catégorie <strong>"${categoryName}"</strong> ?</p>
+                <p class="text-danger small">Toutes les sous-catégories seront également supprimées.</p>
+            `;
+            
+            deleteForm.action = `/admin/category/${categoryId}`;
+            
+            // Utiliser la méthode Symfony pour générer un token
+            // On utilise un token générique et on le validera côté serveur
+            deleteCsrfToken.value = '{{ csrf_token("delete") }}';
+            
+            deleteModal.show();
+        });
+    });
+
+    // Ou encore plus simple, utiliser une confirmation directe sans modal
+    const directDeleteButtons = document.querySelectorAll('.delete-category-btn:not([disabled])');
+    directDeleteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const categoryId = this.dataset.categoryId;
+            const categoryName = this.dataset.categoryName;
+            
+            if (confirm(`Êtes-vous sûr de vouloir supprimer la catégorie "${categoryName}" ?\n\nCette action est irréversible.`)) {
+                // Créer un formulaire et le soumettre
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/admin/category/${categoryId}`;
+                form.style.display = 'none';
+                
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '{{ csrf_token("delete") }}';
+                
+                form.appendChild(csrfInput);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    });
+
+    // Confirmation pour activation/désactivation
+    const toggleButtons = document.querySelectorAll('form[action*="toggle-status"] button[type="submit"]');
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const form = this.closest('form');
+            const categoryCard = this.closest('.category-card');
+            const categoryName = categoryCard.querySelector('.card-title').textContent.trim();
+            const currentStatus = this.querySelector('i').classList.contains('fa-toggle-on');
+            const action = currentStatus ? 'désactiver' : 'activer';
+            
+            if (!confirm(`Êtes-vous sûr de vouloir ${action} la catégorie "${categoryName}" ?`)) {
+                e.preventDefault();
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

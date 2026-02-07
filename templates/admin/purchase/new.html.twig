@@ -1,0 +1,172 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Valider la réception{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-clipboard-check me-2"></i>
+                        Validation de la réception
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- Récapitulatif -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        Récapitulatif
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <th>Nombre de produits :</th>
+                                            <td class="text-end">{{ cart|length }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fournisseur :</th>
+                                            <td class="text-end">
+                                                {% if supplier %}
+                                                    {{ supplier.name }}
+                                                {% else %}
+                                                    <span class="text-warning">Non spécifié</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total d'achat :</th>
+                                            <td class="text-end h5 text-success">{{ total_amount|format_currency('EUR') }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-warning">
+                                <div class="card-header bg-warning text-dark">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        Important
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        La validation va :
+                                    </p>
+                                    <ul class="small mb-0">
+                                        <li>Enregistrer l'achat dans l'historique</li>
+                                        <li>Créer les lots de stock</li>
+                                        <li>Mettre à jour les quantités en stock</li>
+                                        <li>Enregistrer les mouvements de stock</li>
+                                    </ul>
+                                    <div class="alert alert-info mt-3 mb-0 py-2">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        Cette action est définitive et ne peut être annulée.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Détail des produits -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Détail des produits</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Produit</th>
+                                            <th class="text-center">N° Lot</th>
+                                            <th class="text-center">Quantité</th>
+                                            <th class="text-center">Prix unitaire</th>
+                                            <th class="text-center">Total</th>
+                                            <th class="text-center">Dates</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in cart %}
+                                            <tr>
+                                                <td>
+                                                    <strong>{{ item.product_name }}</strong><br>
+                                                    <small class="text-muted">{{ item.barcode }}</small>
+                                                </td>
+                                                <td class="text-center">{{ item.batch_number }}</td>
+                                                <td class="text-center">{{ item.quantity }}</td>
+                                                <td class="text-center">{{ item.purchase_price|format_currency('EUR') }}</td>
+                                                <td class="text-center">{{ (item.purchase_price * item.quantity)|format_currency('EUR') }}</td>
+                                                <td class="text-center small">
+                                                    {% if item.has_expiry_date %}
+                                                        {% if item.manufacturing_date %}
+                                                            Fab: {{ item.manufacturing_date|date('d/m/Y') }}<br>
+                                                        {% endif %}
+                                                        {% if item.expiry_date %}
+                                                            Exp: {{ item.expiry_date|date('d/m/Y') }}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="text-muted">Non périssable</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulaire de validation -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                Finaliser la réception
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {{ form_start(form) }}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {{ form_row(form.supplier) }}
+                                        
+                                        {% if not supplier %}
+                                            <div class="alert alert-warning mt-3">
+                                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                                Aucun fournisseur n'a été sélectionné. Vous pouvez en choisir un ci-dessous.
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form_row(form.notes) }}
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 d-flex justify-content-between">
+                                    <a href="{{ path('admin_purchase_cart') }}" class="btn btn-outline-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>
+                                        Retour au panier
+                                    </a>
+                                    <button type="submit" class="btn btn-success btn-lg px-5">
+                                        <i class="fas fa-save me-2"></i>
+                                        Enregistrer la réception
+                                    </button>
+                                </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

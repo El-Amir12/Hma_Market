@@ -1,0 +1,26 @@
+{# templates/partials/main.html.twig #}
+<!doctype html>
+<html lang="fr" data-layout="vertical" data-sidebar="light" data-sidebar-size="lg">
+<head>
+    {{ include('partials/title-meta.html.twig', {title: 'Dashboard'}) }}
+    {{ include('partials/head-css.html.twig') }}
+</head>
+<body>
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+        {{ include('partials/menu.html.twig') }}
+        
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    <!-- ICI S'AFFICHERA LE CONTENU SPÉCIFIQUE À CHAQUE PAGE -->
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{ include('partials/footer.html.twig') }}
+    {{ include('partials/vendor-scripts.html.twig') }}
+</body>
+</html>

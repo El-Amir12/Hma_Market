@@ -1,0 +1,186 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* partials/menu/_menu_stock_manager.html.twig */
+class __TwigTemplate_f2f5b2806a4ce24e633b35325bda5847 extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "partials/menu/_menu_stock_manager.html.twig"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "partials/menu/_menu_stock_manager.html.twig"));
+
+        // line 1
+        yield "<!-- Menu GESTIONNAIRE DE STOCK -->
+<li class=\"menu-title\" data-key=\"t-menu\">Gestion des Stocks</li>
+
+<li class=\"nav-item\">
+    <a href=\"javascript: void(0);\" class=\"nav-link has-arrow\" data-key=\"t-inventory\">
+        <i class=\"fas fa-warehouse\"></i>
+        <span data-key=\"t-inventory\">Inventaire</span>
+    </a>
+    <ul class=\"sub-menu\" aria-expanded=\"false\">
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-boxes me-1\"></i> Niveau des stocks
+            </a>
+        </li>
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-exclamation-triangle me-1\"></i> Stocks faibles
+            </a>
+        </li>
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-exchange-alt me-1\"></i> Ajustements
+            </a>
+        </li>
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-calendar-times me-1\"></i> Produits expirés
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li class=\"nav-item\">
+    <a href=\"javascript: void(0);\" class=\"nav-link has-arrow\" data-key=\"t-supply\">
+        <i class=\"fas fa-truck-loading\"></i>
+        <span data-key=\"t-supply\">Approvisionnement</span>
+    </a>
+    <ul class=\"sub-menu\" aria-expanded=\"false\">
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-clipboard-list me-1\"></i> Commandes fournisseurs
+            </a>
+        </li>
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-parachute-box me-1\"></i> Fournisseurs
+            </a>
+        </li>
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-dolly me-1\"></i> Réceptions
+            </a>
+        </li>
+    </ul>
+</li>";
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "partials/menu/_menu_stock_manager.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  48 => 1,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("<!-- Menu GESTIONNAIRE DE STOCK -->
+<li class=\"menu-title\" data-key=\"t-menu\">Gestion des Stocks</li>
+
+<li class=\"nav-item\">
+    <a href=\"javascript: void(0);\" class=\"nav-link has-arrow\" data-key=\"t-inventory\">
+        <i class=\"fas fa-warehouse\"></i>
+        <span data-key=\"t-inventory\">Inventaire</span>
+    </a>
+    <ul class=\"sub-menu\" aria-expanded=\"false\">
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-boxes me-1\"></i> Niveau des stocks
+            </a>
+        </li>
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-exclamation-triangle me-1\"></i> Stocks faibles
+            </a>
+        </li>
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-exchange-alt me-1\"></i> Ajustements
+            </a>
+        </li>
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-calendar-times me-1\"></i> Produits expirés
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li class=\"nav-item\">
+    <a href=\"javascript: void(0);\" class=\"nav-link has-arrow\" data-key=\"t-supply\">
+        <i class=\"fas fa-truck-loading\"></i>
+        <span data-key=\"t-supply\">Approvisionnement</span>
+    </a>
+    <ul class=\"sub-menu\" aria-expanded=\"false\">
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-clipboard-list me-1\"></i> Commandes fournisseurs
+            </a>
+        </li>
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-parachute-box me-1\"></i> Fournisseurs
+            </a>
+        </li>
+        <li class=\"nav-item\">
+            <a href=\"#\" class=\"nav-link\" data-key=\"t-analytics\">
+                <i class=\"fas fa-dolly me-1\"></i> Réceptions
+            </a>
+        </li>
+    </ul>
+</li>", "partials/menu/_menu_stock_manager.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\partials\\menu\\_menu_stock_manager.html.twig");
+    }
+}

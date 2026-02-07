@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PurchaseItem{% endblock %}
+
+{% block body %}
+    <h1>PurchaseItem</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ purchase_item.id }}</td>
+            </tr>
+            <tr>
+                <th>Stock_batch_id</th>
+                <td>{{ purchase_item.stockBatchId }}</td>
+            </tr>
+            <tr>
+                <th>Batch_number</th>
+                <td>{{ purchase_item.batchNumber }}</td>
+            </tr>
+            <tr>
+                <th>Quantity</th>
+                <td>{{ purchase_item.quantity }}</td>
+            </tr>
+            <tr>
+                <th>Unit_price</th>
+                <td>{{ purchase_item.unitPrice }}</td>
+            </tr>
+            <tr>
+                <th>Total_price</th>
+                <td>{{ purchase_item.totalPrice }}</td>
+            </tr>
+            <tr>
+                <th>Expiry_date</th>
+                <td>{{ purchase_item.expiryDate ? purchase_item.expiryDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Manufacturing_date</th>
+                <td>{{ purchase_item.manufacturingDate ? purchase_item.manufacturingDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ purchase_item.createdAt ? purchase_item.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_purchase_item_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_purchase_item_edit', {'id': purchase_item.id}) }}">edit</a>
+
+    {{ include('admin/purchase_item/_delete_form.html.twig') }}
+{% endblock %}

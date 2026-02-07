@@ -1,0 +1,1354 @@
+Créé un controller dans un dossier spécifique 
+php bin/console make:controller "Admin\CategoryController"
+
+// Product entity 
+<?php
+
+namespace App\Entity;
+
+use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: ProductRepository::class)]
+class Product
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $slug = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $barcode = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
+    private ?string $sale_price = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
+    private ?string $purchase_price = null;
+
+    #[ORM\Column]
+    private ?int $stock_quantity = null;
+
+    #[ORM\Column]
+    private ?int $min_quantity = null;
+
+    #[ORM\Column(length: 255, nullable: true)]  
+    private ?string $image = null;
+
+    #[ORM\Column]
+    private ?bool $has_expiry_date = null;
+
+    #[ORM\Column]
+    private ?bool $is_active = null;
+
+    #[ORM\Column]
+    private ?\DateTime $created_at = null;
+
+    #[ORM\Column(nullable: true)]  
+    private ?\DateTime $updated_at = null;
+
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    /**
+     * @var Collection<int, PurchaseItem>
+     */
+    #[ORM\OneToMany(targetEntity: PurchaseItem::class, mappedBy: 'product')]
+    private Collection $purchaseItems;
+
+    /**
+     * @var Collection<int, StockBatch>
+     */
+    #[ORM\OneToMany(targetEntity: StockBatch::class, mappedBy: 'product')]
+    private Collection $stockBatches;
+
+    public function __construct()
+    {
+        $this->purchaseItems = new ArrayCollection();
+        $this->stockBatches = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getBarcode(): ?string
+    {
+        return $this->barcode;
+    }
+
+    public function setBarcode(string $barcode): static
+    {
+        $this->barcode = $barcode;
+
+        return $this;
+    }
+
+    public function getSalePrice(): ?string
+    {
+        return $this->sale_price;
+    }
+
+    public function setSalePrice(string $sale_price): static
+    {
+        $this->sale_price = $sale_price;
+
+        return $this;
+    }
+
+    public function getPurchasePrice(): ?string
+    {
+        return $this->purchase_price;
+    }
+
+    public function setPurchasePrice(string $purchase_price): static
+    {
+        $this->purchase_price = $purchase_price;
+
+        return $this;
+    }
+
+    public function getStockQuantity(): ?int
+    {
+        return $this->stock_quantity;
+    }
+
+    public function setStockQuantity(int $stock_quantity): static
+    {
+        $this->stock_quantity = $stock_quantity;
+
+        return $this;
+    }
+
+    public function getMinQuantity(): ?int
+    {
+        return $this->min_quantity;
+    }
+
+    public function setMinQuantity(int $min_quantity): static
+    {
+        $this->min_quantity = $min_quantity;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static  
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getHasExpiryDate(): ?bool
+    {
+        return $this->has_expiry_date;
+    }
+
+    public function setHasExpiryDate(bool $has_expiry_date): static
+    {
+        $this->has_expiry_date = $has_expiry_date;
+        return $this;
+    }
+
+    // Ajoutez cette méthode pour les appels booléens
+    public function hasExpiryDate(): bool
+    {
+        return $this->has_expiry_date ?? false;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(bool $is_active): static
+    {
+        $this->is_active = $is_active;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTime $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTime $updated_at): static
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PurchaseItem>
+     */
+    public function getPurchaseItems(): Collection
+    {
+        return $this->purchaseItems;
+    }
+
+    public function addPurchaseItem(PurchaseItem $purchaseItem): static
+    {
+        if (!$this->purchaseItems->contains($purchaseItem)) {
+            $this->purchaseItems->add($purchaseItem);
+            $purchaseItem->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchaseItem(PurchaseItem $purchaseItem): static
+    {
+        if ($this->purchaseItems->removeElement($purchaseItem)) {
+            // set the owning side to null (unless already changed)
+            if ($purchaseItem->getProduct() === $this) {
+                $purchaseItem->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, StockBatch>
+     */
+    public function getStockBatches(): Collection
+    {
+        return $this->stockBatches;
+    }
+
+    public function addStockBatch(StockBatch $stockBatch): static
+    {
+        if (!$this->stockBatches->contains($stockBatch)) {
+            $this->stockBatches->add($stockBatch);
+            $stockBatch->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStockBatch(StockBatch $stockBatch): static
+    {
+        if ($this->stockBatches->removeElement($stockBatch)) {
+            // set the owning side to null (unless already changed)
+            if ($stockBatch->getProduct() === $this) {
+                $stockBatch->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        if ($this->name && $this->barcode) {
+            return sprintf('%s (%s)', $this->name, $this->barcode);
+        }
+        
+        return $this->name ?: 'Nouveau produit';
+    }
+}
+
+
+// Purchase
+<?php
+
+namespace App\Entity;
+
+use App\Repository\PurchaseRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: PurchaseRepository::class)]
+class Purchase
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 50, unique: true)]
+    private ?string $purchase_number = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
+    private ?string $total_amount = null;
+
+    #[ORM\Column(length: 20)]
+    private ?string $status = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $notes = null;
+
+    #[ORM\Column]
+    private ?\DateTime $created_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $updated_at = null;
+
+    #[ORM\ManyToOne(inversedBy: 'purchases')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Supplier $supplier = null;
+
+    #[ORM\ManyToOne(inversedBy: 'purchases')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    /**
+     * @var Collection<int, PurchaseItem>
+     */
+    #[ORM\OneToMany(targetEntity: PurchaseItem::class, mappedBy: 'purchase', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $purchaseItems;
+
+    public function __construct()
+    {
+        $this->purchaseItems = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getPurchaseNumber(): ?string
+    {
+        return $this->purchase_number;
+    }
+
+    public function setPurchaseNumber(string $purchase_number): static
+    {
+        $this->purchase_number = $purchase_number;
+
+        return $this;
+    }
+
+    public function getTotalAmount(): ?string
+    {
+        return $this->total_amount;
+    }
+
+    public function setTotalAmount(string $total_amount): static
+    {
+        $this->total_amount = $total_amount;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): static
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTime $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTime $updated_at): static
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getSupplier(): ?Supplier
+    {
+        return $this->supplier;
+    }
+
+    public function setSupplier(?Supplier $supplier): static
+    {
+        $this->supplier = $supplier;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PurchaseItem>
+     */
+    public function getPurchaseItems(): Collection
+    {
+        return $this->purchaseItems;
+    }
+
+    public function addPurchaseItem(PurchaseItem $purchaseItem): static
+    {
+        if (!$this->purchaseItems->contains($purchaseItem)) {
+            $this->purchaseItems->add($purchaseItem);
+            $purchaseItem->setPurchase($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchaseItem(PurchaseItem $purchaseItem): static
+    {
+        if ($this->purchaseItems->removeElement($purchaseItem)) {
+            // set the owning side to null (unless already changed)
+            if ($purchaseItem->getPurchase() === $this) {
+                $purchaseItem->setPurchase(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->purchase_number ?: 'Nouvelle réception';
+    }
+}
+
+// PurchaseItem
+<?php
+
+namespace App\Entity;
+
+use App\Repository\PurchaseItemRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: PurchaseItemRepository::class)]
+class PurchaseItem
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column]
+    private ?int $stock_batch_id = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $batch_number = null;
+
+    #[ORM\Column]
+    private ?int $quantity = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
+    private ?string $unit_price = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
+    private ?string $total_price = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $expiry_date = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $manufacturing_date = null;
+
+    #[ORM\Column]
+    private ?\DateTime $created_at = null;
+
+    #[ORM\ManyToOne(inversedBy: 'purchaseItems')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Purchase $purchase = null;
+
+    #[ORM\ManyToOne(inversedBy: 'purchaseItems')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Product $product = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getStockBatchId(): ?int
+    {
+        return $this->stock_batch_id;
+    }
+
+    public function setStockBatchId(int $stock_batch_id): static
+    {
+        $this->stock_batch_id = $stock_batch_id;
+
+        return $this;
+    }
+
+    public function getBatchNumber(): ?string
+    {
+        return $this->batch_number;
+    }
+
+    public function setBatchNumber(string $batch_number): static
+    {
+        $this->batch_number = $batch_number;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): static
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getUnitPrice(): ?string
+    {
+        return $this->unit_price;
+    }
+
+    public function setUnitPrice(string $unit_price): static
+    {
+        $this->unit_price = $unit_price;
+
+        return $this;
+    }
+
+    public function getTotalPrice(): ?string
+    {
+        return $this->total_price;
+    }
+
+    public function setTotalPrice(string $total_price): static
+    {
+        $this->total_price = $total_price;
+
+        return $this;
+    }
+
+     public function getExpiryDate(): ?\DateTimeInterface
+    {
+        return $this->expiry_date;
+    }
+
+    public function setExpiryDate(?\DateTimeInterface $expiry_date): static
+    {
+        $this->expiry_date = $expiry_date;
+
+        return $this;
+    }
+
+    public function getManufacturingDate(): ?\DateTimeInterface
+    {
+        return $this->manufacturing_date;
+    }
+
+    public function setManufacturingDate(?\DateTimeInterface $manufacturing_date): static
+    {
+        $this->manufacturing_date = $manufacturing_date;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTime $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getPurchase(): ?Purchase
+    {
+        return $this->purchase;
+    }
+
+    public function setPurchase(?Purchase $purchase): static
+    {
+        $this->purchase = $purchase;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): static
+    {
+        $this->product = $product;
+
+        return $this;
+    }
+}
+
+
+// Fichier de dernière migration 
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20260129201112 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE category ADD CONSTRAINT FK_64C19C1727ACA70 FOREIGN KEY (parent_id) REFERENCES category (id)');
+        $this->addSql('ALTER TABLE category ADD CONSTRAINT FK_64C19C1A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
+        $this->addSql('ALTER TABLE `order` ADD CONSTRAINT FK_F5299398A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
+        $this->addSql('ALTER TABLE order_item ADD CONSTRAINT FK_52EA1F097DC7170A FOREIGN KEY (vente_id) REFERENCES `order` (id)');
+        $this->addSql('ALTER TABLE product ADD CONSTRAINT FK_D34A04AD12469DE2 FOREIGN KEY (category_id) REFERENCES category (id)');
+        $this->addSql('ALTER TABLE product ADD CONSTRAINT FK_D34A04ADA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
+        $this->addSql('ALTER TABLE purchase CHANGE notes notes LONGTEXT DEFAULT NULL, CHANGE updated_at updated_at DATETIME DEFAULT NULL');
+        $this->addSql('ALTER TABLE purchase ADD CONSTRAINT FK_6117D13B2ADD6D8C FOREIGN KEY (supplier_id) REFERENCES supplier (id)');
+        $this->addSql('ALTER TABLE purchase ADD CONSTRAINT FK_6117D13BA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_6117D13B4DFF1D01 ON purchase (purchase_number)');
+        $this->addSql('ALTER TABLE purchase_item ADD CONSTRAINT FK_6FA8ED7D558FBEB9 FOREIGN KEY (purchase_id) REFERENCES purchase (id)');
+        $this->addSql('ALTER TABLE purchase_item ADD CONSTRAINT FK_6FA8ED7D4584665A FOREIGN KEY (product_id) REFERENCES product (id)');
+        $this->addSql('ALTER TABLE reset_password_request ADD CONSTRAINT FK_7CE748AA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
+        $this->addSql('ALTER TABLE stock_batch CHANGE expiry_date expiry_date DATE DEFAULT NULL, CHANGE manufacturing_date manufacturing_date DATE DEFAULT NULL');
+        $this->addSql('ALTER TABLE stock_batch ADD CONSTRAINT FK_641B4E259B59827 FOREIGN KEY (purchase_item_id) REFERENCES purchase_item (id)');
+        $this->addSql('ALTER TABLE stock_batch ADD CONSTRAINT FK_641B4E254584665A FOREIGN KEY (product_id) REFERENCES product (id)');
+        $this->addSql('ALTER TABLE stock_movement ADD CONSTRAINT FK_BB1BC1B5A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE category DROP FOREIGN KEY FK_64C19C1727ACA70');
+        $this->addSql('ALTER TABLE category DROP FOREIGN KEY FK_64C19C1A76ED395');
+        $this->addSql('ALTER TABLE `order` DROP FOREIGN KEY FK_F5299398A76ED395');
+        $this->addSql('ALTER TABLE order_item DROP FOREIGN KEY FK_52EA1F097DC7170A');
+        $this->addSql('ALTER TABLE product DROP FOREIGN KEY FK_D34A04AD12469DE2');
+        $this->addSql('ALTER TABLE product DROP FOREIGN KEY FK_D34A04ADA76ED395');
+        $this->addSql('ALTER TABLE purchase DROP FOREIGN KEY FK_6117D13B2ADD6D8C');
+        $this->addSql('ALTER TABLE purchase DROP FOREIGN KEY FK_6117D13BA76ED395');
+        $this->addSql('DROP INDEX UNIQ_6117D13B4DFF1D01 ON purchase');
+        $this->addSql('ALTER TABLE purchase CHANGE notes notes LONGTEXT NOT NULL, CHANGE updated_at updated_at DATETIME NOT NULL');
+        $this->addSql('ALTER TABLE purchase_item DROP FOREIGN KEY FK_6FA8ED7D558FBEB9');
+        $this->addSql('ALTER TABLE purchase_item DROP FOREIGN KEY FK_6FA8ED7D4584665A');
+        $this->addSql('ALTER TABLE reset_password_request DROP FOREIGN KEY FK_7CE748AA76ED395');
+        $this->addSql('ALTER TABLE stock_batch DROP FOREIGN KEY FK_641B4E259B59827');
+        $this->addSql('ALTER TABLE stock_batch DROP FOREIGN KEY FK_641B4E254584665A');
+        $this->addSql('ALTER TABLE stock_batch CHANGE expiry_date expiry_date DATE NOT NULL, CHANGE manufacturing_date manufacturing_date DATE NOT NULL');
+        $this->addSql('ALTER TABLE stock_movement DROP FOREIGN KEY FK_BB1BC1B5A76ED395');
+    }
+}
+
+// ProductRepository
+<?php
+// src/Repository/ProductRepository.php
+
+namespace App\Repository;
+
+use App\Entity\Category;
+use App\Entity\Product;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
+/**
+ * @extends ServiceEntityRepository<Product>
+ */
+class ProductRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Product::class);
+    }
+
+    public function findAllPaginated(int $page = 1, int $limit = 12): Paginator
+    {
+        $query = $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->addSelect('c')
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery();
+
+        return $this->paginate($query, $page, $limit);
+    }
+
+    public function search(string $term, int $page = 1, int $limit = 12): Paginator
+    {
+        $query = $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->addSelect('c')
+            ->where('p.name LIKE :term')
+            ->orWhere('p.barcode LIKE :term')
+            ->orWhere('p.description LIKE :term')
+            ->orWhere('c.name LIKE :term')
+            ->setParameter('term', '%' . $term . '%')
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery();
+
+        return $this->paginate($query, $page, $limit);
+    }
+
+    public function findActivePaginated(int $page = 1, int $limit = 12): Paginator
+    {
+        $query = $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->addSelect('c')
+            ->where('p.is_active = true')
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery();
+
+        return $this->paginate($query, $page, $limit);
+    }
+
+    public function findInactivePaginated(int $page = 1, int $limit = 12): Paginator
+    {
+        $query = $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->addSelect('c')
+            ->where('p.is_active = false')
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery();
+
+        return $this->paginate($query, $page, $limit);
+    }
+
+    public function findLowStockPaginated(int $page = 1, int $limit = 12): Paginator
+    {
+        $query = $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->addSelect('c')
+            ->where('p.min_quantity > 0')
+            ->andWhere('p.stock_quantity <= p.min_quantity')
+            ->orderBy('p.stock_quantity', 'ASC')
+            ->getQuery();
+
+        return $this->paginate($query, $page, $limit);
+    }
+
+    public function findPerishablePaginated(int $page = 1, int $limit = 12): Paginator
+    {
+        $query = $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->addSelect('c')
+            ->where('p.has_expiry_date = true')
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery();
+
+        return $this->paginate($query, $page, $limit);
+    }
+
+    public function findNonPerishablePaginated(int $page = 1, int $limit = 12): Paginator
+    {
+        $query = $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->addSelect('c')
+            ->where('p.has_expiry_date = false')
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery();
+
+        return $this->paginate($query, $page, $limit);
+    }
+
+    public function findByCategoryPaginated(int $categoryId, int $page = 1, int $limit = 12): Paginator
+    {
+        // Récupérer la catégorie
+        $entityManager = $this->getEntityManager();
+        $category = $entityManager->getRepository(Category::class)->find($categoryId);
+        
+        // Si la catégorie n'existe pas, retourner un paginator vide
+        if (!$category) {
+            return new Paginator(new \Doctrine\ORM\Query($entityManager));
+        }
+        
+        // Récupérer tous les IDs des catégories (la catégorie parent + ses enfants)
+        $categoryIds = $this->getAllCategoryIds($category);
+        
+        $query = $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->addSelect('c')
+            ->where('c.id IN (:categoryIds)')
+            ->setParameter('categoryIds', $categoryIds)
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery();
+
+        return $this->paginate($query, $page, $limit);
+    }
+
+    public function findByCategoryAndStatusPaginated(int $categoryId, string $status, int $page = 1, int $limit = 12): Paginator
+    {
+        $entityManager = $this->getEntityManager();
+        $categoryIds = [];
+        
+        // Si categoryId n'est pas 0 (Toutes catégories)
+        if ($categoryId > 0) {
+            $category = $entityManager->getRepository(Category::class)->find($categoryId);
+            if ($category) {
+                $categoryIds = $this->getAllCategoryIds($category);
+            }
+        }
+        
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->addSelect('c')
+            ->orderBy('p.created_at', 'DESC');
+        
+        // Appliquer le filtre de catégorie si nécessaire
+        if (!empty($categoryIds)) {
+            $queryBuilder->where('c.id IN (:categoryIds)')
+                ->setParameter('categoryIds', $categoryIds);
+        }
+        
+        // Appliquer le filtre de statut
+        switch ($status) {
+            case 'active':
+                $queryBuilder->andWhere('p.is_active = true');
+                break;
+            case 'inactive':
+                $queryBuilder->andWhere('p.is_active = false');
+                break;
+            case 'low-stock':
+                $queryBuilder->andWhere('p.min_quantity > 0')
+                    ->andWhere('p.stock_quantity <= p.min_quantity');
+                break;
+            case 'perishable':
+                $queryBuilder->andWhere('p.has_expiry_date = true');
+                break;
+            case 'non-perishable':
+                $queryBuilder->andWhere('p.has_expiry_date = false');
+                break;
+        }
+        
+        return $this->paginate($queryBuilder->getQuery(), $page, $limit);
+    }
+
+    public function findAllCategoriesWithCount(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('c.id, c.name, COUNT(p.id) as productCount')
+            ->leftJoin('p.category', 'c')
+            ->groupBy('c.id')
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findHierarchicalCategories(): array
+    {
+        $entityManager = $this->getEntityManager();
+        $categories = $entityManager->getRepository(Category::class)->findBy(['parent' => null], ['name' => 'ASC']);
+        
+        $result = [];
+        foreach ($categories as $category) {
+            $result[] = [
+                'id' => $category->getId(),
+                'name' => $category->getName(),
+                'productCount' => $this->countProductsInCategoryHierarchy($category),
+                'children' => $this->getChildCategories($category),
+                'isParent' => true,
+                'level' => 0
+            ];
+        }
+        
+        return $result;
+    }
+
+    private function getChildCategories(Category $category): array
+    {
+        $children = [];
+        foreach ($category->getChildren() as $child) {
+            $children[] = [
+                'id' => $child->getId(),
+                'name' => $child->getName(),
+                'productCount' => $this->countProductsInCategoryHierarchy($child),
+                'children' => $this->getChildCategories($child),
+                'isParent' => !$child->getChildren()->isEmpty(),
+                'level' => 1
+            ];
+        }
+        return $children;
+    }
+
+    private function countProductsInCategoryHierarchy(Category $category): int
+    {
+        $categoryIds = $this->getAllCategoryIds($category);
+        
+        return $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->join('p.category', 'c')
+            ->where('c.id IN (:categoryIds)')
+            ->setParameter('categoryIds', $categoryIds)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    private function getAllCategoryIds(Category $category): array
+    {
+        $categoryIds = [$category->getId()];
+        
+        // Ajouter tous les IDs des enfants récursivement
+        foreach ($category->getChildren() as $child) {
+            $categoryIds = array_merge($categoryIds, $this->getAllCategoryIds($child));
+        }
+        
+        return $categoryIds;
+    }
+
+    private function paginate($query, int $page, int $limit): Paginator
+    {
+        $paginator = new Paginator($query);
+        $paginator->getQuery()
+            ->setFirstResult($limit * ($page - 1))
+            ->setMaxResults($limit);
+
+        return $paginator;
+    }
+
+    public function searchActiveProducts(string $query, int $limit = 20): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.is_active = :active')
+            ->andWhere('(p.name LIKE :query OR p.barcode LIKE :query)')
+            ->setParameter('active', true)
+            ->setParameter('query', '%' . $query . '%')
+            ->orderBy('p.name', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+}
+
+// PurchaseRepository
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Purchase;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<Purchase>
+ */
+class PurchaseRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Purchase::class);
+    }
+
+    /**
+     * Trouve toutes les réceptions triées par date (plus récentes d'abord)
+     */
+    public function findAllOrderedByDate(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Trouve les réceptions par statut
+     */
+    public function findByStatus(string $status): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.status = :status')
+            ->setParameter('status', $status)
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+    
+    /**
+     * Trouve les réceptions pour un fournisseur donné
+     */
+    public function findBySupplier(int $supplierId): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.supplier = :supplierId')
+            ->setParameter('supplierId', $supplierId)
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+    
+    /**
+     * Trouve les réceptions entre deux dates
+     */
+    public function findByDateRange(\DateTimeInterface $startDate, \DateTimeInterface $endDate): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.created_at BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Compte le nombre de réceptions par mois pour les statistiques
+     */
+    public function countByMonth(int $year = null): array
+    {
+        if (!$year) {
+            $year = (int) date('Y');
+        }
+        
+        $startDate = new \DateTime($year . '-01-01');
+        $endDate = new \DateTime($year . '-12-31 23:59:59');
+        
+        $results = $this->createQueryBuilder('p')
+            ->select('MONTH(p.created_at) as month, COUNT(p.id) as count')
+            ->where('p.created_at BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->groupBy('month')
+            ->orderBy('month', 'ASC')
+            ->getQuery()
+            ->getResult();
+        
+        // Formater les résultats
+        $formattedResults = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $formattedResults[$month] = 0;
+        }
+        
+        foreach ($results as $result) {
+            $formattedResults[(int) $result['month']] = (int) $result['count'];
+        }
+        
+        return $formattedResults;
+    }
+}
+
+
+
+Tache à faire :
+
+Je veux mettre en place le système d'achat et l'enregistrement des données dans la base 
+J'ai déjà créer le CRUD pour Purchase et PurchaseItem 
+Lorsque l'utilisateur clique sur nouvel achat on lui affiche une belle page , simple, moderne pour qu'il remplisse les informations de l'achat . Comment ça va se passer ? Lorsque l'utilisateur clique sur Nouvel achat on lui présente la page on récupère l'utilisateur connecté , il choisit un fournisseur ou il crée un fournisseur grace au bouton qui sera en haut dela sélection . Maintenant on créera les bloc de produit pour chaque produit ajoutés au panier d'achat et on calculera le montal total au fur et à messure qu'il ajoute un produit . Pour les produits non périssable on n'affichera pas les dates de fabrication et d'expiration mais pour les produits périssables on affichera les dates de fabrication et d'expiration qui peuvent etre optionnel c'est importants de le mettre mais on ne va pas forcer la main à l'utilisateur de le faire ce serait optionnel . Pour ajouter les produits au panier d'achat , l'utilisateur peut rechercher les produits qui sont dans le catalogue de produits grace à la barre de recher, scanner le code barres, ect . Le numéro de lot est généré automattiquement si l'utilisateur veut il peut le modifier . Il saisit la quantité , le prix unitaire et on calcule le montant total pour ce bloc . Il y aura le bouton ajouter un autre produit on crée un autre bloc et on affichera le numéro pour chaque bloc . Et il y aua enfin le montant total de tous les lots ajouter . Maintenant pour tous les boutons d'action on affichera des modals pour la confirmation . Par exemple , s'il veut supprimer un bloc de produit , Annuler l'achat ,ect . Lorsqu'il clique sur Valider la réception on enregistre les informations dans la table Purchase, PurchaseItem , on crée une ligne dans StockBatch pour chaque lot crée, on enregistre les données dans la table StockMovement pour chaque lot crée et enfin on modifie la quantité en stock dans la table Product . 
+
+C'est un processus comple pour l'achat si tu veux tu peux améliorer en proposant de bonnes idées . 
+
+Je veux que ça soit beau , moderne . 
+
+On peut utiliser le _form.html.twig pour que new.html.twig et edit.html.twig l'utilise pour ne pas répéter le code .
+
+Merci et bon travail . 
+
+
+public function getReferenceId(): ?int
+    {
+        return $this->reference_id;
+    }
+
+    public function setReferenceId(?int $reference_id): static
+    {
+        $this->reference_id = $reference_id;
+
+        return $this;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// === GESTION DES MODIFICATIONS D'ITEMS (pour commandes confirmées) ===
+if (purchaseStatus === 'confirmed') {
+    let currentItemId = null;
+    let currentItemData = null;
+    let itemToDeleteId = null;
+    let itemToDeleteName = null;
+    
+    // Initialiser tous les modals
+    const editItemModal = new bootstrap.Modal(document.getElementById('editItemModal'));
+    const deleteItemModal = new bootstrap.Modal(document.getElementById('deleteItemModal'));
+    const receiveModal = new bootstrap.Modal(document.getElementById('receiveModal'));
+    const cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
+    
+    // Bouton "Modifier" - garder votre code existant...
+    
+    // Bouton "Supprimer" - garder votre code existant...
+    
+    // Bouton "Réceptionner" - CORRECTION
+    document.getElementById('receivePurchaseBtn')?.addEventListener('click', function() {
+        console.log('Bouton Réceptionner cliqué');
+        
+        // Vérifier que tous les lots sont complets
+        const incompleteItems = [];
+        document.querySelectorAll('#productsTable tr').forEach(row => {
+            const statusBadge = row.querySelector('td:nth-child(2) .badge');
+            if (statusBadge && (statusBadge.classList.contains('bg-warning') || statusBadge.classList.contains('bg-danger'))) {
+                const productName = row.querySelector('strong').textContent;
+                incompleteItems.push(productName.trim());
+            }
+        });
+        
+        const validationDiv = document.getElementById('receiveValidation');
+        const validationMessage = document.getElementById('validationMessage');
+        
+        if (incompleteItems.length > 0) {
+            validationMessage.textContent = 'Les produits suivants nécessitent des informations manquantes: ' + incompleteItems.join(', ');
+            validationDiv.style.display = 'block';
+        } else {
+            validationDiv.style.display = 'none';
+        }
+        
+        // Réinitialiser le champ notes
+        document.getElementById('receiveNotes').value = '';
+        
+        // Afficher le modal
+        receiveModal.show();
+    });
+    
+    // Bouton "Annuler" - garder votre code existant...
+    
+    // Confirmation de réception - CORRECTION
+    document.getElementById('confirmReceiveBtn')?.addEventListener('click', function() {
+        console.log('Confirmation de réception cliquée');
+        
+        const notes = document.getElementById('receiveNotes').value.trim();
+        const resultDiv = document.getElementById('receiveResult');
+        
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Traitement...';
+        
+        // Vérifier à nouveau que tous les lots sont complets
+        const incompleteItems = [];
+        document.querySelectorAll('#productsTable tr').forEach(row => {
+            const statusBadge = row.querySelector('td:nth-child(2) .badge');
+            if (statusBadge && (statusBadge.classList.contains('bg-warning') || statusBadge.classList.contains('bg-danger'))) {
+                const productName = row.querySelector('strong').textContent;
+                incompleteItems.push(productName.trim());
+            }
+        });
+        
+        if (incompleteItems.length > 0) {
+            showAlert('danger', 'Veuillez compléter les informations manquantes avant de réceptionner.', resultDiv);
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-check-circle me-2"></i> Confirmer la réception';
+            return;
+        }
+        
+        // Utiliser FormData pour la réception
+        const formData = new FormData();
+        formData.append('notes', notes);
+        
+        console.log('Envoi de la réception avec notes:', notes);
+        
+        fetch(`/admin/purchase/${purchaseId}/receive-api`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            console.log('Statut réponse réception:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Réponse réception:', data);
+            
+            if (data.success) {
+                showAlert('success', data.message, resultDiv);
+                
+                // Fermer le modal et rediriger
+                setTimeout(() => {
+                    receiveModal.hide();
+                    
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        window.location.href = `/admin/purchase/${purchaseId}`;
+                    }
+                }, 1500);
+            } else {
+                showAlert('danger', data.message || 'Erreur lors de la réception', resultDiv);
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-check-circle me-2"></i> Confirmer la réception';
+            }
+        })
+        .catch(error => {
+            console.error('Erreur réception:', error);
+            showAlert('danger', 'Erreur: ' + error.message, resultDiv);
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-check-circle me-2"></i> Confirmer la réception';
+        });
+    });
+    
+    // ... reste de votre code JavaScript ...
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

@@ -1,0 +1,43 @@
+{# templates/components/_toast.html.twig #}
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="toast align-items-center text-bg-{{ type }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {% if message is iterable %}
+                            <div class="d-flex align-items-center">
+                                {% if message.icon is defined %}
+                                    <i class="{{ message.icon }} me-2 fs-5"></i>
+                                {% endif %}
+                                <div>
+                                    {% if message.title is defined %}
+                                        <strong class="me-auto">{{ message.title }}</strong>
+                                    {% endif %}
+                                    {% if message.message is defined %}
+                                        <div>{{ message.message|raw }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            {{ message|raw }}
+                        {% endif %}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-show toast notifications
+    const toastElList = document.querySelectorAll('.toast');
+    const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, {
+        autohide: true,
+        delay: 5000
+    }));
+    toastList.forEach(toast => toast.show());
+});
+</script>

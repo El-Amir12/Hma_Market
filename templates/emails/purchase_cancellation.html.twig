@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Annulation de commande #{{ purchase.purchaseNumber }}</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        .header { 
+            text-align: center; 
+            border-bottom: 2px solid #dc3545; 
+            padding-bottom: 20px; 
+            margin-bottom: 30px; 
+        }
+        .company-info { 
+            margin-bottom: 30px; 
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .section { 
+            margin-bottom: 25px; 
+        }
+        .section-title { 
+            background-color: #f8f9fa; 
+            padding: 12px; 
+            border-left: 4px solid #dc3545; 
+            font-weight: bold; 
+            margin-bottom: 15px; 
+            border-radius: 4px;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        th { 
+            background-color: #dc3545; 
+            color: white; 
+            padding: 12px; 
+            text-align: left; 
+            border: 1px solid #ddd;
+            font-weight: bold;
+        }
+        td { 
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            vertical-align: top;
+        }
+        tr:nth-child(even) { 
+            background-color: #f9f9f9; 
+        }
+        .total-row { 
+            font-weight: bold; 
+            background-color: #f8f9fa; 
+            border-top: 2px solid #dc3545;
+        }
+        .footer { 
+            margin-top: 40px; 
+            padding-top: 20px; 
+            border-top: 1px solid #ddd; 
+            font-size: 12px; 
+            color: #666; 
+            text-align: center;
+        }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .product-info { 
+            margin: 5px 0; 
+            font-size: 14px;
+        }
+        .batch-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 3px;
+        }
+        .cancelled-badge { 
+            display: inline-block; 
+            background-color: #dc3545; 
+            color: white; 
+            padding: 6px 12px; 
+            border-radius: 20px; 
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .alert { 
+            background-color: #fff3cd; 
+            border: 1px solid #ffeaa7; 
+            padding: 15px; 
+            border-radius: 4px; 
+            margin: 20px 0; 
+            font-size: 14px;
+        }
+        .danger-alert {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="margin: 0 0 10px 0; color: #dc3545;">ANNULATION DE COMMANDE</h1>
+        <h2 style="margin: 0; color: #333;">Commande N° {{ purchase.purchaseNumber }}</h2>
+        <div class="cancelled-badge">ANNULÉE</div>
+        <p style="margin: 5px 0 0 0; color: #666;">
+            Annulée le {{ purchase.cancelledAt|date('d/m/Y à H:i') }}
+        </p>
+    </div>
+    
+    <div class="company-info">
+        <h3 style="margin: 0 0 10px 0; color: #333;">HMA MARKET</h3>
+        <p style="margin: 0 0 5px 0;">Votre épicerie de quartier</p>
+        <p style="margin: 0;">Tél: +229 01 56 13 92 00 | Email: contact@hma-market.com</p>
+    </div>
+    
+    <div class="danger-alert">
+        <p style="margin: 0;">
+            <strong>⚠️ IMPORTANT :</strong> Cette commande a été annulée. Veuillez ne pas livrer les produits listés ci-dessous.
+            Toute livraison effectuée après cette annulation ne pourra être acceptée.
+        </p>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">INFORMATIONS FOURNISSEUR</div>
+        {% if purchase.supplier %}
+            <div style="margin-bottom: 10px;">
+                <strong>Nom :</strong> {{ purchase.supplier.name }}
+            </div>
+            <div style="margin-bottom: 10px;">
+                <strong>Email :</strong> {{ purchase.supplier.email }}
+            </div>
+        {% else %}
+            <p>Aucun fournisseur spécifié</p>
+        {% endif %}
+    </div>
+    
+    <div class="section">
+        <div class="section-title">RAISON DE L'ANNULATION</div>
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px; font-size: 14px;">
+            <strong>{{ reason }}</strong>
+            {% if purchase.cancellationReason and purchase.cancellationReason != reason %}
+                <div style="margin-top: 10px;">
+                    {{ purchase.cancellationReason }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">DÉTAILS DE LA COMMANDE ANNULÉE</div>
+        
+        {% if total_items is defined and total_quantity is defined %}
+            <div style="margin-bottom: 15px;">
+                <strong>{{ total_items }}</strong> article(s) annulé(s) | 
+                <strong>{{ total_quantity }}</strong> unité(s) totale(s)
+            </div>
+        {% endif %}
+        
+        <table>
+            <thead>
+                <tr>
+                    <th width="5%">#</th>
+                    <th width="50%">Produit</th>
+                    <th width="15%" class="text-center">Quantité</th>
+                    <th width="15%" class="text-right">Prix unitaire</th>
+                    <th width="15%" class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in purchase.purchaseItems %}
+                    <tr>
+                        <td class="text-center">{{ loop.index }}</td>
+                        <td>
+                            <div class="product-info">
+                                <strong>{{ item.product.name }}</strong>
+                            </div>
+                            <div class="batch-info">
+                                Réf: {{ item.product.barcode }}
+                                {% if item.batchNumber %}
+                                    <br>Lot: {{ item.batchNumber }}
+                                {% endif %}
+                                {% if item.expiryDate %}
+                                    <br>Exp: {{ item.expiryDate|date('d/m/Y') }}
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="text-center">{{ item.quantity }}</td>
+                        <td class="text-right">{{ item.unitPrice|format_fcfa }}</td>
+                        <td class="text-right">{{ item.totalPrice|format_fcfa }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center" style="padding: 30px;">
+                            Aucun produit dans cette commande
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="4" class="text-right"><strong>TOTAL ANNULÉ :</strong></td>
+                    <td class="text-right"><strong>{{ purchase.totalAmount|format_fcfa }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">INFORMATIONS D'ANNULATION</div>
+        <div class="info-grid">
+            <div>
+                <strong>Date d'annulation :</strong><br>
+                {{ purchase.cancelledAt|date('d/m/Y à H:i') }}
+            </div>
+            <div>
+                <strong>Annulée par :</strong><br>
+                {{ purchase.cancelledBy.fullName|default(purchase.cancelledBy.email) }}
+            </div>
+            <div>
+                <strong>Date de création :</strong><br>
+                {{ purchase.createdAt|date('d/m/Y à H:i') }}
+            </div>
+            <div>
+                <strong>Statut initial :</strong><br>
+                {{ purchase.status == 'draft' ? 'Brouillon' : (purchase.status == 'confirmed' ? 'Confirmé' : 'Reçu') }}
+            </div>
+        </div>
+    </div>
+    
+    <div class="alert">
+        <p style="margin: 0;">
+            <strong>📋 Note :</strong> Si cette commande avait déjà été préparée ou expédiée, veuillez nous contacter 
+            immédiatement à contact@hma-market.com pour coordonner le retour des marchandises.
+        </p>
+    </div>
+    
+    <div class="footer">
+        <p>Document généré le {{ "now"|date('d/m/Y à H:i') }}</p>
+        <p>HMA MARKET - Annulation de commande N° {{ purchase.purchaseNumber }}</p>
+        <p>Nous nous excusons pour tout inconvénient causé et vous remercions pour votre compréhension.</p>
+        <p>Nous espérons pouvoir collaborer à nouveau avec vous dans le futur.</p>
+    </div>
+</body>
+</html>

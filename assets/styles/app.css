@@ -1,0 +1,76 @@
+/* assets/styles/app.css */
+/* Ajoutez vos styles de menu ici */
+
+/* Styles pour les menus déroulants */
+.nav-link.has-arrow::after {
+    content: "\f054";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 15px;
+    transition: transform 0.3s;
+}
+
+.nav-link.has-arrow[aria-expanded="true"]::after {
+    transform: rotate(90deg);
+}
+
+/* Animation des sous-menus */
+.sub-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.sub-menu[aria-expanded="true"] {
+    max-height: 500px;
+}
+
+/* Icônes dans les sous-menus */
+.sub-menu .nav-link i.me-1 {
+    font-size: 12px;
+    width: 15px;
+}
+
+/* Titres de section */
+.menu-title {
+    color: #6c757d;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 20px 5px;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+/* assets/styles/app.css */
+.modal-form .input-group-text {
+    min-width: 40px;
+    justify-content: center;
+}
+
+.modal-form .form-switch {
+    padding-left: 3.5em;
+}
+
+.modal-form .form-check-input {
+    width: 3em;
+    margin-left: -3.5em;
+}
+
+/* Animation pour les toasts */
+.toast {
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+

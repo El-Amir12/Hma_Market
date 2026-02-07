@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}StockBatch{% endblock %}
+
+{% block body %}
+    <h1>StockBatch</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ stock_batch.id }}</td>
+            </tr>
+            <tr>
+                <th>Batch_number</th>
+                <td>{{ stock_batch.batchNumber }}</td>
+            </tr>
+            <tr>
+                <th>Purchase_price</th>
+                <td>{{ stock_batch.purchasePrice }}</td>
+            </tr>
+            <tr>
+                <th>Quantity</th>
+                <td>{{ stock_batch.quantity }}</td>
+            </tr>
+            <tr>
+                <th>Remaining_quantity</th>
+                <td>{{ stock_batch.remainingQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Expiry_date</th>
+                <td>{{ stock_batch.expiryDate ? stock_batch.expiryDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Manufacturing_date</th>
+                <td>{{ stock_batch.manufacturingDate ? stock_batch.manufacturingDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Is_active</th>
+                <td>{{ stock_batch.isActive ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ stock_batch.createdAt ? stock_batch.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated_at</th>
+                <td>{{ stock_batch.updatedAt ? stock_batch.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_stock_batch_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_stock_batch_edit', {'id': stock_batch.id}) }}">edit</a>
+
+    {{ include('admin/stock_batch/_delete_form.html.twig') }}
+{% endblock %}

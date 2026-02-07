@@ -1,0 +1,230 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Tableau de bord</li>
+{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h1 class="page-title">Tableau de bord</h1>
+            <p class="text-muted mb-0">Bienvenue {{ app.user.fullName }}, voici un aperçu de votre activité.</p>
+        </div>
+        <div class="col-auto">
+            <div class="btn-list">
+                <span class="text-muted me-2">{{ "now"|date("d/m/Y") }}</span>
+                <span class="badge bg-light text-dark">{{ "now"|date("H:i") }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistiques rapides -->
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="stat-label">Produits en stock</h6>
+                        <h3 class="stat-value mb-0">1,257</h3>
+                    </div>
+                    <div class="avatar avatar-sm bg-primary-light rounded">
+                        <i class="bi bi-box-seam text-primary fs-3"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-success"><i class="bi bi-arrow-up me-1"></i> 12%</span>
+                    <span class="text-muted ms-2">Depuis hier</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="stat-label">Ventes du jour</h6>
+                        <h3 class="stat-value mb-0">45</h3>
+                    </div>
+                    <div class="avatar avatar-sm bg-success-light rounded">
+                        <i class="bi bi-cart-check text-success fs-3"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-danger"><i class="bi bi-arrow-down me-1"></i> 5%</span>
+                    <span class="text-muted ms-2">Vs hier</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="stat-label">Chiffre d'affaires</h6>
+                        <h3 class="stat-value mb-0">450,000</h3>
+                        <small class="text-muted">FCFA</small>
+                    </div>
+                    <div class="avatar avatar-sm bg-warning-light rounded">
+                        <i class="bi bi-currency-exchange text-warning fs-3"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-success"><i class="bi bi-arrow-up me-1"></i> 18%</span>
+                    <span class="text-muted ms-2">Ce mois</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="stat-label">Alertes stock</h6>
+                        <h3 class="stat-value mb-0">8</h3>
+                    </div>
+                    <div class="avatar avatar-sm bg-danger-light rounded">
+                        <i class="bi bi-exclamation-triangle text-danger fs-3"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-warning">À vérifier</span>
+                    <span class="text-muted ms-2">Produits en rupture</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Actions rapides -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Actions rapides</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    {% if is_granted('ROLE_CASHIER') %}
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <a href="#" class="btn btn-gradient w-100 d-flex flex-column align-items-center py-3">
+                            <i class="bi bi-cart-plus fs-2 mb-2"></i>
+                            <span>Nouvelle vente</span>
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    {% if is_granted('ROLE_MANAGER') or is_granted('ROLE_ADMIN') %}
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <a href="#" class="btn btn-outline-primary w-100 d-flex flex-column align-items-center py-3">
+                            <i class="bi bi-plus-circle fs-2 mb-2"></i>
+                            <span>Ajouter produit</span>
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    {% if is_granted('ROLE_STOCK_MANAGER') or is_granted('ROLE_MANAGER') %}
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <a href="#" class="btn btn-outline-warning w-100 d-flex flex-column align-items-center py-3">
+                            <i class="bi bi-truck fs-2 mb-2"></i>
+                            <span>Commander stock</span>
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <a href="{{ path('app_user_new') }}" class="btn btn-outline-info w-100 d-flex flex-column align-items-center py-3">
+                            <i class="bi bi-person-plus fs-2 mb-2"></i>
+                            <span>Nouvel utilisateur</span>
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center py-3">
+                            <i class="bi bi-box-arrow-right fs-2 mb-2"></i>
+                            <span>Déconnexion</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dernières activités -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Activités récentes</h5>
+                <a href="#" class="btn btn-sm btn-outline-primary">Voir tout</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date/Heure</th>
+                                <th>Utilisateur</th>
+                                <th>Action</th>
+                                <th>Détails</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10:30 AM</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar me-2">JD</div>
+                                        <div>Jean Dupont</div>
+                                    </div>
+                                </td>
+                                <td>Vente</td>
+                                <td>Ticket #ORD-00125 - 45,000 FCFA</td>
+                                <td><span class="badge bg-success">Terminé</span></td>
+                            </tr>
+                            <tr>
+                                <td>09:15 AM</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar me-2">MS</div>
+                                        <div>Marie Smith</div>
+                                    </div>
+                                </td>
+                                <td>Réception stock</td>
+                                <td>50 unités de lait reçues</td>
+                                <td><span class="badge bg-info">En cours</span></td>
+                            </tr>
+                            <tr>
+                                <td>Hier, 16:45</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar me-2">AD</div>
+                                        <div>Admin</div>
+                                    </div>
+                                </td>
+                                <td>Création utilisateur</td>
+                                <td>Nouveau caissier ajouté</td>
+                                <td><span class="badge bg-success">Terminé</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

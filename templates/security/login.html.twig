@@ -1,0 +1,74 @@
+{% extends 'base-auth.html.twig' %}
+
+{% block title %}Connexion - HMA Market{% endblock %}
+
+{% block body %}
+    {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ error.messageKey|trans(error.messageData, 'security') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endif %}
+    
+    {% if app.user %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Vous êtes connecté en tant que {{ app.user.userIdentifier }}, 
+            <a href="{{ path('app_logout') }}" class="alert-link">Déconnexion</a>
+        </div>
+    {% endif %}
+    
+    <form method="post">
+        <div class="mb-4">
+            <label for="inputEmail" class="form-label fw-semibold">
+                <i class="fas fa-envelope me-1"></i> Email
+            </label>
+            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" 
+                   class="form-control" 
+                   placeholder="exemple@email.com"
+                   autocomplete="email" required autofocus>
+        </div>
+        
+        <div class="mb-4">
+            <label for="inputPassword" class="form-label fw-semibold">
+                <i class="fas fa-lock me-1"></i> Mot de passe
+            </label>
+            <input type="password" name="password" id="inputPassword" 
+                   class="form-control" 
+                   placeholder="Votre mot de passe"
+                   autocomplete="current-password" required>
+        </div>
+        
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        
+        <div class="mb-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="_remember_me" id="rememberMe">
+                <label class="form-check-label" for="rememberMe">
+                    Se souvenir de moi
+                </label>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <button class="btn btn-primary w-100 py-2" type="submit">
+                <i class="fas fa-sign-in-alt me-2"></i> Se connecter
+            </button>
+        </div>
+        
+        <div class="text-center mb-3">
+            <a href="{{ path('app_forgot_password_request') }}" class="text-decoration-none">
+                <i class="fas fa-key me-1"></i> Mot de passe oublié ?
+            </a>
+        </div>
+        
+        <hr class="my-4">
+        
+        <div class="text-center">
+            <p class="text-muted mb-0">
+                Vous n'avez pas de compte ? 
+                <a href="https://wa.me/2290156139200" class="text-decoration-none fw-semibold">Contactez l'administrateur</a>
+            </p>
+        </div>
+    </form>
+{% endblock %}

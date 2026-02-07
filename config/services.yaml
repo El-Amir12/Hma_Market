@@ -1,0 +1,36 @@
+# config/services.yaml
+parameters:
+    kernel.secret: '%env(APP_SECRET)%'
+    app.secret: '%env(APP_SECRET)%'
+    
+    # Chemins des répertoires
+    uploads_directory: '%kernel.project_dir%/public/uploads'
+    categories_directory: '%kernel.project_dir%/public/uploads/categories'
+    products_directory: '%kernel.project_dir%/public/uploads/products'
+    
+    # Emails
+    app.email_from: 'contact@hma-market.com'
+    
+    # Répertoires PDF
+    bon_commande_directory: '%kernel.project_dir%/public/uploads/bons-commande'
+    recu_achat_directory: '%kernel.project_dir%/public/uploads/recus-achat'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        
+    # Extension Twig
+    App\Twig\FcfaExtension:
+        tags: ['twig.extension']
+
+    # Service Dompdf
+    Dompdf\Dompdf:
+        public: false
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'

@@ -1,0 +1,49 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        App\Entity\User: 'auto'
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            lazy: true
+            provider: app_user_provider
+            
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                username_parameter: email
+                password_parameter: password
+                enable_csrf: true
+                require_previous_session: false
+                default_target_path: app_home
+                always_use_default_target_path: true
+                use_referer: false
+            
+            logout:
+                path: app_logout
+                target: app_login
+
+    access_control:
+        # Pages accessibles sans connexion
+        - { path: ^/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+        
+        # Pages selon les rôles - CORRECTION ICI
+        - { path: ^/admin/, roles: [ROLE_ADMIN, ROLE_MANAGER] }  # <-- TABLEAU DE RÔLES
+        - { path: ^/manager/, roles: ROLE_MANAGER }
+        - { path: ^/stock/, roles: ROLE_STOCK_MANAGER }
+        - { path: ^/cashier/, roles: ROLE_CASHIER }
+        
+        # Toutes les autres pages nécessitent une connexion
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
