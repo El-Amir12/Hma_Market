@@ -1,0 +1,33 @@
+// Envoyer un projet sur son compte Github
+
+1-Ouvre ton terminal (cmd, Git Bash ou VS Code Terminal)
+
+2-Va dans ton dossier du projet : cd C:\chemin\vers\ton\projet
+
+3-Initialise un dépôt Git dans ton projet : git init
+
+4-Ajoute tous les fichiers : git add .
+
+5-Fais un premier commit : git commit -m "Initial commit"
+
+6-Ajoute le dépôt GitHub comme "remote" : git remote add origin https://github.com/ton-utilisateur/nom-du-repository.git
+
+7-Envoie ton projet sur GitHub : a-git branch -M main, b-git push -u origin main
+
+// Créer une branche et travailler sur la branche 
+# Créez et basculez sur la branche SaaS
+git checkout -b hma-market-saas
+# Basculez sur la branche SaaS
+git checkout hma-market-saas ou git checkout main
+# Voir la branche sur laquelle on est  
+git branch
+# Pour faire un bon commit 
+1-git add . * Ajoute les fichiers modifiés *
+2-git add src/Entity/User.php  * Ajoute un fichier spécifique *
+3-git commit -m "Description des changements" *Faire le commit*
+# Comment push vers la bonne branche 
+1-git branch --show-current * Affiche la branche actuelle pour etre sure *
+2-git push origin main * Si on est sur le repository principale *
+3-git push origin hma-market-saas * Si on est sur la branche *
+4- git push * Pousse sur la branche actuelle *
+
