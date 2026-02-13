@@ -2,17 +2,17 @@
 <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
     {% for type, messages in app.flashes %}
         {% for message in messages %}
-            <div class="toast align-items-center text-bg-{{ type }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast align-items-center text-bg-{{ type }} border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
                 <div class="d-flex">
                     <div class="toast-body">
                         {% if message is iterable %}
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-start">
                                 {% if message.icon is defined %}
-                                    <i class="{{ message.icon }} me-2 fs-5"></i>
+                                    <i class="{{ message.icon }} me-2 fs-5 mt-1"></i>
                                 {% endif %}
                                 <div>
                                     {% if message.title is defined %}
-                                        <strong class="me-auto">{{ message.title }}</strong>
+                                        <strong class="me-auto d-block">{{ message.title }}</strong>
                                     {% endif %}
                                     {% if message.message is defined %}
                                         <div>{{ message.message|raw }}</div>
@@ -32,12 +32,34 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-show toast notifications
+    // Configuration des toasts
     const toastElList = document.querySelectorAll('.toast');
-    const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, {
-        autohide: true,
-        delay: 5000
-    }));
+    const toastList = [...toastElList].map(toastEl => {
+        // Désactiver autohide pour les toasts avec compte à rebours
+        const hasCountdown = toastEl.querySelector('#logout-countdown') !== null;
+        
+        return new bootstrap.Toast(toastEl, {
+            autohide: !hasCountdown,  // Pas d'autohide pour les toasts avec compte à rebours
+            delay: 5000
+        });
+    });
+    
     toastList.forEach(toast => toast.show());
+    
+    // Compte à rebours
+    const countdownElement = document.getElementById('logout-countdown');
+    if (countdownElement) {
+        let seconds = parseInt(countdownElement.textContent);
+        
+        const countdownInterval = setInterval(function() {
+            seconds--;
+            countdownElement.textContent = seconds;
+            
+            if (seconds <= 0) {
+                clearInterval(countdownInterval);
+                window.location.reload();
+            }
+        }, 1000);
+    }
 });
 </script>

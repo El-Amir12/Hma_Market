@@ -1,0 +1,61 @@
+{# templates/components/_session_toast.html.twig #}
+
+{% set hma_toast = app.session.get('hma_toast') %}
+
+{% if hma_toast %}
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        <div class="toast align-items-center text-bg-{{ hma_toast.type }} border-0" 
+             role="alert" 
+             aria-live="assertive" 
+             aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <div class="d-flex align-items-start">
+                        <i class="{{ hma_toast.icon }} me-2 fs-5 mt-1"></i>
+                        <div>
+                            <strong class="d-block">{{ hma_toast.title }}</strong>
+                            <div>{{ hma_toast.message|raw }}</div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toastEl = document.querySelector('.toast');
+            if (toastEl) {
+                // Afficher le toast
+                const toast = new bootstrap.Toast(toastEl, { autohide: false });
+                toast.show();
+                
+                // Compte à rebours
+                const countdownEl = document.getElementById('logout-countdown');
+                if (countdownEl) {
+                    let seconds = parseInt(countdownEl.textContent);
+                    const interval = setInterval(function() {
+                        seconds--;
+                        countdownEl.textContent = seconds;
+                        if (seconds <= 0) {
+                            clearInterval(interval);
+                            window.location.reload();
+                        }
+                    }, 1000);
+                }
+                
+                // Nettoyer la session à la fermeture
+                toastEl.querySelector('.btn-close').addEventListener('click', function() {
+                    fetch('{{ path('app_clear_toast') }}', { 
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                });
+            }
+        });
+    </script>
+    
+    {# ✅ NETTOYER LA SESSION APRÈS AFFICHAGE #}
+    {% do app.session.remove('hma_toast') %}
+{% endif %}

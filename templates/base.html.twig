@@ -18,7 +18,6 @@
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
     
     
-    
     <!-- Custom CSS -->
     <style>
         :root {
@@ -54,6 +53,47 @@
         
         .navbar-brand:hover {
             color: var(--primary-color);
+        }
+        
+        /* Logo de l'entreprise - SIMPLIFIÉ */
+        .company-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 10px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .company-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .company-logo .logo-fallback {
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .company-name {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--dark-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
         }
         
         .sidebar {
@@ -208,6 +248,7 @@
             box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
         }
         
+        /* User Avatar - SIMPLIFIÉ */
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -215,6 +256,10 @@
             overflow: hidden;
             border: 2px solid var(--primary-color);
             transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .user-avatar:hover {
@@ -222,28 +267,22 @@
             border-color: var(--secondary-color);
         }
         
-        .user-avatar-img {
+        .user-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         
-        .user-avatar-initials {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        .user-avatar .avatar-initials {
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-weight: 600;
             font-size: 16px;
         }
         
         .universal-search-container {
             flex-grow: 1;
-            max-width: 700px; /* Augmenté de 500px à 600px */
-            margin: 0 30px; /* Augmenté de 20px à 30px */
+            max-width: 700px;
+            margin: 0 30px;
         }
 
         .universal-search {
@@ -252,18 +291,18 @@
         }
 
         .universal-search-input {
-            border-radius: 25px; /* Augmenté de 20px à 25px */
-            padding: 10px 50px 10px 20px; /* Augmenté le padding */
-            border: 3px solid #dee2e6; /* Épaisseur augmentée de 1px à 2px */
+            border-radius: 25px;
+            padding: 10px 50px 10px 20px;
+            border: 3px solid #dee2e6;
             transition: all 0.3s ease;
             width: 100%;
             background-color: #f8f9fa;
-            font-size: 16px; /* Taille de police légèrement augmentée */
-            height: 45px; /* Hauteur fixe pour un meilleur alignement */
+            font-size: 16px;
+            height: 45px;
         }
 
         .universal-search-input:focus {
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15); /* Ombre plus prononcée */
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
             border-color: var(--primary-color);
             background-color: white;
             outline: none;
@@ -271,18 +310,18 @@
 
         .universal-search-btn {
             position: absolute;
-            right: 8px; /* Ajusté de 5px à 8px */
+            right: 8px;
             top: 30%;
             transform: translateY(-50%);
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             border: none;
             color: white;
             cursor: pointer;
-            padding: 8px 12px; /* Padding augmenté */
+            padding: 8px 12px;
             border-radius: 50%;
             transition: all 0.3s ease;
-            width: 36px; /* Largeur fixe */
-            height: 36px; /* Hauteur fixe */
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -297,7 +336,7 @@
 
         .universal-search-clear {
             position: absolute;
-            right: 50px; /* Ajusté de 40px à 50px pour l'espacement */
+            right: 50px;
             top: 30%;
             transform: translateY(-50%);
             background: rgba(0, 0, 0, 0.05);
@@ -307,8 +346,8 @@
             padding: 6px;
             border-radius: 50%;
             display: none;
-            width: 28px; /* Largeur fixe */
-            height: 28px; /* Hauteur fixe */
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -322,27 +361,25 @@
         }
 
         .universal-search-clear.show {
-            display: flex; /* Changé de block à flex */
+            display: flex;
         }
 
         .search-hint {
-            font-size: 13px; /* Légèrement plus grand */
+            font-size: 13px;
             color: var(--primary-color);
-            margin-top: 8px; /* Augmenté de 5px à 8px */
+            margin-top: 8px;
             text-align: left;
             opacity: 0.8;
             padding-left: 10px;
             font-weight: 500;
         }
 
-        /* Effet de placeholder plus visible */
         .universal-search-input::placeholder {
             color: #6c757d;
             opacity: 0.8;
             font-size: 15px;
         }
 
-        /* Animation d'agrandissement au focus */
         @keyframes searchExpand {
             0% { transform: scale(1); }
             100% { transform: scale(1.02); }
@@ -352,15 +389,13 @@
             animation: searchExpand 0.3s ease forwards;
         }
 
-        /* Version alternative : barre de recherche encore plus large */
         @media (min-width: 1400px) {
             .universal-search-container {
-                max-width: 700px; /* Encore plus large sur les grands écrans */
+                max-width: 700px;
                 margin: 0 40px;
             }
         }
 
-        /* Version compacte pour les petits écrans */
         @media (max-width: 992px) {
             .universal-search-container {
                 max-width: 400px;
@@ -386,7 +421,6 @@
             }
         }
 
-        /* Version mobile */
         @media (max-width: 768px) {
             .universal-search-container {
                 max-width: 100%;
@@ -399,7 +433,6 @@
             }
         }
 
-        /* Option supplémentaire : effet de pulsation pour attirer l'attention */
         .universal-search-input:focus {
             animation: pulseBorder 2s infinite;
         }
@@ -419,38 +452,16 @@
             }
         }
 
-        /* Option : icône de recherche à l'intérieur du champ */
         .universal-search-input {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23667eea' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
             background-position: 15px center;
             background-repeat: no-repeat;
             background-size: 18px;
-            padding-left: 45px; /* Ajusté pour l'icône */
+            padding-left: 45px;
         }
 
         .universal-search-input:focus {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%230463f1' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
-        }
-
-        /* Version encore plus large avec icône externe */
-        .universal-search-input.no-icon {
-            background-image: none;
-            padding-left: 20px;
-        }
-
-        /* Pour un look plus moderne et large */
-        .universal-search-input.modern {
-            border-radius: 12px;
-            border: 1px solid #e0e0e0;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .universal-search-input.modern:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
-            transform: translateY(-1px);
         }
         
         /* Responsive */
@@ -508,7 +519,6 @@
             }
         }
 
-        /* Animation pour les cartes */
         .card-animate {
             transition: all 0.3s ease;
             border: none;
@@ -520,7 +530,6 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
         }
 
-        /* Effet de gradient sur les cartes */
         .bg-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         }
@@ -545,7 +554,6 @@
             background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%) !important;
         }
 
-        /* Avatar rond */
         .avatar-sm {
             width: 50px;
             height: 50px;
@@ -564,13 +572,11 @@
             background-color: rgba(255, 255, 255, 0.2) !important;
         }
         
-        /* Contenu principal */
         main {
             min-height: calc(100vh - 180px);
             padding-top: 30px;
         }
         
-        /* Footer amélioré */
         .footer {
             background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
             color: #f9fafb;
@@ -666,7 +672,6 @@
             transform: translateY(-3px);
         }
         
-        /* Badge de version */
         .version-badge {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
@@ -683,7 +688,6 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
         
-        /* Animation de chargement */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -693,7 +697,6 @@
             animation: fadeIn 0.5s ease-out;
         }
         
-        /* Scrollbar personnalisée */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -712,13 +715,11 @@
             background: var(--secondary-color);
         }
 
-        /* Badges de statut */
         .badge-status-draft { background-color: #6c757d; }
         .badge-status-confirmed { background-color: #0d6efd; }
         .badge-status-received { background-color: #198754; }
         .badge-status-cancelled { background-color: #dc3545; }
 
-        /* Animation du panier */
         @keyframes cartPulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -729,13 +730,11 @@
             animation: cartPulse 0.3s ease-in-out;
         }
 
-        /* Focus pour les inputs */
         .form-control:focus {
             border-color: #0d6efd;
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
         }
 
-        /* Responsive tables */
         @media (max-width: 768px) {
             .table-responsive {
                 font-size: 0.9rem;
@@ -746,18 +745,18 @@
                 font-size: 0.875rem;
             }
         }
-
-
-
-       
     </style>
     
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-    {{ include('components/_toast.html.twig') }}
+    {# ✅ TOAST POUR LES MESSAGES DE SESSION #}
+    {% include 'components/_session_toast.html.twig' %}
     
-    <!-- Navigation principale -->
+    {# ✅ VOS FLASHBAGS CLASSIQUES #}
+    {% include 'components/_toast.html.twig' %}
+    
+    <!-- Navigation principale - SIMPLIFIÉE -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container-fluid">
             <!-- Bouton sidebar (mobile) -->
@@ -765,10 +764,51 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             
-            <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}">
-                <i class="bi bi-shop-window me-2 text-primary"></i>
-                <span class="fw-bold">HMA MARKET</span>
+            <!-- À GAUCHE : Logo et nom de l'entreprise - SIMPLIFIÉ -->
+            <a class="navbar-brand d-flex align-items-center" href="{{ path('app_dashboard') }}">
+                <div class="company-logo" id="companyLogo">
+                    {% if app.user %}
+                        {% set user = app.user %}
+                        {% set hmaService = null %}
+                        {% set logo = null %}
+                        {% set companyName = 'HMA MARKET' %}
+                        {% set initial = 'H' %}
+                        
+                        {# Déterminer l'entreprise #}
+                        {% if user.hmaServiceId is defined and user.hmaServiceId %}
+                            {# User avec entreprise #}
+                            {% set hmaService = user.hmaServiceId %}
+                        {% endif %}
+                        
+                        {% if hmaService %}
+                            {% set companyName = hmaService.companyName %}
+                            {% set initial = companyName|first|upper %}
+                            {% if hmaService.logo %}
+                                {% set logo = asset('uploads/logos/' ~ hmaService.logo) %}
+                            {% endif %}
+                        {% endif %}
+                        
+                        {% if logo %}
+                            <img src="{{ logo }}" 
+                                 alt="{{ companyName }}"
+                                 class="logo-img"
+                                 data-initial="{{ initial }}">
+                        {% else %}
+                            <div class="logo-fallback">
+                                {{ initial }}
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="logo-fallback">H</div>
+                    {% endif %}
+                </div>
+                <div class="company-name" id="companyName">
+                    {% if app.user and app.user.hmaServiceId is defined and app.user.hmaServiceId %}
+                        {{ app.user.hmaServiceId.companyName }}
+                    {% else %}
+                        HMA MARKET
+                    {% endif %}
+                </div>
             </a>
             
             <!-- Barre de recherche universelle -->
@@ -791,7 +831,7 @@
                 </form>
             </div>
             
-            <!-- Contenu navbar -->
+            <!-- À DROITE : Informations utilisateur -->
             <div class="collapse navbar-collapse" id="navbarContent">
                 <!-- Barre de recherche mobile -->
                 <div class="universal-search-container d-md-none">
@@ -818,35 +858,108 @@
                     {% if app.user %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                            <div class="user-avatar me-2">
-                                {% if app.user.photo %}
-                                    <img src="{{ asset('uploads/users/' ~ app.user.photo) }}" 
-                                         alt="{{ app.user.fullName }}" 
-                                         class="user-avatar-img"
-                                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'user-avatar-initials\'>{{ app.user.fullName|first|upper }}</div>';">
+                            <div class="user-avatar me-2" id="userAvatar">
+                                {% set user = app.user %}
+                                {% set userName = user.fullName|default('Utilisateur') %}
+                                {% set initial = userName|first|upper %}
+                                
+                                {% if user.photo %}
+                                    <img src="{{ asset('uploads/users/' ~ user.photo) }}" 
+                                         alt="{{ userName }}"
+                                         class="avatar-img"
+                                         data-initial="{{ initial }}">
+                                    <div class="avatar-initials" style="display: none;">
+                                        {{ initial }}
+                                    </div>
                                 {% else %}
-                                    <div class="user-avatar-initials">
-                                        {{ app.user.fullName|first|upper }}
+                                    <div class="avatar-initials">
+                                        {{ initial }}
                                     </div>
                                 {% endif %}
                             </div>
                             <div class="d-none d-md-block text-start">
-                                <div class="fw-medium">{{ app.user.fullName }}</div>
+                                <div class="fw-medium" id="userName">
+                                    {{ app.user.fullName|default('Utilisateur') }}
+                                </div>
                                 <small class="text-muted">
-                                    {% if 'ROLE_ADMIN' in app.user.roles %}
+                                    {% set user = app.user %}
+                                    {% if 'ROLE_ADMIN' in user.roles %}
                                         <i class="bi bi-shield-check text-primary me-1"></i>Administrateur
-                                    {% elseif 'ROLE_MANAGER' in app.user.roles %}
+                                    {% elseif 'ROLE_MANAGER' in user.roles %}
                                         <i class="bi bi-graph-up text-success me-1"></i>Gestionnaire
-                                    {% elseif 'ROLE_STOCK_MANAGER' in app.user.roles %}
+                                    {% elseif 'ROLE_STOCK_MANAGER' in user.roles %}
                                         <i class="bi bi-box-seam text-warning me-1"></i>Responsable Stock
-                                    {% elseif 'ROLE_CASHIER' in app.user.roles %}
+                                    {% elseif 'ROLE_CASHIER' in user.roles %}
                                         <i class="bi bi-cash-coin text-info me-1"></i>Caissier
+                                    {% else %}
+                                        <i class="bi bi-person me-1"></i>Utilisateur
                                     {% endif %}
                                 </small>
                             </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0">
                             <li><h6 class="dropdown-header bg-light fw-bold">Mon compte</h6></li>
+                            
+                            <!-- Photo et informations du profil -->
+                            <li>
+                                <div class="px-3 py-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar me-3">
+                                            {% set user = app.user %}
+                                            {% set userName = user.fullName|default('Utilisateur') %}
+                                            {% set initial = userName|first|upper %}
+                                            
+                                            {% if user.photo %}
+                                                <img src="{{ asset('uploads/users/' ~ user.photo) }}" 
+                                                     alt="{{ userName }}"
+                                                     class="avatar-img"
+                                                     data-initial="{{ initial }}">
+                                                <div class="avatar-initials" style="display: none;">
+                                                    {{ initial }}
+                                                </div>
+                                            {% else %}
+                                                <div class="avatar-initials">
+                                                    {{ initial }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">
+                                                {{ app.user.fullName|default('Utilisateur') }}
+                                            </div>
+                                            <small class="text-muted">
+                                                {% set user = app.user %}
+                                                {% if 'ROLE_ADMIN' in user.roles %}
+                                                    Administrateur
+                                                {% elseif 'ROLE_MANAGER' in user.roles %}
+                                                    Gestionnaire
+                                                {% elseif 'ROLE_STOCK_MANAGER' in user.roles %}
+                                                    Responsable Stock
+                                                {% elseif 'ROLE_CASHIER' in user.roles %}
+                                                    Caissier
+                                                {% else %}
+                                                    Utilisateur
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            
+                            <!-- Bouton "Gérer l'entreprise" -->
+                            {% if app.user.isHmaOwner is defined and app.user.isHmaOwner and app.user.hmaServiceId %}
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="{{ path('app_dashboard_hmaservice_details') }}">
+                                    <i class="bi bi-building me-2 text-info"></i>
+                                    <span>Gérer l'entreprise</span>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            {% endif %}
+                            
+                            <!-- Liens standards -->
                             <li>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <i class="bi bi-person me-2 text-primary"></i>
@@ -854,7 +967,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="{{ path('app_forgot_password_request') }}">
+                                <a class="dropdown-item d-flex align-items-center" href="{{ path('app_change_password') }}">
                                     <i class="bi bi-shield-lock me-2 text-success"></i>
                                     <span>Changer mot de passe</span>
                                 </a>
@@ -1053,12 +1166,12 @@
     </footer>
     
     <!-- Bootstrap 5 JS -->
-    !-- CDN JavaScript -->
+    <!-- CDN JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     
-    <!-- Custom JS -->
+    <!-- Custom JS SIMPLIFIÉ -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Toggle sidebar sur mobile
@@ -1103,23 +1216,25 @@
                 }, 5000);
             });
             
-            // Animation au scroll pour le footer
-            window.addEventListener('scroll', function() {
-                const footer = document.querySelector('.footer');
-                const scrollPosition = window.scrollY + window.innerHeight;
-                const documentHeight = document.documentElement.scrollHeight;
-                
-                if (scrollPosition >= documentHeight - 100) {
-                    footer.style.transform = 'translateY(0)';
-                } else {
-                    footer.style.transform = 'translateY(20px)';
-                }
-            });
-            
-            // Initialiser les tooltips
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
+            // Gestion des erreurs d'images SIMPLIFIÉE
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('error', function() {
+                    const parent = this.parentElement;
+                    const initial = this.getAttribute('data-initial') || 'H';
+                    
+                    // Créer un élément pour les initiales
+                    const fallback = document.createElement('div');
+                    if (parent.classList.contains('company-logo')) {
+                        fallback.className = 'logo-fallback';
+                    } else if (parent.classList.contains('user-avatar')) {
+                        fallback.className = 'avatar-initials';
+                    }
+                    fallback.textContent = initial;
+                    
+                    // Remplacer l'image
+                    this.style.display = 'none';
+                    parent.appendChild(fallback);
+                });
             });
             
             // Gestion de la recherche universelle
@@ -1131,7 +1246,6 @@
                 
                 if (!searchInput || !searchClear || !searchForm) return;
                 
-                // Afficher/masquer le bouton clear
                 function toggleClearButton() {
                     if (searchInput.value.trim() !== '') {
                         searchClear.classList.add('show');
@@ -1140,13 +1254,11 @@
                     }
                 }
                 
-                // Mettre à jour le placeholder selon la page
                 function updateSearchPlaceholder() {
                     const currentRoute = window.location.pathname;
                     let placeholder = 'Rechercher...';
                     let hint = 'Appuyez sur Entrée pour rechercher';
                     
-                    // Déterminer le type de recherche selon la page
                     if (currentRoute.includes('/admin/user')) {
                         placeholder = 'Rechercher un utilisateur...';
                         hint = 'Recherche par nom, email ou téléphone';
@@ -1173,25 +1285,21 @@
                     }
                 }
                 
-                // Écouter les changements dans le champ de recherche
                 searchInput.addEventListener('input', toggleClearButton);
                 
-                // Vider le champ de recherche
                 searchClear.addEventListener('click', function() {
                     searchInput.value = '';
                     searchInput.focus();
                     toggleClearButton();
                     
-                    // Soumettre le formulaire pour effacer la recherche
                     if (searchInput.value === '') {
                         const url = new URL(window.location);
                         url.searchParams.delete('search');
-                        url.searchParams.delete('page'); // Retour à la page 1
+                        url.searchParams.delete('page');
                         window.location.href = url.toString();
                     }
                 });
                 
-                // Soumettre le formulaire
                 searchForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     
@@ -1200,7 +1308,7 @@
                     
                     if (searchTerm) {
                         currentUrl.searchParams.set('search', searchTerm);
-                        currentUrl.searchParams.set('page', '1'); // Retour à la page 1
+                        currentUrl.searchParams.set('page', '1');
                     } else {
                         currentUrl.searchParams.delete('search');
                         currentUrl.searchParams.delete('page');
@@ -1209,33 +1317,11 @@
                     window.location.href = currentUrl.toString();
                 });
                 
-                // Recherche instantanée avec délai (optionnel)
-                let searchTimeout;
-                searchInput.addEventListener('keyup', function(e) {
-                    clearTimeout(searchTimeout);
-                    
-                    // Si la touche est Entrée, on soumet immédiatement
-                    if (e.key === 'Enter') {
-                        searchForm.dispatchEvent(new Event('submit'));
-                        return;
-                    }
-                    
-                    // Recherche instantanée après 500ms d'inactivité (optionnel)
-                    // searchTimeout = setTimeout(() => {
-                    //     if (searchInput.value.trim().length >= 2 || searchInput.value.trim() === '') {
-                    //         searchForm.dispatchEvent(new Event('submit'));
-                    //     }
-                    // }, 500);
-                });
-                
-                // Mettre à jour le placeholder au chargement et lors des changements de route
                 updateSearchPlaceholder();
-                
-                // Initialiser l'état du bouton clear
                 toggleClearButton();
             }
             
-            // Configurer les deux barres de recherche (desktop et mobile)
+            // Configurer les deux barres de recherche
             setupUniversalSearch('universalSearchInput', 'universalSearchClear', 'universalSearchForm', 'searchHint');
             setupUniversalSearch('universalSearchInputMobile', 'universalSearchClearMobile', 'universalSearchFormMobile', 'searchHintMobile');
             
@@ -1273,14 +1359,7 @@
             }, 5000);
         });
     </script>
-    <script src="https://unpkg.com/@hotwired/stimulus@3.2.1/dist/stimulus.umd.js"></script>
-    <script>
-        const application = Stimulus.Application.start();
-        
-        // Enregistrez votre contrôleur
-        import PurchaseController from './js/purchase.js';
-        application.register('purchase', PurchaseController);
-    </script>
+    
     
     {% block javascripts %}{% endblock %}
 </body>

@@ -1,0 +1,1486 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* home/index.html.twig */
+class __TwigTemplate_60f4f4452cde9a36b1cba71535bf1935 extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->blocks = [
+            'title' => [$this, 'block_title'],
+            'stylesheets' => [$this, 'block_stylesheets'],
+            'body' => [$this, 'block_body'],
+            'javascripts' => [$this, 'block_javascripts'],
+        ];
+    }
+
+    protected function doGetParent(array $context): bool|string|Template|TemplateWrapper
+    {
+        // line 1
+        return "base-auth.html.twig";
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "home/index.html.twig"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "home/index.html.twig"));
+
+        $this->parent = $this->load("base-auth.html.twig", 1);
+        yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+    }
+
+    // line 3
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_title(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
+
+        yield "HMA Market - Solution de Gestion d'Entreprise Complète";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 5
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_stylesheets(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
+
+        // line 6
+        yield "    ";
+        yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
+        yield "
+    <style>
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(4, 99, 241, 0.05) 100%);
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1440 320\"><path fill=\"%23667eea\" fill-opacity=\"0.1\" d=\"M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z\"></path></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 100px 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--dark-color);
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(4, 99, 241, 0.05) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(4, 99, 241, 0.02) 100%);
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card.popular {
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.15);
+        }
+
+        .pricing-card.popular::before {
+            content: 'Populaire';
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 8px 40px;
+            transform: rotate(45deg);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin: 1.5rem 0;
+        }
+
+        .price-period {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        /* Testimonials */
+        .testimonial-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '\"';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 4rem;
+            color: rgba(102, 126, 234, 0.1);
+            font-family: serif;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1440 320\"><path fill=\"white\" fill-opacity=\"0.1\" d=\"M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z\"></path></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Stats */
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .pricing-card.popular {
+                transform: none;
+            }
+        }
+    </style>
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 232
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_body(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        // line 233
+        yield "    <!-- Navigation pour site public -->
+    <nav class=\"navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top\">
+        <div class=\"container\">
+            <a class=\"navbar-brand d-flex align-items-center\" href=\"";
+        // line 236
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_home");
+        yield "\">
+                <i class=\"bi bi-shop-window me-2 text-primary\"></i>
+                <span class=\"fw-bold\">HMA MARKET</span>
+            </a>
+            
+            <button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\">
+                <span class=\"navbar-toggler-icon\"></span>
+            </button>
+            
+            <div class=\"collapse navbar-collapse\" id=\"navbarNav\">
+                <ul class=\"navbar-nav ms-auto\">
+                    <li class=\"nav-item\">
+                        <a class=\"nav-link\" href=\"#home\">Accueil</a>
+                    </li>
+                    <li class=\"nav-item\">
+                        <a class=\"nav-link\" href=\"#features\">Fonctionnalités</a>
+                    </li>
+                    <li class=\"nav-item\">
+                        <a class=\"nav-link\" href=\"#pricing\">Tarifs</a>
+                    </li>
+                    <li class=\"nav-item\">
+                        <a class=\"nav-link\" href=\"#about\">À propos</a>
+                    </li>
+                    <li class=\"nav-item\">
+                        <a class=\"nav-link\" href=\"#contact\">Contact</a>
+                    </li>
+                    <li class=\"nav-item ms-2\">
+                        <a href=\"";
+        // line 263
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_login");
+        yield "\" class=\"btn btn-outline-primary\">Connexion</a>
+                    </li>
+                    <li class=\"nav-item ms-2\">
+                        <a href=\"";
+        // line 266
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
+        yield "\" class=\"btn btn-gradient\">Inscription</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id=\"home\" class=\"hero-section\">
+        <div class=\"container\">
+            <div class=\"row align-items-center\">
+                <div class=\"col-lg-6\">
+                    <h1 class=\"hero-title\">Gérez votre entreprise avec simplicité et efficacité</h1>
+                    <p class=\"hero-subtitle\">
+                        HMA Market est la solution tout-en-un pour gérer vos stocks, ventes, achats et finances. 
+                        Boostez votre productivité avec notre plateforme intuitive et puissante.
+                    </p>
+                    <div class=\"d-flex flex-wrap gap-3\">
+                        <a href=\"#pricing\" class=\"btn btn-gradient btn-lg\">
+                            <i class=\"bi bi-rocket-takeoff me-2\"></i>Commencer gratuitement
+                        </a>
+                        <a href=\"#features\" class=\"btn btn-outline-primary btn-lg\">
+                            <i class=\"bi bi-play-circle me-2\"></i>Voir la démo
+                        </a>
+                    </div>
+                    
+                    <div class=\"row mt-5\">
+                        <div class=\"col-md-4 text-center\">
+                            <div class=\"stat-number\">500+</div>
+                            <p class=\"text-muted\">Entreprises</p>
+                        </div>
+                        <div class=\"col-md-4 text-center\">
+                            <div class=\"stat-number\">99.9%</div>
+                            <p class=\"text-muted\">Disponibilité</p>
+                        </div>
+                        <div class=\"col-md-4 text-center\">
+                            <div class=\"stat-number\">24/7</div>
+                            <p class=\"text-muted\">Support</p>
+                        </div>
+                    </div>
+                </div>
+                <div class=\"col-lg-6\">
+                    <div class=\"float-animation\">
+                        <img src=\"https://cdn.dribbble.com/users/642793/screenshots/15624822/media/78dd7daf7b4722f980ee60d341abeb35.png?compress=1&resize=800x600\" 
+                             alt=\"Dashboard HMA Market\" 
+                             class=\"img-fluid rounded-3 shadow-lg\">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id=\"features\" class=\"features-section\">
+        <div class=\"container\">
+            <h2 class=\"section-title\">Fonctionnalités principales</h2>
+            
+            <div class=\"row g-4\">
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-box-seam\"></i>
+                        </div>
+                        <h4>Gestion des Stocks</h4>
+                        <p class=\"text-muted\">
+                            Suivez vos stocks en temps réel, gérez les inventaires et recevez des alertes pour les stocks faibles.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Suivi en temps réel</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Alertes automatiques</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Gestion des lots</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-cash-coin\"></i>
+                        </div>
+                        <h4>Point de Vente</h4>
+                        <p class=\"text-muted\">
+                            Système de caisse complet avec gestion des ventes, reçus et transactions.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Interface intuitive</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Reçus personnalisés</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Rapports détaillés</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-graph-up\"></i>
+                        </div>
+                        <h4>Analytique & Rapports</h4>
+                        <p class=\"text-muted\">
+                            Tableaux de bord personnalisés et rapports détaillés pour prendre des décisions éclairées.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Tableaux de bord</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Export PDF/Excel</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Indicateurs clés</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-people\"></i>
+                        </div>
+                        <h4>Gestion d'Équipe</h4>
+                        <p class=\"text-muted\">
+                            Gérez les rôles et permissions de votre équipe avec contrôle d'accès granulaire.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Rôles personnalisés</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Permissions fines</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Suivi des activités</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-credit-card\"></i>
+                        </div>
+                        <h4>Facturation & Paiements</h4>
+                        <p class=\"text-muted\">
+                            Gérez les factures, les paiements et suivez votre trésorerie facilement.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Factures automatiques</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Suivi des paiements</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Rapports financiers</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-phone\"></i>
+                        </div>
+                        <h4>Application Mobile</h4>
+                        <p class=\"text-muted\">
+                            Accédez à votre entreprise depuis n'importe où avec notre application mobile.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>iOS & Android</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Notifications push</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Synchronisation en temps réel</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id=\"pricing\" class=\"pricing-section\">
+        <div class=\"container\">
+            <h2 class=\"section-title\">Choisissez votre plan</h2>
+            <p class=\"text-center text-muted mb-5\">Commencez gratuitement, puis évoluez selon vos besoins</p>
+            
+            <div class=\"row g-4 justify-content-center\">
+                <div class=\"col-lg-4\">
+                    <div class=\"pricing-card\">
+                        <h4 class=\"text-center\">Starter</h4>
+                        <p class=\"text-center text-muted\">Parfait pour les petites entreprises</p>
+                        <div class=\"price text-center\">
+                            <span class=\"currency\">0 FCFA</span>
+                            <span class=\"price-period\">/mois</span>
+                        </div>
+                        <ul class=\"list-unstyled mb-4\">
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Jusqu'à 3 utilisateurs</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>100 produits maximum</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Gestion des stocks de base</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Support par email</li>
+                            <li class=\"mb-2 text-muted\"><i class=\"bi bi-x-circle me-2\"></i>Rapports avancés</li>
+                            <li class=\"mb-2 text-muted\"><i class=\"bi bi-x-circle me-2\"></i>API d'intégration</li>
+                        </ul>
+                        <a href=\"";
+        // line 452
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
+        yield "\" class=\"btn btn-outline-primary w-100\">Commencer gratuitement</a>
+                    </div>
+                </div>
+                
+                <div class=\"col-lg-4\">
+                    <div class=\"pricing-card popular\">
+                        <h4 class=\"text-center\">Pro</h4>
+                        <p class=\"text-center text-muted\">Recommandé pour les entreprises en croissance</p>
+                        <div class=\"price text-center\">
+                            <span class=\"currency\">25,000</span>
+                            <span class=\"price-period\">FCFA/mois</span>
+                        </div>
+                        <ul class=\"list-unstyled mb-4\">
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Jusqu'à 10 utilisateurs</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Produits illimités</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Gestion complète des stocks</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Rapports avancés</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Support prioritaire</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>API d'intégration</li>
+                        </ul>
+                        <a href=\"";
+        // line 472
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
+        yield "\" class=\"btn btn-gradient w-100\">Choisir Pro</a>
+                    </div>
+                </div>
+                
+                <div class=\"col-lg-4\">
+                    <div class=\"pricing-card\">
+                        <h4 class=\"text-center\">Enterprise</h4>
+                        <p class=\"text-center text-muted\">Solution personnalisée pour grandes entreprises</p>
+                        <div class=\"price text-center\">
+                            <span class=\"currency\">Contactez-nous</span>
+                        </div>
+                        <ul class=\"list-unstyled mb-4\">
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Utilisateurs illimités</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Toutes les fonctionnalités Pro</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Intégrations personnalisées</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Support 24/7 dédié</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Formation de l'équipe</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Déploiement sur mesure</li>
+                        </ul>
+                        <a href=\"#contact\" class=\"btn btn-outline-primary w-100\">Nous contacter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id=\"about\" class=\"features-section\">
+        <div class=\"container\">
+            <h2 class=\"section-title\">À propos de HMA Market</h2>
+            
+            <div class=\"row align-items-center\">
+                <div class=\"col-lg-6\">
+                    <div class=\"feature-card\">
+                        <h3>Notre mission</h3>
+                        <p class=\"text-muted\">
+                            Nous aidons les entreprises africaines à digitaliser leurs opérations et à accroître leur productivité grâce à des solutions logicielles accessibles et adaptées.
+                        </p>
+                        <p class=\"text-muted\">
+                            Fondée en 2023, HMA Market s'engage à fournir des outils de gestion d'entreprise performants à des prix abordables.
+                        </p>
+                        
+                        <div class=\"row mt-4\">
+                            <div class=\"col-6\">
+                                <h4 class=\"stat-number\">100%</h4>
+                                <p class=\"text-muted\">Satisfaction client</p>
+                            </div>
+                            <div class=\"col-6\">
+                                <h4 class=\"stat-number\">500+</h4>
+                                <p class=\"text-muted\">Clients actifs</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class=\"col-lg-6\">
+                    <div class=\"testimonial-card mt-4 mt-lg-0\">
+                        <p class=\"mb-4\">
+                            \"HMA Market a transformé la façon dont nous gérons notre entreprise. L'interface est intuitive et le support est exceptionnel.\"
+                        </p>
+                        <div class=\"d-flex align-items-center\">
+                            <div class=\"user-avatar me-3\">
+                                <div class=\"user-avatar-initials\">AK</div>
+                            </div>
+                            <div>
+                                <h6 class=\"mb-0\">Amiral Kouassi</h6>
+                                <small class=\"text-muted\">CEO, Tech Solutions Inc.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id=\"contact\" class=\"cta-section\">
+        <div class=\"container\">
+            <h2 class=\"cta-title\">Prêt à transformer votre entreprise ?</h2>
+            <p class=\"lead mb-5\">Inscrivez-vous maintenant et profitez de 14 jours d'essai gratuit</p>
+            
+            <div class=\"row justify-content-center\">
+                <div class=\"col-lg-8\">
+                    <div class=\"card shadow-lg\">
+                        <div class=\"card-body p-5\">
+                            <div class=\"row\">
+                                <div class=\"col-md-6 mb-4\">
+                                    <h4>Contactez-nous</h4>
+                                    <p class=\"text-muted mb-4\">
+                                        <i class=\"bi bi-envelope me-2\"></i>contact@hmamarket.com
+                                    </p>
+                                    <p class=\"text-muted mb-4\">
+                                        <i class=\"bi bi-phone me-2\"></i>+229 01 56 13 92 00
+                                    </p>
+                                    <p class=\"text-muted\">
+                                        <i class=\"bi bi-geo-alt me-2\"></i>Cotonou, Bénin
+                                    </p>
+                                </div>
+                                <div class=\"col-md-6\">
+                                    <form id=\"contactForm\">
+                                        <div class=\"mb-3\">
+                                            <input type=\"text\" class=\"form-control\" placeholder=\"Votre nom\" required>
+                                        </div>
+                                        <div class=\"mb-3\">
+                                            <input type=\"email\" class=\"form-control\" placeholder=\"Votre email\" required>
+                                        </div>
+                                        <div class=\"mb-3\">
+                                            <textarea class=\"form-control\" rows=\"3\" placeholder=\"Votre message\" required></textarea>
+                                        </div>
+                                        <button type=\"submit\" class=\"btn btn-light w-100\">
+                                            <i class=\"bi bi-send me-2\"></i>Envoyer le message
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 595
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_javascripts(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
+
+        // line 596
+        yield "    ";
+        yield from $this->yieldParentBlock("javascripts", $context, $blocks);
+        yield "
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation au scroll
+            const observerOptions = {
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observer les éléments à animer
+            document.querySelectorAll('.feature-card, .pricing-card, .testimonial-card').forEach(card => {
+                observer.observe(card);
+            });
+            
+            // Smooth scroll pour les ancres
+            document.querySelectorAll('a[href^=\"#\"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Form submission
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Merci pour votre message ! Nous vous répondrons dans les plus brefs délais.');
+                    contactForm.reset();
+                });
+            }
+        });
+    </script>
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "home/index.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isTraitable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  751 => 596,  738 => 595,  605 => 472,  582 => 452,  393 => 266,  387 => 263,  357 => 236,  352 => 233,  339 => 232,  102 => 6,  89 => 5,  66 => 3,  43 => 1,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("{% extends 'base-auth.html.twig' %}
+
+{% block title %}HMA Market - Solution de Gestion d'Entreprise Complète{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(4, 99, 241, 0.05) 100%);
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1440 320\"><path fill=\"%23667eea\" fill-opacity=\"0.1\" d=\"M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z\"></path></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 100px 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--dark-color);
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(4, 99, 241, 0.05) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(4, 99, 241, 0.02) 100%);
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card.popular {
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.15);
+        }
+
+        .pricing-card.popular::before {
+            content: 'Populaire';
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 8px 40px;
+            transform: rotate(45deg);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin: 1.5rem 0;
+        }
+
+        .price-period {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        /* Testimonials */
+        .testimonial-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '\"';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 4rem;
+            color: rgba(102, 126, 234, 0.1);
+            font-family: serif;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1440 320\"><path fill=\"white\" fill-opacity=\"0.1\" d=\"M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z\"></path></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Stats */
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .pricing-card.popular {
+                transform: none;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <!-- Navigation pour site public -->
+    <nav class=\"navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top\">
+        <div class=\"container\">
+            <a class=\"navbar-brand d-flex align-items-center\" href=\"{{ path('app_home') }}\">
+                <i class=\"bi bi-shop-window me-2 text-primary\"></i>
+                <span class=\"fw-bold\">HMA MARKET</span>
+            </a>
+            
+            <button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\">
+                <span class=\"navbar-toggler-icon\"></span>
+            </button>
+            
+            <div class=\"collapse navbar-collapse\" id=\"navbarNav\">
+                <ul class=\"navbar-nav ms-auto\">
+                    <li class=\"nav-item\">
+                        <a class=\"nav-link\" href=\"#home\">Accueil</a>
+                    </li>
+                    <li class=\"nav-item\">
+                        <a class=\"nav-link\" href=\"#features\">Fonctionnalités</a>
+                    </li>
+                    <li class=\"nav-item\">
+                        <a class=\"nav-link\" href=\"#pricing\">Tarifs</a>
+                    </li>
+                    <li class=\"nav-item\">
+                        <a class=\"nav-link\" href=\"#about\">À propos</a>
+                    </li>
+                    <li class=\"nav-item\">
+                        <a class=\"nav-link\" href=\"#contact\">Contact</a>
+                    </li>
+                    <li class=\"nav-item ms-2\">
+                        <a href=\"{{ path('app_login') }}\" class=\"btn btn-outline-primary\">Connexion</a>
+                    </li>
+                    <li class=\"nav-item ms-2\">
+                        <a href=\"{{ path('app_register') }}\" class=\"btn btn-gradient\">Inscription</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id=\"home\" class=\"hero-section\">
+        <div class=\"container\">
+            <div class=\"row align-items-center\">
+                <div class=\"col-lg-6\">
+                    <h1 class=\"hero-title\">Gérez votre entreprise avec simplicité et efficacité</h1>
+                    <p class=\"hero-subtitle\">
+                        HMA Market est la solution tout-en-un pour gérer vos stocks, ventes, achats et finances. 
+                        Boostez votre productivité avec notre plateforme intuitive et puissante.
+                    </p>
+                    <div class=\"d-flex flex-wrap gap-3\">
+                        <a href=\"#pricing\" class=\"btn btn-gradient btn-lg\">
+                            <i class=\"bi bi-rocket-takeoff me-2\"></i>Commencer gratuitement
+                        </a>
+                        <a href=\"#features\" class=\"btn btn-outline-primary btn-lg\">
+                            <i class=\"bi bi-play-circle me-2\"></i>Voir la démo
+                        </a>
+                    </div>
+                    
+                    <div class=\"row mt-5\">
+                        <div class=\"col-md-4 text-center\">
+                            <div class=\"stat-number\">500+</div>
+                            <p class=\"text-muted\">Entreprises</p>
+                        </div>
+                        <div class=\"col-md-4 text-center\">
+                            <div class=\"stat-number\">99.9%</div>
+                            <p class=\"text-muted\">Disponibilité</p>
+                        </div>
+                        <div class=\"col-md-4 text-center\">
+                            <div class=\"stat-number\">24/7</div>
+                            <p class=\"text-muted\">Support</p>
+                        </div>
+                    </div>
+                </div>
+                <div class=\"col-lg-6\">
+                    <div class=\"float-animation\">
+                        <img src=\"https://cdn.dribbble.com/users/642793/screenshots/15624822/media/78dd7daf7b4722f980ee60d341abeb35.png?compress=1&resize=800x600\" 
+                             alt=\"Dashboard HMA Market\" 
+                             class=\"img-fluid rounded-3 shadow-lg\">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id=\"features\" class=\"features-section\">
+        <div class=\"container\">
+            <h2 class=\"section-title\">Fonctionnalités principales</h2>
+            
+            <div class=\"row g-4\">
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-box-seam\"></i>
+                        </div>
+                        <h4>Gestion des Stocks</h4>
+                        <p class=\"text-muted\">
+                            Suivez vos stocks en temps réel, gérez les inventaires et recevez des alertes pour les stocks faibles.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Suivi en temps réel</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Alertes automatiques</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Gestion des lots</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-cash-coin\"></i>
+                        </div>
+                        <h4>Point de Vente</h4>
+                        <p class=\"text-muted\">
+                            Système de caisse complet avec gestion des ventes, reçus et transactions.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Interface intuitive</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Reçus personnalisés</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Rapports détaillés</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-graph-up\"></i>
+                        </div>
+                        <h4>Analytique & Rapports</h4>
+                        <p class=\"text-muted\">
+                            Tableaux de bord personnalisés et rapports détaillés pour prendre des décisions éclairées.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Tableaux de bord</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Export PDF/Excel</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Indicateurs clés</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-people\"></i>
+                        </div>
+                        <h4>Gestion d'Équipe</h4>
+                        <p class=\"text-muted\">
+                            Gérez les rôles et permissions de votre équipe avec contrôle d'accès granulaire.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Rôles personnalisés</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Permissions fines</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Suivi des activités</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-credit-card\"></i>
+                        </div>
+                        <h4>Facturation & Paiements</h4>
+                        <p class=\"text-muted\">
+                            Gérez les factures, les paiements et suivez votre trésorerie facilement.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Factures automatiques</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Suivi des paiements</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Rapports financiers</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class=\"col-md-6 col-lg-4\">
+                    <div class=\"feature-card\">
+                        <div class=\"feature-icon\">
+                            <i class=\"bi bi-phone\"></i>
+                        </div>
+                        <h4>Application Mobile</h4>
+                        <p class=\"text-muted\">
+                            Accédez à votre entreprise depuis n'importe où avec notre application mobile.
+                        </p>
+                        <ul class=\"list-unstyled\">
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>iOS & Android</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Notifications push</li>
+                            <li><i class=\"bi bi-check-circle text-success me-2\"></i>Synchronisation en temps réel</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id=\"pricing\" class=\"pricing-section\">
+        <div class=\"container\">
+            <h2 class=\"section-title\">Choisissez votre plan</h2>
+            <p class=\"text-center text-muted mb-5\">Commencez gratuitement, puis évoluez selon vos besoins</p>
+            
+            <div class=\"row g-4 justify-content-center\">
+                <div class=\"col-lg-4\">
+                    <div class=\"pricing-card\">
+                        <h4 class=\"text-center\">Starter</h4>
+                        <p class=\"text-center text-muted\">Parfait pour les petites entreprises</p>
+                        <div class=\"price text-center\">
+                            <span class=\"currency\">0 FCFA</span>
+                            <span class=\"price-period\">/mois</span>
+                        </div>
+                        <ul class=\"list-unstyled mb-4\">
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Jusqu'à 3 utilisateurs</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>100 produits maximum</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Gestion des stocks de base</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Support par email</li>
+                            <li class=\"mb-2 text-muted\"><i class=\"bi bi-x-circle me-2\"></i>Rapports avancés</li>
+                            <li class=\"mb-2 text-muted\"><i class=\"bi bi-x-circle me-2\"></i>API d'intégration</li>
+                        </ul>
+                        <a href=\"{{ path('app_register') }}\" class=\"btn btn-outline-primary w-100\">Commencer gratuitement</a>
+                    </div>
+                </div>
+                
+                <div class=\"col-lg-4\">
+                    <div class=\"pricing-card popular\">
+                        <h4 class=\"text-center\">Pro</h4>
+                        <p class=\"text-center text-muted\">Recommandé pour les entreprises en croissance</p>
+                        <div class=\"price text-center\">
+                            <span class=\"currency\">25,000</span>
+                            <span class=\"price-period\">FCFA/mois</span>
+                        </div>
+                        <ul class=\"list-unstyled mb-4\">
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Jusqu'à 10 utilisateurs</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Produits illimités</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Gestion complète des stocks</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Rapports avancés</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Support prioritaire</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>API d'intégration</li>
+                        </ul>
+                        <a href=\"{{ path('app_register') }}\" class=\"btn btn-gradient w-100\">Choisir Pro</a>
+                    </div>
+                </div>
+                
+                <div class=\"col-lg-4\">
+                    <div class=\"pricing-card\">
+                        <h4 class=\"text-center\">Enterprise</h4>
+                        <p class=\"text-center text-muted\">Solution personnalisée pour grandes entreprises</p>
+                        <div class=\"price text-center\">
+                            <span class=\"currency\">Contactez-nous</span>
+                        </div>
+                        <ul class=\"list-unstyled mb-4\">
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Utilisateurs illimités</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Toutes les fonctionnalités Pro</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Intégrations personnalisées</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Support 24/7 dédié</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Formation de l'équipe</li>
+                            <li class=\"mb-2\"><i class=\"bi bi-check-circle text-success me-2\"></i>Déploiement sur mesure</li>
+                        </ul>
+                        <a href=\"#contact\" class=\"btn btn-outline-primary w-100\">Nous contacter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id=\"about\" class=\"features-section\">
+        <div class=\"container\">
+            <h2 class=\"section-title\">À propos de HMA Market</h2>
+            
+            <div class=\"row align-items-center\">
+                <div class=\"col-lg-6\">
+                    <div class=\"feature-card\">
+                        <h3>Notre mission</h3>
+                        <p class=\"text-muted\">
+                            Nous aidons les entreprises africaines à digitaliser leurs opérations et à accroître leur productivité grâce à des solutions logicielles accessibles et adaptées.
+                        </p>
+                        <p class=\"text-muted\">
+                            Fondée en 2023, HMA Market s'engage à fournir des outils de gestion d'entreprise performants à des prix abordables.
+                        </p>
+                        
+                        <div class=\"row mt-4\">
+                            <div class=\"col-6\">
+                                <h4 class=\"stat-number\">100%</h4>
+                                <p class=\"text-muted\">Satisfaction client</p>
+                            </div>
+                            <div class=\"col-6\">
+                                <h4 class=\"stat-number\">500+</h4>
+                                <p class=\"text-muted\">Clients actifs</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class=\"col-lg-6\">
+                    <div class=\"testimonial-card mt-4 mt-lg-0\">
+                        <p class=\"mb-4\">
+                            \"HMA Market a transformé la façon dont nous gérons notre entreprise. L'interface est intuitive et le support est exceptionnel.\"
+                        </p>
+                        <div class=\"d-flex align-items-center\">
+                            <div class=\"user-avatar me-3\">
+                                <div class=\"user-avatar-initials\">AK</div>
+                            </div>
+                            <div>
+                                <h6 class=\"mb-0\">Amiral Kouassi</h6>
+                                <small class=\"text-muted\">CEO, Tech Solutions Inc.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id=\"contact\" class=\"cta-section\">
+        <div class=\"container\">
+            <h2 class=\"cta-title\">Prêt à transformer votre entreprise ?</h2>
+            <p class=\"lead mb-5\">Inscrivez-vous maintenant et profitez de 14 jours d'essai gratuit</p>
+            
+            <div class=\"row justify-content-center\">
+                <div class=\"col-lg-8\">
+                    <div class=\"card shadow-lg\">
+                        <div class=\"card-body p-5\">
+                            <div class=\"row\">
+                                <div class=\"col-md-6 mb-4\">
+                                    <h4>Contactez-nous</h4>
+                                    <p class=\"text-muted mb-4\">
+                                        <i class=\"bi bi-envelope me-2\"></i>contact@hmamarket.com
+                                    </p>
+                                    <p class=\"text-muted mb-4\">
+                                        <i class=\"bi bi-phone me-2\"></i>+229 01 56 13 92 00
+                                    </p>
+                                    <p class=\"text-muted\">
+                                        <i class=\"bi bi-geo-alt me-2\"></i>Cotonou, Bénin
+                                    </p>
+                                </div>
+                                <div class=\"col-md-6\">
+                                    <form id=\"contactForm\">
+                                        <div class=\"mb-3\">
+                                            <input type=\"text\" class=\"form-control\" placeholder=\"Votre nom\" required>
+                                        </div>
+                                        <div class=\"mb-3\">
+                                            <input type=\"email\" class=\"form-control\" placeholder=\"Votre email\" required>
+                                        </div>
+                                        <div class=\"mb-3\">
+                                            <textarea class=\"form-control\" rows=\"3\" placeholder=\"Votre message\" required></textarea>
+                                        </div>
+                                        <button type=\"submit\" class=\"btn btn-light w-100\">
+                                            <i class=\"bi bi-send me-2\"></i>Envoyer le message
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation au scroll
+            const observerOptions = {
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observer les éléments à animer
+            document.querySelectorAll('.feature-card, .pricing-card, .testimonial-card').forEach(card => {
+                observer.observe(card);
+            });
+            
+            // Smooth scroll pour les ancres
+            document.querySelectorAll('a[href^=\"#\"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Form submission
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Merci pour votre message ! Nous vous répondrons dans les plus brefs délais.');
+                    contactForm.reset();
+                });
+            }
+        });
+    </script>
+{% endblock %}", "home/index.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\home\\index.html.twig");
+    }
+}

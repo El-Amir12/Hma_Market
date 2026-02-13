@@ -1,0 +1,152 @@
+{% extends 'base-auth.html.twig' %}
+
+{% block title %}Première connexion - HMA Market{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-shield me-2"></i>Première connexion
+                    </h4>
+                </div>
+                
+                <div class="card-body p-4 p-md-5">
+                    <div class="alert alert-info mb-4">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-info-circle fa-2x"></i>
+                            </div>
+                            <div>
+                                <strong>Bienvenue sur HMA Market !</strong><br>
+                                Pour des raisons de sécurité, vous devez définir votre mot de passe personnel avant de continuer.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>{{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                    
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                    
+                    {{ form_start(form, {'attr': {'id': 'first-login-form'}}) }}
+                    
+                    <div class="mb-4">
+                        {{ form_label(form.newPassword.first, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        <div class="input-group">
+                            {{ form_widget(form.newPassword.first, {'attr': {'class': 'form-control'}}) }}
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="first">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        {{ form_errors(form.newPassword.first) }}
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form_label(form.newPassword.second, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        <div class="input-group">
+                            {{ form_widget(form.newPassword.second, {'attr': {'class': 'form-control'}}) }}
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="second">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        {{ form_errors(form.newPassword.second) }}
+                    </div>
+                    
+                    <div class="password-requirements mb-4 p-3 bg-light rounded">
+                        <p class="mb-2 fw-bold"><i class="fas fa-shield-alt me-2"></i>Votre mot de passe doit contenir :</p>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-1 requirement-item" data-requirement="length">
+                                <i class="far fa-circle me-2"></i> Au moins 8 caractères
+                            </li>
+                            <li class="mb-1 requirement-item" data-requirement="uppercase">
+                                <i class="far fa-circle me-2"></i> Au moins une lettre majuscule
+                            </li>
+                            <li class="mb-1 requirement-item" data-requirement="lowercase">
+                                <i class="far fa-circle me-2"></i> Au moins une lettre minuscule
+                            </li>
+                            <li class="mb-1 requirement-item" data-requirement="number">
+                                <i class="far fa-circle me-2"></i> Au moins un chiffre
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-key me-2"></i>Changer mon mot de passe
+                        </button>
+                    </div>
+                    
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(button => {
+        button.addEventListener('click', function() {
+            const target = this.dataset.target;
+            const input = document.querySelector(`#${target === 'first' ? 
+                '{{ form.newPassword.first.vars.id }}' : 
+                '{{ form.newPassword.second.vars.id }}'}`);
+            
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            
+            const icon = this.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+    });
+    
+    // Password strength checker (optionnel)
+    const passwordInput = document.getElementById('{{ form.newPassword.first.vars.id }}');
+    if (passwordInput) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            
+            // Length check
+            updateRequirement('length', password.length >= 8);
+            
+            // Uppercase check
+            updateRequirement('uppercase', /[A-Z]/.test(password));
+            
+            // Lowercase check
+            updateRequirement('lowercase', /[a-z]/.test(password));
+            
+            // Number check
+            updateRequirement('number', /\d/.test(password));
+        });
+    }
+    
+    function updateRequirement(requirement, isValid) {
+        const element = document.querySelector(`.requirement-item[data-requirement="${requirement}"]`);
+        if (element) {
+            const icon = element.querySelector('i');
+            if (isValid) {
+                icon.className = 'fas fa-check-circle me-2 text-success';
+                element.classList.add('text-success');
+            } else {
+                icon.className = 'far fa-circle me-2';
+                element.classList.remove('text-success');
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

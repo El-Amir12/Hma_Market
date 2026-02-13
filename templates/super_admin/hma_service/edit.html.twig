@@ -1,0 +1,21 @@
+{# templates/super_admin/hma_service/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier HmaService{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ path('app_super_admin_hma_service_index') }}">HmaServices</a></li>
+                    <li class="breadcrumb-item active">Modifier</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    {% include 'super_admin/hma_service/_form.html.twig' with {'form': form, 'hma_service': hma_service} %}
+</div>
+{% endblock %}

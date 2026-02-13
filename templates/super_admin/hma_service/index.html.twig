@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HmaService index{% endblock %}
+
+{% block body %}
+    <h1>HmaService index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CompanyName</th>
+                <th>CompanyType</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+                <th>Logo</th>
+                <th>IsActive</th>
+                <th>TrialEndsAt</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>Country</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for hma_service in hma_services %}
+            <tr>
+                <td>{{ hma_service.id }}</td>
+                <td>{{ hma_service.companyName }}</td>
+                <td>{{ hma_service.companyType }}</td>
+                <td>{{ hma_service.phone }}</td>
+                <td>{{ hma_service.email }}</td>
+                <td>{{ hma_service.password }}</td>
+                <td>{{ hma_service.address }}</td>
+                <td>{{ hma_service.city }}</td>
+                <td>{{ hma_service.longitude }}</td>
+                <td>{{ hma_service.latitude }}</td>
+                <td>{{ hma_service.logo }}</td>
+                <td>{{ hma_service.isActive ? 'Yes' : 'No' }}</td>
+                <td>{{ hma_service.trialEndsAt ? hma_service.trialEndsAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ hma_service.createdAt ? hma_service.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ hma_service.updatedAt ? hma_service.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ hma_service.country }}</td>
+                <td>
+                    <a href="{{ path('app_super_admin_hma_service_show', {'id': hma_service.id}) }}">show</a>
+                    <a href="{{ path('app_super_admin_hma_service_edit', {'id': hma_service.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="17">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_super_admin_hma_service_new') }}">Create new</a>
+{% endblock %}

@@ -75,6 +75,10 @@ class Purchase
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $recu_achat = null;
 
+    #[ORM\ManyToOne(inversedBy: 'purchases')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?HmaService $hma_service_id = null;
+
     public function __construct()
     {
         $this->purchaseItems = new ArrayCollection();
@@ -455,6 +459,18 @@ class Purchase
     public function setRecuAchat(?string $recu_achat): static
     {
         $this->recu_achat = $recu_achat;
+
+        return $this;
+    }
+
+    public function getHmaServiceId(): ?HmaService
+    {
+        return $this->hma_service_id;
+    }
+
+    public function setHmaServiceId(?HmaService $hma_service_id): static
+    {
+        $this->hma_service_id = $hma_service_id;
 
         return $this;
     }

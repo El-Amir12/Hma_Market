@@ -53,6 +53,10 @@ class StockBatch
     #[ORM\OneToMany(targetEntity: StockMovement::class, mappedBy: 'stock_batch')]
     private Collection $stockMovements;
 
+    #[ORM\ManyToOne(inversedBy: 'stockBatches')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?HmaService $hma_service_id = null;
+
     public function __construct()
     {
         $this->stockMovements = new ArrayCollection();
@@ -210,6 +214,18 @@ class StockBatch
                 $stockMovement->setStockBatch(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getHmaServiceId(): ?HmaService
+    {
+        return $this->hma_service_id;
+    }
+
+    public function setHmaServiceId(?HmaService $hma_service_id): static
+    {
+        $this->hma_service_id = $hma_service_id;
 
         return $this;
     }

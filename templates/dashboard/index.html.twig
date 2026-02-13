@@ -3,26 +3,414 @@
 
 {% block title %}Tableau de bord - HMA Market{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Variables CSS */
+    :root {
+        --primary-color: #3498db;
+        --primary-light: #5dade2;
+        --primary-dark: #2980b9;
+        --success-color: #2ecc71;
+        --info-color: #3498db;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --secondary-color: #95a5a6;
+        --dark-color: #2c3e50;
+        
+        --card-shadow: 0 6px 15px rgba(52, 152, 219, 0.1);
+        --card-shadow-hover: 0 12px 25px rgba(52, 152, 219, 0.15);
+        --border-radius-lg: 12px;
+        --border-radius-sm: 8px;
+        --transition-smooth: all 0.3s ease;
+    }
+    
+    /* Layout fix */
+    .row {
+        margin-bottom: 1.5rem;
+    }
+    
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    /* Welcome Machine Animation - Style bleu clair */
+    .welcome-machine {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+        border-radius: var(--border-radius-lg);
+        padding: 2.5rem;
+        min-height: 200px;
+        position: relative;
+        overflow: hidden;
+        border: none;
+    }
+    
+    .welcome-machine::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .machine-text {
+        font-size: 1.8rem;
+        color: white;
+        margin: 0;
+        min-height: 60px;
+        line-height: 1.4;
+        font-weight: 500;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .machine-cursor {
+        display: inline-block;
+        width: 3px;
+        height: 2rem;
+        background-color: white;
+        margin-left: 5px;
+        animation: blink 1s infinite;
+        vertical-align: middle;
+    }
+    
+    @keyframes blink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+    }
+    
+    /* Unified Card Design */
+    .dashboard-card {
+        border: none;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--card-shadow);
+        transition: var(--transition-smooth);
+        height: 100%;
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        background: white;
+    }
+    
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-shadow-hover);
+    }
+    
+    .dashboard-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--card-color, var(--primary-color));
+    }
+    
+    .dashboard-card.primary-card::before { background: var(--primary-color); }
+    .dashboard-card.success-card::before { background: var(--success-color); }
+    .dashboard-card.info-card::before { background: var(--info-color); }
+    .dashboard-card.warning-card::before { background: var(--warning-color); }
+    .dashboard-card.danger-card::before { background: var(--danger-color); }
+    .dashboard-card.secondary-card::before { background: var(--secondary-color); }
+    .dashboard-card.dark-card::before { background: var(--dark-color); }
+    
+    .card-body {
+        padding: 1.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Card Content Layout */
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+    
+    .card-title {
+        color: var(--dark-color);
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+        opacity: 0.8;
+        font-weight: 600;
+    }
+    
+    .stat-number {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 0.5rem;
+        line-height: 1;
+    }
+    
+    .stat-subtitle {
+        color: var(--secondary-color);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .card-footer {
+        margin-top: auto;
+        padding-top: 1rem;
+        border-top: 1px solid #ecf0f1;
+    }
+    
+    /* Icon Styling */
+    .stat-icon-wrapper {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(52, 152, 219, 0.1);
+        color: var(--primary-color);
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    
+    .success-card .stat-icon-wrapper {
+        background: rgba(46, 204, 113, 0.1);
+        color: var(--success-color);
+    }
+    
+    .info-card .stat-icon-wrapper {
+        background: rgba(52, 152, 219, 0.1);
+        color: var(--info-color);
+    }
+    
+    .warning-card .stat-icon-wrapper {
+        background: rgba(243, 156, 18, 0.1);
+        color: var(--warning-color);
+    }
+    
+    .danger-card .stat-icon-wrapper {
+        background: rgba(231, 76, 60, 0.1);
+        color: var(--danger-color);
+    }
+    
+    .secondary-card .stat-icon-wrapper {
+        background: rgba(149, 165, 166, 0.1);
+        color: var(--secondary-color);
+    }
+    
+    .dark-card .stat-icon-wrapper {
+        background: rgba(44, 62, 80, 0.1);
+        color: var(--dark-color);
+    }
+    
+    /* Stock Movements Table */
+    .stock-movements-card {
+        height: 100%;
+    }
+    
+    .movement-item {
+        padding: 1rem;
+        border-bottom: 1px solid #ecf0f1;
+        transition: var(--transition-smooth);
+    }
+    
+    .movement-item:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .movement-item:last-child {
+        border-bottom: none;
+    }
+    
+    .movement-type {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .movement-type.in {
+        background-color: rgba(46, 204, 113, 0.1);
+        color: var(--success-color);
+    }
+    
+    .movement-type.out {
+        background-color: rgba(231, 76, 60, 0.1);
+        color: var(--danger-color);
+    }
+    
+    .product-name {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 0.25rem;
+    }
+    
+    .movement-date {
+        font-size: 0.85rem;
+        color: var(--secondary-color);
+    }
+    
+    .movement-quantity {
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+    
+    /* Company Info Styling */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .info-item {
+        background: #f8f9fa;
+        padding: 1.25rem;
+        border-radius: var(--border-radius-sm);
+        border-left: 4px solid var(--primary-color);
+        transition: var(--transition-smooth);
+    }
+    
+    .info-item:hover {
+        background: #edf2f7;
+        transform: translateY(-2px);
+    }
+    
+    .info-label {
+        font-size: 0.85rem;
+        color: var(--secondary-color);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    
+    .info-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--dark-color);
+        margin: 0;
+    }
+    
+    /* Quick Actions */
+    .quick-action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem 0.5rem;
+        border: 1px solid #e0e0e0;
+        border-radius: var(--border-radius-sm);
+        background: white;
+        color: var(--dark-color);
+        transition: var(--transition-smooth);
+        text-decoration: none;
+        height: 100%;
+        min-height: 120px;
+        cursor: pointer;
+    }
+    
+    .quick-action-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        text-decoration: none;
+    }
+    
+    .quick-action-btn i {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    /* Empty States */
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--secondary-color);
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stat-number {
+            font-size: 1.8rem;
+        }
+        
+        .welcome-machine {
+            padding: 1.5rem;
+        }
+        
+        .machine-text {
+            font-size: 1.4rem;
+        }
+        
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Status badges */
+    .badge-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .badge-active {
+        background-color: rgba(46, 204, 113, 0.1);
+        color: var(--success-color);
+    }
+    
+    .badge-trial {
+        background-color: rgba(243, 156, 18, 0.1);
+        color: var(--warning-color);
+    }
+    
+    .badge-expired {
+        background-color: rgba(231, 76, 60, 0.1);
+        color: var(--danger-color);
+    }
+</style>
+{% endblock %}
+
 {% block body %}
 <!-- Begin page -->
 <div id="layout-wrapper">
     
-    <!-- ============================================================== -->
-    <!-- Start right Content here -->
-    <!-- ============================================================== -->
     <div class="main-content">
-
         <div class="page-content">
             <div class="container-fluid">
 
-                <!-- Start Content -->
-                <div class="row">
+                <!-- Breadcrumb -->
+                <div class="row mb-4">
                     <div class="col-12">
-                        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 class="mb-sm-0">Tableau de Bord</h4>
+                        <div class="page-title-box">
+                            <h4 class="page-title">Tableau de Bord</h4>
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
-                                    <li class="breadcrumb-item"><a href="{{ path('app_home') }}">HMA Market</a></li>
+                                    <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
                                     <li class="breadcrumb-item active">Dashboard</li>
                                 </ol>
                             </div>
@@ -30,379 +418,284 @@
                     </div>
                 </div>
 
+                <!-- Welcome Machine -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="welcome-machine fade-in">
+                            <div class="machine-text" id="welcomeMessage">
+                                <!-- Texte généré par JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards - Taille uniforme -->
                 <div class="row">
-                    <!-- Welcome Card -->
-                    <div class="col-xl-12">
-                        <div class="card">
+                    <!-- Produits Totaux -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="dashboard-card primary-card fade-in" style="animation-delay: 0.1s">
                             <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col-md-6">
-                                        <div class="mb-4">
-                                            <h5 class="card-title mb-0">Bienvenue, {{ app.user.fullName }} ! 👋</h5>
-                                            <p class="text-muted">
-                                                {% if 'ROLE_ADMIN' in app.user.roles %}
-                                                    Administrateur
-                                                {% elseif 'ROLE_MANAGER' in app.user.roles %}
-                                                    Gestionnaire
-                                                {% elseif 'ROLE_STOCK_MANAGER' in app.user.roles %}
-                                                    Responsable Stock
-                                                {% elseif 'ROLE_CASHIER' in app.user.roles %}
-                                                    Caissier
-                                                {% endif %}
-                                            </p>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div>
-                                                    <p class="text-muted mb-2">Date</p>
-                                                    <h5>{{ "now"|date('d/m/Y') }}</h5>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div>
-                                                    <p class="text-muted mb-2">Heure</p>
-                                                    <h5>{{ "now"|date('H:i') }}</h5>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="card-header">
+                                    <div>
+                                        <h6 class="card-title">Produits Totaux</h6>
+                                        <div class="stat-number">0</div>
+                                        <div class="stat-subtitle">Articles en catalogue</div>
                                     </div>
-                                    
-                                    <div class="col-md-6">
-                                        <div class="mt-4 mt-md-0 text-center">
-                                            <i class="bx bx-store display-4 text-primary"></i>
-                                            <h4 class="mt-2">HMA MARKET</h4>
-                                            <p class="text-muted">Système de Gestion Complet</p>
-                                        </div>
+                                    <div class="stat-icon-wrapper">
+                                        <i class="bi bi-box-seam"></i>
                                     </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="#" class="text-primary text-decoration-none small">
+                                        <i class="bi bi-arrow-right me-1"></i>
+                                        Voir le catalogue
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ventes Totales -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="dashboard-card success-card fade-in" style="animation-delay: 0.2s">
+                            <div class="card-body">
+                                <div class="card-header">
+                                    <div>
+                                        <h6 class="card-title">Ventes Totales</h6>
+                                        <div class="stat-number">0</div>
+                                        <div class="stat-subtitle">Transactions complétées</div>
+                                    </div>
+                                    <div class="stat-icon-wrapper">
+                                        <i class="bi bi-cart-check"></i>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="#" class="text-success text-decoration-none small">
+                                        <i class="bi bi-arrow-right me-1"></i>
+                                        Voir les ventes
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chiffre d'Affaires -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="dashboard-card info-card fade-in" style="animation-delay: 0.3s">
+                            <div class="card-body">
+                                <div class="card-header">
+                                    <div>
+                                        <h6 class="card-title">Chiffre d'Affaires</h6>
+                                        <div class="stat-number">0 FCFA</div>
+                                        <div class="stat-subtitle">Total généré</div>
+                                    </div>
+                                    <div class="stat-icon-wrapper">
+                                        <i class="bi bi-currency-exchange"></i>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="#" class="text-info text-decoration-none small">
+                                        <i class="bi bi-arrow-right me-1"></i>
+                                        Voir rapports
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clients -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="dashboard-card warning-card fade-in" style="animation-delay: 0.4s">
+                            <div class="card-body">
+                                <div class="card-header">
+                                    <div>
+                                        <h6 class="card-title">Clients</h6>
+                                        <div class="stat-number">0</div>
+                                        <div class="stat-subtitle">Clients actifs</div>
+                                    </div>
+                                    <div class="stat-icon-wrapper">
+                                        <i class="bi bi-people"></i>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="#" class="text-warning text-decoration-none small">
+                                        <i class="bi bi-arrow-right me-1"></i>
+                                        Gérer clients
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Stats Cards (Style similaire à votre premier exemple) -->
-                <div class="row">
-                    <!-- Card 1: Produits totaux -->
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card card-animate bg-primary">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">Produits Totaux</p>
-                                    </div>
-                                    <div class="flex-shrink-0">
-                                        <h5 class="text-white fs-14 mb-0">
-                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> {{ stats.totalProducts }}
-                                        </h5>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h4 class="fs-22 fw-bold ff-secondary text-white mb-4">
-                                            <span class="counter-value" data-target="{{ stats.totalProducts }}">{{ stats.totalProducts }}</span> Produits
-                                        </h4>
-                                        <a href="#" class="text-decoration-underline text-white-50">Voir le catalogue</a>
-                                    </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-soft-light rounded fs-3">
-                                            <i class="bx bx-package text-white"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-
-                    <!-- Card 2: Ventes Totales -->
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card card-animate bg-success">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">Ventes Totales</p>
-                                    </div>
-                                    <div class="flex-shrink-0">
-                                        <h5 class="text-white fs-14 mb-0">
-                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> {{ stats.totalSales }}
-                                        </h5>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h4 class="fs-22 fw-bold ff-secondary text-white mb-4">
-                                            <span class="counter-value" data-target="{{ stats.totalSales }}">{{ stats.totalSales }}</span> Transactions
-                                        </h4>
-                                        <a href="#" class="text-decoration-underline text-white-50">Voir les ventes</a>
-                                    </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-soft-light rounded fs-3">
-                                            <i class="bx bx-cart text-white"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-
-                    <!-- Card 3: Chiffre d'Affaires -->
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card card-animate bg-info">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">Chiffre d'Affaires</p>
-                                    </div>
-                                    <div class="flex-shrink-0">
-                                        <h5 class="text-white fs-14 mb-0">
-                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> {{ (stats.totalRevenue / 1000000)|number_format(1) }}M
-                                        </h5>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h4 class="fs-22 fw-bold ff-secondary text-white mb-4">
-                                            <span class="counter-value" data-target="{{ stats.totalRevenue }}">{{ stats.totalRevenue|number_format(0, ',', ' ') }}</span> FCFA
-                                        </h4>
-                                        <a href="#" class="text-decoration-underline text-white-50">Voir rapports</a>
-                                    </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-soft-light rounded fs-3">
-                                            <i class="bx bx-dollar-circle text-white"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-
-                    <!-- Card 4: Clients -->
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card card-animate bg-warning">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">Clients</p>
-                                    </div>
-                                    <div class="flex-shrink-0">
-                                        <h5 class="text-white fs-14 mb-0">
-                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> {{ stats.totalCustomers }}
-                                        </h5>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h4 class="fs-22 fw-bold ff-secondary text-white mb-4">
-                                            <span class="counter-value" data-target="{{ stats.totalCustomers }}">{{ stats.totalCustomers }}</span> Clients
-                                        </h4>
-                                        <a href="#" class="text-decoration-underline text-white-50">Voir clients</a>
-                                    </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-soft-light rounded fs-3">
-                                            <i class="bx bx-user-circle text-white"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-                </div>
-                <!-- end row -->
-
-                <!-- Deuxième ligne de cartes selon le rôle -->
+                <!-- Deuxième ligne de stats conditionnelles -->
                 <div class="row">
                     {% if is_granted('ROLE_CASHIER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
-                    <!-- Card 5: Ventes du jour -->
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card card-animate bg-primary">
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="dashboard-card dark-card fade-in" style="animation-delay: 0.2s">
                             <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">Ventes Aujourd'hui</p>
+                                <div class="card-header">
+                                    <div>
+                                        <h6 class="card-title">Ventes Aujourd'hui</h6>
+                                        <div class="stat-number">0</div>
+                                        <div class="stat-subtitle">0 FCFA générés</div>
                                     </div>
-                                    <div class="flex-shrink-0">
-                                        <h5 class="text-white fs-14 mb-0">
-                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> {{ dashboardData.todaySales.count }}
-                                        </h5>
+                                    <div class="stat-icon-wrapper">
+                                        <i class="bi bi-cash-stack"></i>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h4 class="fs-22 fw-bold ff-secondary text-white mb-4">
-                                            <span class="counter-value" data-target="{{ dashboardData.todaySales.count }}">{{ dashboardData.todaySales.count }}</span> Ventes
-                                        </h4>
-                                        <span class="text-white-50">{{ dashboardData.todaySales.amount|number_format(0, ',', ' ') }} FCFA</span>
-                                    </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-soft-light rounded fs-3">
-                                            <i class="bx bx-money text-white"></i>
-                                        </span>
-                                    </div>
+                                <div class="card-footer">
+                                    <span class="badge bg-light text-dark">En attente: 0</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- end col -->
                     {% endif %}
 
                     {% if is_granted('ROLE_STOCK_MANAGER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
-                    <!-- Card 6: Alertes Stock -->
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card card-animate bg-danger">
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="dashboard-card danger-card fade-in" style="animation-delay: 0.3s">
                             <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">Stock Faible</p>
+                                <div class="card-header">
+                                    <div>
+                                        <h6 class="card-title">Stock Faible</h6>
+                                        <div class="stat-number">0</div>
+                                        <div class="stat-subtitle">Produits à réapprovisionner</div>
                                     </div>
-                                    <div class="flex-shrink-0">
-                                        <h5 class="text-white fs-14 mb-0">
-                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> {{ stats.lowStockProducts }}
-                                        </h5>
+                                    <div class="stat-icon-wrapper">
+                                        <i class="bi bi-exclamation-triangle"></i>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h4 class="fs-22 fw-bold ff-secondary text-white mb-4">
-                                            <span class="counter-value" data-target="{{ stats.lowStockProducts }}">{{ stats.lowStockProducts }}</span> Produits
-                                        </h4>
-                                        <a href="#" class="text-decoration-underline text-white-50">Réapprovisionner</a>
-                                    </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-soft-light rounded fs-3">
-                                            <i class="bx bx-alarm text-white"></i>
-                                        </span>
-                                    </div>
+                                <div class="card-footer">
+                                    <a href="#" class="text-danger text-decoration-none small">
+                                        <i class="bi bi-arrow-right me-1"></i>
+                                        Réapprovisionner
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- end col -->
                     {% endif %}
 
                     {% if is_granted('ROLE_ADMIN') %}
-                    <!-- Card 7: Utilisateurs -->
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card card-animate bg-secondary">
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="dashboard-card secondary-card fade-in" style="animation-delay: 0.4s">
                             <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">Utilisateurs</p>
+                                <div class="card-header">
+                                    <div>
+                                        <h6 class="card-title">Utilisateurs</h6>
+                                        <div class="stat-number">0</div>
+                                        <div class="stat-subtitle">Comptes actifs</div>
                                     </div>
-                                    <div class="flex-shrink-0">
-                                        <h5 class="text-white fs-14 mb-0">
-                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> {{ stats.totalUsers }}
-                                        </h5>
+                                    <div class="stat-icon-wrapper">
+                                        <i class="bi bi-person-plus"></i>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h4 class="fs-22 fw-bold ff-secondary text-white mb-4">
-                                            <span class="counter-value" data-target="{{ stats.totalUsers }}">{{ stats.totalUsers }}</span> Utilisateurs
-                                        </h4>
-                                        <a href="{{ path('app_user_index') }}" class="text-decoration-underline text-white-50">Gérer</a>
-                                    </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-soft-light rounded fs-3">
-                                            <i class="bx bx-user-plus text-white"></i>
-                                        </span>
-                                    </div>
+                                <div class="card-footer">
+                                    <a href="{{ path('app_user_index') }}" class="text-secondary text-decoration-none small">
+                                        <i class="bi bi-arrow-right me-1"></i>
+                                        Gérer utilisateurs
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- end col -->
                     {% endif %}
 
-                    <!-- Card 8: Commandes en attente -->
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card card-animate bg-info">
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="dashboard-card primary-card fade-in" style="animation-delay: 0.5s">
                             <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">En Attente</p>
+                                <div class="card-header">
+                                    <div>
+                                        <h6 class="card-title">En Attente</h6>
+                                        <div class="stat-number">0</div>
+                                        <div class="stat-subtitle">Commandes à traiter</div>
                                     </div>
-                                    <div class="flex-shrink-0">
-                                        <h5 class="text-white fs-14 mb-0">
-                                            <i class="ri-arrow-right-down-line fs-13 align-middle"></i> {{ stats.pendingOrders }}
-                                        </h5>
+                                    <div class="stat-icon-wrapper">
+                                        <i class="bi bi-clock-history"></i>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h4 class="fs-22 fw-bold ff-secondary text-white mb-4">
-                                            <span class="counter-value" data-target="{{ stats.pendingOrders }}">{{ stats.pendingOrders }}</span> Commandes
-                                        </h4>
-                                        <a href="#" class="text-decoration-underline text-white-50">Traiter</a>
-                                    </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-soft-light rounded fs-3">
-                                            <i class="bx bx-time-five text-white"></i>
-                                        </span>
+                                <div class="card-footer">
+                                    <a href="#" class="text-primary text-decoration-none small">
+                                        <i class="bi bi-arrow-right me-1"></i>
+                                        Traiter maintenant
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stock Movements & Quick Actions Row -->
+                <div class="row">
+                    <!-- Stock Movements -->
+                    <div class="col-lg-8 mb-4">
+                        <div class="dashboard-card stock-movements-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="card-title mb-0">
+                                        <i class="bi bi-arrow-left-right text-primary me-2"></i>
+                                        Derniers Mouvements de Stock
+                                    </h5>
+                                    <a href="#" class="text-primary text-decoration-none small">
+                                        Voir tout <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                                
+                                <div id="stockMovements">
+                                    <!-- Les mouvements seront chargés ici -->
+                                    <div class="empty-state">
+                                        <i class="bi bi-arrow-left-right"></i>
+                                        <p class="mb-0">Aucun mouvement de stock récent</p>
+                                        <small class="text-muted">Les mouvements apparaîtront ici</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- end col -->
-                </div>
-                <!-- end row -->
 
-                <!-- Quick Actions Section -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
+                    <!-- Quick Actions -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="dashboard-card">
                             <div class="card-body">
-                                <h4 class="card-title mb-4">Actions Rapides</h4>
+                                <h5 class="card-title mb-3">
+                                    <i class="bi bi-lightning text-warning me-2"></i>
+                                    Actions Rapides
+                                </h5>
                                 
-                                <div class="row">
+                                <div class="row g-3">
                                     {% if is_granted('ROLE_CASHIER') %}
-                                    <div class="col-xl-3 col-md-4 col-sm-6">
-                                        <a href="#" class="btn btn-primary btn-lg w-100 mb-3">
-                                            <i class="bx bx-cart-add me-2"></i> Nouvelle Vente
-                                        </a>
+                                    <div class="col-12">
+                                        <button class="quick-action-btn w-100">
+                                            <i class="bi bi-cart-plus text-primary"></i>
+                                            <span class="fw-medium">Nouvelle Vente</span>
+                                        </button>
                                     </div>
                                     {% endif %}
                                     
                                     {% if is_granted('ROLE_MANAGER') or is_granted('ROLE_ADMIN') %}
-                                    <div class="col-xl-3 col-md-4 col-sm-6">
-                                        <a href="#" class="btn btn-success btn-lg w-100 mb-3">
-                                            <i class="bx bx-plus-circle me-2"></i> Ajouter Produit
-                                        </a>
+                                    <div class="col-12">
+                                        <button class="quick-action-btn w-100">
+                                            <i class="bi bi-plus-circle text-success"></i>
+                                            <span class="fw-medium">Ajouter Produit</span>
+                                        </button>
                                     </div>
                                     {% endif %}
                                     
                                     {% if is_granted('ROLE_STOCK_MANAGER') %}
-                                    <div class="col-xl-3 col-md-4 col-sm-6">
-                                        <a href="#" class="btn btn-warning btn-lg w-100 mb-3">
-                                            <i class="bx bx-package me-2"></i> Inventaire
-                                        </a>
+                                    <div class="col-12">
+                                        <button class="quick-action-btn w-100">
+                                            <i class="bi bi-boxes text-warning"></i>
+                                            <span class="fw-medium">Gérer Stock</span>
+                                        </button>
                                     </div>
                                     {% endif %}
                                     
                                     {% if is_granted('ROLE_ADMIN') %}
-                                    <div class="col-xl-3 col-md-4 col-sm-6">
-                                        <a href="{{ path('app_user_new') }}" class="btn btn-info btn-lg w-100 mb-3">
-                                            <i class="bx bx-user-plus me-2"></i> Nouvel Utilisateur
-                                        </a>
-                                    </div>
-                                    {% endif %}
-                                    
-                                    {% if is_granted('ROLE_STOCK_MANAGER') or is_granted('ROLE_MANAGER') %}
-                                    <div class="col-xl-3 col-md-4 col-sm-6">
-                                        <a href="#" class="btn btn-danger btn-lg w-100 mb-3">
-                                            <i class="bx bx-chart me-2"></i> Rapports
-                                        </a>
-                                    </div>
-                                    {% endif %}
-                                    
-                                    {% if is_granted('ROLE_MANAGER') or is_granted('ROLE_ADMIN') %}
-                                    <div class="col-xl-3 col-md-4 col-sm-6">
-                                        <a href="#" class="btn btn-secondary btn-lg w-100 mb-3">
-                                            <i class="bx bx-cog me-2"></i> Paramètres
+                                    <div class="col-12">
+                                        <a href="{{ path('app_user_new') }}" class="quick-action-btn w-100">
+                                            <i class="bi bi-person-plus text-info"></i>
+                                            <span class="fw-medium">Nouvel Utilisateur</span>
                                         </a>
                                     </div>
                                     {% endif %}
@@ -411,86 +704,376 @@
                         </div>
                     </div>
                 </div>
-                <!-- end row -->
+
+                <!-- Company Information (Visible uniquement pour les administrateurs/propriétaires HMA) -->
+                {% if app.user.isHmaOwner is defined and app.user.isHmaOwner and app.user.hmaServiceId is not null %}
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="dashboard-card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">
+                                    <i class="bi bi-building text-primary me-2"></i>
+                                    Informations de l'Entreprise
+                                </h5>
+                                
+                                {% set hmaService = app.user.hmaServiceId %}
+                                
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="info-label">Nom de l'entreprise</div>
+                                        <p class="info-value">
+                                            {{ hmaService.companyName ?? 'Non spécifié' }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-label">Email de contact</div>
+                                        <p class="info-value">
+                                            {{ hmaService.email ?? app.user.email }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-label">Téléphone</div>
+                                        <p class="info-value">
+                                            {{ hmaService.phone ?? 'Non spécifié' }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-label">Numéro d'abonnement</div>
+                                        <p class="info-value">
+                                            {{ hmaService.subscriptionNumber ?? 'N/A' }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-label">Adresse</div>
+                                        <p class="info-value">
+                                            {{ hmaService.address ?? 'Non spécifiée' }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-label">Ville</div>
+                                        <p class="info-value">
+                                            {{ hmaService.city ?? 'Non spécifiée' }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-label">Pays</div>
+                                        <p class="info-value">
+                                            {{ hmaService.country ?? 'Non spécifié' }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-label">Période d'essai</div>
+                                        <p class="info-value">
+                                            {% if hmaService.trialEndsAt %}
+                                                {% set now = date() %}
+                                                {% set trialEnds = hmaService.trialEndsAt %}
+                                                {% set daysRemaining = trialEnds.diff(now).days %}
+                                                
+                                                {% if daysRemaining > 0 %}
+                                                    <span class="badge-status badge-trial">
+                                                        <i class="bi bi-clock me-1"></i>
+                                                        Jusqu'au {{ trialEnds|date('d/m/Y') }} ({{ daysRemaining }} jours restants)
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge-status badge-expired">
+                                                        <i class="bi bi-x-circle me-1"></i>
+                                                        Terminée le {{ trialEnds|date('d/m/Y') }}
+                                                    </span>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="badge-status badge-active">
+                                                    <i class="bi bi-check-circle me-1"></i>
+                                                    Abonnement actif
+                                                </span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-label">Statut</div>
+                                        <p class="info-value">
+                                            {% if hmaService.isActive %}
+                                                <span class="badge-status badge-active">
+                                                    <i class="bi bi-check-circle me-1"></i>
+                                                    Actif
+                                                </span>
+                                            {% else %}
+                                                <span class="badge-status badge-expired">
+                                                    <i class="bi bi-x-circle me-1"></i>
+                                                    Inactif
+                                                </span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-label">Date de création</div>
+                                        <p class="info-value">
+                                            {% if hmaService.createdAt %}
+                                                {{ hmaService.createdAt|date('d/m/Y à H:i') }}
+                                            {% else %}
+                                                Non disponible
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-label">Dernière mise à jour</div>
+                                        <p class="info-value">
+                                            {% if hmaService.updatedAt %}
+                                                {{ hmaService.updatedAt|date('d/m/Y à H:i') }}
+                                            {% else %}
+                                                Non disponible
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 pt-3 border-top">
+                                    <a href="{{ path('app_dashboard_hmaservice_edit') }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-pencil me-1"></i>
+                                        Modifier les informations
+                                    </a>
+                                    <a href="{{ path('app_dashboard_hmaservice_details') }}" class="btn btn-outline-info btn-sm ms-2">
+                                        <i class="bi bi-eye me-1"></i>
+                                        Voir les détails
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
 
             </div>
             <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
-
     </div>
     <!-- end main content-->
-
 </div>
 <!-- END layout-wrapper -->
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
-<!-- Counter Animation -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Animation des compteurs
-        const counters = document.querySelectorAll('.counter-value');
-        const speed = 200;
+        // Welcome Machine Animation
+        const welcomeElement = document.getElementById('welcomeMessage');
+        const fullName = "{{ app.user.fullName ?? app.user.companyName ?? 'Utilisateur' }}";
+        const welcomeText = `Welcome ${fullName} ! 👋`;
+        let index = 0;
 
-        counters.forEach(counter => {
-            const target = +counter.getAttribute('data-target');
-            const count = +counter.innerText.replace(/\s/g, '');
-            const increment = target / speed;
+        function typeWelcomeText() {
+            if (index < welcomeText.length) {
+                welcomeElement.innerHTML = welcomeText.substring(0, index + 1) + 
+                    '<span class="machine-cursor"></span>';
+                index++;
+                setTimeout(typeWelcomeText, 100);
+            } else {
+                // Keep cursor blinking for a while, then remove it
+                setTimeout(() => {
+                    welcomeElement.innerHTML = welcomeText;
+                }, 2000);
+            }
+        }
 
-            const updateCount = () => {
-                if (count < target) {
-                    const newValue = Math.ceil(count + increment);
-                    counter.innerText = newValue.toLocaleString();
-                    setTimeout(updateCount, 1);
-                } else {
-                    counter.innerText = target.toLocaleString();
+        // Start typing animation after a short delay
+        setTimeout(typeWelcomeText, 500);
+
+        // Load Stock Movements (simulation)
+        function loadStockMovements() {
+            const movementsContainer = document.getElementById('stockMovements');
+            
+            // Simulation de données - À remplacer par une requête AJAX réelle
+            const sampleMovements = [
+                {
+                    id: 1,
+                    product: "Samsung Galaxy S23",
+                    type: "in",
+                    quantity: 50,
+                    date: new Date().toISOString(),
+                    reference: "IN-2024-001"
+                },
+                {
+                    id: 2,
+                    product: "iPhone 15 Pro",
+                    type: "out",
+                    quantity: 15,
+                    date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+                    reference: "OUT-2024-015"
+                },
+                {
+                    id: 3,
+                    product: "MacBook Air M2",
+                    type: "in",
+                    quantity: 25,
+                    date: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+                    reference: "IN-2024-002"
+                },
+                {
+                    id: 4,
+                    product: "Dell XPS 13",
+                    type: "out",
+                    quantity: 8,
+                    date: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
+                    reference: "OUT-2024-014"
                 }
-            };
+            ];
 
-            updateCount();
-        });
+            if (sampleMovements.length > 0) {
+                let html = '';
+                sampleMovements.forEach(movement => {
+                    const date = new Date(movement.date);
+                    const formattedDate = date.toLocaleDateString('fr-FR', { 
+                        day: '2-digit', 
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    html += `
+                        <div class="movement-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <span class="movement-type ${movement.type} me-2">
+                                            <i class="bi bi-${movement.type === 'in' ? 'arrow-down-left' : 'arrow-up-right'} me-1"></i>
+                                            ${movement.type === 'in' ? 'Entrée' : 'Sortie'}
+                                        </span>
+                                        <small class="text-muted">${movement.reference}</small>
+                                    </div>
+                                    <div class="product-name">${movement.product}</div>
+                                    <div class="movement-date">
+                                        <i class="bi bi-calendar me-1"></i>
+                                        ${formattedDate}
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="movement-quantity ${movement.type === 'in' ? 'text-success' : 'text-danger'}">
+                                        ${movement.type === 'in' ? '+' : '-'}${movement.quantity}
+                                    </div>
+                                    <small class="text-muted">unités</small>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                movementsContainer.innerHTML = html;
+            }
+        }
 
-        // Animation des cartes au scroll
+        // Load movements after a delay
+        setTimeout(loadStockMovements, 1500);
+
+        // Counter animations
+        const counters = document.querySelectorAll('.stat-number');
         const observerOptions = {
-            threshold: 0.1
+            threshold: 0.5,
+            rootMargin: '0px 0px -100px 0px'
         };
 
-        const observer = new IntersectionObserver((entries) => {
+        const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                    const element = entry.target;
+                    const target = parseInt(element.textContent) || 0;
+                    if (target > 0) {
+                        animateCounter(element, target);
+                    }
+                    counterObserver.unobserve(element);
                 }
             });
         }, observerOptions);
 
-        // Observer les cartes
-        document.querySelectorAll('.card-animate').forEach(card => {
-            observer.observe(card);
+        counters.forEach(counter => {
+            if (parseInt(counter.textContent) > 0) {
+                counterObserver.observe(counter);
+            }
+        });
+
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 100;
+            const duration = 1500;
+            const interval = duration / (target / increment);
+            
+            const timer = setInterval(() => {
+                current = Math.ceil(current + increment);
+                element.textContent = current.toLocaleString('fr-FR');
+                
+                if (current >= target) {
+                    element.textContent = target.toLocaleString('fr-FR');
+                    clearInterval(timer);
+                }
+            }, interval);
+        }
+
+        // Quick Actions Handlers
+        document.querySelectorAll('.quick-action-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const action = this.querySelector('span').textContent;
+                
+                // Simulation d'action - À remplacer par des vrais handlers
+                console.log(`Action rapide: ${action}`);
+                
+                // Feedback visuel
+                const originalBg = this.style.backgroundColor;
+                const originalColor = this.style.color;
+                this.style.backgroundColor = '#e8f4ff';
+                this.style.color = '#3498db';
+                
+                setTimeout(() => {
+                    this.style.backgroundColor = originalBg;
+                    this.style.color = originalColor;
+                }, 300);
+            });
+        });
+
+        // Update date/time
+        function updateDateTime() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('fr-FR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const timeStr = now.toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Optionnel: Mettre à jour un élément spécifique si nécessaire
+            const timeElements = document.querySelectorAll('.current-time');
+            timeElements.forEach(el => {
+                el.textContent = `${dateStr} - ${timeStr}`;
+            });
+        }
+
+        // Update time initially and every minute
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
+        
+        // Card hover effects
+        const cards = document.querySelectorAll('.dashboard-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
         });
     });
 </script>
-
-<!-- Add CSS animations -->
-<style>
-    .card-animate {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .card-animate:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
-    
-    /* Animation pour les compteurs */
-    @keyframes countUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .counter-value {
-        animation: countUp 0.5s ease-out;
-    }
-</style>
 {% endblock %}

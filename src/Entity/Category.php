@@ -65,6 +65,10 @@ class Category
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'categories')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?HmaService $hma_service_id = null;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
@@ -382,5 +386,17 @@ class Category
         }
         
         return $slug;
+    }
+
+    public function getHmaServiceId(): ?HmaService
+    {
+        return $this->hma_service_id;
+    }
+
+    public function setHmaServiceId(?HmaService $hma_service_id): static
+    {
+        $this->hma_service_id = $hma_service_id;
+
+        return $this;
     }
 }

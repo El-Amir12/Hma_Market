@@ -1,7 +1,42 @@
+# config/routes.yaml
 controllers:
     resource: ../src/Controller/
     type: attribute
 
-login_check:
-    path: /login_check
+# Route pour la page d'accueil
+app_home:
+    path: /
+    controller: App\Controller\HomeController::index
+    methods: [GET]
 
+# Route pour le login
+app_login:
+    path: /login
+    controller: App\Controller\RegistrationController::login
+    methods: [GET, POST]
+
+# Route pour l'inscription
+app_register:
+    path: /register
+    controller: App\Controller\RegistrationController::register
+    methods: [GET, POST]
+
+# Route pour la première connexion
+app_first_login_info:
+    path: /first-login-info
+    controller: App\Controller\FirstLoginController::index
+    methods: [GET]
+
+app_first_login_complete:
+    path: /first-login-complete
+    controller: App\Controller\FirstLoginController::complete
+    methods: [GET]
+
+# Route pour le dashboard
+app_dashboard:
+    path: /dashboard
+    controller: App\Controller\DashboardController::index
+    methods: [GET]
+
+# Route pour le profil de l'entreprise (gérée par annotations)
+# app_dashboard_hmaservice_profile est automatiquement détecté via annotations

@@ -46,6 +46,10 @@ class StockMovement
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'stockMovements')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?HmaService $hma_service = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -167,6 +171,18 @@ class StockMovement
     public function setReferenceId(?int $reference_id): static
     {
         $this->reference_id = $reference_id;
+
+        return $this;
+    }
+
+    public function getHmaService(): ?HmaService
+    {
+        return $this->hma_service;
+    }
+
+    public function setHmaService(?HmaService $hma_service): static
+    {
+        $this->hma_service = $hma_service;
 
         return $this;
     }

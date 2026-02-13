@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -48,8 +49,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTime $created_at = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)] 
     private ?\DateTime $updated_at = null;
+
+    #[ORM\Column]
+    private bool $passwordChanged = false;
 
     /**
      * @var Collection<int, Product>
@@ -83,6 +87,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?HmaService $hma_service_id = null;
+
+    #[ORM\Column]
+    private ?bool $is_super_admin = null;
+
+    #[ORM\Column]
+    private ?bool $is_hma_owner = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTime $employment_date = null;
 
     public function __construct()
     {
@@ -215,10 +231,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTime $updated_at): static
+    public function setUpdatedAt(?\DateTime $updated_at): static // AJOUTER ? devant \DateTime
     {
         $this->updated_at = $updated_at;
 
+        return $this;
+    }
+
+    public function isPasswordChanged(): bool
+    {
+        return $this->passwordChanged;
+    }
+
+    public function setPasswordChanged(bool $passwordChanged): static
+    {
+        $this->passwordChanged = $passwordChanged;
         return $this;
     }
 
@@ -420,6 +447,84 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhoto(?string $photo): static
     {
         $this->photo = $photo;
+
+        return $this;
+    }
+
+    public function getHmaServiceId(): ?HmaService
+    {
+        return $this->hma_service_id;
+    }
+
+    public function setHmaServiceId(?HmaService $hma_service_id): static
+    {
+        $this->hma_service_id = $hma_service_id;
+
+        return $this;
+    }
+
+    // =============================================
+    // ✅ 3. AJOUTEZ CES 3 NOUVELLES MÉTHODES
+    // =============================================
+    
+    /**
+     * Retourne l'objet HmaService associé
+     * Nom plus clair que getHmaServiceId()
+     */
+    public function getHmaService(): ?HmaService
+    {
+        return $this->hma_service_id;
+    }
+    
+    /**
+     * Retourne l'ID numérique du HmaService associé
+     * Utile pour les requêtes SQL directes
+     */
+    public function getHmaServiceIdValue(): ?int
+    {
+        return $this->hma_service_id?->getId();
+    }
+    
+    /**
+     * Vérifie si l'utilisateur est associé à un HmaService
+     */
+    public function hasHmaService(): bool
+    {
+        return $this->hma_service_id !== null;
+    }
+
+    public function isSuperAdmin(): ?bool
+    {
+        return $this->is_super_admin;
+    }
+
+    public function setIsSuperAdmin(bool $is_super_admin): static
+    {
+        $this->is_super_admin = $is_super_admin;
+
+        return $this;
+    }
+
+    public function isHmaOwner(): ?bool
+    {
+        return $this->is_hma_owner;
+    }
+
+    public function setIsHmaOwner(bool $is_hma_owner): static
+    {
+        $this->is_hma_owner = $is_hma_owner;
+
+        return $this;
+    }
+
+    public function getEmploymentDate(): ?\DateTime
+    {
+        return $this->employment_date;
+    }
+
+    public function setEmploymentDate(?\DateTime $employment_date): static
+    {
+        $this->employment_date = $employment_date;
 
         return $this;
     }

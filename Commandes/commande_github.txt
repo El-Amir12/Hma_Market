@@ -25,9 +25,11 @@ git branch
 1-git add . * Ajoute les fichiers modifiés *
 2-git add src/Entity/User.php  * Ajoute un fichier spécifique *
 3-git commit -m "Description des changements" *Faire le commit*
-# Comment push vers la bonne branche 
+# Comment pusher vers la bonne branche 
 1-git branch --show-current * Affiche la branche actuelle pour etre sure *
 2-git push origin main * Si on est sur le repository principale *
 3-git push origin hma-market-saas * Si on est sur la branche *
 4- git push * Pousse sur la branche actuelle *
+# Testez la connexion
+php bin/console doctrine:query:sql "SELECT COUNT(*) FROM product"
 

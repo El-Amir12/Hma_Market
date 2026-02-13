@@ -79,7 +79,7 @@ class MenuBuilder
             ],
             [
                 'type' => 'link',
-                'route' => 'app_home',
+                'route' => 'app_dashboard',
                 'label' => 'Dashboard',
                 'icon' => 'fas fa-home'
             ]

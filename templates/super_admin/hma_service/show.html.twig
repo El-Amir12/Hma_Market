@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HmaService{% endblock %}
+
+{% block body %}
+    <h1>HmaService</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ hma_service.id }}</td>
+            </tr>
+            <tr>
+                <th>CompanyName</th>
+                <td>{{ hma_service.companyName }}</td>
+            </tr>
+            <tr>
+                <th>CompanyType</th>
+                <td>{{ hma_service.companyType }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ hma_service.phone }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ hma_service.email }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ hma_service.password }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ hma_service.address }}</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>{{ hma_service.city }}</td>
+            </tr>
+            <tr>
+                <th>Longitude</th>
+                <td>{{ hma_service.longitude }}</td>
+            </tr>
+            <tr>
+                <th>Latitude</th>
+                <td>{{ hma_service.latitude }}</td>
+            </tr>
+            <tr>
+                <th>Logo</th>
+                <td>{{ hma_service.logo }}</td>
+            </tr>
+            <tr>
+                <th>IsActive</th>
+                <td>{{ hma_service.isActive ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>TrialEndsAt</th>
+                <td>{{ hma_service.trialEndsAt ? hma_service.trialEndsAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ hma_service.createdAt ? hma_service.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ hma_service.updatedAt ? hma_service.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ hma_service.country }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_super_admin_hma_service_index') }}">back to list</a>
+
+    <a href="{{ path('app_super_admin_hma_service_edit', {'id': hma_service.id}) }}">edit</a>
+
+    {{ include('super_admin/hma_service/_delete_form.html.twig') }}
+{% endblock %}

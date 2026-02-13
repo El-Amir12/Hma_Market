@@ -45,6 +45,10 @@ class Supplier
     #[ORM\OneToMany(targetEntity: Purchase::class, mappedBy: 'supplier')]
     private Collection $purchases;
 
+    #[ORM\ManyToOne(inversedBy: 'suppliers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?HmaService $hma_service_id = null;
+
     public function __construct()
     {
         $this->purchases = new ArrayCollection();
@@ -177,6 +181,18 @@ class Supplier
                 $purchase->setSupplier(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getHmaServiceId(): ?HmaService
+    {
+        return $this->hma_service_id;
+    }
+
+    public function setHmaServiceId(?HmaService $hma_service_id): static
+    {
+        $this->hma_service_id = $hma_service_id;
 
         return $this;
     }

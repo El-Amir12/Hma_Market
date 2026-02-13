@@ -1,1354 +1,1482 @@
 Créé un controller dans un dossier spécifique 
 php bin/console make:controller "Admin\CategoryController"
 
-// Product entity 
+Les Classes ajoutées à mon projet Hma_Market
+# Sur la branche hma-market-saas
+git checkout hma-market-saas
+
+# 1. HmaService
+php bin/console make:entity HmaService
+
+# Champs à ajouter :
+# companyName (string, 255) - not null
+# companyType (string, 50) - not null
+# phone (string, 30) - nullable
+# email (string, 180) - not null, unique
+# password (string, 255) - not null
+# address (text) - nullable
+# city (string, 100) - nullable
+# country (string, 100) - default: "Bénin"
+# longitude (decimal, precision: 10, scale: 8) - nullable
+# latitude (decimal, precision: 11, scale: 8) - nullable
+# logo (string, 255) - nullable
+# isActive (boolean) - default: false
+# trialEndsAt (datetime) - nullable
+# createdAt (datetime_immutable)
+# updatedAt (datetime_immutable)
+
+# 2. SubscriptionPlan
+php bin/console make:entity SubscriptionPlan
+
+# Champs :
+# name (string, 50) - not null, unique
+# displayName (string, 100) - not null
+# priceMonthlyFcfa (decimal, precision: 10, scale: 2) - not null
+# priceYearlyFcfa (decimal, precision: 10, scale: 2) - not null
+# maxEmployeesPerRole (integer) - nullable
+# maxDailySales (integer) - nullable
+# maxProducts (integer) - nullable
+# isUnlimited (boolean) - default: false
+# description (text) - nullable
+# isActive (boolean) - default: true
+# createdAt (datetime_immutable)
+
+# 3. Subscription
+php bin/console make:entity Subscription
+
+# Champs :
+# billingPeriod (string, 10) - not null
+# status (string, 20) - default: "trial"
+# startsAt (datetime_immutable) - not null
+# endsAt (datetime_immutable) - not null
+# trialEndsAt (datetime_immutable) - nullable
+# paymentMethod (string, 50) - nullable
+# transactionId (string, 255) - nullable
+# notes (text) - nullable
+# createdAt (datetime_immutable)
+# updatedAt (datetime_immutable)
+
+# 4. DailyUsage
+php bin/console make:entity DailyUsage
+
+# Champs :
+# date (date) - not null
+# salesCount (integer) - default: 0
+# createdAt (datetime_immutable)
+
+# 5. EmployeeRoleCount
+php bin/console make:entity EmployeeRoleCount
+
+# Champs :
+# role (string, 50) - not null
+# currentCount (integer) - default: 0
+# createdAt (datetime_immutable)
+# updatedAt (datetime_immutable)
+
+# 6. Payment
+php bin/console make:entity Payment
+
+# Champs :
+# amountFcfa (decimal, precision: 10, scale: 2) - not null
+# paymentMethod (string, 50) - not null
+# transactionId (string, 255) - nullable
+# status (string, 20) - default: "pending"
+# paymentDate (datetime) - nullable
+# invoiceNumber (string, 100) - nullable
+# notes (text) - nullable
+# createdAt (datetime_immutable)
+
+# 7. Invoice
+php bin/console make:entity Invoice
+
+# Champs :
+# invoiceNumber (string, 50) - not null, unique
+# amountFcfa (decimal, precision: 10, scale: 2) - not null
+# periodStart (date) - not null
+# periodEnd (date) - not null
+# status (string, 20) - default: "draft"
+# dueDate (date) - not null
+# pdfPath (string, 255) - nullable
+# sentAt (datetime) - nullable
+# paidAt (datetime) - nullable
+# createdAt (datetime_immutable)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <?php
 
-namespace App\Entity;
-
-use App\Repository\ProductRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity(repositoryClass: ProductRepository::class)]
-class Product
-{
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column(length: 100)]
-    private ?string $name = null;
-
-    #[ORM\Column(length: 100)]
-    private ?string $slug = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $barcode = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
-    private ?string $sale_price = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
-    private ?string $purchase_price = null;
-
-    #[ORM\Column]
-    private ?int $stock_quantity = null;
-
-    #[ORM\Column]
-    private ?int $min_quantity = null;
-
-    #[ORM\Column(length: 255, nullable: true)]  
-    private ?string $image = null;
-
-    #[ORM\Column]
-    private ?bool $has_expiry_date = null;
-
-    #[ORM\Column]
-    private ?bool $is_active = null;
-
-    #[ORM\Column]
-    private ?\DateTime $created_at = null;
-
-    #[ORM\Column(nullable: true)]  
-    private ?\DateTime $updated_at = null;
-
-    #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Category $category = null;
-
-    #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
-
-    /**
-     * @var Collection<int, PurchaseItem>
-     */
-    #[ORM\OneToMany(targetEntity: PurchaseItem::class, mappedBy: 'product')]
-    private Collection $purchaseItems;
-
-    /**
-     * @var Collection<int, StockBatch>
-     */
-    #[ORM\OneToMany(targetEntity: StockBatch::class, mappedBy: 'product')]
-    private Collection $stockBatches;
-
-    public function __construct()
-    {
-        $this->purchaseItems = new ArrayCollection();
-        $this->stockBatches = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): static
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getBarcode(): ?string
-    {
-        return $this->barcode;
-    }
-
-    public function setBarcode(string $barcode): static
-    {
-        $this->barcode = $barcode;
-
-        return $this;
-    }
-
-    public function getSalePrice(): ?string
-    {
-        return $this->sale_price;
-    }
-
-    public function setSalePrice(string $sale_price): static
-    {
-        $this->sale_price = $sale_price;
-
-        return $this;
-    }
-
-    public function getPurchasePrice(): ?string
-    {
-        return $this->purchase_price;
-    }
-
-    public function setPurchasePrice(string $purchase_price): static
-    {
-        $this->purchase_price = $purchase_price;
-
-        return $this;
-    }
-
-    public function getStockQuantity(): ?int
-    {
-        return $this->stock_quantity;
-    }
-
-    public function setStockQuantity(int $stock_quantity): static
-    {
-        $this->stock_quantity = $stock_quantity;
-
-        return $this;
-    }
-
-    public function getMinQuantity(): ?int
-    {
-        return $this->min_quantity;
-    }
-
-    public function setMinQuantity(int $min_quantity): static
-    {
-        $this->min_quantity = $min_quantity;
-
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(?string $image): static  
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
-    public function getHasExpiryDate(): ?bool
-    {
-        return $this->has_expiry_date;
-    }
-
-    public function setHasExpiryDate(bool $has_expiry_date): static
-    {
-        $this->has_expiry_date = $has_expiry_date;
-        return $this;
-    }
-
-    // Ajoutez cette méthode pour les appels booléens
-    public function hasExpiryDate(): bool
-    {
-        return $this->has_expiry_date ?? false;
-    }
-
-    public function isActive(): ?bool
-    {
-        return $this->is_active;
-    }
-
-    public function setIsActive(bool $is_active): static
-    {
-        $this->is_active = $is_active;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTime
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTime $created_at): static
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTime
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(\DateTime $updated_at): static
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): static
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, PurchaseItem>
-     */
-    public function getPurchaseItems(): Collection
-    {
-        return $this->purchaseItems;
-    }
-
-    public function addPurchaseItem(PurchaseItem $purchaseItem): static
-    {
-        if (!$this->purchaseItems->contains($purchaseItem)) {
-            $this->purchaseItems->add($purchaseItem);
-            $purchaseItem->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removePurchaseItem(PurchaseItem $purchaseItem): static
-    {
-        if ($this->purchaseItems->removeElement($purchaseItem)) {
-            // set the owning side to null (unless already changed)
-            if ($purchaseItem->getProduct() === $this) {
-                $purchaseItem->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, StockBatch>
-     */
-    public function getStockBatches(): Collection
-    {
-        return $this->stockBatches;
-    }
-
-    public function addStockBatch(StockBatch $stockBatch): static
-    {
-        if (!$this->stockBatches->contains($stockBatch)) {
-            $this->stockBatches->add($stockBatch);
-            $stockBatch->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeStockBatch(StockBatch $stockBatch): static
-    {
-        if ($this->stockBatches->removeElement($stockBatch)) {
-            // set the owning side to null (unless already changed)
-            if ($stockBatch->getProduct() === $this) {
-                $stockBatch->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function __toString(): string
-    {
-        if ($this->name && $this->barcode) {
-            return sprintf('%s (%s)', $this->name, $this->barcode);
-        }
-        
-        return $this->name ?: 'Nouveau produit';
-    }
+/* Servers configuration */
+$i = 0;
+/* The 'cookie' auth_type uses AES algorithm to encrypt the password. If
+ * at least one server configuration uses 'cookie' auth_type, enter here a
+ * pass phrase that will be used by AES. The minimum length is 32 characters
+ * The maximum length seems to be 46 characters. */
+$cfg['blowfish_secret'] = 'h]C+{nqW$omNoTIkCwC$%z-LTcy%p6_j';
+
+//Checking Active DBMS Servers
+$wampConf = @parse_ini_file('../../wampmanager.conf');
+//Check if MySQL and MariaDB with MariaDB on default port
+$mariaFirst = ($wampConf['SupportMySQL'] == 'on' && $wampConf['SupportMariaDB'] == 'on' && $wampConf['mariaPortUsed'] == $wampConf['mysqlDefaultPort']) ? true : false;
+if($wampConf['SupportMySQL'] == 'on') {
+/* Server: localhost [1] */
+	$i++;
+	if($mariaFirst) $i++;
+	$cfg['Servers'][$i]['verbose'] = 'MySQL';
+	$cfg['Servers'][$i]['host'] = '127.0.0.1';
+	$cfg['Servers'][$i]['port'] = $wampConf['mysqlPortUsed'];
+	$cfg['Servers'][$i]['extension'] = 'mysqli';
+	$cfg['Servers'][$i]['auth_type'] = 'cookie';
+	$cfg['Servers'][$i]['user'] = '';
+	$cfg['Servers'][$i]['password'] = '';
+
+	// Hidden databases in PhpMyAdmin left panel
+	//$cfg['Servers'][$i]['hide_db'] = '(information_schema|mysql|performance_schema|sys)';
+
+	// Allow connection without password
+	$cfg['Servers'][$i]['AllowNoPassword'] = true;
+}
+/* Server: localhost [2] */
+if($wampConf['SupportMariaDB'] =='on') {
+	$i++;
+	if($mariaFirst) $i -= 2;
+	$cfg['Servers'][$i]['verbose'] = 'MariaDB';
+	$cfg['Servers'][$i]['host'] = '127.0.0.1';
+	$cfg['Servers'][$i]['port'] = $wampConf['mariaPortUsed'];
+	$cfg['Servers'][$i]['extension'] = 'mysqli';
+	$cfg['Servers'][$i]['auth_type'] = 'cookie';
+	$cfg['Servers'][$i]['user'] = '';
+	$cfg['Servers'][$i]['password'] = '';
+
+	// Hidden databases in PhpMyAdmin left panel
+	//$cfg['Servers'][$i]['hide_db'] = '(information_schema|mysql|performance_schema|sys)';
+	// Allow connection without password
+	$cfg['Servers'][$i]['AllowNoPassword'] = true;
 }
 
+// Suppress Warning about pmadb tables
+$cfg['PmaNoRelation_DisableWarning'] = true;
 
-// Purchase
-<?php
+// To have PRIMARY & INDEX in table structure export
+$cfg['Export']['sql_drop_table'] = true;
+$cfg['Export']['sql_if_not_exists'] = true;
 
-namespace App\Entity;
+$cfg['MySQLManualBase'] = 'http://dev.mysql.com/doc/refman/5.7/en/';
+/* End of servers configuration */
 
-use App\Repository\PurchaseRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+?>
 
-#[ORM\Entity(repositoryClass: PurchaseRepository::class)]
-class Purchase
-{
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
 
-    #[ORM\Column(length: 50, unique: true)]
-    private ?string $purchase_number = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
-    private ?string $total_amount = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $status = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $notes = null;
 
-    #[ORM\Column]
-    private ?\DateTime $created_at = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $updated_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'purchases')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Supplier $supplier = null;
 
-    #[ORM\ManyToOne(inversedBy: 'purchases')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
 
-    /**
-     * @var Collection<int, PurchaseItem>
-     */
-    #[ORM\OneToMany(targetEntity: PurchaseItem::class, mappedBy: 'purchase', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private Collection $purchaseItems;
 
-    public function __construct()
-    {
-        $this->purchaseItems = new ArrayCollection();
-    }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
-    public function getPurchaseNumber(): ?string
-    {
-        return $this->purchase_number;
-    }
-
-    public function setPurchaseNumber(string $purchase_number): static
-    {
-        $this->purchase_number = $purchase_number;
-
-        return $this;
-    }
-
-    public function getTotalAmount(): ?string
-    {
-        return $this->total_amount;
-    }
-
-    public function setTotalAmount(string $total_amount): static
-    {
-        $this->total_amount = $total_amount;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getNotes(): ?string
-    {
-        return $this->notes;
-    }
-
-    public function setNotes(?string $notes): static
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTime
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTime $created_at): static
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTime
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(?\DateTime $updated_at): static
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getSupplier(): ?Supplier
-    {
-        return $this->supplier;
-    }
-
-    public function setSupplier(?Supplier $supplier): static
-    {
-        $this->supplier = $supplier;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, PurchaseItem>
-     */
-    public function getPurchaseItems(): Collection
-    {
-        return $this->purchaseItems;
-    }
-
-    public function addPurchaseItem(PurchaseItem $purchaseItem): static
-    {
-        if (!$this->purchaseItems->contains($purchaseItem)) {
-            $this->purchaseItems->add($purchaseItem);
-            $purchaseItem->setPurchase($this);
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token('global') }}">
+    <title>{% block title %}HMA Market - Système de Gestion{% endblock %}</title>
+    
+    <!-- CDN Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- TomSelect CDN (pour l'autocomplete) -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #0463f1ff;
+            --dark-color: #1f2937;
+            --light-color: #f9fafb;
+            --success-color: #10b981;
+            --info-color: #0ea5e9;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fb;
+            color: #2153a3ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .navbar-brand:hover {
+            color: var(--primary-color);
+        }
+        
+        /* Logo de l'entreprise dans la navbar */
+        .company-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 10px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .company-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .company-logo-initials {
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .company-name {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--dark-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+        
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            min-height: calc(100vh - 73px);
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            padding: 0;
+            position: sticky;
+            top: 73px;
+            height: 100%;
+        }
+        
+        .sidebar-content {
+            padding: 20px;
+            height: 100%;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: white;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            border-radius: 0 3px 3px 0;
+        }
+        
+        .sidebar .nav-link:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .sidebar .nav-link:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .sidebar .nav-link.active {
+            background: rgba(255,255,255,0.25);
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar .nav-link.active::before {
+            transform: scaleY(1);
+        }
+        
+        .sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        
+        /* Titres de menu */
+        .menu-title {
+            color: rgba(255,255,255,0.6);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 15px 15px 5px;
+            margin-top: 15px;
+            display: block;
+        }
+        
+        /* Menus déroulants */
+        .has-arrow {
+            position: relative;
+        }
+        
+        .has-arrow::after {
+            content: "\f078";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            transition: transform 0.3s ease;
+            font-size: 12px;
+        }
+        
+        .has-arrow[aria-expanded="true"]::after {
+            transform: rotate(180deg);
+        }
+        
+        /* Sous-menus */
+        .sub-menu {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin: 5px 0 5px 15px;
+            padding-left: 0;
+            list-style: none;
+            border-left: 2px solid rgba(255,255,255,0.1);
+        }
+        
+        .sub-menu .nav-link {
+            padding: 10px 15px 10px 40px;
+            font-size: 13.5px;
+            margin: 2px 0;
+        }
+        
+        .sub-menu .nav-link i {
+            font-size: 12px;
+            width: 15px;
+        }
+        
+        .sub-menu .nav-link:hover {
+            transform: translateX(3px);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.05);
+            border-color: var(--secondary-color);
+        }
+        
+        .user-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-avatar-initials {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .universal-search-container {
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 20px;
         }
 
-        return $this;
-    }
+        .universal-search {
+            position: relative;
+            width: 100%;
+        }
 
-    public function removePurchaseItem(PurchaseItem $purchaseItem): static
-    {
-        if ($this->purchaseItems->removeElement($purchaseItem)) {
-            // set the owning side to null (unless already changed)
-            if ($purchaseItem->getPurchase() === $this) {
-                $purchaseItem->setPurchase(null);
+        .universal-search-input {
+            border-radius: 20px;
+            padding: 8px 40px 8px 15px;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+            width: 100%;
+            background-color: #f8f9fa;
+        }
+
+        .universal-search-input:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+            border-color: var(--primary-color);
+            background-color: white;
+            outline: none;
+        }
+
+        .universal-search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .universal-search-btn:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .universal-search-clear {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 50%;
+            display: none;
+            transition: all 0.2s ease;
+        }
+
+        .universal-search-clear:hover {
+            color: var(--danger-color);
+        }
+
+        .universal-search-clear.show {
+            display: block;
+        }
+
+        .search-hint {
+            font-size: 12px;
+            color: var(--primary-color);
+            margin-top: 5px;
+            text-align: left;
+            opacity: 0.8;
+            padding-left: 10px;
+        }
+
+        /* Menu profil utilisateur */
+        .user-profile-dropdown {
+            padding: 10px 15px;
+            min-width: 250px;
+        }
+        
+        .user-profile-header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 10px;
+        }
+        
+        .user-profile-info {
+            margin-left: 10px;
+        }
+        
+        .user-profile-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .user-profile-role {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100vh;
+                transition: left 0.3s ease;
+                z-index: 1040;
+                box-shadow: 5px 0 30px rgba(0,0,0,0.2);
             }
-        }
-
-        return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->purchase_number ?: 'Nouvelle réception';
-    }
-}
-
-// PurchaseItem
-<?php
-
-namespace App\Entity;
-
-use App\Repository\PurchaseItemRepository;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity(repositoryClass: PurchaseItemRepository::class)]
-class PurchaseItem
-{
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column]
-    private ?int $stock_batch_id = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $batch_number = null;
-
-    #[ORM\Column]
-    private ?int $quantity = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
-    private ?string $unit_price = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
-    private ?string $total_price = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $expiry_date = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $manufacturing_date = null;
-
-    #[ORM\Column]
-    private ?\DateTime $created_at = null;
-
-    #[ORM\ManyToOne(inversedBy: 'purchaseItems')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Purchase $purchase = null;
-
-    #[ORM\ManyToOne(inversedBy: 'purchaseItems')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Product $product = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getStockBatchId(): ?int
-    {
-        return $this->stock_batch_id;
-    }
-
-    public function setStockBatchId(int $stock_batch_id): static
-    {
-        $this->stock_batch_id = $stock_batch_id;
-
-        return $this;
-    }
-
-    public function getBatchNumber(): ?string
-    {
-        return $this->batch_number;
-    }
-
-    public function setBatchNumber(string $batch_number): static
-    {
-        $this->batch_number = $batch_number;
-
-        return $this;
-    }
-
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): static
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    public function getUnitPrice(): ?string
-    {
-        return $this->unit_price;
-    }
-
-    public function setUnitPrice(string $unit_price): static
-    {
-        $this->unit_price = $unit_price;
-
-        return $this;
-    }
-
-    public function getTotalPrice(): ?string
-    {
-        return $this->total_price;
-    }
-
-    public function setTotalPrice(string $total_price): static
-    {
-        $this->total_price = $total_price;
-
-        return $this;
-    }
-
-     public function getExpiryDate(): ?\DateTimeInterface
-    {
-        return $this->expiry_date;
-    }
-
-    public function setExpiryDate(?\DateTimeInterface $expiry_date): static
-    {
-        $this->expiry_date = $expiry_date;
-
-        return $this;
-    }
-
-    public function getManufacturingDate(): ?\DateTimeInterface
-    {
-        return $this->manufacturing_date;
-    }
-
-    public function setManufacturingDate(?\DateTimeInterface $manufacturing_date): static
-    {
-        $this->manufacturing_date = $manufacturing_date;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTime
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTime $created_at): static
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getPurchase(): ?Purchase
-    {
-        return $this->purchase;
-    }
-
-    public function setPurchase(?Purchase $purchase): static
-    {
-        $this->purchase = $purchase;
-
-        return $this;
-    }
-
-    public function getProduct(): ?Product
-    {
-        return $this->product;
-    }
-
-    public function setProduct(?Product $product): static
-    {
-        $this->product = $product;
-
-        return $this;
-    }
-}
-
-
-// Fichier de dernière migration 
-<?php
-
-declare(strict_types=1);
-
-namespace DoctrineMigrations;
-
-use Doctrine\DBAL\Schema\Schema;
-use Doctrine\Migrations\AbstractMigration;
-
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
-final class Version20260129201112 extends AbstractMigration
-{
-    public function getDescription(): string
-    {
-        return '';
-    }
-
-    public function up(Schema $schema): void
-    {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE category ADD CONSTRAINT FK_64C19C1727ACA70 FOREIGN KEY (parent_id) REFERENCES category (id)');
-        $this->addSql('ALTER TABLE category ADD CONSTRAINT FK_64C19C1A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
-        $this->addSql('ALTER TABLE `order` ADD CONSTRAINT FK_F5299398A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
-        $this->addSql('ALTER TABLE order_item ADD CONSTRAINT FK_52EA1F097DC7170A FOREIGN KEY (vente_id) REFERENCES `order` (id)');
-        $this->addSql('ALTER TABLE product ADD CONSTRAINT FK_D34A04AD12469DE2 FOREIGN KEY (category_id) REFERENCES category (id)');
-        $this->addSql('ALTER TABLE product ADD CONSTRAINT FK_D34A04ADA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
-        $this->addSql('ALTER TABLE purchase CHANGE notes notes LONGTEXT DEFAULT NULL, CHANGE updated_at updated_at DATETIME DEFAULT NULL');
-        $this->addSql('ALTER TABLE purchase ADD CONSTRAINT FK_6117D13B2ADD6D8C FOREIGN KEY (supplier_id) REFERENCES supplier (id)');
-        $this->addSql('ALTER TABLE purchase ADD CONSTRAINT FK_6117D13BA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_6117D13B4DFF1D01 ON purchase (purchase_number)');
-        $this->addSql('ALTER TABLE purchase_item ADD CONSTRAINT FK_6FA8ED7D558FBEB9 FOREIGN KEY (purchase_id) REFERENCES purchase (id)');
-        $this->addSql('ALTER TABLE purchase_item ADD CONSTRAINT FK_6FA8ED7D4584665A FOREIGN KEY (product_id) REFERENCES product (id)');
-        $this->addSql('ALTER TABLE reset_password_request ADD CONSTRAINT FK_7CE748AA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
-        $this->addSql('ALTER TABLE stock_batch CHANGE expiry_date expiry_date DATE DEFAULT NULL, CHANGE manufacturing_date manufacturing_date DATE DEFAULT NULL');
-        $this->addSql('ALTER TABLE stock_batch ADD CONSTRAINT FK_641B4E259B59827 FOREIGN KEY (purchase_item_id) REFERENCES purchase_item (id)');
-        $this->addSql('ALTER TABLE stock_batch ADD CONSTRAINT FK_641B4E254584665A FOREIGN KEY (product_id) REFERENCES product (id)');
-        $this->addSql('ALTER TABLE stock_movement ADD CONSTRAINT FK_BB1BC1B5A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
-    }
-
-    public function down(Schema $schema): void
-    {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE category DROP FOREIGN KEY FK_64C19C1727ACA70');
-        $this->addSql('ALTER TABLE category DROP FOREIGN KEY FK_64C19C1A76ED395');
-        $this->addSql('ALTER TABLE `order` DROP FOREIGN KEY FK_F5299398A76ED395');
-        $this->addSql('ALTER TABLE order_item DROP FOREIGN KEY FK_52EA1F097DC7170A');
-        $this->addSql('ALTER TABLE product DROP FOREIGN KEY FK_D34A04AD12469DE2');
-        $this->addSql('ALTER TABLE product DROP FOREIGN KEY FK_D34A04ADA76ED395');
-        $this->addSql('ALTER TABLE purchase DROP FOREIGN KEY FK_6117D13B2ADD6D8C');
-        $this->addSql('ALTER TABLE purchase DROP FOREIGN KEY FK_6117D13BA76ED395');
-        $this->addSql('DROP INDEX UNIQ_6117D13B4DFF1D01 ON purchase');
-        $this->addSql('ALTER TABLE purchase CHANGE notes notes LONGTEXT NOT NULL, CHANGE updated_at updated_at DATETIME NOT NULL');
-        $this->addSql('ALTER TABLE purchase_item DROP FOREIGN KEY FK_6FA8ED7D558FBEB9');
-        $this->addSql('ALTER TABLE purchase_item DROP FOREIGN KEY FK_6FA8ED7D4584665A');
-        $this->addSql('ALTER TABLE reset_password_request DROP FOREIGN KEY FK_7CE748AA76ED395');
-        $this->addSql('ALTER TABLE stock_batch DROP FOREIGN KEY FK_641B4E259B59827');
-        $this->addSql('ALTER TABLE stock_batch DROP FOREIGN KEY FK_641B4E254584665A');
-        $this->addSql('ALTER TABLE stock_batch CHANGE expiry_date expiry_date DATE NOT NULL, CHANGE manufacturing_date manufacturing_date DATE NOT NULL');
-        $this->addSql('ALTER TABLE stock_movement DROP FOREIGN KEY FK_BB1BC1B5A76ED395');
-    }
-}
-
-// ProductRepository
-<?php
-// src/Repository/ProductRepository.php
-
-namespace App\Repository;
-
-use App\Entity\Category;
-use App\Entity\Product;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-
-/**
- * @extends ServiceEntityRepository<Product>
- */
-class ProductRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Product::class);
-    }
-
-    public function findAllPaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function search(string $term, int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.name LIKE :term')
-            ->orWhere('p.barcode LIKE :term')
-            ->orWhere('p.description LIKE :term')
-            ->orWhere('c.name LIKE :term')
-            ->setParameter('term', '%' . $term . '%')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findActivePaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.is_active = true')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findInactivePaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.is_active = false')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findLowStockPaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.min_quantity > 0')
-            ->andWhere('p.stock_quantity <= p.min_quantity')
-            ->orderBy('p.stock_quantity', 'ASC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findPerishablePaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.has_expiry_date = true')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findNonPerishablePaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.has_expiry_date = false')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findByCategoryPaginated(int $categoryId, int $page = 1, int $limit = 12): Paginator
-    {
-        // Récupérer la catégorie
-        $entityManager = $this->getEntityManager();
-        $category = $entityManager->getRepository(Category::class)->find($categoryId);
-        
-        // Si la catégorie n'existe pas, retourner un paginator vide
-        if (!$category) {
-            return new Paginator(new \Doctrine\ORM\Query($entityManager));
-        }
-        
-        // Récupérer tous les IDs des catégories (la catégorie parent + ses enfants)
-        $categoryIds = $this->getAllCategoryIds($category);
-        
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('c.id IN (:categoryIds)')
-            ->setParameter('categoryIds', $categoryIds)
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findByCategoryAndStatusPaginated(int $categoryId, string $status, int $page = 1, int $limit = 12): Paginator
-    {
-        $entityManager = $this->getEntityManager();
-        $categoryIds = [];
-        
-        // Si categoryId n'est pas 0 (Toutes catégories)
-        if ($categoryId > 0) {
-            $category = $entityManager->getRepository(Category::class)->find($categoryId);
-            if ($category) {
-                $categoryIds = $this->getAllCategoryIds($category);
-            }
-        }
-        
-        $queryBuilder = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->orderBy('p.created_at', 'DESC');
-        
-        // Appliquer le filtre de catégorie si nécessaire
-        if (!empty($categoryIds)) {
-            $queryBuilder->where('c.id IN (:categoryIds)')
-                ->setParameter('categoryIds', $categoryIds);
-        }
-        
-        // Appliquer le filtre de statut
-        switch ($status) {
-            case 'active':
-                $queryBuilder->andWhere('p.is_active = true');
-                break;
-            case 'inactive':
-                $queryBuilder->andWhere('p.is_active = false');
-                break;
-            case 'low-stock':
-                $queryBuilder->andWhere('p.min_quantity > 0')
-                    ->andWhere('p.stock_quantity <= p.min_quantity');
-                break;
-            case 'perishable':
-                $queryBuilder->andWhere('p.has_expiry_date = true');
-                break;
-            case 'non-perishable':
-                $queryBuilder->andWhere('p.has_expiry_date = false');
-                break;
-        }
-        
-        return $this->paginate($queryBuilder->getQuery(), $page, $limit);
-    }
-
-    public function findAllCategoriesWithCount(): array
-    {
-        return $this->createQueryBuilder('p')
-            ->select('c.id, c.name, COUNT(p.id) as productCount')
-            ->leftJoin('p.category', 'c')
-            ->groupBy('c.id')
-            ->orderBy('c.name', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findHierarchicalCategories(): array
-    {
-        $entityManager = $this->getEntityManager();
-        $categories = $entityManager->getRepository(Category::class)->findBy(['parent' => null], ['name' => 'ASC']);
-        
-        $result = [];
-        foreach ($categories as $category) {
-            $result[] = [
-                'id' => $category->getId(),
-                'name' => $category->getName(),
-                'productCount' => $this->countProductsInCategoryHierarchy($category),
-                'children' => $this->getChildCategories($category),
-                'isParent' => true,
-                'level' => 0
-            ];
-        }
-        
-        return $result;
-    }
-
-    private function getChildCategories(Category $category): array
-    {
-        $children = [];
-        foreach ($category->getChildren() as $child) {
-            $children[] = [
-                'id' => $child->getId(),
-                'name' => $child->getName(),
-                'productCount' => $this->countProductsInCategoryHierarchy($child),
-                'children' => $this->getChildCategories($child),
-                'isParent' => !$child->getChildren()->isEmpty(),
-                'level' => 1
-            ];
-        }
-        return $children;
-    }
-
-    private function countProductsInCategoryHierarchy(Category $category): int
-    {
-        $categoryIds = $this->getAllCategoryIds($category);
-        
-        return $this->createQueryBuilder('p')
-            ->select('COUNT(p.id)')
-            ->join('p.category', 'c')
-            ->where('c.id IN (:categoryIds)')
-            ->setParameter('categoryIds', $categoryIds)
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    private function getAllCategoryIds(Category $category): array
-    {
-        $categoryIds = [$category->getId()];
-        
-        // Ajouter tous les IDs des enfants récursivement
-        foreach ($category->getChildren() as $child) {
-            $categoryIds = array_merge($categoryIds, $this->getAllCategoryIds($child));
-        }
-        
-        return $categoryIds;
-    }
-
-    private function paginate($query, int $page, int $limit): Paginator
-    {
-        $paginator = new Paginator($query);
-        $paginator->getQuery()
-            ->setFirstResult($limit * ($page - 1))
-            ->setMaxResults($limit);
-
-        return $paginator;
-    }
-
-    public function searchActiveProducts(string $query, int $limit = 20): array
-    {
-        return $this->createQueryBuilder('p')
-            ->where('p.is_active = :active')
-            ->andWhere('(p.name LIKE :query OR p.barcode LIKE :query)')
-            ->setParameter('active', true)
-            ->setParameter('query', '%' . $query . '%')
-            ->orderBy('p.name', 'ASC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
-    }
-}
-
-// PurchaseRepository
-<?php
-
-namespace App\Repository;
-
-use App\Entity\Purchase;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
-
-/**
- * @extends ServiceEntityRepository<Purchase>
- */
-class PurchaseRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Purchase::class);
-    }
-
-    /**
-     * Trouve toutes les réceptions triées par date (plus récentes d'abord)
-     */
-    public function findAllOrderedByDate(): array
-    {
-        return $this->createQueryBuilder('p')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Trouve les réceptions par statut
-     */
-    public function findByStatus(string $status): array
-    {
-        return $this->createQueryBuilder('p')
-            ->where('p.status = :status')
-            ->setParameter('status', $status)
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
-    
-    /**
-     * Trouve les réceptions pour un fournisseur donné
-     */
-    public function findBySupplier(int $supplierId): array
-    {
-        return $this->createQueryBuilder('p')
-            ->where('p.supplier = :supplierId')
-            ->setParameter('supplierId', $supplierId)
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
-    
-    /**
-     * Trouve les réceptions entre deux dates
-     */
-    public function findByDateRange(\DateTimeInterface $startDate, \DateTimeInterface $endDate): array
-    {
-        return $this->createQueryBuilder('p')
-            ->where('p.created_at BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDate)
-            ->setParameter('endDate', $endDate)
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Compte le nombre de réceptions par mois pour les statistiques
-     */
-    public function countByMonth(int $year = null): array
-    {
-        if (!$year) {
-            $year = (int) date('Y');
-        }
-        
-        $startDate = new \DateTime($year . '-01-01');
-        $endDate = new \DateTime($year . '-12-31 23:59:59');
-        
-        $results = $this->createQueryBuilder('p')
-            ->select('MONTH(p.created_at) as month, COUNT(p.id) as count')
-            ->where('p.created_at BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDate)
-            ->setParameter('endDate', $endDate)
-            ->groupBy('month')
-            ->orderBy('month', 'ASC')
-            ->getQuery()
-            ->getResult();
-        
-        // Formater les résultats
-        $formattedResults = [];
-        for ($month = 1; $month <= 12; $month++) {
-            $formattedResults[$month] = 0;
-        }
-        
-        foreach ($results as $result) {
-            $formattedResults[(int) $result['month']] = (int) $result['count'];
-        }
-        
-        return $formattedResults;
-    }
-}
-
-
-
-Tache à faire :
-
-Je veux mettre en place le système d'achat et l'enregistrement des données dans la base 
-J'ai déjà créer le CRUD pour Purchase et PurchaseItem 
-Lorsque l'utilisateur clique sur nouvel achat on lui affiche une belle page , simple, moderne pour qu'il remplisse les informations de l'achat . Comment ça va se passer ? Lorsque l'utilisateur clique sur Nouvel achat on lui présente la page on récupère l'utilisateur connecté , il choisit un fournisseur ou il crée un fournisseur grace au bouton qui sera en haut dela sélection . Maintenant on créera les bloc de produit pour chaque produit ajoutés au panier d'achat et on calculera le montal total au fur et à messure qu'il ajoute un produit . Pour les produits non périssable on n'affichera pas les dates de fabrication et d'expiration mais pour les produits périssables on affichera les dates de fabrication et d'expiration qui peuvent etre optionnel c'est importants de le mettre mais on ne va pas forcer la main à l'utilisateur de le faire ce serait optionnel . Pour ajouter les produits au panier d'achat , l'utilisateur peut rechercher les produits qui sont dans le catalogue de produits grace à la barre de recher, scanner le code barres, ect . Le numéro de lot est généré automattiquement si l'utilisateur veut il peut le modifier . Il saisit la quantité , le prix unitaire et on calcule le montant total pour ce bloc . Il y aura le bouton ajouter un autre produit on crée un autre bloc et on affichera le numéro pour chaque bloc . Et il y aua enfin le montant total de tous les lots ajouter . Maintenant pour tous les boutons d'action on affichera des modals pour la confirmation . Par exemple , s'il veut supprimer un bloc de produit , Annuler l'achat ,ect . Lorsqu'il clique sur Valider la réception on enregistre les informations dans la table Purchase, PurchaseItem , on crée une ligne dans StockBatch pour chaque lot crée, on enregistre les données dans la table StockMovement pour chaque lot crée et enfin on modifie la quantité en stock dans la table Product . 
-
-C'est un processus comple pour l'achat si tu veux tu peux améliorer en proposant de bonnes idées . 
-
-Je veux que ça soit beau , moderne . 
-
-On peut utiliser le _form.html.twig pour que new.html.twig et edit.html.twig l'utilise pour ne pas répéter le code .
-
-Merci et bon travail . 
-
-
-public function getReferenceId(): ?int
-    {
-        return $this->reference_id;
-    }
-
-    public function setReferenceId(?int $reference_id): static
-    {
-        $this->reference_id = $reference_id;
-
-        return $this;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// === GESTION DES MODIFICATIONS D'ITEMS (pour commandes confirmées) ===
-if (purchaseStatus === 'confirmed') {
-    let currentItemId = null;
-    let currentItemData = null;
-    let itemToDeleteId = null;
-    let itemToDeleteName = null;
-    
-    // Initialiser tous les modals
-    const editItemModal = new bootstrap.Modal(document.getElementById('editItemModal'));
-    const deleteItemModal = new bootstrap.Modal(document.getElementById('deleteItemModal'));
-    const receiveModal = new bootstrap.Modal(document.getElementById('receiveModal'));
-    const cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
-    
-    // Bouton "Modifier" - garder votre code existant...
-    
-    // Bouton "Supprimer" - garder votre code existant...
-    
-    // Bouton "Réceptionner" - CORRECTION
-    document.getElementById('receivePurchaseBtn')?.addEventListener('click', function() {
-        console.log('Bouton Réceptionner cliqué');
-        
-        // Vérifier que tous les lots sont complets
-        const incompleteItems = [];
-        document.querySelectorAll('#productsTable tr').forEach(row => {
-            const statusBadge = row.querySelector('td:nth-child(2) .badge');
-            if (statusBadge && (statusBadge.classList.contains('bg-warning') || statusBadge.classList.contains('bg-danger'))) {
-                const productName = row.querySelector('strong').textContent;
-                incompleteItems.push(productName.trim());
-            }
-        });
-        
-        const validationDiv = document.getElementById('receiveValidation');
-        const validationMessage = document.getElementById('validationMessage');
-        
-        if (incompleteItems.length > 0) {
-            validationMessage.textContent = 'Les produits suivants nécessitent des informations manquantes: ' + incompleteItems.join(', ');
-            validationDiv.style.display = 'block';
-        } else {
-            validationDiv.style.display = 'none';
-        }
-        
-        // Réinitialiser le champ notes
-        document.getElementById('receiveNotes').value = '';
-        
-        // Afficher le modal
-        receiveModal.show();
-    });
-    
-    // Bouton "Annuler" - garder votre code existant...
-    
-    // Confirmation de réception - CORRECTION
-    document.getElementById('confirmReceiveBtn')?.addEventListener('click', function() {
-        console.log('Confirmation de réception cliquée');
-        
-        const notes = document.getElementById('receiveNotes').value.trim();
-        const resultDiv = document.getElementById('receiveResult');
-        
-        this.disabled = true;
-        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Traitement...';
-        
-        // Vérifier à nouveau que tous les lots sont complets
-        const incompleteItems = [];
-        document.querySelectorAll('#productsTable tr').forEach(row => {
-            const statusBadge = row.querySelector('td:nth-child(2) .badge');
-            if (statusBadge && (statusBadge.classList.contains('bg-warning') || statusBadge.classList.contains('bg-danger'))) {
-                const productName = row.querySelector('strong').textContent;
-                incompleteItems.push(productName.trim());
-            }
-        });
-        
-        if (incompleteItems.length > 0) {
-            showAlert('danger', 'Veuillez compléter les informations manquantes avant de réceptionner.', resultDiv);
-            this.disabled = false;
-            this.innerHTML = '<i class="fas fa-check-circle me-2"></i> Confirmer la réception';
-            return;
-        }
-        
-        // Utiliser FormData pour la réception
-        const formData = new FormData();
-        formData.append('notes', notes);
-        
-        console.log('Envoi de la réception avec notes:', notes);
-        
-        fetch(`/admin/purchase/${purchaseId}/receive-api`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => {
-            console.log('Statut réponse réception:', response.status);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Réponse réception:', data);
             
-            if (data.success) {
-                showAlert('success', data.message, resultDiv);
-                
-                // Fermer le modal et rediriger
-                setTimeout(() => {
-                    receiveModal.hide();
-                    
-                    if (data.redirect_url) {
-                        window.location.href = data.redirect_url;
-                    } else {
-                        window.location.href = `/admin/purchase/${purchaseId}`;
-                    }
-                }, 1500);
-            } else {
-                showAlert('danger', data.message || 'Erreur lors de la réception', resultDiv);
-                this.disabled = false;
-                this.innerHTML = '<i class="fas fa-check-circle me-2"></i> Confirmer la réception';
+            .sidebar.show {
+                left: 0;
             }
-        })
-        .catch(error => {
-            console.error('Erreur réception:', error);
-            showAlert('danger', 'Erreur: ' + error.message, resultDiv);
-            this.disabled = false;
-            this.innerHTML = '<i class="fas fa-check-circle me-2"></i> Confirmer la réception';
+            
+            .sidebar-backdrop {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 1039;
+                display: none;
+                backdrop-filter: blur(2px);
+            }
+            
+            .sidebar-backdrop.show {
+                display: block;
+            }
+            
+            main {
+                padding-top: 20px !important;
+            }
+            
+            .universal-search-container {
+                max-width: 100%;
+                margin: 10px 0;
+                order: 3;
+                width: 100%;
+            }
+            
+            .navbar-collapse {
+                flex-direction: column;
+            }
+            
+            .company-name {
+                max-width: 150px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .universal-search-container {
+                max-width: 300px;
+            }
+        }
+
+        /* Animation pour les cartes */
+        .card-animate {
+            transition: all 0.3s ease;
+            border: none;
+            overflow: hidden;
+        }
+
+        .card-animate:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+        }
+
+        /* Avatar rond */
+        .avatar-sm {
+            width: 50px;
+            height: 50px;
+        }
+
+        .avatar-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        /* Contenu principal */
+        main {
+            min-height: calc(100vh - 180px);
+            padding-top: 30px;
+        }
+        
+        /* Footer amélioré */
+        .footer {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            color: #f9fafb;
+            margin-top: auto;
+            padding: 2px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .footer-content {
+            transition: all 0.3s ease;
+        }
+        
+        .footer:hover .footer-content {
+            transform: translateY(-5px);
+        }
+        
+        .footer-logo {
+            font-weight: 700;
+            font-size: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .footer-text {
+            color: #9ca3af;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+            display: inline-block;
+        }
+        
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .footer-link:hover::after {
+            width: 100%;
+        }
+        
+        .footer-divider {
+            border-color: #374151;
+            margin: 25px 0;
+            opacity: 0.5;
+        }
+        
+        .footer-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: #d1d5db;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+        }
+        
+        .footer-icon:hover {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        /* Animation de chargement */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        main > * {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Badges de statut */
+        .badge-status-draft { background-color: #6c757d; }
+        .badge-status-confirmed { background-color: #0d6efd; }
+        .badge-status-received { background-color: #198754; }
+        .badge-status-cancelled { background-color: #dc3545; }
+
+        /* Animation du panier */
+        @keyframes cartPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .cart-animation {
+            animation: cartPulse 0.3s ease-in-out;
+        }
+
+        /* Responsive tables */
+        @media (max-width: 768px) {
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+            
+            .btn-group-sm .btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+    
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+    {{ include('components/_toast.html.twig') }}
+    
+    <!-- Navigation principale -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container-fluid">
+            <!-- Bouton sidebar (mobile) -->
+            <button class="navbar-toggler border-0" type="button" id="sidebarToggle">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Logo et nom de l'entreprise -->
+            <a class="navbar-brand d-flex align-items-center" href="{{ path('app_dashboard') }}">
+                <div class="company-logo">
+                    {% if app.user %}
+                        {# Solution alternative à instanceof #}
+                        {% set is_hma_service = app.user.class is defined and app.user.class == 'App\\Entity\\HmaService' %}
+                        
+                        {% if is_hma_service %}
+                            {# Si l'utilisateur est un HmaService (propriétaire) #}
+                            {% if app.user.logo %}
+                                <img src="{{ asset('uploads/logos/' ~ app.user.logo) }}" 
+                                    alt="{{ app.user.companyName }}"
+                                    onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"company-logo-initials\">{{ app.user.companyName|first|upper }}</div>'">
+                            {% else %}
+                                <div class="company-logo-initials">
+                                    {{ app.user.companyName|first|upper }}
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            {# Si l'utilisateur est un User #}
+                            {% if app.user.hmaServiceId is defined and app.user.hmaServiceId and app.user.hmaServiceId.logo %}
+                                {# User avec entreprise #}
+                                <img src="{{ asset('uploads/logos/' ~ app.user.hmaServiceId.logo) }}" 
+                                    alt="{{ app.user.hmaServiceId.companyName }}"
+                                    onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"company-logo-initials\">{{ app.user.hmaServiceId.companyName|first|upper }}</div>'">
+                            {% else %}
+                                {# User sans entreprise #}
+                                <div class="company-logo-initials">HM</div>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {# Pas connecté #}
+                        <div class="company-logo-initials">HM</div>
+                    {% endif %}
+                </div>
+                <div class="company-name">
+                    {% if app.user %}
+                        {% set is_hma_service = app.user.class is defined and app.user.class == 'App\\Entity\\HmaService' %}
+                        
+                        {% if is_hma_service %}
+                            {# Si l'utilisateur est un HmaService #}
+                            {{ app.user.companyName }}
+                        {% elseif app.user.hmaServiceId is defined and app.user.hmaServiceId %}
+                            {# Si l'utilisateur est un User avec une entreprise #}
+                            {{ app.user.hmaServiceId.companyName }}
+                        {% else %}
+                            HMA MARKET
+                        {% endif %}
+                    {% else %}
+                        HMA MARKET
+                    {% endif %}
+                </div>
+            </a>
+            
+            <!-- Barre de recherche universelle -->
+            <div class="universal-search-container d-none d-md-flex">
+                <form id="universalSearchForm" method="get" class="universal-search">
+                    <input type="text" 
+                        id="universalSearchInput"
+                        class="form-control universal-search-input" 
+                        name="search" 
+                        placeholder="Rechercher..." 
+                        value="{{ app.request.query.get('search', '') }}"
+                        autocomplete="off">
+                    <button type="button" id="universalSearchClear" class="universal-search-clear">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <button type="submit" class="universal-search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div class="search-hint" id="searchHint"></div>
+                </form>
+            </div>
+            
+            <!-- Contenu navbar -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <!-- Barre de recherche mobile -->
+                <div class="universal-search-container d-md-none">
+                    <form id="universalSearchFormMobile" method="get" class="universal-search">
+                        <input type="text" 
+                            id="universalSearchInputMobile"
+                            class="form-control universal-search-input" 
+                            name="search" 
+                            placeholder="Rechercher..." 
+                            value="{{ app.request.query.get('search', '') }}"
+                            autocomplete="off">
+                        <button type="button" id="universalSearchClearMobile" class="universal-search-clear">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button type="submit" class="universal-search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <div class="search-hint" id="searchHintMobile"></div>
+                    </form>
+                </div>
+                
+                <ul class="navbar-nav ms-auto">
+                    <!-- Utilisateur connecté -->
+                    {% if app.user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            <div class="user-avatar me-2">
+                                {# Vérifier le type d'utilisateur #}
+                                {% set is_hma_service = app.user.class is defined and app.user.class == 'App\\Entity\\HmaService' %}
+                                
+                                {% if is_hma_service %}
+                                    {# HmaService (propriétaire d'entreprise) #}
+                                    {% if app.user.logo %}
+                                        <img src="{{ asset('uploads/logos/' ~ app.user.logo) }}" 
+                                            alt="{{ app.user.companyName }}" 
+                                            class="user-avatar-img"
+                                            onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"user-avatar-initials\">{{ app.user.companyName|first|upper }}</div>';">
+                                    {% else %}
+                                        <div class="user-avatar-initials">
+                                            {{ app.user.companyName|first|upper }}
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    {# User normal #}
+                                    {% if app.user.photo %}
+                                        <img src="{{ asset('uploads/users/' ~ app.user.photo) }}" 
+                                            alt="{{ app.user.fullName }}" 
+                                            class="user-avatar-img"
+                                            onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"user-avatar-initials\">{{ app.user.fullName|first|upper }}</div>';">
+                                    {% else %}
+                                        <div class="user-avatar-initials">
+                                            {{ app.user.fullName|first|upper }}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="d-none d-md-block text-start">
+                                <div class="fw-medium">
+                                    {# Afficher le nom selon le type #}
+                                    {% set is_hma_service = app.user.class is defined and app.user.class == 'App\\Entity\\HmaService' %}
+                                    
+                                    {% if is_hma_service %}
+                                        {{ app.user.companyName }}
+                                    {% else %}
+                                        {{ app.user.fullName }}
+                                    {% endif %}
+                                </div>
+                                <small class="text-muted">
+                                    {# Afficher le rôle selon le type #}
+                                    {% set is_hma_service = app.user.class is defined and app.user.class == 'App\\Entity\\HmaService' %}
+                                    
+                                    {% if is_hma_service %}
+                                        <i class="bi bi-building text-primary me-1"></i>Propriétaire Entreprise
+                                    {% else %}
+                                        {# C'est un User #}
+                                        {% if app.user.isHmaOwner %}
+                                            <i class="bi bi-shield-check text-primary me-1"></i>Administrateur Entreprise
+                                        {% elseif 'ROLE_ADMIN' in app.user.roles %}
+                                            <i class="bi bi-shield-check text-primary me-1"></i>Administrateur
+                                        {% elseif 'ROLE_MANAGER' in app.user.roles %}
+                                            <i class="bi bi-graph-up text-success me-1"></i>Gestionnaire
+                                        {% elseif 'ROLE_STOCK_MANAGER' in app.user.roles %}
+                                            <i class="bi bi-box-seam text-warning me-1"></i>Responsable Stock
+                                        {% elseif 'ROLE_CASHIER' in app.user.roles %}
+                                            <i class="bi bi-cash-coin text-info me-1"></i>Caissier
+                                        {% else %}
+                                            <i class="bi bi-person me-1"></i>Utilisateur
+                                        {% endif %}
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0">
+                            <!-- Header avec avatar et nom -->
+                            <li>
+                                <div class="user-profile-header px-3 py-2">
+                                    <div class="user-avatar">
+                                        {% set is_hma_service = app.user.class is defined and app.user.class == 'App\\Entity\\HmaService' %}
+                                        
+                                        {% if is_hma_service %}
+                                            {# HmaService (propriétaire d'entreprise) #}
+                                            {% if app.user.logo %}
+                                                <img src="{{ asset('uploads/logos/' ~ app.user.logo) }}" 
+                                                    alt="{{ app.user.companyName }}" 
+                                                    class="user-avatar-img"
+                                                    onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"user-avatar-initials\">{{ app.user.companyName|first|upper }}</div>';">
+                                            {% else %}
+                                                <div class="user-avatar-initials">
+                                                    {{ app.user.companyName|first|upper }}
+                                                </div>
+                                            {% endif %}
+                                        {% else %}
+                                            {# User normal #}
+                                            {% if app.user.photo %}
+                                                <img src="{{ asset('uploads/users/' ~ app.user.photo) }}" 
+                                                    alt="{{ app.user.fullName }}" 
+                                                    class="user-avatar-img"
+                                                    onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"user-avatar-initials\">{{ app.user.fullName|first|upper }}</div>';">
+                                            {% else %}
+                                                <div class="user-avatar-initials">
+                                                    {{ app.user.fullName|first|upper }}
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="user-profile-info">
+                                        <div class="user-profile-name">
+                                            {% set is_hma_service = app.user.class is defined and app.user.class == 'App\\Entity\\HmaService' %}
+                                            
+                                            {% if is_hma_service %}
+                                                {{ app.user.companyName }}
+                                            {% else %}
+                                                {{ app.user.fullName }}
+                                            {% endif %}
+                                        </div>
+                                        <div class="user-profile-role">
+                                            {% set is_hma_service = app.user.class is defined and app.user.class == 'App\\Entity\\HmaService' %}
+                                            
+                                            {% if is_hma_service %}
+                                                Propriétaire Entreprise
+                                            {% else %}
+                                                {# C'est un User #}
+                                                {% if app.user.isHmaOwner %}
+                                                    Administrateur Entreprise
+                                                {% elseif 'ROLE_ADMIN' in app.user.roles %}
+                                                    Administrateur
+                                                {% elseif 'ROLE_MANAGER' in app.user.roles %}
+                                                    Gestionnaire
+                                                {% elseif 'ROLE_STOCK_MANAGER' in app.user.roles %}
+                                                    Responsable Stock
+                                                {% elseif 'ROLE_CASHIER' in app.user.roles %}
+                                                    Caissier
+                                                {% else %}
+                                                    Utilisateur
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            
+                            <!-- Liens de profil -->
+                            {% set is_hma_service = app.user.class is defined and app.user.class == 'App\\Entity\\HmaService' %}
+                            
+                            {% if is_hma_service %}
+                                {# Pour HmaService #}
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ path('app_dashboard_hmaservice_profile') }}">
+                                        <i class="bi bi-building me-2 text-primary"></i>
+                                        <span>Profil de l'entreprise</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                {# Pour User normal #}
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <i class="bi bi-person me-2 text-primary"></i>
+                                        <span>Mon profil</span>
+                                    </a>
+                                </li>
+                                
+                                <!-- Lien vers le profil de l'entreprise (seulement pour l'administrateur de l'entreprise) -->
+                                {% if app.user.isHmaOwner and app.user.hmaServiceId %}
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center" href="{{ path('app_dashboard_hmaservice_profile') }}">
+                                            <i class="bi bi-building me-2 text-info"></i>
+                                            <span>Gérer l'entreprise</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                            
+                            <!-- Lien pour modifier le mot de passe -->
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="{{ path('app_forgot_password_request') }}">
+                                    <i class="bi bi-shield-lock me-2 text-success"></i>
+                                    <span>Changer mot de passe</span>
+                                </a>
+                            </li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            
+                            <!-- Déconnexion -->
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center text-danger" href="{{ path('app_logout') }}">
+                                    <i class="bi bi-box-arrow-right me-2"></i>
+                                    <span>Déconnexion</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container-fluid flex-grow-1">
+        <div class="row">
+            <!-- Backdrop pour mobile -->
+            <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+            
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebarMenu">
+                <div class="sidebar-content">
+                    {% set currentRoute = app.request.get('_route') %}
+                    {% set menuItems = get_menu() %}
+                    
+                    {% for item in menuItems %}
+                        {% if item.type == 'title' %}
+                            <div class="menu-title">{{ item.label }}</div>
+                        {% elseif item.type == 'dropdown' %}
+                            {% set isActive = false %}
+                            {% for child in item.children %}
+                                {% if child.route and child.route == currentRoute %}
+                                    {% set isActive = true %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            <a href="#submenu{{ loop.index }}" 
+                            class="nav-link has-arrow {% if isActive %}active{% endif %}" 
+                            data-bs-toggle="collapse"
+                            aria-expanded="{{ isActive ? 'true' : 'false' }}">
+                                <i class="{{ item.icon }}"></i>
+                                <span>{{ item.label }}</span>
+                            </a>
+                            <div class="sub-menu collapse {% if isActive %}show{% endif %}" id="submenu{{ loop.index }}">
+                                {% for child in item.children %}
+                                    {% if child.route %}
+                                        <a href="{{ path(child.route) }}" 
+                                        class="nav-link {% if child.route == currentRoute %}active{% endif %}">
+                                            <i class="{{ child.icon }}"></i>
+                                            {{ child.label }}
+                                        </a>
+                                    {% else %}
+                                        <a href="#" 
+                                        class="nav-link">
+                                            <i class="{{ child.icon }}"></i>
+                                            {{ child.label }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {% if item.route %}
+                                <a href="{{ path(item.route) }}" 
+                                class="nav-link {% if item.route == currentRoute %}active{% endif %}">
+                                    <i class="{{ item.icon }}"></i>
+                                    <span>{{ item.label }}</span>
+                                </a>
+                            {% else %}
+                                <a href="#" 
+                                class="nav-link">
+                                    <i class="{{ item.icon }}"></i>
+                                    <span>{{ item.label }}</span>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Contenu principal -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <!-- Messages flash -->
+                {% for label, messages in app.flashes %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show shadow-sm border-0" role="alert">
+                        <div class="d-flex align-items-center">
+                            {% if label == 'success' %}
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                            {% elseif label == 'error' or label == 'danger' %}
+                                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                            {% elseif label == 'warning' %}
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            {% elseif label == 'info' %}
+                                <i class="bi bi-info-circle-fill me-2"></i>
+                            {% endif %}
+                            <div>
+                                {% for message in messages %}
+                                    {{ message|raw }}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+                
+                <!-- Contenu de la page -->
+                {% block body %}{% endblock %}
+            </main>
+        </div>
+    </div>
+    
+    <!-- Footer amélioré -->
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="footer-content">
+                <div class="row align-items-center">
+                    <div class="col-lg-4 mb-4 mb-lg-0">
+                        <div class="footer-logo">HMA MARKET</div>
+                        <p class="footer-text mb-3">
+                            Système de gestion intégré pour une optimisation complète de votre entreprise.
+                        </p>
+                        <div class="mt-3">
+                            <a href="#" class="footer-icon me-2">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="footer-icon me-2">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="footer-icon me-2">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="footer-icon">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 mb-4 mb-lg-0 text-center">
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">
+                                <a href="{{ path('app_home') }}" class="footer-link">
+                                    <i class="bi bi-house-door me-1"></i>Accueil
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="#" class="footer-link">
+                                    <i class="bi bi-info-circle me-1"></i>À propos
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="#" class="footer-link">
+                                    <i class="bi bi-envelope me-1"></i>Contact
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="footer-link">
+                                    <i class="bi bi-shield-check me-1"></i>Confidentialité
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-lg-4 text-lg-end">
+                        <p class="footer-text mb-2">
+                            <i class="bi bi-telephone me-2"></i>+229 01 56 13 92 00
+                        </p>
+                        <p class="footer-text mb-3">
+                            <i class="bi bi-envelope me-2"></i>contact@hmamarket.com
+                        </p>
+                        <span class="version-badge">
+                            <i class="bi bi-tag me-1"></i>Version 1.0.0
+                        </span>
+                    </div>
+                </div>
+                
+                <hr class="footer-divider">
+                
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <span class="footer-text">
+                            <i class="bi bi-copyright me-1"></i>{{ "now"|date("Y") }} HMA Market. Tous droits réservés.
+                        </span>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <span class="footer-text">
+                            Développé avec <i class="bi bi-heart-fill text-danger mx-1"></i> par l'équipe technique Amiral Amir.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle sidebar sur mobile
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebarMenu');
+            const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                    sidebarBackdrop.classList.toggle('show');
+                    document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
+                });
+            }
+            
+            if (sidebarBackdrop) {
+                sidebarBackdrop.addEventListener('click', function() {
+                    sidebar.classList.remove('show');
+                    sidebarBackdrop.classList.remove('show');
+                    document.body.style.overflow = '';
+                });
+            }
+            
+            // Fermer le sidebar quand on clique sur un lien (mobile)
+            if (window.innerWidth < 768) {
+                const sidebarLinks = sidebar.querySelectorAll('.nav-link');
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        sidebar.classList.remove('show');
+                        sidebarBackdrop.classList.remove('show');
+                        document.body.style.overflow = '';
+                    });
+                });
+            }
+            
+            // Gestion des alertes flash
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+            });
+            
+            // Initialiser les tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Gestion de la recherche universelle
+            function setupUniversalSearch(searchInputId, searchClearId, searchFormId, searchHintId) {
+                const searchInput = document.getElementById(searchInputId);
+                const searchClear = document.getElementById(searchClearId);
+                const searchForm = document.getElementById(searchFormId);
+                const searchHint = document.getElementById(searchHintId);
+                
+                if (!searchInput || !searchClear || !searchForm) return;
+                
+                // Afficher/masquer le bouton clear
+                function toggleClearButton() {
+                    if (searchInput.value.trim() !== '') {
+                        searchClear.classList.add('show');
+                    } else {
+                        searchClear.classList.remove('show');
+                    }
+                }
+                
+                // Mettre à jour le placeholder selon la page
+                function updateSearchPlaceholder() {
+                    const currentRoute = window.location.pathname;
+                    let placeholder = 'Rechercher...';
+                    let hint = 'Appuyez sur Entrée pour rechercher';
+                    
+                    // Déterminer le type de recherche selon la page
+                    if (currentRoute.includes('/admin/user')) {
+                        placeholder = 'Rechercher un utilisateur...';
+                        hint = 'Recherche par nom, email ou téléphone';
+                    } else if (currentRoute.includes('/admin/product')) {
+                        placeholder = 'Rechercher un produit...';
+                        hint = 'Recherche par nom, référence ou catégorie';
+                    } else if (currentRoute.includes('/admin/category')) {
+                        placeholder = 'Rechercher une catégorie...';
+                        hint = 'Recherche par nom ou description';
+                    } else if (currentRoute.includes('/admin/order')) {
+                        placeholder = 'Rechercher une commande...';
+                        hint = 'Recherche par numéro, client ou statut';
+                    } else if (currentRoute.includes('/admin/stock')) {
+                        placeholder = 'Rechercher un mouvement de stock...';
+                        hint = 'Recherche par produit ou type';
+                    } else if (currentRoute.includes('/admin/purchase')) {
+                        placeholder = 'Rechercher un achat...';
+                        hint = 'Recherche par fournisseur ou référence';
+                    }
+                    
+                    searchInput.placeholder = placeholder;
+                    if (searchHint) {
+                        searchHint.textContent = hint;
+                    }
+                }
+                
+                // Écouter les changements dans le champ de recherche
+                searchInput.addEventListener('input', toggleClearButton);
+                
+                // Vider le champ de recherche
+                searchClear.addEventListener('click', function() {
+                    searchInput.value = '';
+                    searchInput.focus();
+                    toggleClearButton();
+                    
+                    // Soumettre le formulaire pour effacer la recherche
+                    if (searchInput.value === '') {
+                        const url = new URL(window.location);
+                        url.searchParams.delete('search');
+                        url.searchParams.delete('page'); // Retour à la page 1
+                        window.location.href = url.toString();
+                    }
+                });
+                
+                // Soumettre le formulaire
+                searchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const searchTerm = searchInput.value.trim();
+                    const currentUrl = new URL(window.location);
+                    
+                    if (searchTerm) {
+                        currentUrl.searchParams.set('search', searchTerm);
+                        currentUrl.searchParams.set('page', '1'); // Retour à la page 1
+                    } else {
+                        currentUrl.searchParams.delete('search');
+                        currentUrl.searchParams.delete('page');
+                    }
+                    
+                    window.location.href = currentUrl.toString();
+                });
+                
+                // Mettre à jour le placeholder au chargement
+                updateSearchPlaceholder();
+                
+                // Initialiser l'état du bouton clear
+                toggleClearButton();
+            }
+            
+            // Configurer les deux barres de recherche (desktop et mobile)
+            setupUniversalSearch('universalSearchInput', 'universalSearchClear', 'universalSearchForm', 'searchHint');
+            setupUniversalSearch('universalSearchInputMobile', 'universalSearchClearMobile', 'universalSearchFormMobile', 'searchHintMobile');
+            
+            // Synchroniser les deux champs de recherche
+            const desktopInput = document.getElementById('universalSearchInput');
+            const mobileInput = document.getElementById('universalSearchInputMobile');
+            
+            if (desktopInput && mobileInput) {
+                desktopInput.addEventListener('input', function() {
+                    mobileInput.value = this.value;
+                    const mobileClear = document.getElementById('universalSearchClearMobile');
+                    if (mobileClear) {
+                        mobileClear.classList.toggle('show', this.value.trim() !== '');
+                    }
+                });
+                
+                mobileInput.addEventListener('input', function() {
+                    desktopInput.value = this.value;
+                    const desktopClear = document.getElementById('universalSearchClear');
+                    if (desktopClear) {
+                        desktopClear.classList.toggle('show', this.value.trim() !== '');
+                    }
+                });
+            }
         });
-    });
+    </script>
     
-    // ... reste de votre code JavaScript ...
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

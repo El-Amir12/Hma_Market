@@ -7,30 +7,96 @@ parameters:
     uploads_directory: '%kernel.project_dir%/public/uploads'
     categories_directory: '%kernel.project_dir%/public/uploads/categories'
     products_directory: '%kernel.project_dir%/public/uploads/products'
+    logos_directory: '%kernel.project_dir%/public/uploads/logos'
     
     # Emails
     app.email_from: 'contact@hma-market.com'
+    admin_email: '%env(ADMIN_EMAIL)%'
+    support_email: '%env(SUPPORT_EMAIL)%'
+    mailer_from_email: '%env(MAILER_FROM_EMAIL)%'
+    mailer_from_name: '%env(MAILER_FROM_NAME)%'
+    app_name: '%env(APP_NAME)%'
+    app_url: '%env(APP_URL)%'
     
     # Répertoires PDF
     bon_commande_directory: '%kernel.project_dir%/public/uploads/bons-commande'
     recu_achat_directory: '%kernel.project_dir%/public/uploads/recus-achat'
 
 services:
+    # defaults
     _defaults:
         autowire: true
         autoconfigure: true
-        
-    # Extension Twig
-    App\Twig\FcfaExtension:
-        tags: ['twig.extension']
-
-    # Service Dompdf
-    Dompdf\Dompdf:
         public: false
 
+    # makes classes in src/ available to be used as services
     App\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    # explicitly configure the service for your controller
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+
+    # Extension Twig
+    App\Twig\FcfaExtension:
+        tags: ['twig.extension']
+        public: false
+
+    # Service Dompdf
+    Dompdf\Dompdf:
+        public: false
+
+    # Service de génération de numéros d'abonnement
+    App\Service\SubscriptionNumberGenerator:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+
+    # Service d'envoi d'emails
+    App\Service\EmailService:
+        arguments:
+            $mailer: '@mailer.mailer'
+            $logger: '@monolog.logger'
+            $urlGenerator: '@router.default'  
+            $fromEmail: '%mailer_from_email%'
+            $fromName: '%mailer_from_name%'
+            $appName: '%app_name%'
+            $appUrl: '%app_url%'
+            $appEnv: '%kernel.environment%'
+            $adminEmail: '%admin_email%'
+            $supportEmail: '%support_email%'
+
+    # Service d'upload de fichiers
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%logos_directory%'
+            $slugger: '@Symfony\Component\String\Slugger\SluggerInterface'
+        public: false
+
+    # Gestionnaire de succès de connexion - CORRIGÉ avec request_stack
+    App\Security\LoginSuccessHandler:
+        arguments:
+            $urlGenerator: '@router'
+            $requestStack: '@request_stack'  # <-- Changé ici
+            $entityManager: '@doctrine.orm.entity_manager'
+            $passwordHasher: '@security.user_password_hasher'
+            $subscriptionGenerator: '@App\Service\SubscriptionNumberGenerator'
+            $emailService: '@App\Service\EmailService'
+        public: true
+
+    # Subscriber pour les événements de connexion
+    
+    App\EventSubscriber\UserDisabledSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    # Menu Builder
+    App\Service\MenuBuilder:
+        arguments:
+            $security: '@security.helper'
+        public: true

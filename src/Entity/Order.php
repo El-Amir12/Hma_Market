@@ -63,6 +63,10 @@ class Order
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'vente', orphanRemoval: true)]
     private Collection $orderItems;
 
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?HmaService $hma_service_id = null;
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
@@ -255,6 +259,18 @@ class Order
                 $orderItem->setVente(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getHmaServiceId(): ?HmaService
+    {
+        return $this->hma_service_id;
+    }
+
+    public function setHmaServiceId(?HmaService $hma_service_id): static
+    {
+        $this->hma_service_id = $hma_service_id;
 
         return $this;
     }

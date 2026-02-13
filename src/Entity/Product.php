@@ -81,6 +81,22 @@ class Product
     #[ORM\OneToMany(targetEntity: StockMovement::class, mappedBy: 'product')]
     private Collection $stockMovements;
 
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?HmaService $hma_service_id = null;
+
+    #[ORM\Column]
+    private ?bool $is_pharmacy = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $dosage = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $form = null;
+
+    #[ORM\Column]
+    private ?bool $prescription_required = null;
+
     public function __construct()
     {
         $this->purchaseItems = new ArrayCollection();
@@ -456,5 +472,65 @@ class Product
         ];
         
         return $classes[$status] ?? 'bg-secondary';
+    }
+
+    public function getHmaServiceId(): ?HmaService
+    {
+        return $this->hma_service_id;
+    }
+
+    public function setHmaServiceId(?HmaService $hma_service_id): static
+    {
+        $this->hma_service_id = $hma_service_id;
+
+        return $this;
+    }
+
+    public function isPharmacy(): ?bool
+    {
+        return $this->is_pharmacy;
+    }
+
+    public function setIsPharmacy(bool $is_pharmacy): static
+    {
+        $this->is_pharmacy = $is_pharmacy;
+
+        return $this;
+    }
+
+    public function getDosage(): ?string
+    {
+        return $this->dosage;
+    }
+
+    public function setDosage(?string $dosage): static
+    {
+        $this->dosage = $dosage;
+
+        return $this;
+    }
+
+    public function getForm(): ?string
+    {
+        return $this->form;
+    }
+
+    public function setForm(?string $form): static
+    {
+        $this->form = $form;
+
+        return $this;
+    }
+
+    public function isPrescriptionRequired(): ?bool
+    {
+        return $this->prescription_required;
+    }
+
+    public function setPrescriptionRequired(bool $prescription_required): static
+    {
+        $this->prescription_required = $prescription_required;
+
+        return $this;
     }
 }

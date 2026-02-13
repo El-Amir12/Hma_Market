@@ -3,35 +3,93 @@
 {% block title %}Mot de passe oublié - HMA Market{% endblock %}
 
 {% block body %}
-    <div class="text-center mb-4">
-        <div class="mb-3">
-            <i class="fas fa-key fa-3x text-primary"></i>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-key me-2"></i>Réinitialisation du mot de passe
+                    </h4>
+                </div>
+                <div class="card-body">
+                    
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <i class="fas fa-check-circle me-2"></i>{{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                    
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                    
+                    <p class="text-muted mb-4">
+                        Entrez votre adresse email professionnelle et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                    </p>
+                    
+                    {{ form_start(requestForm) }}
+                    
+                    <div class="mb-3">
+                        {{ form_label(requestForm.email, 'Email professionnel', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            {{ form_widget(requestForm.email, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'exemple@votre-entreprise.com',
+                                    'autocomplete': 'email',
+                                    'autofocus': true
+                                }
+                            }) }}
+                        </div>
+                        {{ form_errors(requestForm.email) }}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>Envoyer le lien de réinitialisation
+                        </button>
+                        
+                        <a href="{{ path('app_login') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Retour à la connexion
+                        </a>
+                    </div>
+                    
+                    {{ form_end(requestForm) }}
+                </div>
+                <div class="card-footer text-center text-muted">
+                    <small>
+                        <i class="fas fa-info-circle me-1"></i>
+                        Le lien expirera dans 1 heure. Vérifiez votre dossier spam si vous ne voyez pas l'email.
+                    </small>
+                </div>
+            </div>
         </div>
-        <h2 class="fw-bold">Mot de passe oublié</h2>
-        <p class="text-muted">Entrez votre email pour recevoir un lien de réinitialisation</p>
     </div>
+</div>
+
+{# SCRIPT POUR FORCER LA SOUMISSION #}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
     
-    <form method="post">
-        <div class="mb-4">
-            <label for="inputEmail" class="form-label fw-semibold">
-                <i class="fas fa-envelope me-1"></i> Email
-            </label>
-            <input type="email" name="email" id="inputEmail" 
-                   class="form-control" 
-                   placeholder="exemple@email.com"
-                   required autofocus>
-        </div>
+    form.addEventListener('submit', function(e) {
+        console.log('Formulaire en cours de soumission...');
         
-        <div class="mb-4">
-            <button class="btn btn-primary w-100 py-2" type="submit">
-                <i class="fas fa-paper-plane me-2"></i> Envoyer le lien
-            </button>
-        </div>
-        
-        <div class="text-center">
-            <a href="{{ path('app_login') }}" class="text-decoration-none">
-                <i class="fas fa-arrow-left me-1"></i> Retour à la connexion
-            </a>
-        </div>
-    </form>
+        // Désactiver le bouton pour éviter les double-clics
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Envoi en cours...';
+        }
+    });
+});
+</script>
 {% endblock %}
