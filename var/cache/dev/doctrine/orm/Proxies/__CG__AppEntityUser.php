@@ -41,6 +41,7 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\InternalProxy
         "\0".parent::class."\0".'purchases' => [parent::class, 'purchases', null, 16],
         "\0".parent::class."\0".'roles' => [parent::class, 'roles', null, 16],
         "\0".parent::class."\0".'stockMovements' => [parent::class, 'stockMovements', null, 16],
+        "\0".parent::class."\0".'subscription_active' => [parent::class, 'subscription_active', null, 16],
         "\0".parent::class."\0".'updated_at' => [parent::class, 'updated_at', null, 16],
         'categories' => [parent::class, 'categories', null, 16],
         'created_at' => [parent::class, 'created_at', null, 16],
@@ -61,6 +62,7 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\InternalProxy
         'purchases' => [parent::class, 'purchases', null, 16],
         'roles' => [parent::class, 'roles', null, 16],
         'stockMovements' => [parent::class, 'stockMovements', null, 16],
+        'subscription_active' => [parent::class, 'subscription_active', null, 16],
         'updated_at' => [parent::class, 'updated_at', null, 16],
     ];
 

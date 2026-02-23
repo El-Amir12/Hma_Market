@@ -1,21 +1,28 @@
 {# templates/super_admin/hma_service/edit.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier HmaService{% endblock %}
+{% block title %}Modifier {{ hma_service.companyName }} - HMA Market{% endblock %}
 
 {% block body %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ path('app_super_admin_hma_service_index') }}">HmaServices</a></li>
-                    <li class="breadcrumb-item active">Modifier</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
+    <!-- Fil d'Ariane -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_super_admin_hma_service_index') }}" class="text-decoration-none">
+                    <i class="bi bi-building me-1"></i>
+                    Entreprises
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_super_admin_hma_service_show', {'id': hma_service.id}) }}" class="text-decoration-none">
+                    {{ hma_service.companyName }}
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                Modifier
+            </li>
+        </ol>
+    </nav>
 
-    {% include 'super_admin/hma_service/_form.html.twig' with {'form': form, 'hma_service': hma_service} %}
-</div>
+    {% include 'super_admin/hma_service/_form.html.twig' %}
 {% endblock %}

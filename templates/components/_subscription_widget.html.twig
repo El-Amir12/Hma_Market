@@ -1,0 +1,182 @@
+{# templates/components/_subscription_widget.html.twig #}
+
+{# Ne pas afficher pour le super admin #}
+{% if not is_granted('ROLE_SUPER_ADMIN') %}
+    {% set hmaService = null %}
+    
+    {# Récupérer le HmaService selon le type d'utilisateur #}
+    {% if app.user.hmaServiceId is defined %}
+        {# C'est un User avec une relation #}
+        {% set hmaService = app.user.hmaServiceId %}
+    {% elseif app.user.companyName is defined %}
+        {# C'est directement un HmaService #}
+        {% set hmaService = app.user %}
+    {% endif %}
+    
+    {# N'afficher que si on a un HmaService valide #}
+    {% if hmaService is not null %}
+        {% set subscription_info = get_subscription_info(hmaService) %}
+        {% set can_upgrade = is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
+        
+        <div class="card border-0 shadow-lg mb-4 overflow-hidden" style="background: linear-gradient(135deg, var(--primary-color) 0%, #0355d0 100%);">
+            <!-- Effet de vague décoratif -->
+            <div class="position-absolute opacity-10" style="top: -50px; right: -50px;">
+                <i class="bi bi-graph-up-arrow" style="font-size: 150px; color: rgba(255,255,255,0.1);"></i>
+            </div>
+            
+            <div class="card-body p-4 text-white position-relative">
+                <!-- En-tête avec plan et badge -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <span class="text-white-50 small text-uppercase tracking-wider">Plan actuel</span>
+                        <h3 class="h2 fw-bold mb-0 d-flex align-items-center">
+                            {{ subscription_info.plan_label }}
+                            <span class="badge bg-white text-primary ms-3 px-3 py-2 rounded-pill">
+                                {% if subscription_info.is_trial %}
+                                    <i class="bi bi-star-fill me-1"></i>Essai
+                                {% else %}
+                                    <i class="bi bi-check-circle-fill me-1"></i>Actif
+                                {% endif %}
+                            </span>
+                        </h3>
+                    </div>
+                    
+                    <!-- Logo ou icône -->
+                    <div class="bg-white bg-opacity-20 rounded-circle p-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-gem fs-1 text-white"></i>
+                    </div>
+                </div>
+                
+                <!-- Informations de temps restant -->
+                {% if subscription_info.is_trial %}
+                    <div class="bg-white bg-opacity-10 rounded-3 p-3 mb-4">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <i class="bi bi-hourglass-split fs-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="fw-semibold">Période d'essai</span>
+                                    <span class="fw-bold">{{ subscription_info.days_remaining }} jours restants</span>
+                                </div>
+                                <div class="progress" style="height: 8px; background-color: rgba(255,255,255,0.2);">
+                                    {% set percentage = ((14 - subscription_info.days_remaining) / 14 * 100)|round %}
+                                    {% if percentage > 100 %}{% set percentage = 100 %}{% endif %}
+                                    {% if percentage < 0 %}{% set percentage = 0 %}{% endif %}
+                                    <div class="progress-bar bg-white" role="progressbar" 
+                                         style="width: {{ percentage }}%;" 
+                                         aria-valuenow="{{ percentage }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <small class="text-white-50 mt-1 d-block">
+                                    <i class="bi bi-calendar me-1"></i>Se termine le {{ subscription_info.end_date }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                {% elseif subscription_info.plan == 'freemium' %}
+                    <div class="bg-white bg-opacity-10 rounded-3 p-3 mb-4">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <i class="bi bi-gift fs-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold mb-1">Plan Gratuit</h5>
+                                <p class="mb-0 small text-white-50">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Profitez de fonctionnalités limitées. 
+                                    {% if can_upgrade %}
+                                        <a href="{{ path('app_subscription_plans') }}" class="text-white fw-bold text-decoration-underline">
+                                            Passez à un plan supérieur
+                                        </a>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="bg-white bg-opacity-10 rounded-3 p-3 mb-4">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <i class="bi bi-check-circle fs-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold">Abonnement actif</span>
+                                    {% if subscription_info.subscription_end %}
+                                        <small class="text-white-50">
+                                            <i class="bi bi-calendar me-1"></i>Renouvellement le {{ subscription_info.subscription_end }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <!-- Statistiques d'utilisation -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="bg-white bg-opacity-10 rounded-3 p-3 text-center">
+                            <div class="fs-4 fw-bold">{{ subscription_info.usage.products.current }}</div>
+                            <small class="text-white-50">Produits</small>
+                            {% if subscription_info.usage.products.limit != constant('PHP_INT_MAX') %}
+                                <div class="progress mt-2" style="height: 4px;">
+                                    <div class="progress-bar bg-white" style="width: {{ subscription_info.usage.products.percentage }}%"></div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-white bg-opacity-10 rounded-3 p-3 text-center">
+                            <div class="fs-4 fw-bold">{{ subscription_info.usage.categories.current }}</div>
+                            <small class="text-white-50">Catégories</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-white bg-opacity-10 rounded-3 p-3 text-center">
+                            <div class="fs-4 fw-bold">{{ subscription_info.usage.users.current }}</div>
+                            <small class="text-white-50">Utilisateurs</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Boutons d'action -->
+                <div class="d-flex gap-3">
+                    {% if can_upgrade and subscription_info.can_upgrade %}
+                        <a href="#" class="btn btn-light flex-grow-1 py-3 fw-semibold">
+                            <i class="bi bi-stars me-2"></i>
+                            {% if subscription_info.plan == 'freemium' %}
+                                Passer à un plan payant
+                            {% else %}
+                                Améliorer mon abonnement
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                    
+                    <a href="#" class="btn btn-outline-light flex-grow-1 py-3">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Détails
+                    </a>
+                </div>
+                
+                <!-- Liste des fonctionnalités -->
+                {% if subscription_info.features is not empty and subscription_info.features[0] != 'all' %}
+                    <div class="mt-4 pt-3 border-top border-white border-opacity-20">
+                        <small class="text-white-50 d-block mb-2">Fonctionnalités incluses :</small>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for feature in subscription_info.features %}
+                                <span class="badge bg-white bg-opacity-20 text-white px-3 py-2">
+                                    <i class="bi bi-check-circle-fill me-1 small"></i>
+                                    {{ feature|replace({'_': ' '})|title }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endif %}

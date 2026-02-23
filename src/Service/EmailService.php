@@ -86,6 +86,7 @@ class EmailService
 
     /**
      * ✅ NOTIFICATION AU SUPER ADMIN - À L'ACTIVATION UNIQUEMENT
+     * AVEC LIEN VERS LA PAGE SHOW DE L'ENTREPRISE
      */
     public function sendSuperAdminActivationNotification(HmaService $hmaService, string $subscriptionNumber): bool
     {
@@ -109,6 +110,20 @@ class EmailService
                 }
             }
 
+            // ✅ GÉNÉRER LE LIEN VERS LA PAGE SHOW DE L'ENTREPRISE
+            $companyShowUrl = $this->urlGenerator->generate(
+                'app_super_admin_hma_service_show', 
+                ['id' => $hmaService->getId()], 
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            // ✅ GARDER LE LIEN VERS LA LISTE POUR RÉFÉRENCE
+            $companyListUrl = $this->urlGenerator->generate(
+                'app_super_admin_hma_service_index', 
+                [], 
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
             $email = (new TemplatedEmail())
                 ->from(new Address($this->fromEmail, $this->fromName))
                 ->to($this->adminEmail)
@@ -120,13 +135,17 @@ class EmailService
                     'app_name' => $this->appName,
                     'activation_date' => new \DateTime(),
                     'is_production' => $this->isProduction,
-                    'admin_url' => $this->urlGenerator->generate('app_super_admin_hma_service_index', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                    // ✅ ANCIEN LIEN (gardé pour référence)
+                    'admin_url' => $companyListUrl,
+                    // ✅ NOUVEAU LIEN VERS LA PAGE SHOW
+                    'company_show_url' => $companyShowUrl,
                 ]);
 
             $this->mailer->send($email);
             $this->logger->info('Super admin activation notification sent', [
                 'company' => $hmaService->getCompanyName(),
-                'admin_email' => $this->adminEmail
+                'admin_email' => $this->adminEmail,
+                'company_show_url' => $companyShowUrl
             ]);
             return true;
             

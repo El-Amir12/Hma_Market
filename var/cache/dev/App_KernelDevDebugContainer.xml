@@ -26,6 +26,8 @@
       <parameter key="MonologBundle">Symfony\Bundle\MonologBundle\MonologBundle</parameter>
       <parameter key="MakerBundle">Symfony\Bundle\MakerBundle\MakerBundle</parameter>
       <parameter key="SymfonyCastsResetPasswordBundle">SymfonyCasts\Bundle\ResetPassword\SymfonyCastsResetPasswordBundle</parameter>
+      <parameter key="KnpPaginatorBundle">Knp\Bundle\PaginatorBundle\KnpPaginatorBundle</parameter>
+      <parameter key="KnpTimeBundle">Knp\Bundle\TimeBundle\KnpTimeBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -80,6 +82,14 @@
         <parameter key="path">C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src</parameter>
         <parameter key="namespace">SymfonyCasts\Bundle\ResetPassword</parameter>
       </parameter>
+      <parameter key="KnpPaginatorBundle" type="collection">
+        <parameter key="path">C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle</parameter>
+        <parameter key="namespace">Knp\Bundle\PaginatorBundle</parameter>
+      </parameter>
+      <parameter key="KnpTimeBundle" type="collection">
+        <parameter key="path">C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle</parameter>
+        <parameter key="namespace">Knp\Bundle\TimeBundle</parameter>
+      </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">App_KernelDevDebugContainer</parameter>
@@ -89,6 +99,7 @@
     <parameter key="categories_directory">C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/categories</parameter>
     <parameter key="products_directory">C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/products</parameter>
     <parameter key="logos_directory">C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/logos</parameter>
+    <parameter key="photos_directory">C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/photos</parameter>
     <parameter key="app.email_from">contact@hma-market.com</parameter>
     <parameter key="admin_email">%env(ADMIN_EMAIL)%</parameter>
     <parameter key="support_email">%env(SUPPORT_EMAIL)%</parameter>
@@ -147,6 +158,7 @@
     <parameter key="session.metadata.storage_key">_sf2_meta</parameter>
     <parameter key="session.storage.options" type="collection">
       <parameter key="cache_limiter" type="string">0</parameter>
+      <parameter key="name">HMASESSID</parameter>
       <parameter key="cookie_secure">auto</parameter>
       <parameter key="cookie_httponly">true</parameter>
       <parameter key="cookie_samesite">lax</parameter>
@@ -238,7 +250,19 @@
     <parameter key="twig.default_path">C:\wamp64\www\Mes projets en Symfony\hma_market/templates</parameter>
     <parameter key="web_profiler.debug_toolbar.intercept_redirects">false</parameter>
     <parameter key="web_profiler.debug_toolbar.mode">2</parameter>
-    <parameter key="security.role_hierarchy.roles" type="collection"/>
+    <parameter key="security.role_hierarchy.roles" type="collection">
+      <parameter key="ROLE_SUPER_ADMIN" type="collection">
+        <parameter>ROLE_ADMIN</parameter>
+        <parameter>ROLE_ALLOWED_TO_SWITCH</parameter>
+      </parameter>
+      <parameter key="ROLE_ADMIN" type="collection">
+        <parameter>ROLE_MANAGER</parameter>
+        <parameter>ROLE_STOCK_MANAGER</parameter>
+      </parameter>
+      <parameter key="ROLE_MANAGER" type="collection">
+        <parameter>ROLE_CASHIER</parameter>
+      </parameter>
+    </parameter>
     <parameter key="security.access.denied_url">null</parameter>
     <parameter key="security.authentication.manager.erase_credentials">true</parameter>
     <parameter key="security.authentication.session_strategy.strategy">migrate</parameter>
@@ -266,6 +290,14 @@
         </parameter>
       </parameter>
     </parameter>
+    <parameter key="knp_paginator.template.pagination">@KnpPaginator/Pagination/sliding.html.twig</parameter>
+    <parameter key="knp_paginator.template.rel_links">@KnpPaginator/Pagination/rel_links.html.twig</parameter>
+    <parameter key="knp_paginator.template.filtration">@KnpPaginator/Pagination/filtration.html.twig</parameter>
+    <parameter key="knp_paginator.template.sortable">@KnpPaginator/Pagination/sortable_link.html.twig</parameter>
+    <parameter key="knp_paginator.page_range">5</parameter>
+    <parameter key="knp_paginator.page_limit">null</parameter>
+    <parameter key="knp_paginator.page_name">page</parameter>
+    <parameter key="knp_paginator.remove_first_page_param">false</parameter>
     <parameter key="data_collector.templates" type="collection">
       <parameter key="data_collector.request" type="collection">
         <parameter>request</parameter>
@@ -406,7 +438,7 @@
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\Admin\CartController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\Admin\CartController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\CategoryController" class="App\Controller\Admin\CategoryController" public="true" autowire="true" autoconfigure="true">
@@ -414,7 +446,7 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="slugger"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\Admin\CategoryController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\Admin\CategoryController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\ProductController" class="App\Controller\Admin\ProductController" public="true" autowire="true" autoconfigure="true">
@@ -422,7 +454,7 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="slugger"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\Admin\ProductController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\Admin\ProductController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\PurchaseController" class="App\Controller\Admin\PurchaseController" public="true" autowire="true" autoconfigure="true">
@@ -430,28 +462,28 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="kernel"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\Admin\PurchaseController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\Admin\PurchaseController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\PurchaseItemController" class="App\Controller\Admin\PurchaseItemController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\Admin\PurchaseItemController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\Admin\PurchaseItemController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\StockBatchController" class="App\Controller\Admin\StockBatchController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\Admin\StockBatchController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\Admin\StockBatchController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\SupplierController" class="App\Controller\Admin\SupplierController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\Admin\SupplierController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\Admin\SupplierController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\UserController" class="App\Controller\Admin\UserController" public="true" autowire="true" autoconfigure="true">
@@ -460,22 +492,26 @@
       <argument type="service" id="security.user_password_hasher"/>
       <argument type="service" id="slugger"/>
       <argument type="service" id="App\Repository\UserRepository"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\QuotaManager"/>
+      <argument type="service" id="mailer.mailer"/>
+      <argument type="service" id="monolog.logger"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\Admin\UserController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\Admin\UserController"/>
       </call>
     </service>
     <service id="App\Controller\DashboardController" class="App\Controller\DashboardController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\DashboardController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\DashboardController"/>
       </call>
     </service>
     <service id="App\Controller\Dashboard\HmaServiceProfileController" class="App\Controller\Dashboard\HmaServiceProfileController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\Dashboard\HmaServiceProfileController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\Dashboard\HmaServiceProfileController"/>
       </call>
     </service>
     <service id="App\Controller\FirstLoginController" class="App\Controller\FirstLoginController" public="true" autowire="true" autoconfigure="true">
@@ -483,21 +519,42 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="request_stack"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\FirstLoginController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\FirstLoginController"/>
       </call>
     </service>
     <service id="App\Controller\HomeController" class="App\Controller\HomeController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\HomeController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\HomeController"/>
+      </call>
+    </service>
+    <service id="App\Controller\Manager\TeamController" class="App\Controller\Manager\TeamController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="App\Repository\UserRepository"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="monolog.logger"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\Manager\TeamController"/>
+      </call>
+    </service>
+    <service id="App\Controller\ProfileController" class="App\Controller\ProfileController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="slugger"/>
+      <argument type="service" id="security.user_password_hasher"/>
+      <argument type="service" id="monolog.logger"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\ProfileController"/>
       </call>
     </service>
     <service id="App\Controller\RegistrationController" class="App\Controller\RegistrationController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\RegistrationController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\RegistrationController"/>
       </call>
     </service>
     <service id="App\Controller\ResetPasswordController" class="App\Controller\ResetPasswordController" public="true" autowire="true" autoconfigure="true">
@@ -506,28 +563,39 @@
       <argument type="service" id="symfonycasts.reset_password.helper"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\ResetPasswordController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\ResetPasswordController"/>
       </call>
     </service>
     <service id="App\Controller\SecurityController" class="App\Controller\SecurityController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\SecurityController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\SecurityController"/>
       </call>
     </service>
     <service id="App\Controller\SuperAdmin\HmaServiceController" class="App\Controller\SuperAdmin\HmaServiceController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
+      <argument type="service" id="App\Repository\HmaServiceRepository"/>
+      <argument type="service" id="App\Repository\UserRepository"/>
+      <argument type="service" id="App\Repository\SubscriptionRepository"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="security.user_password_hasher"/>
+      <argument type="service" id="slugger"/>
+      <argument type="service" id="knp_paginator"/>
+      <argument type="service" id="App\Service\EmailService"/>
+      <argument type="service" id="filesystem"/>
+      <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/logos</argument>
+      <argument type="service" id="App\Service\CompanyDeletionService"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\SuperAdmin\HmaServiceController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\SuperAdmin\HmaServiceController"/>
       </call>
     </service>
     <service id="App\Controller\ToastController" class="App\Controller\ToastController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\ToastController"/>
+        <argument type="service" id=".service_locator.2c2NXh5.App\Controller\ToastController"/>
       </call>
     </service>
     <service id="App\EventSubscriber\UserDisabledSubscriber" class="App\EventSubscriber\UserDisabledSubscriber" autowire="true" autoconfigure="true">
@@ -556,10 +624,16 @@
     <service id="App\Form\HmaServiceRegistrationType" class="App\Form\HmaServiceRegistrationType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
+    <service id="App\Form\HmaServiceType" class="App\Form\HmaServiceType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
     <service id="App\Form\ProductAutocompleteType" class="App\Form\ProductAutocompleteType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
     <service id="App\Form\ProductType" class="App\Form\ProductType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\ProfileType" class="App\Form\ProfileType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
     <service id="App\Form\PurchaseItemReceiptType" class="App\Form\PurchaseItemReceiptType" autowire="true" autoconfigure="true">
@@ -676,7 +750,16 @@
       <argument type="service" id="App\Service\EmailService"/>
     </service>
     <service id="App\Security\UserChecker" class="App\Security\UserChecker" autowire="true" autoconfigure="true"/>
-    <service id="App\Service\EmailService" class="App\Service\EmailService" autowire="true" autoconfigure="true">
+    <service id="App\Service\CompanyDeletionService" class="App\Service\CompanyDeletionService" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="filesystem"/>
+      <argument type="service" id="monolog.logger"/>
+      <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/logos</argument>
+      <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/photos</argument>
+      <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/products</argument>
+      <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/categories</argument>
+    </service>
+    <service id="App\Service\EmailService" class="App\Service\EmailService" public="true" autowire="true" autoconfigure="true">
       <argument type="service" id="mailer.mailer"/>
       <argument type="service" id="monolog.logger"/>
       <argument type="service" id="router.default"/>
@@ -698,6 +781,10 @@
     <service id="App\Service\PurchaseCartService" class="App\Service\PurchaseCartService" autowire="true" autoconfigure="true">
       <argument type="service" id="request_stack"/>
     </service>
+    <service id="App\Service\QuotaManager" class="App\Service\QuotaManager" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="monolog.logger"/>
+    </service>
     <service id="App\Service\SearchService" class="App\Service\SearchService" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
@@ -709,7 +796,16 @@
       <tag name="twig.extension"/>
       <argument type="service" id="App\Service\MenuBuilder"/>
     </service>
+    <service id="App\Twig\ArrayExtension" class="App\Twig\ArrayExtension" autowire="true" autoconfigure="true">
+      <tag name="twig.extension"/>
+    </service>
     <service id="App\Twig\FcfaExtension" class="App\Twig\FcfaExtension" autowire="true" autoconfigure="true">
+      <tag name="twig.extension"/>
+    </service>
+    <service id="App\Twig\RoleExtension" class="App\Twig\RoleExtension" autowire="true" autoconfigure="true">
+      <tag name="twig.extension"/>
+    </service>
+    <service id="App\Twig\SubscriptionExtension" class="App\Twig\SubscriptionExtension" autowire="true" autoconfigure="true">
       <tag name="twig.extension"/>
     </service>
     <service id="Dompdf\Dompdf" class="Dompdf\Dompdf" autowire="true" autoconfigure="true"/>
@@ -740,7 +836,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.owyzms7"/>
+      <argument type="service" id=".service_locator.LF.vzNN"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -1564,6 +1660,8 @@
         <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations</argument>
         <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations</argument>
         <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations</argument>
+        <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations</argument>
+        <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations</argument>
       </argument>
       <argument type="collection">
         <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\twig-bridge/Resources/views/Email</argument>
@@ -1591,6 +1689,8 @@
         <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations</argument>
         <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations</argument>
         <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations</argument>
+        <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations</argument>
+        <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations</argument>
       </argument>
       <argument type="collection">
         <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\twig-bridge/Resources/views/Email</argument>
@@ -1681,8 +1781,10 @@
         <argument>App\Form\FirstLoginChangePasswordFormType</argument>
         <argument>App\Form\HmaServiceProfileType</argument>
         <argument>App\Form\HmaServiceRegistrationType</argument>
+        <argument>App\Form\HmaServiceType</argument>
         <argument>App\Form\ProductAutocompleteType</argument>
         <argument>App\Form\ProductType</argument>
+        <argument>App\Form\ProfileType</argument>
         <argument>App\Form\PurchaseItemReceiptType</argument>
         <argument>App\Form\PurchaseItemType</argument>
         <argument>App\Form\PurchaseReceiptType</argument>
@@ -2422,6 +2524,8 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.ar.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.ar.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.ar.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ar.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.ar.xliff</argument>
           </argument>
           <argument key="az" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.az.xlf</argument>
@@ -2437,6 +2541,8 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.bg.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.bg.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.bg.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.bg.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.bg.xliff</argument>
           </argument>
           <argument key="bs" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.bs.xlf</argument>
@@ -2448,12 +2554,16 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.ca.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.ca.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.ca.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ca.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.ca.xliff</argument>
           </argument>
           <argument key="cs" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.cs.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.cs.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.cs.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.cs.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.cs.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.cs.xliff</argument>
           </argument>
           <argument key="cy" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.cy.xlf</argument>
@@ -2465,12 +2575,16 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.da.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.da.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.da.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.da.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.da.xliff</argument>
           </argument>
           <argument key="de" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.de.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.de.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.de.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.de.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.de.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.de.xliff</argument>
           </argument>
           <argument key="el" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.el.xlf</argument>
@@ -2483,12 +2597,16 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.en.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.en.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.en.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.en.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.en.xliff</argument>
           </argument>
           <argument key="es" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.es.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.es.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.es.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.es.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.es.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.es.xliff</argument>
           </argument>
           <argument key="et" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.et.xlf</argument>
@@ -2499,24 +2617,31 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.eu.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.eu.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.eu.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.eu.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.eu.xliff</argument>
           </argument>
           <argument key="fa" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.fa.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.fa.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.fa.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.fa.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fa.xliff</argument>
           </argument>
           <argument key="fi" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.fi.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.fi.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.fi.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.fi.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fi.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.fi.xliff</argument>
           </argument>
           <argument key="fr" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.fr.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.fr.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.fr.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.fr.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fr.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.fr.xliff</argument>
           </argument>
           <argument key="gl" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.gl.xlf</argument>
@@ -2532,12 +2657,15 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.hr.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.hr.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.hr.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.hr.xliff</argument>
           </argument>
           <argument key="hu" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.hu.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.hu.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.hu.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.hu.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.hu.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.hu.xliff</argument>
           </argument>
           <argument key="hy" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.hy.xlf</argument>
@@ -2549,18 +2677,24 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.id.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.id.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.id.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.id.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.id.xliff</argument>
           </argument>
           <argument key="it" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.it.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.it.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.it.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.it.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.it.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.it.xliff</argument>
           </argument>
           <argument key="ja" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.ja.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.ja.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.ja.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.ja.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ja.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.ja.xliff</argument>
           </argument>
           <argument key="lb" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.lb.xlf</argument>
@@ -2571,6 +2705,8 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.lt.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.lt.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.lt.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.lt.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.lt.xliff</argument>
           </argument>
           <argument key="lv" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.lv.xlf</argument>
@@ -2598,62 +2734,78 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.nb.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.nb.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.nb.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.nb.xliff</argument>
           </argument>
           <argument key="nl" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.nl.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.nl.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.nl.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.nl.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.nl.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.nl.xliff</argument>
           </argument>
           <argument key="nn" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.nn.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.nn.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.nn.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.nn.xliff</argument>
           </argument>
           <argument key="no" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.no.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.no.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.no.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.no.xliff</argument>
           </argument>
           <argument key="pl" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.pl.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.pl.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.pl.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.pl.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.pl.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.pl.xliff</argument>
           </argument>
           <argument key="pt" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.pt.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.pt.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.pt.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.pt.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.pt.xliff</argument>
           </argument>
           <argument key="pt_BR" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.pt_BR.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.pt_BR.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.pt_BR.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.pt_BR.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.pt_BR.xliff</argument>
           </argument>
           <argument key="ro" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.ro.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.ro.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.ro.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.ro.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ro.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.ro.xliff</argument>
           </argument>
           <argument key="ru" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.ru.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.ru.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.ru.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.ru.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ru.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.ru.xliff</argument>
           </argument>
           <argument key="sk" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.sk.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.sk.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.sk.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.sk.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.sk.xliff</argument>
           </argument>
           <argument key="sl" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.sl.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.sl.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.sl.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.sl.xliff</argument>
           </argument>
           <argument key="sq" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.sq.xlf</argument>
@@ -2674,11 +2826,14 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.sv.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.sv.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.sv.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.sv.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.sv.xliff</argument>
           </argument>
           <argument key="th" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.th.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.th.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.th.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.th.xliff</argument>
           </argument>
           <argument key="tl" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.tl.xlf</argument>
@@ -2690,12 +2845,16 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.tr.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.tr.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.tr.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.tr.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.tr.xliff</argument>
           </argument>
           <argument key="uk" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.uk.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.uk.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.uk.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.uk.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.uk.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.uk.xliff</argument>
           </argument>
           <argument key="ur" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.ur.xlf</argument>
@@ -2711,19 +2870,51 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.vi.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.vi.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.vi.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.vi.xliff</argument>
           </argument>
           <argument key="zh_CN" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.zh_CN.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.zh_CN.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.zh_CN.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.zh_CN.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.zh_CN.xliff</argument>
           </argument>
           <argument key="zh_TW" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\validator/Resources/translations\validators.zh_TW.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations\validators.zh_TW.xlf</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations\security.zh_TW.xlf</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.zh_TW.xliff</argument>
           </argument>
           <argument key="sr" type="collection">
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.sr.xlf</argument>
+          </argument>
+          <argument key="ky" type="collection">
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ky.xliff</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.ky.xliff</argument>
+          </argument>
+          <argument key="sw" type="collection">
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.sw.xliff</argument>
+          </argument>
+          <argument key="bs_Latn_BA" type="collection">
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.bs_Latn_BA.xliff</argument>
+          </argument>
+          <argument key="eo" type="collection">
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.eo.xliff</argument>
+          </argument>
+          <argument key="hr_HR" type="collection">
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.hr_HR.xliff</argument>
+          </argument>
+          <argument key="pt_PT" type="collection">
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.pt_PT.xliff</argument>
+          </argument>
+          <argument key="sr_Latin" type="collection">
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.sr_Latin.xliff</argument>
+          </argument>
+          <argument key="zh" type="collection">
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.zh.xliff</argument>
+          </argument>
+          <argument key="zh_HK" type="collection">
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations\time.zh_HK.xliff</argument>
           </argument>
         </argument>
         <argument key="scanned_directories" type="collection">
@@ -2731,6 +2922,8 @@
           <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations</argument>
           <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations</argument>
           <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations</argument>
+          <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations</argument>
+          <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations</argument>
           <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/translations</argument>
           <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\framework-bundle/translations</argument>
           <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\doctrine\doctrine-bundle/translations</argument>
@@ -2751,6 +2944,8 @@
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\form/Resources/translations</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\security-core/Resources/translations</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfonycasts\reset-password-bundle\src/Resources/translations</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/translations</argument>
+            <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-time-bundle/translations</argument>
             <argument>translations</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\symfony\framework-bundle/translations</argument>
             <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\doctrine\doctrine-bundle/translations</argument>
@@ -3148,6 +3343,14 @@
         <argument type="collection">
           <argument type="service_closure" id="security.context_listener.0"/>
           <argument>onKernelResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.sliding_pagination"/>
+          <argument>onKernelRequest</argument>
         </argument>
         <argument>0</argument>
       </call>
@@ -3680,6 +3883,46 @@
         <argument>0</argument>
       </call>
       <call method="addListener">
+        <argument>knp_pager.before</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.paginate"/>
+          <argument>before</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>knp_pager.pagination</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.paginate"/>
+          <argument>pagination</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>knp_pager.before</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.sortable"/>
+          <argument>before</argument>
+        </argument>
+        <argument>1</argument>
+      </call>
+      <call method="addListener">
+        <argument>knp_pager.before</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.filtration"/>
+          <argument>before</argument>
+        </argument>
+        <argument>1</argument>
+      </call>
+      <call method="addListener">
+        <argument>knp_pager.pagination</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.sliding_pagination"/>
+          <argument>pagination</argument>
+        </argument>
+        <argument>1</argument>
+      </call>
+      <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\CheckPassportEvent</argument>
         <argument type="collection">
           <argument type="service_closure" id="security.listener.csrf_protection"/>
@@ -3709,7 +3952,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.owyzms7"/>
+      <argument type="service" id=".service_locator.LF.vzNN"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -3809,7 +4052,7 @@
     <service id="router.default" class="Symfony\Bundle\FrameworkBundle\Routing\Router">
       <tag name="monolog.logger" channel="router"/>
       <tag name="container.service_subscriber" id="routing.loader"/>
-      <argument type="service" id=".service_locator.bN.V_Nq.router.default"/>
+      <argument type="service" id=".service_locator.C6HNwui.router.default"/>
       <argument>kernel::loadRoutes</argument>
       <argument type="collection">
         <argument key="cache_dir">C:\wamp64\www\Mes projets en Symfony\hma_market\var\cache\dev</argument>
@@ -4198,7 +4441,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.6cqMVLH"/>
+      <argument type="service" id=".service_locator.Peu9QRV"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -6132,7 +6375,16 @@
         <argument type="service" id="App\Twig\AppExtension"/>
       </call>
       <call method="addExtension">
+        <argument type="service" id="App\Twig\ArrayExtension"/>
+      </call>
+      <call method="addExtension">
         <argument type="service" id="App\Twig\FcfaExtension"/>
+      </call>
+      <call method="addExtension">
+        <argument type="service" id="App\Twig\RoleExtension"/>
+      </call>
+      <call method="addExtension">
+        <argument type="service" id="App\Twig\SubscriptionExtension"/>
       </call>
       <call method="addExtension">
         <argument type="service" id="doctrine.twig.doctrine_extension"/>
@@ -6151,6 +6403,12 @@
       </call>
       <call method="addExtension">
         <argument type="service" id="twig.extension.string"/>
+      </call>
+      <call method="addExtension">
+        <argument type="service" id="knp_paginator.twig.extension.pagination"/>
+      </call>
+      <call method="addExtension">
+        <argument type="service" id=".time.twig.extension.time"/>
       </call>
       <call method="addExtension">
         <argument type="service" id="stimulus.twig_extension"/>
@@ -6280,6 +6538,14 @@
         <argument>!Maker</argument>
       </call>
       <call method="addPath">
+        <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/templates</argument>
+        <argument>KnpPaginator</argument>
+      </call>
+      <call method="addPath">
+        <argument>C:\wamp64\www\Mes projets en Symfony\hma_market\vendor\knplabs\knp-paginator-bundle/templates</argument>
+        <argument>!KnpPaginator</argument>
+      </call>
+      <call method="addPath">
         <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/templates</argument>
       </call>
       <call method="addPath">
@@ -6368,7 +6634,7 @@
       <argument>,</argument>
     </service>
     <service id="twig.runtime_loader" class="Twig\RuntimeLoader\ContainerRuntimeLoader">
-      <argument type="service" id=".service_locator.i0..Ry2"/>
+      <argument type="service" id=".service_locator.2qSEWgy"/>
     </service>
     <service id="twig.error_renderer.html" class="Symfony\Bridge\Twig\ErrorRenderer\TwigErrorRenderer">
       <argument type="service" id="twig"/>
@@ -6633,14 +6899,15 @@
       <argument type="service" id="request_stack"/>
     </service>
     <service id="security.role_hierarchy" class="Symfony\Component\Security\Core\Role\RoleHierarchy">
-      <argument type="collection"/>
-    </service>
-    <service id="security.access.simple_role_voter" class="Symfony\Component\Security\Core\Authorization\Voter\RoleVoter">
-      <tag name="security.voter" priority="245"/>
+      <argument>%security.role_hierarchy.roles%</argument>
     </service>
     <service id="security.access.authenticated_voter" class="Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter">
       <tag name="security.voter" priority="250"/>
       <argument type="service" id="security.authentication.trust_resolver"/>
+    </service>
+    <service id="security.access.role_hierarchy_voter" class="Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter">
+      <tag name="security.voter" priority="245"/>
+      <argument type="service" id="security.role_hierarchy"/>
     </service>
     <service id="security.access.expression_voter" class="Symfony\Component\Security\Core\Authorization\Voter\ExpressionVoter">
       <tag name="security.voter" priority="245"/>
@@ -6923,7 +7190,28 @@
         <argument>null</argument>
       </call>
       <call method="add">
-        <argument type="service" id=".security.request_matcher.hUEAkWJ"/>
+        <argument type="service" id=".security.request_matcher.UY4F9_r"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.1boz3rL"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.6QpGnE5"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.dyci6L5"/>
         <argument type="collection">
           <argument>ROLE_SUPER_ADMIN</argument>
         </argument>
@@ -6933,6 +7221,7 @@
         <argument type="service" id=".security.request_matcher.it5.ahQ"/>
         <argument type="collection">
           <argument>ROLE_ADMIN</argument>
+          <argument>ROLE_SUPER_ADMIN</argument>
         </argument>
         <argument>null</argument>
       </call>
@@ -6940,6 +7229,8 @@
         <argument type="service" id=".security.request_matcher.HQyLEM0"/>
         <argument type="collection">
           <argument>ROLE_MANAGER</argument>
+          <argument>ROLE_ADMIN</argument>
+          <argument>ROLE_SUPER_ADMIN</argument>
         </argument>
         <argument>null</argument>
       </call>
@@ -6947,6 +7238,9 @@
         <argument type="service" id=".security.request_matcher.cvr394d"/>
         <argument type="collection">
           <argument>ROLE_STOCK_MANAGER</argument>
+          <argument>ROLE_MANAGER</argument>
+          <argument>ROLE_ADMIN</argument>
+          <argument>ROLE_SUPER_ADMIN</argument>
         </argument>
         <argument>null</argument>
       </call>
@@ -6954,6 +7248,10 @@
         <argument type="service" id=".security.request_matcher.7_whQU7"/>
         <argument type="collection">
           <argument>ROLE_CASHIER</argument>
+          <argument>ROLE_STOCK_MANAGER</argument>
+          <argument>ROLE_MANAGER</argument>
+          <argument>ROLE_ADMIN</argument>
+          <argument>ROLE_SUPER_ADMIN</argument>
         </argument>
         <argument>null</argument>
       </call>
@@ -7361,11 +7659,19 @@
         <argument key="path">app_logout</argument>
         <argument key="target">app_login</argument>
         <argument key="invalidate_session">true</argument>
+        <argument key="delete_cookies" type="collection">
+          <argument key="PHPSESSID" type="collection">
+            <argument key="path">null</argument>
+            <argument key="domain">null</argument>
+            <argument key="secure">false</argument>
+            <argument key="samesite">null</argument>
+            <argument key="partitioned">false</argument>
+          </argument>
+        </argument>
         <argument key="enable_csrf">null</argument>
         <argument key="csrf_token_id">logout</argument>
         <argument key="csrf_parameter">_csrf_token</argument>
         <argument key="clear_site_data" type="collection"/>
-        <argument key="delete_cookies" type="collection"/>
       </argument>
     </service>
     <service id="security.listener.main.user_provider" class="Symfony\Component\Security\Http\EventListener\UserProviderListener">
@@ -7414,6 +7720,18 @@
     </service>
     <service id="security.logout.listener.session.main" class="Symfony\Component\Security\Http\EventListener\SessionLogoutListener">
       <tag name="kernel.event_subscriber" dispatcher="debug.security.event_dispatcher.main"/>
+    </service>
+    <service id="security.logout.listener.cookie_clearing.main" class="Symfony\Component\Security\Http\EventListener\CookieClearingLogoutListener">
+      <tag name="kernel.event_subscriber" dispatcher="debug.security.event_dispatcher.main"/>
+      <argument type="collection">
+        <argument key="PHPSESSID" type="collection">
+          <argument key="path">null</argument>
+          <argument key="domain">null</argument>
+          <argument key="secure">false</argument>
+          <argument key="samesite">null</argument>
+          <argument key="partitioned">false</argument>
+        </argument>
+      </argument>
     </service>
     <service id="security.authenticator.form_login.main" class="Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator">
       <argument type="service" id="security.http_utils"/>
@@ -7748,12 +8066,36 @@
         <argument type="service" id=".security.request_matcher.m8o8v0k"/>
       </argument>
     </service>
-    <service id=".security.request_matcher.qiHRjf3" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
-      <argument>^/admin/super</argument>
+    <service id=".security.request_matcher.sd.4FPw" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/css/</argument>
     </service>
-    <service id=".security.request_matcher.hUEAkWJ" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+    <service id=".security.request_matcher.UY4F9_r" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
       <argument type="collection">
-        <argument type="service" id=".security.request_matcher.qiHRjf3"/>
+        <argument type="service" id=".security.request_matcher.sd.4FPw"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.k4so1sD" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/js/</argument>
+    </service>
+    <service id=".security.request_matcher.1boz3rL" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.k4so1sD"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.0Nx8.8g" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/images/</argument>
+    </service>
+    <service id=".security.request_matcher.6QpGnE5" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.0Nx8.8g"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.deOhx8v" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/super-admin/</argument>
+    </service>
+    <service id=".security.request_matcher.dyci6L5" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.deOhx8v"/>
       </argument>
     </service>
     <service id=".security.request_matcher.wyJHvZ." class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
@@ -8127,6 +8469,69 @@
       <argument>3600</argument>
       <argument>3600</argument>
     </service>
+    <service id="knp_paginator" class="Knp\Component\Pager\Paginator" public="true" lazy="true">
+      <tag name="proxy" interface="Knp\Component\Pager\PaginatorInterface"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+      <argument type="service" id="Knp\Component\Pager\ArgumentAccess\RequestArgumentAccess"/>
+      <argument type="service" id="doctrine.dbal.default_connection" on-invalid="null"/>
+      <call method="setDefaultPaginatorOptions">
+        <argument type="collection">
+          <argument key="pageParameterName">page</argument>
+          <argument key="sortFieldParameterName">sort</argument>
+          <argument key="sortDirectionParameterName">direction</argument>
+          <argument key="filterFieldParameterName">filterField</argument>
+          <argument key="filterValueParameterName">filterValue</argument>
+          <argument key="distinct">true</argument>
+          <argument key="pageOutOfRange">ignore</argument>
+          <argument key="defaultLimit">10</argument>
+        </argument>
+      </call>
+    </service>
+    <service id="Knp\Component\Pager\ArgumentAccess\RequestArgumentAccess" class="Knp\Component\Pager\ArgumentAccess\RequestArgumentAccess">
+      <argument type="service" id="request_stack"/>
+    </service>
+    <service id="knp_paginator.subscriber.paginate" class="Knp\Component\Pager\Event\Subscriber\Paginate\PaginationSubscriber">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="knp_paginator.subscriber.sortable" class="Knp\Component\Pager\Event\Subscriber\Sortable\SortableSubscriber">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="knp_paginator.subscriber.filtration" class="Knp\Component\Pager\Event\Subscriber\Filtration\FiltrationSubscriber">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="knp_paginator.subscriber.sliding_pagination" class="Knp\Bundle\PaginatorBundle\Subscriber\SlidingPaginationSubscriber">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"/>
+      <tag name="container.hot_path"/>
+      <argument type="collection">
+        <argument key="defaultPaginationTemplate">@KnpPaginator/Pagination/sliding.html.twig</argument>
+        <argument key="defaultRelLinksTemplate">@KnpPaginator/Pagination/rel_links.html.twig</argument>
+        <argument key="defaultSortableTemplate">@KnpPaginator/Pagination/sortable_link.html.twig</argument>
+        <argument key="defaultFiltrationTemplate">@KnpPaginator/Pagination/filtration.html.twig</argument>
+        <argument key="defaultPageRange">5</argument>
+        <argument key="defaultPageLimit">null</argument>
+      </argument>
+    </service>
+    <service id="knp_paginator.helper.processor" class="Knp\Bundle\PaginatorBundle\Helper\Processor">
+      <argument type="service" id="router.default"/>
+      <argument type="service" id="translator.data_collector" on-invalid="null"/>
+    </service>
+    <service id="knp_paginator.twig.extension.pagination" class="Knp\Bundle\PaginatorBundle\Twig\Extension\PaginationExtension">
+      <tag name="twig.extension"/>
+    </service>
+    <service id="Knp\Bundle\PaginatorBundle\Twig\Extension\PaginationRuntime" class="Knp\Bundle\PaginatorBundle\Twig\Extension\PaginationRuntime">
+      <tag name="twig.runtime"/>
+      <argument type="service" id="knp_paginator.helper.processor"/>
+      <argument>page</argument>
+      <argument>false</argument>
+    </service>
+    <service id="time.datetime_formatter" class="Knp\Bundle\TimeBundle\DateTimeFormatter">
+      <tag name="twig.runtime"/>
+      <argument type="service" id="translator.data_collector"/>
+    </service>
+    <service id=".time.twig.extension.time" class="Knp\Bundle\TimeBundle\Twig\Extension\TimeExtension">
+      <tag name="twig.extension"/>
+    </service>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\CleanIncompleteRegistrationsCommand" class="App\Command\CleanIncompleteRegistrationsCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\CleanIncompleteRegistrationsCommand" class="App\Command\CleanIncompleteRegistrationsCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\CreateAdminCommand" class="App\Command\CreateAdminCommand" autowire="true" abstract="true"/>
@@ -8169,6 +8574,12 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Manager\TeamController" class="App\Controller\Manager\TeamController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Manager\TeamController" class="App\Controller\Manager\TeamController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Manager\TeamController" class="App\Controller\Manager\TeamController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ProfileController" class="App\Controller\ProfileController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ProfileController" class="App\Controller\ProfileController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\ProfileController" class="App\Controller\ProfileController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -8198,10 +8609,14 @@
     <service id=".abstract.instanceof.App\Form\HmaServiceProfileType" class="App\Form\HmaServiceProfileType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\HmaServiceRegistrationType" class="App\Form\HmaServiceRegistrationType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\HmaServiceRegistrationType" class="App\Form\HmaServiceRegistrationType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\HmaServiceType" class="App\Form\HmaServiceType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\HmaServiceType" class="App\Form\HmaServiceType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProductAutocompleteType" class="App\Form\ProductAutocompleteType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\ProductAutocompleteType" class="App\Form\ProductAutocompleteType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProductType" class="App\Form\ProductType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\ProductType" class="App\Form\ProductType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProfileType" class="App\Form\ProfileType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\ProfileType" class="App\Form\ProfileType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\PurchaseItemReceiptType" class="App\Form\PurchaseItemReceiptType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\PurchaseItemReceiptType" class="App\Form\PurchaseItemReceiptType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\PurchaseItemType" class="App\Form\PurchaseItemType" autowire="true" abstract="true"/>
@@ -8260,8 +8675,14 @@
     <service id=".abstract.instanceof.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\AppExtension" class="App\Twig\AppExtension" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Twig\AppExtension" class="App\Twig\AppExtension" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\ArrayExtension" class="App\Twig\ArrayExtension" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Twig\ArrayExtension" class="App\Twig\ArrayExtension" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\FcfaExtension" class="App\Twig\FcfaExtension" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Twig\FcfaExtension" class="App\Twig\FcfaExtension" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\RoleExtension" class="App\Twig\RoleExtension" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Twig\RoleExtension" class="App\Twig\RoleExtension" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\SubscriptionExtension" class="App\Twig\SubscriptionExtension" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Twig\SubscriptionExtension" class="App\Twig\SubscriptionExtension" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".service_locator.w7.f4fT" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -8879,23 +9300,16 @@
         <argument key="supplier" type="service_closure" id=".errored..service_locator.dvS6U1..App\Entity\Supplier"/>
       </argument>
     </service>
-    <service id=".service_locator.kPUOGb8" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.V8HB.cV" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="userRepository" type="service_closure" id="App\Repository\UserRepository"/>
+        <argument key="hmaServiceRepository" type="service_closure" id="App\Repository\HmaServiceRepository"/>
       </argument>
     </service>
     <service id=".service_locator.Hz5btge" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="user" type="service_closure" id=".errored..service_locator.Hz5btge.App\Entity\User"/>
-      </argument>
-    </service>
-    <service id=".service_locator.rvMNZGh" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
-        <argument key="user" type="service_closure" id=".errored..service_locator.rvMNZGh.App\Entity\User"/>
       </argument>
     </service>
     <service id=".service_locator.fNvIwJr" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -8940,27 +9354,13 @@
         <argument key="passwordHasher" type="service_closure" id="security.user_password_hasher"/>
       </argument>
     </service>
-    <service id=".service_locator.V8HB.cV" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="hmaServiceRepository" type="service_closure" id="App\Repository\HmaServiceRepository"/>
-      </argument>
-    </service>
     <service id=".service_locator.EFV3GZa" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="hmaService" type="service_closure" id=".errored..service_locator.EFV3GZa.App\Entity\HmaService"/>
       </argument>
     </service>
-    <service id=".service_locator.ktyp3kR" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
-        <argument key="fileUploader" type="service_closure" id="App\Service\FileUploader"/>
-        <argument key="hmaService" type="service_closure" id=".errored..service_locator.ktyp3kR.App\Entity\HmaService"/>
-      </argument>
-    </service>
-    <service id=".service_locator.owyzms7" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.LF.vzNN" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Admin\CartController::receiveCart" type="service_closure" id=".service_locator.nnTODkK"/>
@@ -9021,18 +9421,19 @@
         <argument key="App\Controller\Admin\SupplierController::index" type="service_closure" id=".service_locator.Vzzoljw"/>
         <argument key="App\Controller\Admin\SupplierController::new" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Admin\SupplierController::show" type="service_closure" id=".service_locator.FM.zRi8"/>
-        <argument key="App\Controller\Admin\UserController::delete" type="service_closure" id=".service_locator.rvMNZGh"/>
-        <argument key="App\Controller\Admin\UserController::deletePhoto" type="service_closure" id=".service_locator.rvMNZGh"/>
-        <argument key="App\Controller\Admin\UserController::edit" type="service_closure" id=".service_locator.rvMNZGh"/>
-        <argument key="App\Controller\Admin\UserController::index" type="service_closure" id=".service_locator.kPUOGb8"/>
-        <argument key="App\Controller\Admin\UserController::new" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\Admin\UserController::delete" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\Admin\UserController::deletePhoto" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\Admin\UserController::edit" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\Admin\UserController::index" type="service_closure" id=".service_locator.V8HB.cV"/>
         <argument key="App\Controller\Admin\UserController::show" type="service_closure" id=".service_locator.Hz5btge"/>
-        <argument key="App\Controller\Admin\UserController::toggleStatus" type="service_closure" id=".service_locator.rvMNZGh"/>
+        <argument key="App\Controller\Admin\UserController::toggleStatus" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController::activateCompany" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController::deactivateCompany" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController::deleteLogo" type="service_closure" id=".service_locator.fNvIwJr"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController::editProfile" type="service_closure" id=".service_locator.fNvIwJr"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController::showDetails" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\Manager\TeamController::edit" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\Manager\TeamController::show" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\RegistrationController::login" type="service_closure" id=".service_locator.rSTd.nA"/>
         <argument key="App\Controller\RegistrationController::register" type="service_closure" id=".service_locator.6LV_x97"/>
         <argument key="App\Controller\ResetPasswordController::changePassword" type="service_closure" id=".service_locator.Mhqdd2r"/>
@@ -9040,12 +9441,11 @@
         <argument key="App\Controller\ResetPasswordController::request" type="service_closure" id=".service_locator.EE0.cm9"/>
         <argument key="App\Controller\ResetPasswordController::reset" type="service_closure" id=".service_locator.Z9ydiC1"/>
         <argument key="App\Controller\SecurityController::login" type="service_closure" id=".service_locator.rSTd.nA"/>
-        <argument key="App\Controller\SuperAdmin\HmaServiceController::delete" type="service_closure" id=".service_locator.ktyp3kR"/>
-        <argument key="App\Controller\SuperAdmin\HmaServiceController::deleteLogo" type="service_closure" id=".service_locator.ktyp3kR"/>
-        <argument key="App\Controller\SuperAdmin\HmaServiceController::edit" type="service_closure" id=".service_locator.ktyp3kR"/>
-        <argument key="App\Controller\SuperAdmin\HmaServiceController::index" type="service_closure" id=".service_locator.V8HB.cV"/>
-        <argument key="App\Controller\SuperAdmin\HmaServiceController::new" type="service_closure" id=".service_locator.fNvIwJr"/>
+        <argument key="App\Controller\SuperAdmin\HmaServiceController::delete" type="service_closure" id=".service_locator.EFV3GZa"/>
+        <argument key="App\Controller\SuperAdmin\HmaServiceController::edit" type="service_closure" id=".service_locator.EFV3GZa"/>
         <argument key="App\Controller\SuperAdmin\HmaServiceController::show" type="service_closure" id=".service_locator.EFV3GZa"/>
+        <argument key="App\Controller\SuperAdmin\HmaServiceController::subscriptions" type="service_closure" id=".service_locator.EFV3GZa"/>
+        <argument key="App\Controller\SuperAdmin\HmaServiceController::toggleStatus" type="service_closure" id=".service_locator.EFV3GZa"/>
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="App\Kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
@@ -9108,18 +9508,19 @@
         <argument key="App\Controller\Admin\SupplierController:index" type="service_closure" id=".service_locator.Vzzoljw"/>
         <argument key="App\Controller\Admin\SupplierController:new" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Admin\SupplierController:show" type="service_closure" id=".service_locator.FM.zRi8"/>
-        <argument key="App\Controller\Admin\UserController:delete" type="service_closure" id=".service_locator.rvMNZGh"/>
-        <argument key="App\Controller\Admin\UserController:deletePhoto" type="service_closure" id=".service_locator.rvMNZGh"/>
-        <argument key="App\Controller\Admin\UserController:edit" type="service_closure" id=".service_locator.rvMNZGh"/>
-        <argument key="App\Controller\Admin\UserController:index" type="service_closure" id=".service_locator.kPUOGb8"/>
-        <argument key="App\Controller\Admin\UserController:new" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\Admin\UserController:delete" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\Admin\UserController:deletePhoto" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\Admin\UserController:edit" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\Admin\UserController:index" type="service_closure" id=".service_locator.V8HB.cV"/>
         <argument key="App\Controller\Admin\UserController:show" type="service_closure" id=".service_locator.Hz5btge"/>
-        <argument key="App\Controller\Admin\UserController:toggleStatus" type="service_closure" id=".service_locator.rvMNZGh"/>
+        <argument key="App\Controller\Admin\UserController:toggleStatus" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController:activateCompany" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController:deactivateCompany" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController:deleteLogo" type="service_closure" id=".service_locator.fNvIwJr"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController:editProfile" type="service_closure" id=".service_locator.fNvIwJr"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController:showDetails" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\Manager\TeamController:edit" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\Manager\TeamController:show" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\RegistrationController:login" type="service_closure" id=".service_locator.rSTd.nA"/>
         <argument key="App\Controller\RegistrationController:register" type="service_closure" id=".service_locator.6LV_x97"/>
         <argument key="App\Controller\ResetPasswordController:changePassword" type="service_closure" id=".service_locator.Mhqdd2r"/>
@@ -9127,12 +9528,11 @@
         <argument key="App\Controller\ResetPasswordController:request" type="service_closure" id=".service_locator.EE0.cm9"/>
         <argument key="App\Controller\ResetPasswordController:reset" type="service_closure" id=".service_locator.Z9ydiC1"/>
         <argument key="App\Controller\SecurityController:login" type="service_closure" id=".service_locator.rSTd.nA"/>
-        <argument key="App\Controller\SuperAdmin\HmaServiceController:delete" type="service_closure" id=".service_locator.ktyp3kR"/>
-        <argument key="App\Controller\SuperAdmin\HmaServiceController:deleteLogo" type="service_closure" id=".service_locator.ktyp3kR"/>
-        <argument key="App\Controller\SuperAdmin\HmaServiceController:edit" type="service_closure" id=".service_locator.ktyp3kR"/>
-        <argument key="App\Controller\SuperAdmin\HmaServiceController:index" type="service_closure" id=".service_locator.V8HB.cV"/>
-        <argument key="App\Controller\SuperAdmin\HmaServiceController:new" type="service_closure" id=".service_locator.fNvIwJr"/>
+        <argument key="App\Controller\SuperAdmin\HmaServiceController:delete" type="service_closure" id=".service_locator.EFV3GZa"/>
+        <argument key="App\Controller\SuperAdmin\HmaServiceController:edit" type="service_closure" id=".service_locator.EFV3GZa"/>
         <argument key="App\Controller\SuperAdmin\HmaServiceController:show" type="service_closure" id=".service_locator.EFV3GZa"/>
+        <argument key="App\Controller\SuperAdmin\HmaServiceController:subscriptions" type="service_closure" id=".service_locator.EFV3GZa"/>
+        <argument key="App\Controller\SuperAdmin\HmaServiceController:toggleStatus" type="service_closure" id=".service_locator.EFV3GZa"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
       </argument>
@@ -9294,7 +9694,7 @@
       <argument type="service" id="argument_resolver.query_parameter_value_resolver"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.6cqMVLH" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Peu9QRV" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Form\CartItemType" type="service_closure" id="App\Form\CartItemType"/>
@@ -9303,8 +9703,10 @@
         <argument key="App\Form\FirstLoginChangePasswordFormType" type="service_closure" id="App\Form\FirstLoginChangePasswordFormType"/>
         <argument key="App\Form\HmaServiceProfileType" type="service_closure" id="App\Form\HmaServiceProfileType"/>
         <argument key="App\Form\HmaServiceRegistrationType" type="service_closure" id="App\Form\HmaServiceRegistrationType"/>
+        <argument key="App\Form\HmaServiceType" type="service_closure" id="App\Form\HmaServiceType"/>
         <argument key="App\Form\ProductAutocompleteType" type="service_closure" id="App\Form\ProductAutocompleteType"/>
         <argument key="App\Form\ProductType" type="service_closure" id="App\Form\ProductType"/>
+        <argument key="App\Form\ProfileType" type="service_closure" id="App\Form\ProfileType"/>
         <argument key="App\Form\PurchaseItemReceiptType" type="service_closure" id="App\Form\PurchaseItemReceiptType"/>
         <argument key="App\Form\PurchaseItemType" type="service_closure" id="App\Form\PurchaseItemType"/>
         <argument key="App\Form\PurchaseReceiptType" type="service_closure" id="App\Form\PurchaseReceiptType"/>
@@ -9495,8 +9897,8 @@
       <argument type="service" id="security.access.authenticated_voter"/>
       <argument type="service" id="debug.event_dispatcher"/>
     </service>
-    <service id=".debug.security.voter.security.access.simple_role_voter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
-      <argument type="service" id="security.access.simple_role_voter"/>
+    <service id=".debug.security.voter.security.access.role_hierarchy_voter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
+      <argument type="service" id="security.access.role_hierarchy_voter"/>
       <argument type="service" id="debug.event_dispatcher"/>
     </service>
     <service id=".debug.security.voter.security.access.expression_voter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
@@ -9738,6 +10140,14 @@
         <argument>0</argument>
       </call>
       <call method="addListener">
+        <argument>Symfony\Component\Security\Http\Event\LogoutEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="security.logout.listener.cookie_clearing.main"/>
+          <argument>onLogout</argument>
+        </argument>
+        <argument>-255</argument>
+      </call>
+      <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\LoginSuccessEvent</argument>
         <argument type="collection">
           <argument type="service_closure" id="security.listener.check_remember_me_conditions.main"/>
@@ -9834,7 +10244,7 @@
         <argument>0</argument>
       </call>
     </service>
-    <service id=".service_locator.O2p6Lk7" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="form.factory" type="service_closure" id="form.factory" on-invalid="ignore"/>
@@ -9850,107 +10260,119 @@
         <argument key="web_link.http_header_serializer" type="service_closure" id="web_link.http_header_serializer" on-invalid="ignore"/>
       </argument>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\Admin\CartController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\Admin\CartController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\CartController"/>
       <argument>App\Controller\Admin\CartController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\Admin\CategoryController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\Admin\CategoryController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\CategoryController"/>
       <argument>App\Controller\Admin\CategoryController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\Admin\ProductController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\Admin\ProductController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\ProductController"/>
       <argument>App\Controller\Admin\ProductController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\Admin\PurchaseController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\Admin\PurchaseController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\PurchaseController"/>
       <argument>App\Controller\Admin\PurchaseController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\Admin\PurchaseItemController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\Admin\PurchaseItemController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\PurchaseItemController"/>
       <argument>App\Controller\Admin\PurchaseItemController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\Admin\StockBatchController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\Admin\StockBatchController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\StockBatchController"/>
       <argument>App\Controller\Admin\StockBatchController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\Admin\SupplierController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\Admin\SupplierController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\SupplierController"/>
       <argument>App\Controller\Admin\SupplierController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\Admin\UserController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\Admin\UserController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\UserController"/>
       <argument>App\Controller\Admin\UserController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\DashboardController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\DashboardController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\DashboardController"/>
       <argument>App\Controller\DashboardController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\Dashboard\HmaServiceProfileController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\Dashboard\HmaServiceProfileController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Dashboard\HmaServiceProfileController"/>
       <argument>App\Controller\Dashboard\HmaServiceProfileController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\FirstLoginController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\FirstLoginController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\FirstLoginController"/>
       <argument>App\Controller\FirstLoginController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\HomeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\HomeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\HomeController"/>
       <argument>App\Controller\HomeController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\RegistrationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\Manager\TeamController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Manager\TeamController"/>
+      <argument>App\Controller\Manager\TeamController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
+    </service>
+    <service id=".service_locator.2c2NXh5.App\Controller\ProfileController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ProfileController"/>
+      <argument>App\Controller\ProfileController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
+    </service>
+    <service id=".service_locator.2c2NXh5.App\Controller\RegistrationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\RegistrationController"/>
       <argument>App\Controller\RegistrationController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\ResetPasswordController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\ResetPasswordController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ResetPasswordController"/>
       <argument>App\Controller\ResetPasswordController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\SecurityController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\SecurityController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SecurityController"/>
       <argument>App\Controller\SecurityController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\SuperAdmin\HmaServiceController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\SuperAdmin\HmaServiceController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SuperAdmin\HmaServiceController"/>
       <argument>App\Controller\SuperAdmin\HmaServiceController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\ToastController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2c2NXh5.App\Controller\ToastController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ToastController"/>
       <argument>App\Controller\ToastController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+      <factory service=".service_locator.2c2NXh5" method="withContext"/>
     </service>
     <service id=".service_locator.fuYM_Z." class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -9964,17 +10386,17 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.fuYM_Z." method="withContext"/>
     </service>
-    <service id=".service_locator.bN.V_Nq" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.C6HNwui" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="routing.loader" type="service_closure" id="routing.loader"/>
       </argument>
     </service>
-    <service id=".service_locator.bN.V_Nq.router.default" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.C6HNwui.router.default" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="router.default"/>
       <argument>router.default</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.bN.V_Nq" method="withContext"/>
+      <factory service=".service_locator.C6HNwui" method="withContext"/>
     </service>
     <service id=".service_locator.cUcW89y" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -10144,6 +10566,8 @@
           <argument>App\Controller\Dashboard\HmaServiceProfileController</argument>
           <argument>App\Controller\FirstLoginController</argument>
           <argument>App\Controller\HomeController</argument>
+          <argument>App\Controller\Manager\TeamController</argument>
+          <argument>App\Controller\ProfileController</argument>
           <argument>App\Controller\RegistrationController</argument>
           <argument>App\Controller\ResetPasswordController</argument>
           <argument>App\Controller\SecurityController</argument>
@@ -10317,7 +10741,7 @@
     <service id="debug.security.access.decision_manager.inner" class="Symfony\Component\Security\Core\Authorization\AccessDecisionManager">
       <argument type="iterator">
         <argument type="service" id=".debug.security.voter.security.access.authenticated_voter"/>
-        <argument type="service" id=".debug.security.voter.security.access.simple_role_voter"/>
+        <argument type="service" id=".debug.security.voter.security.access.role_hierarchy_voter"/>
         <argument type="service" id=".debug.security.voter.security.access.expression_voter"/>
       </argument>
       <argument type="service">
@@ -10401,14 +10825,8 @@
     <service id=".errored..service_locator.Hz5btge.App\Entity\User" class="App\Entity\User">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.Hz5btge&quot;: it needs an instance of &quot;App\Entity\User&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
-    <service id=".errored..service_locator.rvMNZGh.App\Entity\User" class="App\Entity\User">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.rvMNZGh&quot;: it needs an instance of &quot;App\Entity\User&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
-    </service>
     <service id=".errored..service_locator.EFV3GZa.App\Entity\HmaService" class="App\Entity\HmaService">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.EFV3GZa&quot;: it needs an instance of &quot;App\Entity\HmaService&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
-    </service>
-    <service id=".errored..service_locator.ktyp3kR.App\Entity\HmaService" class="App\Entity\HmaService">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ktyp3kR&quot;: it needs an instance of &quot;App\Entity\HmaService&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".App\Command\CleanIncompleteRegistrationsCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>app:clean-incomplete-registrations</argument>
@@ -11449,7 +11867,7 @@
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
-    <service id=".service_locator.i0..Ry2" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.2qSEWgy" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="Symfony\Bridge\Twig\Extension\CsrfRuntime" type="service_closure" id="twig.runtime.security_csrf"/>
@@ -11459,6 +11877,8 @@
         <argument key="Symfony\Bridge\Twig\Extension\ImportMapRuntime" type="service_closure" id="twig.runtime.importmap"/>
         <argument key="Symfony\UX\StimulusBundle\Twig\UxControllersTwigRuntime" type="service_closure" id="stimulus.ux_controllers_twig_runtime"/>
         <argument key="Symfony\UX\Turbo\Twig\TurboRuntime" type="service_closure" id="turbo.twig.runtime"/>
+        <argument key="Knp\Bundle\PaginatorBundle\Twig\Extension\PaginationRuntime" type="service_closure" id="Knp\Bundle\PaginatorBundle\Twig\Extension\PaginationRuntime"/>
+        <argument key="Knp\Bundle\TimeBundle\DateTimeFormatter" type="service_closure" id="time.datetime_formatter"/>
       </argument>
     </service>
     <service id="App\Kernel" alias="kernel" public="true"/>
@@ -11627,9 +12047,12 @@
     <service id="logger" alias="monolog.logger"/>
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface" alias="symfonycasts.reset_password.helper"/>
+    <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
+    <service id="Knp\Component\Pager\ArgumentAccess\ArgumentAccessInterface" alias="Knp\Component\Pager\ArgumentAccess\RequestArgumentAccess"/>
+    <service id="Knp\Bundle\TimeBundle\DateTimeFormatter" alias="time.datetime_formatter"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.owyzms7"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.LF.vzNN"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -11678,15 +12101,13 @@
     <service id=".service_locator.XJZu3hD" alias=".service_locator.PwUl5QC"/>
     <service id=".service_locator.IDL1FKy" alias=".service_locator.jyYZuLC"/>
     <service id=".service_locator.T6ncYvc" alias=".service_locator.dvS6U1."/>
-    <service id=".service_locator.R0Sb2kd" alias=".service_locator.rvMNZGh"/>
     <service id=".service_locator.KnFk7IB" alias=".service_locator.6LV_x97"/>
-    <service id=".service_locator.ql1Ms8T" alias=".service_locator.ktyp3kR"/>
-    <service id=".service_locator.cbOi3nF" alias=".service_locator.owyzms7"/>
+    <service id=".service_locator.LQMC1UW" alias=".service_locator.LF.vzNN"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
-    <service id=".service_locator.lR_0nog" alias=".service_locator.6cqMVLH"/>
+    <service id=".service_locator.uIAvyWx" alias=".service_locator.Peu9QRV"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>
     <service id=".service_locator.O24_MAy" alias=".service_locator.yY.p4P7"/>
-    <service id=".service_locator.jUv.zyj" alias=".service_locator.O2p6Lk7"/>
+    <service id=".service_locator.xD4br2I" alias=".service_locator.2c2NXh5"/>
     <service id="validator" alias="debug.validator"/>
     <service id="http_client" alias=".debug.http_client"/>
     <service id=".debug.http_client.inner" alias="http_client.uri_template"/>
@@ -11736,19 +12157,16 @@
     <service id=".service_locator.6kFU5sQ" alias=".service_locator.Vzzoljw"/>
     <service id=".service_locator.euQWjYy" alias=".service_locator.FM.zRi8"/>
     <service id=".service_locator..ObGyYY" alias=".service_locator.dvS6U1."/>
-    <service id=".service_locator.025Wi8b" alias=".service_locator.kPUOGb8"/>
+    <service id=".service_locator.cCPevwB" alias=".service_locator.V8HB.cV"/>
     <service id=".service_locator.EmZ4cZI" alias=".service_locator.Hz5btge"/>
-    <service id=".service_locator.ICTRhpx" alias=".service_locator.rvMNZGh"/>
     <service id=".service_locator.J4v_dgx" alias=".service_locator.fNvIwJr"/>
     <service id=".service_locator.1Bj4zw5" alias=".service_locator.6LV_x97"/>
     <service id=".service_locator.7NIAq8D" alias=".service_locator.rSTd.nA"/>
     <service id=".service_locator.ostNlSn" alias=".service_locator.EE0.cm9"/>
     <service id=".service_locator.uPguXMt" alias=".service_locator.Z9ydiC1"/>
     <service id=".service_locator.W47vLMj" alias=".service_locator.Mhqdd2r"/>
-    <service id=".service_locator.cCPevwB" alias=".service_locator.V8HB.cV"/>
     <service id=".service_locator.iPTsvSG" alias=".service_locator.EFV3GZa"/>
-    <service id=".service_locator.fzDcn3R" alias=".service_locator.ktyp3kR"/>
-    <service id=".service_locator.Q1z.f9O" alias=".service_locator.O2p6Lk7"/>
+    <service id=".service_locator.lz7T6np" alias=".service_locator.2c2NXh5"/>
     <service id=".service_locator.dGUCsbe" alias=".service_locator.oR77BOj"/>
     <service id=".service_locator._kIAbz1" alias=".service_locator.TpoC7U9"/>
     <service id=".service_locator.hnz5ZNh" alias=".service_locator.0TACwl3"/>

@@ -1,323 +1,511 @@
+{# templates/admin/user/index.html.twig #}
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des utilisateurs{% endblock %}
+{% block title %}Gestion des utilisateurs - HMA Market{% endblock %}
 
 {% block body %}
 <div class="container-fluid px-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0 text-gray-800">Gestion des utilisateurs</h1>
-            <p class="text-muted">Gérez les utilisateurs de votre application</p>
+    <!-- Header moderne avec dégradé et animations -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="modern-header position-relative overflow-hidden rounded-4 shadow-lg">
+                <!-- Éléments décoratifs animés -->
+                <div class="floating-shapes">
+                    <div class="shape shape-1"></div>
+                    <div class="shape shape-2"></div>
+                    <div class="shape shape-3"></div>
+                </div>
+                
+                <div class="position-relative p-5" style="z-index: 2;">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <div class="d-flex align-items-center gap-4">
+                                <div class="icon-wrapper bg-white bg-opacity-20 rounded-4 p-4">
+                                    <i class="bi bi-people-fill text-white display-4"></i>
+                                </div>
+                                <div>
+                                    <h1 class="display-5 fw-bold text-white mb-2">Gestion des utilisateurs</h1>
+                                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                                        {% if is_super_admin %}
+                                            <span class="badge bg-white text-primary px-4 py-2 rounded-pill fs-6">
+                                                <i class="bi bi-shield-shaded me-2"></i>Super Administrateur
+                                            </span>
+                                            <span class="text-white-50">
+                                                <i class="bi bi-building me-1"></i>Toutes les entreprises
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-white text-success px-4 py-2 rounded-pill fs-6">
+                                                <i class="bi bi-building me-2"></i>{{ app.user.companyDisplayName }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <!-- Statistiques rapides sous forme de cartes -->
+                            <div class="stats-grid">
+                                <div class="stat-card bg-white bg-opacity-10 rounded-3 p-3 text-center">
+                                    <div class="stat-value text-white h3 mb-0 fw-bold">{{ stats.total }}</div>
+                                    <div class="stat-label text-white-50 small">Total</div>
+                                </div>
+                                <div class="stat-card bg-white bg-opacity-10 rounded-3 p-3 text-center">
+                                    <div class="stat-value text-success h3 mb-0 fw-bold">{{ stats.active }}</div>
+                                    <div class="stat-label text-white-50 small">Actifs</div>
+                                </div>
+                                <div class="stat-card bg-white bg-opacity-10 rounded-3 p-3 text-center">
+                                    <div class="stat-value text-warning h3 mb-0 fw-bold">{{ stats.inactiveByAdmin }}</div>
+                                    <div class="stat-label text-white-50 small">Inactifs</div>
+                                </div>
+                                <div class="stat-card bg-white bg-opacity-10 rounded-3 p-3 text-center">
+                                    <div class="stat-value text-danger h3 mb-0 fw-bold">{{ stats.outOfQuota }}</div>
+                                    <div class="stat-label text-white-50 small">Hors quota</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vague décorative -->
+                <div class="wave-decoration">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                        <path fill="#ffffff" fill-opacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+                    </svg>
+                </div>
+            </div>
         </div>
-        <a href="{{ path('app_user_new') }}" class="btn btn-primary">
-            <i class="fas fa-plus-circle me-2"></i> Nouvel utilisateur
-        </a>
     </div>
 
-    <!-- Alertes flash -->
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i> {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {% endfor %}
-    
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {% endfor %}
-
-    <!-- Modal pour la suppression -->
-    <div class="modal fade" id="deleteModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmation de suppression</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="deleteMessage"></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <form id="deleteForm" method="post">
-                        <input type="hidden" name="_token" id="deleteCsrfToken">
-                        <button type="submit" class="btn btn-danger">Supprimer</button>
+    <!-- Filtres et actions -->
+    <div class="row mb-4 g-3">
+        <div class="col-lg-{% if is_super_admin %}9{% else %}8{% endif %}">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form method="get" action="{{ path('app_user_index') }}" class="row g-3">
+                        <div class="col-md-{% if is_super_admin %}4{% else %}5{% endif %}">
+                            <div class="search-wrapper">
+                                <i class="bi bi-search search-icon"></i>
+                                <input type="text" 
+                                       name="search" 
+                                       class="form-control form-control-lg ps-5 border-0 bg-light"
+                                       placeholder="Rechercher un utilisateur..."
+                                       value="{{ search }}">
+                                {% if search %}
+                                    <a href="{{ path('app_user_index') }}" class="clear-search">
+                                        <i class="bi bi-x-circle"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if is_super_admin %}
+                        <div class="col-md-3">
+                            <select name="company" class="form-select form-select-lg bg-light border-0">
+                                <option value="">🏢 Toutes les entreprises</option>
+                                {% for company in companies %}
+                                    <option value="{{ company.id }}" {{ companyId == company.id ? 'selected' }}>
+                                        {{ company.companyName }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="col-md-3">
+                            <select name="role" class="form-select form-select-lg bg-light border-0">
+                                <option value="">👥 Tous les rôles</option>
+                                <option value="ROLE_ADMIN" {{ role == 'ROLE_ADMIN' ? 'selected' }}>👑 Administrateurs</option>
+                                <option value="ROLE_MANAGER" {{ role == 'ROLE_MANAGER' ? 'selected' }}>📊 Gestionnaires</option>
+                                <option value="ROLE_STOCK_MANAGER" {{ role == 'ROLE_STOCK_MANAGER' ? 'selected' }}>📦 Responsables Stock</option>
+                                <option value="ROLE_CASHIER" {{ role == 'ROLE_CASHIER' ? 'selected' }}>💶 Caissiers</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <select name="status" class="form-select form-select-lg bg-light border-0">
+                                <option value="">⚡ Tous les statuts</option>
+                                <option value="active" {{ status == 'active' ? 'selected' }}>✅ Actifs</option>
+                                <option value="inactive" {{ status == 'inactive' ? 'selected' }}>⛔ Désactivés</option>
+                                <option value="quota" {{ status == 'quota' ? 'selected' }}>⚠️ Hors quota</option>
+                                {% if is_super_admin %}
+                                    <option value="blocked" {{ status == 'blocked' ? 'selected' }}>🔒 Entreprises bloquées</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-12 mt-3">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="bi bi-funnel me-2"></i>Appliquer les filtres
+                            </button>
+                            <a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary btn-lg px-5 ms-2">
+                                <i class="bi bi-arrow-counterclockwise me-2"></i>Réinitialiser
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Carte principale -->
-    <div class="card shadow">
-        <div class="card-body">
-            <!-- Statistiques -->
-            {% set activeUsers = users|filter(u => u.isActive)|length %}
-            {% set inactiveUsers = users|filter(u => not u.isActive)|length %}
-            {% set adminUsers = users|filter(u => 'ROLE_ADMIN' in u.roles)|length %}
-            
-            <div class="row mb-4">
-                <div class="col-md-3 col-6 mb-3">
-                    <div class="card border-0 bg-light stat-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title mb-1">{{ totalItems }}</h5>
-                            <p class="card-text text-muted small">Utilisateurs totaux</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6 mb-3">
-                    <div class="card border-0 bg-light stat-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title mb-1 text-success">{{ activeUsers }}</h5>
-                            <p class="card-text text-muted small">Utilisateurs actifs</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6 mb-3">
-                    <div class="card border-0 bg-light stat-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title mb-1 text-danger">{{ inactiveUsers }}</h5>
-                            <p class="card-text text-muted small">Utilisateurs inactifs</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6 mb-3">
-                    <div class="card border-0 bg-light stat-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title mb-1 text-primary">{{ adminUsers }}</h5>
-                            <p class="card-text text-muted small">Administrateurs</p>
-                        </div>
-                    </div>
+        
+        <div class="col-lg-{% if is_super_admin %}3{% else %}4{% endif %}">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    {% if is_super_admin or can_add_user %}
+                        <a href="{{ path('app_user_new') }}" class="btn btn-success btn-lg w-100 py-3">
+                            <i class="bi bi-person-plus-fill me-2"></i>
+                            Nouvel utilisateur
+                        </a>
+                    {% else %}
+                        <button type="button" class="btn btn-secondary btn-lg w-100 py-3" disabled 
+                                data-bs-toggle="tooltip" 
+                                title="Limite d'utilisateurs atteinte pour votre plan">
+                            <i class="bi bi-person-plus-fill me-2"></i>
+                            Limite atteinte
+                        </button>
+                    {% endif %}
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
+    <!-- Tableau des utilisateurs -->
+    <div class="card border-0 shadow-lg">
+        <div class="card-header bg-white py-4 border-0">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-table me-2 text-primary"></i>
+                    Liste des utilisateurs
+                    <span class="badge bg-primary ms-2 rounded-pill">{{ totalItems }}</span>
+                </h5>
+                <div class="text-muted small">
+                    <i class="bi bi-mouse me-1"></i>
+                    Scrollez pour voir plus de colonnes
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body p-0">
+            <div class="table-responsive" style="max-height: 600px; overflow-y: auto; overflow-x: auto;">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light sticky-top" style="top: 0; z-index: 10;">
                         <tr>
-                            <th width="60">Photo</th>
-                            <th>Nom complet</th>
-                            <th>Email</th>
+                            <th class="ps-4" width="60"></th>
+                            <th>Utilisateur</th>
+                            {% if is_super_admin %}
+                                <th>Entreprise</th>
+                            {% endif %}
                             <th>Rôle</th>
-                            <th width="120">Statut</th>
-                            <th width="100">Date</th>
-                            <th class="text-end" width="160">Actions</th>
+                            <th>Statut</th>
+                            <th>Contact</th>
+                            <th class="text-end pe-4" style="min-width: 200px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for user in users %}
-                        <tr>
-                            <td>
-                                {% if user.photo %}
-                                    <img src="{{ asset('uploads/users/' ~ user.photo) }}" 
-                                         alt="{{ user.fullName }}" 
-                                         class="rounded-circle"
-                                         style="width: 40px; height: 40px; object-fit: cover;"
-                                         onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\'rounded-circle d-flex align-items-center justify-content-center bg-light\' style=\'width: 40px; height: 40px;\'><i class=\'fas fa-user text-muted\'></i></div>';">
-                                {% else %}
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center bg-light"
-                                         style="width: 40px; height: 40px;">
-                                        <i class="fas fa-user text-muted"></i>
+                        {% for user in users %}
+                            {% set rowClass = '' %}
+                            {% if user.hmaServiceId and not user.hmaServiceId.hmaActive %}
+                                {% set rowClass = 'table-inactive-company' %}
+                            {% elseif not user.subscriptionActive %}
+                                {% set rowClass = 'table-warning' %}
+                            {% elseif not user.isActive %}
+                                {% set rowClass = 'table-inactive' %}
+                            {% endif %}
+                            
+                            <tr class="user-row {{ rowClass }}" data-user-id="{{ user.id }}">
+                                <td class="ps-4">
+                                    <div class="user-avatar">
+                                        {% if user.photo %}
+                                            <img src="{{ asset('uploads/users/' ~ user.photo) }}" 
+                                                 alt="{{ user.fullName }}" 
+                                                 class="rounded-circle object-fit-cover"
+                                                 width="45" height="45">
+                                        {% else %}
+                                            <div class="avatar-placeholder rounded-circle bg-gradient-primary text-white d-flex align-items-center justify-content-center"
+                                                 style="width: 45px; height: 45px;">
+                                                <span class="fw-bold fs-5">{{ user.fullName|first|upper }}</span>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if user.isHmaOwner %}
+                                            <span class="owner-badge" data-bs-toggle="tooltip" title="Propriétaire">
+                                                <i class="bi bi-crown-fill"></i>
+                                            </span>
+                                        {% endif %}
                                     </div>
+                                </td>
+                                
+                                <td>
+                                    <div class="fw-semibold">{{ user.fullName }}</div>
+                                </td>
+                                
+                                {% if is_super_admin %}
+                                    <td>
+                                        {% if user.hmaServiceId %}
+                                            <div class="d-flex align-items-center">
+                                                <span class="company-badge">
+                                                    <i class="bi bi-building me-1"></i>
+                                                    {{ user.hmaServiceId.companyName|length > 20 ? user.hmaServiceId.companyName|slice(0, 20) ~ '...' : user.hmaServiceId.companyName }}
+                                                </span>
+                                                {% if not user.hmaServiceId.hmaActive %}
+                                                    <span class="badge bg-dark ms-2" data-bs-toggle="tooltip" title="Entreprise bloquée">
+                                                        <i class="bi bi-lock-fill"></i>
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Indépendant</span>
+                                        {% endif %}
+                                    </td>
                                 {% endif %}
-                            </td>
-                            <td>
-                                <strong>{{ user.fullName }}</strong>
-                                <div class="text-muted small">{{ user.phone }}</div>
-                            </td>
-                            <td>{{ user.email }}</td>
-                            <td>
-                                {% if 'ROLE_ADMIN' in user.roles %}
-                                    <span class="badge bg-danger">
-                                        <i class="fas fa-crown me-1"></i> Admin
+                                
+                                <td>
+                                    <span class="role-badge {{ user.roleBadgeClass }}">
+                                        <i class="bi {{ user.roleIcon }} me-1"></i>
+                                        {{ user.roleLabel }}
                                     </span>
-                                {% elseif 'ROLE_MANAGER' in user.roles %}
-                                    <span class="badge bg-primary">
-                                        <i class="fas fa-chart-line me-1"></i> Gestionnaire
-                                    </span>
-                                {% elseif 'ROLE_STOCK_MANAGER' in user.roles %}
-                                    <span class="badge bg-warning text-dark">
-                                        <i class="fas fa-warehouse me-1"></i> Stock
-                                    </span>
-                                {% elseif 'ROLE_CASHIER' in user.roles %}
-                                    <span class="badge bg-success">
-                                        <i class="fas fa-cash-register me-1"></i> Caissier
-                                    </span>
-                                {% else %}
-                                    <span class="badge bg-secondary">
-                                        <i class="fas fa-user me-1"></i> Utilisateur
-                                    </span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <form action="{{ path('app_user_toggle_status', {'id': user.id}) }}" 
-                                      method="post" 
-                                      class="d-inline">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('toggle-status' ~ user.id) }}">
-                                    {% if user.isActive %}
-                                        <button type="submit" 
-                                                class="btn btn-success btn-sm rounded-pill w-100" 
-                                                title="Cliquez pour désactiver">
-                                            <i class="fas fa-toggle-on me-1"></i> Actif
-                                        </button>
-                                    {% else %}
-                                        <button type="submit" 
-                                                class="btn btn-danger btn-sm rounded-pill w-100" 
-                                                title="Cliquez pour activer">
-                                            <i class="fas fa-toggle-off me-1"></i> Inactif
-                                        </button>
-                                    {% endif %}
-                                </form>
-                            </td>
-                            <td>
-                                <small class="text-muted">
-                                    {{ user.createdAt ? user.createdAt|date('d/m/Y') : '' }}
-                                </small>
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a href="{{ path('app_user_show', {'id': user.id}) }}" 
-                                       class="btn btn-info btn-sm" 
-                                       title="Voir détails">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ path('app_user_edit', {'id': user.id}) }}" 
-                                       class="btn btn-warning btn-sm" 
-                                       title="Modifier">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    {% if user.email != 'admin@hma.com' %}
-                                    <button type="button" 
-                                            class="btn btn-danger btn-sm delete-btn" 
-                                            data-user-id="{{ user.id }}"
-                                            data-user-name="{{ user.fullName }}"
-                                            data-csrf-token="{{ csrf_token('delete' ~ user.id) }}"
-                                            title="Supprimer">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                    {% else %}
-                                    <button type="button" 
-                                            class="btn btn-danger btn-sm" 
-                                            title="Administrateur principal - Non supprimable"
-                                            disabled>
-                                        <i class="fas fa-shield-alt"></i>
-                                    </button>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="7" class="text-center py-4">
-                                <div class="text-muted">
-                                    <i class="fas fa-users fa-2x mb-3"></i>
-                                    <p class="mb-0">Aucun utilisateur trouvé</p>
-                                    {% if search %}
-                                        <p class="small">Aucun résultat pour "{{ search }}"</p>
-                                        <a href="{{ path('app_user_index') }}" class="btn btn-outline-primary mt-2">
-                                            <i class="fas fa-times me-1"></i> Effacer la recherche
+                                </td>
+                                
+                                <td>
+                                    <div class="d-flex flex-column gap-1">
+                                        <span class="status-badge {{ user.statusBadgeClass }}">
+                                            <i class="bi {{ user.statusIcon }} me-1"></i>
+                                            {{ user.statusLabel }}
+                                        </span>
+                                        {% if not user.passwordChanged and not user.isHmaOwner %}
+                                            <span class="badge bg-warning-subtle text-warning-emphasis px-2 py-1 small" 
+                                                  data-bs-toggle="tooltip" 
+                                                  title="Première connexion en attente">
+                                                <i class="bi bi-shield-exclamation me-1"></i>
+                                                1ère connexion
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                
+                                <td>
+                                    <div class="contact-info">
+                                        <div class="small">
+                                            <i class="bi bi-envelope text-muted me-1"></i>
+                                            <a href="mailto:{{ user.email }}" class="text-decoration-none text-dark">
+                                                {{ user.email|length > 20 ? user.email|slice(0, 20) ~ '...' : user.email }}
+                                            </a>
+                                        </div>
+                                        <div class="small">
+                                            <i class="bi bi-telephone text-muted me-1"></i>
+                                            <a href="tel:{{ user.phone }}" class="text-decoration-none text-dark">
+                                                {{ user.phone }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                
+                                <td class="text-end pe-4">
+                                    <div class="action-buttons">
+                                        <a href="{{ path('app_user_show', {'id': user.id}) }}" 
+                                           class="btn-action btn-view" 
+                                           data-bs-toggle="tooltip" 
+                                           title="Voir les détails">
+                                            <i class="bi bi-eye"></i>
                                         </a>
-                                    {% else %}
-                                        <a href="{{ path('app_user_new') }}" class="btn btn-primary mt-2">
-                                            <i class="fas fa-plus me-1"></i> Créer un utilisateur
-                                        </a>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
+                                        
+                                        {% if user.isEditableBy(current_user) %}
+                                            <a href="{{ path('app_user_edit', {'id': user.id}) }}" 
+                                               class="btn-action btn-edit" 
+                                               data-bs-toggle="tooltip" 
+                                               title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        {% endif %}
+                                        
+                                        {% if user.canToggleStatusBy(current_user) %}
+                                            <button type="button" 
+                                                    class="btn-action btn-{{ user.isActive ? 'danger' : 'success' }} toggle-status-btn"
+                                                    data-user-id="{{ user.id }}"
+                                                    data-user-name="{{ user.fullName }}"
+                                                    data-current-status="{{ user.isActive ? 'active' : 'inactive' }}"
+                                                    data-csrf-token="{{ csrf_token('toggle-status' ~ user.id) }}"
+                                                    data-bs-toggle="tooltip" 
+                                                    title="{{ user.isActive ? 'Désactiver' : 'Activer' }}">
+                                                <i class="bi bi-{{ user.isActive ? 'toggle-off' : 'toggle-on' }}"></i>
+                                            </button>
+                                        {% endif %}
+                                        
+                                        {% if user.canBeDeletedBy(current_user) %}
+                                            <button type="button" 
+                                                    class="btn-action btn-delete delete-btn"
+                                                    data-user-id="{{ user.id }}"
+                                                    data-user-name="{{ user.fullName }}"
+                                                    data-csrf-token="{{ csrf_token('delete' ~ user.id) }}"
+                                                    data-bs-toggle="tooltip" 
+                                                    title="Supprimer">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="{% if is_super_admin %}7{% else %}6{% endif %}" class="text-center py-5">
+                                    <div class="empty-state">
+                                        <div class="empty-state-icon mb-4">
+                                            <i class="bi bi-people display-1 text-muted"></i>
+                                        </div>
+                                        <h4 class="text-muted mb-3">Aucun utilisateur trouvé</h4>
+                                        <p class="text-muted mb-4">Commencez par créer votre premier utilisateur</p>
+                                        {% if is_super_admin or can_add_user %}
+                                            <a href="{{ path('app_user_new') }}" class="btn btn-primary btn-lg px-5">
+                                                <i class="bi bi-person-plus me-2"></i>Créer un utilisateur
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination améliorée -->
-            {% if totalPages > 1 %}
-            <nav aria-label="Pagination" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    <!-- Premier & Précédent -->
-                    {% if currentPage > 1 %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ path('app_user_index', app.request.query.all|merge({'page': 1})) }}">
-                                <i class="fas fa-angle-double-left"></i>
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="{{ path('app_user_index', app.request.query.all|merge({'page': currentPage - 1})) }}">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link"><i class="fas fa-angle-double-left"></i></span>
-                        </li>
-                        <li class="page-item disabled">
-                            <span class="page-link"><i class="fas fa-chevron-left"></i></span>
-                        </li>
-                    {% endif %}
-
-                    <!-- Pages numérotées -->
-                    {% set startPage = max(1, currentPage - 2) %}
-                    {% set endPage = min(totalPages, startPage + 4) %}
-                    
-                    {% if startPage > 1 %}
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                    {% endif %}
-                    
-                    {% for page in startPage..endPage %}
-                        <li class="page-item {% if page == currentPage %}active{% endif %}">
-                            <a class="page-link" href="{{ path('app_user_index', app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
-                        </li>
-                    {% endfor %}
-                    
-                    {% if endPage < totalPages %}
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                    {% endif %}
-
-                    <!-- Suivant & Dernier -->
-                    {% if currentPage < totalPages %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ path('app_user_index', app.request.query.all|merge({'page': currentPage + 1})) }}">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="{{ path('app_user_index', app.request.query.all|merge({'page': totalPages})) }}">
-                                <i class="fas fa-angle-double-right"></i>
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link"><i class="fas fa-chevron-right"></i></span>
-                        </li>
-                        <li class="page-item disabled">
-                            <span class="page-link"><i class="fas fa-angle-double-right"></i></span>
-                        </li>
-                    {% endif %}
-                </ul>
-                
-                <div class="text-center text-muted small mt-2">
-                    Page {{ currentPage }} sur {{ totalPages }} - 
-                    Affichage de {{ users|length }} utilisateur(s) sur {{ totalItems }} au total
+        </div>
+        
+        <!-- Pagination -->
+        {% if totalPages > 1 %}
+        <div class="card-footer bg-white py-3 border-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    Affichage de {{ ((currentPage - 1) * limit) + 1 }} à {{ min(currentPage * limit, totalItems) }} sur {{ totalItems }} utilisateurs
                 </div>
-            </nav>
-            {% endif %}
+                <nav aria-label="Pagination">
+                    <ul class="pagination pagination-modern mb-0">
+                        <li class="page-item {{ currentPage <= 1 ? 'disabled' }}">
+                            <a class="page-link" href="{{ path('app_user_index', {page: currentPage - 1, search: search, role: role, status: status, company: companyId}) }}">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                        
+                        {% for i in 1..totalPages %}
+                            <li class="page-item {{ i == currentPage ? 'active' }}">
+                                <a class="page-link" href="{{ path('app_user_index', {page: i, search: search, role: role, status: status, company: companyId}) }}">
+                                    {{ i }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        
+                        <li class="page-item {{ currentPage >= totalPages ? 'disabled' }}">
+                            <a class="page-link" href="{{ path('app_user_index', {page: currentPage + 1, search: search, role: role, status: status, company: companyId}) }}">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modals de confirmation -->
+<div class="modal fade" id="toggleStatusModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-warning border-0">
+                <h5 class="modal-title text-white">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Confirmation
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-question-circle text-warning" style="font-size: 4rem;"></i>
+                </div>
+                <h5 id="toggleStatusMessage" class="mb-3"></h5>
+                <p class="text-muted mb-0">Cette action peut être annulée à tout moment.</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                    <i class="bi bi-x me-2"></i>Annuler
+                </button>
+                <form id="toggleStatusForm" method="post" class="d-inline">
+                    <input type="hidden" name="_token" id="toggleStatusToken">
+                    <button type="submit" class="btn btn-warning px-4">
+                        <i class="bi bi-check me-2"></i>Confirmer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Confirmation de suppression
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-trash3 text-danger" style="font-size: 4rem;"></i>
+                </div>
+                <h5 id="deleteMessage" class="mb-3"></h5>
+                <p class="text-muted mb-0">Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                    <i class="bi bi-x me-2"></i>Annuler
+                </button>
+                <form id="deleteForm" method="post" class="d-inline">
+                    <input type="hidden" name="_token" id="deleteToken">
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="bi bi-trash me-2"></i>Supprimer
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block javascripts %}
+{{ parent() }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion de la suppression avec modal
-    const deleteButtons = document.querySelectorAll('.delete-btn');
+    // Initialisation des tooltips
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltips.forEach(tooltip => new bootstrap.Tooltip(tooltip));
+    
+    // Gestion du toggle status
+    const toggleModal = new bootstrap.Modal(document.getElementById('toggleStatusModal'));
+    const toggleButtons = document.querySelectorAll('.toggle-status-btn');
+    const toggleForm = document.getElementById('toggleStatusForm');
+    const toggleToken = document.getElementById('toggleStatusToken');
+    const toggleMessage = document.getElementById('toggleStatusMessage');
+    
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            const userName = this.dataset.userName;
+            const currentStatus = this.dataset.currentStatus;
+            const csrfToken = this.dataset.csrfToken;
+            
+            const action = currentStatus === 'active' ? 'désactiver' : 'activer';
+            toggleMessage.innerHTML = `Êtes-vous sûr de vouloir <strong class="text-${currentStatus === 'active' ? 'danger' : 'success'}">${action}</strong> l'utilisateur <strong>${userName}</strong> ?`;
+            
+            toggleForm.action = `/admin/user/${userId}/toggle-status`;
+            toggleToken.value = csrfToken;
+            toggleModal.show();
+        });
+    });
+    
+    // Gestion de la suppression
     const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    const deleteButtons = document.querySelectorAll('.delete-btn');
     const deleteForm = document.getElementById('deleteForm');
+    const deleteToken = document.getElementById('deleteToken');
     const deleteMessage = document.getElementById('deleteMessage');
-    const deleteCsrfToken = document.getElementById('deleteCsrfToken');
     
     deleteButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -325,34 +513,392 @@ document.addEventListener('DOMContentLoaded', function() {
             const userName = this.dataset.userName;
             const csrfToken = this.dataset.csrfToken;
             
-            deleteMessage.innerHTML = `
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    Cette action est irréversible.
-                </div>
-                <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>${userName}</strong> ?</p>
-                <p class="text-danger small">Toutes les données associées à cet utilisateur seront également supprimées.</p>
-            `;
+            deleteMessage.innerHTML = `Supprimer définitivement <strong class="text-danger">${userName}</strong> ?`;
             deleteForm.action = `/admin/user/${userId}`;
-            deleteCsrfToken.value = csrfToken;
-            
+            deleteToken.value = csrfToken;
             deleteModal.show();
-        });
-    });
-
-    // Confirmation pour activation/désactivation
-    const toggleButtons = document.querySelectorAll('form[action*="toggle-status"] button[type="submit"]');
-    toggleButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            const form = this.closest('form');
-            const userStatus = this.textContent.includes('Actif') ? 'désactiver' : 'activer';
-            const userName = this.closest('tr').querySelector('strong').textContent;
-            
-            if (!confirm(`Êtes-vous sûr de vouloir ${userStatus} l'utilisateur "${userName}" ?`)) {
-                e.preventDefault();
-            }
         });
     });
 });
 </script>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --success-gradient: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    --warning-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+    --danger-gradient: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+    --info-gradient: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    --dark-gradient: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+}
+
+/* Header moderne */
+.modern-header {
+    background: var(--primary-gradient);
+    position: relative;
+    min-height: 200px;
+}
+
+.floating-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.shape {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    top: -150px;
+    right: -50px;
+    animation: float 8s ease-in-out infinite;
+}
+
+.shape-2 {
+    width: 200px;
+    height: 200px;
+    bottom: -80px;
+    left: -30px;
+    animation: float 12s ease-in-out infinite reverse;
+}
+
+.shape-3 {
+    width: 150px;
+    height: 150px;
+    top: 50%;
+    left: 30%;
+    animation: float 10s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+.icon-wrapper {
+    transition: transform 0.3s ease;
+}
+
+.icon-wrapper:hover {
+    transform: scale(1.05) rotate(5deg);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.stat-card {
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.wave-decoration {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    line-height: 0;
+    z-index: 2;
+}
+
+.wave-decoration svg {
+    width: 100%;
+    height: 50px;
+}
+
+/* Recherche */
+.search-wrapper {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    z-index: 10;
+}
+
+.clear-search {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    text-decoration: none;
+    z-index: 10;
+}
+
+.clear-search:hover {
+    color: #dc3545;
+}
+
+/* Avatar */
+.user-avatar {
+    position: relative;
+    display: inline-block;
+}
+
+.owner-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background: linear-gradient(135deg, #fbbf24, #d97706);
+    color: white;
+    border-radius: 50%;
+    padding: 4px;
+    font-size: 12px;
+    border: 2px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    animation: pulse 2s infinite;
+}
+
+/* Badges */
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.role-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.role-badge.bg-gradient-danger { background: var(--danger-gradient); }
+.role-badge.bg-gradient-primary { background: var(--primary-gradient); }
+.role-badge.bg-gradient-warning { background: var(--warning-gradient); }
+.role-badge.bg-gradient-success { background: var(--success-gradient); }
+.role-badge.bg-gradient-info { background: var(--info-gradient); }
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: white;
+    border: 1px solid;
+    transition: all 0.3s ease;
+}
+
+.company-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: #f8f9fa;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #495057;
+}
+
+/* Boutons d'action */
+.action-buttons {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end;
+}
+
+.btn-action {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: #6c757d;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    color: white;
+}
+
+.btn-view:hover {
+    background: var(--info-gradient);
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+.btn-edit:hover {
+    background: var(--warning-gradient);
+    box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
+}
+
+.btn-danger:hover {
+    background: var(--danger-gradient) !important;
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
+}
+
+.btn-success:hover {
+    background: var(--success-gradient) !important;
+    box-shadow: 0 4px 10px rgba(56, 161, 105, 0.3);
+}
+
+.btn-delete:hover {
+    background: var(--danger-gradient) !important;
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
+}
+
+/* Lignes du tableau */
+.user-row {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.user-row:hover {
+    background-color: rgba(102, 126, 234, 0.05) !important;
+    transform: scale(1.01);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.table-inactive {
+    background-color: #f8f9fa;
+    opacity: 0.8;
+}
+
+.table-inactive-company {
+    background-color: #2d3748;
+    color: white !important;
+}
+
+.table-inactive-company .text-muted {
+    color: rgba(255,255,255,0.6) !important;
+}
+
+.table-warning {
+    background-color: #fff3cd;
+}
+
+/* Pagination moderne */
+.pagination-modern .page-link {
+    border: none;
+    padding: 8px 16px;
+    margin: 0 3px;
+    border-radius: 10px;
+    color: #4a5568;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.pagination-modern .page-link:hover {
+    background: var(--primary-gradient);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.pagination-modern .page-item.active .page-link {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.pagination-modern .page-item.disabled .page-link {
+    background: transparent;
+    color: #cbd5e0;
+}
+
+/* Empty state */
+.empty-state {
+    padding: 3rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 20px;
+}
+
+.empty-state-icon {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Scrollbar personnalisée */
+.table-responsive::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #667eea;
+}
+
+/* Badges de statut */
+.badge.bg-warning-subtle {
+    background-color: #fef3c7 !important;
+    color: #92400e !important;
+}
+
+.text-warning-emphasis {
+    color: #78350f !important;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .action-buttons {
+        flex-wrap: wrap;
+    }
+    
+    .btn-action {
+        width: 30px;
+        height: 30px;
+        font-size: 0.85rem;
+    }
+}
+</style>
 {% endblock %}

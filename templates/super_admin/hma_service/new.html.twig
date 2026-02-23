@@ -1,11 +1,8 @@
+{# templates/super_admin/hma_service/new.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}New HmaService{% endblock %}
+{% block title %}Nouvelle entreprise - HMA Market{% endblock %}
 
 {% block body %}
-    <h1>Create new HmaService</h1>
-
-    {{ include('super_admin/hma_service/_form.html.twig') }}
-
-    <a href="{{ path('app_super_admin_hma_service_index') }}">back to list</a>
+    {% include 'super_admin/hma_service/_form.html.twig' %}
 {% endblock %}

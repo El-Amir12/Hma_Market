@@ -1,4 +1,5 @@
 <?php
+// src/Form/UserType.php
 
 namespace App\Form;
 
@@ -9,12 +10,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\Form\CallbackTransformer;
 
 class UserType extends AbstractType
 {
@@ -24,27 +23,12 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'exemple@email.com'
+                    'class' => 'form-control' . (!$options['can_edit_email'] ? ' bg-light' : ''),
+                    'placeholder' => 'exemple@email.com',
+                    'readonly' => !$options['can_edit_email'],
+                    'autocomplete' => 'email'
                 ],
-                'row_attr' => ['class' => 'mb-3']
-            ])
-            ->add('roles', ChoiceType::class, [
-                'label' => 'Rôle',
-                'choices' => [
-                    'Administrateur' => 'ROLE_ADMIN',
-                    'Caissier' => 'ROLE_CASHIER',
-                    'Gestionnaire' => 'ROLE_MANAGER',
-                    'Gestionnaire de stock' => 'ROLE_STOCK_MANAGER',
-                    'Utilisateur' => 'ROLE_USER',
-                ],
-                'multiple' => false,
-                'expanded' => false,
-                'attr' => [
-                    'class' => 'form-select',
-                    'data-control' => 'select2'
-                ],
-                'row_attr' => ['class' => 'mb-3']
+                'row_attr' => ['class' => 'mb-3'],
             ])
             ->add('full_name', TextType::class, [
                 'label' => 'Nom complet',
@@ -63,114 +47,96 @@ class UserType extends AbstractType
                 ],
                 'row_attr' => ['class' => 'mb-3']
             ])
+            ->add('employment_date', DateType::class, [
+                'label' => "Date d'embauche",
+                'required' => false,
+                'widget' => 'single_text',
+                'attr' => ['class' => 'form-control'],
+                'row_attr' => ['class' => 'mb-3']
+            ])
             ->add('photo', FileType::class, [
                 'label' => 'Photo de profil',
                 'required' => false,
                 'mapped' => false,
                 'attr' => [
-                    'class' => 'form-control',
-                    'accept' => 'image/*'
+                    'class' => 'form-control d-none',
+                    'accept' => 'image/*',
+                    'id' => 'user_photo_input'
                 ],
                 'constraints' => [
                     new Image([
                         'maxSize' => '2M',
                         'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, GIF, WebP)',
                     ])
                 ],
                 'row_attr' => ['class' => 'mb-3']
-            ])
-            // AJOUT DU CHAMP IS_ACTIVE ICI
-            ->add('is_active', CheckboxType::class, [
+            ]);
+
+        // ============================================
+        // GESTION DES RÔLES - VERSION CORRIGÉE
+        // ============================================
+        
+        /** @var User $targetUser */
+        $targetUser = $builder->getData();
+        
+        // Déterminer le rôle actuel de l'utilisateur cible (sans ROLE_USER)
+        $currentRole = 'ROLE_USER';
+        if ($targetUser && $targetUser instanceof User) {
+            $roles = $targetUser->getRoles();
+            foreach ($roles as $role) {
+                if ($role !== 'ROLE_USER') {
+                    $currentRole = $role;
+                    break;
+                }
+            }
+        }
+        
+        // CONSTRUCTION DES CHOIX DE RÔLES DE BASE
+        $roleChoices = [
+            'Administrateur' => 'ROLE_ADMIN',
+            'Gestionnaire' => 'ROLE_MANAGER',
+            'Responsable Stock' => 'ROLE_STOCK_MANAGER',
+            'Caissier' => 'ROLE_CASHIER',
+        ];
+        
+        // ✅ SI L'UTILISATEUR CONNECTÉ EST SUPER ADMIN
+        // On ajoute l'option Super Administrateur
+        if ($options['is_super_admin']) {
+            $roleChoices = ['Super Administrateur' => 'ROLE_SUPER_ADMIN'] + $roleChoices;
+        }
+        
+        // ✅ SI L'UTILISATEUR CIBLE EST SUPER ADMIN MAIS L'ÉDITEUR NE L'EST PAS
+        // On garde l'option mais en lecture seule
+        if ($currentRole === 'ROLE_SUPER_ADMIN' && !$options['is_super_admin']) {
+            $roleChoices = ['Super Administrateur' => 'ROLE_SUPER_ADMIN'] + $roleChoices;
+            $options['can_edit_role'] = false;
+        }
+        
+        // Ajout du champ rôle
+        $builder->add('roles', ChoiceType::class, [
+            'label' => 'Rôle',
+            'choices' => $roleChoices,
+            'multiple' => false,
+            'expanded' => false,
+            'attr' => [
+                'class' => 'form-select' . (!$options['can_edit_role'] ? ' bg-light' : ''),
+                'disabled' => !$options['can_edit_role'],
+            ],
+            'row_attr' => ['class' => 'mb-3'],
+            'mapped' => true,
+            'data' => $currentRole, // Valeur pré-sélectionnée
+        ]);
+
+        // Champ is_active uniquement si ce n'est pas l'utilisateur lui-même
+        if (!$options['is_self'] || $options['is_super_admin']) {
+            $builder->add('is_active', CheckboxType::class, [
                 'label' => 'Utilisateur actif',
                 'required' => false,
                 'row_attr' => ['class' => 'mb-3 form-check form-switch'],
-                'attr' => [
-                    'class' => 'form-check-input',
-                    'role' => 'switch'
-                ],
+                'attr' => ['class' => 'form-check-input'],
                 'label_attr' => ['class' => 'form-check-label']
             ]);
-        
-        // Ajouter le champ mot de passe seulement pour la création
-        if ($options['is_new']) {
-            $builder->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => 'Les mots de passe doivent correspondre.',
-                'options' => ['attr' => ['class' => 'form-control password-toggle']],
-                'required' => true,
-                'first_options'  => [
-                    'label' => 'Mot de passe',
-                    'attr' => [
-                        'class' => 'form-control password-toggle',
-                        'placeholder' => 'Minimum 12 caractères'
-                    ],
-                    'row_attr' => ['class' => 'mb-3']
-                ],
-                'second_options' => [
-                    'label' => 'Confirmer le mot de passe',
-                    'attr' => [
-                        'class' => 'form-control password-toggle',
-                        'placeholder' => 'Répétez le mot de passe'
-                    ],
-                    'row_attr' => ['class' => 'mb-3']
-                ],
-                'mapped' => false,
-            ]);
-        } else {
-            // Pour l'édition, champ optionnel
-            $builder->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => 'Les mots de passe doivent correspondre.',
-                'options' => ['attr' => ['class' => 'form-control password-toggle']],
-                'required' => false,
-                'first_options'  => [
-                    'label' => 'Nouveau mot de passe',
-                    'attr' => [
-                        'class' => 'form-control password-toggle',
-                        'placeholder' => 'Laisser vide pour ne pas changer'
-                    ],
-                    'row_attr' => ['class' => 'mb-3']
-                ],
-                'second_options' => [
-                    'label' => 'Confirmer le nouveau mot de passe',
-                    'attr' => [
-                        'class' => 'form-control password-toggle',
-                        'placeholder' => 'Répétez le nouveau mot de passe'
-                    ],
-                    'row_attr' => ['class' => 'mb-3']
-                ],
-                'mapped' => false,
-            ]);
         }
-        
-        // Transformer pour les rôles
-        $builder->get('roles')
-            ->addModelTransformer(new CallbackTransformer(
-                function ($rolesArray) {
-                    if (null === $rolesArray || empty($rolesArray)) {
-                        return 'ROLE_USER';
-                    }
-                    
-                    if (is_string($rolesArray)) {
-                        return $rolesArray;
-                    }
-                    
-                    foreach ($rolesArray as $role) {
-                        if ($role !== 'ROLE_USER') {
-                            return $role;
-                        }
-                    }
-                    
-                    return 'ROLE_USER';
-                },
-                function ($roleString) {
-                    if (!$roleString) {
-                        return ['ROLE_USER'];
-                    }
-                    return [$roleString];
-                }
-            ));
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -178,8 +144,10 @@ class UserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'is_new' => true,
+            'is_super_admin' => false, // ✅ TRUE si l'utilisateur connecté est SUPER_ADMIN
+            'can_edit_email' => true,
+            'can_edit_role' => true,
+            'is_self' => false,        // ✅ TRUE si on édite son propre profil
         ]);
-        
-        $resolver->setAllowedTypes('is_new', 'bool');
     }
 }

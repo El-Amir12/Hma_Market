@@ -1,0 +1,507 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ target_user.fullName }} - {{ company.companyName }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <!-- Header amélioré -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-primary border-0 shadow-lg position-relative overflow-hidden">
+                <!-- Éléments décoratifs -->
+                <div class="floating-shapes-mini">
+                    <div class="shape-mini shape-1-mini"></div>
+                    <div class="shape-mini shape-2-mini"></div>
+                </div>
+                
+                <div class="card-body p-4 position-relative" style="z-index: 2;">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle bg-white bg-opacity-20 me-3">
+                                {% if target_user.photo %}
+                                    <img src="{{ asset('uploads/users/' ~ target_user.photo) }}" 
+                                         alt="{{ target_user.fullName }}" 
+                                         class="rounded-circle" width="50" height="50" style="object-fit: cover;">
+                                {% else %}
+                                    <span class="text-white fs-3 fw-bold">{{ target_user.fullName|first|upper }}</span>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h1 class="h2 text-white mb-1 fw-bold">{{ target_user.fullName }}</h1>
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    {% set roleConfig = {
+                                        'ROLE_ADMIN': {bg: 'danger-gradient', icon: 'bi-shield-shaded', label: 'Administrateur'},
+                                        'ROLE_MANAGER': {bg: 'primary-gradient', icon: 'bi-graph-up', label: 'Gestionnaire'},
+                                        'ROLE_STOCK_MANAGER': {bg: 'warning-gradient', icon: 'bi-box-seam', label: 'Responsable Stock'},
+                                        'ROLE_CASHIER': {bg: 'success-gradient', icon: 'bi-cash-coin', label: 'Caissier'}
+                                    } %}
+                                    
+                                    {% set role = target_user.roles|filter(r => r != 'ROLE_USER')|first %}
+                                    {% set config = roleConfig[role] ?? {bg: 'secondary-gradient', icon: 'bi-person', label: 'Utilisateur'} %}
+                                    
+                                    <span class="role-badge {{ config.bg }} py-2 px-3">
+                                        <i class="bi {{ config.icon }} me-1"></i>
+                                        {{ config.label }}
+                                    </span>
+                                    
+                                    {% if target_user.isActive %}
+                                        <span class="status-badge status-active py-2 px-3">
+                                            <i class="bi bi-check-circle-fill me-1"></i>Actif
+                                        </span>
+                                    {% else %}
+                                        <span class="status-badge status-inactive py-2 px-3">
+                                            <i class="bi bi-x-circle-fill me-1"></i>Inactif
+                                        </span>
+                                    {% endif %}
+                                    
+                                    {% if target_user.isHmaOwner %}
+                                        <span class="status-badge" style="background: linear-gradient(135deg, #fbbf24, #d97706); color: white; border: none;">
+                                            <i class="bi bi-crown-fill me-1"></i>Propriétaire
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a href="{{ path('app_manager_team_index') }}" class="btn btn-light btn-lg me-2">
+                                <i class="bi bi-arrow-left me-2"></i>Retour
+                            </a>
+                            {% if target_user.id == current_user.id or 
+                                  current_user.hasRole('ROLE_ADMIN') or 
+                                  (current_user.hasRole('ROLE_MANAGER') and not target_user.hasRole('ROLE_ADMIN') and not target_user.hasRole('ROLE_MANAGER')) %}
+                                <a href="{{ path('app_manager_team_edit', {'id': target_user.id}) }}" class="btn btn-warning btn-lg">
+                                    <i class="bi bi-pencil-fill me-2"></i>Modifier
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profil amélioré -->
+    <div class="row">
+        <!-- Colonne de gauche - Photo et infos rapides -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-lg border-0 h-100">
+                <div class="card-body text-center p-4">
+                    <!-- Photo -->
+                    <div class="position-relative d-inline-block mb-4">
+                        {% if target_user.photo %}
+                            <img src="{{ asset('uploads/users/' ~ target_user.photo) }}" 
+                                 alt="{{ target_user.fullName }}" 
+                                 class="rounded-circle shadow-lg"
+                                 style="width: 180px; height: 180px; object-fit: cover; border: 5px solid #667eea;">
+                        {% else %}
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg"
+                                 style="width: 180px; height: 180px; border: 5px solid #667eea;">
+                                <span class="display-2 fw-bold">{{ target_user.fullName|first|upper }}</span>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Badge de statut en temps réel -->
+                        <span class="position-absolute bottom-0 end-0 bg-{{ target_user.isActive ? 'success' : 'danger' }} rounded-circle p-2 border border-3 border-white shadow"
+                              style="width: 30px; height: 30px;"
+                              title="{{ target_user.isActive ? 'Compte actif' : 'Compte inactif' }}"></span>
+                    </div>
+                    
+                    <h3 class="mb-1">{{ target_user.fullName }}</h3>
+                    <p class="text-muted mb-3">{{ target_user.email }}</p>
+                    
+                    <!-- Actions rapides -->
+                    <div class="d-grid gap-2 mb-4">
+                        <a href="tel:{{ target_user.phone }}" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-telephone-fill me-2"></i>{{ target_user.phone }}
+                        </a>
+                        <a href="mailto:{{ target_user.email }}" class="btn btn-outline-info btn-lg">
+                            <i class="bi bi-envelope-fill me-2"></i>Envoyer un email
+                        </a>
+                    </div>
+                    
+                    <hr>
+                    
+                    <!-- Dates importantes -->
+                    <div class="text-start mt-3">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-box bg-primary bg-opacity-10 rounded-3 p-2 me-3">
+                                <i class="bi bi-calendar-plus text-primary"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Date d'embauche</small>
+                                <strong>{{ target_user.employmentDate ? target_user.employmentDate|date('d/m/Y') : 'Non renseignée' }}</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-box bg-success bg-opacity-10 rounded-3 p-2 me-3">
+                                <i class="bi bi-calendar-check text-success"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Membre depuis</small>
+                                <strong>{{ target_user.createdAt ? target_user.createdAt|date('d/m/Y') : 'N/A' }}</strong>
+                            </div>
+                        </div>
+                        {% if target_user.updatedAt %}
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box bg-info bg-opacity-10 rounded-3 p-2 me-3">
+                                    <i class="bi bi-clock-history text-info"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Dernière modification</small>
+                                    <strong>{{ target_user.updatedAt|date('d/m/Y H:i') }}</strong>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Colonne de droite - Informations détaillées -->
+        <div class="col-lg-8 mb-4">
+            <div class="row">
+                <!-- Informations personnelles -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-gradient-info text-white py-3">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-person-badge me-2"></i>Informations personnelles
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td class="text-muted ps-0">Email</td>
+                                    <td class="fw-semibold pe-0 text-end">
+                                        <a href="mailto:{{ target_user.email }}" class="text-decoration-none">
+                                            {{ target_user.email }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted ps-0">Téléphone</td>
+                                    <td class="fw-semibold pe-0 text-end">
+                                        <a href="tel:{{ target_user.phone }}" class="text-decoration-none">
+                                            {{ target_user.phone }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted ps-0">Date d'embauche</td>
+                                    <td class="fw-semibold pe-0 text-end">
+                                        {{ target_user.employmentDate ? target_user.employmentDate|date('d/m/Y') : 'Non renseignée' }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Informations système -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-gradient-secondary text-white py-3">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-gear me-2"></i>Informations système
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td class="text-muted ps-0">Rôle</td>
+                                    <td class="fw-semibold pe-0 text-end">
+                                        <span class="role-badge {{ config.bg }} py-1 px-2" style="font-size: 0.8rem;">
+                                            <i class="bi {{ config.icon }} me-1"></i>
+                                            {{ config.label }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted ps-0">Statut compte</td>
+                                    <td class="fw-semibold pe-0 text-end">
+                                        {% if target_user.isActive %}
+                                            <span class="badge bg-success">Actif</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactif</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted ps-0">1ère connexion</td>
+                                    <td class="fw-semibold pe-0 text-end">
+                                        {% if not target_user.passwordChanged and not target_user.isHmaOwner %}
+                                            <span class="badge bg-warning text-dark">En attente</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Effectuée</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Statistiques d'activité -->
+                <div class="col-12">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-gradient-warning text-white py-3">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-bar-chart-steps me-2"></i>Statistiques d'activité
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-4">
+                                <div class="col-6 col-md-3">
+                                    <div class="stat-card-modern text-center">
+                                        <div class="stat-icon bg-primary bg-opacity-10 rounded-circle p-3 mb-3 d-inline-block">
+                                            <i class="bi bi-box-seam text-primary fs-3"></i>
+                                        </div>
+                                        <div class="stat-value h3 mb-1 fw-bold">{{ target_user.products|length }}</div>
+                                        <div class="stat-label text-muted small">Produits</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="stat-card-modern text-center">
+                                        <div class="stat-icon bg-success bg-opacity-10 rounded-circle p-3 mb-3 d-inline-block">
+                                            <i class="bi bi-cart-check text-success fs-3"></i>
+                                        </div>
+                                        <div class="stat-value h3 mb-1 fw-bold">{{ target_user.orders|length }}</div>
+                                        <div class="stat-label text-muted small">Commandes</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="stat-card-modern text-center">
+                                        <div class="stat-icon bg-info bg-opacity-10 rounded-circle p-3 mb-3 d-inline-block">
+                                            <i class="bi bi-arrow-left-right text-info fs-3"></i>
+                                        </div>
+                                        <div class="stat-value h3 mb-1 fw-bold">{{ target_user.stockMovements|length }}</div>
+                                        <div class="stat-label text-muted small">Mouvements</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="stat-card-modern text-center">
+                                        <div class="stat-icon bg-warning bg-opacity-10 rounded-circle p-3 mb-3 d-inline-block">
+                                            <i class="bi bi-tags text-warning fs-3"></i>
+                                        </div>
+                                        <div class="stat-value h3 mb-1 fw-bold">{{ target_user.categories|length }}</div>
+                                        <div class="stat-label text-muted small">Catégories</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --danger-gradient: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+    --success-gradient: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    --warning-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+    --info-gradient: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    --secondary-gradient: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+}
+
+/* Header */
+.bg-gradient-primary {
+    background: var(--primary-gradient) !important;
+}
+
+.floating-shapes-mini {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    opacity: 0.3;
+}
+
+.shape-mini {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+}
+
+.shape-1-mini {
+    width: 150px;
+    height: 150px;
+    top: -50px;
+    right: -30px;
+    animation: floatMini 8s ease-in-out infinite;
+}
+
+.shape-2-mini {
+    width: 100px;
+    height: 100px;
+    bottom: -30px;
+    left: -20px;
+    animation: floatMini 12s ease-in-out infinite reverse;
+}
+
+@keyframes floatMini {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+/* Badges */
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.danger-gradient { background: var(--danger-gradient); }
+.primary-gradient { background: var(--primary-gradient); }
+.warning-gradient { background: var(--warning-gradient); }
+.success-gradient { background: var(--success-gradient); }
+.info-gradient { background: var(--info-gradient); }
+.secondary-gradient { background: var(--secondary-gradient); }
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background: green;
+    color: white;
+    border: 1px solid withe;
+}
+
+.status-inactive {
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+    border: 1px solid #dc2626;
+}
+
+/* Icon circle */
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.bg-opacity-20 {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Icon box */
+.icon-box {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Statistiques modernes */
+.stat-card-modern {
+    padding: 1.5rem;
+    background: white;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.stat-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-color: transparent;
+}
+
+.stat-icon {
+    transition: all 0.3s ease;
+}
+
+.stat-card-modern:hover .stat-icon {
+    transform: scale(1.1);
+}
+
+/* Table */
+.table-borderless td {
+    padding: 0.75rem 0;
+    border: none;
+}
+
+/* Boutons */
+.btn {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-gradient);
+    border-color: transparent;
+}
+
+.btn-outline-info:hover {
+    background: var(--info-gradient);
+    border-color: transparent;
+    color: white;
+}
+
+/* Cartes */
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
+}
+
+.card-header {
+    border-bottom: none;
+}
+
+.bg-gradient-info {
+    background: var(--info-gradient) !important;
+}
+
+.bg-gradient-secondary {
+    background: var(--secondary-gradient) !important;
+}
+
+.bg-gradient-warning {
+    background: var(--warning-gradient) !important;
+}
+
+/* Animation */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+}
+
+.position-absolute.bottom-0.end-0 {
+    animation: pulse 2s infinite;
+}
+</style>
+{% endblock %}

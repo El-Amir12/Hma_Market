@@ -83,7 +83,7 @@ class Product
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?HmaService $hma_service_id = null;
+    private ?HmaService $hma_service = null;
 
     #[ORM\Column]
     private ?bool $is_pharmacy = null;
@@ -474,15 +474,14 @@ class Product
         return $classes[$status] ?? 'bg-secondary';
     }
 
-    public function getHmaServiceId(): ?HmaService
+    public function getHmaService(): ?HmaService 
     {
-        return $this->hma_service_id;
+        return $this->hma_service;
     }
 
-    public function setHmaServiceId(?HmaService $hma_service_id): static
+    public function setHmaService(?HmaService $hma_service): static  
     {
-        $this->hma_service_id = $hma_service_id;
-
+        $this->hma_service = $hma_service;
         return $this;
     }
 

@@ -1,0 +1,159 @@
+{# templates/manager/team/edit.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="modern-header position-relative overflow-hidden rounded-4 shadow-lg">
+                <div class="position-relative p-4" style="z-index: 2;">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-white bg-opacity-20 rounded-3 p-3 me-3">
+                            <i class="bi bi-pencil-square text-white fs-1"></i>
+                        </div>
+                        <div>
+                            <h1 class="h2 fw-bold text-white mb-1">
+                                {% if is_self %}
+                                    Modifier mon profil
+                                {% else %}
+                                    Modifier {{ target_user.fullName }}
+                                {% endif %}
+                            </h1>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-white text-primary px-3 py-2 rounded-pill">
+                                    <i class="bi bi-building me-1"></i>{{ company.companyName }}
+                                </span>
+                                {% if not is_self %}
+                                    <span class="badge bg-white bg-opacity-20 text-white px-3 py-2 rounded-pill">
+                                        <i class="bi bi-person-badge me-1"></i>
+                                        {% set role = target_user.roles|filter(r => r != 'ROLE_USER')|first %}
+                                        {% if role == 'ROLE_ADMIN' %}Administrateur
+                                        {% elseif role == 'ROLE_MANAGER' %}Gestionnaire
+                                        {% elseif role == 'ROLE_STOCK_MANAGER' %}Responsable Stock
+                                        {% elseif role == 'ROLE_CASHIER' %}Caissier
+                                        {% else %}Utilisateur
+                                        {% endif %}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-white py-3">
+                    <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
+                                <i class="bi bi-person-badge me-2"></i>Informations
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="card-body p-4">
+                    {{ form_start(form) }}
+                    
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="info" role="tabpanel">
+                            
+                            {% if can_edit.full_name %}
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-person-fill text-primary me-1"></i>Nom complet
+                                    </label>
+                                    {{ form_widget(form.full_name, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_errors(form.full_name) }}
+                                </div>
+                            {% endif %}
+                            
+                            {% if can_edit.phone %}
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-telephone-fill text-success me-1"></i>Téléphone
+                                    </label>
+                                    {{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_errors(form.phone) }}
+                                </div>
+                            {% endif %}
+                            
+                            {% if can_edit.employment_date %}
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-calendar-plus-fill text-info me-1"></i>Date d'embauche
+                                    </label>
+                                    {{ form_widget(form.employment_date, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_errors(form.employment_date) }}
+                                    <small class="text-muted">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Modifiable uniquement par les administrateurs
+                                    </small>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Message informatif -->
+                            {% if is_self and not can_edit.employment_date %}
+                                <div class="alert alert-warning mt-3">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    Votre date d'embauche ne peut être modifiée que par un administrateur.
+                                </div>
+                            {% endif %}
+                            
+                            {% if not is_self and not can_edit.full_name and not can_edit.phone and can_edit.employment_date %}
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    Vous pouvez modifier uniquement la date d'embauche de cet employé.
+                                </div>
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ path('app_manager_team_show', {'id': target_user.id}) }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-arrow-left me-2"></i>Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="bi bi-check-circle-fill me-2"></i>Enregistrer
+                        </button>
+                    </div>
+                    
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.modern-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 120px;
+}
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bg-opacity-20 {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+.nav-tabs .nav-link.active {
+    color: #667eea;
+    border-bottom: 3px solid #667eea;
+}
+</style>
+{% endblock %}

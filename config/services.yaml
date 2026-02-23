@@ -8,6 +8,7 @@ parameters:
     categories_directory: '%kernel.project_dir%/public/uploads/categories'
     products_directory: '%kernel.project_dir%/public/uploads/products'
     logos_directory: '%kernel.project_dir%/public/uploads/logos'
+    photos_directory: '%kernel.project_dir%/public/uploads/photos'
     
     # Emails
     app.email_from: 'contact@hma-market.com'
@@ -28,6 +29,24 @@ services:
         autowire: true
         autoconfigure: true
         public: false
+        bind:
+            # ✅ Liaison des paramètres string
+            string $logosDirectory: '%logos_directory%'
+            string $photosDirectory: '%photos_directory%'
+            string $uploadsDirectory: '%uploads_directory%'
+            string $categoriesDirectory: '%categories_directory%'
+            string $productsDirectory: '%products_directory%'
+            string $bonCommandeDirectory: '%bon_commande_directory%'
+            string $recuAchatDirectory: '%recu_achat_directory%'
+            
+            # ✅ Liaison des valeurs d'email
+            string $fromEmail: '%mailer_from_email%'
+            string $fromName: '%mailer_from_name%'
+            string $appName: '%app_name%'
+            string $appUrl: '%app_url%'
+            string $adminEmail: '%admin_email%'
+            string $supportEmail: '%support_email%'
+            string $appEnv: '%kernel.environment%'  # ✅ Ajout de appEnv
 
     # makes classes in src/ available to be used as services
     App\:
@@ -38,7 +57,8 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
-    # explicitly configure the service for your controller
+    # controllers are imported separately to make sure they're public
+    # and have a tag that allows actions to type-hint services
     App\Controller\:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
@@ -57,19 +77,14 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
 
-    # Service d'envoi d'emails
+    # Service d'envoi d'emails - SIMPLIFIÉ grâce au bind
     App\Service\EmailService:
         arguments:
             $mailer: '@mailer.mailer'
             $logger: '@monolog.logger'
-            $urlGenerator: '@router.default'  
-            $fromEmail: '%mailer_from_email%'
-            $fromName: '%mailer_from_name%'
-            $appName: '%app_name%'
-            $appUrl: '%app_url%'
-            $appEnv: '%kernel.environment%'
-            $adminEmail: '%admin_email%'
-            $supportEmail: '%support_email%'
+            $urlGenerator: '@router.default'
+            # Les autres arguments sont automatiquement injectés grâce au bind
+        public: true
 
     # Service d'upload de fichiers
     App\Service\FileUploader:
@@ -78,11 +93,11 @@ services:
             $slugger: '@Symfony\Component\String\Slugger\SluggerInterface'
         public: false
 
-    # Gestionnaire de succès de connexion - CORRIGÉ avec request_stack
+    # Gestionnaire de succès de connexion
     App\Security\LoginSuccessHandler:
         arguments:
             $urlGenerator: '@router'
-            $requestStack: '@request_stack'  # <-- Changé ici
+            $requestStack: '@request_stack'
             $entityManager: '@doctrine.orm.entity_manager'
             $passwordHasher: '@security.user_password_hasher'
             $subscriptionGenerator: '@App\Service\SubscriptionNumberGenerator'
@@ -90,7 +105,6 @@ services:
         public: true
 
     # Subscriber pour les événements de connexion
-    
     App\EventSubscriber\UserDisabledSubscriber:
         tags:
             - { name: kernel.event_subscriber }
@@ -100,3 +114,13 @@ services:
         arguments:
             $security: '@security.helper'
         public: true
+
+    App\Service\CompanyDeletionService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $filesystem: '@filesystem'
+            $logger: '@logger'
+            $logosDirectory: '%logos_directory%'
+            $photosDirectory: '%photos_directory%'
+            $productsDirectory: '%products_directory%'
+            $categoriesDirectory: '%categories_directory%'

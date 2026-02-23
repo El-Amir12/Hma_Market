@@ -107,6 +107,17 @@
             font-weight: 600;
             font-size: 15px;
             margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+        }
+        .button.secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+        }
+        .button.secondary:hover {
+            box-shadow: 0 4px 15px rgba(108,117,125,0.3);
         }
         .stats {
             display: flex;
@@ -128,6 +139,13 @@
             font-size: 12px;
             color: #6c757d;
             margin-top: 5px;
+        }
+        .button-group {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .button-group .button {
+            margin: 5px;
         }
         .footer {
             text-align: center;
@@ -229,10 +247,16 @@
                 </div>
             </div>
             
-            <!-- Actions -->
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="{{ admin_url }}" class="button">
-                    🔍 Gérer cette entreprise
+            <!-- ✅ BOUTONS D'ACTION AMÉLIORÉS -->
+            <div class="button-group">
+                <!-- ✅ BOUTON PRINCIPAL VERS LA PAGE SHOW DE L'ENTREPRISE -->
+                <a href="{{ company_show_url }}" class="button" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                    👁️ Voir les détails de l'entreprise
+                </a>
+                
+                <!-- ✅ BOUTON SECONDAIRE VERS LA LISTE DES ENTREPRISES -->
+                <a href="{{ admin_url }}" class="button secondary">
+                    📋 Voir toutes les entreprises
                 </a>
             </div>
             
@@ -241,6 +265,9 @@
                 <p style="margin: 0; color: #856404;">
                     <strong>📌 À faire :</strong> L'entreprise est maintenant en période d'essai de 14 jours. 
                     Un suivi est recommandé avant la fin de cette période pour discuter de l'abonnement.
+                </p>
+                <p style="margin: 10px 0 0 0; color: #856404; font-size: 14px;">
+                    🔍 <strong>Lien direct :</strong> <a href="{{ company_show_url }}" style="color: #856404;">{{ company.companyName }}</a>
                 </p>
             </div>
             

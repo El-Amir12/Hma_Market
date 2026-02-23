@@ -67,7 +67,7 @@ class Category
 
     #[ORM\ManyToOne(inversedBy: 'categories')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?HmaService $hma_service_id = null;
+    private ?HmaService $hma_service = null;
 
     public function __construct()
     {
@@ -388,15 +388,14 @@ class Category
         return $slug;
     }
 
-    public function getHmaServiceId(): ?HmaService
+    public function getHmaService(): ?HmaService  
     {
-        return $this->hma_service_id;
+        return $this->hma_service;
     }
 
-    public function setHmaServiceId(?HmaService $hma_service_id): static
+    public function setHmaService(?HmaService $hma_service): static  
     {
-        $this->hma_service_id = $hma_service_id;
-
+        $this->hma_service = $hma_service;
         return $this;
     }
 }

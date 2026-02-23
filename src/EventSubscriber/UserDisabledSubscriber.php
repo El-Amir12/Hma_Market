@@ -38,7 +38,8 @@ class UserDisabledSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $route = $request->attributes->get('_route');
         
-        if (in_array($route, ['app_login', 'app_logout', 'app_clear_toast'])) {
+        // Routes à exclure
+        if (in_array($route, ['app_login', 'app_logout', 'app_clear_toast', 'app_forgot_password_request', 'app_reset_password', 'app_check_email', 'app_first_login_change_password'])) {
             return;
         }
 
@@ -60,22 +61,27 @@ class UserDisabledSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // ✅ DÉTECTION DES COMPTES DÉSACTIVÉS
-        if (!$freshUser->isActive() && !$freshUser->isHmaOwner()) {
+        // ✅ UTILISER LA MÉTHODE canLogin() POUR LA VÉRIFICATION
+        if (!$freshUser->canLogin()) {
             
             $session = $request->getSession();
             $disabledTime = $session->get('disabled_detected_at');
             $now = time();
+            
+            // Déterminer le message en fonction de la cause
+            $message = $this->getDisabledMessage($freshUser);
+            $title = $this->getDisabledTitle($freshUser);
+            $icon = $this->getDisabledIcon($freshUser);
             
             if (!$disabledTime) {
                 // 🟡 PREMIÈRE DÉTECTION - TOAST 5 SECONDES
                 $session->set('disabled_detected_at', $now);
                 $session->set('logout_in_seconds', 5);
                 $session->set('hma_toast', [
-                    'type' => 'warning',
-                    'icon' => 'bi bi-exclamation-triangle-fill',
-                    'title' => '⚠️ Compte désactivé',
-                    'message' => 'Votre compte a été désactivé. Déconnexion dans <strong id="logout-countdown">5</strong> secondes.'
+                    'type' => $this->getToastType($freshUser),
+                    'icon' => $icon,
+                    'title' => $title,
+                    'message' => $message . ' Déconnexion dans <strong id="logout-countdown">5</strong> secondes.'
                 ]);
                 
             } else {
@@ -90,7 +96,7 @@ class UserDisabledSubscriber implements EventSubscriberInterface
                     
                     $newSession = $this->requestStack->getSession();
                     $newSession->start();
-                    $newSession->set('login_info', 'Vous avez été déconnecté car votre compte est désactivé.');
+                    $newSession->set('login_info', $this->getLoginInfoMessage($freshUser));
                     
                     $event->setResponse(
                         new RedirectResponse($this->urlGenerator->generate('app_login'))
@@ -100,18 +106,114 @@ class UserDisabledSubscriber implements EventSubscriberInterface
                 } else {
                     // 🟡 MISE À JOUR DU COMPTE À REBOURS
                     $session->set('hma_toast', [
-                        'type' => 'warning',
-                        'icon' => 'bi bi-exclamation-triangle-fill',
-                        'title' => '⚠️ Compte désactivé',
-                        'message' => 'Votre compte a été désactivé. Déconnexion dans <strong id="logout-countdown">' . $remaining . '</strong> secondes.'
+                        'type' => $this->getToastType($freshUser),
+                        'icon' => $icon,
+                        'title' => $title,
+                        'message' => $message . ' Déconnexion dans <strong id="logout-countdown">' . $remaining . '</strong> secondes.'
                     ]);
                 }
             }
         } else {
-            // ✅ UTILISATEUR ACTIF - NETTOYER
+            // ✅ UTILISATEUR AUTORISÉ - NETTOYER
             $request->getSession()->remove('disabled_detected_at');
             $request->getSession()->remove('logout_in_seconds');
             $request->getSession()->remove('hma_toast');
         }
+    }
+
+    /**
+     * Déterminer le message en fonction de la cause de désactivation
+     */
+    private function getDisabledMessage(User $user): string
+    {
+        if ($user->getHmaServiceId() && !$user->getHmaServiceId()->isHmaActive()) {
+            return 'Votre entreprise a été désactivée par l\'administrateur système.';
+        }
+        
+        if ($user->isHmaOwner() && !$user->isActive()) {
+            return 'Votre compte administrateur a été désactivé.';
+        }
+        
+        if (!$user->isActive()) {
+            return 'Votre compte a été désactivé par l\'administrateur de l\'entreprise.';
+        }
+        
+        if (!$user->isSubscriptionActive()) {
+            return 'Votre compte est hors quota (limite d\'abonnement atteinte).';
+        }
+        
+        return 'Votre compte a été désactivé.';
+    }
+
+    /**
+     * Déterminer le titre en fonction de la cause
+     */
+    private function getDisabledTitle(User $user): string
+    {
+        if ($user->getHmaServiceId() && !$user->getHmaServiceId()->isHmaActive()) {
+            return '🔒 Entreprise bloquée';
+        }
+        
+        if ($user->isHmaOwner() && !$user->isActive()) {
+            return '👑 Compte admin désactivé';
+        }
+        
+        if (!$user->isActive()) {
+            return '⚠️ Compte désactivé';
+        }
+        
+        if (!$user->isSubscriptionActive()) {
+            return '📊 Limite d\'abonnement';
+        }
+        
+        return '⚠️ Accès restreint';
+    }
+
+    /**
+     * Déterminer l'icône en fonction de la cause
+     */
+    private function getDisabledIcon(User $user): string
+    {
+        if ($user->getHmaServiceId() && !$user->getHmaServiceId()->isHmaActive()) {
+            return 'bi bi-shield-lock-fill';
+        }
+        
+        if (!$user->isSubscriptionActive()) {
+            return 'bi bi-exclamation-triangle-fill';
+        }
+        
+        return 'bi bi-toggle-off';
+    }
+
+    /**
+     * Déterminer le type de toast (couleur)
+     */
+    private function getToastType(User $user): string
+    {
+        if ($user->getHmaServiceId() && !$user->getHmaServiceId()->isHmaActive()) {
+            return 'danger';
+        }
+        
+        if (!$user->isSubscriptionActive()) {
+            return 'warning';
+        }
+        
+        return 'secondary';
+    }
+
+    /**
+     * Message pour la page de login après déconnexion
+     */
+    private function getLoginInfoMessage(User $user): string
+    {
+        if ($user->getHmaServiceId() && !$user->getHmaServiceId()->isHmaActive()) {
+            return 'Vous avez été déconnecté car votre entreprise a été bloquée par l\'administrateur système.';
+        }
+        
+        if (!$user->isSubscriptionActive()) {
+            return 'Vous avez été déconnecté car votre compte est hors quota. Contactez votre administrateur.';
+        }
+        
+        return 'Vous avez été déconnecté car votre compte est désactivé.';
     }
 }

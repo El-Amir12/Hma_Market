@@ -1,326 +1,358 @@
+{# templates/admin/user/show.html.twig #}
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails de l'utilisateur - {{ user.fullName }}{% endblock %}
+{% block title %}Détails - {{ target_user.fullName }}{% endblock %}
 
 {% block body %}
 <div class="container-fluid px-4">
-    <!-- Header avec boutons d'action -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0 text-gray-800">
-                <i class="fas fa-user-circle me-2 text-primary"></i>
-                Détails de l'utilisateur
-            </h1>
-            <p class="text-muted">Consultez les informations détaillées de l'utilisateur</p>
-        </div>
-        <div class="btn-group">
-            <a href="{{ path('app_user_index') }}" class="btn btn-outline-primary">
-                <i class="fas fa-arrow-left me-2"></i> Retour à la liste
-            </a>
-            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-warning">
-                <i class="fas fa-edit me-2"></i> Modifier
-            </a>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                <i class="fas fa-trash me-2"></i> Supprimer
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal de suppression -->
-    <div class="modal fade" id="deleteModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-danger">
-                        <i class="fas fa-exclamation-triangle me-2"></i> Confirmation de suppression
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-warning">
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        Cette action est irréversible !
+    <!-- Header avec actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-primary border-0 shadow-lg">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle bg-white bg-opacity-20 me-3">
+                                <i class="bi bi-person-circle fs-2 text-white"></i>
+                            </div>
+                            <div>
+                                <h1 class="h2 text-white mb-1 fw-bold">{{ target_user.fullName }}</h1>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge {{ target_user.roleBadgeClass }} py-2 px-3">
+                                        <i class="bi {{ target_user.roleIcon }} me-1"></i>
+                                        {{ target_user.roleLabel }}
+                                    </span>
+                                    {% if target_user.isHmaOwner %}
+                                        <span class="badge bg-danger py-2 px-3">
+                                            <i class="bi bi-crown me-1"></i>Propriétaire
+                                        </span>
+                                    {% endif %}
+                                    <span class="badge {{ target_user.statusBadgeClass }} py-2 px-3">
+                                        <i class="bi {{ target_user.statusIcon }} me-1"></i>
+                                        {{ target_user.statusLabel }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <a href="{{ path('app_user_index') }}" class="btn btn-light">
+                                <i class="bi bi-arrow-left me-2"></i>Retour
+                            </a>
+                            {% if target_user.isEditableBy(current_user) %}
+                                <a href="{{ path('app_user_edit', {'id': target_user.id}) }}" class="btn btn-warning">
+                                    <i class="bi bi-pencil me-2"></i>Modifier
+                                </a>
+                            {% endif %}
+                            {% if target_user.canToggleStatusBy(current_user) %}
+                                <button type="button" 
+                                        class="btn btn-{{ target_user.isActive ? 'danger' : 'success' }} toggle-status-btn"
+                                        data-user-id="{{ target_user.id }}"
+                                        data-user-name="{{ target_user.fullName }}"
+                                        data-current-status="{{ target_user.isActive ? 'active' : 'inactive' }}"
+                                        data-csrf-token="{{ csrf_token('toggle-status' ~ target_user.id) }}">
+                                    <i class="bi bi-{{ target_user.isActive ? 'toggle-off' : 'toggle-on' }} me-2"></i>
+                                    {{ target_user.isActive ? 'Désactiver' : 'Activer' }}
+                                </button>
+                            {% endif %}
+                        </div>
                     </div>
-                    <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{{ user.fullName }}</strong> ?</p>
-                    <p class="text-danger small">
-                        <i class="fas fa-info-circle me-1"></i>
-                        Toutes les données associées à cet utilisateur seront également supprimées.
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i> Annuler
-                    </button>
-                    <form action="{{ path('app_user_delete', {'id': user.id}) }}" method="post" class="d-inline">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash me-1"></i> Supprimer définitivement
-                        </button>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Contenu principal -->
     <div class="row">
-        <!-- Carte de profil -->
+        <!-- Colonne de gauche - Profil -->
         <div class="col-lg-4 mb-4">
-            <div class="card shadow border-0">
-                <div class="card-header bg-gradient-primary text-white py-3">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-id-card me-2"></i> Profil
-                    </h5>
-                </div>
+            <!-- Carte photo -->
+            <div class="card shadow-lg border-0 mb-4">
                 <div class="card-body text-center p-4">
-                    <!-- Photo de profil -->
-                    <div class="mb-4">
-                        {% if user.photo %}
-                            <img src="{{ asset('uploads/users/' ~ user.photo) }}" 
-                                 alt="{{ user.fullName }}" 
+                    {% if target_user.photo %}
+                        <div class="position-relative d-inline-block">
+                            <img src="{{ asset('uploads/users/' ~ target_user.photo) }}" 
+                                 alt="{{ target_user.fullName }}" 
                                  class="rounded-circle shadow-lg"
-                                 style="width: 180px; height: 180px; object-fit: cover; border: 5px solid #f8f9fa;"
-                                 onerror="this.onerror=null; this.src='{{ asset('assets/images/default-avatar.png') }}'">
-                        {% else %}
+                                 style="width: 180px; height: 180px; object-fit: cover; border: 5px solid #0463f1;">
+                            <span class="position-absolute bottom-0 end-0 bg-{{ target_user.isActive ? 'success' : 'danger' }} rounded-circle p-2 border border-2 border-white" 
+                                  style="width: 25px; height: 25px;"
+                                  data-bs-toggle="tooltip" 
+                                  title="{{ target_user.isActive ? 'Compte actif' : 'Compte inactif' }}"></span>
+                        </div>
+                    {% else %}
+                        <div class="position-relative d-inline-block">
                             <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg"
-                                 style="width: 180px; height: 180px; border: 5px solid #f8f9fa;">
-                                <div class="text-center">
-                                    <i class="fas fa-user fa-5x"></i>
-                                    <div class="mt-2 fw-bold">{{ user.fullName|first|upper }}</div>
-                                </div>
+                                 style="width: 180px; height: 180px; border: 5px solid #0463f1;">
+                                <span class="display-2 fw-bold">{{ target_user.fullName|first|upper }}</span>
                             </div>
-                        {% endif %}
-                    </div>
+                            <span class="position-absolute bottom-0 end-0 bg-{{ target_user.isActive ? 'success' : 'danger' }} rounded-circle p-2 border border-2 border-white" 
+                                  style="width: 25px; height: 25px;"
+                                  data-bs-toggle="tooltip" 
+                                  title="{{ target_user.isActive ? 'Compte actif' : 'Compte inactif' }}"></span>
+                        </div>
+                    {% endif %}
                     
-                    <!-- Nom et rôle -->
-                    <h4 class="card-title mb-2">{{ user.fullName }}</h4>
+                    <h3 class="mt-3 mb-1">{{ target_user.fullName }}</h3>
+                    <p class="text-muted mb-3">{{ target_user.email }}</p>
                     
-                    <div class="mb-3">
-                        {% if 'ROLE_ADMIN' in user.roles %}
-                            <span class="badge bg-danger bg-gradient px-3 py-2">
-                                <i class="fas fa-crown me-1"></i> Administrateur
-                            </span>
-                        {% elseif 'ROLE_MANAGER' in user.roles %}
-                            <span class="badge bg-primary bg-gradient px-3 py-2">
-                                <i class="fas fa-chart-line me-1"></i> Gestionnaire
-                            </span>
-                        {% elseif 'ROLE_STOCK_MANAGER' in user.roles %}
-                            <span class="badge bg-warning bg-gradient px-3 py-2 text-dark">
-                                <i class="fas fa-warehouse me-1"></i> Responsable Stock
-                            </span>
-                        {% elseif 'ROLE_CASHIER' in user.roles %}
-                            <span class="badge bg-success bg-gradient px-3 py-2">
-                                <i class="fas fa-cash-register me-1"></i> Caissier
-                            </span>
-                        {% else %}
-                            <span class="badge bg-secondary bg-gradient px-3 py-2">
-                                <i class="fas fa-user me-1"></i> Utilisateur
-                            </span>
-                        {% endif %}
-                    </div>
-                    
-                    <!-- Statut -->
-                    <div class="mb-4">
-                        {% if user.isActive %}
-                            <span class="badge bg-success px-3 py-2">
-                                <i class="fas fa-check-circle me-1"></i> Actif
-                            </span>
-                        {% else %}
-                            <span class="badge bg-danger px-3 py-2">
-                                <i class="fas fa-times-circle me-1"></i> Inactif
-                            </span>
-                        {% endif %}
-                    </div>
-                    
-                    <!-- Boutons d'action rapides -->
                     <div class="d-grid gap-2">
-                        <a href="mailto:{{ user.email }}" class="btn btn-outline-primary">
-                            <i class="fas fa-envelope me-2"></i> Envoyer un email
+                        <a href="tel:{{ target_user.phone }}" class="btn btn-outline-primary">
+                            <i class="bi bi-telephone me-2"></i>{{ target_user.phone }}
                         </a>
-                        <a href="tel:{{ user.phone }}" class="btn btn-outline-success">
-                            <i class="fas fa-phone me-2"></i> Appeler
+                        <a href="mailto:{{ target_user.email }}" class="btn btn-outline-info">
+                            <i class="bi bi-envelope me-2"></i>Envoyer un email
                         </a>
                     </div>
                 </div>
                 <div class="card-footer bg-light text-center">
                     <small class="text-muted">
-                        <i class="fas fa-user-plus me-1"></i>
-                        Membre depuis {{ user.createdAt ? user.createdAt|date('d/m/Y') : 'N/A' }}
+                        <i class="bi bi-calendar-plus me-1"></i>
+                        Membre depuis {{ target_user.createdAt ? target_user.createdAt|date('d/m/Y à H:i') : 'N/A' }}
                     </small>
                 </div>
             </div>
-        </div>
-
-        <!-- Carte des informations détaillées -->
-        <div class="col-lg-8">
-            <div class="card shadow border-0">
-                <div class="card-header bg-gradient-primary text-white py-3">
+            
+            <!-- Carte entreprise -->
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-gradient-success text-white">
                     <h5 class="card-title mb-0">
-                        <i class="fas fa-info-circle me-2"></i> Informations détaillées
+                        <i class="bi bi-building me-2"></i>Entreprise
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <!-- Informations personnelles -->
-                        <div class="col-md-6">
-                            <div class="card border-0 bg-light mb-4">
-                                <div class="card-body">
-                                    <h6 class="card-title text-primary mb-3">
-                                        <i class="fas fa-user me-2"></i> Informations personnelles
-                                    </h6>
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <td class="text-muted" width="40%">Nom complet</td>
-                                            <td class="fw-semibold">{{ user.fullName }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted">Email</td>
-                                            <td>
-                                                <a href="mailto:{{ user.email }}" class="text-decoration-none">
-                                                    {{ user.email }}
-                                                    <i class="fas fa-external-link-alt ms-1 small"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted">Téléphone</td>
-                                            <td>
-                                                <a href="tel:{{ user.phone }}" class="text-decoration-none">
-                                                    {{ user.phone }}
-                                                    <i class="fas fa-external-link-alt ms-1 small"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </table>
+                    {% if target_user.hmaServiceId %}
+                        <div class="d-flex align-items-center mb-3">
+                            {% if target_user.hmaServiceId.logo %}
+                                <img src="{{ asset('uploads/logos/' ~ target_user.hmaServiceId.logo) }}" 
+                                     alt="{{ target_user.hmaServiceId.companyName }}" 
+                                     class="rounded me-3"
+                                     style="width: 50px; height: 50px; object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-gradient-primary text-white d-flex align-items-center justify-content-center me-3"
+                                     style="width: 50px; height: 50px;">
+                                    <span class="fw-bold">{{ target_user.hmaServiceId.companyName|first|upper }}</span>
                                 </div>
+                            {% endif %}
+                            <div>
+                                <h6 class="mb-1">{{ target_user.hmaServiceId.companyName }}</h6>
+                                <span class="badge plan-{{ target_user.hmaServiceId.currentPlan }}">
+                                    {{ target_user.hmaServiceId.currentPlanLabel }}
+                                </span>
                             </div>
                         </div>
-
-                        <!-- Informations système -->
-                        <div class="col-md-6">
-                            <div class="card border-0 bg-light mb-4">
-                                <div class="card-body">
-                                    <h6 class="card-title text-primary mb-3">
-                                        <i class="fas fa-cog me-2"></i> Informations système
-                                    </h6>
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <td class="text-muted" width="40%">ID Utilisateur</td>
-                                            <td class="fw-semibold">#{{ user.id }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted">Statut</td>
-                                            <td>
-                                                {% if user.isActive %}
-                                                    <span class="badge bg-success">
-                                                        <i class="fas fa-check-circle me-1"></i> Actif
-                                                    </span>
-                                                {% else %}
-                                                    <span class="badge bg-danger">
-                                                        <i class="fas fa-times-circle me-1"></i> Inactif
-                                                    </span>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted">Rôles</td>
-                                            <td>
-                                                <div class="d-flex flex-wrap gap-1">
-                                                    {% for role in user.roles %}
-                                                        {% if role != 'ROLE_USER' %}
-                                                            <span class="badge bg-info">
-                                                                {{ role|replace({'ROLE_': ''})|lower|title }}
-                                                            </span>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
+                        <hr>
+                        <div class="small">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Statut entreprise</span>
+                                {% if target_user.hmaServiceId.hmaActive %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-dark">Bloquée</span>
+                                {% endif %}
                             </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Utilisateurs</span>
+                                <span class="fw-semibold">{{ target_user.hmaServiceId.users|length }}</span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-building-x display-4 text-muted mb-3"></i>
+                            <p class="text-muted">Utilisateur indépendant</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Colonne de droite - Informations détaillées -->
+        <div class="col-lg-8">
+            <div class="row">
+                <!-- Informations personnelles -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-gradient-info text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-info-circle me-2"></i>Informations personnelles
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">Nom complet</span>
+                                    <span class="fw-semibold">{{ target_user.fullName }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">Email</span>
+                                    <a href="mailto:{{ target_user.email }}" class="fw-semibold text-decoration-none">
+                                        {{ target_user.email }}
+                                        <i class="bi bi-box-arrow-up-right ms-1 small"></i>
+                                    </a>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">Téléphone</span>
+                                    <a href="tel:{{ target_user.phone }}" class="fw-semibold text-decoration-none">
+                                        {{ target_user.phone }}
+                                        <i class="bi bi-box-arrow-up-right ms-1 small"></i>
+                                    </a>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">Date d'embauche</span>
+                                    <span class="fw-semibold">
+                                        {% if target_user.employmentDate %}
+                                            {{ target_user.employmentDate|date('d/m/Y') }}
+                                        {% else %}
+                                            <span class="text-muted">Non renseignée</span>
+                                        {% endif %}
+                                    </span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Dates -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card border-0 bg-light">
-                                <div class="card-body">
-                                    <h6 class="card-title text-primary mb-3">
-                                        <i class="fas fa-calendar-alt me-2"></i> Dates importantes
-                                    </h6>
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <td class="text-muted" width="40%">Date de création</td>
-                                            <td>
-                                                <i class="far fa-calendar-plus me-2 text-success"></i>
-                                                {{ user.createdAt ? user.createdAt|date('d/m/Y à H:i') : 'N/A' }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted">Dernière modification</td>
-                                            <td>
-                                                <i class="far fa-edit me-2 text-warning"></i>
-                                                {{ user.updatedAt ? user.updatedAt|date('d/m/Y à H:i') : 'N/A' }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
+                <!-- Informations système -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-gradient-secondary text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-gear me-2"></i>Informations système
+                            </h5>
                         </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">ID Utilisateur</span>
+                                    <span class="badge bg-primary">#{{ target_user.id }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">Rôles</span>
+                                    <div>
+                                        {% for role in target_user.roles %}
+                                            {% if role != 'ROLE_USER' %}
+                                                <span class="badge bg-info me-1">
+                                                    {{ role|replace({'ROLE_': ''})|lower|title }}
+                                                </span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">Statut admin</span>
+                                    {% if target_user.isActive %}
+                                        <span class="badge bg-success">Actif</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactif</span>
+                                    {% endif %}
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">Statut quota</span>
+                                    {% if target_user.subscriptionActive %}
+                                        <span class="badge bg-success">Inclus</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Hors quota</span>
+                                    {% endif %}
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">1ère connexion</span>
+                                    {% if not target_user.passwordChanged and not target_user.isHmaOwner %}
+                                        <span class="badge bg-warning text-dark">En attente</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Effectuée</span>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- Statistiques (optionnel) -->
-                        <div class="col-md-6">
-                            <div class="card border-0 bg-light">
-                                <div class="card-body">
-                                    <h6 class="card-title text-primary mb-3">
-                                        <i class="fas fa-chart-bar me-2"></i> Statistiques
-                                    </h6>
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <td class="text-muted" width="40%">Produits créés</td>
-                                            <td>
-                                                <span class="badge bg-primary">
-                                                    {{ user.products|length }} produit(s)
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted">Commandes</td>
-                                            <td>
-                                                <span class="badge bg-success">
-                                                    {{ user.orders|length }} commande(s)
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted">Mouvements stock</td>
-                                            <td>
-                                                <span class="badge bg-warning text-dark">
-                                                    {{ user.stockMovements|length }} mouvement(s)
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </table>
+                <!-- Statistiques -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-gradient-warning text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-bar-chart me-2"></i>Statistiques d'activité
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-4">
+                                    <div class="stat-box bg-light rounded-3 p-3 text-center">
+                                        <div class="h3 mb-1 fw-bold text-primary">{{ target_user.products|length }}</div>
+                                        <small class="text-muted">Produits</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-box bg-light rounded-3 p-3 text-center">
+                                        <div class="h3 mb-1 fw-bold text-success">{{ target_user.orders|length }}</div>
+                                        <small class="text-muted">Commandes</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-box bg-light rounded-3 p-3 text-center">
+                                        <div class="h3 mb-1 fw-bold text-info">{{ target_user.stockMovements|length }}</div>
+                                        <small class="text-muted">Mouvements</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-box bg-light rounded-3 p-3 text-center">
+                                        <div class="h3 mb-1 fw-bold text-warning">{{ target_user.categories|length }}</div>
+                                        <small class="text-muted">Catégories</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-box bg-light rounded-3 p-3 text-center">
+                                        <div class="h3 mb-1 fw-bold text-danger">{{ target_user.purchases|length }}</div>
+                                        <small class="text-muted">Achats</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-box bg-light rounded-3 p-3 text-center">
+                                        <div class="h3 mb-1 fw-bold text-secondary">{{ target_user.stockMovements|length }}</div>
+                                        <small class="text-muted">Stock</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Boutons d'action en bas -->
-                <div class="card-footer bg-light">
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i> Retour à la liste
-                        </a>
-                        <div class="btn-group">
-                            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-warning">
-                                <i class="fas fa-edit me-2"></i> Modifier
-                            </a>
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                <i class="fas fa-trash me-2"></i> Supprimer
-                            </button>
+
+                <!-- Dates importantes -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-gradient-info text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-calendar me-2"></i>Dates importantes
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">
+                                        <i class="bi bi-plus-circle me-2"></i>Date de création
+                                    </span>
+                                    <span class="fw-semibold">
+                                        {{ target_user.createdAt ? target_user.createdAt|date('d/m/Y H:i') : 'N/A' }}
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">
+                                        <i class="bi bi-pencil me-2"></i>Dernière modification
+                                    </span>
+                                    <span class="fw-semibold">
+                                        {{ target_user.updatedAt ? target_user.updatedAt|date('d/m/Y H:i') : 'N/A' }}
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span class="text-muted">
+                                        <i class="bi bi-briefcase me-2"></i>Date d'embauche
+                                    </span>
+                                    <span class="fw-semibold">
+                                        {{ target_user.employmentDate ? target_user.employmentDate|date('d/m/Y') : 'Non renseignée' }}
+                                    </span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -329,35 +361,216 @@
     </div>
 </div>
 
+<!-- Modal de confirmation pour toggle status -->
+<div class="modal fade" id="toggleStatusModal" tabindex="-1" aria-labelledby="toggleStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-warning border-0">
+                <h5 class="modal-title text-white" id="toggleStatusModalLabel">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Confirmation
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-question-circle-fill text-warning" style="font-size: 4rem;"></i>
+                </div>
+                <h4 id="toggleStatusMessage" class="mb-3"></h4>
+                <p class="text-muted mb-0">Cette action peut être annulée à tout moment.</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                    <i class="bi bi-x me-2"></i>Annuler
+                </button>
+                <form id="toggleStatusForm" method="post" class="d-inline">
+                    <input type="hidden" name="_token" id="toggleStatusToken">
+                    <button type="submit" class="btn btn-warning px-4">
+                        <i class="bi bi-check me-2"></i>Confirmer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialiser tous les tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+    
+    // Gestion du toggle status
+    const toggleButtons = document.querySelectorAll('.toggle-status-btn');
+    const toggleModal = new bootstrap.Modal(document.getElementById('toggleStatusModal'));
+    const toggleForm = document.getElementById('toggleStatusForm');
+    const toggleToken = document.getElementById('toggleStatusToken');
+    const toggleMessage = document.getElementById('toggleStatusMessage');
+    
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            const userName = this.dataset.userName;
+            const currentStatus = this.dataset.currentStatus;
+            const csrfToken = this.dataset.csrfToken;
+            
+            const action = currentStatus === 'active' ? 'désactiver' : 'activer';
+            const actionColor = currentStatus === 'active' ? 'danger' : 'success';
+            
+            toggleMessage.innerHTML = `Êtes-vous sûr de vouloir <strong class="text-${actionColor}">${action}</strong> l'utilisateur <strong>${userName}</strong> ?`;
+            
+            toggleForm.action = `/admin/user/${userId}/toggle-status`;
+            toggleToken.value = csrfToken;
+            
+            toggleModal.show();
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
 <style>
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+}
+.bg-gradient-success {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%) !important;
+}
+.bg-gradient-info {
+    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%) !important;
+}
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #ecc94b 0%, #d69e2e 100%) !important;
+}
+.bg-gradient-secondary {
+    background: linear-gradient(135deg, #a0aec0 0%, #718096 100%) !important;
+}
+.bg-gradient-danger {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%) !important;
+}
+
+.plan-premium {
+    background: linear-gradient(135deg, #f6ad55 0%, #dd6b20 100%);
+    color: white;
+}
+.plan-basic {
+    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    color: white;
+}
+.plan-freemium {
+    background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+    color: white;
+}
+.plan-trial {
+    background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
+    color: white;
+}
+
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.bg-opacity-20 {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    background: transparent;
+    padding: 12px 0;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.stat-box {
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.stat-box:hover {
+    transform: translateY(-5px);
+    border-color: #0463f1;
+    box-shadow: 0 10px 20px rgba(4, 99, 241, 0.1);
+}
+
 .card {
-    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;
     overflow: hidden;
-    transition: transform 0.3s ease;
 }
 
 .card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
 }
 
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+.card-header {
+    border-bottom: none;
 }
 
-.badge {
-    border-radius: 20px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
+.btn {
+    border-radius: 10px;
+    transition: all 0.3s ease;
 }
 
-.table-borderless td {
-    padding: 12px 8px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-.btn-outline-primary:hover, .btn-outline-success:hover {
+.btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.modal-content {
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 1.5rem;
+}
+
+.modal-header.bg-warning {
+    background: linear-gradient(135deg, #ecc94b 0%, #d69e2e 100%) !important;
+}
+
+.btn-close-white {
+    filter: brightness(0) invert(1);
+}
+
+/* Animation pour les statistiques */
+@keyframes countUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-box .h3 {
+    animation: countUp 0.5s ease-out;
+}
+
+/* Badge de statut en temps réel */
+.position-absolute.bottom-0.end-0 {
+    box-shadow: 0 0 0 3px white;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 </style>
 {% endblock %}

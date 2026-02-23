@@ -21,8 +21,7 @@
     <!-- Custom CSS -->
     <style>
         :root {
-            --primary-color: #667eea;
-            --secondary-color: #0463f1ff;
+            --primary-color: #0463f1; /* Bleu pur UNIFORME */
             --dark-color: #1f2937;
             --light-color: #f9fafb;
             --success-color: #10b981;
@@ -34,7 +33,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f5f7fb;
-            color: #2153a3ff;
+            color: #333333;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -55,14 +54,14 @@
             color: var(--primary-color);
         }
         
-        /* Logo de l'entreprise - SIMPLIFIÉ */
+        /* Logo de l'entreprise */
         .company-logo {
             width: 40px;
             height: 40px;
             border-radius: 8px;
             overflow: hidden;
             margin-right: 10px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--primary-color); /* Bleu pur */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -96,8 +95,9 @@
             max-width: 200px;
         }
         
+        /* SIDEBAR - Bleu pur UNIFORME */
         .sidebar {
-            background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--primary-color); /* Bleu pur */
             color: white;
             min-height: calc(100vh - 73px);
             box-shadow: 0 0 30px rgba(0,0,0,0.1);
@@ -113,7 +113,7 @@
         }
         
         .sidebar .nav-link {
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,255,255,0.9);
             padding: 12px 15px;
             margin: 5px 0;
             border-radius: 8px;
@@ -233,8 +233,9 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
         
+        /* Bouton gradient - UNIFORME */
         .btn-gradient {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--primary-color); /* Bleu pur */
             border: none;
             color: white;
             padding: 10px 20px;
@@ -244,11 +245,12 @@
         }
         
         .btn-gradient:hover {
+            background: #0355d0; /* Bleu plus foncé au survol */
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 15px rgba(4, 99, 241, 0.4);
         }
         
-        /* User Avatar - SIMPLIFIÉ */
+        /* User Avatar */
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -256,7 +258,7 @@
             overflow: hidden;
             border: 2px solid var(--primary-color);
             transition: all 0.3s ease;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--primary-color); /* Bleu pur */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -264,7 +266,7 @@
         
         .user-avatar:hover {
             transform: scale(1.05);
-            border-color: var(--secondary-color);
+            border-color: #0355d0;
         }
         
         .user-avatar img {
@@ -279,6 +281,7 @@
             font-size: 16px;
         }
         
+        /* Barre de recherche universelle */
         .universal-search-container {
             flex-grow: 1;
             max-width: 700px;
@@ -292,8 +295,8 @@
 
         .universal-search-input {
             border-radius: 25px;
-            padding: 10px 50px 10px 20px;
-            border: 3px solid #dee2e6;
+            padding: 10px 50px 10px 45px;
+            border: 2px solid #dee2e6;
             transition: all 0.3s ease;
             width: 100%;
             background-color: #f8f9fa;
@@ -302,7 +305,7 @@
         }
 
         .universal-search-input:focus {
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+            box-shadow: 0 0 0 4px rgba(4, 99, 241, 0.15);
             border-color: var(--primary-color);
             background-color: white;
             outline: none;
@@ -310,10 +313,10 @@
 
         .universal-search-btn {
             position: absolute;
-            right: 8px;
+            right: 5px;
             top: 30%;
             transform: translateY(-50%);
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--primary-color); /* Bleu pur */
             border: none;
             color: white;
             cursor: pointer;
@@ -325,18 +328,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 3px 10px rgba(4, 99, 241, 0.3);
         }
 
         .universal-search-btn:hover {
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            background: #0355d0; /* Bleu plus foncé */
             transform: translateY(-50%) scale(1.05);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(4, 99, 241, 0.4);
         }
 
         .universal-search-clear {
             position: absolute;
-            right: 50px;
+            right: 45px;
             top: 30%;
             transform: translateY(-50%);
             background: rgba(0, 0, 0, 0.05);
@@ -348,20 +351,19 @@
             display: none;
             width: 28px;
             height: 28px;
-            display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
+        }
+
+        .universal-search-clear.show {
+            display: flex;
         }
 
         .universal-search-clear:hover {
             background: rgba(239, 68, 68, 0.1);
             color: var(--danger-color);
             transform: translateY(-50%) rotate(90deg);
-        }
-
-        .universal-search-clear.show {
-            display: flex;
         }
 
         .search-hint {
@@ -378,6 +380,13 @@
             color: #6c757d;
             opacity: 0.8;
             font-size: 15px;
+        }
+
+        .universal-search-input {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%230463f1' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+            background-position: 15px center;
+            background-repeat: no-repeat;
+            background-size: 18px;
         }
 
         @keyframes searchExpand {
@@ -405,7 +414,7 @@
             .universal-search-input {
                 height: 40px;
                 font-size: 15px;
-                padding: 8px 45px 8px 15px;
+                padding: 8px 45px 8px 40px;
             }
             
             .universal-search-btn {
@@ -433,35 +442,19 @@
             }
         }
 
-        .universal-search-input:focus {
-            animation: pulseBorder 2s infinite;
-        }
-
         @keyframes pulseBorder {
             0% {
                 border-color: var(--primary-color);
-                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+                box-shadow: 0 0 0 4px rgba(4, 99, 241, 0.15);
             }
             50% {
-                border-color: var(--secondary-color);
+                border-color: #0355d0;
                 box-shadow: 0 0 0 6px rgba(4, 99, 241, 0.1);
             }
             100% {
                 border-color: var(--primary-color);
-                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+                box-shadow: 0 0 0 4px rgba(4, 99, 241, 0.15);
             }
-        }
-
-        .universal-search-input {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23667eea' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
-            background-position: 15px center;
-            background-repeat: no-repeat;
-            background-size: 18px;
-            padding-left: 45px;
-        }
-
-        .universal-search-input:focus {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%230463f1' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
         }
         
         /* Responsive */
@@ -531,23 +524,23 @@
         }
 
         .bg-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: var(--primary-color) !important; /* Bleu pur */
         }
 
         .bg-success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            background: var(--success-color) !important;
         }
 
         .bg-info {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+            background: var(--info-color) !important;
         }
 
         .bg-warning {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+            background: var(--warning-color) !important;
         }
 
         .bg-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            background: var(--danger-color) !important;
         }
 
         .bg-secondary {
@@ -577,6 +570,7 @@
             padding-top: 30px;
         }
         
+        /* FOOTER */
         .footer {
             background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
             color: #f9fafb;
@@ -593,7 +587,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            background: var(--primary-color); /* Bleu pur */
         }
         
         .footer-content {
@@ -607,9 +601,7 @@
         .footer-logo {
             font-weight: 700;
             font-size: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--primary-color); /* Bleu pur */
             margin-bottom: 10px;
         }
         
@@ -634,7 +626,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            background: var(--primary-color); /* Bleu pur */
             transition: width 0.3s ease;
         }
         
@@ -667,13 +659,13 @@
         }
         
         .footer-icon:hover {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--primary-color); /* Bleu pur */
             color: white;
             transform: translateY(-3px);
         }
         
         .version-badge {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--primary-color); /* Bleu pur */
             color: white;
             padding: 4px 12px;
             border-radius: 20px;
@@ -685,7 +677,7 @@
         
         .version-badge:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 12px rgba(4, 99, 241, 0.3);
         }
         
         @keyframes fadeIn {
@@ -707,12 +699,12 @@
         }
         
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--primary-color); /* Bleu pur */
             border-radius: 10px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary-color);
+            background: #0355d0; /* Bleu plus foncé */
         }
 
         .badge-status-draft { background-color: #6c757d; }
@@ -731,8 +723,8 @@
         }
 
         .form-control:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(4, 99, 241, 0.25);
         }
 
         @media (max-width: 768px) {
@@ -744,6 +736,168 @@
                 padding: 0.25rem 0.5rem;
                 font-size: 0.875rem;
             }
+        }
+
+        /* Ajouter dans votre bloc stylesheets */
+        .subscription-widget-container {
+            margin-top: 0.5rem;
+        }
+
+        .subscription-widget-container .card {
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .subscription-widget-container .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.2);
+        }
+
+        /* Classes d'opacité */
+        .bg-opacity-10 {
+            --bs-bg-opacity: 0.1;
+        }
+        .bg-opacity-20 {
+            --bs-bg-opacity: 0.2;
+        }
+        .border-opacity-20 {
+            --bs-border-opacity: 0.2;
+        }
+
+        /* Texte blanc avec opacité */
+        .text-white-50 {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        /* Espacement des lettres */
+        .tracking-wider {
+            letter-spacing: 0.05em;
+        }
+
+        /* Ajustement pour mobile */
+        @media (max-width: 768px) {
+            .subscription-widget-container {
+                margin-top: 1rem;
+            }
+        }
+
+        /* Ajouter à la fin de votre bloc stylesheets */
+
+        /* Structure de la page */
+        .container-fluid.flex-grow-1 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            padding-left: 0;
+            padding-right: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-content {
+            padding: 1rem 0.5rem;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        /* Ajustement pour mobile */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 0;
+                width: 280px;
+                height: 100vh;
+                z-index: 1040;
+                transition: left 0.3s ease;
+                box-shadow: none;
+            }
+            
+            .sidebar.show {
+                left: 0;
+                box-shadow: 5px 0 30px rgba(0,0,0,0.2);
+            }
+            
+            .sidebar-backdrop {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 1039;
+                backdrop-filter: blur(3px);
+            }
+            
+            .sidebar-backdrop.show {
+                display: block;
+            }
+            
+            main {
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding: 1rem !important;
+            }
+        }
+
+        /* Animation pour les sous-menus */
+        .sub-menu {
+            transition: all 0.3s ease-in-out;
+            overflow: hidden;
+        }
+
+        .sub-menu.collapse:not(.show) {
+            display: none;
+        }
+
+        .sub-menu.collapsing {
+            display: block;
+            height: 0;
+            overflow: hidden;
+            transition: height 0.3s ease-in-out;
+        }
+
+        /* Style pour les badges */
+        .badge.bg-warning {
+            background: #f59e0b !important;
+            color: #000;
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 500;
+        }
+
+        .badge.bg-danger {
+            background: #ef4444 !important;
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 500;
+        }
+
+        /* Style pour les liens désactivés */
+        .nav-link.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: default;
+        }
+
+        /* Dropdown divider */
+        .dropdown-divider {
+            border-top-color: rgba(255,255,255,0.1);
+            margin: 0.5rem 0;
         }
     </style>
     
@@ -764,50 +918,44 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             
-            <!-- À GAUCHE : Logo et nom de l'entreprise - SIMPLIFIÉ -->
+            <!-- À GAUCHE : Logo et nom de l'entreprise - VERSION SÉCURISÉE -->
             <a class="navbar-brand d-flex align-items-center" href="{{ path('app_dashboard') }}">
                 <div class="company-logo" id="companyLogo">
-                    {% if app.user %}
-                        {% set user = app.user %}
-                        {% set hmaService = null %}
-                        {% set logo = null %}
-                        {% set companyName = 'HMA MARKET' %}
-                        {% set initial = 'H' %}
-                        
-                        {# Déterminer l'entreprise #}
-                        {% if user.hmaServiceId is defined and user.hmaServiceId %}
-                            {# User avec entreprise #}
-                            {% set hmaService = user.hmaServiceId %}
-                        {% endif %}
-                        
-                        {% if hmaService %}
-                            {% set companyName = hmaService.companyName %}
-                            {% set initial = companyName|first|upper %}
-                            {% if hmaService.logo %}
-                                {% set logo = asset('uploads/logos/' ~ hmaService.logo) %}
-                            {% endif %}
-                        {% endif %}
+                    {% if app.user and app.user.hasCompany %}
+                        {# Utilisation des méthodes sécurisées #}
+                        {% set companyName = app.user.companyDisplayName %}
+                        {% set initial = app.user.companyInitial %}
+                        {% set logo = app.user.companyLogo %}
                         
                         {% if logo %}
-                            <img src="{{ logo }}" 
-                                 alt="{{ companyName }}"
-                                 class="logo-img"
-                                 data-initial="{{ initial }}">
+                            <img src="{{ asset('uploads/logos/' ~ logo) }}" 
+                                alt="{{ companyName }}"
+                                class="logo-img"
+                                data-initial="{{ initial }}">
                         {% else %}
-                            <div class="logo-fallback">
+                            <img src="{{ asset('uploads/logos/logo.png') }}" 
+                                alt="{{ companyName }}"
+                                class="logo-img"
+                                data-initial="{{ initial }}"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="logo-fallback" style="display: none;">
                                 {{ initial }}
                             </div>
                         {% endif %}
                     {% else %}
-                        <div class="logo-fallback">H</div>
+                        <img src="{{ asset('uploads/logos/logo.png') }}" 
+                            alt="HMA MARKET"
+                            class="logo-img"
+                            data-initial="H"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="logo-fallback" style="display: none;">
+                            H
+                        </div>
                     {% endif %}
                 </div>
+                
                 <div class="company-name" id="companyName">
-                    {% if app.user and app.user.hmaServiceId is defined and app.user.hmaServiceId %}
-                        {{ app.user.hmaServiceId.companyName }}
-                    {% else %}
-                        HMA MARKET
-                    {% endif %}
+                    {{ app.user ? app.user.companyDisplayName : 'HMA MARKET' }}
                 </div>
             </a>
             
@@ -891,6 +1039,8 @@
                                         <i class="bi bi-box-seam text-warning me-1"></i>Responsable Stock
                                     {% elseif 'ROLE_CASHIER' in user.roles %}
                                         <i class="bi bi-cash-coin text-info me-1"></i>Caissier
+                                    {% elseif 'ROLE_SUPER_ADMIN' in user.roles %}
+                                        <i class="bi bi-shield-check text-danger me-1"></i>Super Administrateur
                                     {% else %}
                                         <i class="bi bi-person me-1"></i>Utilisateur
                                     {% endif %}
@@ -937,6 +1087,8 @@
                                                     Responsable Stock
                                                 {% elseif 'ROLE_CASHIER' in user.roles %}
                                                     Caissier
+                                                {% elseif 'ROLE_SUPER_ADMIN' in user.roles %}
+                                                    Super Administrateur    
                                                 {% else %}
                                                     Utilisateur
                                                 {% endif %}
@@ -961,7 +1113,7 @@
                             
                             <!-- Liens standards -->
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                <a class="dropdown-item d-flex align-items-center" href="{{ path('app_profile_show') }}">
                                     <i class="bi bi-person me-2 text-primary"></i>
                                     <span>Mon profil</span>
                                 </a>
@@ -988,100 +1140,139 @@
     </nav>
     
     <div class="container-fluid flex-grow-1">
-        <div class="row">
-            <!-- Backdrop pour mobile -->
-            <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-            
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebarMenu">
-                <div class="sidebar-content">
-                    {% set currentRoute = app.request.get('_route') %}
-                    {% set menuItems = get_menu() %}
+    <div class="row">
+        <!-- Backdrop pour mobile -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+        
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebarMenu">
+            <div class="sidebar-content">
+                {% set currentRoute = app.request.get('_route') %}
+                {% set menuItems = get_menu() %}
+                {% set counter = 0 %}
+                
+                {% for item in menuItems %}
+                    {# SECTION (TITRE) #}
+                    {% if item.type == 'section' %}
+                        <div class="menu-title">{{ item.label }}</div>
                     
-                    {% for item in menuItems %}
-                        {% if item.type == 'title' %}
-                            <div class="menu-title">{{ item.label }}</div>
-                        {% elseif item.type == 'dropdown' %}
-                            {% set isActive = false %}
+                    {# DROPDOWN #}
+                    {% elseif item.type == 'dropdown' %}
+                        {% set counter = counter + 1 %}
+                        {% set isActive = false %}
+                        {% for child in item.children %}
+                            {% if child.route is defined and child.route == currentRoute %}
+                                {% set isActive = true %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        <a href="#submenu{{ counter }}" 
+                           class="nav-link has-arrow {% if isActive %}active{% endif %}" 
+                           data-bs-toggle="collapse"
+                           aria-expanded="{{ isActive ? 'true' : 'false' }}">
+                            <i class="{{ item.icon }}"></i>
+                            <span>{{ item.label }}</span>
+                            {% if item.coming_soon is defined and item.coming_soon %}
+                                <span class="badge bg-warning ms-auto">Bientôt</span>
+                            {% endif %}
+                        </a>
+                        <div class="sub-menu collapse {% if isActive %}show{% endif %}" id="submenu{{ counter }}">
                             {% for child in item.children %}
-                                {% if child.route and child.route == currentRoute %}
-                                    {% set isActive = true %}
+                                {% if child.type is defined and child.type == 'divider' %}
+                                    <hr class="dropdown-divider">
+                                {% elseif child.route is defined %}
+                                    <a href="{{ path(child.route) }}" 
+                                       class="nav-link {% if child.route == currentRoute %}active{% endif %}">
+                                        <i class="{{ child.icon }}"></i>
+                                        {{ child.label }}
+                                        {% if child.coming_soon is defined and child.coming_soon %}
+                                            <span class="badge bg-warning ms-auto">Bientôt</span>
+                                        {% endif %}
+                                    </a>
+                                {% else %}
+                                    <a href="#" class="nav-link disabled">
+                                        <i class="{{ child.icon }}"></i>
+                                        {{ child.label }}
+                                    </a>
                                 {% endif %}
                             {% endfor %}
-                            
-                            <a href="#submenu{{ loop.index }}" 
-                            class="nav-link has-arrow {% if isActive %}active{% endif %}" 
-                            data-bs-toggle="collapse"
-                            aria-expanded="{{ isActive ? 'true' : 'false' }}">
+                        </div>
+                    
+                    {# LIEN SIMPLE #}
+                    {% elseif item.type == 'link' %}
+                        {% set counter = counter + 1 %}
+                        {% if item.route is defined %}
+                            <a href="{{ path(item.route) }}" 
+                               class="nav-link {% if item.route == currentRoute %}active{% endif %}">
+                                <i class="{{ item.icon }}"></i>
+                                <span>{{ item.label }}</span>
+                                {% if item.badge is defined %}
+                                    <span class="badge bg-danger ms-auto">{{ item.badge }}</span>
+                                {% endif %}
+                                {% if item.coming_soon is defined and item.coming_soon %}
+                                    <span class="badge bg-warning ms-auto">Bientôt</span>
+                                {% endif %}
+                            </a>
+                        {% else %}
+                            <a href="#" class="nav-link disabled">
                                 <i class="{{ item.icon }}"></i>
                                 <span>{{ item.label }}</span>
                             </a>
-                            <div class="sub-menu collapse {% if isActive %}show{% endif %}" id="submenu{{ loop.index }}">
-                                {% for child in item.children %}
-                                    {% if child.route %}
-                                        <a href="{{ path(child.route) }}" 
-                                        class="nav-link {% if child.route == currentRoute %}active{% endif %}">
-                                            <i class="{{ child.icon }}"></i>
-                                            {{ child.label }}
-                                        </a>
-                                    {% else %}
-                                        <a href="#" 
-                                        class="nav-link">
-                                            <i class="{{ child.icon }}"></i>
-                                            {{ child.label }}
-                                        </a>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {% if item.route %}
-                                <a href="{{ path(item.route) }}" 
-                                class="nav-link {% if item.route == currentRoute %}active{% endif %}">
-                                    <i class="{{ item.icon }}"></i>
-                                    <span>{{ item.label }}</span>
-                                </a>
-                            {% else %}
-                                <a href="#" 
-                                class="nav-link">
-                                    <i class="{{ item.icon }}"></i>
-                                    <span>{{ item.label }}</span>
-                                </a>
-                            {% endif %}
                         {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-            
-            <!-- Contenu principal -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-                <!-- Messages flash -->
-                {% for label, messages in app.flashes %}
-                    <div class="alert alert-{{ label }} alert-dismissible fade show shadow-sm border-0" role="alert">
-                        <div class="d-flex align-items-center">
-                            {% if label == 'success' %}
-                                <i class="bi bi-check-circle-fill me-2"></i>
-                            {% elseif label == 'error' or label == 'danger' %}
-                                <i class="bi bi-exclamation-circle-fill me-2"></i>
-                            {% elseif label == 'warning' %}
-                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            {% elseif label == 'info' %}
-                                <i class="bi bi-info-circle-fill me-2"></i>
-                            {% endif %}
-                            <div>
-                                {% for message in messages %}
-                                    {{ message|raw }}
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                    
+                    {# FALLBACK #}
+                    {% elseif item.type == 'title' %}
+                        <div class="menu-title">{{ item.label }}</div>
+                    
+                    {% else %}
+                        {% set counter = counter + 1 %}
+                        {% if item.route is defined %}
+                            <a href="{{ path(item.route) }}" 
+                               class="nav-link {% if item.route == currentRoute %}active{% endif %}">
+                                <i class="{{ item.icon }}"></i>
+                                <span>{{ item.label }}</span>
+                            </a>
+                        {% else %}
+                            <a href="#" class="nav-link disabled">
+                                <i class="{{ item.icon }}"></i>
+                                <span>{{ item.label }}</span>
+                            </a>
+                        {% endif %}
+                    {% endif %}
                 {% endfor %}
-                
-                <!-- Contenu de la page -->
-                {% block body %}{% endblock %}
-            </main>
+            </div>
         </div>
+        
+        <!-- Contenu principal -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <!-- Messages flash -->
+            {% for label, messages in app.flashes %}
+                <div class="alert alert-{{ label }} alert-dismissible fade show shadow-sm border-0" role="alert">
+                    <div class="d-flex align-items-center">
+                        {% if label == 'success' %}
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                        {% elseif label == 'error' or label == 'danger' %}
+                            <i class="bi bi-exclamation-circle-fill me-2"></i>
+                        {% elseif label == 'warning' %}
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        {% elseif label == 'info' %}
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                        {% endif %}
+                        <div>
+                            {% for message in messages %}
+                                {{ message|raw }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+            
+            <!-- Contenu de la page -->
+            {% block body %}{% endblock %}
+        </main>
     </div>
+</div>
     
     <!-- Footer amélioré -->
     <footer class="footer">

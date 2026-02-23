@@ -1,8 +1,10 @@
 <?php
 // src/Service/MenuBuilder.php
+
 namespace App\Service;
 
 use Symfony\Component\Security\Core\Security;
+use App\Entity\User;
 
 class MenuBuilder
 {
@@ -23,36 +25,36 @@ class MenuBuilder
         $menus = [];
         
         // Menu commun à tous les utilisateurs connectés
-        $menus = array_merge($menus, $this->getCommonMenu());
+        $menus[] = $this->getDashboardMenuItem();
         
-        // Menu selon le rôle
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            // L'admin voit le menu Admin ET Manager
+        // Ajout des menus selon la hiérarchie des rôles
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+            $menus = array_merge($menus, $this->getSuperAdminMenu());
+        }
+        elseif ($this->security->isGranted('ROLE_ADMIN')) {
             $menus = array_merge($menus, $this->getAdminMenu());
+        }
+        elseif ($this->security->isGranted('ROLE_MANAGER')) {
             $menus = array_merge($menus, $this->getManagerMenu());
         }
         
-        if ($this->security->isGranted('ROLE_MANAGER') && !$this->security->isGranted('ROLE_ADMIN')) {
-            // Manager seulement (pas admin)
-            $menus = array_merge($menus, $this->getManagerMenu());
-        }
-        
-        if ($this->security->isGranted('ROLE_STOCK_MANAGER')) {
+        // Rôles indépendants (peuvent être combinés avec d'autres)
+        if ($this->security->isGranted('ROLE_STOCK_MANAGER') && !$this->security->isGranted('ROLE_MANAGER')) {
             $menus = array_merge($menus, $this->getStockManagerMenu());
         }
         
-        if ($this->security->isGranted('ROLE_CASHIER')) {
+        if ($this->security->isGranted('ROLE_CASHIER') && !$this->security->isGranted('ROLE_MANAGER')) {
             $menus = array_merge($menus, $this->getCashierMenu());
         }
         
-        // Menu rapports - pour les rôles autorisés
-        if ($this->security->isGranted('ROLE_MANAGER') || 
-            $this->security->isGranted('ROLE_ADMIN') || 
+        // Menu rapport (uniquement pour les rôles autorisés)
+        if ($this->security->isGranted('ROLE_ADMIN') || 
+            $this->security->isGranted('ROLE_MANAGER') || 
             $this->security->isGranted('ROLE_STOCK_MANAGER')) {
             $menus = array_merge($menus, $this->getReportsMenu());
         }
         
-        // Menu profil (toujours en dernier)
+        // Menu profil
         $menus = array_merge($menus, $this->getProfileMenu());
         
         return $menus;
@@ -65,23 +67,81 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => 'app_login',
                 'label' => 'Connexion',
-                'icon' => 'fas fa-sign-in-alt'
+                'icon' => 'bi bi-box-arrow-in-right'
             ]
         ];
     }
 
-    private function getCommonMenu(): array
+    private function getDashboardMenuItem(): array
+    {
+        return [
+            'type' => 'link',
+            'route' => 'app_dashboard',
+            'label' => 'Tableau de bord',
+            'icon' => 'bi bi-speedometer2'
+        ];
+    }
+
+    private function getSuperAdminMenu(): array
     {
         return [
             [
-                'type' => 'title',
-                'label' => 'Tableau de bord'
+                'type' => 'section',
+                'label' => 'SUPER ADMINISTRATION'
             ],
             [
-                'type' => 'link',
-                'route' => 'app_dashboard',
-                'label' => 'Dashboard',
-                'icon' => 'fas fa-home'
+                'type' => 'dropdown',
+                'label' => 'Plateforme SaaS',
+                'icon' => 'bi bi-cloud',
+                'children' => [
+                    [
+                        'type' => 'link',
+                        'route' => 'app_super_admin_hma_service_index',
+                        'label' => 'Toutes les entreprises',
+                        'icon' => 'bi bi-building',
+                        'coming_soon' => true
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Abonnements',
+                        'icon' => 'bi bi-credit-card',
+                        'coming_soon' => true
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Statistiques globales',
+                        'icon' => 'bi bi-bar-chart',
+                        'coming_soon' => true
+                    ]
+                ]
+            ],
+            [
+                'type' => 'dropdown',
+                'label' => 'Gestion système',
+                'icon' => 'bi bi-gear-wide-connected',
+                'children' => [
+                    [
+                        'type' => 'link',
+                        'route' => 'app_user_index',
+                        'label' => 'Tous les utilisateurs',
+                        'icon' => 'bi bi-people'
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_user_new',
+                        'label' => 'Créer un utilisateur',
+                        'icon' => 'bi bi-person-plus'
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Configuration globale',
+                        'icon' => 'bi bi-sliders',
+                        'coming_soon' => true
+                    ]
+                ]
             ]
         ];
     }
@@ -90,45 +150,74 @@ class MenuBuilder
     {
         return [
             [
-                'type' => 'title',
-                'label' => 'Administration'
+                'type' => 'section',
+                'label' => 'ADMINISTRATION'
             ],
             [
                 'type' => 'dropdown',
-                'label' => 'Gestion Utilisateurs',
-                'icon' => 'fas fa-users-cog',
+                'label' => 'Gestion entreprise',
+                'icon' => 'bi bi-building-gear',
                 'children' => [
                     [
-                        'route' => 'app_user_index',
-                        'label' => 'Liste des utilisateurs',
-                        'icon' => 'fas fa-list'
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Paramètres entreprise',
+                        'icon' => 'bi bi-sliders',
+                        'coming_soon' => true
                     ],
                     [
-                        'route' => 'app_user_new',
-                        'label' => 'Créer un utilisateur',
-                        'icon' => 'fas fa-user-plus'
-                    ],
-                    [
-                        'route' => 'app_admin_supplier_new',
-                        'label' => 'Liste des fournisseurs',
-                        'icon' => 'fas fa-list'
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Abonnement',
+                        'icon' => 'bi bi-credit-card',
+                        'coming_soon' => true
                     ]
                 ]
             ],
             [
                 'type' => 'dropdown',
-                'label' => 'Configuration',
-                'icon' => 'fas fa-cogs',
+                'label' => 'Utilisateurs',
+                'icon' => 'bi bi-people',
                 'children' => [
                     [
-                        'route' => null,
-                        'label' => 'Paramètres généraux',
-                        'icon' => 'fas fa-sliders-h'
+                        'type' => 'link',
+                        'route' => 'app_user_index',
+                        'label' => 'Liste des utilisateurs',
+                        'icon' => 'bi bi-list-ul'
                     ],
                     [
-                        'route' => null,
-                        'label' => 'Configuration boutique',
-                        'icon' => 'fas fa-store'
+                        'type' => 'link',
+                        'route' => 'app_user_new',
+                        'label' => 'Créer un utilisateur',
+                        'icon' => 'bi bi-person-plus'
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Gestion des rôles',
+                        'icon' => 'bi bi-shield',
+                        'coming_soon' => true
+                    ]
+                ]
+            ],
+            [
+                'type' => 'dropdown',
+                'label' => 'Fournisseurs',
+                'icon' => 'bi bi-truck',
+                'children' => [
+                    [
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Liste des fournisseurs',
+                        'icon' => 'bi bi-list-ul',
+                        'coming_soon' => true
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Ajouter un fournisseur',
+                        'icon' => 'bi bi-plus-circle',
+                        'coming_soon' => true
                     ]
                 ]
             ]
@@ -139,45 +228,61 @@ class MenuBuilder
     {
         return [
             [
-                'type' => 'title',
-                'label' => 'Gestion Commerciale'
+                'type' => 'section',
+                'label' => 'GESTION'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_manager_team_index',
+                'label' => 'Mon équipe',
+                'icon' => 'bi bi-people'
             ],
             [
                 'type' => 'dropdown',
                 'label' => 'Produits',
-                'icon' => 'fas fa-box-open',
+                'icon' => 'bi bi-box',
                 'children' => [
                     [
-                        'route' => 'app_admin_product_index',
-                        'label' => 'Catalogue produits',
-                        'icon' => 'fas fa-th-large'
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Catalogue',
+                        'icon' => 'bi bi-grid',
+                        'coming_soon' => true
                     ],
                     [
-                        'route' => null,
-                        'label' => 'Ajouter un produit',
-                        'icon' => 'fas fa-plus-circle'
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Nouveau produit',
+                        'icon' => 'bi bi-plus-circle',
+                        'coming_soon' => true
                     ],
                     [
-                        'route' => 'app_admin_category_index',
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
                         'label' => 'Catégories',
-                        'icon' => 'fas fa-tags'
+                        'icon' => 'bi bi-tags',
+                        'coming_soon' => true
                     ]
                 ]
             ],
             [
                 'type' => 'dropdown',
-                'label' => 'Ventes & Analyses',
-                'icon' => 'fas fa-chart-line',
+                'label' => 'Ventes',
+                'icon' => 'bi bi-cart',
                 'children' => [
                     [
-                        'route' => null,
-                        'label' => 'Rapport des ventes',
-                        'icon' => 'fas fa-file-invoice-dollar'
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Commandes',
+                        'icon' => 'bi bi-receipt',
+                        'coming_soon' => true
                     ],
                     [
-                        'route' => null,
-                        'label' => 'Meilleurs produits',
-                        'icon' => 'fas fa-star'
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Nouvelle commande',
+                        'icon' => 'bi bi-plus-circle',
+                        'coming_soon' => true
                     ]
                 ]
             ]
@@ -188,40 +293,62 @@ class MenuBuilder
     {
         return [
             [
-                'type' => 'title',
-                'label' => 'Gestion des Stocks'
+                'type' => 'section',
+                'label' => 'STOCK'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_user_index', // Temporaire
+                'label' => 'Dashboard stock',
+                'icon' => 'bi bi-pie-chart',
+                'coming_soon' => true
             ],
             [
                 'type' => 'dropdown',
-                'label' => 'Inventaire',
-                'icon' => 'fas fa-warehouse',
+                'label' => 'Gestion stock',
+                'icon' => 'bi bi-boxes',
                 'children' => [
                     [
-                        'route' => null,
-                        'label' => 'Niveau des stocks',
-                        'icon' => 'fas fa-boxes'
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Inventaire',
+                        'icon' => 'bi bi-list-check',
+                        'coming_soon' => true
                     ],
                     [
-                        'route' => null,
-                        'label' => 'Stocks faibles',
-                        'icon' => 'fas fa-exclamation-triangle'
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Mouvements',
+                        'icon' => 'bi bi-arrow-left-right',
+                        'coming_soon' => true
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Alertes stock',
+                        'icon' => 'bi bi-exclamation-triangle',
+                        'coming_soon' => true
                     ]
                 ]
             ],
             [
                 'type' => 'dropdown',
                 'label' => 'Approvisionnement',
-                'icon' => 'fas fa-truck-loading',
+                'icon' => 'bi bi-truck',
                 'children' => [
                     [
-                        'route' => null,
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
                         'label' => 'Commandes fournisseurs',
-                        'icon' => 'fas fa-clipboard-list'
+                        'icon' => 'bi bi-clipboard',
+                        'coming_soon' => true
                     ],
                     [
-                        'route' => null,
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
                         'label' => 'Fournisseurs',
-                        'icon' => 'fas fa-parachute-box'
+                        'icon' => 'bi bi-person-lines-fill',
+                        'coming_soon' => true
                     ]
                 ]
             ]
@@ -232,67 +359,87 @@ class MenuBuilder
     {
         return [
             [
-                'type' => 'title',
-                'label' => 'Point de Vente'
+                'type' => 'section',
+                'label' => 'CAISSE'
             ],
             [
                 'type' => 'link',
-                'route' => null,
-                'label' => 'Caisse enregistreuse',
-                'icon' => 'fas fa-cash-register'
+                'route' => 'app_user_index', // Temporaire
+                'label' => 'Caisse',
+                'icon' => 'bi bi-cash-register',
+                'badge' => 'Bientôt',
+                'coming_soon' => true
             ],
             [
                 'type' => 'dropdown',
-                'label' => 'Transactions',
-                'icon' => 'fas fa-receipt',
+                'label' => 'Ventes',
+                'icon' => 'bi bi-receipt',
                 'children' => [
                     [
-                        'route' => null,
-                        'label' => 'Historique des ventes',
-                        'icon' => 'fas fa-history'
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Ventes du jour',
+                        'icon' => 'bi bi-sun',
+                        'coming_soon' => true
                     ],
                     [
-                        'route' => null,
-                        'label' => 'Ventes du jour',
-                        'icon' => 'fas fa-sun'
+                        'type' => 'link',
+                        'route' => 'app_user_index', // Temporaire
+                        'label' => 'Historique',
+                        'icon' => 'bi bi-clock-history',
+                        'coming_soon' => true
                     ]
                 ]
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_user_index', // Temporaire
+                'label' => 'Retours',
+                'icon' => 'bi bi-arrow-return-left',
+                'coming_soon' => true
             ]
         ];
     }
 
     private function getReportsMenu(): array
     {
-        $children = [
-            [
-                'route' => null,
-                'label' => 'Rapport des ventes',
-                'icon' => 'fas fa-shopping-cart'
-            ],
-            [
-                'route' => null,
-                'label' => 'Rapport de stock',
-                'icon' => 'fas fa-box'
-            ]
-        ];
+        $children = [];
         
         if ($this->security->isGranted('ROLE_ADMIN')) {
-            array_unshift($children, [
-                'route' => null,
+            $children[] = [
+                'type' => 'link',
+                'route' => 'app_user_index', // Temporaire
                 'label' => 'Rapport financier',
-                'icon' => 'fas fa-coins'
-            ]);
+                'icon' => 'bi bi-calculator',
+                'coming_soon' => true
+            ];
         }
+        
+        $children[] = [
+            'type' => 'link',
+            'route' => 'app_user_index', // Temporaire
+            'label' => 'Rapport des ventes',
+            'icon' => 'bi bi-graph-up',
+            'coming_soon' => true
+        ];
+        
+        $children[] = [
+            'type' => 'link',
+            'route' => 'app_user_index', // Temporaire
+            'label' => 'Rapport de stock',
+            'icon' => 'bi bi-box',
+            'coming_soon' => true
+        ];
         
         return [
             [
-                'type' => 'title',
-                'label' => 'Rapports'
+                'type' => 'section',
+                'label' => 'RAPPORTS'
             ],
             [
                 'type' => 'dropdown',
-                'label' => 'Analytiques',
-                'icon' => 'fas fa-chart-bar',
+                'label' => 'Analyses',
+                'icon' => 'bi bi-bar-chart',
                 'children' => $children
             ]
         ];
@@ -300,30 +447,46 @@ class MenuBuilder
 
     private function getProfileMenu(): array
     {
+        /** @var User|null $user */
+        $user = $this->security->getUser();
+        
         return [
             [
-                'type' => 'title',
-                'label' => 'Mon Compte'
+                'type' => 'section',
+                'label' => 'MON COMPTE'
             ],
             [
                 'type' => 'dropdown',
-                'label' => 'Mon Profil',
-                'icon' => 'fas fa-user-circle',
+                'label' => $user ? $user->getFullName() : 'Mon Profil',
+                'icon' => 'bi bi-person-circle',
                 'children' => [
                     [
-                        'route' => null,
+                        'type' => 'link',
+                        'route' => 'app_profile_show',
+                        'label' => 'Voir mon profil',
+                        'icon' => 'bi bi-eye'
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_profile_edit',
                         'label' => 'Modifier mon profil',
-                        'icon' => 'fas fa-user-edit'
+                        'icon' => 'bi bi-pencil'
                     ],
                     [
-                        'route' => 'app_forgot_password_request',
+                        'type' => 'link',
+                        'route' => 'app_change_password',
                         'label' => 'Changer mot de passe',
-                        'icon' => 'fas fa-key'
+                        'icon' => 'bi bi-key'
                     ],
                     [
+                        'type' => 'divider'
+                    ],
+                    [
+                        'type' => 'link',
                         'route' => 'app_logout',
                         'label' => 'Déconnexion',
-                        'icon' => 'fas fa-sign-out-alt'
+                        'icon' => 'bi bi-box-arrow-right',
+                        'danger' => true
                     ]
                 ]
             ]

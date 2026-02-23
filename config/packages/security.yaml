@@ -52,42 +52,79 @@ security:
                 path: app_logout
                 target: app_login
                 invalidate_session: true
+                delete_cookies:
+                    PHPSESSID: ~
             
             remember_me:
                 secret: '%kernel.secret%'
-                lifetime: 604800
+                lifetime: 604800 # 7 jours
                 path: /
                 always_remember_me: false
                 remember_me_parameter: '_remember_me'
 
     access_control:
-        # ✅ CORRECTION: Ajouter check-email et toutes les routes de reset en PUBLIC_ACCESS
+        # ============================================
+        # 1. ROUTES PUBLIQUES (PRIORITÉ MAXIMALE)
+        # ============================================
+        # Authentification
         - { path: ^/login$, roles: PUBLIC_ACCESS }
         - { path: ^/register$, roles: PUBLIC_ACCESS }
         - { path: ^/first-login, roles: PUBLIC_ACCESS }
         - { path: ^/forgot-password, roles: PUBLIC_ACCESS }
-        - { path: ^/check-email, roles: PUBLIC_ACCESS }  # <-- AJOUT ESSENTIEL
+        - { path: ^/check-email, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: PUBLIC_ACCESS }
         
+        # Pages marketing
         - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/contact$, roles: PUBLIC_ACCESS }
         - { path: ^/about$, roles: PUBLIC_ACCESS }
         - { path: ^/features$, roles: PUBLIC_ACCESS }
         - { path: ^/pricing$, roles: PUBLIC_ACCESS }
         
+        # Ressources statiques
         - { path: ^/api/public/, roles: PUBLIC_ACCESS }
         - { path: ^/uploads/, roles: PUBLIC_ACCESS }
         - { path: ^/build/, roles: PUBLIC_ACCESS }
+        - { path: ^/css/, roles: PUBLIC_ACCESS }
+        - { path: ^/js/, roles: PUBLIC_ACCESS }
+        - { path: ^/images/, roles: PUBLIC_ACCESS }
+
+        # ============================================
+        # 2. ROUTES SUPER ADMIN (DOSSIER SuperAdmin)
+        #    ⚠️ DOIT VENIR AVANT /admin/ !
+        # ============================================
+        - { path: ^/super-admin/, roles: ROLE_SUPER_ADMIN }
+
+        # ============================================
+        # 3. ROUTES ADMIN ENTREPRISE (DOSSIER Admin)
+        # ============================================
+        - { path: ^/admin/, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+
+        # ============================================
+        # 4. ROUTES PAR RÔLE SPÉCIFIQUE
+        # ============================================
+        # Gestionnaires (Manager)
+        - { path: ^/manager/, roles: [ROLE_MANAGER, ROLE_ADMIN, ROLE_SUPER_ADMIN] }
         
-        - { path: ^/admin/super, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/admin/, roles: ROLE_ADMIN }
-        - { path: ^/manager/, roles: ROLE_MANAGER }
-        - { path: ^/stock/, roles: ROLE_STOCK_MANAGER }
-        - { path: ^/cashier/, roles: ROLE_CASHIER }
+        # Responsables Stock
+        - { path: ^/stock/, roles: [ROLE_STOCK_MANAGER, ROLE_MANAGER, ROLE_ADMIN, ROLE_SUPER_ADMIN] }
         
+        # Caissiers
+        - { path: ^/cashier/, roles: [ROLE_CASHIER, ROLE_STOCK_MANAGER, ROLE_MANAGER, ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+
+        # ============================================
+        # 5. ROUTES UTILISATEUR CONNECTÉ
+        # ============================================
         - { path: ^/dashboard, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/profile, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/change-password, roles: IS_AUTHENTICATED_FULLY }
-        
-        # ✅ IMPORTANT: Mettre cette règle APRÈS toutes les routes publiques
+
+        # ============================================
+        # 6. TOUT LE RESTE (CATCH-ALL)
+        # ============================================
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+        
+    role_hierarchy:
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_ADMIN: [ROLE_MANAGER, ROLE_STOCK_MANAGER]
+        ROLE_MANAGER: [ROLE_CASHIER]
