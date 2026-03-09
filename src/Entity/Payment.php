@@ -38,13 +38,16 @@ class Payment
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $subscriptionNumber = null;
+
     #[ORM\ManyToOne(inversedBy: 'payments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?HmaService $hma_service = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Subscription $subscription_id = null;
+    private ?Subscription $subscription = null;
 
     public function getId(): ?int
     {
@@ -147,6 +150,17 @@ class Payment
         return $this;
     }
 
+    public function getSubscriptionNumber(): ?string
+    {
+        return $this->subscriptionNumber;
+    }
+
+    public function setSubscriptionNumber(?string $subscriptionNumber): static
+    {
+        $this->subscriptionNumber = $subscriptionNumber;
+        return $this;
+    }
+
     public function getHmaService(): ?HmaService  
     {
         return $this->hma_service;
@@ -158,14 +172,14 @@ class Payment
         return $this;
     }
 
-    public function getSubscriptionId(): ?Subscription
+    public function getSubscription(): ?Subscription
     {
-        return $this->subscription_id;
+        return $this->subscription;
     }
 
-    public function setSubscriptionId(?Subscription $subscription_id): static
+    public function setSubscription(?Subscription $subscription): static
     {
-        $this->subscription_id = $subscription_id;
+        $this->subscription = $subscription;
 
         return $this;
     }

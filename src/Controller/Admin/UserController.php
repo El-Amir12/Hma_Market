@@ -203,13 +203,6 @@ class UserController extends AbstractController
             
             $hmaService = $this->entityManager->getRepository(HmaService::class)->find($hmaService->getId());
             $user->setHmaServiceId($hmaService);
-            
-            // Vérifier les quotas
-            $role = $request->get('role') ?? 'ROLE_USER';
-            if (!$this->quotaManager->canAddUserWithRole($hmaService, $role)) {
-                $this->addFlash('error', 'Vous avez atteint la limite d\'utilisateurs pour ce rôle selon votre plan d\'abonnement.');
-                return $this->redirectToRoute('app_user_index');
-            }
         }
         
         $user->setUpdatedAt(new \DateTime());
@@ -219,7 +212,7 @@ class UserController extends AbstractController
         
         $form = $this->createForm(UserType::class, $user, [
             'is_new' => true,
-            'is_super_admin' => $isSuperAdmin, // ← Déjà correct !
+            'is_super_admin' => $isSuperAdmin,
             'can_edit_email' => true,
             'can_edit_role' => true,
             'is_self' => false,
@@ -229,17 +222,36 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             
-            // 🔴 **AJOUTER CETTE SÉCURITÉ** 
             // Un admin entreprise ne peut pas créer de Super Admin
             if (!$isSuperAdmin && in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
                 $this->addFlash('error', 'Vous ne pouvez pas créer un Super Administrateur.');
                 return $this->redirectToRoute('app_user_new');
             }
             
+            // ✅ Vérification des quotas pour le rôle choisi
+            $role = $form->get('roles')->getData();
+            $hmaService = $user->getHmaService(); // Récupérer l'entreprise associée
+            if (!$isSuperAdmin && !User::canBeCreatedBy($currentUser, $role, $this->userRepository, $hmaService)) {
+                $this->addFlash('warning', 'Vous avez atteint la limite d\'utilisateurs pour ce rôle. Pour en ajouter davantage, passez à un plan supérieur.');
+                return $this->redirectToRoute('app_subscription_plans', ['upgrade' => 1]);
+            }
+            
             // Gérer l'upload de la photo
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
-                // ... code existant ...
+                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $this->slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$photoFile->guessExtension();
+                
+                try {
+                    $photoFile->move(
+                        $this->getParameter('uploads_directory').'/users',
+                        $newFilename
+                    );
+                    $user->setPhoto($newFilename);
+                } catch (\Exception $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload de la photo.');
+                }
             }
 
             // Générer un mot de passe aléatoire
@@ -315,28 +327,44 @@ class UserController extends AbstractController
             throw $this->createAccessDeniedException('Type d\'utilisateur non valide.');
         }
         
-        // ✅ Vérification : l'admin peut-il modifier CET utilisateur ?
+        // Vérifier que l'utilisateur connecté a le droit de modifier cet utilisateur
         if (!$user->isEditableBy($currentUser)) {
             throw $this->createAccessDeniedException('Vous n\'avez pas le droit de modifier cet utilisateur.');
         }
 
+        // Récupérer l'ancien rôle (sans ROLE_USER)
+        $oldRoles = array_filter($user->getRoles(), fn($role) => $role !== 'ROLE_USER');
+        $oldRole = !empty($oldRoles) ? reset($oldRoles) : null;
+
         $oldPhoto = $user->getPhoto();
         
-        // ✅ Créer le formulaire avec des options spéciales pour l'email
         $form = $this->createForm(UserType::class, $user, [
             'is_new' => false,
             'is_super_admin' => $this->isGranted('ROLE_SUPER_ADMIN'),
-            'can_edit_email' => $user->canEmailBeEditedBy($currentUser), // ← NOUVEAU
-            'can_edit_role' => $user->canRoleBeEditedBy($currentUser),   // ← NOUVEAU
-            'is_self' => $user->getId() === $currentUser->getId(),       // ← NOUVEAU
+            'can_edit_email' => $user->canEmailBeEditedBy($currentUser),
+            'can_edit_role' => $user->canRoleBeEditedBy($currentUser),
+            'is_self' => $user->getId() === $currentUser->getId(),
         ]);
         
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            // Récupérer le nouveau rôle depuis le formulaire
+            $newRole = $form->get('roles')->getData();
+            
+            // Vérifier les quotas uniquement si le rôle change
+            if ($newRole !== $oldRole) {
+                if (!$user->canBeEditedBy($currentUser, $newRole, $this->userRepository)) {
+                    $this->addFlash('error', 'Modification non autorisée : limite atteinte pour ce rôle.');
+                    return $this->redirectToRoute('app_user_edit', ['id' => $user->getId()]);
+                }
+            }
+            
             // Gérer l'upload de la photo
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
+                // Supprimer l'ancienne photo si elle existe
                 if ($oldPhoto) {
                     $oldPhotoPath = $this->getParameter('uploads_directory').'/users/'.$oldPhoto;
                     if (file_exists($oldPhotoPath)) {
@@ -359,6 +387,7 @@ class UserController extends AbstractController
                 }
             }
 
+            // Sauvegarder les modifications
             $this->entityManager->flush();
 
             $this->addFlash('success', 'Utilisateur mis à jour avec succès.');
@@ -375,40 +404,6 @@ class UserController extends AbstractController
             'can_edit_role' => $user->canRoleBeEditedBy($currentUser),
             'is_self' => $user->getId() === $currentUser->getId(),
         ]);
-    }
-
-    #[Route('/{id}/toggle-status', name: 'app_user_toggle_status', methods: ['POST'])]
-    public function toggleStatus(Request $request, User $user): Response
-    {
-       $this->checkAdminAccess($request);
-        
-        $currentUser = $this->getUser();
-        if (!$currentUser instanceof User) {
-            throw $this->createAccessDeniedException('Type d\'utilisateur non valide.');
-        }
-        
-        // ✅ Vérification : peut-il désactiver CET utilisateur ?
-        if (!$user->canToggleStatusBy($currentUser)) {
-            throw $this->createAccessDeniedException('Vous n\'avez pas le droit de modifier le statut de cet utilisateur.');
-        }
-
-        if (!$this->isCsrfTokenValid('toggle-status'.$user->getId(), $request->request->get('_token'))) {
-            throw $this->createAccessDeniedException('Token CSRF invalide');
-        }
-
-        try {
-            $currentStatus = $user->isActive();
-            $user->setIsActive(!$currentStatus);
-            
-            $this->entityManager->flush();
-
-            $status = $user->isActive() ? 'activé' : 'désactivé';
-            $this->addFlash('success', "Utilisateur {$status} avec succès.");
-        } catch (\Exception $e) {
-            $this->addFlash('error', 'Erreur lors du changement de statut : ' . $e->getMessage());
-        }
-
-        return $this->redirectToRoute('app_user_index');
     }
 
     #[Route('/{id}/delete-photo', name: 'app_user_delete_photo', methods: ['POST'])]

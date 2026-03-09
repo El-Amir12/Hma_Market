@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\HmaService;
 use App\Entity\User;
+use App\Entity\Subscription;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -285,5 +286,107 @@ class EmailService
     {
         $this->logger->warning('DEPRECATED: sendAdminNotification called');
         return true; // Ne fait rien
+    }
+
+    private function getGlobalLogoUrl(): string
+    {
+        $baseUrl = rtrim($this->appUrl, '/');
+        return $baseUrl . '/uploads/logos/logo.png';
+    }
+
+    public function sendSubscriptionConfirmationToUsers(HmaService $service, Subscription $subscription): int
+    {
+        $users = $service->getUsers()->filter(function(User $user) {
+            return $user->isSubscriptionActive() === true;
+        });
+
+        $count = 0;
+        if ($users->isEmpty()) {
+            $this->logger->info('Aucun utilisateur actif à notifier', ['company' => $service->getId()]);
+            return $count;
+        }
+
+        $subject = "Confirmation de votre abonnement - {$this->appName}";
+        if (!$this->isProduction) {
+            $subject = "[DEV] " . $subject;
+        }
+
+        foreach ($users as $user) {
+            try {
+                $email = (new TemplatedEmail())
+                    ->from(new Address($this->fromEmail, $this->fromName))
+                    ->to($user->getEmail())
+                    ->subject($subject)
+                    ->htmlTemplate('emails/subscription_confirmation_user.html.twig')
+                    ->context([
+                        'user' => $user,
+                        'company' => $service,
+                        'subscription' => $subscription,
+                        'app_name' => $this->appName,
+                        'dashboard_url' => $this->urlGenerator->generate('app_dashboard', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                        'support_email' => $this->supportEmail,
+                        'global_logo_url' => $this->getGlobalLogoUrl(),
+                        'is_production' => $this->isProduction,
+                    ]);
+                $this->mailer->send($email);
+                $count++;
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur envoi email à ' . $user->getEmail() . ': ' . $e->getMessage());
+            }
+        }
+
+        $this->logger->info('Emails de confirmation envoyés', [
+            'company' => $service->getId(),
+            'sent' => $count,
+            'total_actifs' => $users->count()
+        ]);
+        return $count;
+    }
+
+    public function sendReactivationEmail(User $user, HmaService $service): bool
+    {
+        $subject = "Votre accès a été rétabli - {$this->appName}";
+        if (!$this->isProduction) {
+            $subject = "[DEV] " . $subject;
+        }
+
+        try {
+            $email = (new TemplatedEmail())
+                ->from(new Address($this->fromEmail, $this->fromName))
+                ->to($user->getEmail())
+                ->subject($subject)
+                ->htmlTemplate('emails/subscription_reactivated.html.twig')
+                ->context([
+                    'user' => $user,
+                    'app_name' => $this->appName,
+                    'login_url' => $this->urlGenerator->generate('app_login', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                    'support_email' => $this->supportEmail,
+                    'global_logo_url' => $this->getGlobalLogoUrl(),
+                    'is_production' => $this->isProduction,
+                ]);
+            $this->mailer->send($email);
+            $this->logger->info('Email de réactivation envoyé', ['user' => $user->getEmail()]);
+            return true;
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur envoi email réactivation: ' . $e->getMessage());
+            return !$this->isProduction;
+        }
+    }
+
+    public function sendExpirationReminder(User $user, HmaService $company): void
+    {
+        $email = (new TemplatedEmail())
+            ->from(new Address('no-reply@hmamarket.com', 'HMA Market'))
+            ->to($user->getEmail())
+            ->subject('Votre abonnement expire bientôt')
+            ->htmlTemplate('emails/subscription_expiration_reminder.html.twig')
+            ->context([
+                'user' => $user,
+                'company' => $company,
+                'expiration_date' => $company->getSubscriptionEndsAt(),
+                'renewal_url' => $this->urlGenerator->generate('app_subscription_plans', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ]);
+
+        $this->mailer->send($email);
     }
 }

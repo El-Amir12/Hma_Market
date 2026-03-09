@@ -53,6 +53,9 @@ class Order
     #[ORM\Column]
     private ?\DateTime $updated_at = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    private bool $subscription_active = true;
+
     #[ORM\ManyToOne(inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
@@ -271,6 +274,17 @@ class Order
     public function setHmaService(?HmaService $hma_service): static  
     {
         $this->hma_service = $hma_service;
+        return $this;
+    }
+
+        public function isSubscriptionActive(): bool
+    {
+        return $this->subscription_active;
+    }
+
+    public function setSubscriptionActive(bool $subscription_active): self
+    {
+        $this->subscription_active = $subscription_active;
         return $this;
     }
 }

@@ -36,6 +36,9 @@ class OrderItem
     #[ORM\JoinColumn(nullable: false)]
     private ?Order $vente = null;
 
+    #[ORM\ManyToOne(inversedBy: 'orderItems')]
+    private ?Recipe $recipe = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +124,18 @@ class OrderItem
     public function setVente(?Order $vente): static
     {
         $this->vente = $vente;
+
+        return $this;
+    }
+
+    public function getRecipe(): ?Recipe
+    {
+        return $this->recipe;
+    }
+
+    public function setRecipe(?Recipe $recipe): static
+    {
+        $this->recipe = $recipe;
 
         return $this;
     }

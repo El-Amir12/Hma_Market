@@ -49,6 +49,7 @@ class HmaServiceController extends AbstractController
         // Récupérer les filtres
         $filters = [
             'search' => $request->query->get('search'),
+            'company_type' => $request->query->get('company_type'),
             'status' => $request->query->get('status'),
             'plan' => $request->query->get('plan'),
             'date_from' => $request->query->get('date_from'),
@@ -57,7 +58,62 @@ class HmaServiceController extends AbstractController
             'direction' => $request->query->get('direction', 'DESC')
         ];
 
-        // Utiliser le repository pour la requête avec filtres
+        // Construire la requête de base AVEC tous les filtres SAUF 'status'
+        $qb = $this->hmaServiceRepository->createQueryBuilder('h');
+
+        if (!empty($filters['search'])) {
+            $qb->andWhere('h.companyName LIKE :search OR h.email LIKE :search OR h.subscription_number LIKE :search')
+            ->setParameter('search', '%' . $filters['search'] . '%');
+        }
+        if (!empty($filters['company_type'])) {
+            $qb->andWhere('h.companyType = :companyType')
+            ->setParameter('companyType', $filters['company_type']);
+        }
+        if (!empty($filters['plan'])) {
+            $qb->andWhere('h.subscriptionPlan = :plan')
+            ->setParameter('plan', $filters['plan']);
+        }
+        if (!empty($filters['date_from'])) {
+            $qb->andWhere('h.createdAt >= :dateFrom')
+            ->setParameter('dateFrom', new \DateTime($filters['date_from']));
+        }
+        if (!empty($filters['date_to'])) {
+            $qb->andWhere('h.createdAt <= :dateTo')
+            ->setParameter('dateTo', new \DateTime($filters['date_to']));
+        }
+
+        // Compter total
+        $total = (clone $qb)->select('COUNT(h.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Compter actives
+        $active = (clone $qb)->andWhere('h.hma_active = true')
+            ->select('COUNT(h.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Compter inactives
+        $inactive = (clone $qb)->andWhere('h.hma_active = false')
+            ->select('COUNT(h.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Compter en période d'essai
+        $trial = (clone $qb)->andWhere('h.trialEndsAt > :now')
+            ->setParameter('now', new \DateTime())
+            ->select('COUNT(h.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $stats = [
+            'total' => $total,
+            'active' => $active,
+            'inactive' => $inactive,
+            'trial' => $trial,
+        ];
+
+        // --- Requête pour la pagination (avec tous les filtres, y compris status) ---
         $queryBuilder = $this->hmaServiceRepository->findByFilters($filters);
 
         // Pagination
@@ -67,13 +123,19 @@ class HmaServiceController extends AbstractController
             $request->query->getInt('limit', 10)
         );
 
-        // Statistiques via le repository
-        $stats = $this->hmaServiceRepository->getStatistics();
+        // Récupérer les types d'entreprise distincts
+        $companyTypes = $this->hmaServiceRepository->createQueryBuilder('h')
+            ->select('DISTINCT h.companyType')
+            ->where('h.companyType IS NOT NULL')
+            ->orderBy('h.companyType', 'ASC')
+            ->getQuery()
+            ->getSingleColumnResult();
 
         return $this->render('super_admin/hma_service/index.html.twig', [
             'pagination' => $pagination,
             'stats' => $stats,
             'filters' => $filters,
+            'companyTypes' => $companyTypes,
         ]);
     }
 

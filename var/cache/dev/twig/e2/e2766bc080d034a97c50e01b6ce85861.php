@@ -85,7 +85,7 @@ class __TwigTemplate_0b2831cbe1e7e72ad4b16c893e0d33b6 extends Template
                 $context["subscription_info"] = $this->extensions['App\Twig\SubscriptionExtension']->getSubscriptionInfo((isset($context["hmaService"]) || array_key_exists("hmaService", $context) ? $context["hmaService"] : (function () { throw new RuntimeError('Variable "hmaService" does not exist.', 18, $this->source); })()));
                 // line 19
                 yield "        ";
-                $context["can_upgrade"] = ($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") || $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_MANAGER"));
+                $context["can_upgrade_role"] = ($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") || $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_MANAGER"));
                 // line 20
                 yield "        
         <div class=\"card border-0 shadow-lg mb-4 overflow-hidden\" style=\"background: linear-gradient(135deg, var(--primary-color) 0%, #0355d0 100%);\">
@@ -195,26 +195,14 @@ class __TwigTemplate_0b2831cbe1e7e72ad4b16c893e0d33b6 extends Template
                                 <h5 class=\"fw-bold mb-1\">Plan Gratuit</h5>
                                 <p class=\"mb-0 small text-white-50\">
                                     <i class=\"bi bi-info-circle me-1\"></i>
-                                    Profitez de fonctionnalités limitées. 
-                                    ";
-                    // line 90
-                    if ((($tmp = (isset($context["can_upgrade"]) || array_key_exists("can_upgrade", $context) ? $context["can_upgrade"] : (function () { throw new RuntimeError('Variable "can_upgrade" does not exist.', 90, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                        // line 91
-                        yield "                                        <a href=\"";
-                        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_subscription_plans");
-                        yield "\" class=\"text-white fw-bold text-decoration-underline\">
-                                            Passez à un plan supérieur
-                                        </a>
-                                    ";
-                    }
-                    // line 95
-                    yield "                                </p>
+                                    Profitez de fonctionnalités limitées.
+                                </p>
                             </div>
                         </div>
                     </div>
                 ";
                 } else {
-                    // line 100
+                    // line 95
                     yield "                    <div class=\"bg-white bg-opacity-10 rounded-3 p-3 mb-4\">
                         <div class=\"d-flex align-items-center\">
                             <div class=\"flex-shrink-0 me-3\">
@@ -224,55 +212,55 @@ class __TwigTemplate_0b2831cbe1e7e72ad4b16c893e0d33b6 extends Template
                                 <div class=\"d-flex justify-content-between align-items-center\">
                                     <span class=\"fw-semibold\">Abonnement actif</span>
                                     ";
-                    // line 108
-                    if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 108, $this->source); })()), "subscription_end", [], "any", false, false, false, 108)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                        // line 109
+                    // line 103
+                    if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 103, $this->source); })()), "subscription_end", [], "any", false, false, false, 103)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                        // line 104
                         yield "                                        <small class=\"text-white-50\">
                                             <i class=\"bi bi-calendar me-1\"></i>Renouvellement le ";
-                        // line 110
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 110, $this->source); })()), "subscription_end", [], "any", false, false, false, 110), "html", null, true);
+                        // line 105
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 105, $this->source); })()), "subscription_end", [], "any", false, false, false, 105), "html", null, true);
                         yield "
                                         </small>
                                     ";
                     }
-                    // line 113
+                    // line 108
                     yield "                                </div>
                             </div>
                         </div>
                     </div>
                 ";
                 }
-                // line 118
+                // line 113
                 yield "                
                 <!-- Statistiques d'utilisation -->
                 <div class=\"row g-3 mb-4\">
                     <div class=\"col-md-4\">
                         <div class=\"bg-white bg-opacity-10 rounded-3 p-3 text-center\">
                             <div class=\"fs-4 fw-bold\">";
-                // line 123
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 123, $this->source); })()), "usage", [], "any", false, false, false, 123), "products", [], "any", false, false, false, 123), "current", [], "any", false, false, false, 123), "html", null, true);
+                // line 118
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 118, $this->source); })()), "usage", [], "any", false, false, false, 118), "products", [], "any", false, false, false, 118), "current", [], "any", false, false, false, 118), "html", null, true);
                 yield "</div>
                             <small class=\"text-white-50\">Produits</small>
                             ";
-                // line 125
-                if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 125, $this->source); })()), "usage", [], "any", false, false, false, 125), "products", [], "any", false, false, false, 125), "limit", [], "any", false, false, false, 125) != Twig\Extension\CoreExtension::constant("PHP_INT_MAX"))) {
-                    // line 126
+                // line 120
+                if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 120, $this->source); })()), "usage", [], "any", false, false, false, 120), "products", [], "any", false, false, false, 120), "limit", [], "any", false, false, false, 120) != Twig\Extension\CoreExtension::constant("PHP_INT_MAX"))) {
+                    // line 121
                     yield "                                <div class=\"progress mt-2\" style=\"height: 4px;\">
                                     <div class=\"progress-bar bg-white\" style=\"width: ";
-                    // line 127
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 127, $this->source); })()), "usage", [], "any", false, false, false, 127), "products", [], "any", false, false, false, 127), "percentage", [], "any", false, false, false, 127), "html", null, true);
+                    // line 122
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 122, $this->source); })()), "usage", [], "any", false, false, false, 122), "products", [], "any", false, false, false, 122), "percentage", [], "any", false, false, false, 122), "html", null, true);
                     yield "%\"></div>
                                 </div>
                             ";
                 }
-                // line 130
+                // line 125
                 yield "                        </div>
                     </div>
                     <div class=\"col-md-4\">
                         <div class=\"bg-white bg-opacity-10 rounded-3 p-3 text-center\">
                             <div class=\"fs-4 fw-bold\">";
-                // line 134
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 134, $this->source); })()), "usage", [], "any", false, false, false, 134), "categories", [], "any", false, false, false, 134), "current", [], "any", false, false, false, 134), "html", null, true);
+                // line 129
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 129, $this->source); })()), "usage", [], "any", false, false, false, 129), "categories", [], "any", false, false, false, 129), "current", [], "any", false, false, false, 129), "html", null, true);
                 yield "</div>
                             <small class=\"text-white-50\">Catégories</small>
                         </div>
@@ -280,8 +268,8 @@ class __TwigTemplate_0b2831cbe1e7e72ad4b16c893e0d33b6 extends Template
                     <div class=\"col-md-4\">
                         <div class=\"bg-white bg-opacity-10 rounded-3 p-3 text-center\">
                             <div class=\"fs-4 fw-bold\">";
-                // line 140
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 140, $this->source); })()), "usage", [], "any", false, false, false, 140), "users", [], "any", false, false, false, 140), "current", [], "any", false, false, false, 140), "html", null, true);
+                // line 135
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 135, $this->source); })()), "usage", [], "any", false, false, false, 135), "users", [], "any", false, false, false, 135), "current", [], "any", false, false, false, 135), "html", null, true);
                 yield "</div>
                             <small class=\"text-white-50\">Utilisateurs</small>
                         </div>
@@ -291,27 +279,44 @@ class __TwigTemplate_0b2831cbe1e7e72ad4b16c893e0d33b6 extends Template
                 <!-- Boutons d'action -->
                 <div class=\"d-flex gap-3\">
                     ";
-                // line 148
-                if (((isset($context["can_upgrade"]) || array_key_exists("can_upgrade", $context) ? $context["can_upgrade"] : (function () { throw new RuntimeError('Variable "can_upgrade" does not exist.', 148, $this->source); })()) && CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 148, $this->source); })()), "can_upgrade", [], "any", false, false, false, 148))) {
-                    // line 149
-                    yield "                        <a href=\"#\" class=\"btn btn-light flex-grow-1 py-3 fw-semibold\">
-                            <i class=\"bi bi-stars me-2\"></i>
-                            ";
-                    // line 151
-                    if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 151, $this->source); })()), "plan", [], "any", false, false, false, 151) == "freemium")) {
-                        // line 152
-                        yield "                                Passer à un plan payant
-                            ";
-                    } else {
-                        // line 154
-                        yield "                                Améliorer mon abonnement
-                            ";
+                // line 143
+                if ((($tmp = (isset($context["can_upgrade_role"]) || array_key_exists("can_upgrade_role", $context) ? $context["can_upgrade_role"] : (function () { throw new RuntimeError('Variable "can_upgrade_role" does not exist.', 143, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 144
+                    yield "                        ";
+                    if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 144, $this->source); })()), "plan", [], "any", false, false, false, 144) == "freemium")) {
+                        // line 145
+                        yield "                            <a href=\"";
+                        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_subscription_plans");
+                        yield "\" class=\"btn btn-light flex-grow-1 py-3 fw-semibold\">
+                                <i class=\"bi bi-stars me-2\"></i>
+                                Passer à un plan payant
+                            </a>
+                        ";
+                    } elseif ((CoreExtension::getAttribute($this->env, $this->source,                     // line 149
+(isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 149, $this->source); })()), "plan", [], "any", false, false, false, 149) == "basic")) {
+                        // line 150
+                        yield "                            <a href=\"";
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_subscription_plans", ["plan" => "premium", "billing" => "monthly"]), "html", null, true);
+                        yield "\" class=\"btn btn-light flex-grow-1 py-3 fw-semibold\">
+                                <i class=\"bi bi-stars me-2\"></i>
+                                Passer à Premium
+                            </a>
+                        ";
+                    } elseif (((CoreExtension::getAttribute($this->env, $this->source,                     // line 154
+(isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 154, $this->source); })()), "plan", [], "any", false, false, false, 154) == "premium") && (CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 154, $this->source); })()), "billing_period", [], "any", false, false, false, 154) == "monthly"))) {
+                        // line 155
+                        yield "                            <a href=\"";
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_subscription_plans", ["plan" => "premium", "billing" => "yearly"]), "html", null, true);
+                        yield "\" class=\"btn btn-light flex-grow-1 py-3 fw-semibold\">
+                                <i class=\"bi bi-stars me-2\"></i>
+                                Passer à Premium annuel <span class=\"badge bg-success ms-2\">-20%</span>
+                            </a>
+                        ";
                     }
-                    // line 156
-                    yield "                        </a>
-                    ";
+                    // line 160
+                    yield "                    ";
                 }
-                // line 158
+                // line 161
                 yield "                    
                     <a href=\"#\" class=\"btn btn-outline-light flex-grow-1 py-3\">
                         <i class=\"bi bi-info-circle me-2\"></i>
@@ -321,36 +326,54 @@ class __TwigTemplate_0b2831cbe1e7e72ad4b16c893e0d33b6 extends Template
                 
                 <!-- Liste des fonctionnalités -->
                 ";
-                // line 166
-                if (( !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 166, $this->source); })()), "features", [], "any", false, false, false, 166)) && (CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 166, $this->source); })()), "features", [], "any", false, false, false, 166), 0, [], "array", false, false, false, 166) != "all"))) {
-                    // line 167
+                // line 169
+                if ((CoreExtension::getAttribute($this->env, $this->source, ($context["subscription_info"] ?? null), "features", [], "any", true, true, false, 169) && (Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 169, $this->source); })()), "features", [], "any", false, false, false, 169)) > 0))) {
+                    // line 170
                     yield "                    <div class=\"mt-4 pt-3 border-top border-white border-opacity-20\">
                         <small class=\"text-white-50 d-block mb-2\">Fonctionnalités incluses :</small>
                         <div class=\"d-flex flex-wrap gap-2\">
                             ";
-                    // line 170
-                    $context['_parent'] = $context;
-                    $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 170, $this->source); })()), "features", [], "any", false, false, false, 170));
-                    foreach ($context['_seq'] as $context["_key"] => $context["feature"]) {
-                        // line 171
+                    // line 173
+                    if (CoreExtension::inFilter("all", CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 173, $this->source); })()), "features", [], "any", false, false, false, 173))) {
+                        // line 174
                         yield "                                <span class=\"badge bg-white bg-opacity-20 text-white px-3 py-2\">
                                     <i class=\"bi bi-check-circle-fill me-1 small\"></i>
-                                    ";
-                        // line 173
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::titleCase($this->env->getCharset(), Twig\Extension\CoreExtension::replace($context["feature"], ["_" => " "])), "html", null, true);
-                        yield "
+                                    Toutes les fonctionnalités
                                 </span>
                             ";
+                    } else {
+                        // line 179
+                        yield "                                ";
+                        // line 180
+                        yield "                                ";
+                        $context["feature_labels"] = ["basic_inventory" => "Inventaire de base", "basic_reports" => "Rapports de base", "advanced_inventory" => "Inventaire avancé", "reports" => "Rapports", "api_access" => "Accès API", "priority_support" => "Support prioritaire", "custom_domain" => "Domaine personnalisé", "white_label" => "Marque blanche"];
+                        // line 190
+                        yield "                                ";
+                        $context['_parent'] = $context;
+                        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["subscription_info"]) || array_key_exists("subscription_info", $context) ? $context["subscription_info"] : (function () { throw new RuntimeError('Variable "subscription_info" does not exist.', 190, $this->source); })()), "features", [], "any", false, false, false, 190));
+                        foreach ($context['_seq'] as $context["_key"] => $context["feature"]) {
+                            // line 191
+                            yield "                                    <span class=\"badge bg-white bg-opacity-20 text-white px-3 py-2\">
+                                        <i class=\"bi bi-check-circle-fill me-1 small\"></i>
+                                        ";
+                            // line 193
+                            yield (((CoreExtension::getAttribute($this->env, $this->source, ($context["feature_labels"] ?? null), $context["feature"], [], "array", true, true, false, 193) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["feature_labels"]) || array_key_exists("feature_labels", $context) ? $context["feature_labels"] : (function () { throw new RuntimeError('Variable "feature_labels" does not exist.', 193, $this->source); })()), $context["feature"], [], "array", false, false, false, 193)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["feature_labels"]) || array_key_exists("feature_labels", $context) ? $context["feature_labels"] : (function () { throw new RuntimeError('Variable "feature_labels" does not exist.', 193, $this->source); })()), $context["feature"], [], "array", false, false, false, 193), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::titleCase($this->env->getCharset(), Twig\Extension\CoreExtension::replace($context["feature"], ["_" => " "])), "html", null, true)));
+                            yield "
+                                    </span>
+                                ";
+                        }
+                        $_parent = $context['_parent'];
+                        unset($context['_seq'], $context['_key'], $context['feature'], $context['_parent']);
+                        $context = array_intersect_key($context, $_parent) + $_parent;
+                        // line 196
+                        yield "                            ";
                     }
-                    $_parent = $context['_parent'];
-                    unset($context['_seq'], $context['_key'], $context['feature'], $context['_parent']);
-                    $context = array_intersect_key($context, $_parent) + $_parent;
-                    // line 176
+                    // line 197
                     yield "                        </div>
                     </div>
                 ";
                 }
-                // line 179
+                // line 200
                 yield "            </div>
         </div>
     ";
@@ -386,7 +409,7 @@ class __TwigTemplate_0b2831cbe1e7e72ad4b16c893e0d33b6 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  354 => 179,  349 => 176,  340 => 173,  336 => 171,  332 => 170,  327 => 167,  325 => 166,  315 => 158,  311 => 156,  307 => 154,  303 => 152,  301 => 151,  297 => 149,  295 => 148,  284 => 140,  275 => 134,  269 => 130,  263 => 127,  260 => 126,  258 => 125,  253 => 123,  246 => 118,  239 => 113,  233 => 110,  230 => 109,  228 => 108,  218 => 100,  211 => 95,  203 => 91,  201 => 90,  189 => 80,  187 => 79,  179 => 74,  170 => 68,  166 => 67,  163 => 66,  158 => 65,  153 => 64,  151 => 63,  145 => 60,  135 => 52,  133 => 51,  120 => 40,  116 => 38,  112 => 36,  110 => 35,  105 => 33,  90 => 20,  87 => 19,  84 => 18,  81 => 17,  78 => 15,  75 => 14,  72 => 13,  70 => 12,  67 => 11,  64 => 10,  62 => 9,  59 => 8,  56 => 6,  53 => 5,  51 => 4,  48 => 2,);
+        return array (  377 => 200,  372 => 197,  369 => 196,  360 => 193,  356 => 191,  351 => 190,  348 => 180,  346 => 179,  339 => 174,  337 => 173,  332 => 170,  330 => 169,  320 => 161,  317 => 160,  308 => 155,  306 => 154,  298 => 150,  296 => 149,  288 => 145,  285 => 144,  283 => 143,  272 => 135,  263 => 129,  257 => 125,  251 => 122,  248 => 121,  246 => 120,  241 => 118,  234 => 113,  227 => 108,  221 => 105,  218 => 104,  216 => 103,  206 => 95,  189 => 80,  187 => 79,  179 => 74,  170 => 68,  166 => 67,  163 => 66,  158 => 65,  153 => 64,  151 => 63,  145 => 60,  135 => 52,  133 => 51,  120 => 40,  116 => 38,  112 => 36,  110 => 35,  105 => 33,  90 => 20,  87 => 19,  84 => 18,  81 => 17,  78 => 15,  75 => 14,  72 => 13,  70 => 12,  67 => 11,  64 => 10,  62 => 9,  59 => 8,  56 => 6,  53 => 5,  51 => 4,  48 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -409,7 +432,7 @@ class __TwigTemplate_0b2831cbe1e7e72ad4b16c893e0d33b6 extends Template
     {# N'afficher que si on a un HmaService valide #}
     {% if hmaService is not null %}
         {% set subscription_info = get_subscription_info(hmaService) %}
-        {% set can_upgrade = is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
+        {% set can_upgrade_role = is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
         
         <div class=\"card border-0 shadow-lg mb-4 overflow-hidden\" style=\"background: linear-gradient(135deg, var(--primary-color) 0%, #0355d0 100%);\">
             <!-- Effet de vague décoratif -->
@@ -479,12 +502,7 @@ class __TwigTemplate_0b2831cbe1e7e72ad4b16c893e0d33b6 extends Template
                                 <h5 class=\"fw-bold mb-1\">Plan Gratuit</h5>
                                 <p class=\"mb-0 small text-white-50\">
                                     <i class=\"bi bi-info-circle me-1\"></i>
-                                    Profitez de fonctionnalités limitées. 
-                                    {% if can_upgrade %}
-                                        <a href=\"{{ path('app_subscription_plans') }}\" class=\"text-white fw-bold text-decoration-underline\">
-                                            Passez à un plan supérieur
-                                        </a>
-                                    {% endif %}
+                                    Profitez de fonctionnalités limitées.
                                 </p>
                             </div>
                         </div>
@@ -538,15 +556,23 @@ class __TwigTemplate_0b2831cbe1e7e72ad4b16c893e0d33b6 extends Template
                 
                 <!-- Boutons d'action -->
                 <div class=\"d-flex gap-3\">
-                    {% if can_upgrade and subscription_info.can_upgrade %}
-                        <a href=\"#\" class=\"btn btn-light flex-grow-1 py-3 fw-semibold\">
-                            <i class=\"bi bi-stars me-2\"></i>
-                            {% if subscription_info.plan == 'freemium' %}
+                    {% if can_upgrade_role %}
+                        {% if subscription_info.plan == 'freemium' %}
+                            <a href=\"{{ path('app_subscription_plans') }}\" class=\"btn btn-light flex-grow-1 py-3 fw-semibold\">
+                                <i class=\"bi bi-stars me-2\"></i>
                                 Passer à un plan payant
-                            {% else %}
-                                Améliorer mon abonnement
-                            {% endif %}
-                        </a>
+                            </a>
+                        {% elseif subscription_info.plan == 'basic' %}
+                            <a href=\"{{ path('app_subscription_plans', {plan: 'premium', billing: 'monthly'}) }}\" class=\"btn btn-light flex-grow-1 py-3 fw-semibold\">
+                                <i class=\"bi bi-stars me-2\"></i>
+                                Passer à Premium
+                            </a>
+                        {% elseif subscription_info.plan == 'premium' and subscription_info.billing_period == 'monthly' %}
+                            <a href=\"{{ path('app_subscription_plans', {plan: 'premium', billing: 'yearly'}) }}\" class=\"btn btn-light flex-grow-1 py-3 fw-semibold\">
+                                <i class=\"bi bi-stars me-2\"></i>
+                                Passer à Premium annuel <span class=\"badge bg-success ms-2\">-20%</span>
+                            </a>
+                        {% endif %}
                     {% endif %}
                     
                     <a href=\"#\" class=\"btn btn-outline-light flex-grow-1 py-3\">
@@ -556,16 +582,34 @@ class __TwigTemplate_0b2831cbe1e7e72ad4b16c893e0d33b6 extends Template
                 </div>
                 
                 <!-- Liste des fonctionnalités -->
-                {% if subscription_info.features is not empty and subscription_info.features[0] != 'all' %}
+                {% if subscription_info.features is defined and subscription_info.features|length > 0 %}
                     <div class=\"mt-4 pt-3 border-top border-white border-opacity-20\">
                         <small class=\"text-white-50 d-block mb-2\">Fonctionnalités incluses :</small>
                         <div class=\"d-flex flex-wrap gap-2\">
-                            {% for feature in subscription_info.features %}
+                            {% if 'all' in subscription_info.features %}
                                 <span class=\"badge bg-white bg-opacity-20 text-white px-3 py-2\">
                                     <i class=\"bi bi-check-circle-fill me-1 small\"></i>
-                                    {{ feature|replace({'_': ' '})|title }}
+                                    Toutes les fonctionnalités
                                 </span>
-                            {% endfor %}
+                            {% else %}
+                                {# Dictionnaire pour de jolis libellés #}
+                                {% set feature_labels = {
+                                    'basic_inventory': 'Inventaire de base',
+                                    'basic_reports': 'Rapports de base',
+                                    'advanced_inventory': 'Inventaire avancé',
+                                    'reports': 'Rapports',
+                                    'api_access': 'Accès API',
+                                    'priority_support': 'Support prioritaire',
+                                    'custom_domain': 'Domaine personnalisé',
+                                    'white_label': 'Marque blanche'
+                                } %}
+                                {% for feature in subscription_info.features %}
+                                    <span class=\"badge bg-white bg-opacity-20 text-white px-3 py-2\">
+                                        <i class=\"bi bi-check-circle-fill me-1 small\"></i>
+                                        {{ feature_labels[feature] ?? feature|replace({'_': ' '})|title }}
+                                    </span>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </div>
                 {% endif %}

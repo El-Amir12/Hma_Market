@@ -753,4 +753,84 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
+
+    /**
+     * Compte les utilisateurs actifs (is_active = true, subscription_active = true)
+     * pour un rôle et une entreprise donnés.
+     *
+     * @param string $role Le rôle (ex: 'ROLE_ADMIN')
+     * @param int $companyId L'ID de l'entreprise (HmaService)
+     * @return int
+     */
+    public function countActiveByRoleAndCompany(string $role, int $companyId): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.hma_service_id = :companyId')
+            ->andWhere('u.is_active = :active')
+            ->andWhere('u.subscription_active = :subActive')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('active', true)
+            ->setParameter('subActive', true)
+            ->setParameter('role', '%"' . $role . '"%')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+        /**
+     * Compte les utilisateurs actifs pour un rôle et une entreprise, en excluant un utilisateur donné.
+     */
+    public function countActiveByRoleAndCompanyExcluding(string $role, int $companyId, int $excludeUserId): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.hma_service_id = :companyId')
+            ->andWhere('u.is_active = :active')
+            ->andWhere('u.subscription_active = :subActive')
+            ->andWhere('u.roles LIKE :role')
+            ->andWhere('u.id != :excludeId')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('active', true)
+            ->setParameter('subActive', true)
+            ->setParameter('role', '%"' . $role . '"%')
+            ->setParameter('excludeId', $excludeUserId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Compte tous les utilisateurs (actifs ou non) ayant un rôle donné dans une entreprise.
+     */
+    public function countByRoleAndCompany(string $role, int $companyId): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.hma_service_id = :companyId')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('role', '%"' . $role . '"%')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+
+    /**
+     * Compte tous les utilisateurs ayant un rôle donné dans une entreprise, en excluant un utilisateur spécifique.
+     */
+   public function countByRoleAndCompanyExcluding(string $role, int $companyId, int $excludeUserId): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.hma_service_id = :companyId')
+            ->andWhere('u.roles LIKE :role')
+            ->andWhere('u.id != :excludeId')
+            ->andWhere('u.is_active = true')
+            ->andWhere('u.subscription_active = true')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('role', '%"' . $role . '"%')
+            ->setParameter('excludeId', $excludeUserId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

@@ -899,6 +899,77 @@
             border-top-color: rgba(255,255,255,0.1);
             margin: 0.5rem 0;
         }
+        
+        /* Animation pulse pour le bouton Upgrade */
+        @keyframes upgradePulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(4, 99, 241, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(4, 99, 241, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(4, 99, 241, 0);
+            }
+        }
+
+        /* Bouton Upgrade moderne avec bords arrondis */
+        .btn-upgrade {
+            background: linear-gradient(135deg, #0463f1, #0355d0);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.2rem 1.2rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            border-radius: 50px; /* Rend le bouton très arrondi (style pilule) */
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(4, 99, 241, 0.3);
+            transition: all 0.3s ease;
+            animation: upgradePulse 2s infinite;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-upgrade:hover {
+            background: linear-gradient(135deg, #0355d0, #0245a8);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(4, 99, 241, 0.5);
+            color: white;
+            animation: none; /* Arrête l'animation au survol */
+        }
+
+        .btn-upgrade:focus {
+            outline: none;
+            box-shadow: 0 0 0 0.25rem rgba(4, 99, 241, 0.5);
+        }
+
+        .btn-upgrade i {
+            margin-right: 6px;
+            font-size: 1rem;
+        }
+
+        /* Animation pulse (identique à votre précédente) */
+        @keyframes upgradePulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(4, 99, 241, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(4, 99, 241, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(4, 99, 241, 0);
+            }
+        }
     </style>
     
     {% block stylesheets %}{% endblock %}
@@ -1000,8 +1071,19 @@
                         <div class="search-hint" id="searchHintMobile"></div>
                     </form>
                 </div>
-                
+
                 <ul class="navbar-nav ms-auto">
+
+                    <!-- Bouton Upgrade (visible pour admin/manager si l'entreprise n'a pas déjà le plan premium) -->
+                    {% if app.user and app.user.hmaServiceId %}
+                    {% set service = app.user.hmaServiceId %}
+                    {% if (is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER')) and service.currentPlan != 'premium' %}
+                        <a href="{{ path('app_subscription_plans') }}" class="btn-upgrade me-3 ms-3">
+                            <i class="bi bi-arrow-up-circle me-1"></i>Upgrade
+                        </a>
+                    {% endif %}
+                {% endif %}
+
                     <!-- Utilisateur connecté -->
                     {% if app.user %}
                     <li class="nav-item dropdown">

@@ -126,19 +126,16 @@ class QuotaManager
     /**
      * Obtenir le nombre d'utilisateurs restants pour un rôle
      */
-    public function getRemainingSlotsForRole(HmaService $hmaService, string $role): int
+   public function getRemainingSlotsForRole(HmaService $hmaService, string $role): int
     {
         $limits = $hmaService->getCurrentLimits();
         $maxPerRole = $limits['max_users_per_role'];
-        
         if ($maxPerRole === PHP_INT_MAX) {
             return PHP_INT_MAX;
         }
-        
         $currentCount = $this->entityManager
             ->getRepository(User::class)
-            ->countActiveByRoleAndCompany($role, $hmaService->getId());
-        
+            ->countByRoleAndCompany($role, $hmaService->getId());
         return max(0, $maxPerRole - $currentCount);
     }
 }

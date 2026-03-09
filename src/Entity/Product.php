@@ -55,6 +55,9 @@ class Product
     #[ORM\Column(nullable: true)]  
     private ?\DateTime $updated_at = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    private bool $subscription_active = true;
+
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
@@ -85,8 +88,8 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private ?HmaService $hma_service = null;
 
-    #[ORM\Column]
-    private ?bool $is_pharmacy = null;
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $unit = null;
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $dosage = null;
@@ -97,11 +100,18 @@ class Product
     #[ORM\Column]
     private ?bool $prescription_required = null;
 
+    /**
+     * @var Collection<int, PromotionProduct>
+     */
+    #[ORM\OneToMany(targetEntity: PromotionProduct::class, mappedBy: 'product', orphanRemoval: true)]
+    private Collection $promotionProducts;
+
     public function __construct()
     {
         $this->purchaseItems = new ArrayCollection();
         $this->stockBatches = new ArrayCollection();
         $this->stockMovements = new ArrayCollection();
+        $this->promotionProducts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -267,6 +277,17 @@ class Product
     {
         $this->updated_at = $updated_at;
 
+        return $this;
+    }
+
+    public function isSubscriptionActive(): bool
+    {
+        return $this->subscription_active;
+    }
+
+    public function setSubscriptionActive(bool $subscription_active): self
+    {
+        $this->subscription_active = $subscription_active;
         return $this;
     }
 
@@ -485,18 +506,6 @@ class Product
         return $this;
     }
 
-    public function isPharmacy(): ?bool
-    {
-        return $this->is_pharmacy;
-    }
-
-    public function setIsPharmacy(bool $is_pharmacy): static
-    {
-        $this->is_pharmacy = $is_pharmacy;
-
-        return $this;
-    }
-
     public function getDosage(): ?string
     {
         return $this->dosage;
@@ -521,6 +530,17 @@ class Product
         return $this;
     }
 
+    public function getUnit(): ?string
+    {
+        return $this->unit;
+    }
+
+    public function setUnit(?string $unit): self
+    {
+        $this->unit = $unit;
+        return $this;
+    }
+
     public function isPrescriptionRequired(): ?bool
     {
         return $this->prescription_required;
@@ -529,6 +549,36 @@ class Product
     public function setPrescriptionRequired(bool $prescription_required): static
     {
         $this->prescription_required = $prescription_required;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PromotionProduct>
+     */
+    public function getPromotionProducts(): Collection
+    {
+        return $this->promotionProducts;
+    }
+
+    public function addPromotionProduct(PromotionProduct $promotionProduct): static
+    {
+        if (!$this->promotionProducts->contains($promotionProduct)) {
+            $this->promotionProducts->add($promotionProduct);
+            $promotionProduct->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotionProduct(PromotionProduct $promotionProduct): static
+    {
+        if ($this->promotionProducts->removeElement($promotionProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($promotionProduct->getProduct() === $this) {
+                $promotionProduct->setProduct(null);
+            }
+        }
 
         return $this;
     }

@@ -22,6 +22,7 @@ parameters:
     # Répertoires PDF
     bon_commande_directory: '%kernel.project_dir%/public/uploads/bons-commande'
     recu_achat_directory: '%kernel.project_dir%/public/uploads/recus-achat'
+    recus_abonnement_directory: '%kernel.project_dir%/public/uploads/recus-abonnement'
 
 services:
     # defaults
@@ -38,6 +39,7 @@ services:
             string $productsDirectory: '%products_directory%'
             string $bonCommandeDirectory: '%bon_commande_directory%'
             string $recuAchatDirectory: '%recu_achat_directory%'
+            string $recuAbonnementDirectory: '%recus_abonnement_directory%'
             
             # ✅ Liaison des valeurs d'email
             string $fromEmail: '%mailer_from_email%'
@@ -46,7 +48,7 @@ services:
             string $appUrl: '%app_url%'
             string $adminEmail: '%admin_email%'
             string $supportEmail: '%support_email%'
-            string $appEnv: '%kernel.environment%'  # ✅ Ajout de appEnv
+            string $appEnv: '%kernel.environment%'
 
     # makes classes in src/ available to be used as services
     App\:
@@ -83,7 +85,6 @@ services:
             $mailer: '@mailer.mailer'
             $logger: '@monolog.logger'
             $urlGenerator: '@router.default'
-            # Les autres arguments sont automatiquement injectés grâce au bind
         public: true
 
     # Service d'upload de fichiers
@@ -109,6 +110,18 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    App\EventListener\LoginListener:
+        tags:
+        - { name: kernel.event_subscriber }
+
+    App\EventListener\LogoutListener:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    App\EventListener\ActivityListener:
+        tags:
+            - { name: kernel.event_subscriber }
+
     # Menu Builder
     App\Service\MenuBuilder:
         arguments:
@@ -124,3 +137,15 @@ services:
             $photosDirectory: '%photos_directory%'
             $productsDirectory: '%products_directory%'
             $categoriesDirectory: '%categories_directory%'
+
+    App\Service\FedaPayService:
+        arguments:
+            $apiKey: '%env(FEDAPAY_API_KEY)%'
+            $environment: '%env(FEDAPAY_ENVIRONMENT)%'
+
+    # Service de génération de facture PDF
+    App\Service\InvoicePdfGenerator:
+        arguments:
+            $twig: '@twig'
+            $pdfDirectory: '%recus_abonnement_directory%'
+        public: false

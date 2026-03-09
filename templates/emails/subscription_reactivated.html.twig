@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Votre accès est rétabli - {{ app_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header img {
+            max-width: 150px;
+            max-height: 80px;
+            margin-bottom: 15px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 300;
+        }
+        .content {
+            padding: 30px;
+        }
+        .content h2 {
+            color: #333;
+            margin-top: 0;
+            font-size: 22px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.5);
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .support {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6c757d;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ global_logo_url }}" alt="{{ app_name }}">
+            <h1>Accès rétabli</h1>
+        </div>
+        <div class="content">
+            <h2>Bonjour {{ user.fullName ?? user.email }},</h2>
+
+            <p>Bonne nouvelle ! Votre accès à {{ app_name }} a été rétabli.</p>
+            <p>Vous pouvez dès maintenant vous connecter à votre espace.</p>
+
+            <p style="text-align: center; margin: 30px 0;">
+                <a href="{{ login_url }}" class="btn">Se connecter</a>
+            </p>
+
+            <div class="support">
+                <p>Si vous avez des questions, contactez notre support à <a href="mailto:{{ support_email }}">{{ support_email }}</a>.</p>
+            </div>
+        </div>
+        <div class="footer">
+            &copy; {{ "now"|date('Y') }} {{ app_name }}. Tous droits réservés.
+        </div>
+    </div>
+</body>
+</html>

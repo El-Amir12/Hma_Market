@@ -39,6 +39,9 @@ class Supplier
     #[ORM\Column]
     private ?\DateTime $updated_at = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    private bool $subscription_active = true;
+
     /**
      * @var Collection<int, Purchase>
      */
@@ -152,6 +155,17 @@ class Supplier
     {
         $this->updated_at = $updated_at;
 
+        return $this;
+    }
+
+    public function isSubscriptionActive(): bool
+    {
+        return $this->subscription_active;
+    }
+
+    public function setSubscriptionActive(bool $subscription_active): self
+    {
+        $this->subscription_active = $subscription_active;
         return $this;
     }
 

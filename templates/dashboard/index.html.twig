@@ -392,6 +392,105 @@
         background-color: rgba(231, 76, 60, 0.1);
         color: var(--danger-color);
     }
+
+    /* Welcome Card */
+    .welcome-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .welcome-card-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .welcome-avatar {
+        flex-shrink: 0;
+    }
+
+    .avatar-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .avatar-placeholder {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+        border: 2px solid white;
+    }
+
+    /* Welcome Card Moderne - Bleu */
+    .welcome-card-modern {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    color: white;
+    box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+    text-align: center;
+}
+
+.welcome-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.welcome-greeting {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.welcome-details {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.detail-item {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    padding: 0.5rem 1.2rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.detail-item i {
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .welcome-greeting {
+        font-size: 1.6rem;
+    }
+    .welcome-details {
+        flex-direction: column;
+        align-items: center;
+    }
+}
 </style>
 {% endblock %}
 
@@ -418,19 +517,72 @@
                     </div>
                 </div>
 
-                <!-- Welcome Machine -->
+                <!-- Welcome Card - Style bleu -->
                 <div class="row mb-4">
                     <div class="col-12">
-                        <div class="welcome-machine fade-in">
-                            <div class="machine-text" id="welcomeMessage">
-                                <!-- Texte généré par JavaScript -->
+                        <div class="welcome-card-modern fade-in">
+                            <div class="welcome-content">
+                                <h2 class="welcome-greeting">
+                                    {% if app.user.fullName is defined %}
+                                        Bonjour, {{ app.user.fullName }} 👋
+                                    {% elseif app.user.companyName is defined %}
+                                        Bonjour, {{ app.user.companyName }} 👋
+                                    {% else %}
+                                        Bonjour ! 👋
+                                    {% endif %}
+                                </h2>
+                                <div class="welcome-details">
+                                    <div class="detail-item">
+                                        <i class="bi bi-envelope me-2"></i>
+                                        <span>{{ app.user.email }}</span>
+                                    </div>
+                                    {% if app.user.employmentDate is defined and app.user.employmentDate %}
+                                        <div class="detail-item">
+                                            <i class="bi bi-calendar-check me-2"></i>
+                                            <span>Embauché le {{ app.user.employmentDate|date('d/m/Y') }}</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if app.user.loginAt is defined and app.user.loginAt %}
+                                        {% set loginDiff = date().diff(app.user.loginAt) %}
+                                        {% if loginDiff.d > 0 %}
+                                            {% set lastLoginText = 'Il y a ' ~ loginDiff.d ~ ' jour' ~ (loginDiff.d > 1 ? 's') %}
+                                        {% elseif loginDiff.h > 0 %}
+                                            {% set lastLoginText = 'Il y a ' ~ loginDiff.h ~ ' heure' ~ (loginDiff.h > 1 ? 's') %}
+                                        {% elseif loginDiff.i > 0 %}
+                                            {% set lastLoginText = 'Il y a ' ~ loginDiff.i ~ ' minute' ~ (loginDiff.i > 1 ? 's') %}
+                                        {% else %}
+                                            {% set lastLoginText = 'À l\'instant' %}
+                                        {% endif %}
+                                        <div class="detail-item">
+                                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                                            <span>Dernière connexion : {{ lastLoginText }}</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if app.user.lastActivity is defined and app.user.lastActivity %}
+                                        {% set activityDiff = date().diff(app.user.lastActivity) %}
+                                        {% if activityDiff.d > 0 %}
+                                            {% set lastActivityText = 'Il y a ' ~ activityDiff.d ~ ' jour' ~ (activityDiff.d > 1 ? 's') %}
+                                        {% elseif activityDiff.h > 0 %}
+                                            {% set lastActivityText = 'Il y a ' ~ activityDiff.h ~ ' heure' ~ (activityDiff.h > 1 ? 's') %}
+                                        {% elseif activityDiff.i > 0 %}
+                                            {% set lastActivityText = 'Il y a ' ~ activityDiff.i ~ ' minute' ~ (activityDiff.i > 1 ? 's') %}
+                                        {% else %}
+                                            {% set lastActivityText = 'À l\'instant' %}
+                                        {% endif %}
+                                        <div class="detail-item">
+                                            <i class="bi bi-activity me-2"></i>
+                                            <span>Dernière activité : {{ lastActivityText }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Subscription Widget - Intégré juste en dessous -->
-                    <div class="subscription-widget-container fade-in" style="animation-delay: 0.2s">
-                        {{ include('components/_subscription_widget.html.twig') }}
-                    </div>
+                </div>
+
+                <!-- Subscription Widget (conserve la ligne suivante inchangée) -->
+                <div class="subscription-widget-container fade-in" style="animation-delay: 0.2s">
+                    {{ include('components/_subscription_widget.html.twig') }}
                 </div>
 
                 <!-- Stats Cards - Taille uniforme -->

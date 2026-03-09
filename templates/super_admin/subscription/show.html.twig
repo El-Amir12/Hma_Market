@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Subscription{% endblock %}
+
+{% block body %}
+    <h1>Subscription</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ subscription.id }}</td>
+            </tr>
+            <tr>
+                <th>BillingPeriod</th>
+                <td>{{ subscription.billingPeriod }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ subscription.status }}</td>
+            </tr>
+            <tr>
+                <th>StartsAt</th>
+                <td>{{ subscription.startsAt ? subscription.startsAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>EndsAt</th>
+                <td>{{ subscription.endsAt ? subscription.endsAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>TrialEndsAt</th>
+                <td>{{ subscription.trialEndsAt ? subscription.trialEndsAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>PaymentMethod</th>
+                <td>{{ subscription.paymentMethod }}</td>
+            </tr>
+            <tr>
+                <th>TransactionId</th>
+                <td>{{ subscription.transactionId }}</td>
+            </tr>
+            <tr>
+                <th>Notes</th>
+                <td>{{ subscription.notes }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ subscription.createdAt ? subscription.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ subscription.updatedAt ? subscription.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_super_admin_subscription_index') }}">back to list</a>
+
+    <a href="{{ path('app_super_admin_subscription_edit', {'id': subscription.id}) }}">edit</a>
+
+    {{ include('super_admin/subscription/_delete_form.html.twig') }}
+{% endblock %}

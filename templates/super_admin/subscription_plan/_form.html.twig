@@ -1,0 +1,244 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+<!-- Section : Informations générales -->
+<div class="card shadow-lg border-0 mb-4 rounded-4">
+    <div class="card-header bg-gradient-primary text-white py-3 rounded-top-4 border-0">
+        <h5 class="mb-0 fw-bold">
+            <i class="bi bi-info-circle-fill me-2"></i>Informations générales
+        </h5>
+    </div>
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="form-floating">
+                    {{ form_widget(form.name, {'attr': {'class': 'form-control rounded-3', 'placeholder': 'Nom technique'}}) }}
+                    {{ form_label(form.name) }}
+                    {{ form_errors(form.name) }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    {{ form_widget(form.displayName, {'attr': {'class': 'form-control rounded-3', 'placeholder': 'Nom affiché'}}) }}
+                    {{ form_label(form.displayName) }}
+                    {{ form_errors(form.displayName) }}
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-floating">
+                    {{ form_widget(form.description, {'attr': {'class': 'form-control rounded-3', 'placeholder': 'Description', 'style': 'height: 100px'}}) }}
+                    {{ form_label(form.description) }}
+                    {{ form_errors(form.description) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section : Tarifs -->
+<div class="card shadow-lg border-0 mb-4 rounded-4">
+    <div class="card-header bg-gradient-success text-white py-3 rounded-top-4 border-0">
+        <h5 class="mb-0 fw-bold">
+            <i class="bi bi-currency-exchange me-2"></i>Tarifs
+        </h5>
+    </div>
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="form-floating">
+                    {{ form_widget(form.priceMonthly, {'attr': {'class': 'form-control rounded-3', 'placeholder': 'Prix mensuel'}}) }}
+                    {{ form_label(form.priceMonthly) }}
+                    {{ form_errors(form.priceMonthly) }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    {{ form_widget(form.priceYearly, {'attr': {'class': 'form-control rounded-3', 'placeholder': 'Prix annuel'}}) }}
+                    {{ form_label(form.priceYearly) }}
+                    {{ form_errors(form.priceYearly) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section : Limites d'utilisation -->
+<div class="card shadow-lg border-0 mb-4 rounded-4">
+    <div class="card-header bg-gradient-warning text-white py-3 rounded-top-4 border-0">
+        <h5 class="mb-0 fw-bold">
+            <i class="bi bi-bar-chart-fill me-2"></i>Limites d'utilisation
+        </h5>
+        <small class="text-white-50">Laissez vide pour illimité</small>
+    </div>
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="form-floating">
+                    {{ form_widget(form.maxUsersPerRole, {'attr': {'class': 'form-control rounded-3', 'placeholder': 'Max utilisateurs par rôle'}}) }}
+                    {{ form_label(form.maxUsersPerRole) }}
+                    {{ form_errors(form.maxUsersPerRole) }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    {{ form_widget(form.maxProducts, {'attr': {'class': 'form-control rounded-3', 'placeholder': 'Max produits'}}) }}
+                    {{ form_label(form.maxProducts) }}
+                    {{ form_errors(form.maxProducts) }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    {{ form_widget(form.maxOrdersPerMonth, {'attr': {'class': 'form-control rounded-3', 'placeholder': 'Max commandes / mois'}}) }}
+                    {{ form_label(form.maxOrdersPerMonth) }}
+                    {{ form_errors(form.maxOrdersPerMonth) }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    {{ form_widget(form.maxCategories, {'attr': {'class': 'form-control rounded-3', 'placeholder': 'Max catégories'}}) }}
+                    {{ form_label(form.maxCategories) }}
+                    {{ form_errors(form.maxCategories) }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    {{ form_widget(form.maxSuppliers, {'attr': {'class': 'form-control rounded-3', 'placeholder': 'Max fournisseurs'}}) }}
+                    {{ form_label(form.maxSuppliers) }}
+                    {{ form_errors(form.maxSuppliers) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section : Fonctionnalités -->
+<div class="card shadow-lg border-0 mb-4 rounded-4">
+    <div class="card-header bg-gradient-info text-white py-3 rounded-top-4 border-0">
+        <h5 class="mb-0 fw-bold">
+            <i class="bi bi-star-fill me-2"></i>Fonctionnalités supplémentaires
+        </h5>
+    </div>
+    <div class="card-body p-4">
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Liste des fonctionnalités</label>
+            <div class="features-collection" data-prototype="{{ form_widget(form.features.vars.prototype)|e('html_attr') }}">
+                {% for feature in form.features %}
+                    <div class="input-group mb-2">
+                        {{ form_widget(feature, {'attr': {'class': 'form-control rounded-3'}}) }}
+                        <button type="button" class="btn btn-outline-danger remove-feature rounded-3">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-outline-primary btn-sm mt-2 add-feature rounded-pill">
+                <i class="bi bi-plus-circle me-2"></i>Ajouter une fonctionnalité
+            </button>
+            {{ form_errors(form.features) }}
+        </div>
+    </div>
+</div>
+
+<!-- Section : Statut -->
+<div class="card shadow-lg border-0 mb-4 rounded-4">
+    <div class="card-header bg-gradient-secondary text-white py-3 rounded-top-4 border-0">
+        <h5 class="mb-0 fw-bold">
+            <i class="bi bi-toggle-on me-2"></i>Statut
+        </h5>
+    </div>
+    <div class="card-body p-4">
+        <div class="form-check form-switch">
+            {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input'}}) }}
+            {{ form_label(form.isActive, null, {'label_attr': {'class': 'form-check-label fw-semibold'}}) }}
+            {{ form_errors(form.isActive) }}
+        </div>
+    </div>
+</div>
+
+<!-- Boutons d'action -->
+<div class="d-flex justify-content-between align-items-center mt-5">
+    <a href="{{ path('app_super_admin_subscription_plan_index') }}" class="btn btn-outline-secondary btn-lg rounded-pill px-5">
+        <i class="bi bi-arrow-left me-2"></i>Annuler
+    </a>
+    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow-lg">
+        <i class="bi bi-check-circle-fill me-2"></i>{{ button_label|default('Enregistrer') }}
+    </button>
+</div>
+
+{{ form_end(form) }}
+
+<!-- Script pour la gestion dynamique de la collection de fonctionnalités -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.querySelector('.features-collection');
+    const addButton = document.querySelector('.add-feature');
+    const prototype = container.dataset.prototype;
+
+    addButton.addEventListener('click', function() {
+        const index = container.children.length;
+        const newForm = prototype.replace(/__name__/g, index);
+        const div = document.createElement('div');
+        div.className = 'input-group mb-2';
+        div.innerHTML = newForm + '<button type="button" class="btn btn-outline-danger remove-feature rounded-3"><i class="bi bi-trash"></i></button>';
+        container.appendChild(div);
+    });
+
+    container.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-feature')) {
+            e.target.closest('.input-group').remove();
+        }
+    });
+});
+</script>
+
+<!-- Styles personnalisés pour le formulaire -->
+<style>
+/* Dégradés pour les entêtes de cartes */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.bg-gradient-success {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+}
+.bg-gradient-info {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+}
+.bg-gradient-secondary {
+    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+}
+
+/* Arrondis supplémentaires */
+.rounded-top-4 {
+    border-top-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+}
+
+/* Animation du bouton de soumission */
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgba(102,126,234,0.4);
+}
+
+/* Effet sur les cartes */
+.card {
+    transition: box-shadow 0.3s ease;
+}
+.card:hover {
+    box-shadow: 0 25px 30px -12px rgba(0,0,0,0.2) !important;
+}
+
+/* Personnalisation des champs flottants */
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: #667eea;
+    opacity: 0.8;
+    transform: scale(0.85) translateY(-0.75rem) translateX(0.15rem);
+}
+</style>

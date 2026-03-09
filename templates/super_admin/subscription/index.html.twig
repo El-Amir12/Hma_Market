@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Subscription index{% endblock %}
+
+{% block body %}
+    <h1>Subscription index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>BillingPeriod</th>
+                <th>Status</th>
+                <th>StartsAt</th>
+                <th>EndsAt</th>
+                <th>TrialEndsAt</th>
+                <th>PaymentMethod</th>
+                <th>TransactionId</th>
+                <th>Notes</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for subscription in subscriptions %}
+            <tr>
+                <td>{{ subscription.id }}</td>
+                <td>{{ subscription.billingPeriod }}</td>
+                <td>{{ subscription.status }}</td>
+                <td>{{ subscription.startsAt ? subscription.startsAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ subscription.endsAt ? subscription.endsAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ subscription.trialEndsAt ? subscription.trialEndsAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ subscription.paymentMethod }}</td>
+                <td>{{ subscription.transactionId }}</td>
+                <td>{{ subscription.notes }}</td>
+                <td>{{ subscription.createdAt ? subscription.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ subscription.updatedAt ? subscription.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_super_admin_subscription_show', {'id': subscription.id}) }}">show</a>
+                    <a href="{{ path('app_super_admin_subscription_edit', {'id': subscription.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_super_admin_subscription_new') }}">Create new</a>
+{% endblock %}

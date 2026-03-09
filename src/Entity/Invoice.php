@@ -50,7 +50,7 @@ class Invoice
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Subscription $subscription_id = null;
+    private ?Subscription $subscription = null;
 
     public function getId(): ?int
     {
@@ -188,14 +188,14 @@ class Invoice
         return $this;
     }
 
-    public function getSubscriptionId(): ?Subscription
+    public function getSubscription(): ?Subscription
     {
-        return $this->subscription_id;
+        return $this->subscription;
     }
 
-    public function setSubscriptionId(?Subscription $subscription_id): static
+    public function setSubscription(?Subscription $subscription): static
     {
-        $this->subscription_id = $subscription_id;
+        $this->subscription = $subscription;
 
         return $this;
     }

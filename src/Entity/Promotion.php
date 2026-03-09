@@ -1,0 +1,252 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\PromotionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: PromotionRepository::class)]
+class Promotion
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\ManyToOne(inversedBy: 'promotions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?HmaService $hma_service = null;
+
+    #[ORM\Column(length: 150)]
+    private ?string $name = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $type = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $value = null;
+
+    #[ORM\Column]
+    private ?\DateTime $startDate = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $endDate = null;
+
+    #[ORM\Column]
+    private ?bool $is_active = null;
+
+    #[ORM\Column]
+    private ?\DateTime $created_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $updated_at = null;
+
+    /**
+     * @var Collection<int, PromotionProduct>
+     */
+    #[ORM\OneToMany(targetEntity: PromotionProduct::class, mappedBy: 'promotion', orphanRemoval: true)]
+    private Collection $promotionProducts;
+
+    /**
+     * @var Collection<int, PromotionCategory>
+     */
+    #[ORM\OneToMany(targetEntity: PromotionCategory::class, mappedBy: 'promotion', orphanRemoval: true)]
+    private Collection $promotionCategories;
+
+    public function __construct()
+    {
+        $this->promotionProducts = new ArrayCollection();
+        $this->promotionCategories = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getHmaService(): ?HmaService
+    {
+        return $this->hma_service;
+    }
+
+    public function setHmaService(?HmaService $hma_service): static
+    {
+        $this->hma_service = $hma_service;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    public function setValue(string $value): static
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function getStartDate(): ?\DateTime
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate(\DateTime $startDate): static
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    public function getEndDate(): ?\DateTime
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(?\DateTime $endDate): static
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(bool $is_active): static
+    {
+        $this->is_active = $is_active;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTime $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTime $updated_at): static
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PromotionProduct>
+     */
+    public function getPromotionProducts(): Collection
+    {
+        return $this->promotionProducts;
+    }
+
+    public function addPromotionProduct(PromotionProduct $promotionProduct): static
+    {
+        if (!$this->promotionProducts->contains($promotionProduct)) {
+            $this->promotionProducts->add($promotionProduct);
+            $promotionProduct->setPromotion($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotionProduct(PromotionProduct $promotionProduct): static
+    {
+        if ($this->promotionProducts->removeElement($promotionProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($promotionProduct->getPromotion() === $this) {
+                $promotionProduct->setPromotion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PromotionCategory>
+     */
+    public function getPromotionCategories(): Collection
+    {
+        return $this->promotionCategories;
+    }
+
+    public function addPromotionCategory(PromotionCategory $promotionCategory): static
+    {
+        if (!$this->promotionCategories->contains($promotionCategory)) {
+            $this->promotionCategories->add($promotionCategory);
+            $promotionCategory->setPromotion($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotionCategory(PromotionCategory $promotionCategory): static
+    {
+        if ($this->promotionCategories->removeElement($promotionCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($promotionCategory->getPromotion() === $this) {
+                $promotionCategory->setPromotion(null);
+            }
+        }
+
+        return $this;
+    }
+}

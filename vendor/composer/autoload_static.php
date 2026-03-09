@@ -252,6 +252,7 @@ class ComposerStaticInit54c05e64f01f49eb136e9af7b3075bdd
         'F' => 
         array (
             'FontLib\\' => 8,
+            'FedaPay\\' => 8,
         ),
         'E' => 
         array (
@@ -712,6 +713,10 @@ class ComposerStaticInit54c05e64f01f49eb136e9af7b3075bdd
         'FontLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-font-lib/src/FontLib',
+        ),
+        'FedaPay\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fedapay/fedapay-php/lib',
         ),
         'Egulias\\EmailValidator\\' => 
         array (

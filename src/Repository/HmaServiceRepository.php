@@ -24,6 +24,7 @@ class HmaServiceRepository extends ServiceEntityRepository
     /**
      * Trouver les entreprises avec filtres
      */
+    // Dans la méthode findByFilters(array $filters)
     public function findByFilters(array $filters)
     {
         $qb = $this->createQueryBuilder('h')
@@ -34,6 +35,12 @@ class HmaServiceRepository extends ServiceEntityRepository
         if (!empty($filters['search'])) {
             $qb->andWhere('h.companyName LIKE :search OR h.email LIKE :search OR h.subscription_number LIKE :search')
                 ->setParameter('search', '%' . $filters['search'] . '%');
+        }
+
+        // Filtre par type d'entreprise (nouveau)
+        if (!empty($filters['company_type'])) {
+            $qb->andWhere('h.companyType = :companyType')
+                ->setParameter('companyType', $filters['company_type']);
         }
 
         // Filtre par statut
@@ -81,7 +88,6 @@ class HmaServiceRepository extends ServiceEntityRepository
 
         return $qb;
     }
-
     /**
      * Obtenir les statistiques
      */

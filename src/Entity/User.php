@@ -116,6 +116,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTime $employment_date = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $login_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $logout_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $last_activity = null;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -547,11 +556,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $roles = array_values($roles); // Réindexer
         }
         
-        // S'assurer que ROLE_USER est toujours présent
-        if (!in_array('ROLE_USER', $roles)) {
-            $roles[] = 'ROLE_USER';
-        }
-        
+        // ✅ NE PAS AJOUTER ROLE_USER ICI (il sera ajouté dans getRoles())
         $this->roles = array_unique($roles);
         
         return $this;
@@ -866,4 +871,90 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         };
     }
 
+    /**
+     * Vérifie si un nouvel utilisateur peut être créé.
+     */
+    public static function canBeCreatedBy(User $admin, string $role, UserRepository $userRepository, HmaService $company): bool
+    {
+        if (!$admin->isSuperAdmin() && !$admin->isHmaOwner()) {
+            return false;
+        }
+        $limits = $company->getCurrentLimits();
+        $maxPerRole = $limits['max_users_per_role'];
+        if ($maxPerRole === PHP_INT_MAX) {
+            return true;
+        }
+        $currentCount = $userRepository->countByRoleAndCompany($role, $company->getId());
+        return $currentCount < $maxPerRole;
+    }
+
+    /**
+     * Vérifie si cet utilisateur peut être modifié.
+     */
+    public function canBeEditedBy(User $admin, string $newRole, UserRepository $userRepository): bool
+    {
+        if (!$this->isEditableBy($admin)) {
+            return false;
+        }
+        $company = $this->getHmaService();
+        if (!$company) {
+            return false;
+        }
+        $limits = $company->getCurrentLimits();
+        $maxPerRole = $limits['max_users_per_role'];
+        
+        if ($maxPerRole === PHP_INT_MAX) {
+            return true;
+        }
+        
+        $currentCount = $userRepository->countByRoleAndCompanyExcluding($newRole, $company->getId(), $this->getId());
+        
+        return $currentCount < $maxPerRole;
+    }
+
+    public function getLoginAt(): ?\DateTime
+    {
+        return $this->login_at;
+    }
+
+    public function setLoginAt(?\DateTime $login_at): static
+    {
+        $this->login_at = $login_at;
+
+        return $this;
+    }
+
+    public function getLogoutAt(): ?\DateTime
+    {
+        return $this->logout_at;
+    }
+
+    public function setLogoutAt(?\DateTime $logout_at): static
+    {
+        $this->logout_at = $logout_at;
+
+        return $this;
+    }
+
+    public function getLastActivity(): ?\DateTime
+    {
+        return $this->last_activity;
+    }
+
+    public function setLastActivity(?\DateTime $last_activity): static
+    {
+        $this->last_activity = $last_activity;
+
+        return $this;
+    }
+
+    public function isOnline(): bool
+    {
+        $lastActivity = $this->getLastActivity();
+        if (!$lastActivity) {
+            return false;
+        }
+        $threshold = new \DateTime('-5 minutes');
+        return $lastActivity > $threshold;
+    }
 }

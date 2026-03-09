@@ -16,7 +16,7 @@
     {# N'afficher que si on a un HmaService valide #}
     {% if hmaService is not null %}
         {% set subscription_info = get_subscription_info(hmaService) %}
-        {% set can_upgrade = is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
+        {% set can_upgrade_role = is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
         
         <div class="card border-0 shadow-lg mb-4 overflow-hidden" style="background: linear-gradient(135deg, var(--primary-color) 0%, #0355d0 100%);">
             <!-- Effet de vague décoratif -->
@@ -86,12 +86,7 @@
                                 <h5 class="fw-bold mb-1">Plan Gratuit</h5>
                                 <p class="mb-0 small text-white-50">
                                     <i class="bi bi-info-circle me-1"></i>
-                                    Profitez de fonctionnalités limitées. 
-                                    {% if can_upgrade %}
-                                        <a href="{{ path('app_subscription_plans') }}" class="text-white fw-bold text-decoration-underline">
-                                            Passez à un plan supérieur
-                                        </a>
-                                    {% endif %}
+                                    Profitez de fonctionnalités limitées.
                                 </p>
                             </div>
                         </div>
@@ -145,15 +140,23 @@
                 
                 <!-- Boutons d'action -->
                 <div class="d-flex gap-3">
-                    {% if can_upgrade and subscription_info.can_upgrade %}
-                        <a href="#" class="btn btn-light flex-grow-1 py-3 fw-semibold">
-                            <i class="bi bi-stars me-2"></i>
-                            {% if subscription_info.plan == 'freemium' %}
+                    {% if can_upgrade_role %}
+                        {% if subscription_info.plan == 'freemium' %}
+                            <a href="{{ path('app_subscription_plans') }}" class="btn btn-light flex-grow-1 py-3 fw-semibold">
+                                <i class="bi bi-stars me-2"></i>
                                 Passer à un plan payant
-                            {% else %}
-                                Améliorer mon abonnement
-                            {% endif %}
-                        </a>
+                            </a>
+                        {% elseif subscription_info.plan == 'basic' %}
+                            <a href="{{ path('app_subscription_plans', {plan: 'premium', billing: 'monthly'}) }}" class="btn btn-light flex-grow-1 py-3 fw-semibold">
+                                <i class="bi bi-stars me-2"></i>
+                                Passer à Premium
+                            </a>
+                        {% elseif subscription_info.plan == 'premium' and subscription_info.billing_period == 'monthly' %}
+                            <a href="{{ path('app_subscription_plans', {plan: 'premium', billing: 'yearly'}) }}" class="btn btn-light flex-grow-1 py-3 fw-semibold">
+                                <i class="bi bi-stars me-2"></i>
+                                Passer à Premium annuel <span class="badge bg-success ms-2">-20%</span>
+                            </a>
+                        {% endif %}
                     {% endif %}
                     
                     <a href="#" class="btn btn-outline-light flex-grow-1 py-3">
@@ -163,16 +166,34 @@
                 </div>
                 
                 <!-- Liste des fonctionnalités -->
-                {% if subscription_info.features is not empty and subscription_info.features[0] != 'all' %}
+                {% if subscription_info.features is defined and subscription_info.features|length > 0 %}
                     <div class="mt-4 pt-3 border-top border-white border-opacity-20">
                         <small class="text-white-50 d-block mb-2">Fonctionnalités incluses :</small>
                         <div class="d-flex flex-wrap gap-2">
-                            {% for feature in subscription_info.features %}
+                            {% if 'all' in subscription_info.features %}
                                 <span class="badge bg-white bg-opacity-20 text-white px-3 py-2">
                                     <i class="bi bi-check-circle-fill me-1 small"></i>
-                                    {{ feature|replace({'_': ' '})|title }}
+                                    Toutes les fonctionnalités
                                 </span>
-                            {% endfor %}
+                            {% else %}
+                                {# Dictionnaire pour de jolis libellés #}
+                                {% set feature_labels = {
+                                    'basic_inventory': 'Inventaire de base',
+                                    'basic_reports': 'Rapports de base',
+                                    'advanced_inventory': 'Inventaire avancé',
+                                    'reports': 'Rapports',
+                                    'api_access': 'Accès API',
+                                    'priority_support': 'Support prioritaire',
+                                    'custom_domain': 'Domaine personnalisé',
+                                    'white_label': 'Marque blanche'
+                                } %}
+                                {% for feature in subscription_info.features %}
+                                    <span class="badge bg-white bg-opacity-20 text-white px-3 py-2">
+                                        <i class="bi bi-check-circle-fill me-1 small"></i>
+                                        {{ feature_labels[feature] ?? feature|replace({'_': ' '})|title }}
+                                    </span>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </div>
                 {% endif %}

@@ -69,12 +69,22 @@ class Category
     #[ORM\JoinColumn(nullable: false)]
     private ?HmaService $hma_service = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    private bool $subscription_active = true;
+
+    /**
+     * @var Collection<int, PromotionCategory>
+     */
+    #[ORM\OneToMany(targetEntity: PromotionCategory::class, mappedBy: 'category', orphanRemoval: true)]
+    private Collection $promotionCategories;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
         $this->products = new ArrayCollection();
         $this->created_at = new \DateTimeImmutable();
         $this->is_active = true;
+        $this->promotionCategories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -396,6 +406,47 @@ class Category
     public function setHmaService(?HmaService $hma_service): static  
     {
         $this->hma_service = $hma_service;
+        return $this;
+    }
+
+    public function isSubscriptionActive(): bool
+    {
+        return $this->subscription_active;
+    }
+
+    public function setSubscriptionActive(bool $subscription_active): self
+    {
+        $this->subscription_active = $subscription_active;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PromotionCategory>
+     */
+    public function getPromotionCategories(): Collection
+    {
+        return $this->promotionCategories;
+    }
+
+    public function addPromotionCategory(PromotionCategory $promotionCategory): static
+    {
+        if (!$this->promotionCategories->contains($promotionCategory)) {
+            $this->promotionCategories->add($promotionCategory);
+            $promotionCategory->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotionCategory(PromotionCategory $promotionCategory): static
+    {
+        if ($this->promotionCategories->removeElement($promotionCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($promotionCategory->getCategory() === $this) {
+                $promotionCategory->setCategory(null);
+            }
+        }
+
         return $this;
     }
 }

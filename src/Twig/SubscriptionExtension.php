@@ -3,11 +3,19 @@
 namespace App\Twig;
 
 use App\Entity\HmaService;
+use App\Repository\SubscriptionRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class SubscriptionExtension extends AbstractExtension
 {
+    private $subscriptionRepository;
+
+    public function __construct(SubscriptionRepository $subscriptionRepository)
+    {
+        $this->subscriptionRepository = $subscriptionRepository;
+    }
+
     public function getFunctions(): array
     {
         return [
@@ -26,14 +34,21 @@ class SubscriptionExtension extends AbstractExtension
                 'is_trial' => false,
                 'days_remaining' => 0,
                 'end_date' => null,
+                'subscription_end' => null,
                 'features' => [],
-                'usage' => []
+                'usage' => [],
+                'can_upgrade' => false,
+                'billing_period' => null,
             ];
         }
 
         $stats = $hmaService->getUsageStats();
         $plan = $hmaService->getCurrentPlan();
         
+        // Récupérer l'abonnement actif
+        $activeSubscription = $this->subscriptionRepository->findActiveSubscription($hmaService);
+        $billingPeriod = $activeSubscription ? $activeSubscription->getBillingPeriod() : null;
+
         return [
             'plan' => $plan,
             'plan_label' => $stats['plan_label'],
@@ -43,7 +58,8 @@ class SubscriptionExtension extends AbstractExtension
             'subscription_end' => $hmaService->getSubscriptionEndsAt()?->format('d/m/Y'),
             'features' => $stats['features'],
             'usage' => $stats,
-            'can_upgrade' => $plan !== HmaService::PLAN_PREMIUM
+            'can_upgrade' => $plan !== HmaService::PLAN_PREMIUM,
+            'billing_period' => $billingPeriod,
         ];
     }
 

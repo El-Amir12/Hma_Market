@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation d'abonnement - {{ app_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header img {
+            max-width: 150px;
+            max-height: 80px;
+            margin-bottom: 15px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 300;
+        }
+        .content {
+            padding: 30px;
+        }
+        .content h2 {
+            color: #333;
+            margin-top: 0;
+            font-size: 22px;
+        }
+        .details {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .details ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .details li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+        .details li:last-child {
+            border-bottom: none;
+        }
+        .details li strong {
+            width: 140px;
+            color: #495057;
+        }
+        .details li span {
+            color: #212529;
+            font-weight: 500;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.5);
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .support {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ global_logo_url }}" alt="{{ app_name }}">
+            <h1>Confirmation d'abonnement</h1>
+        </div>
+        <div class="content">
+            <h2>Bonjour {{ user.fullName ?? user.email }},</h2>
+
+            <p>Votre entreprise <strong>{{ company.companyName }}</strong> vient de souscrire à un abonnement sur {{ app_name }}.</p>
+
+            <div class="details">
+                <ul>
+                    <li>
+                        <strong>Plan :</strong>
+                        <span>{{ subscription.subscriptionPlan.displayName }}</span>
+                    </li>
+                    <li>
+                        <strong>Période :</strong>
+                        <span>{{ subscription.billingPeriod == 'monthly' ? 'Mensuel' : 'Annuel' }}</span>
+                    </li>
+                    <li>
+                        <strong>Date de début :</strong>
+                        <span>{{ subscription.startsAt|date('d/m/Y') }}</span>
+                    </li>
+                    <li>
+                        <strong>Date de fin :</strong>
+                        <span>{{ subscription.endsAt|date('d/m/Y') }}</span>
+                    </li>
+                </ul>
+            </div>
+
+            <p>Vous pouvez dès maintenant accéder à toutes les fonctionnalités de votre abonnement via votre tableau de bord.</p>
+
+            <p style="text-align: center; margin: 30px 0;">
+                <a href="{{ dashboard_url }}" class="btn">Accéder au tableau de bord</a>
+            </p>
+
+            <div class="support">
+                <p>Si vous avez des questions, n'hésitez pas à contacter notre support à <a href="mailto:{{ support_email }}">{{ support_email }}</a>.</p>
+            </div>
+        </div>
+        <div class="footer">
+            &copy; {{ "now"|date('Y') }} {{ app_name }}. Tous droits réservés.
+        </div>
+    </div>
+</body>
+</html>

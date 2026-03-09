@@ -19,15 +19,15 @@ class Subscription
 
     #[ORM\Column(length: 25)]
     private ?string $status = null;
-
-    #[ORM\Column]
+    
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $startsAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $endsAt = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $trialEndsAt = null;
+    #[ORM\Column]
+    private ?bool $subscription_active = true;
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $paymentMethod = null;
@@ -50,7 +50,7 @@ class Subscription
 
     #[ORM\ManyToOne(inversedBy: 'subscriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?SubscriptionPlan $subscription_plan_id = null;
+    private ?SubscriptionPlan $subscriptionPlan = null;
 
     public function getId(): ?int
     {
@@ -105,15 +105,14 @@ class Subscription
         return $this;
     }
 
-    public function getTrialEndsAt(): ?\DateTimeImmutable
+    public function isSubscriptionActive(): ?bool
     {
-        return $this->trialEndsAt;
+        return $this->subscription_active;
     }
 
-    public function setTrialEndsAt(?\DateTimeImmutable $trialEndsAt): static
+    public function setSubscriptionActive(bool $subscription_active): static
     {
-        $this->trialEndsAt = $trialEndsAt;
-
+        $this->subscription_active = $subscription_active;
         return $this;
     }
 
@@ -188,15 +187,14 @@ class Subscription
         return $this;
     }
 
-    public function getSubscriptionPlanId(): ?SubscriptionPlan
+    public function getSubscriptionPlan(): ?SubscriptionPlan
     {
-        return $this->subscription_plan_id;
+        return $this->subscriptionPlan;
     }
 
-    public function setSubscriptionPlanId(?SubscriptionPlan $subscription_plan_id): static
+    public function setSubscriptionPlan(?SubscriptionPlan $subscriptionPlan): static
     {
-        $this->subscription_plan_id = $subscription_plan_id;
-
+        $this->subscriptionPlan = $subscriptionPlan;
         return $this;
     }
 }

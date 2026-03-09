@@ -96,10 +96,16 @@ class MenuBuilder
                 'children' => [
                     [
                         'type' => 'link',
+                        'route' => 'app_super_admin_subscription_plan_index', 
+                        'label' => 'Types d\'abonnement',
+                        'icon' => 'bi bi-tags',
+                    ],
+                    [
+                        'type' => 'link',
                         'route' => 'app_super_admin_hma_service_index',
                         'label' => 'Toutes les entreprises',
                         'icon' => 'bi bi-building',
-                        'coming_soon' => true
+                        'coming_soon' => false
                     ],
                     [
                         'type' => 'link',

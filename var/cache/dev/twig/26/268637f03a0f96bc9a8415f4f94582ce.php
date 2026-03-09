@@ -152,64 +152,82 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 33, $this->source); })()), "statusLabel", [], "any", false, false, false, 33), "html", null, true);
         yield "
                                     </span>
-                                </div>
+                                    ";
+        // line 36
+        yield "                                    ";
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 36, $this->source); })()), "online", [], "any", false, false, false, 36)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 37
+            yield "                                        <span class=\"badge bg-success py-2 px-3\">
+                                            <i class=\"bi bi-circle-fill me-1\" style=\"font-size: 0.6rem;\"></i>En ligne
+                                        </span>
+                                    ";
+        } else {
+            // line 41
+            yield "                                        <span class=\"badge bg-secondary py-2 px-3\">
+                                            <i class=\"bi bi-circle me-1\" style=\"font-size: 0.6rem;\"></i>Hors ligne
+                                        </span>
+                                    ";
+        }
+        // line 45
+        yield "                                </div>
                             </div>
                         </div>
+                        <!-- Boutons d'action (inchangés) -->
                         <div class=\"btn-group\">
                             <a href=\"";
-        // line 39
+        // line 50
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_user_index");
         yield "\" class=\"btn btn-light\">
                                 <i class=\"bi bi-arrow-left me-2\"></i>Retour
                             </a>
                             ";
-        // line 42
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 42, $this->source); })()), "isEditableBy", [(isset($context["current_user"]) || array_key_exists("current_user", $context) ? $context["current_user"] : (function () { throw new RuntimeError('Variable "current_user" does not exist.', 42, $this->source); })())], "method", false, false, false, 42)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 43
+        // line 53
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 53, $this->source); })()), "isEditableBy", [(isset($context["current_user"]) || array_key_exists("current_user", $context) ? $context["current_user"] : (function () { throw new RuntimeError('Variable "current_user" does not exist.', 53, $this->source); })())], "method", false, false, false, 53)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 54
             yield "                                <a href=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_user_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 43, $this->source); })()), "id", [], "any", false, false, false, 43)]), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_user_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 54, $this->source); })()), "id", [], "any", false, false, false, 54)]), "html", null, true);
             yield "\" class=\"btn btn-warning\">
                                     <i class=\"bi bi-pencil me-2\"></i>Modifier
                                 </a>
                             ";
         }
-        // line 47
+        // line 58
         yield "                            ";
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 47, $this->source); })()), "canToggleStatusBy", [(isset($context["current_user"]) || array_key_exists("current_user", $context) ? $context["current_user"] : (function () { throw new RuntimeError('Variable "current_user" does not exist.', 47, $this->source); })())], "method", false, false, false, 47)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 48
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 58, $this->source); })()), "canToggleStatusBy", [(isset($context["current_user"]) || array_key_exists("current_user", $context) ? $context["current_user"] : (function () { throw new RuntimeError('Variable "current_user" does not exist.', 58, $this->source); })())], "method", false, false, false, 58)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 59
             yield "                                <button type=\"button\" 
                                         class=\"btn btn-";
-            // line 49
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 49, $this->source); })()), "isActive", [], "any", false, false, false, 49)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("danger") : ("success"));
+            // line 60
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 60, $this->source); })()), "isActive", [], "any", false, false, false, 60)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("danger") : ("success"));
             yield " toggle-status-btn\"
                                         data-user-id=\"";
-            // line 50
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 50, $this->source); })()), "id", [], "any", false, false, false, 50), "html", null, true);
+            // line 61
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 61, $this->source); })()), "id", [], "any", false, false, false, 61), "html", null, true);
             yield "\"
                                         data-user-name=\"";
-            // line 51
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 51, $this->source); })()), "fullName", [], "any", false, false, false, 51), "html", null, true);
+            // line 62
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 62, $this->source); })()), "fullName", [], "any", false, false, false, 62), "html", null, true);
             yield "\"
                                         data-current-status=\"";
-            // line 52
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 52, $this->source); })()), "isActive", [], "any", false, false, false, 52)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("active") : ("inactive"));
+            // line 63
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 63, $this->source); })()), "isActive", [], "any", false, false, false, 63)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("active") : ("inactive"));
             yield "\"
                                         data-csrf-token=\"";
-            // line 53
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("toggle-status" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 53, $this->source); })()), "id", [], "any", false, false, false, 53))), "html", null, true);
+            // line 64
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("toggle-status" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 64, $this->source); })()), "id", [], "any", false, false, false, 64))), "html", null, true);
             yield "\">
                                     <i class=\"bi bi-";
-            // line 54
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 54, $this->source); })()), "isActive", [], "any", false, false, false, 54)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("toggle-off") : ("toggle-on"));
+            // line 65
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 65, $this->source); })()), "isActive", [], "any", false, false, false, 65)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("toggle-off") : ("toggle-on"));
             yield " me-2\"></i>
                                     ";
-            // line 55
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 55, $this->source); })()), "isActive", [], "any", false, false, false, 55)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Désactiver") : ("Activer"));
+            // line 66
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 66, $this->source); })()), "isActive", [], "any", false, false, false, 66)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Désactiver") : ("Activer"));
             yield "
                                 </button>
                             ";
         }
-        // line 58
+        // line 69
         yield "                        </div>
                     </div>
                 </div>
@@ -225,79 +243,91 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
             <div class=\"card shadow-lg border-0 mb-4\">
                 <div class=\"card-body text-center p-4\">
                     ";
-        // line 72
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 72, $this->source); })()), "photo", [], "any", false, false, false, 72)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 73
+        // line 83
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 83, $this->source); })()), "photo", [], "any", false, false, false, 83)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 84
             yield "                        <div class=\"position-relative d-inline-block\">
                             <img src=\"";
-            // line 74
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 74, $this->source); })()), "photo", [], "any", false, false, false, 74))), "html", null, true);
+            // line 85
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 85, $this->source); })()), "photo", [], "any", false, false, false, 85))), "html", null, true);
             yield "\" 
-                                 alt=\"";
-            // line 75
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 75, $this->source); })()), "fullName", [], "any", false, false, false, 75), "html", null, true);
+                                alt=\"";
+            // line 86
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 86, $this->source); })()), "fullName", [], "any", false, false, false, 86), "html", null, true);
             yield "\" 
-                                 class=\"rounded-circle shadow-lg\"
-                                 style=\"width: 180px; height: 180px; object-fit: cover; border: 5px solid #0463f1;\">
-                            <span class=\"position-absolute bottom-0 end-0 bg-";
-            // line 78
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 78, $this->source); })()), "isActive", [], "any", false, false, false, 78)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("success") : ("danger"));
-            yield " rounded-circle p-2 border border-2 border-white\" 
-                                  style=\"width: 25px; height: 25px;\"
-                                  data-bs-toggle=\"tooltip\" 
-                                  title=\"";
-            // line 81
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 81, $this->source); })()), "isActive", [], "any", false, false, false, 81)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Compte actif") : ("Compte inactif"));
+                                class=\"rounded-circle shadow-lg\"
+                                style=\"width: 180px; height: 180px; object-fit: cover; border: 5px solid #0463f1;\">
+                            <span class=\"position-absolute bottom-0 end-0 
+                                ";
+            // line 90
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 90, $this->source); })()), "online", [], "any", false, false, false, 90)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                yield "bg-success";
+            } else {
+                yield "bg-secondary";
+            }
+            yield " 
+                                rounded-circle p-2 border border-2 border-white status-indicator\"
+                                style=\"width: 25px; height: 25px;\"
+                                data-bs-toggle=\"tooltip\" 
+                                title=\"";
+            // line 94
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 94, $this->source); })()), "online", [], "any", false, false, false, 94)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("En ligne") : ("Hors ligne"));
             yield "\"></span>
                         </div>
                     ";
         } else {
-            // line 84
+            // line 97
             yield "                        <div class=\"position-relative d-inline-block\">
                             <div class=\"rounded-circle d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg\"
-                                 style=\"width: 180px; height: 180px; border: 5px solid #0463f1;\">
+                                style=\"width: 180px; height: 180px; border: 5px solid #0463f1;\">
                                 <span class=\"display-2 fw-bold\">";
-            // line 87
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 87, $this->source); })()), "fullName", [], "any", false, false, false, 87))), "html", null, true);
+            // line 100
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 100, $this->source); })()), "fullName", [], "any", false, false, false, 100))), "html", null, true);
             yield "</span>
                             </div>
-                            <span class=\"position-absolute bottom-0 end-0 bg-";
-            // line 89
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 89, $this->source); })()), "isActive", [], "any", false, false, false, 89)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("success") : ("danger"));
-            yield " rounded-circle p-2 border border-2 border-white\" 
-                                  style=\"width: 25px; height: 25px;\"
-                                  data-bs-toggle=\"tooltip\" 
-                                  title=\"";
-            // line 92
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 92, $this->source); })()), "isActive", [], "any", false, false, false, 92)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Compte actif") : ("Compte inactif"));
+                            <span class=\"position-absolute bottom-0 end-0 
+                                ";
+            // line 103
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 103, $this->source); })()), "online", [], "any", false, false, false, 103)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                yield "bg-success";
+            } else {
+                yield "bg-secondary";
+            }
+            yield " 
+                                rounded-circle p-2 border border-2 border-white status-indicator\"
+                                style=\"width: 25px; height: 25px;\"
+                                data-bs-toggle=\"tooltip\" 
+                                title=\"";
+            // line 107
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 107, $this->source); })()), "online", [], "any", false, false, false, 107)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("En ligne") : ("Hors ligne"));
             yield "\"></span>
                         </div>
                     ";
         }
-        // line 95
+        // line 110
         yield "                    
                     <h3 class=\"mt-3 mb-1\">";
-        // line 96
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 96, $this->source); })()), "fullName", [], "any", false, false, false, 96), "html", null, true);
+        // line 111
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 111, $this->source); })()), "fullName", [], "any", false, false, false, 111), "html", null, true);
         yield "</h3>
                     <p class=\"text-muted mb-3\">";
-        // line 97
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 97, $this->source); })()), "email", [], "any", false, false, false, 97), "html", null, true);
+        // line 112
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 112, $this->source); })()), "email", [], "any", false, false, false, 112), "html", null, true);
         yield "</p>
                     
                     <div class=\"d-grid gap-2\">
                         <a href=\"tel:";
-        // line 100
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 100, $this->source); })()), "phone", [], "any", false, false, false, 100), "html", null, true);
+        // line 115
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 115, $this->source); })()), "phone", [], "any", false, false, false, 115), "html", null, true);
         yield "\" class=\"btn btn-outline-primary\">
                             <i class=\"bi bi-telephone me-2\"></i>";
-        // line 101
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 101, $this->source); })()), "phone", [], "any", false, false, false, 101), "html", null, true);
+        // line 116
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 116, $this->source); })()), "phone", [], "any", false, false, false, 116), "html", null, true);
         yield "
                         </a>
                         <a href=\"mailto:";
-        // line 103
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 103, $this->source); })()), "email", [], "any", false, false, false, 103), "html", null, true);
+        // line 118
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 118, $this->source); })()), "email", [], "any", false, false, false, 118), "html", null, true);
         yield "\" class=\"btn btn-outline-info\">
                             <i class=\"bi bi-envelope me-2\"></i>Envoyer un email
                         </a>
@@ -307,8 +337,8 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                     <small class=\"text-muted\">
                         <i class=\"bi bi-calendar-plus me-1\"></i>
                         Membre depuis ";
-        // line 111
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 111, $this->source); })()), "createdAt", [], "any", false, false, false, 111)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 111, $this->source); })()), "createdAt", [], "any", false, false, false, 111), "d/m/Y à H:i"), "html", null, true)) : ("N/A"));
+        // line 126
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 126, $this->source); })()), "createdAt", [], "any", false, false, false, 126)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 126, $this->source); })()), "createdAt", [], "any", false, false, false, 126), "d/m/Y à H:i"), "html", null, true)) : ("N/A"));
         yield "
                     </small>
                 </div>
@@ -323,48 +353,48 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                 </div>
                 <div class=\"card-body\">
                     ";
-        // line 124
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 124, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 124)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 125
+        // line 139
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 139, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 139)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 140
             yield "                        <div class=\"d-flex align-items-center mb-3\">
                             ";
-            // line 126
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 126, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 126), "logo", [], "any", false, false, false, 126)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 127
+            // line 141
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 141, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 141), "logo", [], "any", false, false, false, 141)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 142
                 yield "                                <img src=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/logos/" . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 127, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 127), "logo", [], "any", false, false, false, 127))), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/logos/" . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 142, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 142), "logo", [], "any", false, false, false, 142))), "html", null, true);
                 yield "\" 
                                      alt=\"";
-                // line 128
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 128, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 128), "companyName", [], "any", false, false, false, 128), "html", null, true);
+                // line 143
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 143, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 143), "companyName", [], "any", false, false, false, 143), "html", null, true);
                 yield "\" 
                                      class=\"rounded me-3\"
                                      style=\"width: 50px; height: 50px; object-fit: cover;\">
                             ";
             } else {
-                // line 132
+                // line 147
                 yield "                                <div class=\"rounded-circle bg-gradient-primary text-white d-flex align-items-center justify-content-center me-3\"
                                      style=\"width: 50px; height: 50px;\">
                                     <span class=\"fw-bold\">";
-                // line 134
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 134, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 134), "companyName", [], "any", false, false, false, 134))), "html", null, true);
+                // line 149
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 149, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 149), "companyName", [], "any", false, false, false, 149))), "html", null, true);
                 yield "</span>
                                 </div>
                             ";
             }
-            // line 137
+            // line 152
             yield "                            <div>
                                 <h6 class=\"mb-1\">";
-            // line 138
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 138, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 138), "companyName", [], "any", false, false, false, 138), "html", null, true);
+            // line 153
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 153, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 153), "companyName", [], "any", false, false, false, 153), "html", null, true);
             yield "</h6>
                                 <span class=\"badge plan-";
-            // line 139
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 139, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 139), "currentPlan", [], "any", false, false, false, 139), "html", null, true);
+            // line 154
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 154, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 154), "currentPlan", [], "any", false, false, false, 154), "html", null, true);
             yield "\">
                                     ";
-            // line 140
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 140, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 140), "currentPlanLabel", [], "any", false, false, false, 140), "html", null, true);
+            // line 155
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 155, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 155), "currentPlanLabel", [], "any", false, false, false, 155), "html", null, true);
             yield "
                                 </span>
                             </div>
@@ -374,36 +404,36 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                             <div class=\"d-flex justify-content-between mb-2\">
                                 <span class=\"text-muted\">Statut entreprise</span>
                                 ";
-            // line 148
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 148, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 148), "hmaActive", [], "any", false, false, false, 148)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 149
+            // line 163
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 163, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 163), "hmaActive", [], "any", false, false, false, 163)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 164
                 yield "                                    <span class=\"badge bg-success\">Active</span>
                                 ";
             } else {
-                // line 151
+                // line 166
                 yield "                                    <span class=\"badge bg-dark\">Bloquée</span>
                                 ";
             }
-            // line 153
+            // line 168
             yield "                            </div>
                             <div class=\"d-flex justify-content-between\">
                                 <span class=\"text-muted\">Utilisateurs</span>
                                 <span class=\"fw-semibold\">";
-            // line 156
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 156, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 156), "users", [], "any", false, false, false, 156)), "html", null, true);
+            // line 171
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 171, $this->source); })()), "hmaServiceId", [], "any", false, false, false, 171), "users", [], "any", false, false, false, 171)), "html", null, true);
             yield "</span>
                             </div>
                         </div>
                     ";
         } else {
-            // line 160
+            // line 175
             yield "                        <div class=\"text-center py-4\">
                             <i class=\"bi bi-building-x display-4 text-muted mb-3\"></i>
                             <p class=\"text-muted\">Utilisateur indépendant</p>
                         </div>
                     ";
         }
-        // line 165
+        // line 180
         yield "                </div>
             </div>
         </div>
@@ -424,19 +454,19 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                 <li class=\"list-group-item d-flex justify-content-between align-items-center px-0\">
                                     <span class=\"text-muted\">Nom complet</span>
                                     <span class=\"fw-semibold\">";
-        // line 184
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 184, $this->source); })()), "fullName", [], "any", false, false, false, 184), "html", null, true);
+        // line 199
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 199, $this->source); })()), "fullName", [], "any", false, false, false, 199), "html", null, true);
         yield "</span>
                                 </li>
                                 <li class=\"list-group-item d-flex justify-content-between align-items-center px-0\">
                                     <span class=\"text-muted\">Email</span>
                                     <a href=\"mailto:";
-        // line 188
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 188, $this->source); })()), "email", [], "any", false, false, false, 188), "html", null, true);
+        // line 203
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 203, $this->source); })()), "email", [], "any", false, false, false, 203), "html", null, true);
         yield "\" class=\"fw-semibold text-decoration-none\">
                                         ";
-        // line 189
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 189, $this->source); })()), "email", [], "any", false, false, false, 189), "html", null, true);
+        // line 204
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 204, $this->source); })()), "email", [], "any", false, false, false, 204), "html", null, true);
         yield "
                                         <i class=\"bi bi-box-arrow-up-right ms-1 small\"></i>
                                     </a>
@@ -444,12 +474,12 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                 <li class=\"list-group-item d-flex justify-content-between align-items-center px-0\">
                                     <span class=\"text-muted\">Téléphone</span>
                                     <a href=\"tel:";
-        // line 195
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 195, $this->source); })()), "phone", [], "any", false, false, false, 195), "html", null, true);
+        // line 210
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 210, $this->source); })()), "phone", [], "any", false, false, false, 210), "html", null, true);
         yield "\" class=\"fw-semibold text-decoration-none\">
                                         ";
-        // line 196
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 196, $this->source); })()), "phone", [], "any", false, false, false, 196), "html", null, true);
+        // line 211
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 211, $this->source); })()), "phone", [], "any", false, false, false, 211), "html", null, true);
         yield "
                                         <i class=\"bi bi-box-arrow-up-right ms-1 small\"></i>
                                     </a>
@@ -458,19 +488,19 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                     <span class=\"text-muted\">Date d'embauche</span>
                                     <span class=\"fw-semibold\">
                                         ";
-        // line 203
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 203, $this->source); })()), "employmentDate", [], "any", false, false, false, 203)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 204
+        // line 218
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 218, $this->source); })()), "employmentDate", [], "any", false, false, false, 218)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 219
             yield "                                            ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 204, $this->source); })()), "employmentDate", [], "any", false, false, false, 204), "d/m/Y"), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 219, $this->source); })()), "employmentDate", [], "any", false, false, false, 219), "d/m/Y"), "html", null, true);
             yield "
                                         ";
         } else {
-            // line 206
+            // line 221
             yield "                                            <span class=\"text-muted\">Non renseignée</span>
                                         ";
         }
-        // line 208
+        // line 223
         yield "                                    </span>
                                 </li>
                             </ul>
@@ -491,83 +521,83 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                 <li class=\"list-group-item d-flex justify-content-between align-items-center px-0\">
                                     <span class=\"text-muted\">ID Utilisateur</span>
                                     <span class=\"badge bg-primary\">#";
-        // line 227
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 227, $this->source); })()), "id", [], "any", false, false, false, 227), "html", null, true);
+        // line 242
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 242, $this->source); })()), "id", [], "any", false, false, false, 242), "html", null, true);
         yield "</span>
                                 </li>
                                 <li class=\"list-group-item d-flex justify-content-between align-items-center px-0\">
                                     <span class=\"text-muted\">Rôles</span>
                                     <div>
                                         ";
-        // line 232
+        // line 247
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 232, $this->source); })()), "roles", [], "any", false, false, false, 232));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 247, $this->source); })()), "roles", [], "any", false, false, false, 247));
         foreach ($context['_seq'] as $context["_key"] => $context["role"]) {
-            // line 233
+            // line 248
             yield "                                            ";
             if (($context["role"] != "ROLE_USER")) {
-                // line 234
+                // line 249
                 yield "                                                <span class=\"badge bg-info me-1\">
                                                     ";
-                // line 235
+                // line 250
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::titleCase($this->env->getCharset(), Twig\Extension\CoreExtension::lower($this->env->getCharset(), Twig\Extension\CoreExtension::replace($context["role"], ["ROLE_" => ""]))), "html", null, true);
                 yield "
                                                 </span>
                                             ";
             }
-            // line 238
+            // line 253
             yield "                                        ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['role'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 239
+        // line 254
         yield "                                    </div>
                                 </li>
                                 <li class=\"list-group-item d-flex justify-content-between align-items-center px-0\">
                                     <span class=\"text-muted\">Statut admin</span>
                                     ";
-        // line 243
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 243, $this->source); })()), "isActive", [], "any", false, false, false, 243)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 244
+        // line 258
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 258, $this->source); })()), "isActive", [], "any", false, false, false, 258)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 259
             yield "                                        <span class=\"badge bg-success\">Actif</span>
                                     ";
         } else {
-            // line 246
+            // line 261
             yield "                                        <span class=\"badge bg-danger\">Inactif</span>
                                     ";
         }
-        // line 248
+        // line 263
         yield "                                </li>
                                 <li class=\"list-group-item d-flex justify-content-between align-items-center px-0\">
                                     <span class=\"text-muted\">Statut quota</span>
                                     ";
-        // line 251
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 251, $this->source); })()), "subscriptionActive", [], "any", false, false, false, 251)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 252
+        // line 266
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 266, $this->source); })()), "subscriptionActive", [], "any", false, false, false, 266)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 267
             yield "                                        <span class=\"badge bg-success\">Inclus</span>
                                     ";
         } else {
-            // line 254
+            // line 269
             yield "                                        <span class=\"badge bg-warning\">Hors quota</span>
                                     ";
         }
-        // line 256
+        // line 271
         yield "                                </li>
                                 <li class=\"list-group-item d-flex justify-content-between align-items-center px-0\">
                                     <span class=\"text-muted\">1ère connexion</span>
                                     ";
-        // line 259
-        if (( !CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 259, $this->source); })()), "passwordChanged", [], "any", false, false, false, 259) &&  !CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 259, $this->source); })()), "isHmaOwner", [], "any", false, false, false, 259))) {
-            // line 260
+        // line 274
+        if (( !CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 274, $this->source); })()), "passwordChanged", [], "any", false, false, false, 274) &&  !CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 274, $this->source); })()), "isHmaOwner", [], "any", false, false, false, 274))) {
+            // line 275
             yield "                                        <span class=\"badge bg-warning text-dark\">En attente</span>
                                     ";
         } else {
-            // line 262
+            // line 277
             yield "                                        <span class=\"badge bg-success\">Effectuée</span>
                                     ";
         }
-        // line 264
+        // line 279
         yield "                                </li>
                             </ul>
                         </div>
@@ -587,8 +617,8 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                 <div class=\"col-4\">
                                     <div class=\"stat-box bg-light rounded-3 p-3 text-center\">
                                         <div class=\"h3 mb-1 fw-bold text-primary\">";
-        // line 282
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 282, $this->source); })()), "products", [], "any", false, false, false, 282)), "html", null, true);
+        // line 297
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 297, $this->source); })()), "products", [], "any", false, false, false, 297)), "html", null, true);
         yield "</div>
                                         <small class=\"text-muted\">Produits</small>
                                     </div>
@@ -596,8 +626,8 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                 <div class=\"col-4\">
                                     <div class=\"stat-box bg-light rounded-3 p-3 text-center\">
                                         <div class=\"h3 mb-1 fw-bold text-success\">";
-        // line 288
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 288, $this->source); })()), "orders", [], "any", false, false, false, 288)), "html", null, true);
+        // line 303
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 303, $this->source); })()), "orders", [], "any", false, false, false, 303)), "html", null, true);
         yield "</div>
                                         <small class=\"text-muted\">Commandes</small>
                                     </div>
@@ -605,8 +635,8 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                 <div class=\"col-4\">
                                     <div class=\"stat-box bg-light rounded-3 p-3 text-center\">
                                         <div class=\"h3 mb-1 fw-bold text-info\">";
-        // line 294
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 294, $this->source); })()), "stockMovements", [], "any", false, false, false, 294)), "html", null, true);
+        // line 309
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 309, $this->source); })()), "stockMovements", [], "any", false, false, false, 309)), "html", null, true);
         yield "</div>
                                         <small class=\"text-muted\">Mouvements</small>
                                     </div>
@@ -614,8 +644,8 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                 <div class=\"col-4\">
                                     <div class=\"stat-box bg-light rounded-3 p-3 text-center\">
                                         <div class=\"h3 mb-1 fw-bold text-warning\">";
-        // line 300
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 300, $this->source); })()), "categories", [], "any", false, false, false, 300)), "html", null, true);
+        // line 315
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 315, $this->source); })()), "categories", [], "any", false, false, false, 315)), "html", null, true);
         yield "</div>
                                         <small class=\"text-muted\">Catégories</small>
                                     </div>
@@ -623,8 +653,8 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                 <div class=\"col-4\">
                                     <div class=\"stat-box bg-light rounded-3 p-3 text-center\">
                                         <div class=\"h3 mb-1 fw-bold text-danger\">";
-        // line 306
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 306, $this->source); })()), "purchases", [], "any", false, false, false, 306)), "html", null, true);
+        // line 321
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 321, $this->source); })()), "purchases", [], "any", false, false, false, 321)), "html", null, true);
         yield "</div>
                                         <small class=\"text-muted\">Achats</small>
                                     </div>
@@ -632,8 +662,8 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                 <div class=\"col-4\">
                                     <div class=\"stat-box bg-light rounded-3 p-3 text-center\">
                                         <div class=\"h3 mb-1 fw-bold text-secondary\">";
-        // line 312
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 312, $this->source); })()), "stockMovements", [], "any", false, false, false, 312)), "html", null, true);
+        // line 327
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 327, $this->source); })()), "stockMovements", [], "any", false, false, false, 327)), "html", null, true);
         yield "</div>
                                         <small class=\"text-muted\">Stock</small>
                                     </div>
@@ -659,8 +689,8 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                     </span>
                                     <span class=\"fw-semibold\">
                                         ";
-        // line 336
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 336, $this->source); })()), "createdAt", [], "any", false, false, false, 336)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 336, $this->source); })()), "createdAt", [], "any", false, false, false, 336), "d/m/Y H:i"), "html", null, true)) : ("N/A"));
+        // line 351
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 351, $this->source); })()), "createdAt", [], "any", false, false, false, 351)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 351, $this->source); })()), "createdAt", [], "any", false, false, false, 351), "d/m/Y H:i"), "html", null, true)) : ("N/A"));
         yield "
                                     </span>
                                 </li>
@@ -670,8 +700,8 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                     </span>
                                     <span class=\"fw-semibold\">
                                         ";
-        // line 344
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 344, $this->source); })()), "updatedAt", [], "any", false, false, false, 344)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 344, $this->source); })()), "updatedAt", [], "any", false, false, false, 344), "d/m/Y H:i"), "html", null, true)) : ("N/A"));
+        // line 359
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 359, $this->source); })()), "updatedAt", [], "any", false, false, false, 359)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 359, $this->source); })()), "updatedAt", [], "any", false, false, false, 359), "d/m/Y H:i"), "html", null, true)) : ("N/A"));
         yield "
                                     </span>
                                 </li>
@@ -681,8 +711,8 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
                                     </span>
                                     <span class=\"fw-semibold\">
                                         ";
-        // line 352
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 352, $this->source); })()), "employmentDate", [], "any", false, false, false, 352)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 352, $this->source); })()), "employmentDate", [], "any", false, false, false, 352), "d/m/Y"), "html", null, true)) : ("Non renseignée"));
+        // line 367
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 367, $this->source); })()), "employmentDate", [], "any", false, false, false, 367)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["target_user"]) || array_key_exists("target_user", $context) ? $context["target_user"] : (function () { throw new RuntimeError('Variable "target_user" does not exist.', 367, $this->source); })()), "employmentDate", [], "any", false, false, false, 367), "d/m/Y"), "html", null, true)) : ("Non renseignée"));
         yield "
                                     </span>
                                 </li>
@@ -737,7 +767,7 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
         yield from [];
     }
 
-    // line 398
+    // line 413
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -750,7 +780,7 @@ class __TwigTemplate_69d66b0d7b3faa34387a0fd25e71b17c extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 399
+        // line 414
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
@@ -798,7 +828,7 @@ document.addEventListener('DOMContentLoaded', function() {
         yield from [];
     }
 
-    // line 437
+    // line 452
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -811,7 +841,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 438
+        // line 453
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
 <style>
@@ -950,6 +980,28 @@ document.addEventListener('DOMContentLoaded', function() {
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
 }
+
+/* Indicateur de statut en ligne */
+.status-indicator {
+    box-shadow: 0 0 0 3px white;
+    transition: all 0.3s ease;
+}
+.status-indicator.bg-success {
+    animation: pulse-green 2s infinite;
+}
+.status-indicator.bg-secondary {
+    animation: pulse-gray 2s infinite;
+}
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7), 0 0 0 3px white; }
+    70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0), 0 0 0 3px white; }
+    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0), 0 0 0 3px white; }
+}
+@keyframes pulse-gray {
+    0% { box-shadow: 0 0 0 0 rgba(108, 117, 125, 0.7), 0 0 0 3px white; }
+    70% { box-shadow: 0 0 0 10px rgba(108, 117, 125, 0), 0 0 0 3px white; }
+    100% { box-shadow: 0 0 0 0 rgba(108, 117, 125, 0), 0 0 0 3px white; }
+}
 </style>
 ";
         
@@ -982,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  815 => 438,  802 => 437,  754 => 399,  741 => 398,  685 => 352,  674 => 344,  663 => 336,  636 => 312,  627 => 306,  618 => 300,  609 => 294,  600 => 288,  591 => 282,  571 => 264,  567 => 262,  563 => 260,  561 => 259,  556 => 256,  552 => 254,  548 => 252,  546 => 251,  541 => 248,  537 => 246,  533 => 244,  531 => 243,  525 => 239,  519 => 238,  513 => 235,  510 => 234,  507 => 233,  503 => 232,  495 => 227,  474 => 208,  470 => 206,  464 => 204,  462 => 203,  452 => 196,  448 => 195,  439 => 189,  435 => 188,  428 => 184,  407 => 165,  400 => 160,  393 => 156,  388 => 153,  384 => 151,  380 => 149,  378 => 148,  367 => 140,  363 => 139,  359 => 138,  356 => 137,  350 => 134,  346 => 132,  339 => 128,  334 => 127,  332 => 126,  329 => 125,  327 => 124,  311 => 111,  300 => 103,  295 => 101,  291 => 100,  285 => 97,  281 => 96,  278 => 95,  272 => 92,  266 => 89,  261 => 87,  256 => 84,  250 => 81,  244 => 78,  238 => 75,  234 => 74,  231 => 73,  229 => 72,  213 => 58,  207 => 55,  203 => 54,  199 => 53,  195 => 52,  191 => 51,  187 => 50,  183 => 49,  180 => 48,  177 => 47,  169 => 43,  167 => 42,  161 => 39,  152 => 33,  148 => 32,  143 => 31,  137 => 27,  135 => 26,  130 => 24,  126 => 23,  122 => 22,  117 => 20,  103 => 8,  90 => 7,  66 => 5,  43 => 3,);
+        return array (  845 => 453,  832 => 452,  784 => 414,  771 => 413,  715 => 367,  704 => 359,  693 => 351,  666 => 327,  657 => 321,  648 => 315,  639 => 309,  630 => 303,  621 => 297,  601 => 279,  597 => 277,  593 => 275,  591 => 274,  586 => 271,  582 => 269,  578 => 267,  576 => 266,  571 => 263,  567 => 261,  563 => 259,  561 => 258,  555 => 254,  549 => 253,  543 => 250,  540 => 249,  537 => 248,  533 => 247,  525 => 242,  504 => 223,  500 => 221,  494 => 219,  492 => 218,  482 => 211,  478 => 210,  469 => 204,  465 => 203,  458 => 199,  437 => 180,  430 => 175,  423 => 171,  418 => 168,  414 => 166,  410 => 164,  408 => 163,  397 => 155,  393 => 154,  389 => 153,  386 => 152,  380 => 149,  376 => 147,  369 => 143,  364 => 142,  362 => 141,  359 => 140,  357 => 139,  341 => 126,  330 => 118,  325 => 116,  321 => 115,  315 => 112,  311 => 111,  308 => 110,  302 => 107,  291 => 103,  285 => 100,  280 => 97,  274 => 94,  263 => 90,  256 => 86,  252 => 85,  249 => 84,  247 => 83,  231 => 69,  225 => 66,  221 => 65,  217 => 64,  213 => 63,  209 => 62,  205 => 61,  201 => 60,  198 => 59,  195 => 58,  187 => 54,  185 => 53,  179 => 50,  172 => 45,  166 => 41,  160 => 37,  157 => 36,  152 => 33,  148 => 32,  143 => 31,  137 => 27,  135 => 26,  130 => 24,  126 => 23,  122 => 22,  117 => 20,  103 => 8,  90 => 7,  66 => 5,  43 => 3,);
     }
 
     public function getSourceContext(): Source
@@ -1021,9 +1073,20 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <i class=\"bi {{ target_user.statusIcon }} me-1\"></i>
                                         {{ target_user.statusLabel }}
                                     </span>
+                                    {# Indicateur de présence en ligne #}
+                                    {% if target_user.online %}
+                                        <span class=\"badge bg-success py-2 px-3\">
+                                            <i class=\"bi bi-circle-fill me-1\" style=\"font-size: 0.6rem;\"></i>En ligne
+                                        </span>
+                                    {% else %}
+                                        <span class=\"badge bg-secondary py-2 px-3\">
+                                            <i class=\"bi bi-circle me-1\" style=\"font-size: 0.6rem;\"></i>Hors ligne
+                                        </span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
+                        <!-- Boutons d'action (inchangés) -->
                         <div class=\"btn-group\">
                             <a href=\"{{ path('app_user_index') }}\" class=\"btn btn-light\">
                                 <i class=\"bi bi-arrow-left me-2\"></i>Retour
@@ -1061,24 +1124,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     {% if target_user.photo %}
                         <div class=\"position-relative d-inline-block\">
                             <img src=\"{{ asset('uploads/users/' ~ target_user.photo) }}\" 
-                                 alt=\"{{ target_user.fullName }}\" 
-                                 class=\"rounded-circle shadow-lg\"
-                                 style=\"width: 180px; height: 180px; object-fit: cover; border: 5px solid #0463f1;\">
-                            <span class=\"position-absolute bottom-0 end-0 bg-{{ target_user.isActive ? 'success' : 'danger' }} rounded-circle p-2 border border-2 border-white\" 
-                                  style=\"width: 25px; height: 25px;\"
-                                  data-bs-toggle=\"tooltip\" 
-                                  title=\"{{ target_user.isActive ? 'Compte actif' : 'Compte inactif' }}\"></span>
+                                alt=\"{{ target_user.fullName }}\" 
+                                class=\"rounded-circle shadow-lg\"
+                                style=\"width: 180px; height: 180px; object-fit: cover; border: 5px solid #0463f1;\">
+                            <span class=\"position-absolute bottom-0 end-0 
+                                {% if target_user.online %}bg-success{% else %}bg-secondary{% endif %} 
+                                rounded-circle p-2 border border-2 border-white status-indicator\"
+                                style=\"width: 25px; height: 25px;\"
+                                data-bs-toggle=\"tooltip\" 
+                                title=\"{{ target_user.online ? 'En ligne' : 'Hors ligne' }}\"></span>
                         </div>
                     {% else %}
                         <div class=\"position-relative d-inline-block\">
                             <div class=\"rounded-circle d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg\"
-                                 style=\"width: 180px; height: 180px; border: 5px solid #0463f1;\">
+                                style=\"width: 180px; height: 180px; border: 5px solid #0463f1;\">
                                 <span class=\"display-2 fw-bold\">{{ target_user.fullName|first|upper }}</span>
                             </div>
-                            <span class=\"position-absolute bottom-0 end-0 bg-{{ target_user.isActive ? 'success' : 'danger' }} rounded-circle p-2 border border-2 border-white\" 
-                                  style=\"width: 25px; height: 25px;\"
-                                  data-bs-toggle=\"tooltip\" 
-                                  title=\"{{ target_user.isActive ? 'Compte actif' : 'Compte inactif' }}\"></span>
+                            <span class=\"position-absolute bottom-0 end-0 
+                                {% if target_user.online %}bg-success{% else %}bg-secondary{% endif %} 
+                                rounded-circle p-2 border border-2 border-white status-indicator\"
+                                style=\"width: 25px; height: 25px;\"
+                                data-bs-toggle=\"tooltip\" 
+                                title=\"{{ target_user.online ? 'En ligne' : 'Hors ligne' }}\"></span>
                         </div>
                     {% endif %}
                     
@@ -1560,6 +1627,28 @@ document.addEventListener('DOMContentLoaded', function() {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
+}
+
+/* Indicateur de statut en ligne */
+.status-indicator {
+    box-shadow: 0 0 0 3px white;
+    transition: all 0.3s ease;
+}
+.status-indicator.bg-success {
+    animation: pulse-green 2s infinite;
+}
+.status-indicator.bg-secondary {
+    animation: pulse-gray 2s infinite;
+}
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7), 0 0 0 3px white; }
+    70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0), 0 0 0 3px white; }
+    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0), 0 0 0 3px white; }
+}
+@keyframes pulse-gray {
+    0% { box-shadow: 0 0 0 0 rgba(108, 117, 125, 0.7), 0 0 0 3px white; }
+    70% { box-shadow: 0 0 0 10px rgba(108, 117, 125, 0), 0 0 0 3px white; }
+    100% { box-shadow: 0 0 0 0 rgba(108, 117, 125, 0), 0 0 0 3px white; }
 }
 </style>
 {% endblock %}", "admin/user/show.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\user\\show.html.twig");

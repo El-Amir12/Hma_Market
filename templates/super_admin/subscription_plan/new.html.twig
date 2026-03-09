@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau plan d'abonnement{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4 py-5">
+    <!-- En-tête moderne -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="modern-header position-relative overflow-hidden rounded-5 shadow-lg p-5 text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="position-relative z-1">
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="icon-wrapper bg-white bg-opacity-20 rounded-4 p-4">
+                            <i class="bi bi-plus-circle text-white display-4"></i>
+                        </div>
+                        <div>
+                            <h1 class="display-5 fw-bold mb-2">Nouveau plan d'abonnement</h1>
+                            <p class="text-white-50 mb-0 fs-5">Créez un nouveau type d'abonnement pour vos clients</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Vague décorative en bas -->
+                <div class="wave-bottom position-absolute bottom-0 start-0 end-0">
+                    <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white" fill-opacity="0.2"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages flash -->
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }} alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-{{ label == 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill' }} fs-4 me-3"></i>
+                    <span>{{ message }}</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <!-- Formulaire -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-5">
+                <div class="card-body p-5">
+                    {% include 'super_admin/subscription_plan/_form.html.twig' with {'button_label': 'Créer le plan'} %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Styles complémentaires -->
+<style>
+.modern-header {
+    min-height: 220px;
+}
+.icon-wrapper {
+    backdrop-filter: blur(8px);
+    transition: transform 0.3s ease;
+}
+.icon-wrapper:hover {
+    transform: scale(1.05) rotate(5deg);
+}
+.wave-bottom svg {
+    width: 100%;
+    height: auto;
+}
+</style>
+{% endblock %}

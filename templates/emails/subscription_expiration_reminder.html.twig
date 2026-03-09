@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Rappel : Votre abonnement expire bientôt - {{ app_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header img {
+            max-width: 150px;
+            max-height: 80px;
+            margin-bottom: 15px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 300;
+        }
+        .content {
+            padding: 30px;
+        }
+        .content h2 {
+            color: #333;
+            margin-top: 0;
+            font-size: 22px;
+        }
+        .alert {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .details {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .details ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .details li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+        .details li:last-child {
+            border-bottom: none;
+        }
+        .details li strong {
+            width: 140px;
+            color: #495057;
+        }
+        .details li span {
+            color: #212529;
+            font-weight: 500;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(240, 147, 251, 0.4);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(240, 147, 251, 0.5);
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer a {
+            color: #f5576c;
+            text-decoration: none;
+        }
+        .support {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ global_logo_url }}" alt="{{ app_name }}">
+            <h1>Rappel d'expiration</h1>
+        </div>
+        <div class="content">
+            <h2>Bonjour {{ user.fullName ?? user.email }},</h2>
+
+            <div class="alert">
+                <strong>⚠️ Votre abonnement arrive à expiration dans 3 jours.</strong>
+            </div>
+
+            <p>L'abonnement de votre entreprise <strong>{{ company.companyName }}</strong> expire le <strong>{{ expiration_date|date('d/m/Y') }}</strong>.</p>
+
+            <p>Passé cette date, votre compte basculera automatiquement en mode gratuit (Freemium) avec des fonctionnalités limitées. Pour continuer à bénéficier de tous les avantages de votre forfait actuel, nous vous invitons à renouveler votre abonnement dès maintenant.</p>
+
+            <div class="details">
+                <ul>
+                    <li>
+                        <strong>Plan actuel :</strong>
+                        <span>{{ company.currentPlanLabel }}</span>
+                    </li>
+                    <li>
+                        <strong>Date d'expiration :</strong>
+                        <span>{{ expiration_date|date('d/m/Y') }}</span>
+                    </li>
+                </ul>
+            </div>
+
+            <p style="text-align: center; margin: 30px 0;">
+                <a href="{{ renewal_url }}" class="btn">Renouveler mon abonnement</a>
+            </p>
+
+            <div class="support">
+                <p>Si vous avez des questions, n'hésitez pas à contacter notre support à <a href="mailto:{{ support_email }}">{{ support_email }}</a>.</p>
+            </div>
+        </div>
+        <div class="footer">
+            &copy; {{ "now"|date('Y') }} {{ app_name }}. Tous droits réservés.
+        </div>
+    </div>
+</body>
+</html>

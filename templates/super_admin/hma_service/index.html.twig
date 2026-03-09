@@ -397,6 +397,17 @@
                         <option value="premium" {{ filters.plan == 'premium' ? 'selected' : '' }}>Premium</option>
                     </select>
                 </div>
+                <!-- Nouveau filtre type d'entreprise -->
+                <div class="col-md-2">
+                <select id="companyTypeFilter" class="form-select">
+                    <option value="">Tous les types</option>
+                    {% for type in companyTypes %}
+                        <option value="{{ type }}" {{ filters.company_type == type ? 'selected' : '' }}>
+                            {{ type|replace({'-': ' '})|title }} {# affiche "Supermarket", "Grocery Store", etc. #}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
                 <div class="col-md-2">
                     <input type="date" id="dateFrom" class="form-control" value="{{ filters.date_from }}" placeholder="Date début">
                 </div>
@@ -424,6 +435,12 @@
                         <i class="bi bi-x ms-1"></i>
                     </span>
                 {% endif %}
+                {% if filters.company_type %}
+                    <span class="badge bg-primary filter-badge" onclick="removeFilter('company_type')">
+                        Type: {{ filters.company_type|upper }}
+                        <i class="bi bi-x ms-1"></i>
+                    </span>
+                {% endif %}
                 {% if filters.status %}
                     <span class="badge bg-primary filter-badge" onclick="removeFilter('status')">
                         Statut: {{ filters.status == 'active' ? 'Actives' : (filters.status == 'inactive' ? 'Inactives' : 'Essai') }}
@@ -445,7 +462,6 @@
             </div>
         </div>
     </div>
-
     <!-- Tableau des entreprises avec scroll -->
     <div class="card">
         <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
@@ -1200,6 +1216,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.applyFilters = function() {
         const search = document.getElementById('searchInput').value.trim();
         const plan = document.getElementById('planFilter').value;
+        const companyType = document.getElementById('companyTypeFilter').value; // ✅ AJOUT
         const dateFrom = document.getElementById('dateFrom').value;
         const dateTo = document.getElementById('dateTo').value;
         
@@ -1210,6 +1227,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (plan) url.searchParams.set('plan', plan);
         else url.searchParams.delete('plan');
+        
+        if (companyType) url.searchParams.set('company_type', companyType); // ✅ AJOUT
+        else url.searchParams.delete('company_type');
         
         if (dateFrom) url.searchParams.set('date_from', dateFrom);
         else url.searchParams.delete('date_from');
@@ -1225,6 +1245,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let url = new URL(window.location.href);
         url.searchParams.delete('search');
         url.searchParams.delete('plan');
+        url.searchParams.delete('company_type'); // ✅ AJOUT
         url.searchParams.delete('status');
         url.searchParams.delete('date_from');
         url.searchParams.delete('date_to');

@@ -32,9 +32,20 @@
                                         <i class="bi {{ target_user.statusIcon }} me-1"></i>
                                         {{ target_user.statusLabel }}
                                     </span>
+                                    {# Indicateur de présence en ligne #}
+                                    {% if target_user.online %}
+                                        <span class="badge bg-success py-2 px-3">
+                                            <i class="bi bi-circle-fill me-1" style="font-size: 0.6rem;"></i>En ligne
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary py-2 px-3">
+                                            <i class="bi bi-circle me-1" style="font-size: 0.6rem;"></i>Hors ligne
+                                        </span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
+                        <!-- Boutons d'action (inchangés) -->
                         <div class="btn-group">
                             <a href="{{ path('app_user_index') }}" class="btn btn-light">
                                 <i class="bi bi-arrow-left me-2"></i>Retour
@@ -72,24 +83,28 @@
                     {% if target_user.photo %}
                         <div class="position-relative d-inline-block">
                             <img src="{{ asset('uploads/users/' ~ target_user.photo) }}" 
-                                 alt="{{ target_user.fullName }}" 
-                                 class="rounded-circle shadow-lg"
-                                 style="width: 180px; height: 180px; object-fit: cover; border: 5px solid #0463f1;">
-                            <span class="position-absolute bottom-0 end-0 bg-{{ target_user.isActive ? 'success' : 'danger' }} rounded-circle p-2 border border-2 border-white" 
-                                  style="width: 25px; height: 25px;"
-                                  data-bs-toggle="tooltip" 
-                                  title="{{ target_user.isActive ? 'Compte actif' : 'Compte inactif' }}"></span>
+                                alt="{{ target_user.fullName }}" 
+                                class="rounded-circle shadow-lg"
+                                style="width: 180px; height: 180px; object-fit: cover; border: 5px solid #0463f1;">
+                            <span class="position-absolute bottom-0 end-0 
+                                {% if target_user.online %}bg-success{% else %}bg-secondary{% endif %} 
+                                rounded-circle p-2 border border-2 border-white status-indicator"
+                                style="width: 25px; height: 25px;"
+                                data-bs-toggle="tooltip" 
+                                title="{{ target_user.online ? 'En ligne' : 'Hors ligne' }}"></span>
                         </div>
                     {% else %}
                         <div class="position-relative d-inline-block">
                             <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg"
-                                 style="width: 180px; height: 180px; border: 5px solid #0463f1;">
+                                style="width: 180px; height: 180px; border: 5px solid #0463f1;">
                                 <span class="display-2 fw-bold">{{ target_user.fullName|first|upper }}</span>
                             </div>
-                            <span class="position-absolute bottom-0 end-0 bg-{{ target_user.isActive ? 'success' : 'danger' }} rounded-circle p-2 border border-2 border-white" 
-                                  style="width: 25px; height: 25px;"
-                                  data-bs-toggle="tooltip" 
-                                  title="{{ target_user.isActive ? 'Compte actif' : 'Compte inactif' }}"></span>
+                            <span class="position-absolute bottom-0 end-0 
+                                {% if target_user.online %}bg-success{% else %}bg-secondary{% endif %} 
+                                rounded-circle p-2 border border-2 border-white status-indicator"
+                                style="width: 25px; height: 25px;"
+                                data-bs-toggle="tooltip" 
+                                title="{{ target_user.online ? 'En ligne' : 'Hors ligne' }}"></span>
                         </div>
                     {% endif %}
                     
@@ -571,6 +586,28 @@ document.addEventListener('DOMContentLoaded', function() {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
+}
+
+/* Indicateur de statut en ligne */
+.status-indicator {
+    box-shadow: 0 0 0 3px white;
+    transition: all 0.3s ease;
+}
+.status-indicator.bg-success {
+    animation: pulse-green 2s infinite;
+}
+.status-indicator.bg-secondary {
+    animation: pulse-gray 2s infinite;
+}
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7), 0 0 0 3px white; }
+    70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0), 0 0 0 3px white; }
+    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0), 0 0 0 3px white; }
+}
+@keyframes pulse-gray {
+    0% { box-shadow: 0 0 0 0 rgba(108, 117, 125, 0.7), 0 0 0 3px white; }
+    70% { box-shadow: 0 0 0 10px rgba(108, 117, 125, 0), 0 0 0 3px white; }
+    100% { box-shadow: 0 0 0 0 rgba(108, 117, 125, 0), 0 0 0 3px white; }
 }
 </style>
 {% endblock %}

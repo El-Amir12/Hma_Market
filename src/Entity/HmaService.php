@@ -29,6 +29,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             'max_orders_per_month' => PHP_INT_MAX,
             'max_categories' => PHP_INT_MAX,
             'max_suppliers' => PHP_INT_MAX,
+            'max_recipes' => PHP_INT_MAX,
             'features' => ['all']
         ],
         self::PLAN_FREEMIUM => [
@@ -37,6 +38,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             'max_orders_per_month' => 100,
             'max_categories' => 10,
             'max_suppliers' => 5,
+            'max_recipes' => 15,
             'features' => ['basic_inventory', 'basic_reports']
         ],
         self::PLAN_BASIC => [
@@ -45,6 +47,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             'max_orders_per_month' => 500,
             'max_categories' => 20,
             'max_suppliers' => 15,
+            'max_recipes' => 50,
             'features' => ['advanced_inventory', 'reports', 'api_access']
         ],
         self::PLAN_PREMIUM => [
@@ -53,6 +56,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             'max_orders_per_month' => PHP_INT_MAX,
             'max_categories' => PHP_INT_MAX,
             'max_suppliers' => PHP_INT_MAX,
+            'max_recipes' => PHP_INT_MAX,
             'features' => ['all', 'priority_support', 'custom_domain', 'white_label']
         ],
     ];
@@ -138,6 +142,10 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(options: ['default' => 0])]
     private int $supplierCount = 0;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private int $recipeCount = 0;
+
+
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $country = null;
 
@@ -219,6 +227,18 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: StockMovement::class, mappedBy: 'hma_service', cascade: ['remove'], orphanRemoval: true)]
     private Collection $stockMovements;
 
+    /**
+     * @var Collection<int, Recipe>
+     */
+    #[ORM\OneToMany(targetEntity: Recipe::class, mappedBy: 'hma_service', orphanRemoval: true)]
+    private Collection $recipes;
+
+    /**
+     * @var Collection<int, Promotion>
+     */
+    #[ORM\OneToMany(targetEntity: Promotion::class, mappedBy: 'hma_service', orphanRemoval: true)]
+    private Collection $promotions;
+
     public function __construct()
     {
         $this->subscriptions = new ArrayCollection();
@@ -244,6 +264,8 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
         
         // Initialiser la période d'essai à 14 jours
         $this->trialEndsAt = (new \DateTime())->modify('+14 days');
+        $this->recipes = new ArrayCollection();
+        $this->promotions = new ArrayCollection();
     }
 
     // ==================== GETTERS & SETTERS EXISTANTS ====================
@@ -538,6 +560,17 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSupplierCount(int $supplierCount): static
     {
         $this->supplierCount = $supplierCount;
+        return $this;
+    }
+
+    public function getRecipeCount(): int
+    {
+        return $this->recipeCount;
+    }
+
+    public function setRecipeCount(int $recipeCount): static
+    {
+        $this->recipeCount = $recipeCount;
         return $this;
     }
 
@@ -909,12 +942,14 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getCurrentPlan(): string
     {
-        // Si en période d'essai et essai non expiré
+        // Si en période d'essai et non expirée
         if ($this->trialEndsAt && $this->trialEndsAt > new \DateTime()) {
             return self::PLAN_TRIAL;
         }
-        
-        // Sinon retourner le plan souscrit
+        // Si le plan stocké est 'trial' et l'essai expiré, on est en freemium
+        if ($this->subscriptionPlan === self::PLAN_TRIAL) {
+            return self::PLAN_FREEMIUM;
+        }
         return $this->subscriptionPlan ?? self::PLAN_FREEMIUM;
     }
 
@@ -1134,10 +1169,22 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\PreUpdate]
     public function updateCounters(): void
     {
-        $this->userCount = $this->users->count();
-        $this->productCount = $this->products->count();
-        $this->categoryCount = $this->categories->count();
-        $this->supplierCount = $this->suppliers->count();
+        // Utilisateurs actifs
+        $this->userCount = $this->users->filter(fn(User $u) => $u->isSubscriptionActive())->count();
+        
+        // Produits actifs
+        $this->productCount = $this->products->filter(fn(Product $p) => $p->isSubscriptionActive())->count();
+        
+        // Catégories actives
+        $this->categoryCount = $this->categories->filter(fn(Category $c) => $c->isSubscriptionActive())->count();
+        
+        // Fournisseurs actifs
+        $this->supplierCount = $this->suppliers->filter(fn(Supplier $s) => $s->isSubscriptionActive())->count();
+        
+        // Recettes actives (si vous avez ajouté Recipe)
+        $this->recipeCount = $this->recipes->filter(fn(Recipe $r) => $r->isSubscriptionActive())->count();
+        
+        // Pour les commandes, si vous n'avez pas de champ subscription_active, comptez toutes
         $this->orderCount = $this->orders->count();
     }
 
@@ -1219,4 +1266,142 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             default => 'bi-question-circle'
         };
     }
+
+    /**
+     * Vérifie si l'entreprise peut souscrire (pas d'abonnement actif et pas en période d'essai valide)
+     */
+    public function canSubscribe(): bool
+    {
+        return !$this->hasActiveSubscription() && !$this->isInTrialPeriod();
+    }
+
+    /**
+     * Met à jour le statut d'abonnement des utilisateurs selon les limites du plan actuel.
+     * Active les plus anciens jusqu'à la limite par rôle, désactive les autres.
+     * Retourne la liste des utilisateurs qui viennent d'être activés.
+     *
+     * @return User[]
+     */
+    public function updateUsersSubscriptionStatus(): array
+    {
+        $limits = $this->getCurrentLimits();
+        $maxPerRole = $limits['max_users_per_role'];
+        $activatedUsers = [];
+
+        // Regrouper les utilisateurs par rôle (ignorer ROLE_USER)
+        $usersByRole = [];
+        foreach ($this->users as $user) {
+            foreach ($user->getRoles() as $role) {
+                if ($role === 'ROLE_USER') continue;
+                if (!isset($usersByRole[$role])) {
+                    $usersByRole[$role] = [];
+                }
+                $usersByRole[$role][] = $user;
+            }
+        }
+
+        // Pour chaque rôle, trier par date de création (du plus ancien au plus récent)
+        foreach ($usersByRole as $role => &$users) {
+            usort($users, function($a, $b) {
+                return $a->getCreatedAt() <=> $b->getCreatedAt();
+            });
+
+            foreach ($users as $index => $user) {
+                $oldStatus = $user->isSubscriptionActive();
+                if ($index < $maxPerRole) {
+                    $user->setSubscriptionActive(true);
+                    if (!$oldStatus) {
+                        $activatedUsers[] = $user;
+                    }
+                } else {
+                    $user->setSubscriptionActive(false);
+                }
+            }
+        }
+
+        return $activatedUsers;
+    }
+
+    /**
+     * @return Collection<int, Recipe>
+     */
+    public function getRecipes(): Collection
+    {
+        return $this->recipes;
+    }
+
+    public function addRecipe(Recipe $recipe): static
+    {
+        if (!$this->recipes->contains($recipe)) {
+            $this->recipes->add($recipe);
+            $recipe->setHmaService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipe(Recipe $recipe): static
+    {
+        if ($this->recipes->removeElement($recipe)) {
+            // set the owning side to null (unless already changed)
+            if ($recipe->getHmaService() === $this) {
+                $recipe->setHmaService(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Promotion>
+     */
+    public function getPromotions(): Collection
+    {
+        return $this->promotions;
+    }
+
+    public function addPromotion(Promotion $promotion): static
+    {
+        if (!$this->promotions->contains($promotion)) {
+            $this->promotions->add($promotion);
+            $promotion->setHmaService($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotion(Promotion $promotion): static
+    {
+        if ($this->promotions->removeElement($promotion)) {
+            // set the owning side to null (unless already changed)
+            if ($promotion->getHmaService() === $this) {
+                $promotion->setHmaService(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function canChangePlan(): bool
+    {
+        // On peut toujours changer de plan, même si on est en période d'essai ou abonnement actif
+        // On pourrait ajouter des restrictions (ex: ne pas pouvoir downgrade si trop d'éléments)
+        return true;
+    }
+
+    public function canAddRecipe(): bool
+    {
+        $limits = $this->getCurrentLimits();
+        return $this->recipeCount < $limits['max_recipes'];
+    }
+
+    public function getRemainingRecipes(): int
+    {
+        $limits = $this->getCurrentLimits();
+        if ($limits['max_recipes'] === PHP_INT_MAX) {
+            return PHP_INT_MAX;
+        }
+        return max(0, $limits['max_recipes'] - $this->recipeCount);
+    }
+
 }

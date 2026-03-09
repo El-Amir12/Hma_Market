@@ -1,4 +1,5 @@
 <?php
+// src/Entity/SubscriptionPlan.php
 
 namespace App\Entity;
 
@@ -9,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SubscriptionPlanRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class SubscriptionPlan
 {
     #[ORM\Id]
@@ -16,7 +18,7 @@ class SubscriptionPlan
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, unique: true)]
     private ?string $name = null;
 
     #[ORM\Column(length: 100)]
@@ -29,30 +31,39 @@ class SubscriptionPlan
     private ?string $priceYearly = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $maxEmployeesPerRole = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $maxDailySales = null;
+    private ?int $maxUsersPerRole = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $maxProducts = null;
 
-    #[ORM\Column]
-    private ?bool $isUnlimited = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $maxOrdersPerMonth = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $maxCategories = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $maxSuppliers = null;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $features = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column]
-    private ?bool $isActive = null;
+    private ?bool $isActive = true;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     /**
      * @var Collection<int, Subscription>
      */
-    #[ORM\OneToMany(targetEntity: Subscription::class, mappedBy: 'subscription_plan_id')]
+    #[ORM\OneToMany(targetEntity: Subscription::class, mappedBy: 'subscriptionPlan')]
     private Collection $subscriptions;
 
     public function __construct()
@@ -73,7 +84,6 @@ class SubscriptionPlan
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -85,7 +95,6 @@ class SubscriptionPlan
     public function setDisplayName(string $displayName): static
     {
         $this->displayName = $displayName;
-
         return $this;
     }
 
@@ -97,7 +106,6 @@ class SubscriptionPlan
     public function setPriceMonthly(string $priceMonthly): static
     {
         $this->priceMonthly = $priceMonthly;
-
         return $this;
     }
 
@@ -109,31 +117,17 @@ class SubscriptionPlan
     public function setPriceYearly(string $priceYearly): static
     {
         $this->priceYearly = $priceYearly;
-
         return $this;
     }
 
-    public function getMaxEmployeesPerRole(): ?int
+    public function getMaxUsersPerRole(): ?int
     {
-        return $this->maxEmployeesPerRole;
+        return $this->maxUsersPerRole;
     }
 
-    public function setMaxEmployeesPerRole(?int $maxEmployeesPerRole): static
+    public function setMaxUsersPerRole(?int $maxUsersPerRole): static
     {
-        $this->maxEmployeesPerRole = $maxEmployeesPerRole;
-
-        return $this;
-    }
-
-    public function getMaxDailySales(): ?int
-    {
-        return $this->maxDailySales;
-    }
-
-    public function setMaxDailySales(?int $maxDailySales): static
-    {
-        $this->maxDailySales = $maxDailySales;
-
+        $this->maxUsersPerRole = $maxUsersPerRole;
         return $this;
     }
 
@@ -145,19 +139,54 @@ class SubscriptionPlan
     public function setMaxProducts(?int $maxProducts): static
     {
         $this->maxProducts = $maxProducts;
-
         return $this;
     }
 
-    public function isUnlimited(): ?bool
+    public function getMaxOrdersPerMonth(): ?int
     {
-        return $this->isUnlimited;
+        return $this->maxOrdersPerMonth;
     }
 
-    public function setIsUnlimited(bool $isUnlimited): static
+    public function setMaxOrdersPerMonth(?int $maxOrdersPerMonth): static
     {
-        $this->isUnlimited = $isUnlimited;
+        $this->maxOrdersPerMonth = $maxOrdersPerMonth;
+        return $this;
+    }
 
+    public function getMaxCategories(): ?int
+    {
+        return $this->maxCategories;
+    }
+
+    public function setMaxCategories(?int $maxCategories): static
+    {
+        $this->maxCategories = $maxCategories;
+        return $this;
+    }
+
+    public function getMaxSuppliers(): ?int
+    {
+        return $this->maxSuppliers;
+    }
+
+    public function setMaxSuppliers(?int $maxSuppliers): static
+    {
+        $this->maxSuppliers = $maxSuppliers;
+        return $this;
+    }
+
+    /**
+     * Retourne les fonctionnalités sous forme de tableau.
+     * Si la valeur est null en base, retourne un tableau vide.
+     */
+    public function getFeatures(): array
+    {
+        return $this->features ?? [];
+    }
+
+    public function setFeatures(array $features): static
+    {
+        $this->features = $features;
         return $this;
     }
 
@@ -169,7 +198,6 @@ class SubscriptionPlan
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -181,7 +209,6 @@ class SubscriptionPlan
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
-
         return $this;
     }
 
@@ -193,8 +220,30 @@ class SubscriptionPlan
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     /**
@@ -209,21 +258,30 @@ class SubscriptionPlan
     {
         if (!$this->subscriptions->contains($subscription)) {
             $this->subscriptions->add($subscription);
-            $subscription->setSubscriptionPlanId($this);
+            $subscription->setSubscriptionPlan($this);
         }
-
         return $this;
     }
 
     public function removeSubscription(Subscription $subscription): static
     {
         if ($this->subscriptions->removeElement($subscription)) {
-            // set the owning side to null (unless already changed)
-            if ($subscription->getSubscriptionPlanId() === $this) {
-                $subscription->setSubscriptionPlanId(null);
+            if ($subscription->getSubscriptionPlan() === $this) {
+                $subscription->setSubscriptionPlan(null);
             }
         }
-
         return $this;
+    }
+
+    /**
+     * Vérifie si le plan est illimité (tous les champs de limite sont null)
+     */
+    public function isUnlimited(): bool
+    {
+        return $this->maxUsersPerRole === null 
+            && $this->maxProducts === null 
+            && $this->maxOrdersPerMonth === null
+            && $this->maxCategories === null
+            && $this->maxSuppliers === null;
     }
 }
