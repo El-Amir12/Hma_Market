@@ -1,88 +1,219 @@
 <?php
-// src/Controller/Admin/ProductController.php
 
 namespace App\Controller\Admin;
 
+use App\Entity\HmaService;
 use App\Entity\Product;
+use App\Entity\Promotion;
 use App\Form\ProductType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use App\Service\UnitConverter; // Ajout de l'import
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/product')]
 final class ProductController extends AbstractController
 {
-    private SluggerInterface $slugger;
-    
     private const DEFAULT_PRODUCT_IMAGE = 'default-product.png';
 
-    public function __construct(SluggerInterface $slugger)
+    public function __construct(
+        private readonly SluggerInterface $slugger,
+        private readonly UnitConverter $unitConverter // Injection de UnitConverter
+    ) {}
+
+    private function getCurrentHmaService(): ?HmaService
     {
-        $this->slugger = $slugger;
+        $user = $this->getUser();
+        if (!$user) return null;
+        if ($user instanceof HmaService) return $user;
+        if ($user instanceof \App\Entity\User) return $user->getHmaService();
+        return null;
     }
 
     private function checkAccess(): void
     {
         if (!$this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_MANAGER') && !$this->isGranted('ROLE_STOCK_MANAGER')) {
-            throw $this->createAccessDeniedException('Accès refusé. Vous devez être administrateur, manager ou responsable stock.');
+            throw new AccessDeniedException('Accès refusé. Vous devez être administrateur, manager ou responsable stock.');
+        }
+    }
+
+    private function checkOwnership(Product $product, HmaService $hmaService): void
+    {
+        $productService = $product->getHmaService();
+        if (!$productService) {
+            throw new AccessDeniedException('Ce produit n\'a pas de service associé.');
+        }
+        if ($productService->getId() !== $hmaService->getId()) {
+            throw new AccessDeniedException('Ce produit ne vous appartient pas.');
         }
     }
 
     #[Route(name: 'app_admin_product_index', methods: ['GET'])]
-    public function index(Request $request, ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
+    public function index(Request $request, ProductRepository $productRepository, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response
     {
         $this->checkAccess();
-        
-        // Récupérer les paramètres de pagination et recherche
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé à votre compte.');
+        }
+
         $page = $request->query->getInt('page', 1);
         $limit = 12;
         $search = $request->query->get('search', '');
         $status = $request->query->get('status', '');
         $categoryId = $request->query->getInt('category', 0);
         $expiryType = $request->query->get('expiry_type', '');
+        $subscriptionStatus = $request->query->get('subscription_status', '');
+        $dosage = $request->query->get('dosage', '');
+        $form = $request->query->get('form', '');
+        $prescriptionRequired = $request->query->get('prescription_required', '');
+        $promotionId = $request->query->getInt('promotion', 0);
+        $unit = $request->query->get('unit', ''); // Nouveau paramètre
 
-        // Récupérer les catégories hiérarchiques depuis CategoryRepository
+        // Récupérer les promotions de l'entreprise pour le select
+        $promotions = $entityManager->getRepository(Promotion::class)->findBy(
+            ['hma_service' => $hmaService, 'is_active' => true],
+            ['name' => 'ASC']
+        );
+
         $categories = $categoryRepository->findHierarchicalCategoriesWithCount();
-        
-        // Gérer la recherche
-        if ($search) {
-            $paginator = $productRepository->search($search, $page, $limit);
-        } 
-        // Gérer les filtres combinés (catégorie + statut)
-        elseif ($categoryId > 0 && $status) {
-            $paginator = $productRepository->findByCategoryAndStatusPaginated($categoryId, $status, $page, $limit);
-        }
-        elseif ($categoryId > 0 && $expiryType) {
-            $paginator = $productRepository->findByCategoryAndStatusPaginated($categoryId, $expiryType, $page, $limit);
-        }
-        // Gérer les filtres simples
-        elseif ($categoryId > 0) {
-            $paginator = $productRepository->findByCategoryPaginated($categoryId, $page, $limit);
-        }
-        elseif ($status === 'active') {
-            $paginator = $productRepository->findActivePaginated($page, $limit);
-        }
-        elseif ($status === 'inactive') {
-            $paginator = $productRepository->findInactivePaginated($page, $limit);
-        }
-        elseif ($status === 'low-stock') {
-            $paginator = $productRepository->findLowStockPaginated($page, $limit);
-        }
-        elseif ($expiryType === 'perishable') {
-            $paginator = $productRepository->findPerishablePaginated($page, $limit);
-        }
-        elseif ($expiryType === 'non-perishable') {
-            $paginator = $productRepository->findNonPerishablePaginated($page, $limit);
-        }
-        else {
-            $paginator = $productRepository->findAllPaginated($page, $limit);
-        }
+
+        // Récupérer les unités supportées
+        $units = $productRepository->findDistinctUnits($hmaService);
+
+        $paginator = $productRepository->findFilteredPaginated(
+            $hmaService,
+            $categoryId,
+            $status,
+            $expiryType,
+            $subscriptionStatus,
+            $dosage,
+            $form,
+            $prescriptionRequired,
+            $search,
+            $page,
+            $limit,
+            $promotionId > 0 ? $promotionId : null,
+            $unit // Ajout du paramètre unité
+        );
+
+        $totalFiltered = $productRepository->countFiltered(
+            $hmaService,
+            $categoryId,
+            $status,
+            $expiryType,
+            $subscriptionStatus,
+            $dosage,
+            $form,
+            $prescriptionRequired,
+            $search,
+            $promotionId > 0 ? $promotionId : null,
+            $unit
+        );
+        $activeFiltered = $productRepository->countFiltered(
+            $hmaService,
+            $categoryId,
+            'active',
+            $expiryType,
+            $subscriptionStatus,
+            $dosage,
+            $form,
+            $prescriptionRequired,
+            $search,
+            $promotionId > 0 ? $promotionId : null,
+            $unit
+        );
+        $inactiveFiltered = $productRepository->countFiltered(
+            $hmaService,
+            $categoryId,
+            'inactive',
+            $expiryType,
+            $subscriptionStatus,
+            $dosage,
+            $form,
+            $prescriptionRequired,
+            $search,
+            $promotionId > 0 ? $promotionId : null,
+            $unit
+        );
+        $lowStockFiltered = $productRepository->countFiltered(
+            $hmaService,
+            $categoryId,
+            'low-stock',
+            $expiryType,
+            $subscriptionStatus,
+            $dosage,
+            $form,
+            $prescriptionRequired,
+            $search,
+            $promotionId > 0 ? $promotionId : null,
+            $unit
+        );
+        $perishableFiltered = $productRepository->countFiltered(
+            $hmaService,
+            $categoryId,
+            '',
+            'perishable',
+            $subscriptionStatus,
+            $dosage,
+            $form,
+            $prescriptionRequired,
+            $search,
+            $promotionId > 0 ? $promotionId : null,
+            $unit
+        );
+        $nonPerishableFiltered = $productRepository->countFiltered(
+            $hmaService,
+            $categoryId,
+            '',
+            'non-perishable',
+            $subscriptionStatus,
+            $dosage,
+            $form,
+            $prescriptionRequired,
+            $search,
+            $promotionId > 0 ? $promotionId : null,
+            $unit
+        );
+
+        $subscriptionActiveFiltered = $productRepository->countFiltered(
+            $hmaService,
+            $categoryId,
+            $status,
+            $expiryType,
+            'active',
+            $dosage,
+            $form,
+            $prescriptionRequired,
+            $search,
+            $promotionId > 0 ? $promotionId : null,
+            $unit
+        );
+        $subscriptionInactiveFiltered = $productRepository->countFiltered(
+            $hmaService,
+            $categoryId,
+            $status,
+            $expiryType,
+            'inactive',
+            $dosage,
+            $form,
+            $prescriptionRequired,
+            $search,
+            $promotionId > 0 ? $promotionId : null,
+            $unit
+        );
+
+        $activeCount = $productRepository->countSubscriptionActive($hmaService);
+        $limits = $hmaService->getCurrentLimits();
+        $quota = $limits['max_products'] ?? PHP_INT_MAX;
+        $quotaReached = $quota !== PHP_INT_MAX && $activeCount >= $quota;
 
         $totalItems = $paginator->count();
         $totalPages = ceil($totalItems / $limit);
@@ -92,11 +223,31 @@ final class ProductController extends AbstractController
             'currentPage' => $page,
             'totalPages' => $totalPages,
             'search' => $search,
-            'totalItems' => $totalItems,
             'categories' => $categories,
             'selectedCategory' => $categoryId,
             'selectedStatus' => $status,
             'selectedExpiryType' => $expiryType,
+            'selectedSubscriptionStatus' => $subscriptionStatus,
+            'dosage' => $dosage,
+            'form' => $form,
+            'prescriptionRequired' => $prescriptionRequired,
+            'totalItems' => $totalItems,
+            'totalFiltered' => $totalFiltered,
+            'activeFiltered' => $activeFiltered,
+            'inactiveFiltered' => $inactiveFiltered,
+            'lowStockFiltered' => $lowStockFiltered,
+            'perishableFiltered' => $perishableFiltered,
+            'nonPerishableFiltered' => $nonPerishableFiltered,
+            'subscriptionActiveFiltered' => $subscriptionActiveFiltered,
+            'subscriptionInactiveFiltered' => $subscriptionInactiveFiltered,
+            'activeCount' => $activeCount,
+            'quota' => $quota === PHP_INT_MAX ? 'Illimité' : $quota,
+            'quotaReached' => $quotaReached,
+            'companyType' => $hmaService->getType(),
+            'promotions' => $promotions,
+            'selectedPromotion' => $promotionId,
+            'units' => $units,          // Ajout
+            'selectedUnit' => $unit,    // Ajout
         ]);
     }
 
@@ -105,45 +256,62 @@ final class ProductController extends AbstractController
     {
         $this->checkAccess();
 
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedException('Utilisateur non connecté.');
+        }
+
+        // Recharger l'utilisateur depuis l'entity manager pour garantir qu'il est géré
+        $user = $entityManager->getRepository(\App\Entity\User::class)->find($user->getId());
+        if (!$user) {
+            throw new AccessDeniedException('Utilisateur introuvable.');
+        }
+
+        $hmaService = $user->getHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé à votre compte.');
+        }
+
+        // Recharger le service (optionnel, mais sécurise)
+        $hmaService = $entityManager->getRepository(HmaService::class)->find($hmaService->getId());
+        if (!$hmaService) {
+            throw new AccessDeniedException('Service introuvable.');
+        }
+
+        // Vérification du quota
+        $activeCount = $entityManager->getRepository(Product::class)->countActive($hmaService);
+        $limits = $hmaService->getCurrentLimits();
+        $quota = $limits['max_products'] ?? PHP_INT_MAX;
+        if ($quota !== PHP_INT_MAX && $activeCount >= $quota) {
+            $this->addFlash('error', "Vous avez atteint votre limite de {$quota} produits actifs.");
+            return $this->redirectToRoute('app_admin_product_index');
+        }
+
         $product = new Product();
-        $product->setUser($this->getUser());
-        $product->setCreatedAt(new \DateTime());
-        
-        // Définir l'image par défaut à la création
-        $product->setImage(self::DEFAULT_PRODUCT_IMAGE);
-        
-        // Générer un code-barres unique par défaut
-        $product->setBarcode($this->generateBarcode());
-        
-        $form = $this->createForm(ProductType::class, $product);
+        $product->setUser($user)
+                ->setHmaService($hmaService)
+                ->setCreatedAt(new \DateTime())
+                ->setImage(self::DEFAULT_PRODUCT_IMAGE)
+                ->setBarcode($this->generateBarcode());
+
+        $form = $this->createForm(ProductType::class, $product, [
+            'hma_service' => $hmaService,
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Générer le slug
+            // Slug
             $slug = $this->slugger->slug($product->getName())->lower();
             $product->setSlug($slug);
 
-            // Si pas de code-barres saisi, générer un nouveau
-            if (!$product->getBarcode() || empty(trim($product->getBarcode()))) {
-                $product->setBarcode($this->generateBarcode());
-            }
-
-            // Gérer l'upload de l'image
+            // Gestion de l'image
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $this->slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-                
-                try {
-                    $imageFile->move(
-                        $this->getParameter('products_directory'),
-                        $newFilename
-                    );
-                    $product->setImage($newFilename);
-                } catch (\Exception $e) {
-                    $this->addFlash('error', 'Erreur lors de l\'upload de l\'image.');
-                }
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                $imageFile->move($this->getParameter('products_directory'), $newFilename);
+                $product->setImage($newFilename);
             }
 
             $entityManager->persist($product);
@@ -156,6 +324,7 @@ final class ProductController extends AbstractController
         return $this->render('admin/product/new.html.twig', [
             'product' => $product,
             'form' => $form,
+            'companyType' => $hmaService->getType(),
         ]);
     }
 
@@ -163,9 +332,14 @@ final class ProductController extends AbstractController
     public function show(Product $product): Response
     {
         $this->checkAccess();
-
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé.');
+        }
+        $this->checkOwnership($product, $hmaService);
         return $this->render('admin/product/show.html.twig', [
             'product' => $product,
+            'companyType' => $hmaService->getType(),
         ]);
     }
 
@@ -174,8 +348,23 @@ final class ProductController extends AbstractController
     {
         $this->checkAccess();
 
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedException('Utilisateur non connecté.');
+        }
+
+        $hmaService = $user->getHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé.');
+        }
+
+        $this->checkOwnership($product, $hmaService);
+
         $oldImage = $product->getImage();
-        $form = $this->createForm(ProductType::class, $product);
+        $form = $this->createForm(ProductType::class, $product, [
+            'hma_service' => $hmaService,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -183,30 +372,18 @@ final class ProductController extends AbstractController
             $newSlug = $this->slugger->slug($product->getName())->lower();
             $product->setSlug($newSlug);
 
-            // Gérer l'upload de l'image
+            // Gestion de l'image
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                // Supprimer l'ancienne image seulement si ce n'est pas l'image par défaut
                 if ($oldImage && $oldImage !== self::DEFAULT_PRODUCT_IMAGE) {
-                    $oldImagePath = $this->getParameter('products_directory').'/'.$oldImage;
-                    if (file_exists($oldImagePath)) {
-                        unlink($oldImagePath);
+                    $oldPath = $this->getParameter('products_directory').'/'.$oldImage;
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
                     }
                 }
-
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $this->slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-                
-                try {
-                    $imageFile->move(
-                        $this->getParameter('products_directory'),
-                        $newFilename
-                    );
-                    $product->setImage($newFilename);
-                } catch (\Exception $e) {
-                    $this->addFlash('error', 'Erreur lors de l\'upload de l\'image.');
-                }
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                $imageFile->move($this->getParameter('products_directory'), $newFilename);
+                $product->setImage($newFilename);
             }
 
             $product->setUpdatedAt(new \DateTime());
@@ -219,7 +396,7 @@ final class ProductController extends AbstractController
         return $this->render('admin/product/edit.html.twig', [
             'product' => $product,
             'form' => $form,
-            'oldImage' => $oldImage,
+            'companyType' => $hmaService->getType(),
         ]);
     }
 
@@ -227,24 +404,32 @@ final class ProductController extends AbstractController
     public function toggleStatus(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         $this->checkAccess();
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedException('Utilisateur non connecté.');
+        }
+        $hmaService = $user->getHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé.');
+        }
+        $this->checkOwnership($product, $hmaService);
 
-        if (!$this->isCsrfTokenValid('toggle-status', $request->request->get('_token'))) {
+        // Vérification du token CSRF (avec l'ID du produit)
+        if (!$this->isCsrfTokenValid('toggle-status' . $product->getId(), $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide');
         }
 
-        try {
-            $product->setIsActive(!$product->isActive());
-            $product->setUpdatedAt(new \DateTime());
-            
-            $entityManager->flush();
+        // Inverser le statut
+        $product->setIsActive(!$product->isActive());
+        $product->setUpdatedAt(new \DateTime());
+        $entityManager->flush();
 
-            $status = $product->isActive() ? 'activé' : 'désactivé';
-            $this->addFlash('success', "Produit {$status} avec succès.");
-        } catch (\Exception $e) {
-            $this->addFlash('error', 'Erreur lors du changement de statut : ' . $e->getMessage());
-        }
+        $status = $product->isActive() ? 'activé' : 'désactivé';
+        $this->addFlash('success', "Produit {$status} avec succès.");
 
-        return $this->redirectToRoute('app_admin_product_index');
+        // Redirection vers la page de détail du produit
+        return $this->redirectToRoute('app_admin_product_show', ['id' => $product->getId()]);
     }
 
     #[Route('/{id}/delete-image', name: 'app_admin_product_delete_image', methods: ['POST'])]
@@ -252,72 +437,96 @@ final class ProductController extends AbstractController
     {
         $this->checkAccess();
 
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedException('Utilisateur non connecté.');
+        }
+
+        $hmaService = $user->getHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé.');
+        }
+
+        $this->checkOwnership($product, $hmaService);
+
         if ($this->isCsrfTokenValid('delete-image'.$product->getId(), $request->request->get('_token'))) {
             $image = $product->getImage();
             if ($image && $image !== self::DEFAULT_PRODUCT_IMAGE) {
-                // Supprimer le fichier physique
-                $imagePath = $this->getParameter('products_directory').'/'.$image;
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
+                $path = $this->getParameter('products_directory').'/'.$image;
+                if (file_exists($path)) {
+                    unlink($path);
                 }
-                
-                // Rétablir l'image par défaut
                 $product->setImage(self::DEFAULT_PRODUCT_IMAGE);
                 $product->setUpdatedAt(new \DateTime());
                 $entityManager->flush();
-                
-                $this->addFlash('success', 'Image supprimée avec succès.');
-            } elseif ($image === self::DEFAULT_PRODUCT_IMAGE) {
-                $this->addFlash('info', 'Ce produit utilise déjà l\'image par défaut.');
+                $this->addFlash('success', 'Image supprimée.');
             } else {
-                $this->addFlash('warning', 'Ce produit n\'a pas d\'image.');
+                $this->addFlash('warning', 'Aucune image personnalisée à supprimer.');
             }
         } else {
             $this->addFlash('error', 'Token CSRF invalide.');
         }
-
         return $this->redirectToRoute('app_admin_product_edit', ['id' => $product->getId()]);
     }
 
     #[Route('/{id}', name: 'app_admin_product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
-        $this->checkAccess();
-
-        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
-            // Vérifier si le produit a des mouvements de stock
-            if ($product->getPurchaseItems()->count() > 0) {
-                $this->addFlash('error', 'Impossible de supprimer ce produit car il a des historiques d\'achat.');
-                return $this->redirectToRoute('app_admin_product_index');
-            }
-
-            // Vérifier si le produit a des lots de stock
-            if ($product->getStockBatches()->count() > 0) {
-                $this->addFlash('error', 'Impossible de supprimer ce produit car il a des lots de stock.');
-                return $this->redirectToRoute('app_admin_product_index');
-            }
-
-            // Supprimer l'image si elle existe et n'est pas l'image par défaut
-            $image = $product->getImage();
-            if ($image && $image !== self::DEFAULT_PRODUCT_IMAGE) {
-                $imagePath = $this->getParameter('products_directory').'/'.$image;
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
-                }
-            }
-
-            $entityManager->remove($product);
-            $entityManager->flush();
-            
-            $this->addFlash('success', 'Produit supprimé avec succès.');
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException('Seul l\'admin peut supprimer.');
         }
 
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedException('Utilisateur non connecté.');
+        }
+
+        $hmaService = $user->getHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé.');
+        }
+
+        $this->checkOwnership($product, $hmaService);
+
+        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
+            if ($product->getPurchaseItems()->count() > 0 || $product->getStockBatches()->count() > 0) {
+                $this->addFlash('error', 'Impossible de supprimer ce produit (liens vers achats ou lots).');
+                return $this->redirectToRoute('app_admin_product_index');
+            }
+            $image = $product->getImage();
+            if ($image && $image !== self::DEFAULT_PRODUCT_IMAGE) {
+                $path = $this->getParameter('products_directory').'/'.$image;
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+            $entityManager->remove($product);
+            $entityManager->flush();
+            $this->addFlash('success', 'Produit supprimé.');
+        }
         return $this->redirectToRoute('app_admin_product_index');
     }
 
     #[Route('/api/{id}/details', name: 'app_admin_product_api_details', methods: ['GET'])]
     public function apiDetails(Product $product): JsonResponse
     {
+        $this->checkAccess();
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedException('Utilisateur non connecté.');
+        }
+
+        $hmaService = $user->getHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé.');
+        }
+
+        $this->checkOwnership($product, $hmaService);
+
         return $this->json([
             'id' => $product->getId(),
             'name' => $product->getName(),
@@ -326,60 +535,34 @@ final class ProductController extends AbstractController
             'sale_price' => $product->getSalePrice(),
             'stock_quantity' => $product->getStockQuantity(),
             'has_expiry_date' => $product->hasExpiryDate(),
-            'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
+            'category' => $product->getCategory()?->getName(),
         ]);
     }
 
     #[Route('/scan/barcode', name: 'app_admin_product_scan_barcode', methods: ['POST'])]
-    public function scanBarcode(Request $request): Response
+    public function scanBarcode(Request $request): JsonResponse
     {
         $this->checkAccess();
-
         $data = json_decode($request->getContent(), true);
         $barcode = $data['barcode'] ?? '';
-
         if (empty($barcode)) {
             return $this->json(['error' => 'Code-barres vide'], 400);
         }
-
-        // Retourner le code-barres pour pré-remplir le formulaire
-        return $this->json([
-            'barcode' => $barcode,
-            'message' => 'Code-barres scanné avec succès'
-        ]);
+        return $this->json(['barcode' => $barcode]);
     }
 
     #[Route('/generate/barcode', name: 'app_admin_product_generate_barcode', methods: ['GET'])]
-    public function generateBarcodeAction(): Response
+    public function generateBarcodeAction(): JsonResponse
     {
         $this->checkAccess();
-
-        $barcode = $this->generateBarcode();
-        
-        return $this->json([
-            'barcode' => $barcode
-        ]);
-    }
-
-    /**
-     * Génère un code-barres unique
-     */
-    private function generateBarcode(): string
-    {
-        // Format: PROD-YYYYMMDD-XXXXXX (6 chiffres aléatoires)
-        $date = date('Ymd');
-        $random = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
-        return 'PROD-' . $date . '-' . $random;
+        return $this->json(['barcode' => $this->generateBarcode()]);
     }
 
     #[Route('/check/barcode/{barcode}', name: 'app_admin_product_check_barcode', methods: ['GET'])]
-    public function checkBarcode(string $barcode, ProductRepository $productRepository): JsonResponse // Ici aussi
+    public function checkBarcode(string $barcode, ProductRepository $productRepository): JsonResponse
     {
         $this->checkAccess();
-
-        // Vérifier si le code-barres existe déjà
         $existingProduct = $productRepository->findOneBy(['barcode' => $barcode]);
-        
         return $this->json([
             'exists' => $existingProduct !== null,
             'product' => $existingProduct ? [
@@ -391,5 +574,12 @@ final class ProductController extends AbstractController
                 'hasExpiryDate' => $existingProduct->hasExpiryDate()
             ] : null
         ]);
+    }
+
+    private function generateBarcode(): string
+    {
+        $date = date('Ymd');
+        $random = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
+        return 'PROD-' . $date . '-' . $random;
     }
 }

@@ -1,15 +1,15 @@
 <?php
+// src/Repository/CategoryRepository.php
 
 namespace App\Repository;
 
 use App\Entity\Category;
+use App\Entity\HmaService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Category>
- */
 class CategoryRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -17,264 +17,234 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
-    public function search(string $searchTerm, int $page = 1, int $limit = 10): Paginator
-    {
-        if ($page < 1) {
-            $page = 1;
-        }
-        
-        $query = $this->createQueryBuilder('c')
-            ->leftJoin('c.parent', 'p')
-            ->where('c.name LIKE :search')
-            ->orWhere('c.description LIKE :search')
-            ->orWhere('p.name LIKE :search')
-            ->setParameter('search', '%' . $searchTerm . '%')
-            ->orderBy('c.created_at', 'DESC')
-            ->getQuery();
+    // === Méthodes de comptage ===
 
-        $paginator = new Paginator($query);
-        $paginator->getQuery()
-            ->setFirstResult($limit * ($page - 1))
-            ->setMaxResults($limit);
-
-        return $paginator;
-    }
-
-    public function findAllPaginated(int $page = 1, int $limit = 10): Paginator
-    {
-        if ($page < 1) {
-            $page = 1;
-        }
-        
-        $query = $this->createQueryBuilder('c')
-            ->orderBy('c.created_at', 'DESC')
-            ->getQuery();
-
-        $paginator = new Paginator($query);
-        $paginator->getQuery()
-            ->setFirstResult($limit * ($page - 1))
-            ->setMaxResults($limit);
-
-        return $paginator;
-    }
-
-    public function findActivePaginated(int $page = 1, int $limit = 10): Paginator
-    {
-        if ($page < 1) {
-            $page = 1;
-        }
-        
-        $query = $this->createQueryBuilder('c')
-            ->where('c.is_active = :active')
-            ->setParameter('active', true)
-            ->orderBy('c.created_at', 'DESC')
-            ->getQuery();
-
-        $paginator = new Paginator($query);
-        $paginator->getQuery()
-            ->setFirstResult($limit * ($page - 1))
-            ->setMaxResults($limit);
-
-        return $paginator;
-    }
-
-    public function findInactivePaginated(int $page = 1, int $limit = 10): Paginator
-    {
-        if ($page < 1) {
-            $page = 1;
-        }
-        
-        $query = $this->createQueryBuilder('c')
-            ->where('c.is_active = :active')
-            ->setParameter('active', false)
-            ->orderBy('c.created_at', 'DESC')
-            ->getQuery();
-
-        $paginator = new Paginator($query);
-        $paginator->getQuery()
-            ->setFirstResult($limit * ($page - 1))
-            ->setMaxResults($limit);
-
-        return $paginator;
-    }
-
-    public function findMainCategoriesPaginated(int $page = 1, int $limit = 10): Paginator
-    {
-        if ($page < 1) {
-            $page = 1;
-        }
-        
-        $query = $this->createQueryBuilder('c')
-            ->where('c.parent IS NULL')
-            ->orderBy('c.created_at', 'DESC')
-            ->getQuery();
-
-        $paginator = new Paginator($query);
-        $paginator->getQuery()
-            ->setFirstResult($limit * ($page - 1))
-            ->setMaxResults($limit);
-
-        return $paginator;
-    }
-
-    public function findSubCategoriesPaginated(int $page = 1, int $limit = 10): Paginator
-    {
-        if ($page < 1) {
-            $page = 1;
-        }
-        
-        $query = $this->createQueryBuilder('c')
-            ->where('c.parent IS NOT NULL')
-            ->orderBy('c.created_at', 'DESC')
-            ->getQuery();
-
-        $paginator = new Paginator($query);
-        $paginator->getQuery()
-            ->setFirstResult($limit * ($page - 1))
-            ->setMaxResults($limit);
-
-        return $paginator;
-    }
-
-    public function findActiveCategories()
-    {
-        return $this->createQueryBuilder('c')
-            ->where('c.is_active = :active')
-            ->setParameter('active', true)
-            ->orderBy('c.name', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function countActive(): int
+    public function countActive(HmaService $hmaService): int
     {
         return $this->createQueryBuilder('c')
             ->select('COUNT(c.id)')
-            ->where('c.is_active = :active')
-            ->setParameter('active', true)
+            ->andWhere('c.hma_service = :service')
+            ->setParameter('service', $hmaService)
+            ->andWhere('c.is_active = :isActive')
+            ->setParameter('isActive', true)
+            ->andWhere('c.subscription_active = :subActive')
+            ->setParameter('subActive', true)
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    public function countInactive(): int
+    public function countSubscriptionInactive(HmaService $hmaService): int
     {
         return $this->createQueryBuilder('c')
             ->select('COUNT(c.id)')
-            ->where('c.is_active = :active')
-            ->setParameter('active', false)
+            ->andWhere('c.hma_service = :service')
+            ->setParameter('service', $hmaService)
+            ->andWhere('c.subscription_active = :subActive')
+            ->setParameter('subActive', false)
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    public function findCategoriesHierarchy()
-    {
-        $query = $this->createQueryBuilder('c')
-            ->addOrderBy('c.parent', 'ASC')
-            ->addOrderBy('c.name', 'ASC')
-            ->getQuery();
-
-        return $query->getResult();
-    }
-
-    public function findMainCategories()
+    public function countSubscriptionActive(HmaService $hmaService): int
     {
         return $this->createQueryBuilder('c')
-            ->where('c.parent IS NULL')
-            ->orderBy('c.name', 'ASC')
+            ->select('COUNT(c.id)')
+            ->andWhere('c.hma_service = :service')
+            ->setParameter('service', $hmaService)
+            ->andWhere('c.subscription_active = :subActive')
+            ->setParameter('subActive', true)
             ->getQuery()
-            ->getResult();
+            ->getSingleScalarResult();
     }
 
-    public function findHierarchicalCategories(): array
-    {
-        $categories = $this->findBy(['parent' => null], ['name' => 'ASC']);
-        
-        $hierarchical = [];
+    /**
+     * Construit la requête de base sans les compteurs.
+     */
+    private function getBaseQueryBuilder(
+        HmaService $hmaService,
+        string $status = 'all',
+        string $type = 'all',
+        string $subStatus = 'all',
+        string $search = '',
+        ?int $promotionId = null
+    ): QueryBuilder {
+        $qb = $this->createQueryBuilder('c')
+            ->andWhere('c.hma_service = :service')
+            ->setParameter('service', $hmaService);
+
+        // Statut is_active
+        if ($status === 'active') {
+            $qb->andWhere('c.is_active = :active')->setParameter('active', true);
+        } elseif ($status === 'inactive') {
+            $qb->andWhere('c.is_active = :active')->setParameter('active', false);
+        }
+
+        // Type (principale / sous-catégorie)
+        if ($type === 'main') {
+            $qb->andWhere('c.parent IS NULL');
+        } elseif ($type === 'sub') {
+            $qb->andWhere('c.parent IS NOT NULL');
+        }
+
+        // Subscription active
+        if ($subStatus === 'active') {
+            $qb->andWhere('c.subscription_active = :subActive')->setParameter('subActive', true);
+        } elseif ($subStatus === 'inactive') {
+            $qb->andWhere('c.subscription_active = :subActive')->setParameter('subActive', false);
+        }
+
+        // Recherche textuelle
+        if (!empty($search)) {
+            $qb->andWhere('c.name LIKE :search OR c.description LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        // Filtre par promotion
+        if ($promotionId) {
+            $qb->leftJoin('c.promotionCategories', 'pc')
+            ->leftJoin('pc.promotion', 'promo')
+            ->andWhere('promo.id = :promoId')
+            ->setParameter('promoId', $promotionId)
+            ->groupBy('c.id'); // <-- AJOUT
+        }
+
+        return $qb;
+    }
+
+    public function countFiltered(
+        HmaService $hmaService,
+        string $status = 'all',
+        string $type = 'all',
+        string $subStatus = 'all',
+        string $search = '',
+        ?int $promotionId = null
+    ): int {
+        $qb = $this->getBaseQueryBuilder($hmaService, $status, $type, $subStatus, $search, $promotionId);
+        return (int) $qb->select('COUNT(c.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Récupère les catégories paginées et injecte les compteurs.
+     */
+    public function findFilteredPaginated(
+        HmaService $hmaService,
+        string $status = 'all',
+        string $type = 'all',
+        string $subStatus = 'all',
+        string $search = '',
+        int $page = 1,
+        int $limit = 12,
+        ?int $promotionId = null
+    ): Paginator {
+        // 1. Récupérer les catégories paginées (sans compteurs)
+        $qb = $this->getBaseQueryBuilder($hmaService, $status, $type, $subStatus, $search, $promotionId)
+            ->orderBy('c.created_at', 'DESC');
+
+        $query = $qb->getQuery();
+        $paginator = new Paginator($query);
+        $paginator->setUseOutputWalkers(false);
+        $paginator->getQuery()
+            ->setFirstResult($limit * ($page - 1))
+            ->setMaxResults($limit);
+
+        $categories = $paginator->getIterator();
+
+        // 2. Récupérer les IDs des catégories de la page courante
+        $ids = [];
         foreach ($categories as $category) {
-            $hierarchical[] = [
-                'id' => $category->getId(),
-                'name' => $category->getName(),
-                'children' => $this->getChildrenHierarchy($category)
-            ];
+            $ids[] = $category->getId();
         }
-        
-        return $hierarchical;
+
+        if (empty($ids)) {
+            return $paginator;
+        }
+
+        // 3. Récupérer le nombre de produits par catégorie
+        $productCounts = $this->getEntityManager()->createQueryBuilder()
+            ->select('IDENTITY(p.category) as categoryId, COUNT(p.id) as cnt')
+            ->from('App\Entity\Product', 'p')
+            ->where('p.category IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->groupBy('p.category')
+            ->getQuery()
+            ->getResult();
+
+        // 4. Récupérer le nombre de sous-catégories par catégorie
+        $childrenCounts = $this->getEntityManager()->createQueryBuilder()
+            ->select('IDENTITY(ch.parent) as parentId, COUNT(ch.id) as cnt')
+            ->from('App\Entity\Category', 'ch')
+            ->where('ch.parent IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->groupBy('ch.parent')
+            ->getQuery()
+            ->getResult();
+
+        // 5. Mapper les compteurs
+        $productCountMap = [];
+        foreach ($productCounts as $row) {
+            $productCountMap[$row['categoryId']] = (int) $row['cnt'];
+        }
+
+        $childrenCountMap = [];
+        foreach ($childrenCounts as $row) {
+            $childrenCountMap[$row['parentId']] = (int) $row['cnt'];
+        }
+
+        // 6. Injecter dans les entités
+        foreach ($categories as $category) {
+            $category->setProductCount($productCountMap[$category->getId()] ?? 0);
+            $category->setChildrenCount($childrenCountMap[$category->getId()] ?? 0);
+        }
+
+        return $paginator;
     }
 
-    private function getChildrenHierarchy(Category $category): array
-    {
-        $children = [];
-        foreach ($category->getChildren() as $child) {
-            $children[] = [
-                'id' => $child->getId(),
-                'name' => $child->getName(),
-                'children' => $this->getChildrenHierarchy($child)
-            ];
-        }
-        return $children;
-    }
+    // === Méthodes hiérarchiques (inchangées) ===
 
     public function findHierarchicalCategoriesWithCount(): array
     {
         $categories = $this->findBy(['parent' => null], ['name' => 'ASC']);
-        
         $result = [];
         foreach ($categories as $category) {
-            $result[] = [
-                'id' => $category->getId(),
-                'name' => $category->getName(),
-                'productCount' => $this->countProductsInCategoryHierarchy($category),
-                'children' => $this->getChildCategoriesWithCount($category),
-                'isParent' => true,
-                'level' => 0
-            ];
+            $result[] = $this->buildCategoryNode($category);
         }
-        
         return $result;
     }
 
-    private function getChildCategoriesWithCount(Category $category): array
+    private function buildCategoryNode(Category $category): array
     {
-        $children = [];
+        $node = [
+            'id' => $category->getId(),
+            'name' => $category->getName(),
+            'productCount' => $this->countProductsInCategoryHierarchy($category),
+            'level' => $category->getHierarchyLevel(),
+            'isParent' => $category->getChildren()->count() > 0,
+            'children' => []
+        ];
         foreach ($category->getChildren() as $child) {
-            $children[] = [
-                'id' => $child->getId(),
-                'name' => $child->getName(),
-                'productCount' => $this->countProductsInCategoryHierarchy($child),
-                'children' => $this->getChildCategoriesWithCount($child),
-                'isParent' => !$child->getChildren()->isEmpty(),
-                'level' => 1
-            ];
+            $node['children'][] = $this->buildCategoryNode($child);
         }
-        return $children;
+        return $node;
     }
 
     private function countProductsInCategoryHierarchy(Category $category): int
     {
-        $entityManager = $this->getEntityManager();
-        
-        // Compter tous les produits dans cette catégorie et ses sous-catégories
-        $categoryIds = $this->getAllCategoryIds($category);
-        
-        return $entityManager->createQueryBuilder()
-            ->select('COUNT(p.id)')
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('COUNT(p.id)')
             ->from('App\Entity\Product', 'p')
             ->join('p.category', 'c')
-            ->where('c.id IN (:categoryIds)')
-            ->setParameter('categoryIds', $categoryIds)
-            ->getQuery()
-            ->getSingleScalarResult();
+            ->where($qb->expr()->in('c.id', $this->getCategoryIdsRecursive($category)));
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    private function getAllCategoryIds(Category $category): array
+    private function getCategoryIdsRecursive(Category $category): array
     {
-        $categoryIds = [$category->getId()];
-        
-        // Ajouter tous les IDs des enfants récursivement
+        $ids = [$category->getId()];
         foreach ($category->getChildren() as $child) {
-            $categoryIds = array_merge($categoryIds, $this->getAllCategoryIds($child));
+            $ids = array_merge($ids, $this->getCategoryIdsRecursive($child));
         }
-        
-        return $categoryIds;
+        return $ids;
     }
 }

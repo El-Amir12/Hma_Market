@@ -1,9 +1,13 @@
 <?php
+// src/Repository/SupplierRepository.php
 
 namespace App\Repository;
 
+use App\Entity\HmaService;
 use App\Entity\Supplier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,49 +20,111 @@ class SupplierRepository extends ServiceEntityRepository
         parent::__construct($registry, Supplier::class);
     }
 
-    // Méthode pour trouver tous les fournisseurs actifs
-    public function findAllActive(): array
-    {
-        return $this->createQueryBuilder('s')
-            ->where('s.is_active = :active')
-            ->setParameter('active', true)
-            ->orderBy('s.name', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
+    // ==================== MÉTHODES DE COMPTAGE ====================
 
-    // Méthode pour trouver par nom
-    public function findByName(string $name): array
-    {
-        return $this->createQueryBuilder('s')
-            ->where('s.name LIKE :name')
-            ->setParameter('name', '%' . $name . '%')
-            ->orderBy('s.name', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    // Méthode pour rechercher des fournisseurs
-    public function search(string $term): array
-    {
-        return $this->createQueryBuilder('s')
-            ->where('s.name LIKE :term')
-            ->orWhere('s.email LIKE :term')
-            ->orWhere('s.phone LIKE :term')
-            ->setParameter('term', '%' . $term . '%')
-            ->orderBy('s.name', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    // Compteur de fournisseurs actifs
-    public function countActive(): int
+    public function countActive(HmaService $hmaService): int
     {
         return $this->createQueryBuilder('s')
             ->select('COUNT(s.id)')
-            ->where('s.is_active = :active')
-            ->setParameter('active', true)
+            ->andWhere('s.hma_service = :service')
+            ->setParameter('service', $hmaService)
+            ->andWhere('s.is_active = :isActive')
+            ->setParameter('isActive', true)
+            ->andWhere('s.subscription_active = :subActive')
+            ->setParameter('subActive', true)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function countSubscriptionInactive(HmaService $hmaService): int
+    {
+        return $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->andWhere('s.hma_service = :service')
+            ->setParameter('service', $hmaService)
+            ->andWhere('s.subscription_active = :subActive')
+            ->setParameter('subActive', false)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countSubscriptionActive(HmaService $hmaService): int
+    {
+        return $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->andWhere('s.hma_service = :service')
+            ->setParameter('service', $hmaService)
+            ->andWhere('s.subscription_active = :subActive')
+            ->setParameter('subActive', true)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countFiltered(
+        HmaService $hmaService,
+        string $status = 'all',
+        string $subStatus = 'all',
+        string $search = ''
+    ): int {
+        $qb = $this->getFilteredQueryBuilder($hmaService, $status, $subStatus, $search);
+        return (int) $qb->select('COUNT(s.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    // ==================== MÉTHODES DE RECHERCHE PAGINÉE ====================
+
+    private function getFilteredQueryBuilder(
+        HmaService $hmaService,
+        string $status = 'all',
+        string $subStatus = 'all',
+        string $search = ''
+    ): QueryBuilder {
+        $qb = $this->createQueryBuilder('s')
+            ->andWhere('s.hma_service = :service')
+            ->setParameter('service', $hmaService);
+
+        if ($status === 'active') {
+            $qb->andWhere('s.is_active = :active')->setParameter('active', true);
+        } elseif ($status === 'inactive') {
+            $qb->andWhere('s.is_active = :active')->setParameter('active', false);
+        }
+
+        if ($subStatus === 'active') {
+            $qb->andWhere('s.subscription_active = :subActive')->setParameter('subActive', true);
+        } elseif ($subStatus === 'inactive') {
+            $qb->andWhere('s.subscription_active = :subActive')->setParameter('subActive', false);
+        }
+
+        if (!empty($search)) {
+            $qb->andWhere('s.name LIKE :search OR s.contact_person LIKE :search OR s.email LIKE :search OR s.phone LIKE :search OR s.adress LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        return $qb;
+    }
+
+    public function findFilteredPaginated(
+        HmaService $hmaService,
+        string $status = 'all',
+        string $subStatus = 'all',
+        string $search = '',
+        int $page = 1,
+        int $limit = 12
+    ): Paginator {
+        $qb = $this->getFilteredQueryBuilder($hmaService, $status, $subStatus, $search)
+            ->orderBy('s.created_at', 'DESC');
+
+        return $this->paginate($qb->getQuery(), $page, $limit);
+    }
+
+    private function paginate($query, int $page, int $limit): Paginator
+    {
+        $paginator = new Paginator($query);
+        $paginator->getQuery()
+            ->setFirstResult($limit * ($page - 1))
+            ->setMaxResults($limit);
+
+        return $paginator;
     }
 }

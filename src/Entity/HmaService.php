@@ -30,6 +30,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             'max_categories' => PHP_INT_MAX,
             'max_suppliers' => PHP_INT_MAX,
             'max_recipes' => PHP_INT_MAX,
+            'max_categories_recipes' => PHP_INT_MAX,
             'features' => ['all']
         ],
         self::PLAN_FREEMIUM => [
@@ -39,6 +40,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             'max_categories' => 10,
             'max_suppliers' => 5,
             'max_recipes' => 15,
+            'max_categories_recipes' => 2,
             'features' => ['basic_inventory', 'basic_reports']
         ],
         self::PLAN_BASIC => [
@@ -48,6 +50,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             'max_categories' => 20,
             'max_suppliers' => 15,
             'max_recipes' => 50,
+            'max_categories_recipes' => 10,
             'features' => ['advanced_inventory', 'reports', 'api_access']
         ],
         self::PLAN_PREMIUM => [
@@ -57,6 +60,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             'max_categories' => PHP_INT_MAX,
             'max_suppliers' => PHP_INT_MAX,
             'max_recipes' => PHP_INT_MAX,
+            'max_categories_recipes' => PHP_INT_MAX,
             'features' => ['all', 'priority_support', 'custom_domain', 'white_label']
         ],
     ];
@@ -1059,6 +1063,14 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
         }
         return max(0, $limits['max_categories'] - $this->categoryCount);
     }
+    /**
+    * Retourne le nombre maximum de catégories autorisées pour le plan actuel.
+    */
+    public function getMaxCategories(): int
+    {
+        $limits = $this->getCurrentLimits();
+        return $limits['max_categories'] ?? PHP_INT_MAX;
+    }
 
     /**
      * Obtenir le nombre de fournisseurs restants
@@ -1402,6 +1414,33 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             return PHP_INT_MAX;
         }
         return max(0, $limits['max_recipes'] - $this->recipeCount);
+    }
+
+        // ==================== MÉTHODES AJOUTÉES POUR LA GESTION DES PRODUITS ====================
+
+    /**
+     * Retourne le type d'entreprise (pharmacy, supermarket, etc.)
+     */
+    public function getType(): ?string
+    {
+        return $this->companyType;
+    }
+
+    /**
+     * Retourne le code pays (ex: CM, CI, FR)
+     */
+    public function getCountryCode(): ?string
+    {
+        return $this->country;
+    }
+
+    /**
+     * Retourne le nombre maximum de produits autorisés pour le plan actuel.
+     */
+    public function getMaxProducts(): int
+    {
+        $limits = $this->getCurrentLimits();
+        return $limits['max_products'] ?? PHP_INT_MAX;
     }
 
 }

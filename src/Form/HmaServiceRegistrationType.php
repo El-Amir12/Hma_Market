@@ -41,52 +41,43 @@ class HmaServiceRegistrationType extends AbstractType
                 ]
             ])
             ->add('companyType', ChoiceType::class, [
-                'label' => 'Type d\'entreprise *',
-                'choices' => [
-                    // Alimentation
+            'label' => 'Type d\'entreprise',
+            'choices' => [
+                '🛒 Alimentation & Distribution' => [
                     'Supermarché' => 'supermarket',
                     'Épicerie / Alimentation générale' => 'grocery-store',
                     'Boulangerie / Pâtisserie' => 'bakery',
-                    'Boucherie' => 'butcher',
+                    'Boucherie / Charcuterie' => 'butcher',
                     'Restaurant / Café' => 'restaurant',
-                    'Fast-food / Snack' => 'fast-food',
-                    
-                    // Santé & Beauté
+                ],
+                '💊 Santé & Bien-être' => [
                     'Pharmacie' => 'pharmacy',
                     'Parapharmacie' => 'parapharmacy',
                     'Cosmétiques / Parfumerie' => 'cosmetics',
-                    
-                    // Commerce de détail
+                ],
+                '👕 Commerce de détail' => [
                     'Magasin de vêtements' => 'clothing-store',
                     'Magasin d\'électronique' => 'electronics-store',
                     'Magasin de meubles' => 'furniture-store',
                     'Quincaillerie / Bricolage' => 'hardware-store',
-                    'Dépôt de proximité' => 'convenience-store',
-                    
-                    // Services
-                    'Salon de coiffure / Beauté' => 'salon',
-                    'Laverie / Pressing' => 'laundry',
-                    'Atelier de réparation' => 'repair-shop',
-                    
-                    // Grossiste & Industrie
+                ],
+                '💇 Services' => [
+                    'Salon de coiffure' => 'salon',
+                    'Laverie' => 'laundry',
+                ],
+                '📦 Grossiste & Distribution' => [
                     'Grossiste' => 'wholesaler',
-                    'Entrepôt / Stockage' => 'warehouse',
-                    'Manufacturier / Fabricant' => 'manufacturer',
-                    
-                    // Autres
-                    'Autre commerce de détail' => 'other-retail',
-                    'Autre service' => 'other-service',
+                ],
+                'Autre' => [
                     'Autre' => 'other'
-                ],
-                'placeholder' => 'Sélectionnez un type',
-                'attr' => [
-                    'class' => 'form-select',
-                    'data-choices' => 'true'
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'Le type d\'entreprise est requis']),
                 ]
-            ])
+            ],
+            'placeholder' => '-- Sélectionnez un type d\'entreprise --',
+            'attr' => ['class' => 'form-select form-select-lg'],
+            'constraints' => [
+                new NotBlank(['message' => 'Le type d\'entreprise est requis'])
+            ]
+        ])
             ->add('email', EmailType::class, [
                 'label' => 'Email professionnel *',
                 'attr' => [

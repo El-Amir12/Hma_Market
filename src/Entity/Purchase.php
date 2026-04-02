@@ -473,4 +473,6 @@ class Purchase
         $this->hma_service = $hma_service;
         return $this;
     }
+
+   
 }

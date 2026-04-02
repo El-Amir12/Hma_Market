@@ -1,49 +1,534 @@
+{# templates/admin/supplier/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Supplier index{% endblock %}
+{% block title %}Gestion des Fournisseurs - HMA Market{% endblock %}
 
 {% block body %}
-    <h1>Supplier index</h1>
+<div class="container-fluid px-4">
+    <!-- En-tête avec quota et bouton d'ajout -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-truck me-2"></i>Gestion des Fournisseurs
+            </h1>
+            <p class="text-muted mt-1">Gérez vos fournisseurs et leurs coordonnées</p>
+        </div>
+        
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <!-- Indicateur de quota -->
+            <div class="card bg-light border-0 shadow-sm p-2">
+                <div class="d-flex align-items-center">
+                    <div class="me-2">
+                        <span class="badge bg-primary p-2 rounded-circle">
+                            <i class="fas fa-chart-line fa-fw"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Fournisseurs dans quota</small>
+                        <h6 class="mb-0 {{ quotaReached ? 'text-danger' : 'text-success' }} fw-bold">
+                            {{ activeCount }} / {{ quota }}
+                            {% if quota == 'Illimité' %}
+                                <i class="fas fa-infinity text-info ms-1 small"></i>
+                            {% endif %}
+                        </h6>
+                    </div>
+                </div>
+            </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Contact_person</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Adress</th>
-                <th>Is_active</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+            {# Affichage du nombre de fournisseurs en attente (désactivés par quota) #}
+            {% if subscriptionInactiveCount > 0 %}
+            <div class="card bg-light border-0 shadow-sm p-2">
+                <div class="d-flex align-items-center">
+                    <div class="me-2">
+                        <span class="badge bg-warning p-2 rounded-circle">
+                            <i class="fas fa-clock fa-fw"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">En attente</small>
+                        <h6 class="mb-0 fw-bold">{{ subscriptionInactiveCount }}</h6>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <a href="{{ path('app_admin_supplier_new') }}" id="newSupplierBtn" class="btn btn-primary shadow-sm">
+                <i class="fas fa-plus-circle me-2"></i> Nouveau Fournisseur
+            </a>
+        </div>
+    </div>
+
+    {# Message si quota atteint #}
+    {% if quotaReached and plan != 'premium' %}
+    <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Quota atteint !</strong> Vous avez utilisé vos {{ quota }} fournisseurs dans le quota.
+            </div>
+            <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-sm">
+                <i class="fas fa-arrow-up me-1"></i> Voir les offres
+            </a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+
+    {# Flash messages #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+    
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <!-- Statistiques filtrées -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-semibold">
+                <i class="fas fa-chart-pie text-primary me-2"></i>Statistiques selon les filtres
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3 row-cols-2 row-cols-md-4 row-cols-lg-5" style="--bs-custom-col: 20%;">
+                <div class="col">
+                    <div class="stat-item p-3 bg-light rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted text-uppercase small fw-bold">Filtrés</span>
+                                <h3 class="mb-0 fw-bold">{{ totalFiltered }}</h3>
+                            </div>
+                            <div class="bg-primary p-2 rounded-3">
+                                <i class="fas fa-truck text-white fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-item p-3 bg-light rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted text-uppercase small fw-bold">Actifs</span>
+                                <h3 class="mb-0 fw-bold text-success">{{ activeFiltered }}</h3>
+                            </div>
+                            <div class="bg-success p-2 rounded-3">
+                                <i class="fas fa-check-circle text-white fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-item p-3 bg-light rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted text-uppercase small fw-bold">Inactifs</span>
+                                <h3 class="mb-0 fw-bold text-danger">{{ inactiveFiltered }}</h3>
+                            </div>
+                            <div class="bg-danger p-2 rounded-3">
+                                <i class="fas fa-pause-circle text-white fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-item p-3 bg-light rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted text-uppercase small fw-bold">Abonnement actif</span>
+                                <h3 class="mb-0 fw-bold text-info">{{ subscriptionActiveFiltered }}</h3>
+                            </div>
+                            <div class="bg-info p-2 rounded-3">
+                                <i class="fas fa-database text-white fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stat-item p-3 bg-light rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted text-uppercase small fw-bold">Abonnement inactif</span>
+                                <h3 class="mb-0 fw-bold text-secondary">{{ subscriptionInactiveFiltered }}</h3>
+                            </div>
+                            <div class="bg-secondary p-2 rounded-3">
+                                <i class="fas fa-clock text-white fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire de filtres -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-semibold">
+                <i class="fas fa-filter text-primary me-2"></i>Filtres avancés
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-lg-4 col-md-6">
+                    <label for="search" class="form-label fw-semibold">
+                        <i class="fas fa-search text-primary me-1"></i>Rechercher
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" name="search" id="search" value="{{ search }}" 
+                            class="form-control bg-light border-0" placeholder="Nom, contact, email...">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label for="status" class="form-label fw-semibold">
+                        <i class="fas fa-toggle-on text-success me-1"></i>Statut
+                    </label>
+                    <select name="status" id="status" class="form-select bg-light border-0">
+                        <option value="all" {{ status == 'all' ? 'selected' : '' }}>Tous</option>
+                        <option value="active" {{ status == 'active' ? 'selected' : '' }}>Actifs</option>
+                        <option value="inactive" {{ status == 'inactive' ? 'selected' : '' }}>Inactifs</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label for="sub_status" class="form-label fw-semibold">
+                        <i class="fas fa-credit-card text-warning me-1"></i>Abonnement
+                    </label>
+                    <select name="sub_status" id="sub_status" class="form-select bg-light border-0">
+                        <option value="all" {{ subStatus == 'all' ? 'selected' : '' }}>Tous</option>
+                        <option value="active" {{ subStatus == 'active' ? 'selected' : '' }}>Actif</option>
+                        <option value="inactive" {{ subStatus == 'inactive' ? 'selected' : '' }}>Inactif</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-primary w-100 py-2">
+                        <i class="fas fa-search me-1"></i> Filtrer
+                    </button>
+                    <a href="{{ path('app_admin_supplier_index') }}" class="btn btn-outline-secondary py-2" title="Effacer">
+                        <i class="fas fa-undo"></i>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Message informatif quand on filtre par abonnement inactif #}
+    {% if subStatus == 'inactive' and subscriptionInactiveFiltered > 0 %}
+        <div class="alert alert-info alert-dismissible fade show mb-4 shadow-sm" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>{{ subscriptionInactiveFiltered }} fournisseur(s)</strong> désactivés par abonnement.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endif %}
+
+    <!-- Grille de fournisseurs -->
+    <div class="row g-4">
         {% for supplier in suppliers %}
-            <tr>
-                <td>{{ supplier.id }}</td>
-                <td>{{ supplier.name }}</td>
-                <td>{{ supplier.contactPerson }}</td>
-                <td>{{ supplier.phone }}</td>
-                <td>{{ supplier.email }}</td>
-                <td>{{ supplier.adress }}</td>
-                <td>{{ supplier.isActive ? 'Yes' : 'No' }}</td>
-                <td>{{ supplier.createdAt ? supplier.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ supplier.updatedAt ? supplier.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_admin_supplier_show', {'id': supplier.id}) }}">show</a>
-                    <a href="{{ path('app_admin_supplier_edit', {'id': supplier.id}) }}">edit</a>
-                </td>
-            </tr>
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <div class="card-header bg-transparent border-0 pt-3 px-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="badge {{ supplier.isActive ? 'bg-success' : 'bg-danger' }} rounded-pill px-3 py-2">
+                                <i class="fas {{ supplier.isActive ? 'fa-check-circle' : 'fa-pause-circle' }} me-1"></i>
+                                {{ supplier.isActive ? 'Actif' : 'Inactif' }}
+                            </span>
+                        </div>
+                        <div>
+                            {% if supplier.subscriptionActive %}
+                                <span class="badge bg-info rounded-pill px-3 py-2" title="Dans quota">
+                                    <i class="fas fa-database me-1"></i>Quota
+                                </span>
+                            {% else %}
+                                <span class="badge bg-warning rounded-pill px-3 py-2" title="Hors quota">
+                                    <i class="fas fa-clock me-1"></i>En attente
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <h5 class="card-title mt-2 mb-0 fw-bold text-truncate">{{ supplier.name }}</h5>
+                </div>
+                <div class="card-body pt-2">
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="bg-light rounded-circle p-2 me-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user text-primary small"></i>
+                            </div>
+                            <span class="small">{{ supplier.contactPerson }}</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="bg-light rounded-circle p-2 me-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-phone text-success small"></i>
+                            </div>
+                            <span class="small">{{ supplier.phone }}</span>
+                            <a href="https://wa.me/{{ supplier.phone|replace({' ': '', '-': '', '+': ''}) }}" 
+                               target="_blank" 
+                               class="ms-auto text-success"
+                               title="Discuter sur WhatsApp">
+                                <i class="fab fa-whatsapp fa-lg"></i>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="bg-light rounded-circle p-2 me-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-envelope text-info small"></i>
+                            </div>
+                            <span class="small text-truncate">{{ supplier.email }}</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-light rounded-circle p-2 me-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-map-marker-alt text-warning small"></i>
+                            </div>
+                            <span class="small text-truncate">{{ supplier.adress|u.truncate(35) }}</span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between gap-2 mt-3">
+                        <a href="{{ path('app_admin_supplier_show', {'id': supplier.id}) }}" class="btn btn-sm btn-outline-info flex-fill">
+                            <i class="fas fa-eye me-1"></i> 
+                        </a>
+                        <a href="{{ path('app_admin_supplier_edit', {'id': supplier.id}) }}" class="btn btn-sm btn-outline-warning flex-fill">
+                            <i class="fas fa-edit me-1"></i> 
+                        </a>
+                        {% if supplier.subscriptionActive %}
+                            <button type="button" 
+                                    class="btn btn-sm {{ supplier.isActive ? 'btn-outline-danger' : 'btn-outline-success' }} flex-fill toggle-supplier-btn"
+                                    data-supplier-id="{{ supplier.id }}"
+                                    data-supplier-name="{{ supplier.name }}"
+                                    data-current-status="{{ supplier.isActive ? 'active' : 'inactive' }}"
+                                    data-token="{{ csrf_token('toggle-status' ~ supplier.id) }}"
+                                    title="{{ supplier.isActive ? 'Désactiver' : 'Activer' }}">
+                                <i class="fas {{ supplier.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
+                            </button>
+                        {% else %}
+                            <span class="btn btn-sm btn-secondary disabled flex-fill">
+                                <i class="fas fa-ban"></i>
+                            </span>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') and supplier.purchases|length == 0 %}
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-danger flex-fill delete-supplier-btn"
+                                    data-supplier-id="{{ supplier.id }}"
+                                    data-supplier-name="{{ supplier.name }}"
+                                    title="Supprimer">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
         {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-truck fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted fw-light">Aucun fournisseur trouvé</h4>
+                    <p class="text-muted mb-4">Modifiez vos filtres ou créez un nouveau fournisseur.</p>
+                    <a href="{{ path('app_admin_supplier_index') }}" class="btn btn-outline-primary px-4">
+                        <i class="fas fa-undo me-2"></i> Réinitialiser les filtres
+                    </a>
+                </div>
+            </div>
+        </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
 
-    <a href="{{ path('app_admin_supplier_new') }}">Create new</a>
+    <!-- Pagination -->
+    {% if totalPages > 1 %}
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="text-muted small">
+            Page {{ currentPage }} sur {{ totalPages }} ({{ totalItems }} résultats)
+        </div>
+        <nav aria-label="Pagination">
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item {{ currentPage <= 1 ? 'disabled' }}">
+                    <a class="page-link" href="{{ path('app_admin_supplier_index', app.request.query.all|merge({'page': currentPage - 1})) }}"><i class="fas fa-chevron-left"></i></a>
+                </li>
+                {% for i in 1..totalPages %}
+                    <li class="page-item {{ i == currentPage ? 'active' }}">
+                        <a class="page-link" href="{{ path('app_admin_supplier_index', app.request.query.all|merge({'page': i})) }}">{{ i }}</a>
+                    </li>
+                {% endfor %}
+                <li class="page-item {{ currentPage >= totalPages ? 'disabled' }}">
+                    <a class="page-link" href="{{ path('app_admin_supplier_index', app.request.query.all|merge({'page': currentPage + 1})) }}"><i class="fas fa-chevron-right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modals -->
+<div class="modal fade" id="quotaReachedModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-warning text-white border-0">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Quota atteint</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-ban fa-4x text-warning mb-3"></i>
+                <h5>Vous avez atteint votre limite de {{ quota }} fournisseurs dans le quota.</h5>
+                <p class="text-muted">Pour ajouter de nouveaux fournisseurs, passez à un plan supérieur.</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-lg px-4">
+                    <i class="fas fa-arrow-up me-2"></i> Voir les offres
+                </a>
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4" data-bs-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="toggleSupplierModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-warning text-white border-0">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-question-circle fa-4x text-primary mb-3"></i>
+                <p id="toggleSupplierMessage" class="mb-0"></p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Annuler</button>
+                <form id="toggleSupplierForm" method="post" class="d-inline">
+                    <input type="hidden" name="_token" id="toggleSupplierToken">
+                    <button type="submit" class="btn btn-warning px-4">Confirmer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if is_granted('ROLE_ADMIN') %}
+<div class="modal fade" id="deleteSupplierModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Confirmation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
+                <p id="deleteSupplierMessage" class="mb-0"></p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Annuler</button>
+                <form id="deleteSupplierForm" method="post" class="d-inline">
+                    <input type="hidden" name="_token" id="deleteSupplierCsrfToken">
+                    <button type="submit" class="btn btn-danger px-4">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+.hover-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+}
+.stat-item {
+    transition: background-color 0.2s;
+}
+.stat-item:hover {
+    background-color: #e9ecef !important;
+}
+.badge {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+@media (min-width: 992px) {
+    .row-cols-lg-5 > .col {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+@media (max-width: 768px) {
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Nouveau fournisseur
+    const newBtn = document.getElementById('newSupplierBtn');
+    if (newBtn) {
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            {% if quotaReached %}
+                new bootstrap.Modal(document.getElementById('quotaReachedModal')).show();
+            {% else %}
+                window.location.href = "{{ path('app_admin_supplier_new') }}";
+            {% endif %}
+        });
+    }
+
+    // Toggle status
+    const toggleModal = new bootstrap.Modal(document.getElementById('toggleSupplierModal'));
+    const toggleForm = document.getElementById('toggleSupplierForm');
+    const toggleToken = document.getElementById('toggleSupplierToken');
+    const toggleMessage = document.getElementById('toggleSupplierMessage');
+
+    document.querySelectorAll('.toggle-supplier-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.supplierId;
+            const name = this.dataset.supplierName;
+            const current = this.dataset.currentStatus;
+            const action = current === 'active' ? 'désactiver' : 'activer';
+            toggleMessage.innerText = `Êtes-vous sûr de vouloir ${action} le fournisseur "${name}" ?`;
+            toggleForm.action = `/admin/supplier/${id}/toggle-status`;
+            toggleToken.value = this.dataset.token;
+            toggleModal.show();
+        });
+    });
+
+    // Suppression
+    {% if is_granted('ROLE_ADMIN') %}
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteSupplierModal'));
+    const deleteForm = document.getElementById('deleteSupplierForm');
+    const deleteToken = document.getElementById('deleteSupplierCsrfToken');
+    const deleteMessage = document.getElementById('deleteSupplierMessage');
+
+    document.querySelectorAll('.delete-supplier-btn:not([disabled])').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.supplierId;
+            const name = this.dataset.supplierName;
+            deleteMessage.innerHTML = `
+                <div class="alert alert-warning mb-2 p-2">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Cette action est irréversible.
+                </div>
+                <p class="mb-0">Supprimer le fournisseur <strong>"${name}"</strong> ?</p>
+            `;
+            deleteForm.action = `/admin/supplier/${id}`;
+            deleteToken.value = '{{ csrf_token("delete") }}';
+            deleteModal.show();
+        });
+    });
+    {% endif %}
+});
+</script>
 {% endblock %}

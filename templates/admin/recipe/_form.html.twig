@@ -1,0 +1,655 @@
+{# templates/admin/recipe/_form.html.twig #}
+
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+{% form_theme form 'form/recipe_item.html.twig' %}
+
+<div class="container-fluid px-4">
+    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+
+    <div class="row g-4">
+        <!-- Colonne image -->
+        <div class="col-lg-4">
+            <div class="card shadow-lg border-0 h-100 card-hover">
+                <div class="card-header bg-gradient-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-image me-2"></i>Image du plat
+                    </h5>
+                </div>
+                <div class="card-body text-center d-flex flex-column">
+                    <!-- Preview de l'image -->
+                    <div class="recipe-image-preview mb-4 flex-grow-1 d-flex flex-column justify-content-center">
+                        {% if recipe.image %}
+                            <div class="position-relative mx-auto" style="width: 200px; height: 200px;">
+                                <img src="{{ asset('uploads/plats/' ~ recipe.image) }}"
+                                     alt="{{ recipe.name }}"
+                                     class="img-fluid rounded shadow-lg recipe-preview"
+                                     style="width: 100%; height: 100%; object-fit: cover; border: 5px solid #f8f9fa;">
+                                {% if recipe.id is defined and recipe.id is not null %}
+                                    <button type="button"
+                                            class="btn btn-danger btn-sm position-absolute rounded-circle shadow"
+                                            style="bottom: 10px; right: 10px; width: 36px; height: 36px;"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteImageModal"
+                                            title="Supprimer l'image">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="recipe-placeholder rounded d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg"
+                                 style="width: 200px; height: 200px; border: 5px solid #f8f9fa;">
+                                <i class="fas fa-utensils fa-5x"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Champ de téléchargement d'image -->
+                    <div class="mt-auto">
+                        <div class="file-upload-wrapper">
+                            {{ form_widget(form.image, {'attr': {
+                                'class': 'form-control',
+                                'onchange': 'previewRecipeImage(this)',
+                                'accept': 'image/*'
+                            }}) }}
+                            <div class="form-text mt-2">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Formats acceptés : JPG, PNG, GIF, WebP. Taille max : 2M
+                            </div>
+                            <div class="invalid-feedback d-block">
+                                {{ form_errors(form.image) }}
+                            </div>
+                        </div>
+
+                        <!-- Bouton de sélection stylé -->
+                        <div class="mt-3">
+                            <label for="{{ form.image.vars.id }}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                {{ recipe.image ? 'Changer l\'image' : 'Choisir une image' }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne informations -->
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 h-100 card-hover">
+                <div class="card-header bg-gradient-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-utensils me-2"></i>
+                        {% if recipe.id is defined and recipe.id is not null %}
+                            Modifier le plat
+                        {% else %}
+                            Nouveau plat
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Nom et prix -->
+                    <div class="row g-3">
+                        <div class="col-md-7">
+                            <div class="form-floating">
+                                {{ form_widget(form.name, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' ',
+                                    'autocomplete': 'off'
+                                }}) }}
+                                <label for="{{ form.name.vars.id }}">
+                                    <i class="fas fa-tag me-1"></i> Nom du plat *
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.name) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-floating">
+                                {{ form_widget(form.selling_price, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' ',
+                                    'autocomplete': 'off',
+                                    'oninput': 'calculateRecipeMargin()'
+                                }}) }}
+                                <label for="{{ form.selling_price.vars.id }}">
+                                    <i class="fas fa-money-bill-wave me-1"></i> Prix de vente (FCFA) *
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.selling_price) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Catégorie et statut -->
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form_widget(form.category, {'attr': {
+                                    'class': 'form-select select2-category',
+                                    'placeholder': ' '
+                                }}) }}
+                                <label for="{{ form.category.vars.id }}">
+                                    <i class="fas fa-folder me-1"></i> Catégorie
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.category) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light h-100">
+                                <div class="card-body py-2">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-toggle-on me-2 text-primary"></i>
+                                            <span class="fw-bold">Statut du plat</span>
+                                        </div>
+                                        <span class="badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }}" id="recipe-status-badge">
+                                            {{ form.is_active.vars.data ? 'ACTIF' : 'INACTIF' }}
+                                        </span>
+                                    </div>
+                                    <div class="form-check form-switch mt-2">
+                                        {{ form_widget(form.is_active, {'attr': {
+                                            'class': 'form-check-input',
+                                            'role': 'switch'
+                                        }}) }}
+                                        <label class="form-check-label" for="{{ form.is_active.vars.id }}" id="recipe-status-label">
+                                            {{ form.is_active.vars.data ? 'Plat actif' : 'Plat inactif' }}
+                                        </label>
+                                    </div>
+                                    <small class="text-muted mt-1 d-block">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Les plats inactifs ne seront pas visibles
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description et instructions -->
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form_widget(form.description, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' ',
+                                    'style': 'height: 120px'
+                                }}) }}
+                                <label for="{{ form.description.vars.id }}">
+                                    <i class="fas fa-align-left me-1"></i> Description
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.description) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form_widget(form.instructions, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' ',
+                                    'style': 'height: 120px'
+                                }}) }}
+                                <label for="{{ form.instructions.vars.id }}">
+                                    <i class="fas fa-book-open me-1"></i> Instructions
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.instructions) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ingrédients -->
+                    <div class="card mt-4 border-0 shadow-sm">
+                        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-cup-straw me-2 text-primary"></i> Ingrédients
+                            </h5>
+                            <button type="button" class="btn btn-sm btn-primary" id="add-ingredient">
+                                <i class="fas fa-plus me-1"></i> Ajouter un ingrédient
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            {{ form_row(form.recipeItems, {'attr': {'class': 'recipe-items-collection'}}) }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer avec boutons -->
+                <div class="card-footer bg-light py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ path('app_admin_recipe_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i> Annuler
+                        </a>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <i class="fas fa-save me-2"></i>
+                                {{ button_label|default('Enregistrer le plat') }}
+                            </button>
+                            {% if recipe.id is defined and recipe.id is not null %}
+                                <a href="{{ path('app_admin_recipe_show', {'id': recipe.id}) }}" class="btn btn-info btn-lg">
+                                    <i class="fas fa-eye me-2"></i> Voir
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+</div>
+
+<!-- Modal de suppression d'image -->
+{% if recipe.id is defined and recipe.id is not null and recipe.image %}
+<div class="modal fade" id="deleteImageModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Supprimer l'image
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
+                    <h5>Êtes-vous sûr de vouloir supprimer cette image ?</h5>
+                    <p class="text-muted">Cette action ne peut pas être annulée.</p>
+                </div>
+                <div class="mb-3">
+                    <img src="{{ asset('uploads/plats/' ~ recipe.image) }}"
+                         alt="{{ recipe.name }}"
+                         class="rounded shadow-lg"
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i> Annuler
+                </button>
+                <form action="{{ path('app_admin_recipe_delete_image', {'id': recipe.id}) }}" method="post" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-image' ~ recipe.id) }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i> Supprimer l'image
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Modal de suppression d'ingrédient -->
+<div class="modal fade" id="deleteIngredientModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Confirmation de suppression
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
+                <h5>Êtes-vous sûr de vouloir supprimer cet ingrédient ?</h5>
+                <p class="text-muted">Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i> Annuler
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteIngredient">
+                    <i class="fas fa-trash me-2"></i> Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+// Mapping des unités vers leur type
+const unitTypes = {
+    'kg': 'weight',
+    'g': 'weight',
+    'mg': 'weight',
+    'L': 'volume',
+    'ml': 'volume',
+    'cl': 'volume',
+    'pièce': 'piece',
+    'piece': 'piece',
+    'boîte': 'piece',
+    'boite': 'piece',
+    'carton': 'piece',
+    'paquet': 'piece',
+    'pack': 'piece'
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Données des produits
+    const availableProducts = {{ availableProducts|json_encode|raw }};
+    const productsMap = {};
+    availableProducts.forEach(p => {
+        productsMap[p.id] = p;
+    });
+
+    // ==================== PREVIEW IMAGE ====================
+    window.previewRecipeImage = function(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            const preview = document.querySelector('.recipe-preview') || document.querySelector('.recipe-placeholder');
+            reader.onload = function(e) {
+                if (preview && preview.classList.contains('recipe-placeholder')) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'img-fluid rounded shadow-lg recipe-preview';
+                    img.style = 'width: 200px; height: 200px; object-fit: cover; border: 5px solid #f8f9fa;';
+                    preview.parentNode.replaceChild(img, preview);
+                } else if (preview) {
+                    preview.src = e.target.result;
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    };
+
+    // ==================== CALCUL DE MARGE (simulé pour plat) ====================
+    window.calculateRecipeMargin = function() {
+        const sellingPrice = parseFloat(document.getElementById('{{ form.selling_price.vars.id }}').value) || 0;
+        const marginAmount = sellingPrice;
+        const badge = document.getElementById('margin-percentage');
+        if (badge) badge.textContent = marginAmount.toLocaleString('fr-FR') + ' FCFA';
+    };
+
+    // ==================== SELECT2 ====================
+    function initSelect2(selector) {
+        if (typeof $ !== 'undefined' && $.fn.select2) {
+            $(selector).select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Rechercher un produit...',
+                allowClear: true,
+                width: '100%',
+                language: {
+                    noResults: function() { return 'Aucun produit trouvé'; }
+                }
+            });
+        }
+    }
+
+    // Sauvegarder les options originales des selects d'unité
+    const unitSelects = document.querySelectorAll('.unit-input');
+    const unitOptionsMap = new Map();
+    unitSelects.forEach(select => {
+        unitOptionsMap.set(select, Array.from(select.options));
+    });
+
+    function filterUnitsForSelect(select, productId) {
+        const product = productsMap[productId];
+        const originalOptions = unitOptionsMap.get(select);
+        if (!originalOptions) return;
+
+        if (!product || !product.unitType) {
+            // Restaurer toutes les options
+            select.innerHTML = '';
+            originalOptions.forEach(opt => select.appendChild(opt.cloneNode(true)));
+            return;
+        }
+
+        const productType = product.unitType;
+        const filteredOptions = originalOptions.filter(opt => {
+            const unitValue = opt.value;
+            if (!unitValue) return true; // conserver le placeholder
+            return unitTypes[unitValue] === productType;
+        });
+
+        select.innerHTML = '';
+        filteredOptions.forEach(opt => select.appendChild(opt.cloneNode(true)));
+    }
+
+    function bindProductChange(select) {
+        $(select).on('change', function() {
+            const productId = $(this).val();
+            const itemDiv = $(this).closest('.recipe-item');
+            const unitInput = itemDiv.find('.unit-input');
+
+            if (unitInput.length) {
+                filterUnitsForSelect(unitInput[0], productId);
+                if (productId && productsMap[productId] && productsMap[productId].unit) {
+                    const productUnit = productsMap[productId].unit;
+                    const available = Array.from(unitInput[0].options).some(opt => opt.value === productUnit);
+                    if (available) {
+                        unitInput.val(productUnit);
+                    } else {
+                        unitInput.val('');
+                    }
+                } else {
+                    unitInput.val('');
+                }
+            }
+        });
+    }
+
+    // Initialiser les ingrédients existants
+    document.querySelectorAll('.product-select').forEach(select => {
+        initSelect2(select);
+        bindProductChange(select);
+        // Appliquer le filtre initial
+        const productId = select.value;
+        const itemDiv = select.closest('.recipe-item');
+        const unitInput = itemDiv.querySelector('.unit-input');
+        if (unitInput && productId) {
+            filterUnitsForSelect(unitInput, productId);
+        }
+    });
+
+    // ==================== AJOUT DYNAMIQUE D'INGRÉDIENT ====================
+    let index = {{ form.recipeItems|length }};
+    const container = document.querySelector('.recipe-items-collection');
+    const prototype = container.dataset.prototype;
+    const addBtn = document.getElementById('add-ingredient');
+
+    if (addBtn) {
+        addBtn.addEventListener('click', function() {
+            const newFormHtml = prototype.replace(/__name__/g, index);
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = newFormHtml;
+            const newItem = tempDiv.firstElementChild;
+            container.appendChild(newItem);
+
+            // Initialiser Select2 et le changement de produit
+            const productSelect = newItem.querySelector('.product-select');
+            if (productSelect) {
+                initSelect2(productSelect);
+                bindProductChange(productSelect);
+            }
+
+            // Sauvegarder les options de l'unité (car c'est un nouvel élément)
+            const newUnitSelect = newItem.querySelector('.unit-input');
+            if (newUnitSelect) {
+                unitOptionsMap.set(newUnitSelect, Array.from(newUnitSelect.options));
+            }
+
+            // Attacher le bouton de suppression
+            const deleteBtn = newItem.querySelector('.delete-ingredient');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const modal = new bootstrap.Modal(document.getElementById('deleteIngredientModal'));
+                    const confirmBtn = document.getElementById('confirmDeleteIngredient');
+                    modal.show();
+                    confirmBtn.onclick = function() {
+                        newItem.remove();
+                        modal.hide();
+                        confirmBtn.onclick = null;
+                    };
+                });
+            }
+            index++;
+        });
+    }
+
+    // ==================== SUPPRESSION INGRÉDIENT EXISTANT ====================
+    let currentDeleteTarget = null;
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteIngredientModal'));
+    const confirmBtn = document.getElementById('confirmDeleteIngredient');
+
+    document.querySelectorAll('.delete-ingredient').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentDeleteTarget = btn.closest('.recipe-item');
+            deleteModal.show();
+        });
+    });
+
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+            if (currentDeleteTarget) {
+                currentDeleteTarget.remove();
+                currentDeleteTarget = null;
+                deleteModal.hide();
+            }
+        });
+    }
+
+    document.getElementById('deleteIngredientModal').addEventListener('hidden.bs.modal', function() {
+        currentDeleteTarget = null;
+    });
+
+    // ==================== GESTION DU STATUT ====================
+    const activeSwitch = document.getElementById('{{ form.is_active.vars.id }}');
+    const statusBadge = document.getElementById('recipe-status-badge');
+    const statusLabel = document.getElementById('recipe-status-label');
+    if (activeSwitch && statusBadge && statusLabel) {
+        activeSwitch.addEventListener('change', function() {
+            const isActive = this.checked;
+            statusBadge.textContent = isActive ? 'ACTIF' : 'INACTIF';
+            statusBadge.className = isActive ? 'badge bg-success' : 'badge bg-danger';
+            statusLabel.textContent = isActive ? 'Plat actif' : 'Plat inactif';
+        });
+    }
+
+    // ==================== SELECT2 POUR CATÉGORIE ====================
+    const categorySelect = document.querySelector('.select2-category');
+    if (categorySelect && typeof $ !== 'undefined') {
+        $(categorySelect).select2({
+            theme: 'bootstrap-5',
+            placeholder: 'Sélectionnez une catégorie...',
+            width: '100%',
+            allowClear: false
+        });
+    }
+
+    // ==================== VALIDATION BOOTSTRAP ====================
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<style>
+.card-hover {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+}
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+}
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+.form-floating > label {
+    padding-left: 2.5rem;
+}
+.form-floating > .form-control,
+.form-floating > .form-select {
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+    padding: 1rem 0.75rem 0.5rem 2.5rem;
+}
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select:focus ~ label,
+.form-floating > .form-select:not([value=""]):not(:placeholder-shown) ~ label {
+    transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
+    color: #667eea;
+}
+.form-floating > .form-control,
+.form-floating > .form-select {
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+}
+.form-floating > .form-control:focus,
+.form-floating > .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+}
+.select2-container--bootstrap-5 .select2-selection {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px !important;
+    min-height: calc(3.5rem + 2px);
+    padding: 1rem 0.75rem 0.5rem 2.5rem;
+}
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    line-height: 1.5;
+    padding-left: 0;
+}
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    border: none;
+}
+.recipe-preview {
+    transition: all 0.3s ease;
+}
+.recipe-preview:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+.form-switch .form-check-input {
+    width: 3.5em;
+    height: 1.8em;
+    cursor: pointer;
+    margin-top: 0.25rem;
+}
+.form-check-input:checked {
+    background-color: #198754;
+    border-color: #198754;
+}
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+@media (max-width: 768px) {
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+    }
+}
+</style>
+{% endblock %}

@@ -3,12 +3,18 @@ parameters:
     kernel.secret: '%env(APP_SECRET)%'
     app.secret: '%env(APP_SECRET)%'
     
+    
+    # Configuration environnement
+    app.is_local: false  # Valeur par défaut, sera surchargée en dev
+    
     # Chemins des répertoires
     uploads_directory: '%kernel.project_dir%/public/uploads'
     categories_directory: '%kernel.project_dir%/public/uploads/categories'
     products_directory: '%kernel.project_dir%/public/uploads/products'
     logos_directory: '%kernel.project_dir%/public/uploads/logos'
     photos_directory: '%kernel.project_dir%/public/uploads/photos'
+    categories_plats_directory: '%kernel.project_dir%/public/uploads/categories_plats'
+    images_plats_directory: '%kernel.project_dir%/public/uploads/images_plats'
     
     # Emails
     app.email_from: 'contact@hma-market.com'
@@ -40,6 +46,8 @@ services:
             string $bonCommandeDirectory: '%bon_commande_directory%'
             string $recuAchatDirectory: '%recu_achat_directory%'
             string $recuAbonnementDirectory: '%recus_abonnement_directory%'
+            string $categoriesPlatsDirectory: '%categories_plats_directory%'
+            string $imagesPlatsDirectory: '%images_plats_directory%'
             
             # ✅ Liaison des valeurs d'email
             string $fromEmail: '%mailer_from_email%'
@@ -79,12 +87,38 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
 
-    # Service d'envoi d'emails - SIMPLIFIÉ grâce au bind
+    # Service d'envoi d'emails
     App\Service\EmailService:
         arguments:
             $mailer: '@mailer.mailer'
             $logger: '@monolog.logger'
             $urlGenerator: '@router.default'
+        public: true
+
+    # Service de notification (email + WhatsApp)
+    App\Service\NotificationService:
+        arguments:
+            $mailer: '@mailer.mailer'
+            $twig: '@twig'
+            $logger: '@monolog.logger'
+            $appEmail: '%mailer_from_email%'
+            $appUrl: '%app_url%'
+            $isLocal: '%app.is_local%' 
+        public: true
+
+    
+
+    # Service de gestion du stock
+    App\Service\StockService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $logger: '@monolog.logger'
+        public: true
+
+    # Service de recherche de produits
+    App\Service\ProductSearchService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
         public: true
 
     # Service d'upload de fichiers
@@ -112,7 +146,7 @@ services:
 
     App\EventListener\LoginListener:
         tags:
-        - { name: kernel.event_subscriber }
+            - { name: kernel.event_subscriber }
 
     App\EventListener\LogoutListener:
         tags:
@@ -147,5 +181,12 @@ services:
     App\Service\InvoicePdfGenerator:
         arguments:
             $twig: '@twig'
+            $logger: '@monolog.logger'
+            $bonCommandeDirectory: '%bon_commande_directory%'
+            $recuAchatDirectory: '%recu_achat_directory%'
             $pdfDirectory: '%recus_abonnement_directory%'
+        public: false
+
+    # Service de conversion d'unités
+    App\Service\UnitConverter:
         public: false

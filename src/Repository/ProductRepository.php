@@ -1,13 +1,13 @@
 <?php
-// src/Repository/ProductRepository.php
 
 namespace App\Repository;
 
 use App\Entity\Category;
+use App\Entity\HmaService;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -19,238 +19,264 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function findAllPaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function search(string $term, int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.name LIKE :term')
-            ->orWhere('p.barcode LIKE :term')
-            ->orWhere('p.description LIKE :term')
-            ->orWhere('c.name LIKE :term')
-            ->setParameter('term', '%' . $term . '%')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findActivePaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.is_active = true')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findInactivePaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.is_active = false')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findLowStockPaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.min_quantity > 0')
-            ->andWhere('p.stock_quantity <= p.min_quantity')
-            ->orderBy('p.stock_quantity', 'ASC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findPerishablePaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.has_expiry_date = true')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findNonPerishablePaginated(int $page = 1, int $limit = 12): Paginator
-    {
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('p.has_expiry_date = false')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findByCategoryPaginated(int $categoryId, int $page = 1, int $limit = 12): Paginator
-    {
-        // Récupérer la catégorie
-        $entityManager = $this->getEntityManager();
-        $category = $entityManager->getRepository(Category::class)->find($categoryId);
-        
-        // Si la catégorie n'existe pas, retourner un paginator vide
-        if (!$category) {
-            return new Paginator(new \Doctrine\ORM\Query($entityManager));
-        }
-        
-        // Récupérer tous les IDs des catégories (la catégorie parent + ses enfants)
-        $categoryIds = $this->getAllCategoryIds($category);
-        
-        $query = $this->createQueryBuilder('p')
-            ->leftJoin('p.category', 'c')
-            ->addSelect('c')
-            ->where('c.id IN (:categoryIds)')
-            ->setParameter('categoryIds', $categoryIds)
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
-
-        return $this->paginate($query, $page, $limit);
-    }
-
-    public function findByCategoryAndStatusPaginated(int $categoryId, string $status, int $page = 1, int $limit = 12): Paginator
-    {
-        $entityManager = $this->getEntityManager();
-        $categoryIds = [];
-        
-        // Si categoryId n'est pas 0 (Toutes catégories)
-        if ($categoryId > 0) {
-            $category = $entityManager->getRepository(Category::class)->find($categoryId);
-            if ($category) {
-                $categoryIds = $this->getAllCategoryIds($category);
-            }
-        }
-        
-        $queryBuilder = $this->createQueryBuilder('p')
+    /**
+     * Retourne les produits paginés selon les filtres.
+     */
+    public function findFilteredPaginated(
+        ?HmaService $hmaService,
+        int $categoryId = 0,
+        string $status = '',
+        string $expiryType = '',
+        string $subscriptionStatus = '',
+        string $dosage = '',
+        string $form = '',
+        string $prescriptionRequired = '',
+        string $search = '',
+        int $page = 1,
+        int $limit = 12,
+        ?int $promotionId = null,
+        string $unit = '' // Nouveau paramètre
+    ): Paginator {
+        $qb = $this->createQueryBuilder('p')
             ->leftJoin('p.category', 'c')
             ->addSelect('c')
             ->orderBy('p.created_at', 'DESC');
-        
-        // Appliquer le filtre de catégorie si nécessaire
-        if (!empty($categoryIds)) {
-            $queryBuilder->where('c.id IN (:categoryIds)')
-                ->setParameter('categoryIds', $categoryIds);
+
+        if ($hmaService) {
+            $qb->andWhere('p.hma_service = :hmaService')
+               ->setParameter('hmaService', $hmaService);
         }
-        
-        // Appliquer le filtre de statut
-        switch ($status) {
-            case 'active':
-                $queryBuilder->andWhere('p.is_active = true');
-                break;
-            case 'inactive':
-                $queryBuilder->andWhere('p.is_active = false');
-                break;
-            case 'low-stock':
-                $queryBuilder->andWhere('p.min_quantity > 0')
-                    ->andWhere('p.stock_quantity <= p.min_quantity');
-                break;
-            case 'perishable':
-                $queryBuilder->andWhere('p.has_expiry_date = true');
-                break;
-            case 'non-perishable':
-                $queryBuilder->andWhere('p.has_expiry_date = false');
-                break;
+
+        // Filtre par catégorie (avec sous-catégories)
+        if ($categoryId > 0) {
+            $category = $this->getEntityManager()->getRepository(Category::class)->find($categoryId);
+            if ($category) {
+                $categoryIds = $this->getAllCategoryIds($category);
+                $qb->andWhere('c.id IN (:categoryIds)')
+                   ->setParameter('categoryIds', $categoryIds);
+            }
         }
-        
-        return $this->paginate($queryBuilder->getQuery(), $page, $limit);
+
+        // Filtre par recherche
+        if ($search) {
+            $qb->andWhere('(p.name LIKE :search OR p.barcode LIKE :search OR p.description LIKE :search)')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        // Filtre par statut (is_active)
+        if ($status) {
+            switch ($status) {
+                case 'active':
+                    $qb->andWhere('p.is_active = true');
+                    break;
+                case 'inactive':
+                    $qb->andWhere('p.is_active = false');
+                    break;
+                case 'low-stock':
+                    $qb->andWhere('p.min_quantity > 0')
+                       ->andWhere('p.stock_quantity <= p.min_quantity');
+                    break;
+            }
+        }
+
+        // Filtre par type de date critique
+        if ($expiryType) {
+            switch ($expiryType) {
+                case 'perishable':
+                    $qb->andWhere('p.has_expiry_date = true');
+                    break;
+                case 'non-perishable':
+                    $qb->andWhere('p.has_expiry_date = false');
+                    break;
+            }
+        }
+
+        // Filtre par abonnement (subscription_active)
+        if ($subscriptionStatus) {
+            if ($subscriptionStatus === 'active') {
+                $qb->andWhere('p.subscription_active = true');
+            } elseif ($subscriptionStatus === 'inactive') {
+                $qb->andWhere('p.subscription_active = false');
+            }
+        }
+
+        // Filtres supplémentaires : dosage, forme, prescription_required
+        if ($dosage) {
+            $qb->andWhere('p.dosage LIKE :dosage')
+               ->setParameter('dosage', '%' . $dosage . '%');
+        }
+        if ($form) {
+            $qb->andWhere('p.form LIKE :form')
+               ->setParameter('form', '%' . $form . '%');
+        }
+        if ($prescriptionRequired !== '') {
+            $qb->andWhere('p.prescription_required = :prescriptionRequired')
+               ->setParameter('prescriptionRequired', filter_var($prescriptionRequired, FILTER_VALIDATE_BOOLEAN));
+        }
+
+        // Filtre par promotion (par ID)
+        if ($promotionId) {
+            $qb->leftJoin('p.promotionProducts', 'pp')
+               ->leftJoin('pp.promotion', 'promo')
+               ->andWhere('promo.id = :promoId')
+               ->setParameter('promoId', $promotionId);
+        }
+
+        // Filtre par unité
+        if ($unit) {
+            $qb->andWhere('p.unit = :unit')
+               ->setParameter('unit', $unit);
+        }
+
+        return $this->paginate($qb->getQuery(), $page, $limit);
     }
 
-    public function findAllCategoriesWithCount(): array
-    {
-        return $this->createQueryBuilder('p')
-            ->select('c.id, c.name, COUNT(p.id) as productCount')
-            ->leftJoin('p.category', 'c')
-            ->groupBy('c.id')
-            ->orderBy('c.name', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
+    /**
+     * Compte les produits selon les filtres.
+     */
+    public function countFiltered(
+        ?HmaService $hmaService,
+        int $categoryId = 0,
+        string $status = '',
+        string $expiryType = '',
+        string $subscriptionStatus = '',
+        string $dosage = '',
+        string $form = '',
+        string $prescriptionRequired = '',
+        string $search = '',
+        ?int $promotionId = null,
+        string $unit = '' // Nouveau paramètre
+    ): int {
+        $qb = $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)');
 
-    public function findHierarchicalCategories(): array
-    {
-        $entityManager = $this->getEntityManager();
-        $categories = $entityManager->getRepository(Category::class)->findBy(['parent' => null], ['name' => 'ASC']);
-        
-        $result = [];
-        foreach ($categories as $category) {
-            $result[] = [
-                'id' => $category->getId(),
-                'name' => $category->getName(),
-                'productCount' => $this->countProductsInCategoryHierarchy($category),
-                'children' => $this->getChildCategories($category),
-                'isParent' => true,
-                'level' => 0
-            ];
+        if ($hmaService) {
+            $qb->andWhere('p.hma_service = :hmaService')
+               ->setParameter('hmaService', $hmaService);
         }
-        
-        return $result;
-    }
 
-    private function getChildCategories(Category $category): array
-    {
-        $children = [];
-        foreach ($category->getChildren() as $child) {
-            $children[] = [
-                'id' => $child->getId(),
-                'name' => $child->getName(),
-                'productCount' => $this->countProductsInCategoryHierarchy($child),
-                'children' => $this->getChildCategories($child),
-                'isParent' => !$child->getChildren()->isEmpty(),
-                'level' => 1
-            ];
+        if ($categoryId > 0) {
+            $category = $this->getEntityManager()->getRepository(Category::class)->find($categoryId);
+            if ($category) {
+                $categoryIds = $this->getAllCategoryIds($category);
+                $qb->join('p.category', 'c')
+                   ->andWhere('c.id IN (:categoryIds)')
+                   ->setParameter('categoryIds', $categoryIds);
+            }
         }
-        return $children;
+
+        if ($search) {
+            $qb->andWhere('(p.name LIKE :search OR p.barcode LIKE :search OR p.description LIKE :search)')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($status) {
+            switch ($status) {
+                case 'active':
+                    $qb->andWhere('p.is_active = true');
+                    break;
+                case 'inactive':
+                    $qb->andWhere('p.is_active = false');
+                    break;
+                case 'low-stock':
+                    $qb->andWhere('p.min_quantity > 0')
+                       ->andWhere('p.stock_quantity <= p.min_quantity');
+                    break;
+            }
+        }
+
+        if ($expiryType) {
+            switch ($expiryType) {
+                case 'perishable':
+                    $qb->andWhere('p.has_expiry_date = true');
+                    break;
+                case 'non-perishable':
+                    $qb->andWhere('p.has_expiry_date = false');
+                    break;
+            }
+        }
+
+        if ($subscriptionStatus) {
+            if ($subscriptionStatus === 'active') {
+                $qb->andWhere('p.subscription_active = true');
+            } elseif ($subscriptionStatus === 'inactive') {
+                $qb->andWhere('p.subscription_active = false');
+            }
+        }
+
+        if ($dosage) {
+            $qb->andWhere('p.dosage LIKE :dosage')
+               ->setParameter('dosage', '%' . $dosage . '%');
+        }
+        if ($form) {
+            $qb->andWhere('p.form LIKE :form')
+               ->setParameter('form', '%' . $form . '%');
+        }
+        if ($prescriptionRequired !== '') {
+            $qb->andWhere('p.prescription_required = :prescriptionRequired')
+               ->setParameter('prescriptionRequired', filter_var($prescriptionRequired, FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if ($promotionId) {
+            $qb->leftJoin('p.promotionProducts', 'pp')
+               ->leftJoin('pp.promotion', 'promo')
+               ->andWhere('promo.id = :promoId')
+               ->setParameter('promoId', $promotionId);
+        }
+
+        // Filtre par unité
+        if ($unit) {
+            $qb->andWhere('p.unit = :unit')
+               ->setParameter('unit', $unit);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    private function countProductsInCategoryHierarchy(Category $category): int
+    /**
+     * Compte les produits actifs pour un service donné.
+     */
+    public function countActive(?HmaService $hmaService): int
     {
-        $categoryIds = $this->getAllCategoryIds($category);
-        
+        $qb = $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->where('p.is_active = true');
+
+        if ($hmaService) {
+            $qb->andWhere('p.hma_service = :hmaService')
+               ->setParameter('hmaService', $hmaService);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function countSubscriptionActive(HmaService $hmaService): int
+    {
         return $this->createQueryBuilder('p')
             ->select('COUNT(p.id)')
-            ->join('p.category', 'c')
-            ->where('c.id IN (:categoryIds)')
-            ->setParameter('categoryIds', $categoryIds)
+            ->andWhere('p.hma_service = :service')
+            ->setParameter('service', $hmaService)
+            ->andWhere('p.subscription_active = :subActive')
+            ->setParameter('subActive', true)
             ->getQuery()
             ->getSingleScalarResult();
     }
 
+    /**
+     * Récupère tous les IDs d'une catégorie et de ses descendants.
+     */
     private function getAllCategoryIds(Category $category): array
     {
-        $categoryIds = [$category->getId()];
-        
-        // Ajouter tous les IDs des enfants récursivement
+        $ids = [$category->getId()];
         foreach ($category->getChildren() as $child) {
-            $categoryIds = array_merge($categoryIds, $this->getAllCategoryIds($child));
+            $ids = array_merge($ids, $this->getAllCategoryIds($child));
         }
-        
-        return $categoryIds;
+        return $ids;
     }
 
+    /**
+     * Applique la pagination à une requête.
+     */
     private function paginate($query, int $page, int $limit): Paginator
     {
         $paginator = new Paginator($query);
@@ -261,16 +287,21 @@ class ProductRepository extends ServiceEntityRepository
         return $paginator;
     }
 
-    public function searchActiveProducts(string $query, int $limit = 10): array
+     /**
+     * Retourne la liste des unités distinctes utilisées par les produits de l'entreprise.
+     *
+     * @return array<string>
+     */
+    public function findDistinctUnits(HmaService $hmaService): array
     {
-        return $this->createQueryBuilder('p')
-            ->where('p.is_active = :active')
-            ->andWhere('(p.name LIKE :query OR p.barcode LIKE :query)')
-            ->setParameter('active', true)
-            ->setParameter('query', '%' . $query . '%')
-            ->orderBy('p.name', 'ASC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+        $qb = $this->createQueryBuilder('p')
+            ->select('DISTINCT p.unit')
+            ->where('p.hma_service = :hmaService')
+            ->andWhere('p.unit IS NOT NULL')
+            ->setParameter('hmaService', $hmaService)
+            ->orderBy('p.unit', 'ASC');
+
+        $results = $qb->getQuery()->getScalarResult();
+        return array_column($results, 'unit');
     }
 }

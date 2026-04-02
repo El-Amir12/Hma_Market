@@ -1,0 +1,93 @@
+{# templates/admin/category_recipe/new.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Catégorie de Plats - HMA Market{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <!-- En-tête avec effets d'animation -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="{{ path('app_admin_category_recipe_index') }}" class="btn btn-outline-secondary mb-2 btn-hover-scale">
+                <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+            </a>
+            <h1 class="h3 mb-0 text-gray-800 slide-in-left">
+                <i class="fas fa-plus-circle me-2"></i> Nouvelle Catégorie de Plats
+            </h1>
+            <p class="text-muted mt-2">Créez une nouvelle catégorie pour organiser vos plats</p>
+        </div>
+        <div class="float-up">
+            <i class="fas fa-utensils fa-3x text-primary opacity-75"></i>
+        </div>
+    </div>
+
+    <!-- Alertes flash -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+    
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <!-- Formulaire -->
+    {{ include('admin/category_recipe/_form.html.twig') }}
+
+    <!-- Info-bulle d'aide -->
+    <div class="alert alert-info alert-dismissible fade show mt-4" role="alert">
+        <div class="d-flex">
+            <div class="me-3">
+                <i class="fas fa-lightbulb fa-2x text-info"></i>
+            </div>
+            <div>
+                <h6 class="alert-heading mb-1">
+                    <i class="fas fa-info-circle me-1"></i> Conseils pour créer une catégorie de plats
+                </h6>
+                <ul class="mb-0 ps-3 small">
+                    <li>Choisissez un nom clair et descriptif (ex: Entrées, Plats principaux, Desserts)</li>
+                    <li>Ajoutez une image représentative si possible</li>
+                    <li>Organisez vos catégories en hiérarchie pour une meilleure navigation dans le menu</li>
+                    <li>Les catégories désactivées ne seront pas visibles dans le menu</li>
+                </ul>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</div>
+
+{% block stylesheets %}
+<style>
+.slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.float-up {
+    animation: floatUp 3s ease-in-out infinite;
+}
+
+@keyframes floatUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.btn-hover-scale {
+    transition: all 0.2s ease;
+}
+
+.btn-hover-scale:hover {
+    transform: scale(1.05);
+}
+</style>
+{% endblock %}
+{% endblock %}

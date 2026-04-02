@@ -5,6 +5,7 @@ namespace App\Service;
 
 use Symfony\Component\Security\Core\Security;
 use App\Entity\User;
+use App\Entity\HmaService;
 
 class MenuBuilder
 {
@@ -60,6 +61,21 @@ class MenuBuilder
         return $menus;
     }
 
+    private function getCompanyType(): ?string
+    {
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            return null;
+        }
+        $hmaService = $user->getHmaService();
+        return $hmaService?->getType();
+    }
+
+    private function isRestaurant(): bool
+    {
+        return $this->getCompanyType() === 'restaurant';
+    }
+
     private function getPublicMenu(): array
     {
         return [
@@ -67,7 +83,7 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => 'app_login',
                 'label' => 'Connexion',
-                'icon' => 'bi bi-box-arrow-in-right'
+                'icon' => 'fas fa-sign-in-alt'
             ]
         ];
     }
@@ -78,7 +94,7 @@ class MenuBuilder
             'type' => 'link',
             'route' => 'app_dashboard',
             'label' => 'Tableau de bord',
-            'icon' => 'bi bi-speedometer2'
+            'icon' => 'fas fa-tachometer-alt'
         ];
     }
 
@@ -92,33 +108,33 @@ class MenuBuilder
             [
                 'type' => 'dropdown',
                 'label' => 'Plateforme SaaS',
-                'icon' => 'bi bi-cloud',
+                'icon' => 'fas fa-cloud',
                 'children' => [
                     [
                         'type' => 'link',
                         'route' => 'app_super_admin_subscription_plan_index', 
                         'label' => 'Types d\'abonnement',
-                        'icon' => 'bi bi-tags',
+                        'icon' => 'fas fa-tags',
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_super_admin_hma_service_index',
                         'label' => 'Toutes les entreprises',
-                        'icon' => 'bi bi-building',
+                        'icon' => 'fas fa-building',
                         'coming_soon' => false
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_user_index', // Temporaire
                         'label' => 'Abonnements',
-                        'icon' => 'bi bi-credit-card',
+                        'icon' => 'fas fa-credit-card',
                         'coming_soon' => true
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_user_index', // Temporaire
                         'label' => 'Statistiques globales',
-                        'icon' => 'bi bi-bar-chart',
+                        'icon' => 'fas fa-chart-bar',
                         'coming_soon' => true
                     ]
                 ]
@@ -126,25 +142,25 @@ class MenuBuilder
             [
                 'type' => 'dropdown',
                 'label' => 'Gestion système',
-                'icon' => 'bi bi-gear-wide-connected',
+                'icon' => 'fas fa-cogs',
                 'children' => [
                     [
                         'type' => 'link',
                         'route' => 'app_user_index',
                         'label' => 'Tous les utilisateurs',
-                        'icon' => 'bi bi-people'
+                        'icon' => 'fas fa-users'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_user_new',
                         'label' => 'Créer un utilisateur',
-                        'icon' => 'bi bi-person-plus'
+                        'icon' => 'fas fa-user-plus'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_user_index', // Temporaire
                         'label' => 'Configuration globale',
-                        'icon' => 'bi bi-sliders',
+                        'icon' => 'fas fa-sliders-h',
                         'coming_soon' => true
                     ]
                 ]
@@ -154,7 +170,7 @@ class MenuBuilder
 
     private function getAdminMenu(): array
     {
-        return [
+        $menu = [
             [
                 'type' => 'section',
                 'label' => 'ADMINISTRATION'
@@ -162,20 +178,20 @@ class MenuBuilder
             [
                 'type' => 'dropdown',
                 'label' => 'Gestion entreprise',
-                'icon' => 'bi bi-building-gear',
+                'icon' => 'fas fa-building',
                 'children' => [
                     [
                         'type' => 'link',
                         'route' => 'app_user_index', // Temporaire
                         'label' => 'Paramètres entreprise',
-                        'icon' => 'bi bi-sliders',
+                        'icon' => 'fas fa-sliders-h',
                         'coming_soon' => true
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_user_index', // Temporaire
                         'label' => 'Abonnement',
-                        'icon' => 'bi bi-credit-card',
+                        'icon' => 'fas fa-credit-card',
                         'coming_soon' => true
                     ]
                 ]
@@ -183,56 +199,191 @@ class MenuBuilder
             [
                 'type' => 'dropdown',
                 'label' => 'Utilisateurs',
-                'icon' => 'bi bi-people',
+                'icon' => 'fas fa-users',
                 'children' => [
                     [
                         'type' => 'link',
                         'route' => 'app_user_index',
                         'label' => 'Liste des utilisateurs',
-                        'icon' => 'bi bi-list-ul'
+                        'icon' => 'fas fa-list-ul'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_user_new',
                         'label' => 'Créer un utilisateur',
-                        'icon' => 'bi bi-person-plus'
-                    ],
-                    [
-                        'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
-                        'label' => 'Gestion des rôles',
-                        'icon' => 'bi bi-shield',
-                        'coming_soon' => true
+                        'icon' => 'fas fa-user-plus'
                     ]
                 ]
             ],
             [
                 'type' => 'dropdown',
                 'label' => 'Fournisseurs',
-                'icon' => 'bi bi-truck',
+                'icon' => 'fas fa-truck',
                 'children' => [
                     [
                         'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
+                        'route' => 'app_admin_supplier_index', 
                         'label' => 'Liste des fournisseurs',
-                        'icon' => 'bi bi-list-ul',
-                        'coming_soon' => true
+                        'icon' => 'fas fa-list-ul',
+                        'coming_soon' => false
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
+                        'route' => 'app_admin_supplier_new', 
                         'label' => 'Ajouter un fournisseur',
-                        'icon' => 'bi bi-plus-circle',
-                        'coming_soon' => true
+                        'icon' => 'fas fa-plus-circle',
+                        'coming_soon' => false
+                    ]
+                ]
+            ],
+            [
+                'type' => 'dropdown',
+                'label' => 'Approvisionnement',
+                'icon' => 'fas fa-truck',
+                'children' => [
+                    [
+                        'type' => 'link',
+                        'route' => 'purchase_index', 
+                        'label' => 'Commandes d\'achat',
+                        'icon' => 'fas fa-clipboard-list',
+                        'coming_soon' => false
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_admin_supplier_new', 
+                        'label' => 'Mouvement du stock',
+                        'icon' => 'fas fa-exchange-alt',
+                        'coming_soon' => false
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_admin_supplier_new', 
+                        'label' => 'Gestion des lots',
+                        'icon' => 'fas fa-cubes',
+                        'coming_soon' => false
                     ]
                 ]
             ]
         ];
+
+        // Section Catalogue (produits) pour tous les types d'entreprises
+        $catalogueChildren = [
+            [
+                'type' => 'link',
+                'route' => 'app_admin_category_index',
+                'label' => 'Catégories',
+                'icon' => 'fas fa-tags',
+                'coming_soon' => false
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_product_new',
+                'label' => 'Nouveau produit',
+                'icon' => 'fas fa-box',
+                'coming_soon' => false
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_product_index', 
+                'label' => 'Produits',
+                'icon' => 'fas fa-boxes',
+                'coming_soon' => false
+            ],
+        ];
+
+        // Si ce n'est pas un restaurant, on ajoute les promotions dans Catalogue
+        if (!$this->isRestaurant()) {
+            $catalogueChildren[] = [
+                'type' => 'link',
+                'route' => 'app_user_index', // Temporaire
+                'label' => 'Promotions',
+                'icon' => 'fas fa-percent',
+                'coming_soon' => true
+            ];
+            $catalogueChildren[] = [
+                'type' => 'link',
+                'route' => 'app_user_index', // Temporaire
+                'label' => 'Catégories promo',
+                'icon' => 'fas fa-tags',
+                'coming_soon' => true
+            ];
+            $catalogueChildren[] = [
+                'type' => 'link',
+                'route' => 'app_user_index', // Temporaire
+                'label' => 'Promotions des produits',
+                'icon' => 'fas fa-tag',
+                'coming_soon' => true
+            ];
+        }
+
+        $menu[] = [
+            'type' => 'dropdown',
+            'label' => 'Catalogue',
+            'icon' => 'fas fa-th',
+            'children' => $catalogueChildren
+        ];
+
+        // Si restaurant, on ajoute la section Menu (plats) avec ses propres promotions
+        if ($this->isRestaurant()) {
+            $menuChildren = [
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_category_recipe_index', 
+                    'label' => 'Catégories de plats',
+                    'icon' => 'fas fa-th',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_recipe_new',
+                    'label' => 'Nouveau plat',
+                    'icon' => 'fas fa-plus-circle',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_recipe_index', // Route à créer pour liste des plats
+                    'label' => 'Plats',
+                    'icon' => 'fas fa-utensils',
+                    'coming_soon' => false
+                ],
+                // Promotions pour les plats
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index', // Temporaire
+                    'label' => 'Promotions',
+                    'icon' => 'fas fa-percent',
+                    'coming_soon' => true
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index', // Temporaire
+                    'label' => 'Catégories promo',
+                    'icon' => 'fas fa-tags',
+                    'coming_soon' => true
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index', // Temporaire
+                    'label' => 'Promotions des plats',
+                    'icon' => 'fas fa-tag',
+                    'coming_soon' => true
+                ]
+            ];
+            $menu[] = [
+                'type' => 'dropdown',
+                'label' => 'Menu',
+                'icon' => 'fas fa-utensils',
+                'children' => $menuChildren
+            ];
+        }
+
+        return $menu;
     }
 
     private function getManagerMenu(): array
     {
-        return [
+        $menu = [
             [
                 'type' => 'section',
                 'label' => 'GESTION'
@@ -241,58 +392,166 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => 'app_manager_team_index',
                 'label' => 'Mon équipe',
-                'icon' => 'bi bi-people'
-            ],
+                'icon' => 'fas fa-users'
+            ]
+        ];
+
+        // Section Produits pour tous
+        $produitsChildren = [
             [
-                'type' => 'dropdown',
+                'type' => 'link',
+                'route' => 'app_admin_product_index', 
                 'label' => 'Produits',
-                'icon' => 'bi bi-box',
-                'children' => [
-                    [
-                        'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
-                        'label' => 'Catalogue',
-                        'icon' => 'bi bi-grid',
-                        'coming_soon' => true
-                    ],
-                    [
-                        'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
-                        'label' => 'Nouveau produit',
-                        'icon' => 'bi bi-plus-circle',
-                        'coming_soon' => true
-                    ],
-                    [
-                        'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
-                        'label' => 'Catégories',
-                        'icon' => 'bi bi-tags',
-                        'coming_soon' => true
-                    ]
-                ]
+                'icon' => 'fas fa-boxes',
+                'coming_soon' => false
             ],
             [
+                'type' => 'link',
+                'route' => 'app_admin_product_new', 
+                'label' => 'Nouveau produit',
+                'icon' => 'fas fa-plus-circle',
+                'coming_soon' => false
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_category_index',
+                'label' => 'Catégories',
+                'icon' => 'fas fa-tags',
+                'coming_soon' => false
+            ],
+            [
+                'type' => 'link',
+                'route' => 'purchase_index', 
+                'label' => 'Approvisionnement',
+                'icon' => 'fas fa-truck',
+                'coming_soon' => false
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_supplier_new', 
+                'label' => 'Mouvement du stock',
+                'icon' => 'fas fa-exchange-alt',
+                'coming_soon' => false
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_category_index',
+                'label' => 'Gestion des lots',
+                'icon' => 'fas fa-cubes',
+                'coming_soon' => false
+            ],
+        ];
+
+        // Si ce n'est pas un restaurant, on ajoute les promotions dans Produits
+        if (!$this->isRestaurant()) {
+            $produitsChildren[] = [
+                'type' => 'link',
+                'route' => 'app_user_index', // Temporaire
+                'label' => 'Promotions',
+                'icon' => 'fas fa-percent',
+                'coming_soon' => true
+            ];
+            $produitsChildren[] = [
+                'type' => 'link',
+                'route' => 'app_user_index', // Temporaire
+                'label' => 'Promotions des catégories',
+                'icon' => 'fas fa-tags',
+                'coming_soon' => true
+            ];
+            $produitsChildren[] = [
+                'type' => 'link',
+                'route' => 'app_user_index', // Temporaire
+                'label' => 'Promotions des produits',
+                'icon' => 'fas fa-tag',
+                'coming_soon' => true
+            ];
+        }
+
+        $menu[] = [
+            'type' => 'dropdown',
+            'label' => 'Produits',
+            'icon' => 'fas fa-box',
+            'children' => $produitsChildren
+        ];
+
+        // Si restaurant, on ajoute la section Menu
+        if ($this->isRestaurant()) {
+            $menuChildren = [
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_category_recipe_index', 
+                    'label' => 'Catégories de plats',
+                    'icon' => 'fas fa-th',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index', // Route à créer pour nouveau plat
+                    'label' => 'Nouveau plat',
+                    'icon' => 'fas fa-plus-circle',
+                    'coming_soon' => true
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index', // Route à créer pour liste des plats
+                    'label' => 'Plats',
+                    'icon' => 'fas fa-utensils',
+                    'coming_soon' => true
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index', // Temporaire
+                    'label' => 'Promotions',
+                    'icon' => 'fas fa-percent',
+                    'coming_soon' => true
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index', // Temporaire
+                    'label' => 'Catégories promo',
+                    'icon' => 'fas fa-tags',
+                    'coming_soon' => true
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index', // Temporaire
+                    'label' => 'Promotions des plats',
+                    'icon' => 'fas fa-tag',
+                    'coming_soon' => true
+                ]
+            ];
+            $menu[] = [
                 'type' => 'dropdown',
-                'label' => 'Ventes',
-                'icon' => 'bi bi-cart',
-                'children' => [
-                    [
-                        'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
-                        'label' => 'Commandes',
-                        'icon' => 'bi bi-receipt',
-                        'coming_soon' => true
-                    ],
-                    [
-                        'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
-                        'label' => 'Nouvelle commande',
-                        'icon' => 'bi bi-plus-circle',
-                        'coming_soon' => true
-                    ]
+                'label' => 'Menu',
+                'icon' => 'fas fa-utensils',
+                'children' => $menuChildren
+            ];
+        }
+
+        // Section Ventes (commune)
+        $menu[] = [
+            'type' => 'dropdown',
+            'label' => 'Ventes',
+            'icon' => 'fas fa-shopping-cart',
+            'children' => [
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index', // Temporaire
+                    'label' => 'Commandes',
+                    'icon' => 'fas fa-receipt',
+                    'coming_soon' => true
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index', // Temporaire
+                    'label' => 'Nouvelle commande',
+                    'icon' => 'fas fa-plus-circle',
+                    'coming_soon' => true
                 ]
             ]
         ];
+
+        return $menu;
     }
 
     private function getStockManagerMenu(): array
@@ -306,33 +565,33 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => 'app_user_index', // Temporaire
                 'label' => 'Dashboard stock',
-                'icon' => 'bi bi-pie-chart',
+                'icon' => 'fas fa-chart-pie',
                 'coming_soon' => true
             ],
             [
                 'type' => 'dropdown',
                 'label' => 'Gestion stock',
-                'icon' => 'bi bi-boxes',
+                'icon' => 'fas fa-boxes',
                 'children' => [
                     [
                         'type' => 'link',
                         'route' => 'app_user_index', // Temporaire
                         'label' => 'Inventaire',
-                        'icon' => 'bi bi-list-check',
+                        'icon' => 'fas fa-list-check',
                         'coming_soon' => true
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_user_index', // Temporaire
                         'label' => 'Mouvements',
-                        'icon' => 'bi bi-arrow-left-right',
+                        'icon' => 'fas fa-exchange-alt',
                         'coming_soon' => true
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_user_index', // Temporaire
                         'label' => 'Alertes stock',
-                        'icon' => 'bi bi-exclamation-triangle',
+                        'icon' => 'fas fa-exclamation-triangle',
                         'coming_soon' => true
                     ]
                 ]
@@ -340,21 +599,28 @@ class MenuBuilder
             [
                 'type' => 'dropdown',
                 'label' => 'Approvisionnement',
-                'icon' => 'bi bi-truck',
+                'icon' => 'fas fa-truck',
                 'children' => [
                     [
                         'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
-                        'label' => 'Commandes fournisseurs',
-                        'icon' => 'bi bi-clipboard',
-                        'coming_soon' => true
+                        'route' => 'purchase_index', 
+                        'label' => 'Approvisionnement',
+                        'icon' => 'fas fa-clipboard-list',
+                        'coming_soon' => false
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
-                        'label' => 'Fournisseurs',
-                        'icon' => 'bi bi-person-lines-fill',
-                        'coming_soon' => true
+                        'route' => 'app_admin_supplier_new', // À remplacer par la vraie route
+                        'label' => 'Mouvement du stock',
+                        'icon' => 'fas fa-exchange-alt',
+                        'coming_soon' => false
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_admin_supplier_new', // À remplacer par la vraie route
+                        'label' => 'Gestion des lots',
+                        'icon' => 'fas fa-cubes',
+                        'coming_soon' => false
                     ]
                 ]
             ]
@@ -372,27 +638,27 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => 'app_user_index', // Temporaire
                 'label' => 'Caisse',
-                'icon' => 'bi bi-cash-register',
+                'icon' => 'fas fa-cash-register',
                 'badge' => 'Bientôt',
                 'coming_soon' => true
             ],
             [
                 'type' => 'dropdown',
                 'label' => 'Ventes',
-                'icon' => 'bi bi-receipt',
+                'icon' => 'fas fa-receipt',
                 'children' => [
                     [
                         'type' => 'link',
                         'route' => 'app_user_index', // Temporaire
                         'label' => 'Ventes du jour',
-                        'icon' => 'bi bi-sun',
+                        'icon' => 'fas fa-sun',
                         'coming_soon' => true
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_user_index', // Temporaire
                         'label' => 'Historique',
-                        'icon' => 'bi bi-clock-history',
+                        'icon' => 'fas fa-history',
                         'coming_soon' => true
                     ]
                 ]
@@ -401,7 +667,7 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => 'app_user_index', // Temporaire
                 'label' => 'Retours',
-                'icon' => 'bi bi-arrow-return-left',
+                'icon' => 'fas fa-undo-alt',
                 'coming_soon' => true
             ]
         ];
@@ -416,7 +682,7 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => 'app_user_index', // Temporaire
                 'label' => 'Rapport financier',
-                'icon' => 'bi bi-calculator',
+                'icon' => 'fas fa-calculator',
                 'coming_soon' => true
             ];
         }
@@ -425,7 +691,7 @@ class MenuBuilder
             'type' => 'link',
             'route' => 'app_user_index', // Temporaire
             'label' => 'Rapport des ventes',
-            'icon' => 'bi bi-graph-up',
+            'icon' => 'fas fa-chart-line',
             'coming_soon' => true
         ];
         
@@ -433,7 +699,7 @@ class MenuBuilder
             'type' => 'link',
             'route' => 'app_user_index', // Temporaire
             'label' => 'Rapport de stock',
-            'icon' => 'bi bi-box',
+            'icon' => 'fas fa-box',
             'coming_soon' => true
         ];
         
@@ -445,7 +711,7 @@ class MenuBuilder
             [
                 'type' => 'dropdown',
                 'label' => 'Analyses',
-                'icon' => 'bi bi-bar-chart',
+                'icon' => 'fas fa-chart-bar',
                 'children' => $children
             ]
         ];
@@ -464,25 +730,25 @@ class MenuBuilder
             [
                 'type' => 'dropdown',
                 'label' => $user ? $user->getFullName() : 'Mon Profil',
-                'icon' => 'bi bi-person-circle',
+                'icon' => 'fas fa-user-circle',
                 'children' => [
                     [
                         'type' => 'link',
                         'route' => 'app_profile_show',
                         'label' => 'Voir mon profil',
-                        'icon' => 'bi bi-eye'
+                        'icon' => 'fas fa-eye'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_profile_edit',
                         'label' => 'Modifier mon profil',
-                        'icon' => 'bi bi-pencil'
+                        'icon' => 'fas fa-pencil-alt'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_change_password',
                         'label' => 'Changer mot de passe',
-                        'icon' => 'bi bi-key'
+                        'icon' => 'fas fa-key'
                     ],
                     [
                         'type' => 'divider'
@@ -491,7 +757,7 @@ class MenuBuilder
                         'type' => 'link',
                         'route' => 'app_logout',
                         'label' => 'Déconnexion',
-                        'icon' => 'bi bi-box-arrow-right',
+                        'icon' => 'fas fa-sign-out-alt',
                         'danger' => true
                     ]
                 ]

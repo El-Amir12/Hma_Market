@@ -46,7 +46,6 @@ class HmaServiceType extends AbstractType
                         'Boulangerie / Pâtisserie' => 'bakery',
                         'Boucherie / Charcuterie' => 'butcher',
                         'Restaurant / Café' => 'restaurant',
-                        'Fast-food / Snack' => 'fast-food',
                     ],
                     '💊 Santé & Bien-être' => [
                         'Pharmacie' => 'pharmacy',

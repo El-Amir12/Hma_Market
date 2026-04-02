@@ -209,4 +209,12 @@ class Supplier
         $this->hma_service = $hma_service;
         return $this;
     }
+
+    /**
+     * Alias pour getName()
+     */
+    public function getCompanyName(): ?string
+    {
+        return $this->getName();
+    }
 }

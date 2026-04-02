@@ -1,54 +1,328 @@
+{# templates/admin/supplier/show.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Supplier{% endblock %}
+{% block title %}{{ supplier.name }} - Détails - HMA Market{% endblock %}
 
 {% block body %}
-    <h1>Supplier</h1>
+<div class="container-fluid px-4">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('app_admin_supplier_index') }}" class="text-decoration-none">Fournisseurs</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ supplier.name|u.truncate(30) }}</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-truck text-primary me-2"></i>{{ supplier.name }}
+            </h1>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_admin_supplier_edit', {'id': supplier.id}) }}" class="btn btn-warning shadow-sm">
+                <i class="fas fa-edit me-2"></i> Modifier
+            </a>
+            {% if supplier.purchases|length == 0 and is_granted('ROLE_ADMIN') %}
+                <button type="button" class="btn btn-danger shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteSupplierModal">
+                    <i class="fas fa-trash me-2"></i> Supprimer
+                </button>
+            {% endif %}
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ supplier.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ supplier.name }}</td>
-            </tr>
-            <tr>
-                <th>Contact_person</th>
-                <td>{{ supplier.contactPerson }}</td>
-            </tr>
-            <tr>
-                <th>Phone</th>
-                <td>{{ supplier.phone }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ supplier.email }}</td>
-            </tr>
-            <tr>
-                <th>Adress</th>
-                <td>{{ supplier.adress }}</td>
-            </tr>
-            <tr>
-                <th>Is_active</th>
-                <td>{{ supplier.isActive ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Created_at</th>
-                <td>{{ supplier.createdAt ? supplier.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Updated_at</th>
-                <td>{{ supplier.updatedAt ? supplier.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Flash messages -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+    
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
 
-    <a href="{{ path('app_admin_supplier_index') }}">back to list</a>
+    <div class="row g-4">
+        <!-- Colonne gauche : Informations générales -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0 fw-semibold">
+                        <i class="fas fa-info-circle text-primary me-2"></i>Informations générales
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary p-3 rounded-3 me-3">
+                                        <i class="fas fa-building text-white fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Nom du fournisseur</small>
+                                        <strong class="fs-5">{{ supplier.name }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-success p-3 rounded-3 me-3">
+                                        <i class="fas fa-user text-white fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Personne de contact</small>
+                                        <strong>{{ supplier.contactPerson }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-info p-3 rounded-3 me-3">
+                                        <i class="fas fa-phone text-white fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Téléphone</small>
+                                        <div>
+                                            <strong>{{ supplier.phone }}</strong>
+                                            <a href="https://wa.me/{{ supplier.phone|replace({' ': '', '-': '', '+': ''}) }}" 
+                                               target="_blank" 
+                                               class="text-success ms-2"
+                                               title="Discuter sur WhatsApp">
+                                                <i class="fab fa-whatsapp"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning p-3 rounded-3 me-3">
+                                        <i class="fas fa-envelope text-white fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Email</small>
+                                        <strong>{{ supplier.email }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="d-flex">
+                                    <div class="bg-danger p-3 rounded-3 me-3 align-self-start">
+                                        <i class="fas fa-map-marker-alt text-white fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Adresse</small>
+                                        <p class="mb-0">{{ supplier.adress|nl2br }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <a href="{{ path('app_admin_supplier_edit', {'id': supplier.id}) }}">edit</a>
+        <!-- Colonne droite : Statistiques et statut -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0 fw-semibold">
+                        <i class="fas fa-chart-bar text-primary me-2"></i>Statut & Statistiques
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-around text-center mb-4">
+                        <div>
+                            <div class="display-6 fw-bold text-primary">{{ supplier.purchases|length }}</div>
+                            <span class="text-muted small">Achats</span>
+                        </div>
+                        <div class="vr"></div>
+                        <div>
+                            <div class="display-6 fw-bold {{ supplier.isActive ? 'text-success' : 'text-danger' }}">
+                                <i class="fas {{ supplier.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
+                            </div>
+                            <span class="text-muted small">{{ supplier.isActive ? 'Actif' : 'Inactif' }}</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Créé le :</span>
+                        <strong>{{ supplier.createdAt|date('d/m/Y H:i') }}</strong>
+                    </div>
+                    {% if supplier.updatedAt %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Modifié le :</span>
+                        <strong>{{ supplier.updatedAt|date('d/m/Y H:i') }}</strong>
+                    </div>
+                    {% endif %}
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Statut abonnement :</span>
+                        {% if supplier.subscriptionActive %}
+                            <span class="badge bg-info px-3 py-2">Actif dans quota</span>
+                        {% else %}
+                            <span class="badge bg-warning px-3 py-2">Hors quota</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 
-    {{ include('admin/supplier/_delete_form.html.twig') }}
+            <!-- Actions rapides -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0 fw-semibold">
+                        <i class="fas fa-bolt text-primary me-2"></i>Actions rapides
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('app_admin_supplier_edit', {'id': supplier.id}) }}" class="btn btn-warning">
+                            <i class="fas fa-edit me-2"></i> Modifier
+                        </a>
+                        {% if supplier.subscriptionActive %}
+                            <button type="button" 
+                                    class="btn {{ supplier.isActive ? 'btn-outline-danger' : 'btn-outline-success' }} toggle-supplier-btn"
+                                    data-supplier-id="{{ supplier.id }}"
+                                    data-supplier-name="{{ supplier.name }}"
+                                    data-current-status="{{ supplier.isActive ? 'active' : 'inactive' }}"
+                                    data-token="{{ csrf_token('toggle-status' ~ supplier.id) }}">
+                                <i class="fas {{ supplier.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }} me-2"></i>
+                                {{ supplier.isActive ? 'Désactiver' : 'Activer' }}
+                            </button>
+                        {% endif %}
+                        <a href="{{ path('app_admin_supplier_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Retour à la liste
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achats récents -->
+    {% if supplier.purchases|length > 0 %}
+    <div class="card border-0 shadow-sm mt-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title mb-0 fw-semibold">
+                <i class="fas fa-shopping-cart text-primary me-2"></i>Achats récents
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for purchase in supplier.purchases|slice(0,5) %}
+                        <tr>
+                            <td>#{{ purchase.id }}</td>
+                            <td>{{ purchase.purchaseDate|date('d/m/Y') }}</td>
+                            <td>{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</td>
+                            <td>
+                                <span class="badge bg-{{ purchase.status == 'received' ? 'success' : 'warning' }}">
+                                    {{ purchase.status == 'received' ? 'Reçu' : 'En attente' }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modals -->
+<!-- Modal toggle status -->
+<div class="modal fade" id="toggleSupplierModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-warning text-white border-0">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Confirmation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-question-circle fa-4x text-primary mb-3"></i>
+                <p id="toggleSupplierMessage" class="mb-0"></p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Annuler</button>
+                <form id="toggleSupplierForm" method="post" class="d-inline">
+                    <input type="hidden" name="_token" id="toggleSupplierToken">
+                    <button type="submit" class="btn btn-warning px-4">Confirmer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal suppression -->
+{% if supplier.purchases|length == 0 and is_granted('ROLE_ADMIN') %}
+<div class="modal fade" id="deleteSupplierModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Confirmation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
+                <h5>Supprimer {{ supplier.name }} ?</h5>
+                <p class="text-muted">Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Annuler</button>
+                <form action="{{ path('app_admin_supplier_delete', {'id': supplier.id}) }}" method="post" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ supplier.id) }}">
+                    <button type="submit" class="btn btn-danger px-4">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle status modal
+    const toggleModal = new bootstrap.Modal(document.getElementById('toggleSupplierModal'));
+    const toggleForm = document.getElementById('toggleSupplierForm');
+    const toggleToken = document.getElementById('toggleSupplierToken');
+    const toggleMessage = document.getElementById('toggleSupplierMessage');
+
+    document.querySelectorAll('.toggle-supplier-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.supplierId;
+            const name = this.dataset.supplierName;
+            const current = this.dataset.currentStatus;
+            const action = current === 'active' ? 'désactiver' : 'activer';
+            toggleMessage.innerText = `Êtes-vous sûr de vouloir ${action} le fournisseur "${name}" ?`;
+            toggleForm.action = `/admin/supplier/${id}/toggle-status`;
+            toggleToken.value = this.dataset.token;
+            toggleModal.show();
+        });
+    });
+});
+</script>
 {% endblock %}

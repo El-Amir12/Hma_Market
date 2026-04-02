@@ -389,4 +389,38 @@ class EmailService
 
         $this->mailer->send($email);
     }
+
+    /**
+     * Envoie un email à un utilisateur pour l'informer qu'il a été désactivé (hors quota)
+     */
+    public function sendQuotaDeactivationEmail(User $user, HmaService $company): bool
+    {
+        $subject = "Compte désactivé - {$this->appName}";
+        if (!$this->isProduction) {
+            $subject = "[DEV] " . $subject;
+        }
+
+        try {
+            $email = (new TemplatedEmail())
+                ->from(new Address($this->fromEmail, $this->fromName))
+                ->to($user->getEmail())
+                ->subject($subject)
+                ->htmlTemplate('emails/quota_deactivation.html.twig')
+                ->context([
+                    'user' => $user,
+                    'company' => $company,
+                    'app_name' => $this->appName,
+                    'login_url' => $this->urlGenerator->generate('app_login', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                    'support_email' => $this->supportEmail,
+                    'global_logo_url' => $this->getGlobalLogoUrl(),
+                    'is_production' => $this->isProduction,
+                ]);
+            $this->mailer->send($email);
+            $this->logger->info('Email de désactivation (quota) envoyé', ['user' => $user->getEmail()]);
+            return true;
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur envoi email désactivation: ' . $e->getMessage());
+            return !$this->isProduction; // en dev, on simule le succès
+        }
+    }
 }

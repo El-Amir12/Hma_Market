@@ -17,16 +17,13 @@ class PurchaseRepository extends ServiceEntityRepository
         parent::__construct($registry, Purchase::class);
     }
 
-    // Méthode améliorée avec métadonnées de pagination
+    // ==================== PAGINATION GÉNÉRIQUE ====================
     public function paginate($query, int $page, int $limit): array
     {
         $paginator = new Paginator($query);
-        
-        // Calculer les infos de pagination
         $totalItems = count($paginator);
         $totalPages = ceil($totalItems / $limit);
         
-        // Appliquer la pagination
         $paginator->getQuery()
             ->setFirstResult($limit * ($page - 1))
             ->setMaxResults($limit);
@@ -44,7 +41,7 @@ class PurchaseRepository extends ServiceEntityRepository
         ];
     }
 
-    // Méthode pour paginer tous les achats
+    // ==================== MÉTHODES DE RECHERCHE PAGINÉES ====================
     public function findAllPaginated(int $page = 1, int $limit = 15): array
     {
         $query = $this->createQueryBuilder('p')
@@ -58,7 +55,6 @@ class PurchaseRepository extends ServiceEntityRepository
         return $this->paginate($query, $page, $limit);
     }
 
-    // Méthode pour paginer par statut
     public function findByStatusPaginated(string $status, int $page = 1, int $limit = 15): array
     {
         $query = $this->createQueryBuilder('p')
@@ -74,7 +70,6 @@ class PurchaseRepository extends ServiceEntityRepository
         return $this->paginate($query, $page, $limit);
     }
 
-    // Méthode pour paginer par fournisseur
     public function findBySupplierPaginated(int $supplierId, int $page = 1, int $limit = 15): array
     {
         $query = $this->createQueryBuilder('p')
@@ -90,7 +85,6 @@ class PurchaseRepository extends ServiceEntityRepository
         return $this->paginate($query, $page, $limit);
     }
 
-    // Méthode pour paginer par date
     public function findByDateRangePaginated(\DateTime $startDate, \DateTime $endDate, int $page = 1, int $limit = 15): array
     {
         $query = $this->createQueryBuilder('p')
@@ -107,7 +101,6 @@ class PurchaseRepository extends ServiceEntityRepository
         return $this->paginate($query, $page, $limit);
     }
 
-    // Méthode pour rechercher avec pagination
     public function searchPaginated(string $searchTerm, int $page = 1, int $limit = 15): array
     {
         $query = $this->createQueryBuilder('p')
@@ -125,7 +118,25 @@ class PurchaseRepository extends ServiceEntityRepository
         return $this->paginate($query, $page, $limit);
     }
 
-    // Gardez les anciennes méthodes sans pagination pour d'autres usages
+    public function searchPurchases(string $searchTerm, int $page = 1, int $limit = 15): array
+    {
+        $query = $this->createQueryBuilder('p')
+            ->leftJoin('p.supplier', 's')
+            ->addSelect('s')
+            ->leftJoin('p.user', 'u')
+            ->addSelect('u')
+            ->where('p.purchase_number LIKE :searchTerm')
+            ->orWhere('s.name LIKE :searchTerm')
+            ->orWhere('u.email LIKE :searchTerm')
+            ->orWhere('u.full_name LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%')
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery();
+
+        return $this->paginate($query, $page, $limit);
+    }
+
+    // ==================== MÉTHODES SANS PAGINATION ====================
     public function findAllOrderedByDate(): array
     {
         return $this->createQueryBuilder('p')
@@ -171,7 +182,17 @@ class PurchaseRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // Statistiques
+    public function findAllActive(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.status != :cancelled')
+            ->setParameter('cancelled', 'cancelled')
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    // ==================== STATISTIQUES ====================
     public function getMonthlyStats(int $year, int $month): array
     {
         $startDate = new \DateTime(sprintf('%d-%02d-01', $year, $month));
@@ -189,31 +210,116 @@ class PurchaseRepository extends ServiceEntityRepository
             ->getSingleResult();
     }
 
-    public function searchPurchases(string $searchTerm, int $page = 1, int $limit = 15): array
+    // ==================== FILTRES AVANCÉS ====================
+    /**
+     * Applique les filtres à la requête QueryBuilder
+     */
+    private function applyFilters($qb, array $filters): void
     {
-        $query = $this->createQueryBuilder('p')
+        if (!empty($filters['status']) && in_array($filters['status'], array_keys(Purchase::getStatuses()))) {
+            $qb->andWhere('p.status = :status')
+                ->setParameter('status', $filters['status']);
+        }
+
+        if (!empty($filters['supplier_id'])) {
+            $qb->andWhere('p.supplier = :supplier')
+                ->setParameter('supplier', $filters['supplier_id']);
+        }
+
+        if (!empty($filters['start_date'])) {
+            $start = \DateTime::createFromFormat('d/m/Y', $filters['start_date']);
+            if ($start) {
+                $start->setTime(0, 0, 0);
+                $qb->andWhere('p.created_at >= :start')
+                    ->setParameter('start', $start);
+            }
+        }
+
+        if (!empty($filters['end_date'])) {
+            $end = \DateTime::createFromFormat('d/m/Y', $filters['end_date']);
+            if ($end) {
+                $end->setTime(23, 59, 59);
+                $qb->andWhere('p.created_at <= :end')
+                    ->setParameter('end', $end);
+            }
+        }
+
+        if (!empty($filters['search'])) {
+            $qb->andWhere('p.purchase_number LIKE :search OR s.name LIKE :search OR u.email LIKE :search OR u.full_name LIKE :search')
+                ->setParameter('search', '%' . $filters['search'] . '%');
+        }
+    }
+
+    /**
+     * Retourne les statistiques globales (total commandes, montant total) selon les filtres
+     */
+    public function getStatsByFilters(array $filters): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('COUNT(p.id) as total_count', 'SUM(p.total_amount) as total_amount');
+
+        $this->applyFilters($qb, $filters);
+
+        $result = $qb->getQuery()->getSingleResult();
+        return [
+            'total_count' => (int) $result['total_count'],
+            'total_amount' => (float) $result['total_amount'] ?? 0,
+        ];
+    }
+
+    /**
+     * Retourne les nombres de commandes par statut selon les filtres
+     */
+    public function getStatusCountsByFilters(array $filters): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p.status, COUNT(p.id) as count')
+            ->groupBy('p.status');
+
+        $this->applyFilters($qb, $filters);
+
+        $results = $qb->getQuery()->getResult();
+        $counts = [
+            Purchase::STATUS_DRAFT => 0,
+            Purchase::STATUS_CONFIRMED => 0,
+            Purchase::STATUS_RECEIVED => 0,
+            Purchase::STATUS_CANCELLED => 0,
+        ];
+        foreach ($results as $row) {
+            $counts[$row['status']] = (int) $row['count'];
+        }
+        return $counts;
+    }
+
+    /**
+     * Retourne les commandes paginées selon les filtres
+     */
+    public function findFilteredPaginated(array $filters, int $page, int $limit): array
+    {
+        $qb = $this->createQueryBuilder('p')
             ->leftJoin('p.supplier', 's')
             ->addSelect('s')
             ->leftJoin('p.user', 'u')
             ->addSelect('u')
-            ->where('p.purchase_number LIKE :searchTerm')
-            ->orWhere('s.name LIKE :searchTerm')
-            ->orWhere('u.email LIKE :searchTerm')
-            ->orWhere('u.full_name LIKE :searchTerm')
-            ->setParameter('searchTerm', '%' . $searchTerm . '%')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery();
+            ->orderBy('p.created_at', 'DESC');
 
-        return $this->paginate($query, $page, $limit);
-    }
+        $this->applyFilters($qb, $filters);
 
-    public function findAllActive()
-    {
-        return $this->createQueryBuilder('p')
-            ->where('p.status != :cancelled')
-            ->setParameter('cancelled', 'cancelled')
-            ->orderBy('p.created_at', 'DESC')
-            ->getQuery()
-            ->getResult();
+        $paginator = new Paginator($qb);
+        $totalItems = count($paginator);
+        $totalPages = ceil($totalItems / $limit);
+
+        $qb->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+
+        $items = $qb->getQuery()->getResult();
+
+        return [
+            'items' => $items,
+            'total_items' => $totalItems,
+            'total_pages' => $totalPages,
+            'current_page' => $page,
+            'limit' => $limit,
+        ];
     }
 }

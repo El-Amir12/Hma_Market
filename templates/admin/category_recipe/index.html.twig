@@ -1,0 +1,670 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Catégories de Plats - HMA Market{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <!-- En-tête avec quota et bouton d'ajout -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-utensils me-2"></i>Gestion des Catégories de Plats
+            </h1>
+            <p class="text-muted">Organisez vos plats par catégories et sous-catégories</p>
+        </div>
+        
+        <div class="d-flex align-items-center gap-3">
+            <!-- Indicateur de quota -->
+            <div class="card bg-light p-3">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <span class="badge bg-primary p-2">
+                            <i class="fas fa-chart-line"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <small class="text-muted">Catégories dans quota</small>
+                        <h5 class="mb-0 {{ quotaReached ? 'text-danger' : 'text-success' }}">
+                            {{ activeCount }} / {{ quota }}
+                            {% if quota == 'Illimité' %}
+                                <i class="fas fa-infinity text-info ms-1"></i>
+                            {% endif %}
+                        </h5>
+                        {% if quotaReached %}
+                            <small class="text-danger">Quota atteint</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {# Affichage du nombre de catégories en attente (désactivées par quota) #}
+            {% if subscriptionInactiveCount > 0 %}
+            <div class="card bg-light p-3">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <span class="badge bg-warning p-2">
+                            <i class="fas fa-clock"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <small class="text-muted">En attente</small>
+                        <h5 class="mb-0">{{ subscriptionInactiveCount }}</h5>
+                        <small>désactivées par quota</small>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {# Bouton Nouvelle Catégorie toujours visible #}
+            <a href="#" id="newCategoryBtn" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-2"></i> Nouvelle Catégorie de Plats
+            </a>
+        </div>
+    </div>
+
+    {# Message si quota atteint (pour les plans limités) #}
+    {% if quotaReached and plan != 'premium' %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Quota atteint !</strong> Vous avez utilisé vos {{ quota }} catégories de plats dans le quota.
+            </div>
+            <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-sm">
+                <i class="fas fa-arrow-up me-1"></i> Voir les offres
+            </a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+
+    {# Flash messages #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+    
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <!-- Container des statistiques dynamiques -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">
+                <i class="fas fa-chart-pie me-2"></i>Statistiques selon les filtres
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Première ligne -->
+                <div class="col-md-3 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-primary text-uppercase small fw-bold">Total</span>
+                                <h3 class="mb-0">{{ totalFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-utensils fa-2x text-primary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-success text-uppercase small fw-bold">Actives</span>
+                                <h3 class="mb-0">{{ activeFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-check-circle fa-2x text-success opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-info text-uppercase small fw-bold">Principales</span>
+                                <h3 class="mb-0">{{ mainFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-sitemap fa-2x text-info opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-warning text-uppercase small fw-bold">Sous-catégories</span>
+                                <h3 class="mb-0">{{ subFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-folder-tree fa-2x text-warning opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Deuxième ligne -->
+                <div class="col-md-4 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-danger text-uppercase small fw-bold">Inactives</span>
+                                <h3 class="mb-0">{{ inactiveFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-pause-circle fa-2x text-danger opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-info text-uppercase small fw-bold">Abonnement actif</span>
+                                <h3 class="mb-0">{{ subscriptionActiveFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-check-circle fa-2x text-info opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-secondary text-uppercase small fw-bold">Abonnement inactif</span>
+                                <h3 class="mb-0">{{ subscriptionInactiveFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-clock fa-2x text-secondary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire de filtres -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filtres</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <!-- Première ligne : tous les filtres -->
+                <div class="col-lg-3 col-md-6">
+                    <label for="search" class="form-label fw-bold">
+                        <i class="fas fa-search text-primary me-1"></i>Rechercher
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" name="search" id="search" value="{{ search }}" 
+                            class="form-control border-start-0" placeholder="Nom, description...">
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <label for="status" class="form-label fw-bold">
+                        <i class="fas fa-toggle-on text-success me-1"></i>Statut
+                    </label>
+                    <select name="status" id="status" class="form-select">
+                        <option value="all" {{ status == 'all' ? 'selected' : '' }}>Tous</option>
+                        <option value="active" {{ status == 'active' ? 'selected' : '' }}>Actives</option>
+                        <option value="inactive" {{ status == 'inactive' ? 'selected' : '' }}>Inactives</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <label for="type" class="form-label fw-bold">
+                        <i class="fas fa-sitemap text-info me-1"></i>Type
+                    </label>
+                    <select name="type" id="type" class="form-select">
+                        <option value="all" {{ type == 'all' ? 'selected' : '' }}>Tous</option>
+                        <option value="main" {{ type == 'main' ? 'selected' : '' }}>Principales</option>
+                        <option value="sub" {{ type == 'sub' ? 'selected' : '' }}>Sous-catégories</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <label for="sub_status" class="form-label fw-bold">
+                        <i class="fas fa-credit-card text-warning me-1"></i>Abonnement
+                    </label>
+                    <select name="sub_status" id="sub_status" class="form-select">
+                        <option value="all" {{ subStatus == 'all' ? 'selected' : '' }}>Tous</option>
+                        <option value="active" {{ subStatus == 'active' ? 'selected' : '' }}>Actif</option>
+                        <option value="inactive" {{ subStatus == 'inactive' ? 'selected' : '' }}>Inactif</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label for="promotion" class="form-label fw-bold">
+                        <i class="fas fa-tags text-danger me-1"></i>Promotion
+                    </label>
+                    <select name="promotion" id="promotion" class="form-select">
+                        <option value="">Toutes les promotions</option>
+                        {% for promotion in promotions %}
+                            <option value="{{ promotion.id }}" {{ selectedPromotion == promotion.id ? 'selected' : '' }}>
+                                {{ promotion.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Deuxième ligne : boutons d'action -->
+                <div class="col-12 d-flex justify-content-end gap-2 mt-4">
+                    <a href="{{ path('app_admin_category_recipe_index') }}" class="btn btn-outline-secondary px-4">
+                        <i class="fas fa-undo me-1"></i> Effacer
+                    </a>
+                    <button type="submit" class="btn btn-primary px-5">
+                        <i class="fas fa-search me-2"></i> Filtrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Message informatif quand on filtre par abonnement inactif #}
+    {% if subStatus == 'inactive' %}
+        <div class="alert alert-info mb-4">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>{{ subscriptionInactiveFiltered }} catégorie(s)</strong> désactivées par abonnement.
+        </div>
+    {% endif %}
+
+    <!-- Grille de cartes -->
+    <div class="row">
+        {% for category in categories %}
+        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+            <div class="card category-card shadow h-100 {{ not category.subscriptionActive ? 'border-warning' : '' }}">
+                <!-- Image avec badges superposés (en haut à gauche) -->
+                <div class="category-image-container position-relative">
+                    {% if category.image %}
+                        <img src="{{ asset('uploads/categories_plats/' ~ category.image) }}" 
+                            alt="{{ category.name }}"
+                            class="card-img-top category-image">
+                    {% else %}
+                        <div class="category-image-placeholder">
+                            <i class="fas fa-utensils fa-4x text-muted"></i>
+                        </div>
+                    {% endif %}
+
+                    <!-- Badges de statut superposés (en haut à gauche) -->
+                    <div class="position-absolute top-0 start-0 p-2">
+                        <div class="d-flex flex-column gap-1">
+                            {% if not category.subscriptionActive %}
+                                <span class="badge bg-warning"><i class="fas fa-clock me-1"></i> En attente (quota)</span>
+                            {% elseif category.isActive %}
+                                <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Active</span>
+                            {% else %}
+                                <span class="badge bg-danger"><i class="fas fa-pause-circle me-1"></i> Désactivée</span>
+                            {% endif %}
+                            {% if category.subscriptionActive %}
+                                <span class="badge bg-info"><i class="fas fa-database me-1"></i> Dans quota</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenu -->
+                <div class="card-body d-flex flex-column">
+                    <!-- Titre avec bouton burger -->
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title text-truncate mb-0" title="{{ category.name }}">
+                            {{ category.name }}
+                            {% if category.parent %}
+                                <br><small class="text-muted"><i class="fas fa-level-up-alt me-1"></i>{{ category.parent.name }}</small>
+                            {% endif %}
+                        </h5>
+                        <div class="dropdown ms-2">
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ path('app_admin_category_recipe_show', {'id': category.id}) }}">
+                                        <i class="fas fa-eye me-2"></i> Voir
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ path('app_admin_category_recipe_edit', {'id': category.id}) }}">
+                                        <i class="fas fa-edit me-2"></i> Modifier
+                                    </a>
+                                </li>
+                                <li>
+                                    {% if category.subscriptionActive %}
+                                        <button type="button" 
+                                                class="dropdown-item toggle-category-btn"
+                                                data-category-id="{{ category.id }}"
+                                                data-category-name="{{ category.name }}"
+                                                data-current-status="{{ category.isActive ? 'active' : 'inactive' }}"
+                                                data-token="{{ csrf_token('toggle-status' ~ category.id) }}">
+                                            <i class="fas {{ category.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }} me-2"></i>
+                                            {{ category.isActive ? 'Désactiver' : 'Activer' }}
+                                        </button>
+                                    {% else %}
+                                        <span class="dropdown-item text-muted disabled">
+                                            <i class="fas fa-ban me-2"></i> Non disponible
+                                        </span>
+                                    {% endif %}
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <button type="button" class="dropdown-item text-danger delete-category-btn"
+                                                data-category-id="{{ category.id }}"
+                                                data-category-name="{{ category.name }}"
+                                                data-has-recipes="{{ category.recipes|length > 0 ? 'true' : 'false' }}"
+                                                data-has-children="{{ category.children|length > 0 ? 'true' : 'false' }}"
+                                                data-token="{{ csrf_token('delete' ~ category.id) }}">
+                                            <i class="fas fa-trash me-2"></i> Supprimer
+                                        </button>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <p class="card-text text-muted small mb-3">
+                        {{ category.description|default('Aucune description')|u.truncate(80, '...') }}
+                    </p>
+                    
+                    <!-- Compteurs Recettes & Sous-catégories (côte à côte) -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="text-center px-2 py-1 bg-light rounded" style="min-width: 45%;">
+                            <i class="fas fa-utensils text-primary me-1"></i>
+                            <span class="fw-bold">{{ category.recipes|length }}</span>
+                            <small class="text-muted d-block">Plats</small>
+                        </div>
+                        <div class="text-center px-2 py-1 bg-light rounded" style="min-width: 45%;">
+                            <i class="fas fa-sitemap text-info me-1"></i>
+                            <span class="fw-bold">{{ category.children|length }}</span>
+                            <small class="text-muted d-block">sous-catégories</small>
+                        </div>
+                    </div>
+
+                    <!-- Boutons d'action secondaires (Plats & Promos) -->
+                    <div class="d-flex gap-2 mt-auto">
+                        <a href="{{ path('app_admin_category_recipe_recipes', {'id': category.id}) }}" 
+                           class="btn btn-sm btn-outline-info flex-fill">
+                            <i class="fas fa-list"></i> Plats
+                        </a>
+                        <a href="{{ path('app_admin_category_recipe_promotions', {'id': category.id}) }}" 
+                           class="btn btn-sm btn-outline-warning flex-fill">
+                            <i class="fas fa-tags"></i> Promos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-utensils fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">Aucune catégorie de plats trouvée</h4>
+                    <a href="{{ path('app_admin_category_recipe_index') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-undo me-1"></i> Réinitialiser les filtres
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if totalPages > 1 %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center flex-wrap">
+                    {% for i in 1..totalPages %}
+                        <li class="page-item {{ i == currentPage ? 'active' }}">
+                            <a class="page-link" href="{{ path('app_admin_category_recipe_index', app.request.query.all|merge({'page': i})) }}">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{# ==================== MODALES ==================== #}
+
+{# Modale pour quota atteint (nouvelle catégorie) #}
+<div class="modal fade" id="quotaReachedModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Quota atteint
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-ban fa-4x text-warning mb-3"></i>
+                <h5>Vous avez atteint votre limite de {{ quota }} catégories de plats dans le quota.</h5>
+                <p class="text-muted">Pour ajouter de nouvelles catégories, passez à un plan supérieur.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-lg px-4">
+                    <i class="fas fa-arrow-up me-2"></i> Voir les offres
+                </a>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Modale pour activation/désactivation manuelle (toggle) #}
+<div class="modal fade" id="toggleCategoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="toggleModalTitle">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-question-circle fa-4x text-primary mb-3"></i>
+                <p id="toggleModalMessage">...</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <form id="toggleCategoryForm" method="post" style="display: inline;">
+                    <input type="hidden" name="_token" id="toggleCategoryToken" value="">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-check me-2"></i> Confirmer
+                    </button>
+                </form>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Modale suppression (admin) avec confirmation par saisie du nom #}
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Confirmation de suppression
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="deleteCategoryModalContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form id="deleteCategoryForm" method="post" action="">
+                    <input type="hidden" name="_token" id="deleteCategoryToken" value="">
+                    <button type="submit" class="btn btn-danger" id="deleteCategoryConfirmBtn">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+.category-card.border-warning {
+    border: 2px solid #ffc107 !important;
+}
+.category-image-container {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 15px 15px 0 0;
+}
+.category-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.category-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+.btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.stat-item {
+    transition: transform 0.2s;
+}
+.stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+@media (max-width: 768px) {
+    .category-card .btn-sm {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.3rem;
+    }
+    .category-image-container {
+        height: 140px;
+    }
+    .d-flex.gap-2 {
+        flex-wrap: wrap;
+    }
+}
+</style>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ========== 1. Gestion du bouton "Nouvelle Catégorie" ==========
+    const newCategoryBtn = document.getElementById('newCategoryBtn');
+    if (newCategoryBtn) {
+        newCategoryBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            {% if quotaReached %}
+                const quotaModal = new bootstrap.Modal(document.getElementById('quotaReachedModal'));
+                quotaModal.show();
+            {% else %}
+                window.location.href = "{{ path('app_admin_category_recipe_new') }}";
+            {% endif %}
+        });
+    }
+
+    // ========== 2. Modale pour activation/désactivation manuelle (toggle) ==========
+    const toggleModal = new bootstrap.Modal(document.getElementById('toggleCategoryModal'));
+    const toggleForm = document.getElementById('toggleCategoryForm');
+    const toggleToken = document.getElementById('toggleCategoryToken');
+    const toggleMessage = document.getElementById('toggleModalMessage');
+
+    document.querySelectorAll('.toggle-category-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const categoryId = this.dataset.categoryId;
+            const categoryName = this.dataset.categoryName;
+            const currentStatus = this.dataset.currentStatus;
+            const action = currentStatus === 'active' ? 'désactiver' : 'activer';
+            
+            toggleMessage.innerText = `Êtes-vous sûr de vouloir ${action} la catégorie "${categoryName}" ?`;
+            toggleForm.action = `/admin/category-recipe/${categoryId}/toggle-status`;
+            toggleToken.value = this.dataset.token;
+            toggleModal.show();
+        });
+    });
+
+    // ========== 3. Gestion de la suppression (admin) ==========
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteCategoryModal'));
+    const deleteForm = document.getElementById('deleteCategoryForm');
+    const deleteToken = document.getElementById('deleteCategoryToken');
+    const deleteConfirmBtn = document.getElementById('deleteCategoryConfirmBtn');
+    const deleteModalContent = document.getElementById('deleteCategoryModalContent');
+
+    document.querySelectorAll('.delete-category-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.categoryId;
+            const name = this.dataset.categoryName;
+            const hasRecipes = this.dataset.hasRecipes === 'true';
+            const hasChildren = this.dataset.hasChildren === 'true';
+            const token = this.dataset.token;
+
+            deleteForm.action = `/admin/category-recipe/${id}`;
+            deleteToken.value = token;
+
+            if (hasRecipes || hasChildren) {
+                let message = '';
+                if (hasRecipes && hasChildren) {
+                    message = `Cette catégorie contient des plats et des sous-catégories.`;
+                } else if (hasRecipes) {
+                    message = `Cette catégorie contient des plats.`;
+                } else if (hasChildren) {
+                    message = `Cette catégorie contient des sous-catégories.`;
+                }
+                message += ` Pour confirmer la suppression, saisissez exactement le nom "${name}".`;
+                deleteModalContent.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        ${message}
+                    </div>
+                    <div class="input-group mt-3">
+                        <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                        <input type="text" id="deleteConfirmName" class="form-control" placeholder="Saisissez le nom de la catégorie pour confirmer">
+                    </div>
+                `;
+                deleteConfirmBtn.disabled = true;
+
+                const confirmInput = document.getElementById('deleteConfirmName');
+                if (confirmInput) {
+                    confirmInput.addEventListener('input', function() {
+                        deleteConfirmBtn.disabled = this.value.trim() !== name;
+                    });
+                }
+            } else {
+                deleteModalContent.innerHTML = `
+                    <p>Êtes-vous sûr de vouloir supprimer la catégorie <strong>"${name}"</strong> ?</p>
+                    <p class="text-danger"><i class="fas fa-exclamation-circle me-1"></i>Cette action est irréversible.</p>
+                `;
+                deleteConfirmBtn.disabled = false;
+            }
+
+            deleteModal.show();
+        });
+    });
+
+    // Nettoyer le modal à la fermeture
+    deleteModal._element.addEventListener('hidden.bs.modal', function() {
+        deleteConfirmBtn.disabled = false;
+        deleteModalContent.innerHTML = '';
+    });
+});
+</script>
+{% endblock %}

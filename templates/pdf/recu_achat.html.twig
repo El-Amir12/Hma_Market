@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reçu d'achat {{ purchase.purchaseNumber }}</title>
+    <style>
+        body { font-family: 'DejaVu Sans', Arial, sans-serif; margin: 40px; }
+        h1 { color: #0463f1; }
+        .header { margin-bottom: 30px; }
+        .info { margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .total { font-weight: bold; text-align: right; margin-top: 20px; }
+        .signature { margin-top: 40px; text-align: right; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Reçu d'achat</h1>
+        <p>N° {{ purchase.purchaseNumber }}</p>
+        <p>Date de réception : {{ purchase.receivedAt|date('d/m/Y H:i') }}</p>
+    </div>
+    <div class="info">
+        <p><strong>Fournisseur :</strong> {{ purchase.supplier.name }}</p>
+    </div>
+    <table>
+        <thead>
+             <tr>
+                <th>Produit</th>
+                <th>Unité</th>
+                <th>Lot</th>
+                <th>Date de fabrication</th>
+                <th>Date d'expiration</th>
+                <th>Quantité</th>
+                <th>Prix unitaire (FCFA)</th>
+                <th>Total (FCFA)</th>
+             </tr>
+        </thead>
+        <tbody>
+            {% for item in purchase.purchaseItems %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product.unit|default('pièce') }}</td>
+                <td>{{ item.batchNumber }}</td>
+                <td>{{ item.manufacturingDate ? item.manufacturingDate|date('d/m/Y') : '-' }}</td>
+                <td>{{ item.expiryDate ? item.expiryDate|date('d/m/Y') : '-' }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.unitPrice|number_format(0, ',', ' ') }}</td>
+                <td>{{ item.totalPrice|number_format(0, ',', ' ') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="total">
+        <p>Total TTC : <strong>{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</strong></p>
+    </div>
+    <div class="signature">
+        <p>Bon pour réception,</p>
+        <p>{{ purchase.user.fullName }}</p>
+    </div>
+</body>
+</html>

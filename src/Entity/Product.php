@@ -9,6 +9,12 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ORM\Table(name: 'product')]
+#[ORM\Index(name: 'idx_hma_service', columns: ['hma_service_id'])]
+#[ORM\Index(name: 'idx_is_active', columns: ['is_active'])]
+#[ORM\Index(name: 'idx_subscription_active', columns: ['subscription_active'])]
+#[ORM\Index(name: 'idx_barcode', columns: ['barcode'])]
+#[ORM\Index(name: 'idx_name', columns: ['name'])]
 class Product
 {
     #[ORM\Id]
@@ -22,13 +28,13 @@ class Product
     #[ORM\Column(length: 100)]
     private ?string $slug = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
     private ?string $barcode = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2, nullable: true)]
     private ?string $sale_price = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
@@ -46,7 +52,7 @@ class Product
     #[ORM\Column]
     private ?bool $has_expiry_date = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => true])]
     private ?bool $is_active = null;
 
     #[ORM\Column]
@@ -59,10 +65,10 @@ class Product
     private bool $subscription_active = true;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]  
     private ?Category $category = null;
 
-    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\ManyToOne(inversedBy: 'products', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
@@ -84,7 +90,7 @@ class Product
     #[ORM\OneToMany(targetEntity: StockMovement::class, mappedBy: 'product')]
     private Collection $stockMovements;
 
-    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\ManyToOne(inversedBy: 'products', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?HmaService $hma_service = null;
 
@@ -97,7 +103,7 @@ class Product
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $form = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $prescription_required = null;
 
     /**
@@ -112,6 +118,7 @@ class Product
         $this->stockBatches = new ArrayCollection();
         $this->stockMovements = new ArrayCollection();
         $this->promotionProducts = new ArrayCollection();
+        $this->is_active = true;
     }
 
     public function getId(): ?int

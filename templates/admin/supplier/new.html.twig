@@ -1,11 +1,100 @@
+{# templates/admin/supplier/new.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}New Supplier{% endblock %}
+{% block title %}Nouveau Fournisseur - HMA Market{% endblock %}
 
 {% block body %}
-    <h1>Create new Supplier</h1>
+<div class="container-fluid px-4">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('app_admin_supplier_index') }}" class="text-decoration-none">Fournisseurs</a></li>
+                    <li class="breadcrumb-item active">Nouveau</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-plus-circle text-primary me-2"></i> Nouveau Fournisseur
+            </h1>
+            <p class="text-muted mt-2">Ajoutez un nouveau fournisseur</p>
+        </div>
+        <div class="float-animation">
+            <i class="fas fa-truck fa-3x text-primary opacity-50"></i>
+        </div>
+    </div>
 
+    <!-- Messages flash -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <!-- Formulaire -->
     {{ include('admin/supplier/_form.html.twig') }}
+</div>
+{% endblock %}
 
-    <a href="{{ path('app_admin_supplier_index') }}">back to list</a>
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+    }
+    /* Vous pouvez également copier les autres styles de la catégorie si nécessaire */
+    .card-hover {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+    }
+    .form-floating > label {
+        padding-left: 2.5rem;
+    }
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+        padding: 1rem 0.75rem 0.5rem 2.5rem;
+    }
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
+        color: #667eea;
+    }
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+    }
+    .form-floating > .form-control:focus,
+    .form-floating > .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    .btn-outline-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+</style>
 {% endblock %}

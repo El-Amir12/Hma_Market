@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Plat{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Créer un nouveau plat</h1>
+        <a href="{{ path('app_admin_recipe_index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+    </div>
+    {% include 'admin/recipe/_form.html.twig' %}
+</div>
+{% endblock %}

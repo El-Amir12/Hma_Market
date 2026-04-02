@@ -1,25 +1,42 @@
 <?php
 
-// src/Twig/AppExtension.php
 namespace App\Twig;
 
-use App\Service\MenuBuilder;
+use App\Entity\HmaService;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Twig\TwigFilter;
 
 class AppExtension extends AbstractExtension
 {
-    private MenuBuilder $menuBuilder;
+    private const CURRENCY_MAP = [
+        'CM' => 'XAF',
+        'CI' => 'XOF',
+        'SN' => 'XOF',
+        'FR' => 'EUR',
+        'US' => 'USD',
+        'BJ' => 'FCFA',
+    ];
 
-    public function __construct(MenuBuilder $menuBuilder)
-    {
-        $this->menuBuilder = $menuBuilder;
-    }
-
-    public function getFunctions(): array
+    public function getFilters(): array
     {
         return [
-            new TwigFunction('get_menu', [$this->menuBuilder, 'getMenuForCurrentUser']),
+            new TwigFilter('price_with_currency', [$this, 'formatPriceWithCurrency']),
         ];
+    }
+
+    public function formatPriceWithCurrency($price, ?HmaService $hmaService = null): string
+    {
+        if ($price === null) {
+            return '';
+        }
+
+        $currency = 'XAF'; // défaut
+
+        if ($hmaService && $hmaService->getCountry()) {
+            $currency = self::CURRENCY_MAP[$hmaService->getCountry()] ?? 'XAF';
+        }
+
+        $formatted = number_format((float) $price, 0, ',', ' ');
+        return $formatted . ' ' . $currency;
     }
 }

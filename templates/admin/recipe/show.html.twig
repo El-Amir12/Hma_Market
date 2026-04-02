@@ -1,0 +1,420 @@
+{# templates/admin/recipe/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ recipe.name }} - Détails du plat - HMA Market{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <!-- En-tête avec navigation -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_recipe_index') }}" class="text-decoration-none">
+                            <i class="fas fa-utensils me-1"></i> Plats
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">{{ recipe.name|u.truncate(30, '...') }}</li>
+                </ol>
+            </nav>
+            <div class="d-flex align-items-center">
+                <a href="{{ path('app_admin_recipe_index') }}" class="btn btn-outline-secondary me-3 btn-hover-scale">
+                    <i class="fas fa-arrow-left me-1"></i> Retour
+                </a>
+                <h1 class="h3 mb-0 text-gray-800 slide-in-left">
+                    <i class="fas fa-utensils me-2"></i> {{ recipe.name }}
+                </h1>
+            </div>
+            <p class="text-muted mt-2">Détails du plat et de sa composition</p>
+        </div>
+        <div class="float-up">
+            <i class="fas fa-utensils fa-3x text-primary opacity-75"></i>
+        </div>
+    </div>
+
+    <!-- Alertes flash -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <div class="row g-4">
+        <!-- Colonne gauche : Informations générales -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i> Informations du plat
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <!-- Image (optionnelle) -->
+                        <div class="col-md-4 text-center">
+                            {% if recipe.image %}
+                                <img src="{{ asset('uploads/images_plats/' ~ recipe.image) }}" 
+                                     alt="{{ recipe.name }}" 
+                                     class="img-fluid rounded shadow-sm mb-3"
+                                     style="max-height: 150px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center mb-3"
+                                     style="height: 150px;">
+                                    <i class="fas fa-utensils fa-4x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div class="mt-2">
+                                {% if recipe.isActive %}
+                                    <span class="badge bg-success"><i class="fas fa-toggle-on me-1"></i> Actif</span>
+                                {% else %}
+                                    <span class="badge bg-danger"><i class="fas fa-toggle-off me-1"></i> Inactif</span>
+                                {% endif %}
+                                {% if not recipe.subscriptionActive %}
+                                    <span class="badge bg-warning text-dark ms-1"><i class="fas fa-clock me-1"></i> Hors quota</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="info-item">
+                                <div class="info-label"><i class="fas fa-tag text-primary me-2"></i> Nom</div>
+                                <div class="info-value">{{ recipe.name }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label"><i class="fas fa-folder text-primary me-2"></i> Catégorie</div>
+                                <div class="info-value">
+                                    {% if recipe.category %}
+                                        <span class="badge bg-info">{{ recipe.category.name }}</span>
+                                        {% if recipe.category.parent %}
+                                            <small class="text-muted d-block mt-1">
+                                                <i class="fas fa-level-up-alt me-1"></i> {{ recipe.category.parent.name }}
+                                            </small>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted">Non catégorisé</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label"><i class="fas fa-money-bill-wave text-primary me-2"></i> Prix de vente</div>
+                                <div class="info-value fw-bold text-success">{{ recipe.sellingPrice|price_with_currency(recipe.hmaService) }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    {% if recipe.description %}
+                    <div class="mt-4">
+                        <div class="info-label"><i class="fas fa-align-left text-primary me-2"></i> Description</div>
+                        <div class="info-value bg-light p-3 rounded">{{ recipe.description|nl2br }}</div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Instructions -->
+                    {% if recipe.instructions %}
+                    <div class="mt-4">
+                        <div class="info-label"><i class="fas fa-book-open text-primary me-2"></i> Instructions</div>
+                        <div class="info-value bg-light p-3 rounded">{{ recipe.instructions|nl2br }}</div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Métadonnées -->
+                    <div class="mt-4 pt-3 border-top">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-calendar-plus text-primary me-2"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Créé le</small>
+                                        <span class="fw-semibold">{{ recipe.createdAt|date('d/m/Y à H:i') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-calendar-edit text-primary me-2"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Modifié le</small>
+                                        <span class="fw-semibold">{{ recipe.updatedAt ? recipe.updatedAt|date('d/m/Y à H:i') : 'Jamais modifié' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Créateur avec photo -->
+                        <div class="d-flex align-items-center mt-3 p-3 bg-light rounded">
+                            <div class="flex-shrink-0">
+                                {% if recipe.user.photo %}
+                                    <img src="{{ asset('uploads/users/' ~ recipe.user.photo) }}" 
+                                         alt="{{ recipe.user.fullName }}" 
+                                         class="rounded-circle"
+                                         style="width: 50px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center text-white"
+                                         style="width: 50px; height: 50px;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <small class="text-muted d-block">Créé par</small>
+                                <span class="fw-semibold">{{ recipe.user.fullName }}</span>
+                                <br>
+                                <small class="text-muted">{{ recipe.user.email }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Boutons d'action principaux -->
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <a href="{{ path('app_admin_recipe_edit', {'id': recipe.id}) }}" class="btn btn-warning btn-lg">
+                    <i class="fas fa-edit me-2"></i> Modifier le plat
+                </a>
+                <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#deleteRecipeModal">
+                    <i class="fas fa-trash me-2"></i> Supprimer
+                </button>
+            </div>
+        </div>
+
+        <!-- Colonne droite : Ingrédients -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-cup-straw me-2"></i> Ingrédients
+                        <span class="badge bg-primary ms-2">{{ recipe.recipeItems|length }}</span>
+                    </h5>
+                    <a href="{{ path('app_admin_recipe_edit', {'id': recipe.id}) }}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-plus me-1"></i> Modifier la liste
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if paginatedItems is defined and paginatedItems is not empty %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Produit</th>
+                                        <th>Quantité</th>
+                                        <th>Unité</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in paginatedItems %}
+                                    <tr>
+                                        <td style="width: 60px;">
+                                            {% if item.product.image and item.product.image != 'default-product.png' %}
+                                                <img src="{{ asset('uploads/products/' ~ item.product.image) }}" 
+                                                     alt="{{ item.product.name }}"
+                                                     class="img-thumbnail"
+                                                     style="width: 50px; height: 50px; object-fit: cover;">
+                                            {% else %}
+                                                <div class="bg-light d-flex align-items-center justify-content-center"
+                                                     style="width: 50px; height: 50px;">
+                                                    <i class="fas fa-box text-muted"></i>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <strong>{{ item.product.name }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ item.product.unit|default('pièce') }}</small>
+                                        </td>
+                                        <td class="fw-bold">{{ item.quantity }}</td>
+                                        <td>{{ item.unit }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% if totalPages > 1 %}
+                        <nav aria-label="Pagination des ingrédients" class="mt-3">
+                            <ul class="pagination pagination-sm justify-content-center">
+                                <li class="page-item {{ currentPage <= 1 ? 'disabled' }}">
+                                    <a class="page-link" href="{{ path('app_admin_recipe_show', {'id': recipe.id, 'page': currentPage - 1}) }}">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                                {% for i in 1..totalPages %}
+                                    <li class="page-item {{ i == currentPage ? 'active' }}">
+                                        <a class="page-link" href="{{ path('app_admin_recipe_show', {'id': recipe.id, 'page': i}) }}">{{ i }}</a>
+                                    </li>
+                                {% endfor %}
+                                <li class="page-item {{ currentPage >= totalPages ? 'disabled' }}">
+                                    <a class="page-link" href="{{ path('app_admin_recipe_show', {'id': recipe.id, 'page': currentPage + 1}) }}">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-cup-straw fa-4x text-muted mb-3"></i>
+                            <p class="text-muted">Aucun ingrédient dans ce plat</p>
+                            <a href="{{ path('app_admin_recipe_edit', {'id': recipe.id}) }}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-plus me-1"></i> Ajouter des ingrédients
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Boutons d'actions secondaires (à implémenter) -->
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <a href="#" class="btn btn-outline-info btn-lg flex-fill">
+                    <i class="fas fa-exchange-alt me-2"></i> Mouvements stock
+                </a>
+                <a href="#" class="btn btn-outline-warning btn-lg flex-fill">
+                    <i class="fas fa-tags me-2"></i> Promotions
+                </a>
+                <a href="#" class="btn btn-outline-success btn-lg flex-fill">
+                    <i class="fas fa-shopping-cart me-2"></i> Commandes liées
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de suppression -->
+<div class="modal fade" id="deleteRecipeModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Supprimer le plat
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="deleteRecipeContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form id="deleteRecipeForm" method="post" action="">
+                    <input type="hidden" name="_token" id="deleteRecipeToken">
+                    <button type="submit" class="btn btn-danger" id="deleteRecipeConfirmBtn">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+.slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+}
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+.float-up {
+    animation: floatUp 3s ease-in-out infinite;
+}
+@keyframes floatUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.btn-hover-scale {
+    transition: all 0.2s ease;
+}
+.btn-hover-scale:hover {
+    transform: scale(1.05);
+}
+.info-item {
+    margin-bottom: 0.75rem;
+}
+.info-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+.info-value {
+    font-size: 1rem;
+}
+.table th {
+    font-weight: 600;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+.table td {
+    vertical-align: middle;
+}
+.pagination .page-link {
+    border-radius: 8px;
+    margin: 0 2px;
+}
+@media (max-width: 768px) {
+    .card-header .btn-sm {
+        margin-top: 0.5rem;
+        width: 100%;
+    }
+    .d-flex.flex-wrap.gap-2 {
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion de la suppression avec confirmation par saisie du nom si commandes existent
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteRecipeModal'));
+    const deleteForm = document.getElementById('deleteRecipeForm');
+    const deleteToken = document.getElementById('deleteRecipeToken');
+    const deleteConfirmBtn = document.getElementById('deleteRecipeConfirmBtn');
+    const deleteContent = document.getElementById('deleteRecipeContent');
+
+    const hasOrders = {{ recipe.orderItems|length > 0 ? 'true' : 'false' }};
+    const recipeName = "{{ recipe.name|e('js') }}";
+
+    deleteForm.action = "{{ path('app_admin_recipe_delete', {'id': recipe.id}) }}";
+    deleteToken.value = "{{ csrf_token('delete' ~ recipe.id) }}";
+
+    if (hasOrders) {
+        deleteContent.innerHTML = `
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Ce plat est lié à des commandes. Pour confirmer la suppression, saisissez exactement le nom du plat ci-dessous.
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                <input type="text" id="deleteConfirmName" class="form-control" placeholder="Saisissez le nom du plat pour confirmer">
+            </div>
+        `;
+        deleteConfirmBtn.disabled = true;
+
+        const confirmInput = document.getElementById('deleteConfirmName');
+        if (confirmInput) {
+            confirmInput.addEventListener('input', function() {
+                deleteConfirmBtn.disabled = this.value.trim() !== recipeName;
+            });
+        }
+    } else {
+        deleteContent.innerHTML = `
+            <p>Êtes-vous sûr de vouloir supprimer le plat <strong>"${recipeName}"</strong> ?</p>
+            <p class="text-danger"><i class="fas fa-exclamation-circle me-1"></i>Cette action est irréversible.</p>
+        `;
+        deleteConfirmBtn.disabled = false;
+    }
+});
+</script>
+{% endblock %}

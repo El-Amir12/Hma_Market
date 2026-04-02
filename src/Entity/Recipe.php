@@ -7,8 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
+#[UniqueEntity(
+    fields: ['hma_service', 'name'],
+    message: 'Une recette avec ce nom existe déjà pour votre entreprise.'
+)]
 class Recipe
 {
     #[ORM\Id]
@@ -26,6 +31,9 @@ class Recipe
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $instructions = null;
+
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $selling_price = null;
 
@@ -34,6 +42,13 @@ class Recipe
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updated_at = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     #[ORM\Column]
     private ?bool $is_active = null;
@@ -44,7 +59,7 @@ class Recipe
     /**
      * @var Collection<int, RecipeItem>
      */
-    #[ORM\OneToMany(targetEntity: RecipeItem::class, mappedBy: 'recipe', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: RecipeItem::class, mappedBy: 'recipe', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $recipeItems;
 
     /**
@@ -52,6 +67,10 @@ class Recipe
      */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'recipe')]
     private Collection $orderItems;
+
+    #[ORM\ManyToOne(inversedBy: 'recipes')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?CategoryRecipe $category = null;
 
     public function __construct()
     {
@@ -100,6 +119,17 @@ class Recipe
         return $this;
     }
 
+    public function getInstructions(): ?string
+    {
+        return $this->instructions;
+    }
+
+    public function setInstructions(?string $instructions): static
+    {
+        $this->instructions = $instructions;
+        return $this;
+    }
+
     public function getSellingPrice(): ?string
     {
         return $this->selling_price;
@@ -133,6 +163,28 @@ class Recipe
     {
         $this->updated_at = $updated_at;
 
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
         return $this;
     }
 
@@ -180,7 +232,6 @@ class Recipe
     public function removeRecipeItem(RecipeItem $recipeItem): static
     {
         if ($this->recipeItems->removeElement($recipeItem)) {
-            // set the owning side to null (unless already changed)
             if ($recipeItem->getRecipe() === $this) {
                 $recipeItem->setRecipe(null);
             }
@@ -210,11 +261,22 @@ class Recipe
     public function removeOrderItem(OrderItem $orderItem): static
     {
         if ($this->orderItems->removeElement($orderItem)) {
-            // set the owning side to null (unless already changed)
             if ($orderItem->getRecipe() === $this) {
                 $orderItem->setRecipe(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?CategoryRecipe
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?CategoryRecipe $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

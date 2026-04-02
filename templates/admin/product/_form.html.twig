@@ -18,7 +18,7 @@
                                  alt="{{ product.name }}" 
                                  class="img-fluid rounded shadow-lg product-preview"
                                  style="width: 100%; height: 100%; object-fit: cover; border: 5px solid #f8f9fa;">
-                            {% if form.vars.name != 'new' %}
+                            {% if product.id is defined and product.id is not null %}
                                 <button type="button" 
                                         class="btn btn-danger btn-sm position-absolute rounded-circle shadow"
                                         style="bottom: 10px; right: 10px; width: 36px; height: 36px;"
@@ -47,7 +47,7 @@
                         }}) }}
                         <div class="form-text mt-2">
                             <i class="fas fa-info-circle me-1"></i>
-                            Formats acceptés : JPG, PNG, GIF, WebP. Taille max : 2MB
+                            Formats acceptés : JPG, PNG, GIF, WebP. Taille max : 5M
                         </div>
                         <div class="invalid-feedback d-block">
                             {{ form_errors(form.image) }}
@@ -72,7 +72,11 @@
             <div class="card-header bg-gradient-primary text-white py-3">
                 <h5 class="card-title mb-0">
                     <i class="fas fa-box-open me-2"></i>
-                    {{ form.vars.name == 'new' ? 'Nouveau produit' : 'Modifier le produit' }}
+                    {% if product.id is defined and product.id is not null %}
+                        Modifier le produit
+                    {% else %}
+                        Nouveau produit
+                    {% endif %}
                 </h5>
             </div>
             <div class="card-body">
@@ -149,10 +153,29 @@
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Unité de mesure -->
+                <div class="row g-3 mt-3">
+                    <div class="col-md-12">
+                        <div class="form-floating">
+                            {{ form_widget(form.unit, {'attr': {'class': 'form-select', 'id': 'product_unit', 'placeholder': ' '}}) }}
+                            <label for="{{ form.unit.vars.id }}">
+                                <i class="fas fa-weight-hanging me-1"></i> Unité de mesure
+                            </label>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Si aucune unité n'est sélectionnée, "Pièce" sera utilisé par défaut.
+                            </div>
+                            <div class="invalid-feedback d-block">
+                                {{ form_errors(form.unit) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                
                 <!-- Prix -->
                 <div class="row g-3 mt-3">
-                    <div class="col-md-6">
+                    <div class="col-md-{{ companyType == 'restaurant' ? '12' : '6' }}">
                         <div class="form-floating">
                             {{ form_widget(form.purchase_price, {'attr': {
                                 'class': 'form-control',
@@ -168,7 +191,7 @@
                             </div>
                         </div>
                     </div>
-                    
+                    {% if companyType != 'restaurant' %}
                     <div class="col-md-6">
                         <div class="form-floating">
                             {{ form_widget(form.sale_price, {'attr': {
@@ -185,9 +208,11 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
                 
                 <!-- Marge calculée -->
+                {% if companyType != 'restaurant' %}
                 <div class="row g-3 mt-2">
                     <div class="col-md-12">
                         <div class="card border-0 bg-light">
@@ -205,6 +230,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 
                 <!-- Stock -->
                 <div class="row g-3 mt-3">
@@ -221,9 +247,9 @@
                             <div class="invalid-feedback d-block">
                                 {{ form_errors(form.stock_quantity) }}
                             </div>
+                            <small class="text-muted" id="stock_unit_help">Unité : {{ product.unit ?: 'pièce' }}</small>
                         </div>
                     </div>
-                    
                     <div class="col-md-6">
                         <div class="form-floating">
                             {{ form_widget(form.min_quantity, {'attr': {
@@ -234,13 +260,10 @@
                             <label for="{{ form.min_quantity.vars.id }}">
                                 <i class="fas fa-exclamation-circle me-1"></i> Stock minimum d'alerte
                             </label>
-                            <div class="form-text">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Alerte lorsque le stock atteint cette quantité
-                            </div>
                             <div class="invalid-feedback d-block">
                                 {{ form_errors(form.min_quantity) }}
                             </div>
+                            <small class="text-muted" id="min_quantity_unit_help">Alerte en {{ product.unit ?: 'pièce' }}</small>
                         </div>
                     </div>
                 </div>
@@ -332,6 +355,76 @@
                         </div>
                     </div>
                 </div>
+            </div> <!-- fin card-body -->
+
+            <!-- Bouton Autres informations -->
+            <div class="row g-3 mt-3 px-3">
+                <div class="col-12">
+                    <div class="card border-0 bg-light">
+                        <div class="card-body py-2">
+                            <div class="form-check form-switch">
+                                {{ form_widget(form.show_extra, {'attr': {
+                                    'class': 'form-check-input',
+                                    'role': 'switch'
+                                }}) }}
+                                <label class="form-check-label fw-bold" for="{{ form.show_extra.vars.id }}">
+                                    <i class="fas fa-ellipsis-h me-2"></i>Autre information
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Champs supplémentaires (cachés par défaut) -->
+            <div id="extraFields" style="display: none;" class="px-3">
+                <div class="row g-3 mt-3">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            {{ form_widget(form.dosage, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
+                            <label for="{{ form.dosage.vars.id }}">Dosage</label>
+                            <div class="invalid-feedback d-block">{{ form_errors(form.dosage) }}</div>
+                            <small class="text-muted mt-1 d-block">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    EX : 500 mg
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            {{ form_widget(form.form, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
+                            <label for="{{ form.form.vars.id }}">Forme</label>
+                            <div class="invalid-feedback d-block">{{ form_errors(form.form) }}</div>
+                            <small class="text-muted mt-1 d-block">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    EX : Comprimé
+                                </small>
+                        </div>
+                    </div>
+                </div>
+
+                {# Champ prescription_required uniquement pour les pharmacies #}
+                {% if companyType == 'pharmacy' %}
+                <div class="row g-3 mt-3">
+                    <div class="col-12">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body">
+                                <div class="form-check form-switch">
+                                    {{ form_widget(form.prescription_required, {'attr': {'class': 'form-check-input'}}) }}
+                                    <label class="form-check-label" for="{{ form.prescription_required.vars.id }}">
+                                        Prescription obligatoire
+                                    </label>
+                                    <div class="invalid-feedback d-block">{{ form_errors(form.prescription_required) }}</div>
+                                    <small class="text-muted mt-1 d-block">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Requiert une ordonance à la vente
+                                </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
             
             <!-- Footer avec boutons d'action -->
@@ -347,7 +440,7 @@
                             {{ button_label|default('Enregistrer le produit') }}
                         </button>
                         
-                        {% if form.vars.name != 'new' and product.id is defined and product.id is not null %}
+                        {% if product.id is defined and product.id is not null %}
                             <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="btn btn-info btn-lg">
                                 <i class="fas fa-eye me-2"></i> Voir
                             </a>
@@ -360,8 +453,8 @@
 </div>
 {{ form_end(form) }}
 
-<!-- Modal pour supprimer l'image -->
-{% if form.vars.name != 'new' and product.image and product.image != 'default-product.png' %}
+<!-- Modals -->
+{% if product.id is defined and product.id is not null and product.image and product.image != 'default-product.png' %}
 <div class="modal fade" id="deleteImageModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -440,7 +533,7 @@
     </div>
 </div>
 
-{% block javascripts %}
+<!-- JavaScript -->
 <script>
 // Preview d'image
 function previewProductImage(input) {
@@ -450,14 +543,14 @@ function previewProductImage(input) {
                        document.querySelector('.product-placeholder');
         
         reader.onload = function(e) {
-            if (preview.classList.contains('product-placeholder')) {
+            if (preview && preview.classList.contains('product-placeholder')) {
                 // Remplacer le placeholder par une image
                 const img = document.createElement('img');
                 img.src = e.target.result;
                 img.className = 'img-fluid rounded shadow-lg product-preview';
                 img.style = 'width: 200px; height: 200px; object-fit: cover; border: 5px solid #f8f9fa;';
                 preview.parentNode.replaceChild(img, preview);
-            } else {
+            } else if (preview) {
                 // Mettre à jour l'image existante
                 preview.src = e.target.result;
             }
@@ -469,8 +562,12 @@ function previewProductImage(input) {
 
 // Calcul de la marge
 function calculateMargin() {
-    const purchasePrice = parseFloat(document.getElementById('{{ form.purchase_price.vars.id }}').value) || 0;
-    const salePrice = parseFloat(document.getElementById('{{ form.sale_price.vars.id }}').value) || 0;
+    {% if companyType != 'restaurant' %}
+    const purchasePriceInput = document.getElementById('{{ form.purchase_price.vars.id }}');
+    const salePriceInput = document.getElementById('{{ form.sale_price.vars.id }}');
+    
+    const purchasePrice = purchasePriceInput ? parseFloat(purchasePriceInput.value) || 0 : 0;
+    const salePrice = salePriceInput ? parseFloat(salePriceInput.value) || 0 : 0;
     
     if (purchasePrice > 0 && salePrice > 0) {
         const marginAmount = salePrice - purchasePrice;
@@ -494,67 +591,119 @@ function calculateMargin() {
         document.getElementById('margin-percentage').textContent = '0%';
         document.getElementById('margin-percentage').className = 'badge bg-secondary ms-2';
     }
+    {% endif %}
 }
 
-// Scanner de code-barres
+// Attendre que le DOM soit chargé
 document.addEventListener('DOMContentLoaded', function() {
-    const scannerModal = new bootstrap.Modal(document.getElementById('scannerModalForm'));
-    const scanBtn = document.getElementById('scan-barcode-btn-form');
-    const generateBtn = document.getElementById('generate-barcode-btn-form');
-    const barcodeInput = document.getElementById('product-barcode');
-    const scannerInput = document.getElementById('barcode-scanner-input');
-    const useScannedBtn = document.getElementById('use-scanned-barcode');
+    console.log('DOM chargé, initialisation des scripts...');
     
-    // Scanner modal
-    scanBtn.addEventListener('click', function() {
-        scannerModal.show();
-        scannerInput.focus();
-    });
+    // ========== MISE À JOUR DE L'UNITÉ POUR LE STOCK ET L'ALERTE ==========
+    const unitSelect = document.getElementById('product_unit');
+    const stockUnitHelp = document.getElementById('stock_unit_help');
+    const minQuantityHelp = document.getElementById('min_quantity_unit_help');
     
-    // Générer un code-barres automatique
-    generateBtn.addEventListener('click', function() {
-        const timestamp = Date.now();
-        const random = Math.floor(Math.random() * 10000);
-        const barcode = 'PRD-' + timestamp + '-' + random.toString().padStart(4, '0');
-        barcodeInput.value = barcode;
-    });
-    
-    // Utiliser le code scanné
-    useScannedBtn.addEventListener('click', function() {
-        if (scannerInput.value.trim()) {
-            barcodeInput.value = scannerInput.value.trim();
-            scannerModal.hide();
-            scannerInput.value = '';
+    if (unitSelect && stockUnitHelp && minQuantityHelp) {
+        function updateUnitHelps() {
+            const selectedOption = unitSelect.options[unitSelect.selectedIndex];
+            let unitText = selectedOption ? selectedOption.text : 'pièce';
+            // Si l'option est le placeholder, on affiche "pièce"
+            if (unitSelect.value === '') unitText = 'pièce';
+            stockUnitHelp.textContent = `Unité : ${unitText}`;
+            minQuantityHelp.textContent = `Alerte en ${unitText}`;
         }
-    });
+        
+        // Initialiser
+        updateUnitHelps();
+        
+        // Écouter le changement
+        unitSelect.addEventListener('change', updateUnitHelps);
+    }
     
-    // Détecter l'entrée du scanner (Enter ou Tab)
-    scannerInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === 'Tab') {
-            e.preventDefault();
-            if (this.value.trim()) {
-                barcodeInput.value = this.value.trim();
-                scannerModal.hide();
-                this.value = '';
-            }
+    // ========== SCANNER ==========
+    const scannerModalElement = document.getElementById('scannerModalForm');
+    if (scannerModalElement && typeof bootstrap !== 'undefined') {
+        const scannerModal = new bootstrap.Modal(scannerModalElement);
+        const scanBtn = document.getElementById('scan-barcode-btn-form');
+        const generateBtn = document.getElementById('generate-barcode-btn-form');
+        const barcodeInput = document.getElementById('product-barcode');
+        const scannerInput = document.getElementById('barcode-scanner-input');
+        const useScannedBtn = document.getElementById('use-scanned-barcode');
+        
+        if (scanBtn) {
+            scanBtn.addEventListener('click', function() {
+                scannerModal.show();
+                if (scannerInput) scannerInput.focus();
+            });
         }
-    });
+        
+        if (generateBtn) {
+            generateBtn.addEventListener('click', function() {
+                const timestamp = Date.now();
+                const random = Math.floor(Math.random() * 10000);
+                const barcode = 'PRD-' + timestamp + '-' + random.toString().padStart(4, '0');
+                if (barcodeInput) barcodeInput.value = barcode;
+            });
+        }
+        
+        if (useScannedBtn && scannerInput && barcodeInput) {
+            useScannedBtn.addEventListener('click', function() {
+                if (scannerInput.value.trim()) {
+                    barcodeInput.value = scannerInput.value.trim();
+                    scannerModal.hide();
+                    scannerInput.value = '';
+                }
+            });
+        }
+        
+        if (scannerInput && barcodeInput) {
+            scannerInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === 'Tab') {
+                    e.preventDefault();
+                    if (this.value.trim()) {
+                        barcodeInput.value = this.value.trim();
+                        scannerModal.hide();
+                        this.value = '';
+                    }
+                }
+            });
+        }
+    } else {
+        console.warn('Bootstrap non chargé ou modal introuvable');
+    }
     
-    // Initialiser Select2 pour les catégories
-    $('.select2-category').select2({
-        theme: "bootstrap-5",
-        language: "fr",
-        width: "100%",
-        placeholder: "Sélectionnez une catégorie...",
-        allowClear: false,
-        minimumInputLength: 0,
-        dropdownParent: $('.card-body')
-    });
+    // ========== SELECT2 ==========
+    if (typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
+        console.log('=== DÉBOGAGE SELECT2 ===');
+        console.log('Nombre d\'éléments .select2-category :', $('.select2-category').length);
+        console.log('Instance Select2 existante ?', $('.select2-category').data('select2') ? 'OUI' : 'NON');
+        
+        // Détruire toute instance existante avant de recréer
+        if ($('.select2-category').data('select2')) {
+            console.log('Destruction de l\'instance existante');
+            $('.select2-category').select2('destroy');
+        }
+        
+        console.log('Initialisation de Select2...');
+        $('.select2-category').select2({
+            theme: "bootstrap-5",
+            language: "fr",
+            width: "100%",
+            placeholder: "Sélectionnez une catégorie...",
+            allowClear: false,
+            minimumInputLength: 0
+        });
+        console.log('Select2 initialisé');
+    } else {
+        console.warn('jQuery ou Select2 non chargé');
+    }
     
-    // Calculer la marge au chargement
+    // ========== MARGE ==========
+    {% if companyType != 'restaurant' %}
     calculateMargin();
+    {% endif %}
     
-    // Validation Bootstrap
+    // ========== VALIDATION BOOTSTRAP ==========
     const forms = document.querySelectorAll('.needs-validation');
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
@@ -565,11 +714,48 @@ document.addEventListener('DOMContentLoaded', function() {
             form.classList.add('was-validated');
         }, false);
     });
+    
+    // ========== GESTION DU SWITCH "AUTRES INFORMATIONS" ==========
+    console.log('Recherche du switch avec ID :', '{{ form.show_extra.vars.id }}');
+    const showExtraSwitch = document.getElementById('{{ form.show_extra.vars.id }}');
+    const extraFields = document.getElementById('extraFields');
+
+    if (showExtraSwitch) {
+        console.log('✅ Switch trouvé :', showExtraSwitch);
+        console.log('État initial du switch (checked) :', showExtraSwitch.checked);
+    } else {
+        console.error('❌ Switch non trouvé avec ID :', '{{ form.show_extra.vars.id }}');
+    }
+
+    if (extraFields) {
+        console.log('✅ Div extraFields trouvée :', extraFields);
+        console.log('Style display initial de extraFields :', extraFields.style.display);
+    } else {
+        console.error('❌ Div extraFields non trouvée');
+    }
+
+    if (showExtraSwitch && extraFields) {
+        // Fonction pour basculer l'affichage
+        function toggleExtraFields() {
+            console.log('Événement change déclenché. Nouvel état checked :', showExtraSwitch.checked);
+            const newDisplay = showExtraSwitch.checked ? 'block' : 'none';
+            extraFields.style.display = newDisplay;
+            console.log('Nouveau style display de extraFields :', newDisplay);
+        }
+        
+        // Appliquer l'état initial
+        toggleExtraFields();
+        
+        // Ajouter l'écouteur d'événement
+        showExtraSwitch.addEventListener('change', toggleExtraFields);
+        console.log('Écouteur d\'événement change attaché avec succès.');
+    } else {
+        console.error('Impossible d\'attacher l\'événement : un des éléments est manquant.');
+    }
 });
 </script>
-{% endblock %}
 
-{% block stylesheets %}
+<!-- CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style>
@@ -578,140 +764,115 @@ document.addEventListener('DOMContentLoaded', function() {
     border-radius: 15px;
     overflow: hidden;
 }
-
 .card-hover:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
 }
-
 .bg-gradient-primary {
     background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
 }
-
 .form-floating > label {
     padding-left: 2.5rem;
 }
-
 .form-floating > .form-control,
 .form-floating > .form-select {
     height: calc(3.5rem + 2px);
     line-height: 1.25;
     padding: 1rem 0.75rem 0.5rem 2.5rem;
 }
-
 .form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label {
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select:focus ~ label,
+.form-floating > .form-select:not([value=""]):not(:placeholder-shown) ~ label {
     transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
     color: #667eea;
 }
-
 .form-floating > .form-control,
 .form-floating > .form-select {
     border-radius: 10px;
     border: 2px solid #e0e0e0;
 }
-
 .form-floating > .form-control:focus,
 .form-floating > .form-select:focus {
     border-color: #667eea;
     box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
 }
-
 .select2-container--bootstrap-5 .select2-selection {
     border: 2px solid #e0e0e0;
     border-radius: 10px !important;
     min-height: calc(3.5rem + 2px);
     padding: 1rem 0.75rem 0.5rem 2.5rem;
 }
-
-.select2-container--bootstrap-5 .select2-selection:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    line-height: 1.5;
+    padding-left: 0;
 }
-
 .btn-primary {
     background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
     border: none;
     transition: all 0.3s ease;
 }
-
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
-
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    border: none;
+}
 .product-preview {
     transition: all 0.3s ease;
 }
-
 .product-preview:hover {
     transform: scale(1.05);
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
-
 .input-group .btn {
     border-radius: 0 10px 10px 0;
     height: 100%;
     display: flex;
-    align-items-center;
+    align-items: center;
     justify-content: center;
 }
-
 .input-group .btn-outline-primary {
     border-left: none;
 }
-
 .input-group .form-control {
     border-right: none;
 }
-
 .input-group .form-control:focus {
     border-color: #667eea;
     box-shadow: none;
 }
-
 .input-group .btn:focus {
     box-shadow: none;
 }
-
-/* Animation pour la marge */
 #margin-percentage {
     transition: all 0.3s ease;
 }
-
-/* Style pour les switches */
 .form-switch .form-check-input {
     width: 3.5em;
     height: 1.8em;
     cursor: pointer;
     margin-top: 0.25rem;
 }
-
 .form-check-input:checked {
     background-color: #198754;
     border-color: #198754;
 }
-
 .form-check-input:focus {
     box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
 }
-
-/* Pour le switch date critique */
 #{{ form.has_expiry_date.vars.id }}:checked {
     background-color: #ffc107;
     border-color: #ffc107;
 }
-
 #{{ form.has_expiry_date.vars.id }}:focus {
     box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
 }
-
-/* Style pour les cartes de switches */
 .bg-light {
     background-color: #f8f9fa !important;
 }
-
-/* Responsive pour les switches */
 @media (max-width: 768px) {
     .form-switch .form-check-input {
         width: 3em;
@@ -719,4 +880,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 </style>
-{% endblock %}

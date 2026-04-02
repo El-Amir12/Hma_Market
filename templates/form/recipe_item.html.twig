@@ -1,0 +1,34 @@
+{# templates/form/recipe_item.html.twig #}
+
+{% block recipe_item_widget %}
+    <div class="recipe-item card mb-3 border">
+        <div class="card-body position-relative">
+            <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2 delete-ingredient" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">
+                <i class="bi bi-trash3"></i> Supprimer
+            </button>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form_label(form.product, 'Produit', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.product, {'attr': {'class': 'form-select product-select'}}) }}
+                        {{ form_errors(form.product) }}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {{ form_label(form.quantity, 'Quantité', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.quantity, {'attr': {'class': 'form-control quantity-input'}}) }}
+                        {{ form_errors(form.quantity) }}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {{ form_label(form.unit, 'Unité', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.unit, {'attr': {'class': 'form-control unit-input'}}) }}
+                        {{ form_errors(form.unit) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

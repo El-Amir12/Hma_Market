@@ -32,6 +32,14 @@ if %errorlevel% neq 0 echo ⚠️ Erreur lors de l'envoi
 echo [%date% %time%] ✅ Envoi terminé
 echo.
 
+echo [%date% %time%] ⚙️ Application des quotas (entités)...
+php bin/console app:enforce-quotas --no-interaction
+if %errorlevel% neq 0 echo ⚠️ Erreur lors de l'application des quotas
+
+echo [%date% %time%] 👥 Application des quotas utilisateurs...
+php bin/console app:enforce-user-quotas --no-interaction
+if %errorlevel% neq 0 echo ⚠️ Erreur lors de l'application des quotas utilisateurs
+
 echo ========================================
 echo    TÂCHES TERMINÉES À %date% %time%
 echo ========================================

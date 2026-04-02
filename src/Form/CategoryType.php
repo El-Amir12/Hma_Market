@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Category;
-use App\Entity\User;
+use App\Entity\HmaService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -20,6 +20,8 @@ class CategoryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $hmaService = $options['hma_service'] ?? null;
+
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom de la catégorie *',
@@ -80,8 +82,13 @@ class CategoryType extends AbstractType
                     'class' => 'form-select select2-category',
                     'data-placeholder' => 'Rechercher une catégorie parente...'
                 ],
+                'query_builder' => function ($er) use ($hmaService) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.hma_service = :service')
+                        ->setParameter('service', $hmaService)
+                        ->orderBy('c.name', 'ASC');
+                },
                 'group_by' => function($choice) {
-                    // Grouper par niveau de hiérarchie
                     $level = $choice->getHierarchyLevel();
                     if ($level === 0) return 'Catégories principales';
                     return 'Sous-catégories (niveau ' . $level . ')';
@@ -93,6 +100,7 @@ class CategoryType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Category::class,
+            'hma_service' => null,
         ]);
     }
 }

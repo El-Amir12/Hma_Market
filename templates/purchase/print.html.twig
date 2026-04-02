@@ -1,0 +1,229 @@
+{# templates/purchase/print.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Commande {{ purchase.purchaseNumber }}</title>
+    <style>
+        /* Reset et styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'DejaVu Sans', 'Arial', sans-serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            color: #000;
+            background: #fff;
+            padding: 2cm;
+        }
+        .print-container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        /* En-tête */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #333;
+            padding-bottom: 1rem;
+        }
+        .company-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+        .document-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+        /* Informations */
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .info-block {
+            width: 45%;
+            margin-bottom: 1rem;
+        }
+        .info-block h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.25rem;
+        }
+        .info-block p {
+            margin: 0.25rem 0;
+        }
+        /* Tableau des produits */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+        /* Pied de page */
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 9pt;
+            border-top: 1px solid #ccc;
+            padding-top: 1rem;
+        }
+        /* Notes */
+        .notes {
+            margin-top: 1.5rem;
+            border: 1px solid #eee;
+            padding: 0.75rem;
+            background: #fafafa;
+        }
+        /* Signature (optionnel) */
+        .signature {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature-line {
+            width: 200px;
+            border-top: 1px solid #000;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        @media print {
+            body {
+                padding: 0;
+                margin: 0;
+            }
+            .no-print {
+                display: none;
+            }
+            th {
+                background-color: #f2f2f2 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-container">
+        <!-- En-tête -->
+        <div class="header">
+            <div class="company-name">{{ purchase.hmaService.companyName }}</div>
+            <div class="document-title">
+                {% if purchase.status == 'confirmed' %}
+                    Bon de commande
+                {% elseif purchase.status == 'received' %}
+                    Reçu d'achat
+                {% else %}
+                    Commande
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Informations -->
+        <div class="info-section">
+            <div class="info-block">
+                <h3>Informations commande</h3>
+                <p><strong>N° commande :</strong> {{ purchase.purchaseNumber }}</p>
+                <p><strong>Date de création :</strong> {{ purchase.createdAt|date('d/m/Y H:i') }}</p>
+                {% if purchase.confirmedAt %}
+                    <p><strong>Date confirmation :</strong> {{ purchase.confirmedAt|date('d/m/Y H:i') }}</p>
+                {% endif %}
+                {% if purchase.receivedAt %}
+                    <p><strong>Date réception :</strong> {{ purchase.receivedAt|date('d/m/Y H:i') }}</p>
+                {% endif %}
+                <p><strong>Statut :</strong> {{ purchase.statusLabel }}</p>
+            </div>
+            <div class="info-block">
+                <h3>Fournisseur</h3>
+                {% if purchase.supplier %}
+                    <p><strong>{{ purchase.supplier.name }}</strong></p>
+                    <p>{{ purchase.supplier.contactPerson }}</p>
+                    <p>Tél : {{ purchase.supplier.phone }}</p>
+                    <p>Email : {{ purchase.supplier.email }}</p>
+                    <p>Adresse : {{ purchase.supplier.adress }}</p>
+                {% else %}
+                    <p>Non renseigné</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Tableau des produits -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Code-barres</th>
+                    <th>Quantité</th>
+                    <th>Prix unitaire (FCFA)</th>
+                    <th>Total (FCFA)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in purchase.purchaseItems %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.barcode }}</td>
+                    <td class="text-right">{{ item.quantity }}</td>
+                    <td class="text-right">{{ item.unitPrice|number_format(0, ',', ' ') }}</td>
+                    <td class="text-right">{{ item.totalPrice|number_format(0, ',', ' ') }}</td>
+                </tr>
+                {% endfor %}
+                <tr class="total-row">
+                    <td colspan="4" class="text-right"><strong>Total TTC</strong></td>
+                    <td class="text-right"><strong>{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Notes -->
+        {% if purchase.notes %}
+        <div class="notes">
+            <strong>Notes :</strong>
+            <p>{{ purchase.notes|nl2br }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Pied de page (signature) -->
+        <div class="signature">
+            <div>
+                <div class="signature-line">Cachet et signature du fournisseur</div>
+            </div>
+            <div>
+                <div class="signature-line">Cachet et signature du client</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            {{ purchase.hmaService.companyName }} - {{ purchase.hmaService.address|default('') }}<br>
+            Document généré le {{ 'now'|date('d/m/Y H:i') }}
+        </div>
+    </div>
+    <div class="no-print" style="text-align: center; margin-top: 2rem;">
+        <button onclick="window.print();" style="padding: 8px 16px;">Imprimer</button>
+        <button onclick="window.close();" style="padding: 8px 16px;">Fermer</button>
+    </div>
+</body>
+</html>

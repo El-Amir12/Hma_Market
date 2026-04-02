@@ -1,13 +1,148 @@
+{# templates/admin/supplier/edit.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Supplier{% endblock %}
+{% block title %}Modifier {{ supplier.name }} - HMA Market{% endblock %}
 
 {% block body %}
-    <h1>Edit Supplier</h1>
+<div class="container-fluid px-4">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('app_admin_supplier_index') }}" class="text-decoration-none">Fournisseurs</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_admin_supplier_show', {'id': supplier.id}) }}" class="text-decoration-none">{{ supplier.name|u.truncate(20) }}</a></li>
+                    <li class="breadcrumb-item active">Modifier</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-edit text-warning me-2"></i> Modifier {{ supplier.name }}
+            </h1>
+            <p class="text-muted mt-2">Mettez à jour les informations du fournisseur</p>
+        </div>
+        <div class="float-animation">
+            <i class="fas fa-truck fa-3x text-warning opacity-50"></i>
+        </div>
+    </div>
 
-    {{ include('admin/supplier/_form.html.twig', {'button_label': 'Update'}) }}
+    <!-- Messages flash -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
 
-    <a href="{{ path('app_admin_supplier_index') }}">back to list</a>
+    <!-- Formulaire -->
+    {{ include('admin/supplier/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
-    {{ include('admin/supplier/_delete_form.html.twig') }}
+    <!-- Zone de danger (suppression) si pas d'achats -->
+    {% if supplier.purchases|length == 0 and is_granted('ROLE_ADMIN') %}
+    <div class="row mt-4">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-danger shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-exclamation-triangle me-2"></i> Zone de danger</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="text-danger mb-3">Supprimer ce fournisseur</h6>
+                    <p class="text-muted mb-4">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Cette action est irréversible.
+                    </p>
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteSupplierModal">
+                        <i class="fas fa-trash me-2"></i> Supprimer ce fournisseur
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de suppression -->
+    <div class="modal fade" id="deleteSupplierModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-danger text-white border-0">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Confirmation</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
+                    <h5>Supprimer {{ supplier.name }} ?</h5>
+                    <p class="text-muted">Cette action est irréversible.</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Annuler</button>
+                    <form action="{{ path('app_admin_supplier_delete', {'id': supplier.id}) }}" method="post" class="d-inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ supplier.id) }}">
+                        <button type="submit" class="btn btn-danger px-4">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+    }
+    /* Vous pouvez également copier les autres styles de la catégorie si nécessaire */
+    .card-hover {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+    }
+    .form-floating > label {
+        padding-left: 2.5rem;
+    }
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+        padding: 1rem 0.75rem 0.5rem 2.5rem;
+    }
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
+        color: #667eea;
+    }
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+    }
+    .form-floating > .form-control:focus,
+    .form-floating > .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    .btn-outline-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+</style>
 {% endblock %}

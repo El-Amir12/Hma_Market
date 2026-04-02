@@ -1,4 +1,5 @@
 <?php
+// src/Entity/Category.php
 
 namespace App\Entity;
 
@@ -19,12 +20,7 @@ class Category
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank(message: "Le nom de la catégorie est obligatoire")]
-    #[Assert\Length(
-        min: 2,
-        max: 100,
-        minMessage: "Le nom doit contenir au moins {{ limit }} caractères",
-        maxMessage: "Le nom ne doit pas dépasser {{ limit }} caractères"
-    )]
+    #[Assert\Length(min: 2, max: 100, minMessage: "Le nom doit contenir au moins {{ limit }} caractères", maxMessage: "Le nom ne doit pas dépasser {{ limit }} caractères")]
     private ?string $name = null;
 
     #[ORM\Column(length: 150, unique: true)]
@@ -77,6 +73,10 @@ class Category
      */
     #[ORM\OneToMany(targetEntity: PromotionCategory::class, mappedBy: 'category', orphanRemoval: true)]
     private Collection $promotionCategories;
+
+    // Propriétés transientes pour les compteurs
+    private int $productCount = 0;
+    private int $childrenCount = 0;
 
     public function __construct()
     {
@@ -215,7 +215,6 @@ class Category
     public function removeChild(self $child): static
     {
         if ($this->children->removeElement($child)) {
-            // set the owning side to null (unless already changed)
             if ($child->getParent() === $this) {
                 $child->setParent(null);
             }
@@ -245,7 +244,6 @@ class Category
     public function removeProduct(Product $product): static
     {
         if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
             if ($product->getCategory() === $this) {
                 $product->setCategory(null);
             }
@@ -267,143 +265,12 @@ class Category
         return $this;
     }
 
-    // Méthodes utilitaires pour l'affichage hiérarchique
-
-    public function getHierarchyLevel(): int
-    {
-        $level = 0;
-        $parent = $this->getParent();
-        
-        while ($parent !== null) {
-            $level++;
-            $parent = $parent->getParent();
-        }
-        
-        return $level;
-    }
-
-    public function getDisplayName(): string
-    {
-        $level = $this->getHierarchyLevel();
-        $indent = str_repeat('— ', $level);
-        return $indent . $this->getName();
-    }
-
-    public function getAllChildren(): array
-    {
-        $allChildren = [];
-        
-        foreach ($this->getChildren() as $child) {
-            $allChildren[] = $child;
-            $allChildren = array_merge($allChildren, $child->getAllChildren());
-        }
-        
-        return $allChildren;
-    }
-
-    public function getTotalProductsCount(): int
-    {
-        $count = $this->getProducts()->count();
-        
-        foreach ($this->getChildren() as $child) {
-            $count += $child->getTotalProductsCount();
-        }
-        
-        return $count;
-    }
-
-    public function isDescendantOf(?Category $category): bool
-    {
-        if ($category === null) {
-            return false;
-        }
-        
-        $parent = $this->getParent();
-        
-        while ($parent !== null) {
-            if ($parent->getId() === $category->getId()) {
-                return true;
-            }
-            $parent = $parent->getParent();
-        }
-        
-        return false;
-    }
-
-    public function getFullPath(): string
-    {
-        $path = [$this->getName()];
-        $parent = $this->getParent();
-        
-        while ($parent !== null) {
-            array_unshift($path, $parent->getName());
-            $parent = $parent->getParent();
-        }
-        
-        return implode(' > ', $path);
-    }
-
-    public function hasActiveProducts(): bool
-    {
-        foreach ($this->getProducts() as $product) {
-            if ($product->isActive()) {
-                return true;
-            }
-        }
-        
-        foreach ($this->getChildren() as $child) {
-            if ($child->hasActiveProducts()) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-
-    public function getActiveProductsCount(): int
-    {
-        $count = 0;
-        
-        foreach ($this->getProducts() as $product) {
-            if ($product->isActive()) {
-                $count++;
-            }
-        }
-        
-        foreach ($this->getChildren() as $child) {
-            $count += $child->getActiveProductsCount();
-        }
-        
-        return $count;
-    }
-
-    // Pour l'affichage dans les formulaires
-    public function __toString(): string
-    {
-        return $this->getName();
-    }
-
-    // Méthodes pour la génération automatique du slug
-    public function generateSlug(): string
-    {
-        $slug = strtolower($this->getName());
-        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
-        $slug = trim($slug, '-');
-        
-        // Ajouter l'ID pour l'unicité si nécessaire
-        if ($this->getId()) {
-            $slug .= '-' . $this->getId();
-        }
-        
-        return $slug;
-    }
-
-    public function getHmaService(): ?HmaService  
+    public function getHmaService(): ?HmaService
     {
         return $this->hma_service;
     }
 
-    public function setHmaService(?HmaService $hma_service): static  
+    public function setHmaService(?HmaService $hma_service): static
     {
         $this->hma_service = $hma_service;
         return $this;
@@ -441,12 +308,152 @@ class Category
     public function removePromotionCategory(PromotionCategory $promotionCategory): static
     {
         if ($this->promotionCategories->removeElement($promotionCategory)) {
-            // set the owning side to null (unless already changed)
             if ($promotionCategory->getCategory() === $this) {
                 $promotionCategory->setCategory(null);
             }
         }
 
+        return $this;
+    }
+
+    // === Méthodes utilitaires ===
+
+    public function getHierarchyLevel(): int
+    {
+        $level = 0;
+        $parent = $this->getParent();
+        $visited = [];
+        while ($parent !== null) {
+            $id = $parent->getId();
+            if (in_array($id, $visited)) {
+                // Cycle détecté, on arrête
+                break;
+            }
+            $visited[] = $id;
+            $level++;
+            $parent = $parent->getParent();
+            if ($level > 100) break; // sécurité supplémentaire
+        }
+        return $level;
+    }
+
+    public function getDisplayName(): string
+    {
+        $level = $this->getHierarchyLevel();
+        return str_repeat('— ', $level) . $this->getName();
+    }
+
+    public function getAllChildren(): array
+    {
+        $allChildren = [];
+        foreach ($this->getChildren() as $child) {
+            $allChildren[] = $child;
+            $allChildren = array_merge($allChildren, $child->getAllChildren());
+        }
+        return $allChildren;
+    }
+
+    public function getTotalProductsCount(): int
+    {
+        $count = $this->getProducts()->count();
+        foreach ($this->getChildren() as $child) {
+            $count += $child->getTotalProductsCount();
+        }
+        return $count;
+    }
+
+    public function isDescendantOf(?Category $category): bool
+    {
+        if ($category === null) {
+            return false;
+        }
+        $parent = $this->getParent();
+        while ($parent !== null) {
+            if ($parent->getId() === $category->getId()) {
+                return true;
+            }
+            $parent = $parent->getParent();
+        }
+        return false;
+    }
+
+    public function getFullPath(): string
+    {
+        $path = [$this->getName()];
+        $parent = $this->getParent();
+        while ($parent !== null) {
+            array_unshift($path, $parent->getName());
+            $parent = $parent->getParent();
+        }
+        return implode(' > ', $path);
+    }
+
+    public function hasActiveProducts(): bool
+    {
+        foreach ($this->getProducts() as $product) {
+            if ($product->isActive()) {
+                return true;
+            }
+        }
+        foreach ($this->getChildren() as $child) {
+            if ($child->hasActiveProducts()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getActiveProductsCount(): int
+    {
+        $count = 0;
+        foreach ($this->getProducts() as $product) {
+            if ($product->isActive()) {
+                $count++;
+            }
+        }
+        foreach ($this->getChildren() as $child) {
+            $count += $child->getActiveProductsCount();
+        }
+        return $count;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
+    public function generateSlug(): string
+    {
+        $slug = strtolower($this->getName());
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+        $slug = trim($slug, '-');
+        if ($this->getId()) {
+            $slug .= '-' . $this->getId();
+        }
+        return $slug;
+    }
+
+    // === Getters / Setters pour les compteurs transients ===
+
+    public function getProductCount(): int
+    {
+        return $this->productCount;
+    }
+
+    public function setProductCount(int $productCount): self
+    {
+        $this->productCount = $productCount;
+        return $this;
+    }
+
+    public function getChildrenCount(): int
+    {
+        return $this->childrenCount;
+    }
+
+    public function setChildrenCount(int $childrenCount): self
+    {
+        $this->childrenCount = $childrenCount;
         return $this;
     }
 }

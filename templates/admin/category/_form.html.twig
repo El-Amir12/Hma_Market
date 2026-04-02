@@ -1,196 +1,207 @@
-{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
-<div class="row g-4">
-    <!-- Carte Image -->
-    <div class="col-lg-4">
-        <div class="card shadow-lg border-0 h-100 card-hover">
-            <div class="card-header bg-gradient-primary text-white py-3">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-image me-2"></i>Image de la catégorie
-                </h5>
-            </div>
-            <div class="card-body text-center d-flex flex-column">
-                <!-- Preview de l'image -->
-                <div class="category-image-preview mb-4 flex-grow-1 d-flex flex-column justify-content-center">
-                    {% if category.image %}
-                        <div class="position-relative mx-auto" style="width: 200px; height: 200px;">
-                            <img src="{{ asset('uploads/categories/' ~ category.image) }}" 
-                                 alt="{{ category.name }}" 
-                                 class="img-fluid rounded shadow-lg profile-preview"
-                                 style="width: 100%; height: 100%; object-fit: cover; border: 5px solid #f8f9fa;">
-                            {% if form.vars.name != 'new' %}
-                                <button type="button" 
-                                        class="btn btn-danger btn-sm position-absolute rounded-circle shadow"
-                                        style="bottom: 10px; right: 10px; width: 36px; height: 36px;"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#deleteImageModal"
-                                        title="Supprimer l'image">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            {% endif %}
-                        </div>
-                    {% else %}
-                        <div class="category-placeholder rounded d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg"
-                             style="width: 200px; height: 200px; border: 5px solid #f8f9fa;">
-                            <i class="fas fa-folder fa-5x"></i>
-                        </div>
-                    {% endif %}
+{# templates/admin/category/_form.html.twig #}
+
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+<div class="container-fluid px-4">
+    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+
+    <div class="row g-4">
+        <!-- Carte Image -->
+        <div class="col-lg-4">
+            <div class="card shadow-lg border-0 h-100 card-hover">
+                <div class="card-header bg-gradient-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-image me-2"></i>Image de la catégorie
+                    </h5>
                 </div>
-                
-                <!-- Champ de téléchargement d'image -->
-                <div class="mt-auto">
-                    <div class="file-upload-wrapper">
-                        {{ form_widget(form.image, {'attr': {
-                            'class': 'form-control', 
-                            'onchange': 'previewCategoryImage(this)',
-                            'accept': 'image/*'
-                        }}) }}
-                        <div class="form-text mt-2">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Formats acceptés : JPG, PNG, GIF, WebP. Taille max : 2MB
-                        </div>
-                        <div class="invalid-feedback d-block">
-                            {{ form_errors(form.image) }}
-                        </div>
+                <div class="card-body text-center d-flex flex-column">
+                    <!-- Preview de l'image -->
+                    <div class="category-image-preview mb-4 flex-grow-1 d-flex flex-column justify-content-center">
+                        {% if category.image %}
+                            <div class="position-relative mx-auto" style="width: 200px; height: 200px;">
+                                <img src="{{ asset('uploads/categories/' ~ category.image) }}"
+                                     alt="{{ category.name }}"
+                                     class="img-fluid rounded shadow-lg profile-preview"
+                                     style="width: 100%; height: 100%; object-fit: cover; border: 5px solid #f8f9fa;">
+                                {% if category.id is defined and category.id is not null %}
+                                    <button type="button"
+                                            class="btn btn-danger btn-sm position-absolute rounded-circle shadow"
+                                            style="bottom: 10px; right: 10px; width: 36px; height: 36px;"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteImageModal"
+                                            title="Supprimer l'image">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="category-placeholder rounded d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg"
+                                 style="width: 200px; height: 200px; border: 5px solid #f8f9fa;">
+                                <i class="fas fa-folder fa-5x"></i>
+                            </div>
+                        {% endif %}
                     </div>
-                    
-                    <!-- Bouton de sélection stylé -->
-                    <div class="mt-3">
-                        <label for="{{ form.image.vars.id }}" class="btn btn-outline-primary w-100">
-                            <i class="fas fa-cloud-upload-alt me-2"></i>
-                            {{ category.image ? 'Changer l\'image' : 'Choisir une image' }}
-                        </label>
+
+                    <!-- Champ de téléchargement d'image -->
+                    <div class="mt-auto">
+                        <div class="file-upload-wrapper">
+                            {{ form_widget(form.image, {'attr': {
+                                'class': 'form-control',
+                                'onchange': 'previewCategoryImage(this)',
+                                'accept': 'image/*'
+                            }}) }}
+                            <div class="form-text mt-2">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Formats acceptés : JPG, PNG, GIF, WebP. Taille max : 2M
+                            </div>
+                            <div class="invalid-feedback d-block">
+                                {{ form_errors(form.image) }}
+                            </div>
+                        </div>
+
+                        <!-- Bouton de sélection stylé -->
+                        <div class="mt-3">
+                            <label for="{{ form.image.vars.id }}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                {{ category.image ? 'Changer l\'image' : 'Choisir une image' }}
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Carte Informations de la catégorie -->
-    <div class="col-lg-8">
-        <div class="card shadow-lg border-0 h-100 card-hover">
-            <div class="card-header bg-gradient-primary text-white py-3">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-folder-edit me-2"></i>
-                    {{ form.vars.name == 'new' ? 'Nouvelle catégorie' : 'Modifier la catégorie' }}
-                </h5>
-            </div>
-            <div class="card-body">
-                <!-- Informations de base -->
-                <div class="row g-3">
-                    <div class="col-md-12">
-                        <div class="form-floating">
-                            {{ form_widget(form.name, {'attr': {
-                                'class': 'form-control',
-                                'placeholder': ' ',
-                                'autocomplete': 'off'
-                            }}) }}
-                            <label for="{{ form.name.vars.id }}">
-                                <i class="fas fa-tag me-1"></i> Nom de la catégorie
-                            </label>
-                            <div class="invalid-feedback d-block">
-                                {{ form_errors(form.name) }}
+
+        <!-- Carte Informations de la catégorie -->
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 h-100 card-hover">
+                <div class="card-header bg-gradient-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-folder-edit me-2"></i>
+                        {% if category.id is defined and category.id is not null %}
+                            Modifier la catégorie
+                        {% else %}
+                            Nouvelle catégorie
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Informations de base -->
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                {{ form_widget(form.name, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' ',
+                                    'autocomplete': 'off'
+                                }}) }}
+                                <label for="{{ form.name.vars.id }}">
+                                    <i class="fas fa-tag me-1"></i> Nom de la catégorie *
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.name) }}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="row g-3 mt-3">
-                    <div class="col-md-12">
-                        <div class="form-floating">
-                            {{ form_widget(form.description, {'attr': {
-                                'class': 'form-control',
-                                'placeholder': ' ',
-                                'style': 'height: 120px'
-                            }}) }}
-                            <label for="{{ form.description.vars.id }}">
-                                <i class="fas fa-align-left me-1"></i> Description
-                            </label>
-                            <div class="invalid-feedback d-block">
-                                {{ form_errors(form.description) }}
+
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                {{ form_widget(form.description, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' ',
+                                    'style': 'height: 120px'
+                                }}) }}
+                                <label for="{{ form.description.vars.id }}">
+                                    <i class="fas fa-align-left me-1"></i> Description
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.description) }}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="row g-3 mt-3">
-                    <div class="col-md-12">
-                        <div class="form-floating">
-                            {{ form_widget(form.parent, {'attr': {
-                                'class': 'form-control select2-category',
-                                'placeholder': ' '
-                            }}) }}
-                            <label for="{{ form.parent.vars.id }}">
-                                <i class="fas fa-sitemap me-1"></i> Catégorie parente
-                            </label>
-                            <div class="invalid-feedback d-block">
-                                {{ form_errors(form.parent) }}
+
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                {{ form_widget(form.parent, {'attr': {
+                                    'class': 'form-select select2-category',
+                                    'placeholder': ' '
+                                }}) }}
+                                <label for="{{ form.parent.vars.id }}">
+                                    <i class="fas fa-sitemap me-1"></i> Catégorie parente
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.parent) }}
+                                </div>
+                            </div>
+                            <div class="form-text mt-2">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Laissez vide pour créer une catégorie principale
                             </div>
                         </div>
-                        <div class="form-text mt-2">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Laissez vide pour créer une catégorie principale
-                        </div>
                     </div>
-                </div>
-                
-                <hr class="my-4">
-                
-                <!-- Statut -->
-                <div class="card border-0 bg-light mb-4">
-                    <div class="card-body">
-                        <h6 class="card-title text-primary mb-3">
-                            <i class="fas fa-toggle-on me-2"></i> Statut de la catégorie
-                        </h6>
-                        <div class="d-flex align-items-center">
-                            <div class="form-check form-switch me-3">
+
+                    <hr class="my-4">
+
+                    <!-- Statut -->
+                    <div class="card border-0 bg-light">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-toggle-on me-2 text-primary"></i>
+                                    <span class="fw-bold">Statut de la catégorie</span>
+                                </div>
+                                <span class="badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }}" id="status-badge">
+                                    {{ form.is_active.vars.data ? 'ACTIVE' : 'INACTIVE' }}
+                                </span>
+                            </div>
+                            <div class="form-check form-switch">
                                 {{ form_widget(form.is_active, {'attr': {
                                     'class': 'form-check-input',
                                     'role': 'switch'
                                 }}) }}
-                                <label class="form-check-label" for="{{ form.is_active.vars.id }}">
-                                    {{ category.isActive ? 'Catégorie active' : 'Catégorie inactive' }}
+                                <label class="form-check-label" for="{{ form.is_active.vars.id }}" id="status-label">
+                                    {{ form.is_active.vars.data ? 'Catégorie active' : 'Catégorie inactive' }}
                                 </label>
                             </div>
-                            <span class="badge {{ category.isActive ? 'bg-success' : 'bg-danger' }}">
-                                {{ category.isActive ? 'ACTIVE' : 'INACTIVE' }}
-                            </span>
+                            <small class="text-muted mt-1 d-block">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Les catégories inactives ne seront pas visibles dans le catalogue.
+                            </small>
                         </div>
-                        <small class="text-muted mt-2 d-block">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Les catégories inactives ne seront pas visibles dans le catalogue.
-                        </small>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Footer avec boutons d'action -->
-            <div class="card-footer bg-light py-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="{{ path('app_admin_category_index') }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-times me-2"></i> Annuler
-                    </a>
-                    
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-primary btn-lg px-4">
-                            <i class="fas fa-save me-2"></i> 
-                            {{ button_label|default('Enregistrer') }}
-                        </button>
-                        
-                        {% if form.vars.name != 'new' and category.id is defined and category.id is not null %}
-                            <a href="{{ path('app_admin_category_show', {'id': category.id}) }}" class="btn btn-info btn-lg">
-                                <i class="fas fa-eye me-2"></i> Voir
-                            </a>
-                        {% endif %}
+
+                <!-- Footer avec boutons d'action -->
+                <div class="card-footer bg-light py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ path('app_admin_category_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i> Annuler
+                        </a>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <i class="fas fa-save me-2"></i>
+                                {{ button_label|default('Enregistrer') }}
+                            </button>
+                            {% if category.id is defined and category.id is not null %}
+                                <a href="{{ path('app_admin_category_show', {'id': category.id}) }}" class="btn btn-info btn-lg">
+                                    <i class="fas fa-eye me-2"></i> Voir
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    {{ form_end(form) }}
 </div>
-{{ form_end(form) }}
 
 <!-- Modal pour supprimer l'image -->
-{% if form.vars.name != 'new' and category.image %}
+{% if category.id is defined and category.id is not null and category.image %}
 <div class="modal fade" id="deleteImageModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -207,8 +218,8 @@
                     <p class="text-muted">Cette action ne peut pas être annulée.</p>
                 </div>
                 <div class="mb-3">
-                    <img src="{{ asset('uploads/categories/' ~ category.image) }}" 
-                         alt="{{ category.name }}" 
+                    <img src="{{ asset('uploads/categories/' ~ category.image) }}"
+                         alt="{{ category.name }}"
                          class="rounded shadow-lg"
                          style="width: 150px; height: 150px; object-fit: cover;">
                 </div>
@@ -230,6 +241,8 @@
 {% endif %}
 
 {% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 function previewCategoryImage(input) {
     if (input.files && input.files[0]) {
@@ -238,35 +251,47 @@ function previewCategoryImage(input) {
                        document.querySelector('.category-placeholder');
         
         reader.onload = function(e) {
-            if (preview.classList.contains('category-placeholder')) {
-                // Remplacer le placeholder par une image
+            if (preview && preview.classList.contains('category-placeholder')) {
                 const img = document.createElement('img');
                 img.src = e.target.result;
                 img.className = 'img-fluid rounded shadow-lg profile-preview';
                 img.style = 'width: 200px; height: 200px; object-fit: cover; border: 5px solid #f8f9fa;';
                 preview.parentNode.replaceChild(img, preview);
-            } else {
-                // Mettre à jour l'image existante
+            } else if (preview) {
                 preview.src = e.target.result;
             }
         };
-        
         reader.readAsDataURL(input.files[0]);
     }
 }
 
-// Initialiser Select2 pour les catégories parentes
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialiser Select2
-    $('.select2-category').select2({
-        theme: "bootstrap-5",
-        language: "fr",
-        width: "100%",
-        placeholder: "Rechercher une catégorie parente...",
-        allowClear: true,
-        minimumInputLength: 0,
-        dropdownParent: $('.card-body')
-    });
+    // Initialiser Select2 pour la catégorie parente
+    const categorySelect = document.querySelector('.select2-category');
+    if (categorySelect && typeof $ !== 'undefined') {
+        $(categorySelect).select2({
+            theme: 'bootstrap-5',
+            placeholder: 'Rechercher une catégorie parente...',
+            allowClear: true,
+            width: '100%',
+            language: {
+                noResults: function() { return 'Aucune catégorie trouvée'; }
+            }
+        });
+    }
+
+    // Gestion du statut (badge)
+    const activeSwitch = document.getElementById('{{ form.is_active.vars.id }}');
+    const statusBadge = document.getElementById('status-badge');
+    const statusLabel = document.getElementById('status-label');
+    if (activeSwitch && statusBadge && statusLabel) {
+        activeSwitch.addEventListener('change', function() {
+            const isActive = this.checked;
+            statusBadge.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
+            statusBadge.className = isActive ? 'badge bg-success' : 'badge bg-danger';
+            statusLabel.textContent = isActive ? 'Catégorie active' : 'Catégorie inactive';
+        });
+    }
 
     // Validation Bootstrap
     const forms = document.querySelectorAll('.needs-validation');
@@ -284,7 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
 {% endblock %}
 
 {% block stylesheets %}
-
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style>
@@ -293,113 +317,87 @@ document.addEventListener('DOMContentLoaded', function() {
     border-radius: 15px;
     overflow: hidden;
 }
-
 .card-hover:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
 }
-
 .bg-gradient-primary {
     background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
 }
-
 .form-floating > label {
     padding-left: 2.5rem;
 }
-
 .form-floating > .form-control,
 .form-floating > .form-select {
     height: calc(3.5rem + 2px);
     line-height: 1.25;
     padding: 1rem 0.75rem 0.5rem 2.5rem;
 }
-
 .form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label {
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select:focus ~ label,
+.form-floating > .form-select:not([value=""]):not(:placeholder-shown) ~ label {
     transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
     color: #667eea;
 }
-
 .form-floating > .form-control,
 .form-floating > .form-select {
     border-radius: 10px;
     border: 2px solid #e0e0e0;
 }
-
 .form-floating > .form-control:focus,
 .form-floating > .form-select:focus {
     border-color: #667eea;
     box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
 }
-
 .select2-container--bootstrap-5 .select2-selection {
     border: 2px solid #e0e0e0;
     border-radius: 10px !important;
     min-height: calc(3.5rem + 2px);
     padding: 1rem 0.75rem 0.5rem 2.5rem;
 }
-
-.select2-container--bootstrap-5 .select2-selection:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    line-height: 1.5;
+    padding-left: 0;
 }
-
 .form-check-input:checked {
-    background-color: #667eea;
-    border-color: #667eea;
+    background-color: #198754;
+    border-color: #198754;
 }
-
 .form-switch .form-check-input {
-    width: 3em;
-    height: 1.5em;
+    width: 3.5em;
+    height: 1.8em;
+    cursor: pointer;
+    margin-top: 0.25rem;
 }
-
 .btn-primary {
     background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
     border: none;
     transition: all 0.3s ease;
 }
-
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
-
-.btn-outline-secondary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    border: none;
 }
-
 .profile-preview {
     transition: all 0.3s ease;
 }
-
 .profile-preview:hover {
     transform: scale(1.05);
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
-
-.file-upload-wrapper {
-    position: relative;
+.bg-light {
+    background-color: #f8f9fa !important;
 }
-
-.file-upload-wrapper input[type="file"] {
-    opacity: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-}
-
-.modal-content {
-    border-radius: 15px;
-    border: none;
-}
-
-.badge {
-    font-size: 0.85em;
-    font-weight: 500;
-    letter-spacing: 0.5px;
+@media (max-width: 768px) {
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+    }
 }
 </style>
 {% endblock %}

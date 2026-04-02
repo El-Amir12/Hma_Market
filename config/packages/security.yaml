@@ -98,7 +98,15 @@ security:
         # ============================================
         # 3. ROUTES ADMIN ENTREPRISE (DOSSIER Admin)
         # ============================================
+        - { path: ^/admin/category, roles: [ROLE_ADMIN, ROLE_MANAGER] }
+        - { path: ^/admin/product, roles: [ROLE_ADMIN, ROLE_MANAGER] }
+        - { path: ^/admin/recipe, roles: [ROLE_ADMIN, ROLE_MANAGER] }
         - { path: ^/admin/, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+
+        # ============================================
+        # 3.5. ROUTES APPROVISIONNEMENT (ACHATS)
+        # ============================================
+        - { path: ^/purchase, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER, ROLE_CASHIER] }
 
         # ============================================
         # 4. ROUTES PAR RÔLE SPÉCIFIQUE

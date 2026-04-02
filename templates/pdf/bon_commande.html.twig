@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Bon de commande {{ purchase.purchaseNumber }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #0463f1; }
+        .header { margin-bottom: 30px; }
+        .info { margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .total { font-weight: bold; text-align: right; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Bon de commande</h1>
+        <p>N° {{ purchase.purchaseNumber }}</p>
+        <p>Date : {{ purchase.confirmedAt|date('d/m/Y H:i') }}</p>
+    </div>
+    <div class="info">
+        <p><strong>Fournisseur :</strong> {{ purchase.supplier.name }}</p>
+        <p><strong>Contact :</strong> {{ purchase.supplier.contactPerson }} / {{ purchase.supplier.phone }}</p>
+        <p><strong>Adresse :</strong> {{ purchase.supplier.adress }}</p>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Code-barres</th>
+                <th>Quantité</th>
+                <th>Prix unitaire (FCFA)</th>
+                <th>Total (FCFA)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in purchase.purchaseItems %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product.barcode }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.unitPrice|number_format(0, ',', ' ') }}</td>
+                <td>{{ item.totalPrice|number_format(0, ',', ' ') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="total">
+        <p>Total TTC : <strong>{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</strong></p>
+    </div>
+    <div class="footer">
+        <p>Merci de votre confiance.</p>
+        <p>{{ purchase.hmaService.companyName }}</p>
+    </div>
+</body>
+</html>

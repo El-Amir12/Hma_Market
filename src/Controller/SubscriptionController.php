@@ -7,6 +7,7 @@ use App\Entity\HmaService;
 use App\Entity\Subscription;
 use App\Entity\Payment;
 use App\Entity\Invoice;
+use App\Entity\User;
 use App\Repository\SubscriptionPlanRepository;
 use App\Service\FedaPayService;
 use App\Service\EmailService;
@@ -18,10 +19,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/subscription')]
-#[IsGranted('ROLE_ADMIN')]
 class SubscriptionController extends AbstractController
 {
     private LoggerInterface $logger;
@@ -38,13 +38,61 @@ class SubscriptionController extends AbstractController
         $this->quotaEnforcementService = $quotaEnforcementService;
     }
 
+    /**
+     * Récupère le HmaService associé à l'utilisateur connecté.
+     */
+    private function getCurrentHmaService(): ?HmaService
+    {
+        $user = $this->getUser();
+        if (!$user) return null;
+        if ($user instanceof HmaService) return $user;
+        if ($user instanceof User) return $user->getHmaService();
+        return null;
+    }
+
+    /**
+     * Vérifie si l'utilisateur connecté peut gérer l'abonnement d'un service donné.
+     */
+    private function canManageSubscription(HmaService $service): bool
+    {
+        $user = $this->getUser();
+        if (!$user) return false;
+
+        // Super admin a tous les droits
+        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
+            return true;
+        }
+
+        // Si l'utilisateur est un HmaService, il ne peut gérer que son propre abonnement
+        if ($user instanceof HmaService) {
+            return $user->getId() === $service->getId();
+        }
+
+        // Si l'utilisateur est un User
+        if ($user instanceof User) {
+            // Le propriétaire de l'entreprise (is_hma_owner) a tous les droits sur son entreprise
+            if ($user->isHmaOwner()) {
+                $userService = $user->getHmaService();
+                return $userService && $userService->getId() === $service->getId();
+            }
+            // Les admins et managers de l'entreprise peuvent voir les plans, mais la souscription est réservée ?
+            // Ici on autorise l'admin et le manager à souscrire 
+            if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_MANAGER')) {
+                $userService = $user->getHmaService();
+                return $userService && $userService->getId() === $service->getId();
+            }
+        }
+
+        return false;
+    }
+
     #[Route('/plans', name: 'app_subscription_plans')]
     public function plans(SubscriptionPlanRepository $planRepo): Response
     {
-        /** @var \App\Entity\User $user */
         $user = $this->getUser();
-        $service = $user->getHmaService();
+        $service = $this->getCurrentHmaService();
 
+        // Les super admins peuvent voir les plans même sans service
         if (!$service && !$this->isGranted('ROLE_SUPER_ADMIN')) {
             $this->addFlash('error', 'Aucune entreprise associée à votre compte.');
             return $this->redirectToRoute('app_dashboard');
@@ -64,9 +112,6 @@ class SubscriptionController extends AbstractController
     #[Route('/checkout', name: 'app_subscription_checkout', methods: ['POST'])]
     public function checkout(Request $request, SubscriptionPlanRepository $planRepo, EntityManagerInterface $em, FedaPayService $fedaPay): Response
     {
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-
         $planId = $request->request->get('plan');
         $billingPeriod = $request->request->get('billing_period');
         $subscriptionNumber = $request->request->get('subscription_number');
@@ -88,14 +133,9 @@ class SubscriptionController extends AbstractController
             return $this->redirectToRoute('app_subscription_plans');
         }
 
-        $userService = $user->getHmaServiceId();
-        $isSuperAdmin = $this->isGranted('ROLE_SUPER_ADMIN') || $user->isSuperAdmin();
-
-        if (!$isSuperAdmin) {
-            if (!$userService || $userService->getId() !== $service->getId()) {
-                $this->addFlash('error', 'Vous n\'êtes pas autorisé à souscrire pour cette entreprise.');
-                return $this->redirectToRoute('app_subscription_plans');
-            }
+        // Vérifier les droits
+        if (!$this->canManageSubscription($service)) {
+            throw new AccessDeniedException('Vous n\'êtes pas autorisé à souscrire pour cette entreprise.');
         }
 
         // Vérifier si l'entreprise peut changer de plan (toujours possible ici)
@@ -115,7 +155,7 @@ class SubscriptionController extends AbstractController
         $subscription->setSubscriptionPlan($plan);
         $subscription->setBillingPeriod($billingPeriod);
         $subscription->setStatus('pending');
-        $subscription->setSubscriptionActive(false); // En attente, pas encore actif
+        $subscription->setSubscriptionActive(false);
         $subscription->setCreatedAt(new \DateTimeImmutable());
         $em->persist($subscription);
 
@@ -206,11 +246,8 @@ class SubscriptionController extends AbstractController
     #[Route('/success/{id}', name: 'app_subscription_success')]
     public function success(Subscription $subscription): Response
     {
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-        $service = $user->getHmaServiceId();
-
-        if (!$this->isGranted('ROLE_SUPER_ADMIN') && (!$service || $subscription->getHmaService()->getId() !== $service->getId())) {
+        $service = $subscription->getHmaService();
+        if (!$this->canManageSubscription($service)) {
             throw $this->createAccessDeniedException();
         }
 
@@ -253,7 +290,7 @@ class SubscriptionController extends AbstractController
     private function activateSubscription(Payment $payment, EntityManagerInterface $em, EmailService $emailService): void
     {
         $subscription = $payment->getSubscription();
-        $service = $payment->getHmaService();
+        $service = $payment->getHmaService(); // <- ici c'est $service, pas $hmaService
 
         // Mise à jour du paiement
         $payment->setStatus('completed');
@@ -290,6 +327,7 @@ class SubscriptionController extends AbstractController
         $service->setSubscriptionNumber($payment->getSubscriptionNumber());
         $service->setSubscriptionPlan($subscription->getSubscriptionPlan()->getName());
         $service->setTrialEndsAt(null);
+        // Utiliser le bon service ($service) et la bonne propriété ($this->quotaEnforcementService)
         $this->quotaEnforcementService->enforceQuotas($service);
         $service->setSubscriptionStartAt(\DateTime::createFromImmutable($startsAt));
         $service->setSubscriptionEndsAt(\DateTime::createFromImmutable($endsAt));
@@ -309,8 +347,7 @@ class SubscriptionController extends AbstractController
         $pdfPath = $this->invoicePdfGenerator->generate($invoice);
         $invoice->setPdfPath($pdfPath);
 
-        // --- Les envois d'emails (avant le flush final) ---
-        // 1. Email de confirmation aux utilisateurs actifs
+        // Envoi d'emails
         try {
             $sentCount = $emailService->sendSubscriptionConfirmationToUsers($service, $subscription);
             if ($sentCount > 0) {
@@ -320,7 +357,6 @@ class SubscriptionController extends AbstractController
             $this->logger->error('Erreur envoi emails confirmation: ' . $e->getMessage());
         }
 
-        // 2. Email de réactivation aux utilisateurs qui viennent d'être activés
         foreach ($activatedUsers as $user) {
             try {
                 $emailService->sendReactivationEmail($user, $service);
@@ -329,7 +365,6 @@ class SubscriptionController extends AbstractController
             }
         }
 
-        // Flush final pour tout persister (y compris sent_at)
         $em->flush();
     }
 }

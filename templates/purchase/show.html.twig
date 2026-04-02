@@ -1,0 +1,370 @@
+{# templates/purchase/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande {{ purchase.purchaseNumber }} - HMA Market{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .stat-card {
+        border-radius: 1rem;
+        transition: all 0.2s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+    .timeline-item {
+        position: relative;
+        padding-left: 2rem;
+        padding-bottom: 1.5rem;
+        border-left: 2px solid #e9ecef;
+    }
+    .timeline-item:last-child {
+        border-left: 2px solid transparent;
+    }
+    .timeline-icon {
+        position: absolute;
+        left: -0.75rem;
+        top: 0;
+        width: 2rem;
+        height: 2rem;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .timeline-icon i {
+        font-size: 1rem;
+    }
+    .user-avatar-md {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .user-avatar-md i {
+        font-size: 2rem;
+        color: #6c757d;
+    }
+    .badge-status {
+        font-size: 0.85rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: 2rem;
+    }
+    .btn-pdf {
+        padding: 0.3rem 0.75rem;
+        font-size: 0.8rem;
+    }
+    .table-product-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- En‑tête -->
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h1 class="h3 mb-1 text-gray-800 fw-bold">
+                        <i class="fas fa-receipt text-primary me-2"></i>
+                        Commande {{ purchase.purchaseNumber }}
+                    </h1>
+                    <p class="text-muted">
+                        Créée le {{ purchase.createdAt|date('d/m/Y à H:i') }}
+                    </p>
+                </div>
+                <div class="d-flex gap-2">
+                    {% if purchase.bonCommande %}
+                        <a href="{{ asset('uploads/bons-commande/' ~ purchase.bonCommande) }}" target="_blank" class="btn btn-outline-primary btn-pdf">
+                            <i class="fas fa-file-pdf me-1"></i> Bon de commande
+                        </a>
+                    {% endif %}
+                    {% if purchase.recuAchat %}
+                        <a href="{{ asset('uploads/recus-achat/' ~ purchase.recuAchat) }}" target="_blank" class="btn btn-outline-success btn-pdf">
+                            <i class="fas fa-file-pdf me-1"></i> Reçu d'achat
+                        </a>
+                    {% endif %}
+                    <a href="{{ path('purchase_print', {id: purchase.id}) }}" class="btn btn-outline-secondary" target="_blank">
+                        <i class="fas fa-print me-1"></i> Imprimer
+                    </a>
+                    {% if purchase.status == 'confirmed' %}
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                            <i class="fas fa-ban me-1"></i> Annuler la commande
+                        </button>
+                    {% endif %}
+                    <a href="{{ path('purchase_index') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-1"></i> Retour
+                    </a>
+                </div>
+            </div>
+
+            <!-- Cartes info -->
+            <div class="row g-4 mb-4">
+                <!-- Carte informations générales -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm stat-card h-100 border-0">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-info-circle text-primary me-2"></i>Informations
+                                </h5>
+                                <span class="badge {{ purchase.statusBadgeClass }} badge-status">
+                                    <i class="fas {{ purchase.statusIcon }} me-1"></i>
+                                    {{ purchase.statusLabel }}
+                                </span>
+                            </div>
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <td class="text-muted">N° commande</td>
+                                    <td class="fw-bold">{{ purchase.purchaseNumber }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">Date création</td>
+                                    <td>{{ purchase.createdAt|date('d/m/Y H:i') }}</td>
+                                </tr>
+                                {% if purchase.confirmedAt %}
+                                <tr>
+                                    <td class="text-muted">Date confirmation</td>
+                                    <td>{{ purchase.confirmedAt|date('d/m/Y H:i') }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if purchase.receivedAt %}
+                                <tr>
+                                    <td class="text-muted">Date réception</td>
+                                    <td>{{ purchase.receivedAt|date('d/m/Y H:i') }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if purchase.cancelledAt %}
+                                <tr>
+                                    <td class="text-muted">Date annulation</td>
+                                    <td>{{ purchase.cancelledAt|date('d/m/Y H:i') }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">Motif annulation</td>
+                                    <td class="text-danger">{{ purchase.cancellationReason }}</td>
+                                </tr>
+                                {% endif %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carte fournisseur -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm stat-card h-100 border-0">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-truck text-primary me-2"></i>Fournisseur
+                            </h5>
+                            {% if purchase.supplier %}
+                                <h6 class="mb-1">{{ purchase.supplier.name }}</h6>
+                                <p class="text-muted mb-2">{{ purchase.supplier.contactPerson }}</p>
+                                <p class="mb-1"><i class="fas fa-phone-alt me-2 text-muted"></i> {{ purchase.supplier.phone }}</p>
+                                <p class="mb-1"><i class="fas fa-envelope me-2 text-muted"></i> {{ purchase.supplier.email }}</p>
+                                <p class="mb-0"><i class="fas fa-map-marker-alt me-2 text-muted"></i> {{ purchase.supplier.adress }}</p>
+                            {% else %}
+                                <p class="text-muted">Aucun fournisseur renseigné</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carte utilisateur créateur + total -->
+                <div class="col-md-12 col-lg-4">
+                    <div class="card shadow-sm stat-card h-100 border-0">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <h5 class="card-title mb-3">
+                                        <i class="fas fa-user-circle text-primary me-2"></i>Créée par
+                                    </h5>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar-md me-3">
+                                            {% if purchase.user.photo %}
+                                                <img src="{{ asset('uploads/users/' ~ purchase.user.photo) }}" 
+                                                     alt="{{ purchase.user.fullName }}"
+                                                     class="w-100 h-100 rounded-circle object-fit-cover">
+                                            {% else %}
+                                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center w-100 h-100">
+                                                    <i class="fas fa-user-circle fa-2x text-secondary"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">{{ purchase.user.fullName }}</div>
+                                            <div class="small text-muted">{{ purchase.user.email }}</div>
+                                            <div class="small text-muted">{{ purchase.user.phone }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <hr>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="text-muted">Total commande</span>
+                                        <h3 class="mb-0 text-primary fw-bold">{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</h3>
+                                    </div>
+                                    <div class="text-muted small mt-1">
+                                        {{ purchase.purchaseItems|length }} produit(s) commandé(s)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline des statuts -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Historique des statuts</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="timeline">
+                                {% set statusHistory = purchase.statusHistory %}
+                                {% for event in statusHistory %}
+                                    <div class="timeline-item">
+                                        <div class="timeline-icon bg-white border border-{{ event.status == 'Création' ? 'primary' : (event.status == 'Confirmation' ? 'success' : (event.status == 'Réception' ? 'info' : (event.status == 'Annulation' ? 'danger' : 'secondary'))) }}">
+                                            <i class="fas {{ event.status == 'Création' ? 'fa-plus-circle' : (event.status == 'Confirmation' ? 'fa-check-circle' : (event.status == 'Réception' ? 'fa-box-open' : (event.status == 'Annulation' ? 'fa-ban' : 'fa-edit'))) }} text-{{ event.status == 'Création' ? 'primary' : (event.status == 'Confirmation' ? 'success' : (event.status == 'Réception' ? 'info' : (event.status == 'Annulation' ? 'danger' : 'secondary'))) }}"></i>
+                                        </div>
+                                        <div class="ms-2">
+                                            <strong>{{ event.status }}</strong>
+                                            <div class="small text-muted">{{ event.date|date('d/m/Y H:i') }}</div>
+                                            <div class="small">par {{ event.by ? event.by.fullName : 'Système' }}</div>
+                                            {% if event.reason is defined %}
+                                                <div class="small text-danger">Motif : {{ event.reason }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tableau des produits -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-boxes me-2"></i>Produits commandés</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Produit</th>
+                                <th>Code-barres</th>
+                                <th>Quantité</th>
+                                <th>Prix unitaire</th>
+                                <th>Total</th>
+                                <th>Lot</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in purchase.purchaseItems %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if item.product.image %}
+                                            <img src="{{ asset('uploads/products/' ~ item.product.image) }}" 
+                                                 alt="{{ item.product.name }}"
+                                                 class="table-product-img me-2">
+                                        {% endif %}
+                                        <div>
+                                            <strong>{{ item.product.name }}</strong>
+                                            {% if item.product.hasExpiryDate %}
+                                                <span class="badge bg-warning text-dark ms-1">Périssable</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><code>{{ item.product.barcode }}</code></td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.unitPrice|number_format(0, ',', ' ') }} FCFA</td>
+                                <td class="fw-bold text-primary">{{ item.totalPrice|number_format(0, ',', ' ') }} FCFA</td>
+                                <td>
+                                    {% if item.batchNumber %}
+                                        <span class="badge bg-secondary">{{ item.batchNumber }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <td colspan="4" class="text-end fw-bold">Total général</td>
+                                <td colspan="2" class="fw-bold text-primary h5">
+                                    {{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            {% if purchase.notes %}
+                <div class="card shadow-sm border-0 mt-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Notes</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ purchase.notes|nl2br }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'annulation -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Annuler la commande</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <form action="{{ path('purchase_cancel', {id: purchase.id}) }}" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="cancelReason" class="form-label">Motif d'annulation <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="cancelReason" name="reason" rows="3" required></textarea>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        L'annulation enverra une notification au fournisseur.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-danger">Confirmer l'annulation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    // Scripts supplémentaires éventuels
+</script>
+{% endblock %}

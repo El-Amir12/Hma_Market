@@ -1,4 +1,5 @@
 <?php
+// src/Controller/Admin/UserController.php
 
 namespace App\Controller\Admin;
 
@@ -47,7 +48,6 @@ class UserController extends AbstractController
         $this->quotaManager = $quotaManager;
         $this->mailer = $mailer;
         $this->logger = $logger;
-        
     }
 
     private function checkAdminAccess(?Request $request = null): void
@@ -57,18 +57,14 @@ class UserController extends AbstractController
             throw $this->createAccessDeniedException('Utilisateur non authentifié.');
         }
         
-        // Vérification explicite des deux rôles
         if (!$this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
-            // Log pour debug (avec vérification que request n'est pas null)
             $route = $request ? $request->get('_route') : 'unknown';
-            
             $this->logger->warning('Tentative d\'accès admin refusée', [
                 'user_id' => $user->getId(),
                 'user_email' => $user->getEmail(),
                 'user_roles' => $user->getRoles(),
                 'route' => $route
             ]);
-            
             throw $this->createAccessDeniedException('Accès réservé aux administrateurs.');
         }
     }
@@ -94,22 +90,17 @@ class UserController extends AbstractController
         
         // Récupérer les utilisateurs avec filtres selon le rôle
         if ($isSuperAdmin) {
-            // SUPER ADMIN : voit tous les utilisateurs
             $paginator = $this->userRepository->findFilteredForSuperAdmin($search, $role, $status, $companyId, $page, $limit);
-            
-            // Récupérer la liste des entreprises pour le filtre
             $companies = $hmaServiceRepository->findAll();
+            $stats = $this->userRepository->countAllByStatus();
             
-            // Statistiques globales
-            $stats = [
-                'active' => $this->userRepository->countByStatusForSuperAdmin('active'),
-                'inactiveByAdmin' => $this->userRepository->countByStatusForSuperAdmin('inactive'),
-                'outOfQuota' => $this->userRepository->countByStatusForSuperAdmin('quota'),
-                'blockedBySystem' => $this->userRepository->countByStatusForSuperAdmin('blocked'),
-                'total' => $this->userRepository->count([]),
-            ];
+            // Statistiques filtrées
+            $totalFiltered = $paginator->count();
+            $activeFiltered = $this->userRepository->countByStatusForSuperAdmin('active');
+            $inactiveFiltered = $this->userRepository->countByStatusForSuperAdmin('inactive');
+            $outOfQuotaFiltered = $this->userRepository->countByStatusForSuperAdmin('quota');
+            $blockedFiltered = $this->userRepository->countByStatusForSuperAdmin('blocked');
         } else {
-            // ADMIN ENTREPRISE : voit uniquement les utilisateurs de son entreprise
             $hmaService = $currentUser->getHmaService();
             if (!$hmaService) {
                 throw $this->createAccessDeniedException('Aucune entreprise associée à votre compte.');
@@ -117,15 +108,20 @@ class UserController extends AbstractController
             
             $paginator = $this->userRepository->findFilteredForCompany($hmaService->getId(), $search, $role, $status, $page, $limit);
             $companies = [];
-            
-            // Statistiques pour l'entreprise
             $stats = [
                 'active' => $this->userRepository->countByStatusForCompany($hmaService->getId(), 'active'),
                 'inactiveByAdmin' => $this->userRepository->countByStatusForCompany($hmaService->getId(), 'inactive'),
                 'outOfQuota' => $this->userRepository->countByStatusForCompany($hmaService->getId(), 'quota'),
-                'blockedBySystem' => 0, // Pas de bloqués système pour une entreprise
+                'blockedBySystem' => 0,
                 'total' => $this->userRepository->count(['hma_service_id' => $hmaService->getId()]),
             ];
+            
+            // Statistiques filtrées
+            $totalFiltered = $paginator->count();
+            $activeFiltered = $this->userRepository->countByStatusForCompany($hmaService->getId(), 'active');
+            $inactiveFiltered = $this->userRepository->countByStatusForCompany($hmaService->getId(), 'inactive');
+            $outOfQuotaFiltered = $this->userRepository->countByStatusForCompany($hmaService->getId(), 'quota');
+            $blockedFiltered = 0;
         }
         
         $totalItems = $paginator->count();
@@ -140,8 +136,6 @@ class UserController extends AbstractController
             $hmaService = $currentUser->getHmaService();
             if ($hmaService) {
                 $subscriptionInfo = $hmaService->getUsageStats();
-                
-                // Vérifier si on peut ajouter des utilisateurs selon le quota
                 $limits = $hmaService->getCurrentLimits();
                 $maxPerRole = $limits['max_users_per_role'];
                 
@@ -150,8 +144,6 @@ class UserController extends AbstractController
                     foreach ($roles as $roleName) {
                         $remainingSlotsByRole[$roleName] = $this->quotaManager->getRemainingSlotsForRole($hmaService, $roleName);
                     }
-                    
-                    // Vérifier s'il reste au moins un slot pour un rôle quelconque
                     $canAddUser = !empty(array_filter($remainingSlotsByRole, fn($slots) => $slots > 0));
                 }
             }
@@ -168,6 +160,11 @@ class UserController extends AbstractController
             'companies' => $companies ?? [],
             'totalItems' => $totalItems,
             'stats' => $stats,
+            'totalFiltered' => $totalFiltered,
+            'activeFiltered' => $activeFiltered,
+            'inactiveFiltered' => $inactiveFiltered,
+            'outOfQuotaFiltered' => $outOfQuotaFiltered,
+            'blockedFiltered' => $blockedFiltered,
             'subscription_info' => $subscriptionInfo,
             'is_super_admin' => $isSuperAdmin,
             'can_add_user' => $canAddUser,
@@ -232,8 +229,24 @@ class UserController extends AbstractController
             $role = $form->get('roles')->getData();
             $hmaService = $user->getHmaService(); // Récupérer l'entreprise associée
             if (!$isSuperAdmin && !User::canBeCreatedBy($currentUser, $role, $this->userRepository, $hmaService)) {
-                $this->addFlash('warning', 'Vous avez atteint la limite d\'utilisateurs pour ce rôle. Pour en ajouter davantage, passez à un plan supérieur.');
-                return $this->redirectToRoute('app_subscription_plans', ['upgrade' => 1]);
+                // ✅ Ajout du message flash
+                $this->addFlash('error', sprintf(
+                    'Quota atteint pour le rôle %s. Maximum %d utilisateur(s) autorisé(s).',
+                    User::getRoleLabelStatic($role),
+                    $hmaService->getCurrentLimits()['max_users_per_role']
+                ));
+                
+                // Renvoie le formulaire avec l'indicateur de quota atteint
+                return $this->render('admin/user/new.html.twig', [
+                    'target_user' => $user,
+                    'form' => $form->createView(),
+                    'is_super_admin' => $isSuperAdmin,
+                    'quota_reached' => true,
+                    'role_limit' => $role,
+                    'can_edit_email' => true,
+                    'can_edit_role' => true,
+                    'is_self' => false,
+                ]);
             }
             
             // Gérer l'upload de la photo
@@ -275,6 +288,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_user_index');
         }
 
+        // Affichage initial du formulaire (GET)
         return $this->render('admin/user/new.html.twig', [
             'target_user' => $user,
             'form' => $form->createView(),

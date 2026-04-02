@@ -47,6 +47,10 @@ class Promotion
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updated_at = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     /**
      * @var Collection<int, PromotionProduct>
      */
@@ -59,10 +63,17 @@ class Promotion
     #[ORM\OneToMany(targetEntity: PromotionCategory::class, mappedBy: 'promotion', orphanRemoval: true)]
     private Collection $promotionCategories;
 
+    /**
+     * @var Collection<int, PromotionCategoryRecipe>
+     */
+    #[ORM\OneToMany(targetEntity: PromotionCategoryRecipe::class, mappedBy: 'promotion', orphanRemoval: true)]
+    private Collection $promotionCategoryRecipes;
+
     public function __construct()
     {
         $this->promotionProducts = new ArrayCollection();
         $this->promotionCategories = new ArrayCollection();
+        $this->promotionCategoryRecipes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -190,6 +201,17 @@ class Promotion
         return $this;
     }
 
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
+
     /**
      * @return Collection<int, PromotionProduct>
      */
@@ -244,6 +266,36 @@ class Promotion
             // set the owning side to null (unless already changed)
             if ($promotionCategory->getPromotion() === $this) {
                 $promotionCategory->setPromotion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PromotionCategoryRecipe>
+     */
+    public function getPromotionCategoryRecipes(): Collection
+    {
+        return $this->promotionCategoryRecipes;
+    }
+
+    public function addPromotionCategoryRecipe(PromotionCategoryRecipe $promotionCategoryRecipe): static
+    {
+        if (!$this->promotionCategoryRecipes->contains($promotionCategoryRecipe)) {
+            $this->promotionCategoryRecipes->add($promotionCategoryRecipe);
+            $promotionCategoryRecipe->setPromotion($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotionCategoryRecipe(PromotionCategoryRecipe $promotionCategoryRecipe): static
+    {
+        if ($this->promotionCategoryRecipes->removeElement($promotionCategoryRecipe)) {
+            // set the owning side to null (unless already changed)
+            if ($promotionCategoryRecipe->getPromotion() === $this) {
+                $promotionCategoryRecipe->setPromotion(null);
             }
         }
 

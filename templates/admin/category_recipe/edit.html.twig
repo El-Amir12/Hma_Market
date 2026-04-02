@@ -1,0 +1,212 @@
+{# templates/admin/category_recipe/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ category.name }} - HMA Market{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <!-- En-tête avec navigation -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_category_recipe_index') }}" class="text-decoration-none">
+                            <i class="fas fa-utensils me-1"></i> Catégories de plats
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_category_recipe_show', {'id': category.id}) }}" class="text-decoration-none">
+                            {{ category.name|u.truncate(20, '...') }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Modifier</li>
+                </ol>
+            </nav>
+            
+            <div class="d-flex align-items-center">
+                <a href="{{ path('app_admin_category_recipe_index') }}" class="btn btn-outline-secondary me-3 btn-hover-scale">
+                    <i class="fas fa-arrow-left me-1"></i> Retour
+                </a>
+                <h1 class="h3 mb-0 text-gray-800 slide-in-left">
+                    <i class="fas fa-edit me-2"></i> Modifier la catégorie
+                </h1>
+            </div>
+            <p class="text-muted mt-2">Mettez à jour les informations de la catégorie de plats</p>
+        </div>
+        <div class="float-up">
+            <i class="fas fa-utensils fa-3x text-warning opacity-75"></i>
+        </div>
+    </div>
+
+    <!-- Alertes flash -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+    
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <!-- Informations rapides sur la catégorie -->
+    <div class="row mb-4">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 bg-gradient-light shadow-sm">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                        {% if category.image %}
+                            <img src="{{ asset('uploads/categories_plats/' ~ category.image) }}" 
+                                 alt="{{ category.name }}"
+                                 class="rounded me-3"
+                                 style="width: 60px; height: 60px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-primary rounded d-flex align-items-center justify-content-center me-3"
+                                 style="width: 60px; height: 60px;">
+                                <i class="fas fa-utensils text-white"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h5 class="mb-1">{{ category.name }}</h5>
+                            <div class="d-flex align-items-center">
+                                <span class="badge me-2 {{ category.isActive ? 'bg-success' : 'bg-danger' }}">
+                                    {{ category.isActive ? 'Active' : 'Inactive' }}
+                                </span>
+                                <span class="badge bg-info me-2">
+                                    {{ category.recipes|length }} plats
+                                </span>
+                                <span class="badge bg-secondary">
+                                    {{ category.children|length }} sous-catégories
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire -->
+    {{ include('admin/category_recipe/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+    <!-- Section suppression (optionnelle) -->
+    {% if category.recipes|length == 0 and category.children|length == 0 %}
+    <div class="row mt-4">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-danger shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i> Zone de danger
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="text-danger mb-3">Supprimer cette catégorie</h6>
+                    <p class="text-muted mb-4">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Cette action est irréversible. Une fois supprimée, la catégorie ne pourra plus être restaurée.
+                    </p>
+                    <button type="button" 
+                            class="btn btn-outline-danger"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#deleteCategoryModal">
+                        <i class="fas fa-trash me-2"></i> Supprimer cette catégorie
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de suppression -->
+    <div class="modal fade" id="deleteCategoryModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i> Supprimer la catégorie
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="mb-4">
+                        <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
+                        <h5>Êtes-vous sûr de vouloir supprimer cette catégorie ?</h5>
+                        <p class="text-muted">Cette action ne peut pas être annulée.</p>
+                    </div>
+                    <div class="mb-3">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            La catégorie <strong>"{{ category.name }}"</strong> sera définitivement supprimée.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i> Annuler
+                    </button>
+                    <form action="{{ path('app_admin_category_recipe_delete', {'id': category.id}) }}" method="post" class="d-inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i> Supprimer définitivement
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% block stylesheets %}
+<style>
+.slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.float-up {
+    animation: floatUp 3s ease-in-out infinite;
+}
+
+@keyframes floatUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.btn-hover-scale {
+    transition: all 0.2s ease;
+}
+
+.btn-hover-scale:hover {
+    transform: scale(1.05);
+}
+
+.breadcrumb {
+    background-color: transparent;
+    padding-left: 0;
+}
+
+.breadcrumb-item a {
+    color: #667eea;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #0463f1;
+    text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+}
+</style>
+{% endblock %}
+{% endblock %}

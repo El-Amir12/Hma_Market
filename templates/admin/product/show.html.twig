@@ -66,7 +66,7 @@
                         <div class="flex-grow-1">
                             <h6 class="text-muted mb-1">Valeur stock</h6>
                             <h3 class="mb-0 fw-bold">
-                                {{ (product.stockQuantity * product.purchasePrice)|number_format(0, ',', ' ') }} FCFA
+                                {{ (product.stockQuantity * product.purchasePrice)|price_with_currency(product.hmaService) }}
                             </h3>
                         </div>
                         <div class="bg-success bg-opacity-25 p-3 rounded">
@@ -75,7 +75,7 @@
                     </div>
                     <small class="text-muted">
                         <i class="fas fa-calculator me-1"></i>
-                        {{ product.purchasePrice|number_format(0, ',', ' ') }} FCFA × {{ product.stockQuantity }}
+                        {{ product.purchasePrice|price_with_currency(product.hmaService) }} × {{ product.stockQuantity }}
                     </small>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                     </div>
                     <small class="text-muted">
                         <i class="fas fa-arrow-up me-1"></i>
-                        {{ margin|number_format(0, ',', ' ') }} FCFA par unité
+                        {{ margin|price_with_currency(product.hmaService) }} par unité
                     </small>
                 </div>
             </div>
@@ -166,6 +166,11 @@
                                     {% endif %}
                                 </dd>
                                 
+                                <dt class="col-sm-5 text-muted">Unité de mesure</dt>
+                                <dd class="col-sm-7">
+                                    {{ product.unit|default('pièce')|capitalize }}
+                                </dd>
+                                
                                 <dt class="col-sm-5 text-muted">Type de produit</dt>
                                 <dd class="col-sm-7">
                                     {% if product.hasExpiryDate() %}
@@ -179,17 +184,34 @@
                                     {% endif %}
                                 </dd>
                                 
+                                {% if product.dosage %}
+                                    <dt class="col-sm-5 text-muted">Dosage</dt>
+                                    <dd class="col-sm-7">{{ product.dosage }}</dd>
+                                {% endif %}
+                                
+                                {% if product.form %}
+                                    <dt class="col-sm-5 text-muted">Forme</dt>
+                                    <dd class="col-sm-7">{{ product.form }}</dd>
+                                {% endif %}
+                                
+                                {% if product.prescriptionRequired %}
+                                    <dt class="col-sm-5 text-muted">Prescription</dt>
+                                    <dd class="col-sm-7">
+                                        <span class="badge bg-warning text-dark">Obligatoire</span>
+                                    </dd>
+                                {% endif %}
+                                
                                 <dt class="col-sm-5 text-muted">Prix d'achat</dt>
                                 <dd class="col-sm-7">
                                     <span class="text-primary fw-bold">
-                                        {{ product.purchasePrice|number_format(0, ',', ' ') }} FCFA
+                                        {{ product.purchasePrice|price_with_currency(product.hmaService) }}
                                     </span>
                                 </dd>
                                 
                                 <dt class="col-sm-5 text-muted">Prix de vente</dt>
                                 <dd class="col-sm-7">
                                     <span class="text-success fw-bold">
-                                        {{ product.salePrice|number_format(0, ',', ' ') }} FCFA
+                                        {{ product.salePrice|price_with_currency(product.hmaService) }}
                                     </span>
                                 </dd>
                                 
@@ -253,10 +275,13 @@
                 <!-- Timeline des mouvements récents -->
                 <div class="col-12 mb-4">
                     <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-white py-3">
+                        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">
                                 <i class="fas fa-history me-2"></i> Derniers mouvements de stock
                             </h5>
+                            <a href="#" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-exchange-alt me-1"></i> Voir tous
+                            </a>
                         </div>
                         <div class="card-body">
                             {% if product.stockBatches|length > 0 %}
@@ -329,22 +354,62 @@
                             <i class="fas fa-edit me-2"></i> Modifier le produit
                         </a>
                         
-                        <a href="{{ path('app_admin_purchase_new', {'productId': product.id}) }}" 
+                        <a href="{{ path('admin_purchase_new', {'productId': product.id}) }}" 
                            class="btn btn-success">
                             <i class="fas fa-plus me-2"></i> Nouvel achat
                         </a>
                         
-                        <!-- Bouton qui ouvre le modal de confirmation -->
+                        <!-- Lien vers les lots -->
+                        <a href="{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}" 
+                           class="btn btn-outline-info">
+                            <i class="fas fa-boxes me-2"></i> Gérer les lots
+                        </a>
+                        
+                        <!-- Lien vers les mouvements de stock (à créer) -->
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fas fa-exchange-alt me-2"></i> Voir les mouvements
+                        </a>
+                        
+                        <!-- Lien vers les commandes liées (si pas restaurant) -->
+                        {% if companyType != 'restaurant' %}
+                        <a href="#" class="btn btn-outline-success">
+                            <i class="fas fa-shopping-cart me-2"></i> Commandes liées
+                        </a>
+                        {% endif %}
+                        
+                        <!-- Lien vers les promotions (à créer) -->
+                        <a href="#" class="btn btn-outline-warning">
+                            <i class="fas fa-tags me-2"></i> Promotions
+                        </a>
+                        
+                        <!-- Bouton toggle status (ouvre modal) -->
                         <button type="button" 
-                                class="btn btn-outline-secondary toggle-status-btn w-100"
+                                class="btn btn-outline-secondary toggle-status-btn"
                                 data-bs-toggle="modal" 
                                 data-bs-target="#toggleStatusModal"
                                 data-product-id="{{ product.id }}"
                                 data-product-name="{{ product.name }}"
-                                data-is-active="{{ product.isActive ? '1' : '0' }}">
+                                data-is-active="{{ product.isActive ? '1' : '0' }}"
+                                data-token="{{ csrf_token('toggle-status' ~ product.id) }}">
                             <i class="fas {{ product.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }} me-2"></i>
                             {{ product.isActive ? 'Désactiver le produit' : 'Activer le produit' }}
                         </button>
+                        
+                        <!-- Bouton supprimer (visible pour admin) -->
+                        {% if is_granted('ROLE_ADMIN') %}
+                            {% set hasDependencies = product.purchaseItems|length > 0 or product.stockBatches|length > 0 %}
+                            <button type="button" 
+                                    class="btn btn-outline-danger delete-product-btn"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#deleteModal"
+                                    data-product-id="{{ product.id }}"
+                                    data-product-name="{{ product.name }}"
+                                    data-has-dependencies="{{ hasDependencies ? '1' : '0' }}"
+                                    data-token="{{ csrf_token('delete' ~ product.id) }}"
+                                    {% if hasDependencies %}title="Ce produit a des dépendances"{% endif %}>
+                                <i class="fas fa-trash me-2"></i> Supprimer le produit
+                            </button>
+                        {% endif %}
                         
                         <div class="dropdown">
                             <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
@@ -477,7 +542,7 @@
     </div>
 </div>
 
-<!-- Modal pour confirmer la désactivation/activation - CORRIGÉ -->
+<!-- Modal pour confirmer la désactivation/activation -->
 <div class="modal fade" id="toggleStatusModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -491,8 +556,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                 <form id="toggleStatusForm" method="post" action="">
-                    <!-- CORRECTION : Token CSRF avec 'toggle-status' SANS l'ID du produit -->
-                    <input type="hidden" name="_token" value="{{ csrf_token('toggle-status') }}">
+                    <input type="hidden" name="_token" id="toggleStatusToken" value="">
                     <button type="submit" class="btn" id="toggleStatusModalButton">
                         <i class="fas fa-check me-2"></i> Confirmer
                     </button>
@@ -502,7 +566,33 @@
     </div>
 </div>
 
+<!-- Modal pour confirmer la suppression (avec vérification du nom si dépendances) -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Confirmation de suppression
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="deleteModalContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form id="deleteForm" method="post" action="">
+                    <input type="hidden" name="_token" id="deleteToken" value="">
+                    <button type="submit" class="btn btn-danger" id="deleteConfirmBtn">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
 {% block stylesheets %}
+{{ parent() }}
 <style>
 .slide-in-left {
     animation: slideInLeft 0.5s ease-out;
@@ -664,24 +754,25 @@
 {% endblock %}
 
 {% block javascripts %}
+{{ parent() }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Gestion du modal de désactivation/activation
     const toggleStatusModal = document.getElementById('toggleStatusModal');
-    
     if (toggleStatusModal) {
         toggleStatusModal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
             const productId = button.getAttribute('data-product-id');
             const productName = button.getAttribute('data-product-name');
             const isActive = button.getAttribute('data-is-active') === '1';
+            const token = button.getAttribute('data-token');
             
             const modalTitle = toggleStatusModal.querySelector('.modal-title');
             const modalMessage = toggleStatusModal.querySelector('#toggleStatusModalMessage');
             const modalButton = toggleStatusModal.querySelector('#toggleStatusModalButton');
             const modalForm = toggleStatusModal.querySelector('#toggleStatusForm');
+            const tokenInput = document.getElementById('toggleStatusToken');
             
-            // Mettre à jour le contenu du modal
             if (isActive) {
                 modalTitle.textContent = 'Désactiver le produit';
                 modalMessage.textContent = `Êtes-vous sûr de vouloir désactiver le produit "${productName}" ?`;
@@ -694,22 +785,71 @@ document.addEventListener('DOMContentLoaded', function() {
                 modalButton.className = 'btn btn-success';
             }
             
-            // Mettre à jour l'action du formulaire avec l'ID du produit
             modalForm.action = `/admin/product/${productId}/toggle-status`;
+            tokenInput.value = token;
         });
-        
-        // Ajouter un indicateur de chargement lors de la soumission
-        const toggleStatusForm = document.getElementById('toggleStatusForm');
-        if (toggleStatusForm) {
-            toggleStatusForm.addEventListener('submit', function(event) {
-                const submitButton = this.querySelector('button[type="submit"]');
-                const originalText = submitButton.innerHTML;
+    }
+
+    // Gestion du modal de suppression
+    const deleteModal = document.getElementById('deleteModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const productId = button.getAttribute('data-product-id');
+            const productName = button.getAttribute('data-product-name');
+            const hasDependencies = button.getAttribute('data-has-dependencies') === '1';
+            const token = button.getAttribute('data-token');
+            
+            const modalContent = deleteModal.querySelector('#deleteModalContent');
+            const deleteForm = deleteModal.querySelector('#deleteForm');
+            const deleteToken = deleteModal.querySelector('#deleteToken');
+            const deleteConfirmBtn = deleteModal.querySelector('#deleteConfirmBtn');
+            
+            deleteForm.action = `/admin/product/${productId}`;
+            deleteToken.value = token;
+            
+            if (hasDependencies) {
+                modalContent.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Attention !</strong> Ce produit est lié à des achats ou des lots de stock.
+                    </div>
+                    <p>Pour confirmer la suppression, veuillez taper le nom du produit :</p>
+                    <input type="text" id="confirmProductName" class="form-control" placeholder="Nom du produit">
+                `;
+                deleteConfirmBtn.disabled = true;
                 
-                // Ajouter un spinner et désactiver le bouton
-                submitButton.disabled = true;
-                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Traitement...';
-            });
-        }
+                const confirmInput = deleteModal.querySelector('#confirmProductName');
+                confirmInput.addEventListener('input', function() {
+                    deleteConfirmBtn.disabled = (this.value.trim() !== productName);
+                });
+            } else {
+                modalContent.innerHTML = `
+                    <p>Êtes-vous sûr de vouloir supprimer le produit <strong>"${productName}"</strong> ?</p>
+                    <p class="text-danger"><i class="fas fa-exclamation-circle me-1"></i>Cette action est irréversible.</p>
+                `;
+                deleteConfirmBtn.disabled = false;
+            }
+        });
+    }
+
+    // Ajouter un indicateur de chargement lors de la soumission des formulaires modaux
+    const toggleStatusForm = document.getElementById('toggleStatusForm');
+    if (toggleStatusForm) {
+        toggleStatusForm.addEventListener('submit', function(event) {
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Traitement...';
+        });
+    }
+
+    const deleteForm = document.getElementById('deleteForm');
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', function(event) {
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Suppression...';
+        });
     }
     
     // Fermer automatiquement les alertes après 5 secondes
@@ -724,5 +864,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-{% endblock %}
 {% endblock %}

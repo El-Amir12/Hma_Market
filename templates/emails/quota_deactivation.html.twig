@@ -1,0 +1,17 @@
+{# templates/emails/quota_deactivation.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Compte désactivé - {{ app_name }}</title>
+</head>
+<body>
+    <h1>Compte désactivé</h1>
+    <p>Bonjour {{ user.fullName }},</p>
+    <p>Votre compte a été désactivé car votre entreprise a atteint la limite d'utilisateurs autorisés par votre plan d'abonnement actuel.</p>
+    <p>Pour rétablir votre accès, veuillez contacter l'administrateur de votre entreprise ou envisager une mise à niveau de l'abonnement.</p>
+    <p>Si vous pensez qu'il s'agit d'une erreur, veuillez contacter notre support à <a href="mailto:{{ support_email }}">{{ support_email }}</a>.</p>
+    <br>
+    <p>Cordialement,<br>L'équipe {{ app_name }}</p>
+</body>
+</html>
