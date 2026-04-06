@@ -68,6 +68,12 @@ class Recipe
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'recipe')]
     private Collection $orderItems;
 
+    /**
+     * @var Collection<int, PromotionRecipe>
+     */
+    #[ORM\OneToMany(targetEntity: PromotionRecipe::class, mappedBy: 'recipe', orphanRemoval: true)]
+    private Collection $promotionRecipes;
+
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: true)]
     private ?CategoryRecipe $category = null;
@@ -76,6 +82,7 @@ class Recipe
     {
         $this->recipeItems = new ArrayCollection();
         $this->orderItems = new ArrayCollection();
+        $this->promotionRecipes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -278,6 +285,33 @@ class Recipe
     {
         $this->category = $category;
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PromotionRecipe>
+     */
+    public function getPromotionRecipes(): Collection
+    {
+        return $this->promotionRecipes;
+    }
+
+    public function addPromotionRecipe(PromotionRecipe $promotionRecipe): static
+    {
+        if (!$this->promotionRecipes->contains($promotionRecipe)) {
+            $this->promotionRecipes->add($promotionRecipe);
+            $promotionRecipe->setRecipe($this);
+        }
+        return $this;
+    }
+
+    public function removePromotionRecipe(PromotionRecipe $promotionRecipe): static
+    {
+        if ($this->promotionRecipes->removeElement($promotionRecipe)) {
+            if ($promotionRecipe->getRecipe() === $this) {
+                $promotionRecipe->setRecipe(null);
+            }
+        }
         return $this;
     }
 }

@@ -6,6 +6,7 @@ namespace App\Service;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\User;
 use App\Entity\HmaService;
+use Doctrine\ORM\Query\Exec\FinalizedSelectExecutor;
 
 class MenuBuilder
 {
@@ -295,24 +296,24 @@ class MenuBuilder
         if (!$this->isRestaurant()) {
             $catalogueChildren[] = [
                 'type' => 'link',
-                'route' => 'app_user_index', // Temporaire
+                'route' => 'app_admin_promotion_index', 
                 'label' => 'Promotions',
                 'icon' => 'fas fa-percent',
-                'coming_soon' => true
+                'coming_soon' => false
             ];
             $catalogueChildren[] = [
                 'type' => 'link',
-                'route' => 'app_user_index', // Temporaire
+                'route' => 'app_admin_promotion_category_index', 
                 'label' => 'Catégories promo',
                 'icon' => 'fas fa-tags',
-                'coming_soon' => true
+                'coming_soon' => false
             ];
             $catalogueChildren[] = [
                 'type' => 'link',
-                'route' => 'app_user_index', // Temporaire
+                'route' => 'app_admin_promotion_product_index',
                 'label' => 'Promotions des produits',
                 'icon' => 'fas fa-tag',
-                'coming_soon' => true
+                'coming_soon' => false
             ];
         }
 
@@ -350,24 +351,24 @@ class MenuBuilder
                 // Promotions pour les plats
                 [
                     'type' => 'link',
-                    'route' => 'app_user_index', // Temporaire
+                    'route' => 'app_admin_promotion_index', 
                     'label' => 'Promotions',
                     'icon' => 'fas fa-percent',
-                    'coming_soon' => true
+                    'coming_soon' => false
                 ],
                 [
                     'type' => 'link',
-                    'route' => 'app_user_index', // Temporaire
+                    'route' => 'app_restaurant_promotion_category_index', 
                     'label' => 'Catégories promo',
                     'icon' => 'fas fa-tags',
-                    'coming_soon' => true
+                    'coming_soon' => false
                 ],
                 [
                     'type' => 'link',
-                    'route' => 'app_user_index', // Temporaire
+                    'route' => 'app_restaurant_promotion_recipe_index', 
                     'label' => 'Promotions des plats',
                     'icon' => 'fas fa-tag',
-                    'coming_soon' => true
+                    'coming_soon' => false
                 ]
             ];
             $menu[] = [
@@ -446,10 +447,10 @@ class MenuBuilder
         if (!$this->isRestaurant()) {
             $produitsChildren[] = [
                 'type' => 'link',
-                'route' => 'app_user_index', // Temporaire
+                'route' => 'app_admin_promotion_index', 
                 'label' => 'Promotions',
                 'icon' => 'fas fa-percent',
-                'coming_soon' => true
+                'coming_soon' => false
             ];
             $produitsChildren[] = [
                 'type' => 'link',
@@ -500,10 +501,10 @@ class MenuBuilder
                 ],
                 [
                     'type' => 'link',
-                    'route' => 'app_user_index', // Temporaire
+                    'route' => 'app_admin_promotion_index', 
                     'label' => 'Promotions',
                     'icon' => 'fas fa-percent',
-                    'coming_soon' => true
+                    'coming_soon' => false
                 ],
                 [
                     'type' => 'link',

@@ -1,0 +1,841 @@
+{# templates/admin/promotion/_form.html.twig #}
+
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+<div class="container-fluid px-4">
+    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+
+    <div class="row g-4">
+        <!-- Carte Image -->
+        <div class="col-lg-4">
+            <div class="card shadow-lg border-0 h-100 card-hover">
+                <div class="card-header bg-gradient-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-image me-2"></i>Image de la promotion
+                    </h5>
+                </div>
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="promo-image-preview mb-4 flex-grow-1 d-flex flex-column justify-content-center">
+                        {% if promotion.image %}
+                            <div class="position-relative mx-auto" style="width: 200px; height: 200px;">
+                                <img src="{{ asset('uploads/promotions/' ~ promotion.image) }}"
+                                     alt="{{ promotion.name }}"
+                                     class="img-fluid rounded shadow-lg promo-preview"
+                                     style="width: 100%; height: 100%; object-fit: cover; border: 5px solid #f8f9fa;">
+                                {% if promotion.id is defined and promotion.id is not null %}
+                                    <button type="button"
+                                            class="btn btn-danger btn-sm position-absolute rounded-circle shadow"
+                                            style="bottom: 10px; right: 10px; width: 36px; height: 36px;"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteImageModal"
+                                            title="Supprimer l'image">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="promo-placeholder rounded d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg"
+                                 style="width: 200px; height: 200px; border: 5px solid #f8f9fa;">
+                                <i class="fas fa-tag fa-5x"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-auto">
+                        <div class="file-upload-wrapper">
+                            {{ form_widget(form.image, {'attr': {
+                                'class': 'form-control',
+                                'onchange': 'previewPromoImage(this)',
+                                'accept': 'image/*'
+                            }}) }}
+                            <div class="form-text mt-2">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Formats acceptés : JPG, PNG, GIF, WebP. Taille max : 5M
+                            </div>
+                            <div class="invalid-feedback d-block">
+                                {{ form_errors(form.image) }}
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <label for="{{ form.image.vars.id }}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                {{ promotion.image ? 'Changer l\'image' : 'Choisir une image' }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carte Informations de la promotion -->
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 h-100 card-hover">
+                <div class="card-header bg-gradient-primary text-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-percent me-2"></i>
+                        {% if promotion.id is defined and promotion.id is not null %}
+                            Modifier la promotion
+                        {% else %}
+                            Nouvelle promotion
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Informations de base -->
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                {{ form_widget(form.name, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' ',
+                                    'autocomplete': 'off'
+                                }}) }}
+                                <label for="{{ form.name.vars.id }}">
+                                    <i class="fas fa-tag me-1"></i> Nom de la promotion *
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.name) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                {{ form_widget(form.description, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' ',
+                                    'style': 'height: 120px'
+                                }}) }}
+                                <label for="{{ form.description.vars.id }}">
+                                    <i class="fas fa-align-left me-1"></i> Description
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.description) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form_widget(form.typePromotion, {'attr': {
+                                    'class': 'form-select',
+                                    'placeholder': ' '
+                                }}) }}
+                                <label for="{{ form.typePromotion.vars.id }}">
+                                    <i class="fas fa-layer-group me-1"></i> Type de promotion *
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.typePromotion) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form_widget(form.value, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' ',
+                                    'autocomplete': 'off'
+                                }}) }}
+                                <label for="{{ form.value.vars.id }}">
+                                    <i class="fas fa-calculator me-1"></i> Valeur de réduction *
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.value) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form_widget(form.startDate, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' '
+                                }}) }}
+                                <label for="{{ form.startDate.vars.id }}">
+                                    <i class="fas fa-calendar-alt me-1"></i> Date de début *
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.startDate) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form_widget(form.endDate, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' '
+                                }}) }}
+                                <label for="{{ form.endDate.vars.id }}">
+                                    <i class="fas fa-calendar-check me-1"></i> Date de fin
+                                </label>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.endDate) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Statut -->
+                    <div class="card border-0 bg-light">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-toggle-on me-2 text-primary"></i>
+                                    <span class="fw-bold">Statut de la promotion</span>
+                                </div>
+                                <span class="badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }}" id="status-badge">
+                                    {{ form.is_active.vars.data ? 'ACTIVE' : 'INACTIVE' }}
+                                </span>
+                            </div>
+                            <div class="form-check form-switch">
+                                {{ form_widget(form.is_active, {'attr': {
+                                    'class': 'form-check-input',
+                                    'role': 'switch'
+                                }}) }}
+                                <label class="form-check-label" for="{{ form.is_active.vars.id }}" id="status-label">
+                                    {{ form.is_active.vars.data ? 'Promotion active' : 'Promotion inactive' }}
+                                </label>
+                            </div>
+                            <small class="text-muted mt-1 d-block">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Les promotions inactives ne seront pas appliquées
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- ========================================== -->
+                    <!-- SECTION EXPLICATION PERMANENTE -->
+                    <!-- ========================================== -->
+                    <div class="card border-0 bg-info bg-opacity-10 mt-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-white bg-opacity-25 p-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                        <i class="fas fa-info-circle fa-xl text-white"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="fw-bold mb-3 text-white">
+                                        <i class="fas fa-question-circle text-white me-2"></i>Comment s'applique cette promotion ?
+                                    </h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <ul class="mb-0 small" style="list-style: none; padding-left: 0;">
+                                                <li class="mb-2">
+                                                    <span class="badge bg-secondary me-2 px-2 py-1">Cas 1</span>
+                                                    <span class="text-white">Aucune sélection → <strong class="text-white fw-bold">TOUS les {% if companyType == 'restaurant' %}plats{% else %}produits{% endif %}</strong></span>
+                                                </li>
+                                                <li class="mb-2">
+                                                    <span class="badge bg-success me-2 px-2 py-1">Cas 2</span>
+                                                    <span class="text-white">Catégories uniquement → <strong class="text-white fw-bold">tous les {% if companyType == 'restaurant' %}plats{% else %}produits{% endif %}</strong> des catégories sélectionnées</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <ul class="mb-0 small" style="list-style: none; padding-left: 0;">
+                                                <li class="mb-2">
+                                                    <span class="badge bg-primary me-2 px-2 py-1">Cas 3</span>
+                                                    <span class="text-white">{% if companyType == 'restaurant' %}Plats{% else %}Produits{% endif %} uniquement → <strong class="text-white fw-bold">ces {% if companyType == 'restaurant' %}plats{% else %}produits{% endif %} uniquement</strong></span>
+                                                </li>
+                                                <li class="mb-2">
+                                                    <span class="badge bg-warning text-dark me-2 px-2 py-1">Cas 4</span>
+                                                    <span class="text-white">Catégories + {% if companyType == 'restaurant' %}Plats{% else %}Produits{% endif %} → <strong class="text-white fw-bold">l'ensemble</strong> (union des deux)</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 pt-2 border-top border-white border-opacity-25">
+                                        <div class="d-flex align-items-start">
+                                            <i class="fas fa-lightbulb text-warning me-2 mt-1"></i>
+                                            <span class="small text-white">
+                                                <strong class="text-warning">Astuce :</strong> 
+                                                Si un {% if companyType == 'restaurant' %}plat{% else %}produit{% endif %} est déjà inclus via une catégorie, 
+                                                <strong class="text-white fw-bold">il n'est pas dupliqué</strong>. La promotion s'applique une seule fois.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ========================================== -->
+                    <!-- SECTIONS DES ASSOCIATIONS AVEC COLLECTIONTYPE -->
+                    <!-- ========================================== -->
+                    {% if companyType == 'restaurant' %}
+                        <!-- SECTION CATÉGORIES DE PLATS -->
+                        <div class="card border-0 bg-light mt-4">
+                            <div class="card-header bg-white border-0">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-utensils me-2 text-primary"></i>Catégories de plats concernées
+                                </h5>
+                                <p class="text-muted small mb-0">Sélectionnez les catégories de plats concernées par cette promotion (optionnel)</p>
+                            </div>
+                            <div class="card-body">
+                                <div id="promotion-category-recipes-collection" 
+                                     class="collection-wrapper"
+                                     data-prototype="{{ form_widget(form.promotionCategoryRecipes.vars.prototype)|e('html_attr') }}"
+                                     data-index="{{ form.promotionCategoryRecipes|length }}">
+                                    {% for promoCategoryRecipe in form.promotionCategoryRecipes %}
+                                        <div class="collection-item row g-2 mb-2">
+                                            <div class="col-md-10">
+                                                {{ form_widget(promoCategoryRecipe.categoryRecipe, {'attr': {'class': 'form-select select2-category-recipe'}}) }}
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-danger remove-collection-item w-100">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            {{ form_rest(promoCategoryRecipe) }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <button type="button" class="btn btn-primary mt-2 add-collection-item" data-collection="promotion-category-recipes-collection">
+                                    <i class="fas fa-plus-circle me-2"></i>Ajouter une catégorie
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- SECTION PLATS -->
+                        <div class="card border-0 bg-light mt-4">
+                            <div class="card-header bg-white border-0">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-hamburger me-2 text-primary"></i>Plats concernés
+                                </h5>
+                                <p class="text-muted small mb-0">Sélectionnez les plats spécifiques concernés par cette promotion (optionnel)</p>
+                            </div>
+                            <div class="card-body">
+                                <div id="promotion-recipes-collection" 
+                                     class="collection-wrapper"
+                                     data-prototype="{{ form_widget(form.promotionRecipes.vars.prototype)|e('html_attr') }}"
+                                     data-index="{{ form.promotionRecipes|length }}">
+                                    {% for promoRecipe in form.promotionRecipes %}
+                                        <div class="collection-item row g-2 mb-2">
+                                            <div class="col-md-10">
+                                                {{ form_widget(promoRecipe.recipe, {'attr': {'class': 'form-select select2-recipe'}}) }}
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-danger remove-collection-item w-100">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            {{ form_rest(promoRecipe) }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <button type="button" class="btn btn-primary mt-2 add-collection-item" data-collection="promotion-recipes-collection">
+                                    <i class="fas fa-plus-circle me-2"></i>Ajouter un plat
+                                </button>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- SECTION CATÉGORIES (MARKET/PHARMACY) -->
+                        <div class="card border-0 bg-light mt-4">
+                            <div class="card-header bg-white border-0">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-folder-tree me-2 text-primary"></i>Catégories concernées
+                                </h5>
+                                <p class="text-muted small mb-0">Sélectionnez les catégories de produits concernées par cette promotion (optionnel)</p>
+                            </div>
+                            <div class="card-body">
+                                <div id="promotion-categories-collection" 
+                                     class="collection-wrapper"
+                                     data-prototype="{{ form_widget(form.promotionCategories.vars.prototype)|e('html_attr') }}"
+                                     data-index="{{ form.promotionCategories|length }}">
+                                    {% for promoCategory in form.promotionCategories %}
+                                        <div class="collection-item row g-2 mb-2">
+                                            <div class="col-md-10">
+                                                {{ form_widget(promoCategory.category, {'attr': {'class': 'form-select select2-category'}}) }}
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-danger remove-collection-item w-100">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            {{ form_rest(promoCategory) }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <button type="button" class="btn btn-primary mt-2 add-collection-item" data-collection="promotion-categories-collection">
+                                    <i class="fas fa-plus-circle me-2"></i>Ajouter une catégorie
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- SECTION PRODUITS (MARKET/PHARMACY) -->
+                        <div class="card border-0 bg-light mt-4">
+                            <div class="card-header bg-white border-0">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-boxes me-2 text-primary"></i>Produits concernés
+                                </h5>
+                                <p class="text-muted small mb-0">Sélectionnez les produits spécifiques concernés par cette promotion (optionnel)</p>
+                            </div>
+                            <div class="card-body">
+                                <div id="promotion-products-collection" 
+                                     class="collection-wrapper"
+                                     data-prototype="{{ form_widget(form.promotionProducts.vars.prototype)|e('html_attr') }}"
+                                     data-index="{{ form.promotionProducts|length }}">
+                                    {% for promoProduct in form.promotionProducts %}
+                                        <div class="collection-item row g-2 mb-2">
+                                            <div class="col-md-10">
+                                                {{ form_widget(promoProduct.product, {'attr': {'class': 'form-select select2-product'}}) }}
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-danger remove-collection-item w-100">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            {{ form_rest(promoProduct) }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <button type="button" class="btn btn-primary mt-2 add-collection-item" data-collection="promotion-products-collection">
+                                    <i class="fas fa-plus-circle me-2"></i>Ajouter un produit
+                                </button>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Footer avec boutons d'action -->
+                <div class="card-footer bg-light py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ path('app_admin_promotion_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i> Annuler
+                        </a>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <i class="fas fa-save me-2"></i>
+                                {{ button_label|default('Enregistrer la promotion') }}
+                            </button>
+                            {% if promotion.id is defined and promotion.id is not null %}
+                                <a href="{{ path('app_admin_promotion_show', {'id': promotion.id}) }}" class="btn btn-info btn-lg">
+                                    <i class="fas fa-eye me-2"></i> Voir
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+</div>
+
+<!-- Modal de confirmation pour suppression d'élément de collection -->
+<div class="modal fade" id="confirmRemoveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Confirmer la suppression
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
+                <h5>Êtes-vous sûr de vouloir supprimer cet élément ?</h5>
+                <p class="text-muted">Cette action est irréversible.</p>
+                <div class="alert alert-warning mt-2" id="itemToRemoveInfo">
+                    <span id="itemToRemoveName"></span>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" id="confirmRemoveItemBtn">Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour supprimer l'image -->
+{% if promotion.id is defined and promotion.id is not null and promotion.image %}
+<div class="modal fade" id="deleteImageModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Supprimer l'image
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
+                    <h5>Êtes-vous sûr de vouloir supprimer cette image ?</h5>
+                    <p class="text-muted">Cette action ne peut pas être annulée.</p>
+                </div>
+                <div class="mb-3">
+                    <img src="{{ asset('uploads/promotions/' ~ promotion.image) }}"
+                         alt="{{ promotion.name }}"
+                         class="rounded shadow-lg"
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i> Annuler
+                </button>
+                <form action="{{ path('app_admin_promotion_delete_image', {'id': promotion.id}) }}" method="post" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-image' ~ promotion.id) }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i> Supprimer l'image
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+function previewPromoImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        const preview = document.querySelector('.promo-preview') || 
+                       document.querySelector('.promo-placeholder');
+        
+        reader.onload = function(e) {
+            if (preview && preview.classList.contains('promo-placeholder')) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'img-fluid rounded shadow-lg promo-preview';
+                img.style = 'width: 200px; height: 200px; object-fit: cover; border: 5px solid #f8f9fa;';
+                preview.parentNode.replaceChild(img, preview);
+            } else if (preview) {
+                preview.src = e.target.result;
+            }
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Variable globale pour stocker l'élément à supprimer
+let pendingRemoveItem = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // ========== INITIALISATION SELECT2 ==========
+    if (typeof $ !== 'undefined') {
+        $('.select2-category, .select2-product, .select2-category-recipe, .select2-recipe').each(function() {
+            $(this).select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Rechercher...',
+                allowClear: true,
+                width: '100%',
+                language: {
+                    noResults: function() { return 'Aucun résultat trouvé'; }
+                }
+            });
+        });
+    }
+
+    // ========== GESTION DU SWITCH DE STATUT ==========
+    const activeSwitch = document.getElementById('{{ form.is_active.vars.id }}');
+    const statusBadge = document.getElementById('status-badge');
+    const statusLabel = document.getElementById('status-label');
+    
+    if (activeSwitch && statusBadge && statusLabel) {
+        activeSwitch.addEventListener('change', function() {
+            const isActive = this.checked;
+            statusBadge.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
+            statusBadge.className = isActive ? 'badge bg-success' : 'badge bg-danger';
+            statusLabel.textContent = isActive ? 'Promotion active' : 'Promotion inactive';
+        });
+    }
+
+    // ========== GESTION DYNAMIQUE DU CHAMP VALEUR ==========
+    const typeSelect = document.getElementById('{{ form.typePromotion.vars.id }}');
+    const valueInput = document.getElementById('{{ form.value.vars.id }}');
+    const valueLabel = document.querySelector('label[for="{{ form.value.vars.id }}"]');
+
+    if (typeSelect && valueInput && valueLabel) {
+        function updateValuePlaceholder() {
+            const selectedText = typeSelect.options[typeSelect.selectedIndex]?.text;
+            const isPercentage = selectedText === 'Pourcentage';
+            valueInput.placeholder = isPercentage ? 'Ex: 20' : 'Ex: 5000';
+            const suffix = isPercentage ? '%' : ' (FCFA)';
+            valueLabel.innerHTML = `<i class="fas fa-calculator me-1"></i> Valeur de réduction * ${suffix}`;
+        }
+        typeSelect.addEventListener('change', updateValuePlaceholder);
+        updateValuePlaceholder();
+    }
+
+    // ========== GESTION DES COLLECTIONS ==========
+    
+    // Fonction pour initialiser Select2 sur un élément
+    function initSelect2OnElement(element) {
+        if (typeof $ !== 'undefined') {
+            const select = element.querySelector('select');
+            if (select && !$(select).data('select2')) {
+                $(select).select2({
+                    theme: 'bootstrap-5',
+                    placeholder: 'Rechercher...',
+                    allowClear: true,
+                    width: '100%'
+                });
+            }
+        }
+    }
+    
+    // Fonction pour attacher l'événement de suppression à un bouton
+    function attachRemoveEvent(button) {
+        // Supprimer l'ancien événement pour éviter les doublons
+        button.removeEventListener('click', handleRemoveClick);
+        button.addEventListener('click', handleRemoveClick);
+    }
+    
+    // Gestionnaire de clic pour suppression avec modal
+    function handleRemoveClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const button = e.currentTarget;
+        const item = button.closest('.collection-item');
+        
+        if (item) {
+            // Récupérer le nom de l'élément à supprimer (peut être vide)
+            const select = item.querySelector('select');
+            let itemName = '';
+            if (select && select.options && select.options[select.selectedIndex]) {
+                const selectedOption = select.options[select.selectedIndex];
+                if (selectedOption.value && selectedOption.text) {
+                    itemName = selectedOption.text;
+                }
+            }
+            
+            // Si aucun élément sélectionné, afficher un message générique
+            if (!itemName) {
+                itemName = 'ce bloc vide';
+            }
+            
+            const itemToRemoveNameSpan = document.getElementById('itemToRemoveName');
+            if (itemToRemoveNameSpan) {
+                itemToRemoveNameSpan.innerHTML = `<strong>${escapeHtml(itemName)}</strong> sera supprimé(e) de la liste.`;
+            }
+            
+            pendingRemoveItem = item;
+            const modal = new bootstrap.Modal(document.getElementById('confirmRemoveModal'));
+            modal.show();
+        }
+    }
+    
+    // Fonction pour créer un nouvel élément de collection
+    function createCollectionItem(prototype, index) {
+        const div = document.createElement('div');
+        div.className = 'collection-item row g-2 mb-2';
+        let html = prototype.replace(/__name__/g, index);
+        
+        // Ajouter la structure HTML correcte
+        // Chercher où placer le bouton supprimer
+        if (html.includes('select')) {
+            // Remplacer la structure existante
+            html = html.replace(/<div class="col-md-10">/, '<div class="col-md-10">');
+            html = html.replace(/<\/div>\s*$/, '');
+            html += '</div><div class="col-md-2"><button type="button" class="btn btn-danger remove-collection-item w-100"><i class="fas fa-trash"></i></button></div>';
+        }
+        
+        div.innerHTML = html;
+        return div;
+    }
+    
+    // Fonction pour ajouter un élément à une collection
+    function addCollectionItem(collectionId) {
+        const collection = document.getElementById(collectionId);
+        if (!collection) return;
+        
+        const prototype = collection.dataset.prototype;
+        let index = parseInt(collection.dataset.index);
+        
+        // Créer le nouvel élément
+        const newItem = createCollectionItem(prototype, index);
+        
+        // Ajouter à la collection
+        collection.appendChild(newItem);
+        collection.dataset.index = index + 1;
+        
+        // Initialiser Select2 sur le nouveau select
+        initSelect2OnElement(newItem);
+        
+        // Attacher l'événement de suppression sur le nouveau bouton
+        const removeBtn = newItem.querySelector('.remove-collection-item');
+        if (removeBtn) {
+            attachRemoveEvent(removeBtn);
+        }
+    }
+    
+    // Gestionnaire de clic pour ajout
+    function handleAddCollection(e) {
+        const button = e.currentTarget;
+        const collectionId = button.dataset.collection;
+        if (collectionId) {
+            addCollectionItem(collectionId);
+        }
+    }
+    
+    // Attacher les événements d'ajout
+    document.querySelectorAll('.add-collection-item').forEach(button => {
+        button.removeEventListener('click', handleAddCollection);
+        button.addEventListener('click', handleAddCollection);
+    });
+    
+    // Attacher les événements de suppression sur les éléments existants (pour l'édition)
+    document.querySelectorAll('.remove-collection-item').forEach(button => {
+        attachRemoveEvent(button);
+    });
+    
+    // Confirmation de suppression
+    const confirmRemoveBtn = document.getElementById('confirmRemoveItemBtn');
+    if (confirmRemoveBtn) {
+        confirmRemoveBtn.removeEventListener('click', handleConfirmRemove);
+        confirmRemoveBtn.addEventListener('click', handleConfirmRemove);
+    }
+    
+    function handleConfirmRemove() {
+        if (pendingRemoveItem) {
+            pendingRemoveItem.remove();
+            pendingRemoveItem = null;
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmRemoveModal'));
+            if (modal) modal.hide();
+        }
+    }
+    
+    // Nettoyer pendingRemoveItem quand le modal est fermé
+    const confirmModal = document.getElementById('confirmRemoveModal');
+    if (confirmModal) {
+        confirmModal.addEventListener('hidden.bs.modal', function() {
+            pendingRemoveItem = null;
+        });
+    }
+
+    // ========== VALIDATION BOOTSTRAP ==========
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<style>
+.card-hover {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+}
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+}
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+}
+.form-floating > label {
+    padding-left: 2.5rem;
+}
+.form-floating > .form-control,
+.form-floating > .form-select {
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+    padding: 1rem 0.75rem 0.5rem 2.5rem;
+}
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select:focus ~ label,
+.form-floating > .form-select:not([value=""]):not(:placeholder-shown) ~ label {
+    transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
+    color: #667eea;
+}
+.form-floating > .form-control,
+.form-floating > .form-select {
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+}
+.form-floating > .form-control:focus,
+.form-floating > .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+}
+.select2-container--bootstrap-5 .select2-selection {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px !important;
+    min-height: calc(3.5rem + 2px);
+    padding: 1rem 0.75rem 0.5rem 2.5rem;
+}
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    line-height: 1.5;
+    padding-left: 0;
+}
+.form-check-input:checked {
+    background-color: #198754;
+    border-color: #198754;
+}
+.form-switch .form-check-input {
+    width: 3.5em;
+    height: 1.8em;
+    cursor: pointer;
+    margin-top: 0.25rem;
+}
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    border: none;
+}
+.promo-preview {
+    transition: all 0.3s ease;
+}
+.promo-preview:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+.collection-item {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+@media (max-width: 768px) {
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+    }
+}
+</style>
+{% endblock %}

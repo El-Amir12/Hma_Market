@@ -26,8 +26,9 @@ class Promotion
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $type = null;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TypePromotion $typePromotion = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $value = null;
@@ -51,29 +52,39 @@ class Promotion
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
     /**
      * @var Collection<int, PromotionProduct>
      */
-    #[ORM\OneToMany(targetEntity: PromotionProduct::class, mappedBy: 'promotion', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: PromotionProduct::class, mappedBy: 'promotion', orphanRemoval: true, cascade: ['persist'])]
     private Collection $promotionProducts;
 
     /**
      * @var Collection<int, PromotionCategory>
      */
-    #[ORM\OneToMany(targetEntity: PromotionCategory::class, mappedBy: 'promotion', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: PromotionCategory::class, mappedBy: 'promotion', orphanRemoval: true, cascade: ['persist'])]
     private Collection $promotionCategories;
 
     /**
      * @var Collection<int, PromotionCategoryRecipe>
      */
-    #[ORM\OneToMany(targetEntity: PromotionCategoryRecipe::class, mappedBy: 'promotion', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: PromotionCategoryRecipe::class, mappedBy: 'promotion', orphanRemoval: true, cascade: ['persist'])]
     private Collection $promotionCategoryRecipes;
+
+    /**
+     * @var Collection<int, PromotionRecipe>
+     */
+    #[ORM\OneToMany(targetEntity: PromotionRecipe::class, mappedBy: 'promotion', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $promotionRecipes;
 
     public function __construct()
     {
         $this->promotionProducts = new ArrayCollection();
         $this->promotionCategories = new ArrayCollection();
         $this->promotionCategoryRecipes = new ArrayCollection();
+        $this->promotionRecipes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -117,16 +128,15 @@ class Promotion
         return $this;
     }
 
-    public function getType(): ?string
-    {
-        return $this->type;
+    public function getTypePromotion(): ?TypePromotion { 
+        return $this->typePromotion; 
     }
 
-    public function setType(string $type): static
-    {
-        $this->type = $type;
-
-        return $this;
+    public function setTypePromotion(?TypePromotion $typePromotion): static 
+    { 
+        $this->typePromotion = $typePromotion; 
+    
+        return $this; 
     }
 
     public function getValue(): ?string
@@ -301,4 +311,40 @@ class Promotion
 
         return $this;
     }
+
+    public function getPromotionRecipes(): Collection
+    {
+        return $this->promotionRecipes;
+    }
+
+    public function addPromotionRecipe(PromotionRecipe $promotionRecipe): static
+    {
+        if (!$this->promotionRecipes->contains($promotionRecipe)) {
+            $this->promotionRecipes->add($promotionRecipe);
+            $promotionRecipe->setPromotion($this);
+        }
+        return $this;
+    }
+
+    public function removePromotionRecipe(PromotionRecipe $promotionRecipe): static
+    {
+        if ($this->promotionRecipes->removeElement($promotionRecipe)) {
+            if ($promotionRecipe->getPromotion() === $this) {
+                $promotionRecipe->setPromotion(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+        return $this;
+    }
+
 }

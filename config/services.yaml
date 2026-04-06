@@ -15,6 +15,7 @@ parameters:
     photos_directory: '%kernel.project_dir%/public/uploads/photos'
     categories_plats_directory: '%kernel.project_dir%/public/uploads/categories_plats'
     images_plats_directory: '%kernel.project_dir%/public/uploads/images_plats'
+    promotions_directory: '%kernel.project_dir%/public/uploads/promotions'
     
     # Emails
     app.email_from: 'contact@hma-market.com'
@@ -48,6 +49,7 @@ services:
             string $recuAbonnementDirectory: '%recus_abonnement_directory%'
             string $categoriesPlatsDirectory: '%categories_plats_directory%'
             string $imagesPlatsDirectory: '%images_plats_directory%'
+            string $promotionsDirectory: '%promotions_directory%'
             
             # ✅ Liaison des valeurs d'email
             string $fromEmail: '%mailer_from_email%'

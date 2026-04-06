@@ -1,0 +1,172 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+<div class="row g-4">
+    <div class="col-lg-12">
+        <div class="card shadow-lg border-0 card-hover">
+            <div class="card-header bg-gradient-primary text-white py-3">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-percent me-2"></i>
+                    {% if type.id is defined and type.id is not null %}
+                        Modifier le type de promotion
+                    {% else %}
+                        Nouveau type de promotion
+                    {% endif %}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <div class="form-floating">
+                            {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': ' ', 'autocomplete': 'off'}}) }}
+                            <label for="{{ form.name.vars.id }}">
+                                <i class="fas fa-tag me-1"></i> Nom *
+                            </label>
+                            <div class="invalid-feedback d-block">{{ form_errors(form.name) }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mt-3">
+                    <div class="col-md-12">
+                        <div class="form-floating">
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': ' ', 'style': 'height: 100px'}}) }}
+                            <label for="{{ form.description.vars.id }}">
+                                <i class="fas fa-align-left me-1"></i> Description
+                            </label>
+                            <div class="invalid-feedback d-block">{{ form_errors(form.description) }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mt-3">
+                    <div class="col-md-12">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-toggle-on me-2 text-primary"></i>
+                                        <span class="fw-bold">Statut</span>
+                                    </div>
+                                    <span class="badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }}" id="status-badge">
+                                        {{ form.is_active.vars.data ? 'ACTIF' : 'INACTIF' }}
+                                    </span>
+                                </div>
+                                <div class="form-check form-switch">
+                                    {{ form_widget(form.is_active, {'attr': {'class': 'form-check-input', 'role': 'switch'}}) }}
+                                    <label class="form-check-label" for="{{ form.is_active.vars.id }}" id="status-label">
+                                        {{ form.is_active.vars.data ? 'Type actif' : 'Type inactif' }}
+                                    </label>
+                                </div>
+                                <small class="text-muted mt-1 d-block">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Les types inactifs ne seront pas disponibles pour les promotions.
+                                </small>
+                                <div class="invalid-feedback d-block">{{ form_errors(form.is_active) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-light py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ path('app_admin_type_promotion_index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i> Annuler
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-save me-2"></i> 
+                        {{ button_label|default('Enregistrer') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ form_end(form) }}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const activeSwitch = document.getElementById('{{ form.is_active.vars.id }}');
+    const statusBadge = document.getElementById('status-badge');
+    const statusLabel = document.getElementById('status-label');
+    
+    if (activeSwitch && statusBadge && statusLabel) {
+        function updateStatus() {
+            if (activeSwitch.checked) {
+                statusBadge.textContent = 'ACTIF';
+                statusBadge.className = 'badge bg-success';
+                statusLabel.textContent = 'Type actif';
+            } else {
+                statusBadge.textContent = 'INACTIF';
+                statusBadge.className = 'badge bg-danger';
+                statusLabel.textContent = 'Type inactif';
+            }
+        }
+        activeSwitch.addEventListener('change', updateStatus);
+        updateStatus();
+    }
+    
+    // Validation Bootstrap
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});
+</script>
+
+<style>
+.card-hover {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+}
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+}
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+}
+.form-floating > label {
+    padding-left: 2.5rem;
+}
+.form-floating > .form-control,
+.form-floating > .form-select {
+    height: calc(3.5rem + 2px);
+    padding: 1rem 0.75rem 0.5rem 2.5rem;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+}
+.form-floating > .form-control:focus,
+.form-floating > .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+}
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select:focus ~ label,
+.form-floating > .form-select:not([value=""]):not(:placeholder-shown) ~ label {
+    transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
+    color: #667eea;
+}
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+.form-switch .form-check-input {
+    width: 3.5em;
+    height: 1.8em;
+    cursor: pointer;
+}
+.form-check-input:checked {
+    background-color: #198754;
+    border-color: #198754;
+}
+</style>

@@ -577,13 +577,13 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
             // line 358
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "id", [], "any", false, false, false, 358)]), "html", null, true);
             yield "\" class=\"btn btn-outline-info\" title=\"Voir\">
-                                        <i class=\"fas fa-eye\"></i>
+                                        <i class=\"fas fa-eye\"></i> Voir
                                     </a>
                                     <a href=\"";
             // line 361
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_print", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "id", [], "any", false, false, false, 361)]), "html", null, true);
             yield "\" class=\"btn btn-outline-secondary\" title=\"Imprimer\" target=\"_blank\">
-                                        <i class=\"fas fa-print\"></i>
+                                        <i class=\"fas fa-print\"></i> Imprimer
                                     </a>
                                     ";
             // line 364
@@ -592,7 +592,7 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
                 yield "                                        <a href=\"";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/bons-commande/" . CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "bonCommande", [], "any", false, false, false, 365))), "html", null, true);
                 yield "\" class=\"btn btn-outline-primary\" target=\"_blank\" title=\"Bon de commande\">
-                                            <i class=\"fas fa-file-pdf\"></i>
+                                            <i class=\"fas fa-file-pdf\"></i> Bon commande
                                         </a>
                                     ";
             }
@@ -1225,14 +1225,14 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
                             <td>
                                 <div class=\"btn-group btn-group-sm\">
                                     <a href=\"{{ path('purchase_show', {id: purchase.id}) }}\" class=\"btn btn-outline-info\" title=\"Voir\">
-                                        <i class=\"fas fa-eye\"></i>
+                                        <i class=\"fas fa-eye\"></i> Voir
                                     </a>
                                     <a href=\"{{ path('purchase_print', {id: purchase.id}) }}\" class=\"btn btn-outline-secondary\" title=\"Imprimer\" target=\"_blank\">
-                                        <i class=\"fas fa-print\"></i>
+                                        <i class=\"fas fa-print\"></i> Imprimer
                                     </a>
                                     {% if purchase.bonCommande %}
                                         <a href=\"{{ asset('uploads/bons-commande/' ~ purchase.bonCommande) }}\" class=\"btn btn-outline-primary\" target=\"_blank\" title=\"Bon de commande\">
-                                            <i class=\"fas fa-file-pdf\"></i>
+                                            <i class=\"fas fa-file-pdf\"></i> Bon commande
                                         </a>
                                     {% endif %}
                                     {% if purchase.recuAchat and (purchase.status == 'confirmed' or purchase.status == 'received') %}
