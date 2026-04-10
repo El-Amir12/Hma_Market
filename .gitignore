@@ -8,3 +8,7 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+# Ajouter les logs au .gitignore
+echo "var/log/" >> .gitignore
+echo "*.log" >> .gitignore
