@@ -327,9 +327,12 @@
                         <a href="#" class="btn btn-sm btn-outline-success flex-fill" title="Commandes liées">
                             <i class="fas fa-shopping-cart"></i>
                         </a>
-                        <a href="#" class="btn btn-sm btn-outline-warning flex-fill" title="Promotions">
-                            <i class="fas fa-tags"></i> 
-                        </a>
+                        {% if companyType == 'restaurant' %}
+                            <a href="{{ path('app_restaurant_recipe_promotions', {'id': recipe.id}) }}" 
+                            class="btn btn-sm btn-outline-warning" title="Promotions du plat">
+                                <i class="fas fa-percent me-1"></i> 
+                            </a>
+                        {% endif %}
                         {# Bouton Supprimer ajouté ici #}
                         {% if is_granted('ROLE_ADMIN') and recipe.orderItems|length == 0 %}
                             <button type="button" 

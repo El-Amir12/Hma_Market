@@ -260,7 +260,7 @@
                             <option value="">Toutes</option>
                             {% for promotion in promotions %}
                                 <option value="{{ promotion.id }}" {{ selectedPromotion == promotion.id ? 'selected' : '' }}>
-                                    {{ promotion.name }} ({{ promotion.type }})
+                                    {{ promotion.name }} ({{ promotion.typePromotion ? promotion.typePromotion.name : 'Standard' }})
                                 </option>
                             {% endfor %}
                         </select>
@@ -433,17 +433,19 @@
                     <!-- Boutons secondaires alignés sur une ligne -->
                     <div class="d-flex gap-1 mt-auto">
                         <a href="{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}" 
-                           class="btn btn-sm btn-outline-info flex-fill" title="Lots de stock">
-                            <i class="fas fa-boxes"></i>
+                            class="btn btn-sm btn-outline-info flex-fill" title="Lots de stock">
+                            <i class="fas fa-boxes"></i> Lots
                         </a>
                         <a href="#" 
                            class="btn btn-sm btn-outline-primary flex-fill" title="Mouvements de stock">
-                            <i class="fas fa-exchange-alt"></i>
+                            <i class="fas fa-exchange-alt"></i> Mouvements
                         </a>
-                        <a href="#" 
-                           class="btn btn-sm btn-outline-warning flex-fill" title="Promotions">
-                            <i class="fas fa-tags"></i>
-                        </a>
+                        {% if companyType != 'restaurant' %}
+                            <a href="{{ path('app_admin_product_promotions', {'id': product.id}) }}" 
+                            class="btn btn-sm btn-outline-warning flex-fill" title="Promotions">
+                                <i class="fas fa-tags"></i> Promos
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

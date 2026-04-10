@@ -21,6 +21,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('price_with_currency', [$this, 'formatPriceWithCurrency']),
+            new TwigFilter('sum', [$this, 'calculateSum']),
         ];
     }
 
@@ -38,5 +39,37 @@ class AppExtension extends AbstractExtension
 
         $formatted = number_format((float) $price, 0, ',', ' ');
         return $formatted . ' ' . $currency;
+    }
+
+    /**
+     * Calcule la somme d'une propriété sur un tableau d'objets
+     * 
+     * @param array $array Le tableau d'objets
+     * @param string $property Le nom de la propriété (ex: 'currentQuantity', 'unitPrice')
+     * @return float La somme calculée
+     */
+    public function calculateSum(array $array, string $property): float
+    {
+        $sum = 0;
+        
+        foreach ($array as $item) {
+            // Construire le nom du getter (ex: getCurrentQuantity)
+            $getter = 'get' . ucfirst($property);
+            
+            // Vérifier si la méthode existe
+            if (method_exists($item, $getter)) {
+                $sum += (float) $item->$getter();
+            } 
+            // Vérifier si la propriété existe (accès direct)
+            elseif (property_exists($item, $property)) {
+                $sum += (float) $item->$property;
+            }
+            // Vérifier si c'est un tableau associatif
+            elseif (is_array($item) && isset($item[$property])) {
+                $sum += (float) $item[$property];
+            }
+        }
+        
+        return $sum;
     }
 }

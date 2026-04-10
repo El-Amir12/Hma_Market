@@ -129,6 +129,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTime $last_activity = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $failed_login_attempts = 0;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $locked_until = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $last_failed_attempt_at = null;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -949,6 +958,73 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->last_activity = $last_activity;
 
+        return $this;
+    }
+
+    public function getFailedLoginAttempts(): ?int
+    {
+        return $this->failed_login_attempts;
+    }
+
+    public function setFailedLoginAttempts(?int $failed_login_attempts): static
+    {
+        $this->failed_login_attempts = $failed_login_attempts;
+        return $this;
+    }
+
+    public function getLockedUntil(): ?\DateTime
+    {
+        return $this->locked_until;
+    }
+
+    public function setLockedUntil(?\DateTime $locked_until): static
+    {
+        $this->locked_until = $locked_until;
+        return $this;
+    }
+
+    public function incrementFailedLoginAttempts(): static
+    {
+        $this->failed_login_attempts = ($this->failed_login_attempts ?? 0) + 1;
+        return $this;
+    }
+
+    public function resetFailedLoginAttempts(): static
+    {
+        $this->failed_login_attempts = 0;
+        $this->locked_until = null;
+        return $this;
+    }
+
+    public function isLocked(): bool
+    {
+        if ($this->locked_until === null) {
+            return false;
+        }
+        $now = new \DateTime();
+        return $this->locked_until > $now;
+    }
+
+    public function getRemainingLockTime(): ?int
+    {
+        if (!$this->isLocked()) {
+            return null;
+        }
+        $now = new \DateTime();
+        $interval = $now->diff($this->locked_until);
+        // Retourne les minutes restantes
+        $minutes = ($interval->h * 60) + $interval->i;
+        return $minutes > 0 ? $minutes : 1;
+    }
+
+    public function getLastFailedAttemptAt(): ?\DateTime
+    {
+        return $this->last_failed_attempt_at;
+    }
+
+    public function setLastFailedAttemptAt(?\DateTime $last_failed_attempt_at): static
+    {
+        $this->last_failed_attempt_at = $last_failed_attempt_at;
         return $this;
     }
 

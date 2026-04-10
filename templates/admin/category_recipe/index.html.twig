@@ -390,10 +390,12 @@
                            class="btn btn-sm btn-outline-info flex-fill">
                             <i class="fas fa-list"></i> Plats
                         </a>
-                        <a href="{{ path('app_admin_category_recipe_promotions', {'id': category.id}) }}" 
-                           class="btn btn-sm btn-outline-warning flex-fill">
-                            <i class="fas fa-tags"></i> Promos
-                        </a>
+                        {% if companyType == 'restaurant' %}
+                            <a href="{{ path('app_restaurant_category_recipe_promotions', {'id': category.id}) }}" 
+                            class="btn btn-sm btn-outline-warning" title="Promotions de la catégorie">
+                                <i class="fas fa-percent me-1"></i> Promotions
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -1,0 +1,461 @@
+{# templates/admin/product/print_sheet.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche produit - {{ product.name }}</title>
+    <style>
+        @media print {
+            body {
+                margin: 0;
+                padding: 20px;
+            }
+            .no-print {
+                display: none;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: #f5f5f5;
+            padding: 40px;
+        }
+
+        .sheet-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .header .barcode {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            letter-spacing: 2px;
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            font-size: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-top: 4px;
+        }
+
+        .info-value.price {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .info-value.purchase {
+            color: #dc3545;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .product-image {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .image-placeholder {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .image-placeholder i {
+            font-size: 64px;
+            color: #adb5bd;
+        }
+
+        .description {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            border-top: 1px solid #eee;
+        }
+
+        .badge-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge-active {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-inactive {
+            background: #dc3545;
+            color: white;
+        }
+
+        .badge-perishable {
+            background: #ffc107;
+            color: #856404;
+        }
+
+        .badge-non-perishable {
+            background: #6c757d;
+            color: white;
+        }
+
+        .row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        .print-actions {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .print-actions button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-print {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+
+        .btn-close {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-close:hover {
+            background: #5a6268;
+        }
+
+        hr {
+            margin: 20px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .row {
+                flex-direction: column;
+            }
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-actions no-print">
+        <button class="btn-print" onclick="window.print()">
+            <i class="fas fa-print"></i> Imprimer
+        </button>
+        <button class="btn-close" onclick="window.close()">
+            <i class="fas fa-times"></i> Fermer
+        </button>
+    </div>
+
+    <div class="sheet-container">
+        <div class="header">
+            <h1>{{ product.name }}</h1>
+            <div class="barcode">{{ product.barcode }}</div>
+        </div>
+
+        <div class="content">
+            <!-- Image -->
+            <div class="image-container">
+                {% if product.image and product.image != 'default-product.png' %}
+                    <img src="{{ asset('uploads/products/' ~ product.image) }}" 
+                         alt="{{ product.name }}" 
+                         class="product-image">
+                {% else %}
+                    <div class="image-placeholder">
+                        <i class="fas fa-box"></i>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Informations générales -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Informations générales
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Code-barres</span>
+                        <span class="info-value">{{ product.barcode }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Catégorie</span>
+                        <span class="info-value">{{ product.category ? product.category.name : 'Non catégorisé' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Unité de mesure</span>
+                        <span class="info-value">{{ product.unit|default('pièce')|capitalize }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Statut</span>
+                        <span class="info-value">
+                            <span class="badge-status {{ product.isActive ? 'badge-active' : 'badge-inactive' }}">
+                                {{ product.isActive ? 'Actif' : 'Inactif' }}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prix et stock -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Prix et stock
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="info-item">
+                            <span class="info-label">Prix d'achat</span>
+                            <span class="info-value purchase">{{ product.purchasePrice|price_with_currency(product.hmaService) }}</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="info-item">
+                            <span class="info-label">Prix de vente</span>
+                            <span class="info-value price">{{ product.salePrice|price_with_currency(product.hmaService) }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="info-item">
+                            <span class="info-label">Stock actuel</span>
+                            <span class="info-value">{{ product.stockQuantity }} {{ product.unit|default('pièce') }}</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="info-item">
+                            <span class="info-label">Stock minimum</span>
+                            <span class="info-value">{{ product.minQuantity }} {{ product.unit|default('pièce') }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% if companyType != 'restaurant' %}
+                <div class="row">
+                    <div class="col">
+                        <div class="info-item">
+                            <span class="info-label">Marge unitaire</span>
+                            {% set margin = product.salePrice - product.purchasePrice %}
+                            {% set marginPercentage = product.purchasePrice > 0 ? (margin / product.purchasePrice * 100)|round(1) : 0 %}
+                            <span class="info-value">{{ margin|price_with_currency(product.hmaService) }} ({{ marginPercentage }}%)</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="info-item">
+                            <span class="info-label">Valeur du stock</span>
+                            <span class="info-value">{{ (product.stockQuantity * product.purchasePrice)|price_with_currency(product.hmaService) }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Caractéristiques -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-flask"></i>
+                    Caractéristiques
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="info-item">
+                            <span class="info-label">Type de produit</span>
+                            <span class="info-value">
+                                <span class="badge-status {{ product.hasExpiryDate ? 'badge-perishable' : 'badge-non-perishable' }}">
+                                    {{ product.hasExpiryDate ? 'Périssable' : 'Non périssable' }}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="info-item">
+                            <span class="info-label">Prescription</span>
+                            <span class="info-value">{{ product.prescriptionRequired ? 'Obligatoire' : 'Non requise' }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% if product.dosage or product.form %}
+                <div class="row">
+                    {% if product.dosage %}
+                    <div class="col">
+                        <div class="info-item">
+                            <span class="info-label">Dosage</span>
+                            <span class="info-value">{{ product.dosage }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if product.form %}
+                    <div class="col">
+                        <div class="info-item">
+                            <span class="info-label">Forme</span>
+                            <span class="info-value">{{ product.form }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Description -->
+            {% if product.description %}
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-align-left"></i>
+                    Description
+                </div>
+                <div class="description">
+                    {{ product.description|nl2br }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Informations système -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-history"></i>
+                    Informations système
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Créé le</span>
+                        <span class="info-value">{{ product.createdAt|date('d/m/Y H:i') }}</span>
+                    </div>
+                    {% if product.updatedAt %}
+                    <div class="info-item">
+                        <span class="info-label">Modifié le</span>
+                        <span class="info-value">{{ product.updatedAt|date('d/m/Y H:i') }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Document généré par HMA Market le {{ 'now'|date('d/m/Y H:i') }}<br>
+            Fiche produit - {{ product.name }}
+        </div>
+    </div>
+</body>
+</html>

@@ -740,30 +740,36 @@ $context["category"], "isActive", [], "any", false, false, false, 297)) && $tmp 
                            class=\"btn btn-sm btn-outline-info flex-fill\">
                             <i class=\"fas fa-list\"></i> Plats
                         </a>
-                        <a href=\"";
+                        ";
             // line 393
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_recipe_promotions", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["category"], "id", [], "any", false, false, false, 393)]), "html", null, true);
-            yield "\" 
-                           class=\"btn btn-sm btn-outline-warning flex-fill\">
-                            <i class=\"fas fa-tags\"></i> Promos
-                        </a>
-                    </div>
+            if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 393, $this->source); })()) == "restaurant")) {
+                // line 394
+                yield "                            <a href=\"";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_restaurant_category_recipe_promotions", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["category"], "id", [], "any", false, false, false, 394)]), "html", null, true);
+                yield "\" 
+                            class=\"btn btn-sm btn-outline-warning\" title=\"Promotions de la catégorie\">
+                                <i class=\"fas fa-percent me-1\"></i> Promotions
+                            </a>
+                        ";
+            }
+            // line 399
+            yield "                    </div>
                 </div>
             </div>
         </div>
         ";
             $context['_iterated'] = true;
         }
-        // line 401
+        // line 403
         if (!$context['_iterated']) {
-            // line 402
+            // line 404
             yield "        <div class=\"col-12\">
             <div class=\"card shadow\">
                 <div class=\"card-body text-center py-5\">
                     <i class=\"fas fa-utensils fa-4x text-muted mb-3\"></i>
                     <h4 class=\"text-muted\">Aucune catégorie de plats trouvée</h4>
                     <a href=\"";
-            // line 407
+            // line 409
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_recipe_index");
             yield "\" class=\"btn btn-outline-primary\">
                         <i class=\"fas fa-undo me-1\"></i> Réinitialiser les filtres
@@ -776,30 +782,30 @@ $context["category"], "isActive", [], "any", false, false, false, 297)) && $tmp 
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['category'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 414
+        // line 416
         yield "    </div>
 
     <!-- Pagination -->
     ";
-        // line 417
-        if (((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 417, $this->source); })()) > 1)) {
-            // line 418
+        // line 419
+        if (((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 419, $this->source); })()) > 1)) {
+            // line 420
             yield "    <div class=\"row mt-4\">
         <div class=\"col-12\">
             <nav aria-label=\"Pagination\">
                 <ul class=\"pagination justify-content-center flex-wrap\">
                     ";
-            // line 422
+            // line 424
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable(range(1, (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 422, $this->source); })())));
+            $context['_seq'] = CoreExtension::ensureTraversable(range(1, (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 424, $this->source); })())));
             foreach ($context['_seq'] as $context["_key"] => $context["i"]) {
-                // line 423
+                // line 425
                 yield "                        <li class=\"page-item ";
-                yield ((($context["i"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 423, $this->source); })()))) ? ("active") : (""));
+                yield ((($context["i"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 425, $this->source); })()))) ? ("active") : (""));
                 yield "\">
                             <a class=\"page-link\" href=\"";
-                // line 424
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_recipe_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 424, $this->source); })()), "request", [], "any", false, false, false, 424), "query", [], "any", false, false, false, 424), "all", [], "any", false, false, false, 424), ["page" => $context["i"]])), "html", null, true);
+                // line 426
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_recipe_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 426, $this->source); })()), "request", [], "any", false, false, false, 426), "query", [], "any", false, false, false, 426), "all", [], "any", false, false, false, 426), ["page" => $context["i"]])), "html", null, true);
                 yield "\">";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["i"], "html", null, true);
                 yield "</a>
@@ -809,21 +815,21 @@ $context["category"], "isActive", [], "any", false, false, false, 297)) && $tmp 
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['i'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 427
+            // line 429
             yield "                </ul>
             </nav>
         </div>
     </div>
     ";
         }
-        // line 432
+        // line 434
         yield "</div>
 
 ";
-        // line 435
+        // line 437
         yield "
 ";
-        // line 437
+        // line 439
         yield "<div class=\"modal fade\" id=\"quotaReachedModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -836,14 +842,14 @@ $context["category"], "isActive", [], "any", false, false, false, 297)) && $tmp 
             <div class=\"modal-body text-center py-4\">
                 <i class=\"fas fa-ban fa-4x text-warning mb-3\"></i>
                 <h5>Vous avez atteint votre limite de ";
-        // line 448
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["quota"]) || array_key_exists("quota", $context) ? $context["quota"] : (function () { throw new RuntimeError('Variable "quota" does not exist.', 448, $this->source); })()), "html", null, true);
+        // line 450
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["quota"]) || array_key_exists("quota", $context) ? $context["quota"] : (function () { throw new RuntimeError('Variable "quota" does not exist.', 450, $this->source); })()), "html", null, true);
         yield " catégories de plats dans le quota.</h5>
                 <p class=\"text-muted\">Pour ajouter de nouvelles catégories, passez à un plan supérieur.</p>
             </div>
             <div class=\"modal-footer justify-content-center\">
                 <a href=\"";
-        // line 452
+        // line 454
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_subscription_plans");
         yield "\" class=\"btn btn-warning btn-lg px-4\">
                     <i class=\"fas fa-arrow-up me-2\"></i> Voir les offres
@@ -857,7 +863,7 @@ $context["category"], "isActive", [], "any", false, false, false, 297)) && $tmp 
 </div>
 
 ";
-        // line 464
+        // line 466
         yield "<div class=\"modal fade\" id=\"toggleCategoryModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -885,7 +891,7 @@ $context["category"], "isActive", [], "any", false, false, false, 297)) && $tmp 
 </div>
 
 ";
-        // line 491
+        // line 493
         yield "<div class=\"modal fade\" id=\"deleteCategoryModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -919,7 +925,7 @@ $context["category"], "isActive", [], "any", false, false, false, 297)) && $tmp 
         yield from [];
     }
 
-    // line 516
+    // line 518
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -932,7 +938,7 @@ $context["category"], "isActive", [], "any", false, false, false, 297)) && $tmp 
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 517
+        // line 519
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
 <style>
@@ -992,7 +998,7 @@ $context["category"], "isActive", [], "any", false, false, false, 297)) && $tmp 
         yield from [];
     }
 
-    // line 567
+    // line 569
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -1005,7 +1011,7 @@ $context["category"], "isActive", [], "any", false, false, false, 297)) && $tmp 
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 568
+        // line 570
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
@@ -1016,20 +1022,20 @@ document.addEventListener('DOMContentLoaded', function() {
         newCategoryBtn.addEventListener('click', function(e) {
             e.preventDefault();
             ";
-        // line 576
-        if ((($tmp = (isset($context["quotaReached"]) || array_key_exists("quotaReached", $context) ? $context["quotaReached"] : (function () { throw new RuntimeError('Variable "quotaReached" does not exist.', 576, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 577
+        // line 578
+        if ((($tmp = (isset($context["quotaReached"]) || array_key_exists("quotaReached", $context) ? $context["quotaReached"] : (function () { throw new RuntimeError('Variable "quotaReached" does not exist.', 578, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 579
             yield "                const quotaModal = new bootstrap.Modal(document.getElementById('quotaReachedModal'));
                 quotaModal.show();
             ";
         } else {
-            // line 580
+            // line 582
             yield "                window.location.href = \"";
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_recipe_new");
             yield "\";
             ";
         }
-        // line 582
+        // line 584
         yield "        });
     }
 
@@ -1149,7 +1155,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  1033 => 582,  1027 => 580,  1022 => 577,  1020 => 576,  1009 => 568,  996 => 567,  936 => 517,  923 => 516,  889 => 491,  861 => 464,  847 => 452,  840 => 448,  827 => 437,  824 => 435,  820 => 432,  813 => 427,  802 => 424,  797 => 423,  793 => 422,  787 => 418,  785 => 417,  780 => 414,  767 => 407,  760 => 402,  758 => 401,  745 => 393,  738 => 389,  728 => 382,  720 => 377,  710 => 370,  701 => 363,  694 => 359,  690 => 358,  686 => 357,  682 => 356,  678 => 355,  675 => 354,  673 => 353,  668 => 350,  662 => 346,  656 => 343,  652 => 342,  648 => 341,  644 => 340,  640 => 339,  636 => 338,  632 => 336,  630 => 335,  622 => 330,  614 => 325,  605 => 318,  599 => 316,  597 => 315,  593 => 314,  589 => 313,  579 => 305,  575 => 303,  572 => 302,  568 => 300,  564 => 298,  562 => 297,  559 => 296,  557 => 295,  551 => 291,  545 => 287,  539 => 284,  534 => 283,  532 => 282,  526 => 279,  523 => 278,  518 => 277,  513 => 274,  507 => 271,  503 => 269,  500 => 268,  486 => 256,  479 => 251,  470 => 248,  463 => 247,  459 => 246,  447 => 237,  443 => 236,  439 => 235,  428 => 227,  424 => 226,  420 => 225,  409 => 217,  405 => 216,  401 => 215,  389 => 206,  360 => 180,  346 => 169,  332 => 158,  315 => 144,  301 => 133,  287 => 122,  273 => 111,  255 => 95,  245 => 91,  242 => 90,  238 => 89,  235 => 88,  225 => 84,  222 => 83,  217 => 82,  214 => 80,  204 => 73,  199 => 71,  193 => 67,  190 => 66,  182 => 59,  179 => 57,  170 => 51,  159 => 42,  156 => 41,  150 => 36,  146 => 34,  144 => 33,  141 => 32,  137 => 30,  135 => 29,  129 => 28,  125 => 27,  102 => 6,  89 => 5,  66 => 3,  43 => 1,);
+        return array (  1039 => 584,  1033 => 582,  1028 => 579,  1026 => 578,  1015 => 570,  1002 => 569,  942 => 519,  929 => 518,  895 => 493,  867 => 466,  853 => 454,  846 => 450,  833 => 439,  830 => 437,  826 => 434,  819 => 429,  808 => 426,  803 => 425,  799 => 424,  793 => 420,  791 => 419,  786 => 416,  773 => 409,  766 => 404,  764 => 403,  756 => 399,  747 => 394,  745 => 393,  738 => 389,  728 => 382,  720 => 377,  710 => 370,  701 => 363,  694 => 359,  690 => 358,  686 => 357,  682 => 356,  678 => 355,  675 => 354,  673 => 353,  668 => 350,  662 => 346,  656 => 343,  652 => 342,  648 => 341,  644 => 340,  640 => 339,  636 => 338,  632 => 336,  630 => 335,  622 => 330,  614 => 325,  605 => 318,  599 => 316,  597 => 315,  593 => 314,  589 => 313,  579 => 305,  575 => 303,  572 => 302,  568 => 300,  564 => 298,  562 => 297,  559 => 296,  557 => 295,  551 => 291,  545 => 287,  539 => 284,  534 => 283,  532 => 282,  526 => 279,  523 => 278,  518 => 277,  513 => 274,  507 => 271,  503 => 269,  500 => 268,  486 => 256,  479 => 251,  470 => 248,  463 => 247,  459 => 246,  447 => 237,  443 => 236,  439 => 235,  428 => 227,  424 => 226,  420 => 225,  409 => 217,  405 => 216,  401 => 215,  389 => 206,  360 => 180,  346 => 169,  332 => 158,  315 => 144,  301 => 133,  287 => 122,  273 => 111,  255 => 95,  245 => 91,  242 => 90,  238 => 89,  235 => 88,  225 => 84,  222 => 83,  217 => 82,  214 => 80,  204 => 73,  199 => 71,  193 => 67,  190 => 66,  182 => 59,  179 => 57,  170 => 51,  159 => 42,  156 => 41,  150 => 36,  146 => 34,  144 => 33,  141 => 32,  137 => 30,  135 => 29,  129 => 28,  125 => 27,  102 => 6,  89 => 5,  66 => 3,  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -1546,10 +1552,12 @@ document.addEventListener('DOMContentLoaded', function() {
                            class=\"btn btn-sm btn-outline-info flex-fill\">
                             <i class=\"fas fa-list\"></i> Plats
                         </a>
-                        <a href=\"{{ path('app_admin_category_recipe_promotions', {'id': category.id}) }}\" 
-                           class=\"btn btn-sm btn-outline-warning flex-fill\">
-                            <i class=\"fas fa-tags\"></i> Promos
-                        </a>
+                        {% if companyType == 'restaurant' %}
+                            <a href=\"{{ path('app_restaurant_category_recipe_promotions', {'id': category.id}) }}\" 
+                            class=\"btn btn-sm btn-outline-warning\" title=\"Promotions de la catégorie\">
+                                <i class=\"fas fa-percent me-1\"></i> Promotions
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

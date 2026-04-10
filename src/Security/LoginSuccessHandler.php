@@ -52,6 +52,13 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
             return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
         }
 
+        // Réinitialiser les tentatives échouées
+        if ($user instanceof User) {
+            $user->resetFailedLoginAttempts();
+            $user->setLoginAt(new \DateTime());
+            $this->entityManager->flush();
+        }
+
         // Si c'est un HmaService qui se connecte pour la première fois
         if ($user instanceof HmaService && !$user->isActive()) {
             return $this->handleFirstHmaServiceLogin($user, $request);

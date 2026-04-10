@@ -1,10 +1,10 @@
+{# templates/security/login.html.twig #}
 {% extends 'base-auth.html.twig' %}
 
 {% block title %}Connexion - HMA Market{% endblock %}
 
 {% block body %}
 <div class="row g-4">
-    <!-- Formulaire de Connexion -->
     <div class="col-lg-6">
         <div class="form-container">
             <div class="text-center mb-4">
@@ -14,12 +14,25 @@
                 <p class="text-muted">Accédez à votre tableau de bord HMA Market</p>
             </div>
             
+            {# Affichage des erreurs d'authentification (y compris compte bloqué) #}
             {% if error %}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="fas fa-exclamation-circle me-2"></i>
                 {{ error.messageKey|trans(error.messageData, 'security') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
+            {% endif %}
+            
+            {# Affichage des avertissements (tentatives restantes) #}
+            {% set login_warning = app.session.get('_login_warning') %}
+            
+            {% if login_warning %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                {{ login_warning }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {{ app.session.remove('_login_warning') }}
             {% endif %}
             
             {% if app.user %}

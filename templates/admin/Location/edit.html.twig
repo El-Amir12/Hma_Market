@@ -1,0 +1,73 @@
+{# templates/admin/location/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'emplacement - {{ location.name }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_location_index') }}" class="text-decoration-none">
+                            <i class="fas fa-map-marker-alt me-1"></i> Emplacements
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-edit me-1"></i> {{ location.name }}
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0">
+                <i class="fas fa-edit me-2 text-warning"></i>
+                Modifier l'emplacement
+            </h1>
+            <p class="text-muted mt-1">
+                Modifiez les informations de l'emplacement
+            </p>
+        </div>
+        <div class="btn-group">
+            {% if location.stockBatches|length == 0 %}
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="fas fa-trash me-2"></i> Supprimer
+                </button>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'admin/location/_form.html.twig' with {
+        'form': form,
+        'location': location,
+        'button_label': 'Mettre à jour'
+    } only %}
+</div>
+
+<!-- Modal suppression -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Confirmer la suppression
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer l'emplacement <strong>{{ location.name }}</strong> ?</p>
+                {% if location.code %}
+                    <p><small class="text-muted">Code: {{ location.code }}</small></p>
+                {% endif %}
+                <p class="text-danger mb-0">⚠️ Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="post" action="{{ path('app_admin_location_delete', {'id': location.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ location.id) }}">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

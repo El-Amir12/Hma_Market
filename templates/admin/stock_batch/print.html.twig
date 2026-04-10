@@ -1,0 +1,39 @@
+{# templates/admin/stock_batch/print.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Lot {{ batch.batchNumber }}</title>
+    <style>
+        @media print {
+            body { margin: 0; padding: 20px; }
+            .no-print { display: none; }
+        }
+        .batch-label {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+        }
+        .barcode {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="batch-label">
+        <h2>{{ product.name }}</h2>
+        <div class="barcode">{{ batch.batchNumber }}</div>
+        <p><strong>Emplacement:</strong> {{ batch.location|default('Non défini') }}</p>
+        <p><strong>Quantité:</strong> {{ batch.currentQuantity }} / {{ batch.initialQuantity }}</p>
+        <p><strong>Expiration:</strong> {{ batch.expiryDate ? batch.expiryDate|date('d/m/Y') : 'N/A' }}</p>
+        <div class="no-print">
+            <button onclick="window.print()">Imprimer</button>
+            <button onclick="window.close()">Fermer</button>
+        </div>
+    </div>
+</body>
+</html>

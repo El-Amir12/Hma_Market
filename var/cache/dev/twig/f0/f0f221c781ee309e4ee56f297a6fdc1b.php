@@ -1600,180 +1600,222 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                     } elseif (CoreExtension::getAttribute($this->env, $this->source,                     // line 1265
 $context["child"], "route", [], "any", true, true, false, 1265)) {
                         // line 1266
-                        yield "                                    <a href=\"";
-                        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1266));
-                        yield "\" 
-                                       class=\"nav-link ";
+                        yield "                                    ";
                         // line 1267
-                        if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1267) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1267, $this->source); })()))) {
-                            yield "active";
-                        }
-                        yield "\">
-                                        <i class=\"";
+                        yield "                                    ";
+                        $context["route_params"] = ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "params", [], "any", true, true, false, 1267)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "params", [], "any", false, false, false, 1267), [])) : ([]));
                         // line 1268
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", false, false, false, 1268), "html", null, true);
-                        yield "\"></i>
-                                        ";
-                        // line 1269
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", false, false, false, 1269), "html", null, true);
-                        yield "
-                                        ";
+                        yield "                                    
+                                    ";
                         // line 1270
-                        if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "coming_soon", [], "any", true, true, false, 1270) && CoreExtension::getAttribute($this->env, $this->source, $context["child"], "coming_soon", [], "any", false, false, false, 1270))) {
+                        yield "                                    ";
+                        if (((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1270) == "app_admin_stock_batch_index") &&  !CoreExtension::getAttribute($this->env, $this->source, ($context["route_params"] ?? null), "productId", [], "any", true, true, false, 1270))) {
                             // line 1271
-                            yield "                                            <span class=\"badge bg-warning ms-auto\">Bientôt</span>
-                                        ";
+                            yield "                                        ";
+                            $context["route_params"] = Twig\Extension\CoreExtension::merge((isset($context["route_params"]) || array_key_exists("route_params", $context) ? $context["route_params"] : (function () { throw new RuntimeError('Variable "route_params" does not exist.', 1271, $this->source); })()), ["productId" => 0]);
+                            // line 1272
+                            yield "                                    ";
                         }
                         // line 1273
-                        yield "                                    </a>
-                                ";
-                    } else {
+                        yield "                                    
+                                    ";
                         // line 1275
-                        yield "                                    <a href=\"#\" class=\"nav-link disabled\">
+                        yield "                                    ";
+                        if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "coming_soon", [], "any", true, true, false, 1275) && CoreExtension::getAttribute($this->env, $this->source, $context["child"], "coming_soon", [], "any", false, false, false, 1275))) {
+                            // line 1276
+                            yield "                                        <a href=\"#\" class=\"nav-link disabled\" onclick=\"return false;\">
+                                            <i class=\"";
+                            // line 1277
+                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", false, false, false, 1277), "html", null, true);
+                            yield " me-2\"></i>
+                                            ";
+                            // line 1278
+                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", false, false, false, 1278), "html", null, true);
+                            yield "
+                                            <span class=\"badge bg-warning ms-2\">Bientôt</span>
+                                        </a>
+                                    ";
+                        } else {
+                            // line 1282
+                            yield "                                        <a href=\"";
+                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1282), (isset($context["route_params"]) || array_key_exists("route_params", $context) ? $context["route_params"] : (function () { throw new RuntimeError('Variable "route_params" does not exist.', 1282, $this->source); })())), "html", null, true);
+                            yield "\" 
+                                        class=\"nav-link ";
+                            // line 1283
+                            if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1283) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1283, $this->source); })()))) {
+                                yield "active";
+                            }
+                            yield "\">
+                                            <i class=\"";
+                            // line 1284
+                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", false, false, false, 1284), "html", null, true);
+                            yield " me-2\"></i>
+                                            ";
+                            // line 1285
+                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", false, false, false, 1285), "html", null, true);
+                            yield "
+                                            ";
+                            // line 1286
+                            if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "badge", [], "any", true, true, false, 1286) && CoreExtension::getAttribute($this->env, $this->source, $context["child"], "badge", [], "any", false, false, false, 1286))) {
+                                // line 1287
+                                yield "                                                <span class=\"badge bg-info ms-2\">";
+                                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "badge", [], "any", false, false, false, 1287), "html", null, true);
+                                yield "</span>
+                                            ";
+                            }
+                            // line 1289
+                            yield "                                        </a>
+                                    ";
+                        }
+                        // line 1291
+                        yield "                                ";
+                    } else {
+                        // line 1292
+                        yield "                                    <a href=\"#\" class=\"nav-link disabled\" onclick=\"return false;\">
                                         <i class=\"";
-                        // line 1276
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", false, false, false, 1276), "html", null, true);
-                        yield "\"></i>
+                        // line 1293
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", true, true, false, 1293)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", false, false, false, 1293), "fas fa-ban")) : ("fas fa-ban")), "html", null, true);
+                        yield " me-2\"></i>
                                         ";
-                        // line 1277
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", false, false, false, 1277), "html", null, true);
+                        // line 1294
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", true, true, false, 1294)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", false, false, false, 1294), "Lien indisponible")) : ("Lien indisponible")), "html", null, true);
                         yield "
                                     </a>
                                 ";
                     }
-                    // line 1280
+                    // line 1297
                     yield "                            ";
                 }
                 $_parent = $context['_parent'];
                 unset($context['_seq'], $context['_key'], $context['child'], $context['_parent']);
                 $context = array_intersect_key($context, $_parent) + $_parent;
-                // line 1281
+                // line 1298
                 yield "                        </div>
                     
                     ";
-                // line 1284
+                // line 1301
                 yield "                    ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1284) == "link")) {
-                // line 1285
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1301) == "link")) {
+                // line 1302
                 yield "                        ";
-                $context["counter"] = ((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1285, $this->source); })()) + 1);
-                // line 1286
+                $context["counter"] = ((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1302, $this->source); })()) + 1);
+                // line 1303
                 yield "                        ";
-                if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", true, true, false, 1286)) {
-                    // line 1287
+                if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", true, true, false, 1303)) {
+                    // line 1304
                     yield "                            <a href=\"";
-                    yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1287));
+                    yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1304));
                     yield "\" 
                                class=\"nav-link ";
-                    // line 1288
-                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1288) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1288, $this->source); })()))) {
+                    // line 1305
+                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1305) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1305, $this->source); })()))) {
                         yield "active";
                     }
                     yield "\">
                                 <i class=\"";
-                    // line 1289
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1289), "html", null, true);
+                    // line 1306
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1306), "html", null, true);
                     yield "\"></i>
                                 <span>";
-                    // line 1290
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1290), "html", null, true);
+                    // line 1307
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1307), "html", null, true);
                     yield "</span>
                                 ";
-                    // line 1291
-                    if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "badge", [], "any", true, true, false, 1291)) {
-                        // line 1292
+                    // line 1308
+                    if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "badge", [], "any", true, true, false, 1308)) {
+                        // line 1309
                         yield "                                    <span class=\"badge bg-danger ms-auto\">";
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "badge", [], "any", false, false, false, 1292), "html", null, true);
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "badge", [], "any", false, false, false, 1309), "html", null, true);
                         yield "</span>
                                 ";
                     }
-                    // line 1294
+                    // line 1311
                     yield "                                ";
-                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", true, true, false, 1294) && CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", false, false, false, 1294))) {
-                        // line 1295
+                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", true, true, false, 1311) && CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", false, false, false, 1311))) {
+                        // line 1312
                         yield "                                    <span class=\"badge bg-warning ms-auto\">Bientôt</span>
                                 ";
                     }
-                    // line 1297
+                    // line 1314
                     yield "                            </a>
                         ";
                 } else {
-                    // line 1299
+                    // line 1316
                     yield "                            <a href=\"#\" class=\"nav-link disabled\">
                                 <i class=\"";
-                    // line 1300
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1300), "html", null, true);
+                    // line 1317
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1317), "html", null, true);
                     yield "\"></i>
                                 <span>";
-                    // line 1301
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1301), "html", null, true);
+                    // line 1318
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1318), "html", null, true);
                     yield "</span>
                             </a>
                         ";
                 }
-                // line 1304
+                // line 1321
                 yield "                    
                     ";
-                // line 1306
+                // line 1323
                 yield "                    ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1306) == "title")) {
-                // line 1307
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1323) == "title")) {
+                // line 1324
                 yield "                        <div class=\"menu-title\">";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1307), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1324), "html", null, true);
                 yield "</div>
                     
                     ";
             } else {
-                // line 1310
+                // line 1327
                 yield "                        ";
-                $context["counter"] = ((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1310, $this->source); })()) + 1);
-                // line 1311
+                $context["counter"] = ((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1327, $this->source); })()) + 1);
+                // line 1328
                 yield "                        ";
-                if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", true, true, false, 1311)) {
-                    // line 1312
+                if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", true, true, false, 1328)) {
+                    // line 1329
                     yield "                            <a href=\"";
-                    yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1312));
+                    yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1329));
                     yield "\" 
                                class=\"nav-link ";
-                    // line 1313
-                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1313) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1313, $this->source); })()))) {
+                    // line 1330
+                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1330) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1330, $this->source); })()))) {
                         yield "active";
                     }
                     yield "\">
                                 <i class=\"";
-                    // line 1314
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1314), "html", null, true);
+                    // line 1331
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1331), "html", null, true);
                     yield "\"></i>
                                 <span>";
-                    // line 1315
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1315), "html", null, true);
+                    // line 1332
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1332), "html", null, true);
                     yield "</span>
                             </a>
                         ";
                 } else {
-                    // line 1318
+                    // line 1335
                     yield "                            <a href=\"#\" class=\"nav-link disabled\">
                                 <i class=\"";
-                    // line 1319
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1319), "html", null, true);
+                    // line 1336
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1336), "html", null, true);
                     yield "\"></i>
                                 <span>";
-                    // line 1320
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1320), "html", null, true);
+                    // line 1337
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1337), "html", null, true);
                     yield "</span>
                             </a>
                         ";
                 }
-                // line 1323
+                // line 1340
                 yield "                    ";
             }
-            // line 1324
+            // line 1341
             yield "                ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['item'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 1325
+        // line 1342
         yield "            </div>
         </div>
         
@@ -1781,45 +1823,45 @@ $context["child"], "route", [], "any", true, true, false, 1265)) {
         <main class=\"col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4\">
             <!-- Messages flash -->
             ";
-        // line 1331
+        // line 1348
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1331, $this->source); })()), "flashes", [], "any", false, false, false, 1331));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1348, $this->source); })()), "flashes", [], "any", false, false, false, 1348));
         foreach ($context['_seq'] as $context["label"] => $context["messages"]) {
-            // line 1332
+            // line 1349
             yield "                <div class=\"alert alert-";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["label"], "html", null, true);
             yield " alert-dismissible fade show shadow-sm border-0\" role=\"alert\">
                     <div class=\"d-flex align-items-center\">
                         ";
-            // line 1334
+            // line 1351
             if (($context["label"] == "success")) {
-                // line 1335
+                // line 1352
                 yield "                            <i class=\"bi bi-check-circle-fill me-2\"></i>
                         ";
-            } elseif (((            // line 1336
+            } elseif (((            // line 1353
 $context["label"] == "error") || ($context["label"] == "danger"))) {
-                // line 1337
+                // line 1354
                 yield "                            <i class=\"bi bi-exclamation-circle-fill me-2\"></i>
                         ";
-            } elseif ((            // line 1338
+            } elseif ((            // line 1355
 $context["label"] == "warning")) {
-                // line 1339
+                // line 1356
                 yield "                            <i class=\"bi bi-exclamation-triangle-fill me-2\"></i>
                         ";
-            } elseif ((            // line 1340
+            } elseif ((            // line 1357
 $context["label"] == "info")) {
-                // line 1341
+                // line 1358
                 yield "                            <i class=\"bi bi-info-circle-fill me-2\"></i>
                         ";
             }
-            // line 1343
+            // line 1360
             yield "                        <div>
                             ";
-            // line 1344
+            // line 1361
             $context['_parent'] = $context;
             $context['_seq'] = CoreExtension::ensureTraversable($context["messages"]);
             foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
-                // line 1345
+                // line 1362
                 yield "                                ";
                 yield $context["message"];
                 yield "
@@ -1828,7 +1870,7 @@ $context["label"] == "info")) {
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 1347
+            // line 1364
             yield "                        </div>
                     </div>
                     <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>
@@ -1838,13 +1880,13 @@ $context["label"] == "info")) {
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['label'], $context['messages'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 1352
+        // line 1369
         yield "            
             <!-- Contenu de la page -->
             ";
-        // line 1354
+        // line 1371
         yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
-        // line 1355
+        // line 1372
         yield "        </main>
     </div>
 </div>
@@ -1879,7 +1921,7 @@ $context["label"] == "info")) {
                         <ul class=\"list-unstyled mb-0\">
                             <li class=\"mb-2\">
                                 <a href=\"";
-        // line 1388
+        // line 1405
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_home");
         yield "\" class=\"footer-link\">
                                     <i class=\"bi bi-house-door me-1\"></i>Accueil
@@ -1922,7 +1964,7 @@ $context["label"] == "info")) {
                     <div class=\"col-md-6\">
                         <span class=\"footer-text\">
                             <i class=\"bi bi-copyright me-1\"></i>";
-        // line 1428
+        // line 1445
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate("now", "Y"), "html", null, true);
         yield " HMA Market. Tous droits réservés.
                         </span>
@@ -2136,9 +2178,9 @@ $context["label"] == "info")) {
     
     
     ";
-        // line 1639
+        // line 1656
         yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
-        // line 1640
+        // line 1657
         yield "    ";
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getFunction('encore_entry_script_tags')->getCallable()("app"), "html", null, true);
         yield "
@@ -2199,7 +2241,7 @@ $context["label"] == "info")) {
         yield from [];
     }
 
-    // line 1354
+    // line 1371
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -2221,7 +2263,7 @@ $context["label"] == "info")) {
         yield from [];
     }
 
-    // line 1639
+    // line 1656
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -2264,7 +2306,7 @@ $context["label"] == "info")) {
      */
     public function getDebugInfo(): array
     {
-        return array (  2225 => 1639,  2203 => 1354,  2181 => 975,  2158 => 7,  2142 => 1640,  2140 => 1639,  1926 => 1428,  1883 => 1388,  1848 => 1355,  1846 => 1354,  1842 => 1352,  1832 => 1347,  1823 => 1345,  1819 => 1344,  1816 => 1343,  1812 => 1341,  1810 => 1340,  1807 => 1339,  1805 => 1338,  1802 => 1337,  1800 => 1336,  1797 => 1335,  1795 => 1334,  1789 => 1332,  1785 => 1331,  1777 => 1325,  1771 => 1324,  1768 => 1323,  1762 => 1320,  1758 => 1319,  1755 => 1318,  1749 => 1315,  1745 => 1314,  1739 => 1313,  1734 => 1312,  1731 => 1311,  1728 => 1310,  1721 => 1307,  1718 => 1306,  1715 => 1304,  1709 => 1301,  1705 => 1300,  1702 => 1299,  1698 => 1297,  1694 => 1295,  1691 => 1294,  1685 => 1292,  1683 => 1291,  1679 => 1290,  1675 => 1289,  1669 => 1288,  1664 => 1287,  1661 => 1286,  1658 => 1285,  1655 => 1284,  1651 => 1281,  1645 => 1280,  1639 => 1277,  1635 => 1276,  1632 => 1275,  1628 => 1273,  1624 => 1271,  1622 => 1270,  1618 => 1269,  1614 => 1268,  1608 => 1267,  1603 => 1266,  1601 => 1265,  1598 => 1264,  1595 => 1263,  1591 => 1262,  1583 => 1261,  1580 => 1260,  1576 => 1258,  1574 => 1257,  1570 => 1256,  1566 => 1255,  1562 => 1254,  1555 => 1252,  1551 => 1251,  1548 => 1250,  1542 => 1249,  1539 => 1248,  1536 => 1247,  1533 => 1246,  1528 => 1245,  1525 => 1244,  1522 => 1243,  1519 => 1242,  1513 => 1239,  1510 => 1238,  1508 => 1237,  1504 => 1236,  1501 => 1235,  1498 => 1234,  1495 => 1233,  1493 => 1232,  1478 => 1219,  1467 => 1211,  1457 => 1204,  1448 => 1198,  1443 => 1195,  1433 => 1188,  1430 => 1187,  1428 => 1186,  1417 => 1177,  1413 => 1175,  1409 => 1173,  1407 => 1172,  1404 => 1171,  1402 => 1170,  1399 => 1169,  1397 => 1168,  1394 => 1167,  1392 => 1166,  1389 => 1165,  1386 => 1164,  1384 => 1163,  1378 => 1160,  1373 => 1157,  1367 => 1154,  1364 => 1153,  1358 => 1150,  1353 => 1148,  1348 => 1146,  1343 => 1145,  1341 => 1144,  1338 => 1143,  1335 => 1142,  1332 => 1141,  1330 => 1140,  1317 => 1129,  1313 => 1127,  1309 => 1125,  1307 => 1124,  1304 => 1123,  1302 => 1122,  1299 => 1121,  1297 => 1120,  1294 => 1119,  1292 => 1118,  1289 => 1117,  1286 => 1116,  1284 => 1115,  1278 => 1112,  1273 => 1109,  1267 => 1106,  1264 => 1105,  1258 => 1102,  1253 => 1100,  1248 => 1098,  1243 => 1097,  1241 => 1096,  1238 => 1095,  1235 => 1094,  1232 => 1093,  1230 => 1092,  1225 => 1089,  1223 => 1088,  1219 => 1086,  1216 => 1085,  1208 => 1081,  1205 => 1080,  1202 => 1079,  1200 => 1078,  1182 => 1063,  1157 => 1041,  1142 => 1029,  1137 => 1026,  1124 => 1017,  1121 => 1016,  1115 => 1013,  1109 => 1010,  1104 => 1008,  1099 => 1007,  1094 => 1005,  1089 => 1003,  1084 => 1002,  1082 => 1001,  1079 => 1000,  1076 => 999,  1073 => 998,  1070 => 997,  1068 => 996,  1066 => 995,  1061 => 993,  1049 => 983,  1046 => 982,  1043 => 980,  1040 => 979,  1036 => 976,  1034 => 975,  63 => 7,  59 => 6,  52 => 1,);
+        return array (  2267 => 1656,  2245 => 1371,  2223 => 975,  2200 => 7,  2184 => 1657,  2182 => 1656,  1968 => 1445,  1925 => 1405,  1890 => 1372,  1888 => 1371,  1884 => 1369,  1874 => 1364,  1865 => 1362,  1861 => 1361,  1858 => 1360,  1854 => 1358,  1852 => 1357,  1849 => 1356,  1847 => 1355,  1844 => 1354,  1842 => 1353,  1839 => 1352,  1837 => 1351,  1831 => 1349,  1827 => 1348,  1819 => 1342,  1813 => 1341,  1810 => 1340,  1804 => 1337,  1800 => 1336,  1797 => 1335,  1791 => 1332,  1787 => 1331,  1781 => 1330,  1776 => 1329,  1773 => 1328,  1770 => 1327,  1763 => 1324,  1760 => 1323,  1757 => 1321,  1751 => 1318,  1747 => 1317,  1744 => 1316,  1740 => 1314,  1736 => 1312,  1733 => 1311,  1727 => 1309,  1725 => 1308,  1721 => 1307,  1717 => 1306,  1711 => 1305,  1706 => 1304,  1703 => 1303,  1700 => 1302,  1697 => 1301,  1693 => 1298,  1687 => 1297,  1681 => 1294,  1677 => 1293,  1674 => 1292,  1671 => 1291,  1667 => 1289,  1661 => 1287,  1659 => 1286,  1655 => 1285,  1651 => 1284,  1645 => 1283,  1640 => 1282,  1633 => 1278,  1629 => 1277,  1626 => 1276,  1623 => 1275,  1620 => 1273,  1617 => 1272,  1614 => 1271,  1611 => 1270,  1608 => 1268,  1605 => 1267,  1603 => 1266,  1601 => 1265,  1598 => 1264,  1595 => 1263,  1591 => 1262,  1583 => 1261,  1580 => 1260,  1576 => 1258,  1574 => 1257,  1570 => 1256,  1566 => 1255,  1562 => 1254,  1555 => 1252,  1551 => 1251,  1548 => 1250,  1542 => 1249,  1539 => 1248,  1536 => 1247,  1533 => 1246,  1528 => 1245,  1525 => 1244,  1522 => 1243,  1519 => 1242,  1513 => 1239,  1510 => 1238,  1508 => 1237,  1504 => 1236,  1501 => 1235,  1498 => 1234,  1495 => 1233,  1493 => 1232,  1478 => 1219,  1467 => 1211,  1457 => 1204,  1448 => 1198,  1443 => 1195,  1433 => 1188,  1430 => 1187,  1428 => 1186,  1417 => 1177,  1413 => 1175,  1409 => 1173,  1407 => 1172,  1404 => 1171,  1402 => 1170,  1399 => 1169,  1397 => 1168,  1394 => 1167,  1392 => 1166,  1389 => 1165,  1386 => 1164,  1384 => 1163,  1378 => 1160,  1373 => 1157,  1367 => 1154,  1364 => 1153,  1358 => 1150,  1353 => 1148,  1348 => 1146,  1343 => 1145,  1341 => 1144,  1338 => 1143,  1335 => 1142,  1332 => 1141,  1330 => 1140,  1317 => 1129,  1313 => 1127,  1309 => 1125,  1307 => 1124,  1304 => 1123,  1302 => 1122,  1299 => 1121,  1297 => 1120,  1294 => 1119,  1292 => 1118,  1289 => 1117,  1286 => 1116,  1284 => 1115,  1278 => 1112,  1273 => 1109,  1267 => 1106,  1264 => 1105,  1258 => 1102,  1253 => 1100,  1248 => 1098,  1243 => 1097,  1241 => 1096,  1238 => 1095,  1235 => 1094,  1232 => 1093,  1230 => 1092,  1225 => 1089,  1223 => 1088,  1219 => 1086,  1216 => 1085,  1208 => 1081,  1205 => 1080,  1202 => 1079,  1200 => 1078,  1182 => 1063,  1157 => 1041,  1142 => 1029,  1137 => 1026,  1124 => 1017,  1121 => 1016,  1115 => 1013,  1109 => 1010,  1104 => 1008,  1099 => 1007,  1094 => 1005,  1089 => 1003,  1084 => 1002,  1082 => 1001,  1079 => 1000,  1076 => 999,  1073 => 998,  1070 => 997,  1068 => 996,  1066 => 995,  1061 => 993,  1049 => 983,  1046 => 982,  1043 => 980,  1040 => 979,  1036 => 976,  1034 => 975,  63 => 7,  59 => 6,  52 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -3534,18 +3576,35 @@ $context["label"] == "info")) {
                                 {% if child.type is defined and child.type == 'divider' %}
                                     <hr class=\"dropdown-divider\">
                                 {% elseif child.route is defined %}
-                                    <a href=\"{{ path(child.route) }}\" 
-                                       class=\"nav-link {% if child.route == currentRoute %}active{% endif %}\">
-                                        <i class=\"{{ child.icon }}\"></i>
-                                        {{ child.label }}
-                                        {% if child.coming_soon is defined and child.coming_soon %}
-                                            <span class=\"badge bg-warning ms-auto\">Bientôt</span>
-                                        {% endif %}
-                                    </a>
+                                    {# Gestion sécurisée des paramètres de route #}
+                                    {% set route_params = child.params|default({}) %}
+                                    
+                                    {# Pour la route des lots, on ajoute un productId par défaut si absent #}
+                                    {% if child.route == 'app_admin_stock_batch_index' and route_params.productId is not defined %}
+                                        {% set route_params = route_params|merge({'productId': 0}) %}
+                                    {% endif %}
+                                    
+                                    {# Si la route est en développement, lien désactivé #}
+                                    {% if child.coming_soon is defined and child.coming_soon %}
+                                        <a href=\"#\" class=\"nav-link disabled\" onclick=\"return false;\">
+                                            <i class=\"{{ child.icon }} me-2\"></i>
+                                            {{ child.label }}
+                                            <span class=\"badge bg-warning ms-2\">Bientôt</span>
+                                        </a>
+                                    {% else %}
+                                        <a href=\"{{ path(child.route, route_params) }}\" 
+                                        class=\"nav-link {% if child.route == currentRoute %}active{% endif %}\">
+                                            <i class=\"{{ child.icon }} me-2\"></i>
+                                            {{ child.label }}
+                                            {% if child.badge is defined and child.badge %}
+                                                <span class=\"badge bg-info ms-2\">{{ child.badge }}</span>
+                                            {% endif %}
+                                        </a>
+                                    {% endif %}
                                 {% else %}
-                                    <a href=\"#\" class=\"nav-link disabled\">
-                                        <i class=\"{{ child.icon }}\"></i>
-                                        {{ child.label }}
+                                    <a href=\"#\" class=\"nav-link disabled\" onclick=\"return false;\">
+                                        <i class=\"{{ child.icon|default('fas fa-ban') }} me-2\"></i>
+                                        {{ child.label|default('Lien indisponible') }}
                                     </a>
                                 {% endif %}
                             {% endfor %}

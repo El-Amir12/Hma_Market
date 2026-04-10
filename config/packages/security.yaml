@@ -36,17 +36,7 @@ security:
             provider: chain_provider
             user_checker: App\Security\UserChecker
             
-            form_login:
-                login_path: app_login
-                check_path: app_login
-                username_parameter: email
-                password_parameter: password
-                enable_csrf: true
-                require_previous_session: false
-                default_target_path: app_home
-                always_use_default_target_path: false
-                use_referer: false
-                success_handler: App\Security\LoginSuccessHandler
+            custom_authenticator: App\Security\LoginFormAuthentificatorAuthenticator
             
             logout:
                 path: app_logout
@@ -57,7 +47,7 @@ security:
             
             remember_me:
                 secret: '%kernel.secret%'
-                lifetime: 604800 # 7 jours
+                lifetime: 604800
                 path: /
                 always_remember_me: false
                 remember_me_parameter: '_remember_me'
@@ -104,9 +94,15 @@ security:
         - { path: ^/admin/, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
 
         # ============================================
-        # 3.5. ROUTES APPROVISIONNEMENT (ACHATS)
+        # 3.1. ROUTES APPROVISIONNEMENT (ACHATS)
         # ============================================
         - { path: ^/purchase, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER, ROLE_CASHIER] }
+
+        # ============================================
+        # 3.2. ROUTES APPROVISIONNEMENT (ACHATS)
+        # ============================================
+        - { path: ^/admin/stock-batch, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER, ROLE_CASHIER] }
+
 
         # ============================================
         # 4. ROUTES PAR RÔLE SPÉCIFIQUE

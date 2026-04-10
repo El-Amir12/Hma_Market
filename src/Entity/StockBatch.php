@@ -49,6 +49,16 @@ class StockBatch
     #[ORM\Column(nullable: true)]
     private ?bool $is_active = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $location = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Location $locationEntity = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updated_at = null;
+
     // Ajouter la relation vers StockMovement
     #[ORM\OneToMany(targetEntity: StockMovement::class, mappedBy: 'stock_batch')]
     private Collection $stockMovements;
@@ -184,6 +194,50 @@ class StockBatch
     {
         $this->is_active = $is_active;
 
+        return $this;
+    }
+
+    public function getLocation(): ?string
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?string $location): static
+    {
+        $this->location = $location;
+        return $this;
+    }
+
+    public function getLocationEntity(): ?Location
+    {
+        return $this->locationEntity;
+    }
+
+    public function setLocationEntity(?Location $locationEntity): static
+    {
+        $this->locationEntity = $locationEntity;
+        // Synchroniser pour compatibilité
+        $this->location = $locationEntity?->getDisplayName();
+        return $this;
+    }
+
+    // Méthode utilitaire pour afficher l'emplacement
+    public function getLocationDisplay(): string
+    {
+        if ($this->locationEntity) {
+            return $this->locationEntity->getDisplayName();
+        }
+        return $this->location ?: 'Non défini';
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updated_at): static
+    {
+        $this->updated_at = $updated_at;
         return $this;
     }
 

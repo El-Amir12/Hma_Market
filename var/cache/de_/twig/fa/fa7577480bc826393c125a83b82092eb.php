@@ -91,8 +91,8 @@ class __TwigTemplate_984894b16e24130299d15601af89c26c extends Template
             <thead>
                  <tr>
                     <th>Produit</th>
-                    <th>Unité</th>
                     <th>Quantité</th>
+                    <th>Unité</th>
                     <th>Prix unitaire</th>
                     <th>Total</th>
                  </tr>
@@ -111,11 +111,11 @@ class __TwigTemplate_984894b16e24130299d15601af89c26c extends Template
             yield "</td>
                     <td>";
             // line 45
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product", [], "any", false, true, false, 45), "unit", [], "any", true, true, false, 45)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product", [], "any", false, false, false, 45), "unit", [], "any", false, false, false, 45), "pièce")) : ("pièce")), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 45), "html", null, true);
             yield "</td>
                     <td>";
             // line 46
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 46), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product", [], "any", false, true, false, 46), "unit", [], "any", true, true, false, 46)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product", [], "any", false, false, false, 46), "unit", [], "any", false, false, false, 46), "pièce")) : ("pièce")), "html", null, true);
             yield "</td>
                     <td>";
             // line 47
@@ -227,8 +227,8 @@ class __TwigTemplate_984894b16e24130299d15601af89c26c extends Template
             <thead>
                  <tr>
                     <th>Produit</th>
-                    <th>Unité</th>
                     <th>Quantité</th>
+                    <th>Unité</th>
                     <th>Prix unitaire</th>
                     <th>Total</th>
                  </tr>
@@ -237,8 +237,8 @@ class __TwigTemplate_984894b16e24130299d15601af89c26c extends Template
                 {% for item in purchase.purchaseItems %}
                 <tr>
                     <td>{{ item.product.name }}</td>
-                    <td>{{ item.product.unit|default('pièce') }}</td>
                     <td>{{ item.quantity }}</td>
+                    <td>{{ item.product.unit|default('pièce') }}</td>
                     <td>{{ item.unitPrice|number_format(0, ',', ' ') }} FCFA</td>
                     <td>{{ item.totalPrice|number_format(0, ',', ' ') }} FCFA</td>
                 </tr>

@@ -214,6 +214,9 @@ final class ProductController extends AbstractController
         $limits = $hmaService->getCurrentLimits();
         $quota = $limits['max_products'] ?? PHP_INT_MAX;
         $quotaReached = $quota !== PHP_INT_MAX && $activeCount >= $quota;
+        $type_promotion = $promotionId > 0 ? $entityManager->getRepository(Promotion::class)->find($promotionId)?->getTypePromotion() : null;
+
+         // Si une promotion est sélectionnée, filtrer les produits pour n'afficher que ceux qui correspondent au type de promotion
 
         $totalItems = $paginator->count();
         $totalPages = ceil($totalItems / $limit);
@@ -245,6 +248,7 @@ final class ProductController extends AbstractController
             'quotaReached' => $quotaReached,
             'companyType' => $hmaService->getType(),
             'promotions' => $promotions,
+            'typePromotion' => $type_promotion,
             'selectedPromotion' => $promotionId,
             'units' => $units,          // Ajout
             'selectedUnit' => $unit,    // Ajout
@@ -581,5 +585,50 @@ final class ProductController extends AbstractController
         $date = date('Ymd');
         $random = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
         return 'PROD-' . $date . '-' . $random;
+    }
+
+    #[Route('/{id}/stock-batches', name: 'app_admin_product_stock_batches', methods: ['GET'])]
+    public function stockBatches(Product $product): Response
+    {
+        $this->checkAccess();
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé.');
+        }
+        $this->checkOwnership($product, $hmaService);
+        
+        return $this->redirectToRoute('app_admin_stock_batch_index', ['productId' => $product->getId()]);
+    }
+
+    #[Route('/{id}/print-barcode', name: 'app_admin_product_print_barcode', methods: ['GET'])]
+    public function printBarcode(Product $product): Response
+    {
+        $this->checkAccess();
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé.');
+        }
+        $this->checkOwnership($product, $hmaService);
+
+        return $this->render('admin/product/print_barcode.html.twig', [
+            'product' => $product,
+            'companyType' => $hmaService->getType(),
+        ]);
+    }
+
+    #[Route('/{id}/print-sheet', name: 'app_admin_product_print_sheet', methods: ['GET'])]
+    public function printSheet(Product $product): Response
+    {
+        $this->checkAccess();
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé.');
+        }
+        $this->checkOwnership($product, $hmaService);
+
+        return $this->render('admin/product/print_sheet.html.twig', [
+            'product' => $product,
+            'companyType' => $hmaService->getType(),
+        ]);
     }
 }

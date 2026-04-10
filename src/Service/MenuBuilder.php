@@ -258,7 +258,14 @@ class MenuBuilder
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_admin_supplier_new', 
+                        'route' => 'app_admin_location_index', 
+                        'label' => 'Emplacement',
+                        'icon' => 'fas fa-map-marker-alt',
+                        'coming_soon' => false
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_admin_stock_batch_all', 
                         'label' => 'Gestion des lots',
                         'icon' => 'fas fa-cubes',
                         'coming_soon' => false
@@ -436,7 +443,14 @@ class MenuBuilder
             ],
             [
                 'type' => 'link',
-                'route' => 'app_admin_category_index',
+                'route' => 'app_admin_location_index', 
+                'label' => 'Emplacement',
+                'icon' => 'fas fa-map-marker-alt',
+                'coming_soon' => false
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_stock_batch_all',
                 'label' => 'Gestion des lots',
                 'icon' => 'fas fa-cubes',
                 'coming_soon' => false
@@ -564,10 +578,10 @@ class MenuBuilder
             ],
             [
                 'type' => 'link',
-                'route' => 'app_user_index', // Temporaire
+                'route' => 'app_admin_stock_batch_all', 
                 'label' => 'Dashboard stock',
                 'icon' => 'fas fa-chart-pie',
-                'coming_soon' => true
+                'coming_soon' => false
             ],
             [
                 'type' => 'dropdown',
@@ -618,7 +632,14 @@ class MenuBuilder
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_admin_supplier_new', // À remplacer par la vraie route
+                        'route' => 'app_admin_location_index',
+                        'label' => 'Emplacement',
+                        'icon' => 'fas fa-map-marker-alt',
+                        'coming_soon' => false
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_admin_stock_batch_index', 
                         'label' => 'Gestion des lots',
                         'icon' => 'fas fa-cubes',
                         'coming_soon' => false
@@ -630,48 +651,175 @@ class MenuBuilder
 
     private function getCashierMenu(): array
     {
-        return [
+        $menu = [
             [
                 'type' => 'section',
                 'label' => 'CAISSE'
             ],
             [
                 'type' => 'link',
-                'route' => 'app_user_index', // Temporaire
+                'route' => 'app_user_index',
                 'label' => 'Caisse',
                 'icon' => 'fas fa-cash-register',
-                'badge' => 'Bientôt',
-                'coming_soon' => true
-            ],
-            [
-                'type' => 'dropdown',
-                'label' => 'Ventes',
-                'icon' => 'fas fa-receipt',
-                'children' => [
-                    [
-                        'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
-                        'label' => 'Ventes du jour',
-                        'icon' => 'fas fa-sun',
-                        'coming_soon' => true
-                    ],
-                    [
-                        'type' => 'link',
-                        'route' => 'app_user_index', // Temporaire
-                        'label' => 'Historique',
-                        'icon' => 'fas fa-history',
-                        'coming_soon' => true
-                    ]
-                ]
-            ],
-            [
-                'type' => 'link',
-                'route' => 'app_user_index', // Temporaire
-                'label' => 'Retours',
-                'icon' => 'fas fa-undo-alt',
-                'coming_soon' => true
+                'coming_soon' => false
             ]
         ];
+
+        // Section Catalogue pour caissier (non restaurant)
+        if (!$this->isRestaurant()) {
+            $catalogueChildren = [
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_category_index',
+                    'label' => 'Catégories',
+                    'icon' => 'fas fa-tags',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_product_index', 
+                    'label' => 'Produits',
+                    'icon' => 'fas fa-boxes',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_stock_batch_all',
+                    'label' => 'Stock',
+                    'icon' => 'fas fa-cubes',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_location_index',
+                    'label' => 'Emplacements',
+                    'icon' => 'fas fa-map-marker-alt',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_promotion_index', 
+                    'label' => 'Promotions',
+                    'icon' => 'fas fa-percent',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_promotion_category_index', 
+                    'label' => 'Catégories promo',
+                    'icon' => 'fas fa-tags',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_promotion_product_index',
+                    'label' => 'Promotions des produits',
+                    'icon' => 'fas fa-tag',
+                    'coming_soon' => false
+                ]
+            ];
+
+            $menu[] = [
+                'type' => 'dropdown',
+                'label' => 'Catalogue',
+                'icon' => 'fas fa-th',
+                'children' => $catalogueChildren
+            ];
+        }
+
+        // Section Restauration pour caissier (restaurant)
+        if ($this->isRestaurant()) {
+            $restaurantChildren = [
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_category_recipe_index', 
+                    'label' => 'Catégories de plats',
+                    'icon' => 'fas fa-utensils',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_recipe_index',
+                    'label' => 'Plats',
+                    'icon' => 'fas fa-hamburger',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_stock_batch_all',
+                    'label' => 'Stock',
+                    'icon' => 'fas fa-cubes',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_location_index',
+                    'label' => 'Emplacements',
+                    'icon' => 'fas fa-map-marker-alt',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_promotion_index', 
+                    'label' => 'Promotions',
+                    'icon' => 'fas fa-percent',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_restaurant_promotion_category_index', 
+                    'label' => 'Catégories promo',
+                    'icon' => 'fas fa-tags',
+                    'coming_soon' => false
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_restaurant_promotion_recipe_index', 
+                    'label' => 'Promotions des plats',
+                    'icon' => 'fas fa-tag',
+                    'coming_soon' => false
+                ]
+            ];
+
+            $menu[] = [
+                'type' => 'dropdown',
+                'label' => 'Restauration',
+                'icon' => 'fas fa-utensils',
+                'children' => $restaurantChildren
+            ];
+        }
+
+        // Section Ventes (commune aux deux types)
+        $menu[] = [
+            'type' => 'dropdown',
+            'label' => 'Ventes',
+            'icon' => 'fas fa-receipt',
+            'children' => [
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index',
+                    'label' => 'Ventes du jour',
+                    'icon' => 'fas fa-sun',
+                    'coming_soon' => true
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index',
+                    'label' => 'Historique',
+                    'icon' => 'fas fa-history',
+                    'coming_soon' => true
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_user_index',
+                    'label' => 'Factures',
+                    'icon' => 'fas fa-file-invoice',
+                    'coming_soon' => true
+                ]
+            ]
+        ];
+
+        return $menu;
     }
 
     private function getReportsMenu(): array

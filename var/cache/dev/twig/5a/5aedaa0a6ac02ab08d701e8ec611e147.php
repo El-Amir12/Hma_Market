@@ -37,7 +37,7 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
 
     protected function doGetParent(array $context): bool|string|Template|TemplateWrapper
     {
-        // line 1
+        // line 2
         return "base-auth.html.twig";
     }
 
@@ -50,7 +50,7 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "security/login.html.twig"));
 
-        $this->parent = $this->load("base-auth.html.twig", 1);
+        $this->parent = $this->load("base-auth.html.twig", 2);
         yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
         
         $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
@@ -60,7 +60,7 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
 
     }
 
-    // line 3
+    // line 4
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -83,7 +83,7 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
         yield from [];
     }
 
-    // line 5
+    // line 6
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -96,9 +96,8 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 6
+        // line 7
         yield "<div class=\"row g-4\">
-    <!-- Formulaire de Connexion -->
     <div class=\"col-lg-6\">
         <div class=\"form-container\">
             <div class=\"text-center mb-4\">
@@ -109,39 +108,66 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
             </div>
             
             ";
-        // line 17
-        if ((($tmp = (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 17, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 18
+        // line 18
+        yield "            ";
+        if ((($tmp = (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 18, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 19
             yield "            <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
                 <i class=\"fas fa-exclamation-circle me-2\"></i>
                 ";
-            // line 20
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans(CoreExtension::getAttribute($this->env, $this->source, (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 20, $this->source); })()), "messageKey", [], "any", false, false, false, 20), CoreExtension::getAttribute($this->env, $this->source, (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 20, $this->source); })()), "messageData", [], "any", false, false, false, 20), "security"), "html", null, true);
+            // line 21
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans(CoreExtension::getAttribute($this->env, $this->source, (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 21, $this->source); })()), "messageKey", [], "any", false, false, false, 21), CoreExtension::getAttribute($this->env, $this->source, (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 21, $this->source); })()), "messageData", [], "any", false, false, false, 21), "security"), "html", null, true);
             yield "
                 <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
             </div>
             ";
         }
-        // line 24
+        // line 25
         yield "            
             ";
-        // line 25
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 25, $this->source); })()), "user", [], "any", false, false, false, 25)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 26
+        // line 27
+        yield "            ";
+        $context["login_warning"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 27, $this->source); })()), "session", [], "any", false, false, false, 27), "get", ["_login_warning"], "method", false, false, false, 27);
+        // line 28
+        yield "            
+            ";
+        // line 29
+        if ((($tmp = (isset($context["login_warning"]) || array_key_exists("login_warning", $context) ? $context["login_warning"] : (function () { throw new RuntimeError('Variable "login_warning" does not exist.', 29, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 30
+            yield "            <div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\">
+                <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                ";
+            // line 32
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["login_warning"]) || array_key_exists("login_warning", $context) ? $context["login_warning"] : (function () { throw new RuntimeError('Variable "login_warning" does not exist.', 32, $this->source); })()), "html", null, true);
+            yield "
+                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
+            </div>
+            ";
+            // line 35
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 35, $this->source); })()), "session", [], "any", false, false, false, 35), "remove", ["_login_warning"], "method", false, false, false, 35), "html", null, true);
+            yield "
+            ";
+        }
+        // line 37
+        yield "            
+            ";
+        // line 38
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 38, $this->source); })()), "user", [], "any", false, false, false, 38)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 39
             yield "            <div class=\"alert alert-info\">
                 <i class=\"fas fa-info-circle me-2\"></i>
                 Vous êtes connecté en tant que <strong>";
-            // line 28
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 28, $this->source); })()), "user", [], "any", false, false, false, 28), "userIdentifier", [], "any", false, false, false, 28), "html", null, true);
+            // line 41
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 41, $this->source); })()), "user", [], "any", false, false, false, 41), "userIdentifier", [], "any", false, false, false, 41), "html", null, true);
             yield "</strong>
                 <a href=\"";
-            // line 29
+            // line 42
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
             yield "\" class=\"alert-link ms-2\">Déconnexion</a>
             </div>
             ";
         }
-        // line 32
+        // line 45
         yield "            
             <form method=\"post\">
                 <div class=\"mb-4\">
@@ -150,8 +176,8 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
                     </label>
                     <input type=\"email\" 
                            value=\"";
-        // line 39
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["last_username"]) || array_key_exists("last_username", $context) ? $context["last_username"] : (function () { throw new RuntimeError('Variable "last_username" does not exist.', 39, $this->source); })()), "html", null, true);
+        // line 52
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["last_username"]) || array_key_exists("last_username", $context) ? $context["last_username"] : (function () { throw new RuntimeError('Variable "last_username" does not exist.', 52, $this->source); })()), "html", null, true);
         yield "\" 
                            name=\"email\" 
                            id=\"inputEmail\" 
@@ -168,7 +194,7 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
                             <i class=\"fas fa-lock me-2 text-primary\"></i>Mot de passe
                         </label>
                         <a href=\"";
-        // line 54
+        // line 67
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_forgot_password_request");
         yield "\" class=\"text-decoration-none small\">
                             <i class=\"fas fa-key me-1\"></i>Mot de passe oublié ?
@@ -193,7 +219,7 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
                 </div>
                 
                 <input type=\"hidden\" name=\"_csrf_token\" value=\"";
-        // line 76
+        // line 89
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken("authenticate"), "html", null, true);
         yield "\">
                 
@@ -207,7 +233,7 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
                     <p class=\"text-muted mb-0\">
                         Vous n'avez pas de compte ? 
                         <a href=\"";
-        // line 87
+        // line 100
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
         yield "\" class=\"text-decoration-none fw-semibold\">
                             Créer un compte entreprise
@@ -330,7 +356,7 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
             <!-- CTA -->
             <div class=\"text-center mt-5\">
                 <a href=\"";
-        // line 207
+        // line 220
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
         yield "\" class=\"btn btn-outline-primary px-4 py-3 fw-semibold\">
                     <i class=\"fas fa-rocket me-2\"></i>Essai gratuit 14 jours
@@ -373,18 +399,18 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  334 => 207,  211 => 87,  197 => 76,  172 => 54,  154 => 39,  145 => 32,  139 => 29,  135 => 28,  131 => 26,  129 => 25,  126 => 24,  119 => 20,  115 => 18,  113 => 17,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  360 => 220,  237 => 100,  223 => 89,  198 => 67,  180 => 52,  171 => 45,  165 => 42,  161 => 41,  157 => 39,  155 => 38,  152 => 37,  147 => 35,  141 => 32,  137 => 30,  135 => 29,  132 => 28,  129 => 27,  126 => 25,  119 => 21,  115 => 19,  112 => 18,  100 => 7,  87 => 6,  64 => 4,  41 => 2,);
     }
 
     public function getSourceContext(): Source
     {
-        return new Source("{% extends 'base-auth.html.twig' %}
+        return new Source("{# templates/security/login.html.twig #}
+{% extends 'base-auth.html.twig' %}
 
 {% block title %}Connexion - HMA Market{% endblock %}
 
 {% block body %}
 <div class=\"row g-4\">
-    <!-- Formulaire de Connexion -->
     <div class=\"col-lg-6\">
         <div class=\"form-container\">
             <div class=\"text-center mb-4\">
@@ -394,12 +420,25 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
                 <p class=\"text-muted\">Accédez à votre tableau de bord HMA Market</p>
             </div>
             
+            {# Affichage des erreurs d'authentification (y compris compte bloqué) #}
             {% if error %}
             <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
                 <i class=\"fas fa-exclamation-circle me-2\"></i>
                 {{ error.messageKey|trans(error.messageData, 'security') }}
                 <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
             </div>
+            {% endif %}
+            
+            {# Affichage des avertissements (tentatives restantes) #}
+            {% set login_warning = app.session.get('_login_warning') %}
+            
+            {% if login_warning %}
+            <div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\">
+                <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                {{ login_warning }}
+                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
+            </div>
+            {{ app.session.remove('_login_warning') }}
             {% endif %}
             
             {% if app.user %}

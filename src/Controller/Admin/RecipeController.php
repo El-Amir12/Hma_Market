@@ -118,6 +118,7 @@ final class RecipeController extends AbstractController
             'activeCount' => $activeCount,
             'quota' => $quota === PHP_INT_MAX ? 'Illimité' : $quota,
             'quotaReached' => $quotaReached,
+            'companyType' => $hmaService->getType(),
         ]);
     }
 
@@ -232,6 +233,7 @@ final class RecipeController extends AbstractController
             'paginatedItems' => $paginator->getIterator(),
             'currentPage' => $page,
             'totalPages' => $totalPages,
+            'companyType' => $hmaService->getType(),
         ]);
     }
     #[Route('/{id}/edit', name: 'app_admin_recipe_edit', methods: ['GET', 'POST'])]

@@ -237,6 +237,13 @@
                         <a href="{{ path('app_admin_product_new') }}?category={{ category.id }}" class="btn btn-primary btn-lg">
                             <i class="fas fa-plus me-2"></i> Ajouter un produit
                         </a>
+                        {% if companyType != 'restaurant' %}
+                            <a href="{{ path('app_admin_category_promotions', {'id': category.id}) }}" 
+                                class="btn btn-sm btn-outline-warning" title="Promotions">
+                                <i class="fas fa-percent"></i> Promotions
+                            </a>
+                        {% endif %}    
+                        
                     </div>
                 </div>
             </div>

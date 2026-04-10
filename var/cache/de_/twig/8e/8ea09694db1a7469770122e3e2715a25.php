@@ -569,7 +569,7 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
                                                             <i class=\"fas fa-box me-1\"></i>
                                                             Quantité: ";
                 // line 300
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "quantity", [], "any", false, false, false, 300), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "initialQuantity", [], "any", false, false, false, 300), "html", null, true);
                 yield "
                                                             ";
                 // line 301
@@ -632,26 +632,24 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
                                         <a href=\"";
                 // line 324
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_stock_batch_index", ["productId" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 324, $this->source); })()), "id", [], "any", false, false, false, 324)]), "html", null, true);
-                yield "\" class=\"btn btn-sm btn-outline-primary\">
-                                            Voir tous les lots (";
-                // line 325
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 325, $this->source); })()), "stockBatches", [], "any", false, false, false, 325)), "html", null, true);
-                yield ")
+                yield "\" 
+                                            class=\"btn btn-sm btn-outline-info flex-fill\" title=\"Lots de stock\">
+                                            <i class=\"fas fa-boxes\"></i> Lots
                                         </a>
                                     </div>
                                 ";
             }
-            // line 329
+            // line 330
             yield "                            ";
         } else {
-            // line 330
+            // line 331
             yield "                                <div class=\"text-center py-4\">
                                     <i class=\"fas fa-box-open fa-3x text-muted mb-3\"></i>
                                     <p class=\"text-muted mb-0\">Aucun mouvement de stock enregistré</p>
                                 </div>
                             ";
         }
-        // line 335
+        // line 336
         yield "                        </div>
                     </div>
                 </div>
@@ -670,16 +668,40 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
                 <div class=\"card-body\">
                     <div class=\"d-grid gap-2\">
                         <a href=\"";
-        // line 352
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 352, $this->source); })()), "id", [], "any", false, false, false, 352)]), "html", null, true);
+        // line 353
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 353, $this->source); })()), "id", [], "any", false, false, false, 353)]), "html", null, true);
         yield "\" 
                            class=\"btn btn-warning\">
                             <i class=\"fas fa-edit me-2\"></i> Modifier le produit
                         </a>
+
+                        <div class=\"dropdown\">
+                            <button class=\"btn btn-outline-primary dropdown-toggle w-100\" type=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">
+                                <i class=\"fas fa-print me-2\"></i> Imprimer
+                            </button>
+                            <ul class=\"dropdown-menu w-100\">
+                                <li>
+                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open('";
+        // line 364
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_print_barcode", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 364, $this->source); })()), "id", [], "any", false, false, false, 364)]), "html", null, true);
+        yield "', '_blank'); return false;\">
+                                        <i class=\"fas fa-barcode me-2\"></i> Étiquette code-barres
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open('";
+        // line 369
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_print_sheet", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 369, $this->source); })()), "id", [], "any", false, false, false, 369)]), "html", null, true);
+        yield "', '_blank'); return false;\">
+                                        <i class=\"fas fa-file-alt me-2\"></i> Fiche produit
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                         
                         <a href=\"";
-        // line 357
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_purchase_new", ["productId" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 357, $this->source); })()), "id", [], "any", false, false, false, 357)]), "html", null, true);
+        // line 376
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_cart");
         yield "\" 
                            class=\"btn btn-success\">
                             <i class=\"fas fa-plus me-2\"></i> Nouvel achat
@@ -687,8 +709,8 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
                         
                         <!-- Lien vers les lots -->
                         <a href=\"";
-        // line 363
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_stock_batch_index", ["productId" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 363, $this->source); })()), "id", [], "any", false, false, false, 363)]), "html", null, true);
+        // line 382
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_stock_batch_index", ["productId" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 382, $this->source); })()), "id", [], "any", false, false, false, 382)]), "html", null, true);
         yield "\" 
                            class=\"btn btn-outline-info\">
                             <i class=\"fas fa-boxes me-2\"></i> Gérer les lots
@@ -701,83 +723,92 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
                         
                         <!-- Lien vers les commandes liées (si pas restaurant) -->
                         ";
-        // line 374
-        if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 374, $this->source); })()) != "restaurant")) {
-            // line 375
+        // line 393
+        if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 393, $this->source); })()) != "restaurant")) {
+            // line 394
             yield "                        <a href=\"#\" class=\"btn btn-outline-success\">
                             <i class=\"fas fa-shopping-cart me-2\"></i> Commandes liées
                         </a>
                         ";
         }
-        // line 379
+        // line 398
         yield "                        
-                        <!-- Lien vers les promotions (à créer) -->
-                        <a href=\"#\" class=\"btn btn-outline-warning\">
-                            <i class=\"fas fa-tags me-2\"></i> Promotions
-                        </a>
-                        
+                        ";
+        // line 399
+        if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 399, $this->source); })()) != "restaurant")) {
+            // line 400
+            yield "                            <a href=\"";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_promotions", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 400, $this->source); })()), "id", [], "any", false, false, false, 400)]), "html", null, true);
+            yield "\" 
+                            class=\"btn btn-sm btn-outline-warning flex-fill\" title=\"Promotions\">
+                                <i class=\"fas fa-tags me-1\"></i> Promos
+                            </a>
+                        ";
+        }
+        // line 405
+        yield "                        
                         <!-- Bouton toggle status (ouvre modal) -->
                         <button type=\"button\" 
                                 class=\"btn btn-outline-secondary toggle-status-btn\"
                                 data-bs-toggle=\"modal\" 
                                 data-bs-target=\"#toggleStatusModal\"
                                 data-product-id=\"";
-        // line 390
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 390, $this->source); })()), "id", [], "any", false, false, false, 390), "html", null, true);
+        // line 411
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 411, $this->source); })()), "id", [], "any", false, false, false, 411), "html", null, true);
         yield "\"
                                 data-product-name=\"";
-        // line 391
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 391, $this->source); })()), "name", [], "any", false, false, false, 391), "html", null, true);
+        // line 412
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 412, $this->source); })()), "name", [], "any", false, false, false, 412), "html", null, true);
         yield "\"
                                 data-is-active=\"";
-        // line 392
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 392, $this->source); })()), "isActive", [], "any", false, false, false, 392)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("1") : ("0"));
+        // line 413
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 413, $this->source); })()), "isActive", [], "any", false, false, false, 413)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("1") : ("0"));
         yield "\"
                                 data-token=\"";
-        // line 393
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("toggle-status" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 393, $this->source); })()), "id", [], "any", false, false, false, 393))), "html", null, true);
+        // line 414
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("toggle-status" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 414, $this->source); })()), "id", [], "any", false, false, false, 414))), "html", null, true);
         yield "\">
                             <i class=\"fas ";
-        // line 394
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 394, $this->source); })()), "isActive", [], "any", false, false, false, 394)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("fa-toggle-on") : ("fa-toggle-off"));
+        // line 415
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 415, $this->source); })()), "isActive", [], "any", false, false, false, 415)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("fa-toggle-on") : ("fa-toggle-off"));
         yield " me-2\"></i>
                             ";
-        // line 395
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 395, $this->source); })()), "isActive", [], "any", false, false, false, 395)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Désactiver le produit") : ("Activer le produit"));
+        // line 416
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 416, $this->source); })()), "isActive", [], "any", false, false, false, 416)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Désactiver le produit") : ("Activer le produit"));
         yield "
                         </button>
                         
                         <!-- Bouton supprimer (visible pour admin) -->
                         ";
-        // line 399
+        // line 420
         if ((($tmp = $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN")) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 400
+            // line 421
             yield "                            ";
-            $context["hasDependencies"] = ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 400, $this->source); })()), "purchaseItems", [], "any", false, false, false, 400)) > 0) || (Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 400, $this->source); })()), "stockBatches", [], "any", false, false, false, 400)) > 0));
-            // line 401
+            $context["hasDependencies"] = ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 421, $this->source); })()), "purchaseItems", [], "any", false, false, false, 421)) > 0) || (Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 421, $this->source); })()), "stockBatches", [], "any", false, false, false, 421)) > 0));
+            // line 422
             yield "                            <button type=\"button\" 
                                     class=\"btn btn-outline-danger delete-product-btn\"
                                     data-bs-toggle=\"modal\" 
                                     data-bs-target=\"#deleteModal\"
                                     data-product-id=\"";
-            // line 405
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 405, $this->source); })()), "id", [], "any", false, false, false, 405), "html", null, true);
+            // line 426
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 426, $this->source); })()), "id", [], "any", false, false, false, 426), "html", null, true);
             yield "\"
                                     data-product-name=\"";
-            // line 406
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 406, $this->source); })()), "name", [], "any", false, false, false, 406), "html", null, true);
+            // line 427
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 427, $this->source); })()), "name", [], "any", false, false, false, 427), "html", null, true);
             yield "\"
                                     data-has-dependencies=\"";
-            // line 407
-            yield (((($tmp = (isset($context["hasDependencies"]) || array_key_exists("hasDependencies", $context) ? $context["hasDependencies"] : (function () { throw new RuntimeError('Variable "hasDependencies" does not exist.', 407, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("1") : ("0"));
+            // line 428
+            yield (((($tmp = (isset($context["hasDependencies"]) || array_key_exists("hasDependencies", $context) ? $context["hasDependencies"] : (function () { throw new RuntimeError('Variable "hasDependencies" does not exist.', 428, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("1") : ("0"));
             yield "\"
                                     data-token=\"";
-            // line 408
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 408, $this->source); })()), "id", [], "any", false, false, false, 408))), "html", null, true);
+            // line 429
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 429, $this->source); })()), "id", [], "any", false, false, false, 429))), "html", null, true);
             yield "\"
                                     ";
-            // line 409
-            if ((($tmp = (isset($context["hasDependencies"]) || array_key_exists("hasDependencies", $context) ? $context["hasDependencies"] : (function () { throw new RuntimeError('Variable "hasDependencies" does not exist.', 409, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 430
+            if ((($tmp = (isset($context["hasDependencies"]) || array_key_exists("hasDependencies", $context) ? $context["hasDependencies"] : (function () { throw new RuntimeError('Variable "hasDependencies" does not exist.', 430, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                 yield "title=\"Ce produit a des dépendances\"";
             }
             yield ">
@@ -785,26 +816,8 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
                             </button>
                         ";
         }
-        // line 413
-        yield "                        
-                        <div class=\"dropdown\">
-                            <button class=\"btn btn-outline-primary dropdown-toggle w-100\" type=\"button\" data-bs-toggle=\"dropdown\">
-                                <i class=\"fas fa-print me-2\"></i> Imprimer
-                            </button>
-                            <ul class=\"dropdown-menu w-100\">
-                                <li>
-                                    <a class=\"dropdown-item\" href=\"#\">
-                                        <i class=\"fas fa-barcode me-2\"></i> Étiquette code-barres
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class=\"dropdown-item\" href=\"#\">
-                                        <i class=\"fas fa-file-alt me-2\"></i> Fiche produit
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+        // line 434
+        yield "                    </div>
                 </div>
             </div>
             
@@ -817,85 +830,85 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
                 </div>
                 <div class=\"card-body\">
                     ";
-        // line 443
-        $context["activeBatches"] = Twig\Extension\CoreExtension::sort($this->env, Twig\Extension\CoreExtension::filter($this->env, CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 443, $this->source); })()), "stockBatches", [], "any", false, false, false, 443), function ($__b__) use ($context, $macros) { $context["b"] = $__b__; return (CoreExtension::getAttribute($this->env, $this->source, (isset($context["b"]) || array_key_exists("b", $context) ? $context["b"] : (function () { throw new RuntimeError('Variable "b" does not exist.', 443, $this->source); })()), "isActive", [], "any", false, false, false, 443) && (CoreExtension::getAttribute($this->env, $this->source, (isset($context["b"]) || array_key_exists("b", $context) ? $context["b"] : (function () { throw new RuntimeError('Variable "b" does not exist.', 443, $this->source); })()), "remainingQuantity", [], "any", false, false, false, 443) > 0)); }), function ($__a__, $__b__) use ($context, $macros) { $context["a"] = $__a__; $context["b"] = $__b__; return (CoreExtension::getAttribute($this->env, $this->source, (isset($context["a"]) || array_key_exists("a", $context) ? $context["a"] : (function () { throw new RuntimeError('Variable "a" does not exist.', 443, $this->source); })()), "expiryDate", [], "any", false, false, false, 443) <=> CoreExtension::getAttribute($this->env, $this->source, (isset($context["b"]) || array_key_exists("b", $context) ? $context["b"] : (function () { throw new RuntimeError('Variable "b" does not exist.', 443, $this->source); })()), "expiryDate", [], "any", false, false, false, 443)); });
-        // line 444
+        // line 446
+        $context["activeBatches"] = Twig\Extension\CoreExtension::sort($this->env, Twig\Extension\CoreExtension::filter($this->env, CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 446, $this->source); })()), "stockBatches", [], "any", false, false, false, 446), function ($__b__) use ($context, $macros) { $context["b"] = $__b__; return (CoreExtension::getAttribute($this->env, $this->source, (isset($context["b"]) || array_key_exists("b", $context) ? $context["b"] : (function () { throw new RuntimeError('Variable "b" does not exist.', 446, $this->source); })()), "isActive", [], "any", false, false, false, 446) && (CoreExtension::getAttribute($this->env, $this->source, (isset($context["b"]) || array_key_exists("b", $context) ? $context["b"] : (function () { throw new RuntimeError('Variable "b" does not exist.', 446, $this->source); })()), "currentQuantity", [], "any", false, false, false, 446) > 0)); }), function ($__a__, $__b__) use ($context, $macros) { $context["a"] = $__a__; $context["b"] = $__b__; return (CoreExtension::getAttribute($this->env, $this->source, (isset($context["a"]) || array_key_exists("a", $context) ? $context["a"] : (function () { throw new RuntimeError('Variable "a" does not exist.', 446, $this->source); })()), "expiryDate", [], "any", false, false, false, 446) <=> CoreExtension::getAttribute($this->env, $this->source, (isset($context["b"]) || array_key_exists("b", $context) ? $context["b"] : (function () { throw new RuntimeError('Variable "b" does not exist.', 446, $this->source); })()), "expiryDate", [], "any", false, false, false, 446)); });
+        // line 447
         yield "                    
                     ";
-        // line 445
-        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["activeBatches"]) || array_key_exists("activeBatches", $context) ? $context["activeBatches"] : (function () { throw new RuntimeError('Variable "activeBatches" does not exist.', 445, $this->source); })())) > 0)) {
-            // line 446
+        // line 448
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["activeBatches"]) || array_key_exists("activeBatches", $context) ? $context["activeBatches"] : (function () { throw new RuntimeError('Variable "activeBatches" does not exist.', 448, $this->source); })())) > 0)) {
+            // line 449
             yield "                        <div class=\"list-group list-group-flush\">
                             ";
-            // line 447
+            // line 450
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable(Twig\Extension\CoreExtension::slice($this->env->getCharset(), (isset($context["activeBatches"]) || array_key_exists("activeBatches", $context) ? $context["activeBatches"] : (function () { throw new RuntimeError('Variable "activeBatches" does not exist.', 447, $this->source); })()), 0, 3));
+            $context['_seq'] = CoreExtension::ensureTraversable(Twig\Extension\CoreExtension::slice($this->env->getCharset(), (isset($context["activeBatches"]) || array_key_exists("activeBatches", $context) ? $context["activeBatches"] : (function () { throw new RuntimeError('Variable "activeBatches" does not exist.', 450, $this->source); })()), 0, 3));
             foreach ($context['_seq'] as $context["_key"] => $context["batch"]) {
-                // line 448
+                // line 451
                 yield "                                <div class=\"list-group-item border-0 px-0 py-2\">
                                     <div class=\"d-flex justify-content-between align-items-center\">
                                         <div>
                                             <h6 class=\"mb-1\">Lot ";
-                // line 451
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "batchNumber", [], "any", false, false, false, 451), "html", null, true);
+                // line 454
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "batchNumber", [], "any", false, false, false, 454), "html", null, true);
                 yield "</h6>
                                             <small class=\"text-muted\">
                                                 <i class=\"fas fa-box me-1\"></i>
                                                 ";
-                // line 454
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "remainingQuantity", [], "any", false, false, false, 454), "html", null, true);
+                // line 457
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "currentQuantity", [], "any", false, false, false, 457), "html", null, true);
                 yield "/";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "quantity", [], "any", false, false, false, 454), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "initialQuantity", [], "any", false, false, false, 457), "html", null, true);
                 yield "
                                             </small>
                                         </div>
                                         <div class=\"text-end\">
                                             ";
-                // line 458
-                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 458)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 459
+                // line 461
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 461)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 462
                     yield "                                                <div class=\"mb-1\">
                                                     <small class=\"";
-                    // line 460
-                    yield (((CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 460) < $this->extensions['Twig\Extension\CoreExtension']->convertDate("+30 days"))) ? ("text-danger") : ("text-muted"));
+                    // line 463
+                    yield (((CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 463) < $this->extensions['Twig\Extension\CoreExtension']->convertDate("+30 days"))) ? ("text-danger") : ("text-muted"));
                     yield "\">
                                                         <i class=\"fas fa-calendar-alt me-1\"></i>
                                                         ";
-                    // line 462
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 462), "d/m/Y"), "html", null, true);
+                    // line 465
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 465), "d/m/Y"), "html", null, true);
                     yield "
                                                     </small>
                                                 </div>
                                             ";
                 }
-                // line 466
+                // line 469
                 yield "                                            <span class=\"badge ";
-                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "remainingQuantity", [], "any", false, false, false, 466) <= 10)) ? ("bg-warning") : ("bg-success"));
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "currentQuantity", [], "any", false, false, false, 469) <= 10)) ? ("bg-warning") : ("bg-success"));
                 yield "\">
                                                 ";
-                // line 467
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "remainingQuantity", [], "any", false, false, false, 467), "html", null, true);
+                // line 470
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "currentQuantity", [], "any", false, false, false, 470), "html", null, true);
                 yield " restants
                                             </span>
                                         </div>
                                     </div>
                                     ";
-                // line 471
-                if ((CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 471) && (CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 471) < $this->extensions['Twig\Extension\CoreExtension']->convertDate("+30 days")))) {
-                    // line 472
+                // line 474
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 474) && (CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 474) < $this->extensions['Twig\Extension\CoreExtension']->convertDate("+30 days")))) {
+                    // line 475
                     yield "                                        <div class=\"mt-2\">
                                             <div class=\"progress\" style=\"height: 5px;\">
                                                 ";
-                    // line 474
-                    $context["daysLeft"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 474), "diff", [$this->extensions['Twig\Extension\CoreExtension']->convertDate()], "method", false, false, false, 474), "days", [], "any", false, false, false, 474);
-                    // line 475
+                    // line 477
+                    $context["daysLeft"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["batch"], "expiryDate", [], "any", false, false, false, 477), "diff", [$this->extensions['Twig\Extension\CoreExtension']->convertDate()], "method", false, false, false, 477), "days", [], "any", false, false, false, 477);
+                    // line 478
                     yield "                                                ";
-                    $context["progress"] = (((isset($context["daysLeft"]) || array_key_exists("daysLeft", $context) ? $context["daysLeft"] : (function () { throw new RuntimeError('Variable "daysLeft" does not exist.', 475, $this->source); })()) / 30) * 100);
-                    // line 476
+                    $context["progress"] = (((isset($context["daysLeft"]) || array_key_exists("daysLeft", $context) ? $context["daysLeft"] : (function () { throw new RuntimeError('Variable "daysLeft" does not exist.', 478, $this->source); })()) / 30) * 100);
+                    // line 479
                     yield "                                                <div class=\"progress-bar bg-danger\" 
                                                      style=\"width: ";
-                    // line 477
-                    yield ((((isset($context["progress"]) || array_key_exists("progress", $context) ? $context["progress"] : (function () { throw new RuntimeError('Variable "progress" does not exist.', 477, $this->source); })()) > 100)) ? (100) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["progress"]) || array_key_exists("progress", $context) ? $context["progress"] : (function () { throw new RuntimeError('Variable "progress" does not exist.', 477, $this->source); })()), "html", null, true)));
+                    // line 480
+                    yield ((((isset($context["progress"]) || array_key_exists("progress", $context) ? $context["progress"] : (function () { throw new RuntimeError('Variable "progress" does not exist.', 480, $this->source); })()) > 100)) ? (100) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["progress"]) || array_key_exists("progress", $context) ? $context["progress"] : (function () { throw new RuntimeError('Variable "progress" does not exist.', 480, $this->source); })()), "html", null, true)));
                     yield "%\"
                                                      role=\"progressbar\">
                                                 </div>
@@ -903,53 +916,53 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
                                             <small class=\"text-danger\">
                                                 <i class=\"fas fa-exclamation-triangle me-1\"></i>
                                                 Expire dans ";
-                    // line 483
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["daysLeft"]) || array_key_exists("daysLeft", $context) ? $context["daysLeft"] : (function () { throw new RuntimeError('Variable "daysLeft" does not exist.', 483, $this->source); })()), "html", null, true);
+                    // line 486
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["daysLeft"]) || array_key_exists("daysLeft", $context) ? $context["daysLeft"] : (function () { throw new RuntimeError('Variable "daysLeft" does not exist.', 486, $this->source); })()), "html", null, true);
                     yield " jour";
-                    yield ((((isset($context["daysLeft"]) || array_key_exists("daysLeft", $context) ? $context["daysLeft"] : (function () { throw new RuntimeError('Variable "daysLeft" does not exist.', 483, $this->source); })()) > 1)) ? ("s") : (""));
+                    yield ((((isset($context["daysLeft"]) || array_key_exists("daysLeft", $context) ? $context["daysLeft"] : (function () { throw new RuntimeError('Variable "daysLeft" does not exist.', 486, $this->source); })()) > 1)) ? ("s") : (""));
                     yield "
                                             </small>
                                         </div>
                                     ";
                 }
-                // line 487
+                // line 490
                 yield "                                </div>
                             ";
             }
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['batch'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 489
+            // line 492
             yield "                        </div>
                         
                         ";
-            // line 491
-            if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["activeBatches"]) || array_key_exists("activeBatches", $context) ? $context["activeBatches"] : (function () { throw new RuntimeError('Variable "activeBatches" does not exist.', 491, $this->source); })())) > 3)) {
-                // line 492
+            // line 494
+            if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["activeBatches"]) || array_key_exists("activeBatches", $context) ? $context["activeBatches"] : (function () { throw new RuntimeError('Variable "activeBatches" does not exist.', 494, $this->source); })())) > 3)) {
+                // line 495
                 yield "                            <div class=\"text-center mt-3\">
                                 <a href=\"";
-                // line 493
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_stock_batch_index", ["productId" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 493, $this->source); })()), "id", [], "any", false, false, false, 493)]), "html", null, true);
+                // line 496
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_stock_batch_index", ["productId" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 496, $this->source); })()), "id", [], "any", false, false, false, 496)]), "html", null, true);
                 yield "\" class=\"btn btn-sm btn-outline-primary\">
                                     Voir tous les lots (";
-                // line 494
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["activeBatches"]) || array_key_exists("activeBatches", $context) ? $context["activeBatches"] : (function () { throw new RuntimeError('Variable "activeBatches" does not exist.', 494, $this->source); })())), "html", null, true);
+                // line 497
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["activeBatches"]) || array_key_exists("activeBatches", $context) ? $context["activeBatches"] : (function () { throw new RuntimeError('Variable "activeBatches" does not exist.', 497, $this->source); })())), "html", null, true);
                 yield ")
                                 </a>
                             </div>
                         ";
             }
-            // line 498
+            // line 501
             yield "                    ";
         } else {
-            // line 499
+            // line 502
             yield "                        <div class=\"text-center py-3\">
                             <i class=\"fas fa-box-open fa-2x text-muted mb-2\"></i>
                             <p class=\"text-muted mb-0\">Aucun lot actif en stock</p>
                         </div>
                     ";
         }
-        // line 504
+        // line 507
         yield "                </div>
             </div>
             
@@ -966,42 +979,42 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
                             <small class=\"text-muted d-flex justify-content-between\">
                                 <span><i class=\"fas fa-plus-circle me-2\"></i> Création</span>
                                 <span>";
-        // line 519
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 519, $this->source); })()), "createdAt", [], "any", false, false, false, 519), "d/m/Y H:i"), "html", null, true);
+        // line 522
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 522, $this->source); })()), "createdAt", [], "any", false, false, false, 522), "d/m/Y H:i"), "html", null, true);
         yield "</span>
                             </small>
                         </div>
                         ";
-        // line 522
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 522, $this->source); })()), "updatedAt", [], "any", false, false, false, 522)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 523
+        // line 525
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 525, $this->source); })()), "updatedAt", [], "any", false, false, false, 525)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 526
             yield "                            <div class=\"list-group-item border-0 px-0 py-1\">
                                 <small class=\"text-muted d-flex justify-content-between\">
                                     <span><i class=\"fas fa-edit me-2\"></i> Dernière modification</span>
                                     <span>";
-            // line 526
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 526, $this->source); })()), "updatedAt", [], "any", false, false, false, 526), "d/m/Y H:i"), "html", null, true);
+            // line 529
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 529, $this->source); })()), "updatedAt", [], "any", false, false, false, 529), "d/m/Y H:i"), "html", null, true);
             yield "</span>
                                 </small>
                             </div>
                         ";
         }
-        // line 530
+        // line 533
         yield "                        ";
-        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 530, $this->source); })()), "stockBatches", [], "any", false, false, false, 530)) > 0)) {
-            // line 531
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 533, $this->source); })()), "stockBatches", [], "any", false, false, false, 533)) > 0)) {
+            // line 534
             yield "                            <div class=\"list-group-item border-0 px-0 py-1\">
                                 <small class=\"text-muted d-flex justify-content-between\">
                                     <span><i class=\"fas fa-cart-plus me-2\"></i> Dernier achat</span>
                                     <span>";
-            // line 534
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 534, $this->source); })()), "stockBatches", [], "any", false, false, false, 534)), "createdAt", [], "any", false, false, false, 534), "d/m/Y"), "html", null, true);
+            // line 537
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 537, $this->source); })()), "stockBatches", [], "any", false, false, false, 537)), "createdAt", [], "any", false, false, false, 537), "d/m/Y"), "html", null, true);
             yield "</span>
                                 </small>
                             </div>
                         ";
         }
-        // line 538
+        // line 541
         yield "                    </div>
                 </div>
             </div>
@@ -1066,7 +1079,7 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
         yield from [];
     }
 
-    // line 594
+    // line 597
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -1079,7 +1092,7 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 595
+        // line 598
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
 <style>
@@ -1250,7 +1263,7 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
         yield from [];
     }
 
-    // line 756
+    // line 759
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -1263,7 +1276,7 @@ class __TwigTemplate_21877b1b6c9b4815f30a7d8d672cb181 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 757
+        // line 760
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
@@ -1406,7 +1419,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  1267 => 757,  1254 => 756,  1083 => 595,  1070 => 594,  1005 => 538,  998 => 534,  993 => 531,  990 => 530,  983 => 526,  978 => 523,  976 => 522,  970 => 519,  953 => 504,  946 => 499,  943 => 498,  936 => 494,  932 => 493,  929 => 492,  927 => 491,  923 => 489,  916 => 487,  907 => 483,  898 => 477,  895 => 476,  892 => 475,  890 => 474,  886 => 472,  884 => 471,  877 => 467,  872 => 466,  865 => 462,  860 => 460,  857 => 459,  855 => 458,  846 => 454,  840 => 451,  835 => 448,  831 => 447,  828 => 446,  826 => 445,  823 => 444,  821 => 443,  789 => 413,  780 => 409,  776 => 408,  772 => 407,  768 => 406,  764 => 405,  758 => 401,  755 => 400,  753 => 399,  746 => 395,  742 => 394,  738 => 393,  734 => 392,  730 => 391,  726 => 390,  713 => 379,  707 => 375,  705 => 374,  691 => 363,  682 => 357,  674 => 352,  655 => 335,  648 => 330,  645 => 329,  638 => 325,  634 => 324,  631 => 323,  629 => 322,  626 => 321,  608 => 316,  604 => 314,  602 => 313,  597 => 311,  593 => 310,  588 => 307,  582 => 304,  578 => 302,  576 => 301,  572 => 300,  566 => 297,  558 => 292,  552 => 290,  535 => 289,  532 => 288,  530 => 287,  515 => 274,  506 => 268,  495 => 259,  493 => 258,  486 => 253,  479 => 248,  472 => 244,  467 => 243,  465 => 242,  448 => 227,  444 => 225,  438 => 222,  435 => 221,  433 => 220,  424 => 214,  414 => 207,  408 => 203,  401 => 198,  399 => 197,  396 => 196,  391 => 194,  388 => 193,  386 => 192,  383 => 191,  378 => 189,  375 => 188,  373 => 187,  369 => 185,  363 => 181,  357 => 177,  355 => 176,  347 => 171,  341 => 167,  335 => 164,  330 => 161,  328 => 160,  323 => 158,  314 => 152,  307 => 148,  282 => 126,  272 => 121,  268 => 120,  261 => 116,  257 => 115,  248 => 109,  238 => 102,  225 => 93,  222 => 92,  220 => 91,  202 => 78,  190 => 69,  177 => 58,  171 => 55,  167 => 53,  165 => 52,  156 => 46,  136 => 29,  129 => 25,  120 => 19,  112 => 14,  103 => 7,  90 => 6,  66 => 4,  43 => 2,);
+        return array (  1280 => 760,  1267 => 759,  1096 => 598,  1083 => 597,  1018 => 541,  1011 => 537,  1006 => 534,  1003 => 533,  996 => 529,  991 => 526,  989 => 525,  983 => 522,  966 => 507,  959 => 502,  956 => 501,  949 => 497,  945 => 496,  942 => 495,  940 => 494,  936 => 492,  929 => 490,  920 => 486,  911 => 480,  908 => 479,  905 => 478,  903 => 477,  899 => 475,  897 => 474,  890 => 470,  885 => 469,  878 => 465,  873 => 463,  870 => 462,  868 => 461,  859 => 457,  853 => 454,  848 => 451,  844 => 450,  841 => 449,  839 => 448,  836 => 447,  834 => 446,  820 => 434,  811 => 430,  807 => 429,  803 => 428,  799 => 427,  795 => 426,  789 => 422,  786 => 421,  784 => 420,  777 => 416,  773 => 415,  769 => 414,  765 => 413,  761 => 412,  757 => 411,  749 => 405,  740 => 400,  738 => 399,  735 => 398,  729 => 394,  727 => 393,  713 => 382,  704 => 376,  694 => 369,  686 => 364,  672 => 353,  653 => 336,  646 => 331,  643 => 330,  634 => 324,  631 => 323,  629 => 322,  626 => 321,  608 => 316,  604 => 314,  602 => 313,  597 => 311,  593 => 310,  588 => 307,  582 => 304,  578 => 302,  576 => 301,  572 => 300,  566 => 297,  558 => 292,  552 => 290,  535 => 289,  532 => 288,  530 => 287,  515 => 274,  506 => 268,  495 => 259,  493 => 258,  486 => 253,  479 => 248,  472 => 244,  467 => 243,  465 => 242,  448 => 227,  444 => 225,  438 => 222,  435 => 221,  433 => 220,  424 => 214,  414 => 207,  408 => 203,  401 => 198,  399 => 197,  396 => 196,  391 => 194,  388 => 193,  386 => 192,  383 => 191,  378 => 189,  375 => 188,  373 => 187,  369 => 185,  363 => 181,  357 => 177,  355 => 176,  347 => 171,  341 => 167,  335 => 164,  330 => 161,  328 => 160,  323 => 158,  314 => 152,  307 => 148,  282 => 126,  272 => 121,  268 => 120,  261 => 116,  257 => 115,  248 => 109,  238 => 102,  225 => 93,  222 => 92,  220 => 91,  202 => 78,  190 => 69,  177 => 58,  171 => 55,  167 => 53,  165 => 52,  156 => 46,  136 => 29,  129 => 25,  120 => 19,  112 => 14,  103 => 7,  90 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1710,7 +1723,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                         <h6 class=\"mb-1\">Lot {{ batch.batchNumber }}</h6>
                                                         <p class=\"mb-0 text-muted small\">
                                                             <i class=\"fas fa-box me-1\"></i>
-                                                            Quantité: {{ batch.quantity }}
+                                                            Quantité: {{ batch.initialQuantity }}
                                                             {% if batch.expiryDate %}
                                                                 <span class=\"ms-2\">
                                                                     <i class=\"fas fa-calendar-alt me-1\"></i>
@@ -1734,8 +1747,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </div>
                                 {% if product.stockBatches|length > 5 %}
                                     <div class=\"text-center mt-3\">
-                                        <a href=\"{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}\" class=\"btn btn-sm btn-outline-primary\">
-                                            Voir tous les lots ({{ product.stockBatches|length }})
+                                        <a href=\"{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}\" 
+                                            class=\"btn btn-sm btn-outline-info flex-fill\" title=\"Lots de stock\">
+                                            <i class=\"fas fa-boxes\"></i> Lots
                                         </a>
                                     </div>
                                 {% endif %}
@@ -1766,8 +1780,26 @@ document.addEventListener('DOMContentLoaded', function() {
                            class=\"btn btn-warning\">
                             <i class=\"fas fa-edit me-2\"></i> Modifier le produit
                         </a>
+
+                        <div class=\"dropdown\">
+                            <button class=\"btn btn-outline-primary dropdown-toggle w-100\" type=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">
+                                <i class=\"fas fa-print me-2\"></i> Imprimer
+                            </button>
+                            <ul class=\"dropdown-menu w-100\">
+                                <li>
+                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open('{{ path('app_admin_product_print_barcode', {'id': product.id}) }}', '_blank'); return false;\">
+                                        <i class=\"fas fa-barcode me-2\"></i> Étiquette code-barres
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open('{{ path('app_admin_product_print_sheet', {'id': product.id}) }}', '_blank'); return false;\">
+                                        <i class=\"fas fa-file-alt me-2\"></i> Fiche produit
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                         
-                        <a href=\"{{ path('admin_purchase_new', {'productId': product.id}) }}\" 
+                        <a href=\"{{ path('purchase_cart') }}\" 
                            class=\"btn btn-success\">
                             <i class=\"fas fa-plus me-2\"></i> Nouvel achat
                         </a>
@@ -1790,10 +1822,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         </a>
                         {% endif %}
                         
-                        <!-- Lien vers les promotions (à créer) -->
-                        <a href=\"#\" class=\"btn btn-outline-warning\">
-                            <i class=\"fas fa-tags me-2\"></i> Promotions
-                        </a>
+                        {% if companyType != 'restaurant' %}
+                            <a href=\"{{ path('app_admin_product_promotions', {'id': product.id}) }}\" 
+                            class=\"btn btn-sm btn-outline-warning flex-fill\" title=\"Promotions\">
+                                <i class=\"fas fa-tags me-1\"></i> Promos
+                            </a>
+                        {% endif %}
                         
                         <!-- Bouton toggle status (ouvre modal) -->
                         <button type=\"button\" 
@@ -1823,24 +1857,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <i class=\"fas fa-trash me-2\"></i> Supprimer le produit
                             </button>
                         {% endif %}
-                        
-                        <div class=\"dropdown\">
-                            <button class=\"btn btn-outline-primary dropdown-toggle w-100\" type=\"button\" data-bs-toggle=\"dropdown\">
-                                <i class=\"fas fa-print me-2\"></i> Imprimer
-                            </button>
-                            <ul class=\"dropdown-menu w-100\">
-                                <li>
-                                    <a class=\"dropdown-item\" href=\"#\">
-                                        <i class=\"fas fa-barcode me-2\"></i> Étiquette code-barres
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class=\"dropdown-item\" href=\"#\">
-                                        <i class=\"fas fa-file-alt me-2\"></i> Fiche produit
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1853,7 +1869,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </h5>
                 </div>
                 <div class=\"card-body\">
-                    {% set activeBatches = product.stockBatches|filter(b => b.isActive and b.remainingQuantity > 0)|sort((a, b) => a.expiryDate <=> b.expiryDate) %}
+                    {% set activeBatches = product.stockBatches|filter(b => b.isActive and b.currentQuantity > 0)|sort((a, b) => a.expiryDate <=> b.expiryDate) %}
                     
                     {% if activeBatches|length > 0 %}
                         <div class=\"list-group list-group-flush\">
@@ -1864,7 +1880,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <h6 class=\"mb-1\">Lot {{ batch.batchNumber }}</h6>
                                             <small class=\"text-muted\">
                                                 <i class=\"fas fa-box me-1\"></i>
-                                                {{ batch.remainingQuantity }}/{{ batch.quantity }}
+                                                {{ batch.currentQuantity }}/{{ batch.initialQuantity }}
                                             </small>
                                         </div>
                                         <div class=\"text-end\">
@@ -1876,8 +1892,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                                     </small>
                                                 </div>
                                             {% endif %}
-                                            <span class=\"badge {{ batch.remainingQuantity <= 10 ? 'bg-warning' : 'bg-success' }}\">
-                                                {{ batch.remainingQuantity }} restants
+                                            <span class=\"badge {{ batch.currentQuantity <= 10 ? 'bg-warning' : 'bg-success' }}\">
+                                                {{ batch.currentQuantity }} restants
                                             </span>
                                         </div>
                                     </div>

@@ -1,11 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New StockBatch{% endblock %}
+{% block title %}Nouveau lot - {{ product.name }}{% endblock %}
 
 {% block body %}
-    <h1>Create new StockBatch</h1>
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_product_index') }}">Produits</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_product_show', {'id': product.id}) }}">
+                            {{ product.name|u.truncate(30) }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}">
+                            Lots
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">Nouveau lot</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0">
+                <i class="fas fa-plus-circle me-2 text-success"></i>
+                Ajouter un lot pour "{{ product.name }}"
+            </h1>
+        </div>
+    </div>
 
-    {{ include('admin/stock_batch/_form.html.twig') }}
-
-    <a href="{{ path('app_admin_stock_batch_index') }}">back to list</a>
+    {% include 'admin/stock_batch/_form.html.twig' with {
+        'form': form,
+        'product': product,
+        'button_label': 'Créer le lot'
+    } only %}
+</div>
 {% endblock %}

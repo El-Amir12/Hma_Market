@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 #[Route('/admin/promotion')]
 class PromotionController extends AbstractController
@@ -518,5 +519,170 @@ class PromotionController extends AbstractController
             $this->addFlash('success', 'Promotion supprimée.');
         }
         return $this->redirectToRoute('app_admin_promotion_index');
+    }
+
+    #[Route('/product/{id}/promotions', name: 'app_admin_product_promotions', methods: ['GET'])]
+    public function productPromotions(Product $product, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->checkAccess();
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService || $product->getHmaService()->getId() !== $hmaService->getId()) {
+            throw new AccessDeniedException('Accès non autorisé.');
+        }
+
+        // Filtres
+        $search = $request->query->get('search', '');
+        $status = $request->query->get('status', 'all');
+        $period = $request->query->get('period', 'all');
+        $page = $request->query->getInt('page', 1);
+        $limit = 12;
+
+        // Récupérer toutes les promotions associées à ce produit
+        $queryBuilder = $entityManager->createQueryBuilder()
+            ->select('p')
+            ->from(Promotion::class, 'p')
+            ->leftJoin('p.promotionProducts', 'pp')
+            ->where('pp.product = :product')
+            ->setParameter('product', $product)
+            ->andWhere('p.hma_service = :hmaService')
+            ->setParameter('hmaService', $hmaService);
+
+        // Filtre par recherche
+        if ($search) {
+            $queryBuilder->andWhere('p.name LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        // Filtre par statut
+        if ($status === 'active') {
+            $queryBuilder->andWhere('p.is_active = true');
+        } elseif ($status === 'inactive') {
+            $queryBuilder->andWhere('p.is_active = false');
+        }
+
+        // Filtre par période
+        $now = new \DateTime();
+        if ($period === 'ongoing') {
+            $queryBuilder->andWhere('p.startDate <= :now')
+                ->andWhere('p.endDate IS NULL OR p.endDate >= :now')
+                ->setParameter('now', $now);
+        } elseif ($period === 'upcoming') {
+            $queryBuilder->andWhere('p.startDate > :now')
+                ->setParameter('now', $now);
+        } elseif ($period === 'ended') {
+            $queryBuilder->andWhere('p.endDate IS NOT NULL')
+                ->andWhere('p.endDate < :now')
+                ->setParameter('now', $now);
+        }
+
+        // Pagination
+        $queryBuilder->orderBy('p.created_at', 'DESC');
+        $query = $queryBuilder->getQuery();
+        
+        $paginator = new Paginator($query);
+        $totalItems = count($paginator);
+        $totalPages = ceil($totalItems / $limit);
+        
+        $paginator->getQuery()
+            ->setFirstResult($limit * ($page - 1))
+            ->setMaxResults($limit);
+
+        $promotions = iterator_to_array($paginator);
+
+        return $this->render('admin/promotion/product_promotions.html.twig', [
+            'product' => $product,
+            'promotions' => $promotions,
+            'search' => $search,
+            'status' => $status,
+            'period' => $period,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+        ]);
+    }
+
+    #[Route('/category/{id}/promotions', name: 'app_admin_category_promotions', methods: ['GET'])]
+    public function categoryPromotions(Category $category, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->checkAccess();
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService || $category->getHmaService()->getId() !== $hmaService->getId()) {
+            throw new AccessDeniedException('Accès non autorisé.');
+        }
+
+        // Filtres
+        $search = $request->query->get('search', '');
+        $status = $request->query->get('status', 'all');
+        $period = $request->query->get('period', 'all');
+        $page = $request->query->getInt('page', 1);
+        $limit = 12;
+
+        // Récupérer toutes les promotions associées à cette catégorie
+        $queryBuilder = $entityManager->createQueryBuilder()
+            ->select('p')
+            ->from(Promotion::class, 'p')
+            ->leftJoin('p.promotionCategories', 'pc')
+            ->where('pc.category = :category')
+            ->setParameter('category', $category)
+            ->andWhere('p.hma_service = :hmaService')
+            ->setParameter('hmaService', $hmaService);
+
+        // Filtre par recherche
+        if ($search) {
+            $queryBuilder->andWhere('p.name LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        // Filtre par statut
+        if ($status === 'active') {
+            $queryBuilder->andWhere('p.is_active = true');
+        } elseif ($status === 'inactive') {
+            $queryBuilder->andWhere('p.is_active = false');
+        }
+
+        // Filtre par période
+        $now = new \DateTime();
+        if ($period === 'ongoing') {
+            $queryBuilder->andWhere('p.startDate <= :now')
+                ->andWhere('p.endDate IS NULL OR p.endDate >= :now')
+                ->setParameter('now', $now);
+        } elseif ($period === 'upcoming') {
+            $queryBuilder->andWhere('p.startDate > :now')
+                ->setParameter('now', $now);
+        } elseif ($period === 'ended') {
+            $queryBuilder->andWhere('p.endDate IS NOT NULL')
+                ->andWhere('p.endDate < :now')
+                ->setParameter('now', $now);
+        }
+
+        // Tri et pagination
+        $queryBuilder->orderBy('p.created_at', 'DESC');
+        
+        $totalItems = count($queryBuilder->getQuery()->getResult());
+        $totalPages = ceil($totalItems / $limit);
+        
+        $promotions = $queryBuilder->setFirstResult($limit * ($page - 1))
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        // Récupérer les produits de cette catégorie pour les stats
+        $productsCount = $entityManager->getRepository(Product::class)
+            ->createQueryBuilder('pr')
+            ->select('COUNT(pr.id)')
+            ->where('pr.category = :category')
+            ->setParameter('category', $category)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $this->render('admin/promotion/category_promotions.html.twig', [
+            'category' => $category,
+            'promotions' => $promotions,
+            'productsCount' => $productsCount,
+            'search' => $search,
+            'status' => $status,
+            'period' => $period,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+        ]);
     }
 }

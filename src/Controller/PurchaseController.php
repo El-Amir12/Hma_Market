@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Form\PurchaseConfirmationType;
 use App\Form\PurchaseType;
 use App\Form\ReceivePurchaseType;
+use App\Repository\LocationRepository;
 use App\Service\PurchaseFlowService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -274,12 +275,16 @@ class PurchaseController extends AbstractController
      * Réceptionner une commande
      */
     #[Route('/receive/{id}', name: 'purchase_receive', methods: ['GET', 'POST'])]
-    public function receive(Request $request, Purchase $purchase): Response
+    public function receive(Request $request, Purchase $purchase, LocationRepository $locationRepository): Response
     {
         if ($purchase->getStatus() !== Purchase::STATUS_CONFIRMED) {
             $this->addFlash('error', 'Seules les commandes confirmées peuvent être réceptionnées');
             return $this->redirectToRoute('purchase_index');
         }
+        
+        // Récupérer les emplacements actifs de l'entreprise
+        $hmaService = $purchase->getHmaService();
+        $locations = $locationRepository->findActiveByHmaService($hmaService);
         
         if ($request->isMethod('POST')) {
             $batchData = [];
@@ -296,6 +301,7 @@ class PurchaseController extends AbstractController
                     'received_quantity' => $request->request->get('received_quantity_' . $itemId),
                     'received_price' => $request->request->get('received_price_' . $itemId),
                     'remove' => $request->request->get('remove_' . $itemId),
+                    'location_id' => $request->request->get('location_id_' . $itemId),
                 ];
                 
                 // Validation pour les produits périssables
@@ -308,7 +314,6 @@ class PurchaseController extends AbstractController
                     }
                 }
 
-                // Vérifier la quantité reçue (doit être >= 0)
                 $receivedQty = (int)$batchData[$itemId]['received_quantity'];
                 if ($receivedQty < 0) {
                     $valid = false;
@@ -328,7 +333,8 @@ class PurchaseController extends AbstractController
         }
         
         return $this->render('purchase/receive.html.twig', [
-            'purchase' => $purchase
+            'purchase' => $purchase,
+            'locations' => $locations,
         ]);
     }
 

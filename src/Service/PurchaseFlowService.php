@@ -5,6 +5,7 @@ namespace App\Service;
 
 use App\Entity\HmaService;
 use App\Entity\Product;
+use App\Entity\Location;
 use App\Entity\Purchase;
 use App\Entity\PurchaseItem;
 use App\Entity\StockBatch;
@@ -277,40 +278,45 @@ class PurchaseFlowService
         $this->entityManager->beginTransaction();
 
         try {
-            $itemsToRemove = []; // Pour les articles supprimés (quantité 0 ou marqués)
-            $receivedItems = []; // Pour les articles effectivement reçus
-
             foreach ($purchase->getPurchaseItems() as $item) {
                 $product = $item->getProduct();
                 $data = $batchData[$item->getId()] ?? [];
 
                 // Vérifier si l'utilisateur a coché "supprimer"
                 if (!empty($data['remove']) && $data['remove'] == 1) {
-                    $itemsToRemove[] = $item;
+                    $purchase->removePurchaseItem($item);
+                    $this->entityManager->remove($item);
                     continue;
                 }
 
-                // Quantité reçue (sinon quantité commandée)
+                // Quantité reçue
                 $receivedQuantity = isset($data['received_quantity']) && is_numeric($data['received_quantity']) 
                     ? (int)$data['received_quantity'] 
                     : $item->getQuantity();
 
                 if ($receivedQuantity <= 0) {
-                    $itemsToRemove[] = $item;
+                    $purchase->removePurchaseItem($item);
+                    $this->entityManager->remove($item);
                     continue;
                 }
 
-                // Prix unitaire reçu (sinon prix commandé)
+                // Prix unitaire reçu
                 $receivedPrice = isset($data['received_price']) && is_numeric($data['received_price']) 
                     ? (float)$data['received_price'] 
                     : (float)$item->getUnitPrice();
 
-                // Mettre à jour les champs du PurchaseItem (pour l'historique)
+                // Mettre à jour les champs du PurchaseItem
                 $item->setQuantity($receivedQuantity);
                 $item->setUnitPrice((string)$receivedPrice);
                 $item->setTotalPrice(bcmul((string)$receivedPrice, (string)$receivedQuantity, 2));
                 
-                // Si le produit a une date d'expiration, on enregistre les dates
+                // Récupérer l'emplacement
+                $location = null;
+                if (!empty($data['location_id'])) {
+                    $location = $this->entityManager->getRepository(Location::class)->find($data['location_id']);
+                }
+                
+                // Si le produit a une date d'expiration
                 if ($product->hasExpiryDate()) {
                     if (empty($data['batch_number']) || empty($data['manufacturing_date']) || empty($data['expiry_date'])) {
                         throw new \Exception(sprintf('Données de lot manquantes pour le produit "%s"', $product->getName()));
@@ -320,7 +326,6 @@ class PurchaseFlowService
                 }
 
                 $this->entityManager->persist($item);
-                $receivedItems[] = $item;
 
                 // Génération du lot
                 $batchNumber = $data['batch_number'] ?? $item->getBatchNumber();
@@ -338,6 +343,12 @@ class PurchaseFlowService
                 $stockBatch->setHmaService($purchase->getHmaService());
                 $stockBatch->setIsActive(true);
                 $stockBatch->setCreatedAt(new \DateTime());
+                
+                // Enregistrer l'emplacement
+                if ($location) {
+                    $stockBatch->setLocationEntity($location);
+                    $stockBatch->setLocation($location->getDisplayName()); // Pour compatibilité
+                }
 
                 if ($product->hasExpiryDate()) {
                     $stockBatch->setManufacturingDate(new \DateTime($data['manufacturing_date']));
@@ -367,12 +378,6 @@ class PurchaseFlowService
                 $this->entityManager->persist($product);
             }
 
-            // Supprimer les articles non reçus
-            foreach ($itemsToRemove as $item) {
-                $purchase->removePurchaseItem($item);
-                $this->entityManager->remove($item);
-            }
-
             // Recalculer le total de la commande
             $purchase->calculateTotalAmount();
             $purchase->setStatus(Purchase::STATUS_RECEIVED);
@@ -381,7 +386,7 @@ class PurchaseFlowService
             $this->entityManager->flush();
             $this->entityManager->commit();
 
-            // Générer le reçu avec les valeurs mises à jour
+            // Générer le reçu
             $recuPath = $this->pdfGenerator->generatePurchaseReceipt($purchase);
             if ($recuPath) {
                 $purchase->setRecuAchat($recuPath);
@@ -392,8 +397,6 @@ class PurchaseFlowService
 
             $this->logger->info('Commande réceptionnée', [
                 'purchase_id' => $purchase->getId(),
-                'received_items' => count($receivedItems),
-                'removed_items' => count($itemsToRemove)
             ]);
 
         } catch (\Exception $e) {
@@ -405,7 +408,6 @@ class PurchaseFlowService
             throw $e;
         }
     }
-
     /**
      * Génère un numéro de commande unique
      */

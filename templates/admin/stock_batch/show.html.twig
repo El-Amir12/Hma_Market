@@ -1,58 +1,301 @@
+{# templates/admin/stock_batch/show.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}StockBatch{% endblock %}
+{% block title %}Lot {{ batch.batchNumber }} - {{ product.name }}{% endblock %}
 
 {% block body %}
-    <h1>StockBatch</h1>
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_product_index') }}">Produits</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_product_show', {'id': product.id}) }}">
+                            {{ product.name|u.truncate(30) }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}">
+                            Lots
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">{{ batch.batchNumber }}</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0">
+                <i class="fas fa-boxes me-2 text-info"></i>
+                Lot {{ batch.batchNumber }}
+            </h1>
+        </div>
+        <div class="btn-group">
+            <a href="{{ path('app_admin_stock_batch_print', {'id': batch.id}) }}" class="btn btn-outline-secondary" target="_blank">
+                <i class="fas fa-print me-1"></i> Imprimer
+            </a>
+            {% if canEdit %}
+                <a href="{{ path('app_admin_stock_batch_edit', {'id': batch.id}) }}" class="btn btn-warning">
+                    <i class="fas fa-edit me-1"></i> Modifier
+                </a>
+            {% endif %}
+            <a href="{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Retour
+            </a>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ stock_batch.id }}</td>
-            </tr>
-            <tr>
-                <th>Batch_number</th>
-                <td>{{ stock_batch.batchNumber }}</td>
-            </tr>
-            <tr>
-                <th>Purchase_price</th>
-                <td>{{ stock_batch.purchasePrice }}</td>
-            </tr>
-            <tr>
-                <th>Quantity</th>
-                <td>{{ stock_batch.quantity }}</td>
-            </tr>
-            <tr>
-                <th>Remaining_quantity</th>
-                <td>{{ stock_batch.remainingQuantity }}</td>
-            </tr>
-            <tr>
-                <th>Expiry_date</th>
-                <td>{{ stock_batch.expiryDate ? stock_batch.expiryDate|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Manufacturing_date</th>
-                <td>{{ stock_batch.manufacturingDate ? stock_batch.manufacturingDate|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Is_active</th>
-                <td>{{ stock_batch.isActive ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Created_at</th>
-                <td>{{ stock_batch.createdAt ? stock_batch.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Updated_at</th>
-                <td>{{ stock_batch.updatedAt ? stock_batch.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Informations générales
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted">Numéro de lot</dt>
+                        <dd class="col-sm-8 fw-bold">{{ batch.batchNumber }}</dd>
+                        
+                        <dt class="col-sm-4 text-muted">Emplacement</dt>
+                        <dd class="col-sm-8">
+                            {% if batch.location %}
+                                <span class="badge bg-info text-dark">
+                                    <i class="fas fa-map-marker-alt me-1"></i> {{ batch.location }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted">Non défini</span>
+                            {% endif %}
+                        </dd>
+                        
+                        <dt class="col-sm-4 text-muted">Statut</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge {{ batch.isActive ? 'bg-success' : 'bg-secondary' }}">
+                                {{ batch.isActive ? 'Actif' : 'Inactif' }}
+                            </span>
+                        </dd>
+                        
+                        <dt class="col-sm-4 text-muted">Date de création</dt>
+                        <dd class="col-sm-8">{{ batch.createdAt|date('d/m/Y H:i') }}</dd>
+                        
+                        {% if batch.updatedAt %}
+                            <dt class="col-sm-4 text-muted">Dernière modification</dt>
+                            <dd class="col-sm-8">{{ batch.updatedAt|date('d/m/Y H:i') }}</dd>
+                        {% endif %}
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Quantités et prix
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted">Quantité initiale</dt>
+                        <dd class="col-sm-8">{{ batch.initialQuantity }} {{ product.unit|default('pièce') }}</dd>
+                        
+                        <dt class="col-sm-4 text-muted">Quantité actuelle</dt>
+                        <dd class="col-sm-8">
+                            <span class="fw-bold {% if batch.currentQuantity <= 10 %}text-danger{% endif %}">
+                                {{ batch.currentQuantity }} {{ product.unit|default('pièce') }}
+                            </span>
+                            {% if batch.currentQuantity <= 10 %}
+                                <span class="badge bg-warning text-dark ms-2">Stock faible</span>
+                            {% endif %}
+                        </dd>
+                        
+                        <dt class="col-sm-4 text-muted">Prix unitaire</dt>
+                        <dd class="col-sm-8">{{ batch.unitPrice|price_with_currency(batch.hmaService) }}</dd>
+                        
+                        <dt class="col-sm-4 text-muted">Valeur totale</dt>
+                        <dd class="col-sm-8">
+                            {{ (batch.currentQuantity * batch.unitPrice)|price_with_currency(batch.hmaService) }}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ path('app_admin_stock_batch_index') }}">back to list</a>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        Dates
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted">Date de fabrication</dt>
+                        <dd class="col-sm-8">
+                            {{ batch.manufacturingDate ? batch.manufacturingDate|date('d/m/Y') : 'Non renseignée' }}
+                        </dd>
+                        
+                        <dt class="col-sm-4 text-muted">Date d'expiration</dt>
+                        <dd class="col-sm-8">
+                            {% if batch.expiryDate %}
+                                <span class="{% if batch.expiryDate < date() %}text-danger fw-bold{% elseif batch.expiryDate < date('+30 days') %}text-warning{% else %}text-success{% endif %}">
+                                    {{ batch.expiryDate|date('d/m/Y') }}
+                                </span>
+                                {% if batch.expiryDate < date() %}
+                                    <span class="badge bg-danger ms-2">Expiré</span>
+                                {% elseif batch.expiryDate < date('+30 days') %}
+                                    <span class="badge bg-warning text-dark ms-2">Expire bientôt</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted">Non périssable</span>
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exchange-alt me-2"></i>
+                        Derniers mouvements
+                    </h5>
+                    <span class="badge bg-secondary">{{ batch.stockMovements|length }} mouvement(s)</span>
+                </div>
+                <div class="card-body p-0">
+                    {% if batch.stockMovements|length > 0 %}
+                        <div class="list-group list-group-flush">
+                            {% for movement in batch.stockMovements|slice(0, 5)|sort((a, b) => b.createdAt <=> a.createdAt) %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            {# Affichage du type de mouvement corrigé #}
+                                            <span class="badge 
+                                                {% if movement.movementType == 'PURCHASE' %}bg-success
+                                                {% elseif movement.movementType == 'SALE' %}bg-danger
+                                                {% elseif movement.movementType == 'ADJUSTMENT' %}bg-warning text-dark
+                                                {% else %}bg-info
+                                                {% endif %} me-2">
+                                                {% if movement.movementType == 'PURCHASE' %}
+                                                    <i class="fas fa-cart-plus me-1"></i> ACHAT
+                                                {% elseif movement.movementType == 'SALE' %}
+                                                    <i class="fas fa-shopping-cart me-1"></i> VENTE
+                                                {% elseif movement.movementType == 'ADJUSTMENT' %}
+                                                    <i class="fas fa-sliders-h me-1"></i> AJUSTEMENT
+                                                {% else %}
+                                                    {{ movement.movementType }}
+                                                {% endif %}
+                                            </span>
+                                            <strong>{{ movement.quantity }}</strong> unités
+                                            {% if movement.unitPrice %}
+                                                <br>
+                                                <small class="text-muted">
+                                                    Prix: {{ movement.unitPrice|price_with_currency(batch.hmaService) }}
+                                                </small>
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-end">
+                                            <small class="text-muted">{{ movement.createdAt|date('d/m/Y H:i') }}</small>
+                                            <br>
+                                            {% if movement.user %}
+                                                <small class="text-muted">
+                                                    <i class="fas fa-user me-1"></i>
+                                                    {{ movement.user.fullName|default(movement.user.email) }}
+                                                </small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% if movement.notes %}
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-comment me-1"></i>
+                                                {{ movement.notes }}
+                                            </small>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if batch.stockMovements|length > 5 %}
+                            <div class="text-center p-3">
+                                <small class="text-muted">+ {{ batch.stockMovements|length - 5 }} autres mouvements</small>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-chart-line fa-2x text-muted mb-2"></i>
+                            <p class="text-muted mb-0">Aucun mouvement de stock</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ path('app_admin_stock_batch_edit', {'id': stock_batch.id}) }}">edit</a>
+    <!-- Informations supplémentaires sur l'achat -->
+    {% if batch.purchaseItem %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-receipt me-2"></i>
+                        Informations d'achat
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3 text-muted">Achat associé</dt>
+                        <dd class="col-sm-9">
+                            <a href="{{ path('purchase_show', {'id': batch.purchaseItem.purchase.id}) }}" class="text-decoration-none">
+                                Commande #{{ batch.purchaseItem.purchase.purchaseNumber }}
+                            </a>
+                        </dd>
+                        
+                        <dt class="col-sm-3 text-muted">Fournisseur</dt>
+                        <dd class="col-sm-9">
+                            {{ batch.purchaseItem.purchase.supplier.name|default('Non renseigné') }}
+                        </dd>
+                        
+                        <dt class="col-sm-3 text-muted">Date d'achat</dt>
+                        <dd class="col-sm-9">
+                            {{ batch.purchaseItem.purchase.createdAt|date('d/m/Y') }}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
 
-    {{ include('admin/stock_batch/_delete_form.html.twig') }}
+{% block stylesheets %}
+{{ parent() }}
+<style>
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1) !important;
+}
+.list-group-item {
+    transition: background-color 0.2s;
+}
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+.badge i {
+    margin-right: 4px;
+}
+</style>
 {% endblock %}

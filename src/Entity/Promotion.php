@@ -347,4 +347,32 @@ class Promotion
         return $this;
     }
 
+    public function isOngoing(): bool
+    {
+        $now = new \DateTime();
+        $startDate = $this->getStartDate();
+        $endDate = $this->getEndDate();
+        
+        if ($startDate <= $now && ($endDate === null || $endDate >= $now)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isUpcoming(): bool
+    {
+        $now = new \DateTime();
+        $startDate = $this->getStartDate();
+        
+        return $startDate > $now;
+    }
+
+    public function isEnded(): bool
+    {
+        $now = new \DateTime();
+        $endDate = $this->getEndDate();
+        
+        return $endDate !== null && $endDate < $now;
+    }
+
 }

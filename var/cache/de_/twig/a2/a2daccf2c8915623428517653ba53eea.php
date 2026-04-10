@@ -105,7 +105,7 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
 <link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
 <link href=\"https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css\" rel=\"stylesheet\" />
 <style>
-    /* --- Styles généraux (inchangés) --- */
+    /* --- Styles généraux --- */
     .stat-card {
         transition: transform 0.2s ease;
         border-left: 4px solid var(--primary-color);
@@ -283,7 +283,7 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
         </div>
     </div>
 
-    <!-- Cartes de statistiques (5 premières) -->
+    <!-- Cartes de statistiques -->
     <div class=\"row g-4 mb-4 equal-height\">
         <div class=\"col-sm-6 col-md-6 col-lg-4\">
             <div class=\"card shadow-sm stat-card h-100\">
@@ -377,7 +377,7 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
         </div>
     </div>
 
-    <!-- Carte Montant total (pleine largeur) -->
+    <!-- Carte Montant total -->
     <div class=\"row mb-4\">
         <div class=\"col-12\">
             <div class=\"card shadow-sm stat-card h-100\">
@@ -403,8 +403,8 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
             <h5 class=\"mb-0\"><i class=\"fas fa-filter me-2\"></i>Filtres</h5>
         </div>
         <div class=\"card-body\">
-            <form method=\"get\" class=\"row g-3\">
-                <div class=\"col-lg-3 col-md-6\">
+            <form method=\"get\" class=\"row g-4\">
+                <div class=\"col-md-6 col-lg-3\">
                     <label for=\"search\" class=\"form-label fw-bold\">Recherche</label>
                     <div class=\"input-group\">
                         <span class=\"input-group-text bg-white border-end-0\">
@@ -414,10 +414,10 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
         // line 275
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 275, $this->source); })()), "search", [], "any", false, false, false, 275), "html", null, true);
         yield "\" 
-                               class=\"form-control border-start-0\" placeholder=\"N° commande, fournisseur, utilisateur...\">
+                            class=\"form-control border-start-0\" placeholder=\"N° commande, fournisseur, utilisateur...\">
                     </div>
                 </div>
-                <div class=\"col-lg-2 col-md-6\">
+                <div class=\"col-md-6 col-lg-2\">
                     <label for=\"status\" class=\"form-label fw-bold\">Statut</label>
                     <select name=\"status\" id=\"status\" class=\"form-select\">
                         <option value=\"\">Tous</option>
@@ -442,7 +442,7 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
         // line 286
         yield "                    </select>
                 </div>
-                <div class=\"col-lg-2 col-md-6\">
+                <div class=\"col-md-6 col-lg-2\">
                     <label for=\"supplier_id\" class=\"form-label fw-bold\">Fournisseur</label>
                     <select name=\"supplier_id\" id=\"supplier_id\" class=\"form-select select2\">
                         <option value=\"\">Tous</option>
@@ -467,21 +467,21 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
         // line 295
         yield "                    </select>
                 </div>
-                <div class=\"col-lg-2 col-md-6\">
+                <div class=\"col-md-6 col-lg-2\">
                     <label for=\"start_date\" class=\"form-label fw-bold\">Date de début</label>
                     <input type=\"text\" name=\"start_date\" id=\"start_date\" class=\"form-control datepicker\" placeholder=\"jj/mm/aaaa\" value=\"";
         // line 299
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 299, $this->source); })()), "start_date", [], "any", false, false, false, 299), "html", null, true);
         yield "\">
                 </div>
-                <div class=\"col-lg-2 col-md-6\">
+                <div class=\"col-md-6 col-lg-3\">
                     <label for=\"end_date\" class=\"form-label fw-bold\">Date de fin</label>
                     <input type=\"text\" name=\"end_date\" id=\"end_date\" class=\"form-control datepicker\" placeholder=\"jj/mm/aaaa\" value=\"";
         // line 303
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 303, $this->source); })()), "end_date", [], "any", false, false, false, 303), "html", null, true);
         yield "\">
                 </div>
-                <div class=\"col-12 d-flex justify-content-end gap-2 mt-4\">
+                <div class=\"col-12 d-flex justify-content-end gap-3 mt-4\">
                     <a href=\"";
         // line 306
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_index");
@@ -504,189 +504,187 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
         <div class=\"table-responsive\">
             <table class=\"table table-hover mb-0 align-middle\">
                 <thead class=\"table-light\">
+                    <tr>
                         <th>N° commande</th>
                         <th>Fournisseur</th>
                         <th>Date</th>
                         <th>Total</th>
                         <th>Statut</th>
                         <th>Actions</th>
-                     </thead>
+                    </tr>
+                </thead>
                 <tbody>
                     ";
-        // line 333
+        // line 335
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["purchases"]) || array_key_exists("purchases", $context) ? $context["purchases"] : (function () { throw new RuntimeError('Variable "purchases" does not exist.', 333, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["purchases"]) || array_key_exists("purchases", $context) ? $context["purchases"] : (function () { throw new RuntimeError('Variable "purchases" does not exist.', 335, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["purchase"]) {
-            // line 334
-            yield "                      <tr>
-                        <td>
-                            <strong>";
             // line 336
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "purchaseNumber", [], "any", false, false, false, 336), "html", null, true);
+            yield "                        <tr>
+                            <td>
+                                <strong>";
+            // line 338
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "purchaseNumber", [], "any", false, false, false, 338), "html", null, true);
             yield "</strong>
-                            ";
-            // line 337
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "bonCommande", [], "any", false, false, false, 337)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 338
-                yield "                                <br><small class=\"text-muted\">
-                                    <a href=\"";
-                // line 339
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/bons-commande/" . CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "bonCommande", [], "any", false, false, false, 339))), "html", null, true);
-                yield "\" target=\"_blank\" class=\"text-primary\">
-                                        <i class=\"fas fa-file-pdf\"></i> BC
-                                    </a>
-                                </small>
-                            ";
-            }
-            // line 344
-            yield "                        </td>
-                        <td>
-                            ";
-            // line 346
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "supplier", [], "any", false, false, false, 346)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 347
-                yield "                                ";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "supplier", [], "any", false, false, false, 347), "name", [], "any", false, false, false, 347), "html", null, true);
+                            </td>
+                            <td>
+                                ";
+            // line 341
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "supplier", [], "any", false, false, false, 341)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 342
+                yield "                                    ";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "supplier", [], "any", false, false, false, 342), "name", [], "any", false, false, false, 342), "html", null, true);
                 yield "
-                                <br><small class=\"text-muted\">";
-                // line 348
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "supplier", [], "any", false, false, false, 348), "phone", [], "any", false, false, false, 348), "html", null, true);
+                                    <br><small class=\"text-muted\">";
+                // line 343
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "supplier", [], "any", false, false, false, 343), "phone", [], "any", false, false, false, 343), "html", null, true);
                 yield "</small>
-                            ";
+                                ";
             } else {
-                // line 350
-                yield "                                <span class=\"text-muted\">-</span>
-                            ";
+                // line 345
+                yield "                                    <span class=\"text-muted\">-</span>
+                                ";
             }
-            // line 352
-            yield "                        </td>
-                        <td>";
-            // line 353
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "createdAt", [], "any", false, false, false, 353), "d/m/Y H:i"), "html", null, true);
+            // line 347
+            yield "                            </td>
+                            <td>";
+            // line 348
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "createdAt", [], "any", false, false, false, 348), "d/m/Y H:i"), "html", null, true);
             yield "</td>
-                        <td class=\"fw-bold text-primary\">";
-            // line 354
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "totalAmount", [], "any", false, false, false, 354), 0, ",", " "), "html", null, true);
+                            <td class=\"fw-bold text-primary\">";
+            // line 349
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "totalAmount", [], "any", false, false, false, 349), 0, ",", " "), "html", null, true);
             yield " FCFA</td>
-                        <td>
-                            <span class=\"badge badge-status-";
-            // line 356
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "status", [], "any", false, false, false, 356), "html", null, true);
+                            <td>
+                                <span class=\"badge badge-status-";
+            // line 351
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "status", [], "any", false, false, false, 351), "html", null, true);
             yield "\">
-                                <i class=\"fas ";
-            // line 357
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "statusIcon", [], "any", false, false, false, 357), "html", null, true);
+                                    <i class=\"fas ";
+            // line 352
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "statusIcon", [], "any", false, false, false, 352), "html", null, true);
             yield " me-1\"></i>
-                                ";
-            // line 358
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "statusLabel", [], "any", false, false, false, 358), "html", null, true);
+                                    ";
+            // line 353
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "statusLabel", [], "any", false, false, false, 353), "html", null, true);
             yield "
-                            </span>
-                        </td>
-                        <td>
-                            <div class=\"btn-group btn-group-sm\">
-                                <a href=\"";
-            // line 363
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "id", [], "any", false, false, false, 363)]), "html", null, true);
+                                </span>
+                            </td>
+                            <td>
+                                <div class=\"btn-group btn-group-sm\">
+                                    <a href=\"";
+            // line 358
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "id", [], "any", false, false, false, 358)]), "html", null, true);
             yield "\" class=\"btn btn-outline-info\" title=\"Voir\">
-                                    <i class=\"fas fa-eye\"></i>
-                                </a>
-                                <a href=\"";
-            // line 366
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_print", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "id", [], "any", false, false, false, 366)]), "html", null, true);
+                                        <i class=\"fas fa-eye\"></i> Voir
+                                    </a>
+                                    <a href=\"";
+            // line 361
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_print", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "id", [], "any", false, false, false, 361)]), "html", null, true);
             yield "\" class=\"btn btn-outline-secondary\" title=\"Imprimer\" target=\"_blank\">
-                                    <i class=\"fas fa-print\"></i>
-                                </a>
-                                ";
+                                        <i class=\"fas fa-print\"></i> Imprimer
+                                    </a>
+                                    ";
+            // line 364
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "bonCommande", [], "any", false, false, false, 364)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 365
+                yield "                                        <a href=\"";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/bons-commande/" . CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "bonCommande", [], "any", false, false, false, 365))), "html", null, true);
+                yield "\" class=\"btn btn-outline-primary\" target=\"_blank\" title=\"Bon de commande\">
+                                            <i class=\"fas fa-file-pdf\"></i> Bon commande
+                                        </a>
+                                    ";
+            }
             // line 369
+            yield "                                    ";
             if ((CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "recuAchat", [], "any", false, false, false, 369) && ((CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "status", [], "any", false, false, false, 369) == "confirmed") || (CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "status", [], "any", false, false, false, 369) == "received")))) {
                 // line 370
-                yield "                                    <a href=\"";
+                yield "                                        <a href=\"";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/recus-achat/" . CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "recuAchat", [], "any", false, false, false, 370))), "html", null, true);
                 yield "\" class=\"btn btn-outline-success\" target=\"_blank\" title=\"Reçu\">
-                                        <i class=\"fas fa-file-pdf\"></i> Reçu
-                                    </a>
-                                ";
+                                            <i class=\"fas fa-file-pdf\"></i> Reçu
+                                        </a>
+                                    ";
             }
             // line 374
-            yield "                                ";
+            yield "                                    ";
             if ((CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "status", [], "any", false, false, false, 374) == "confirmed")) {
                 // line 375
-                yield "                                    <a href=\"";
+                yield "                                        <a href=\"";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_receive", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "id", [], "any", false, false, false, 375)]), "html", null, true);
                 yield "\" class=\"btn btn-outline-success\" title=\"Réceptionner\">
-                                        <i class=\"fas fa-box-open\"></i>
-                                    </a>
-                                ";
+                                            <i class=\"fas fa-box-open\"></i>
+                                        </a>
+                                    ";
             }
             // line 379
-            yield "                                ";
+            yield "                                    ";
             if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "canCancel", [], "any", false, false, false, 379)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                 // line 380
-                yield "                                    <button type=\"button\" class=\"btn btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#cancelModal";
+                yield "                                        <button type=\"button\" class=\"btn btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#cancelModal";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "id", [], "any", false, false, false, 380), "html", null, true);
                 yield "\" title=\"Annuler\">
-                                        <i class=\"fas fa-ban\"></i>
-                                    </button>
-                                ";
+                                            <i class=\"fas fa-ban\"></i>
+                                        </button>
+                                    ";
             }
             // line 384
-            yield "                            </div>
+            yield "                                </div>
 
-                            <!-- Modal d'annulation -->
-                            <div class=\"modal fade\" id=\"cancelModal";
+                                <!-- Modal d'annulation -->
+                                <div class=\"modal fade\" id=\"cancelModal";
             // line 387
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "id", [], "any", false, false, false, 387), "html", null, true);
             yield "\" tabindex=\"-1\">
-                                <div class=\"modal-dialog modal-dialog-centered\">
-                                    <div class=\"modal-content\">
-                                        <div class=\"modal-header\">
-                                            <h5 class=\"modal-title\">Annuler la commande</h5>
-                                            <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
-                                        </div>
-                                        <form action=\"";
+                                    <div class=\"modal-dialog modal-dialog-centered\">
+                                        <div class=\"modal-content\">
+                                            <div class=\"modal-header\">
+                                                <h5 class=\"modal-title\">Annuler la commande</h5>
+                                                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
+                                            </div>
+                                            <form action=\"";
             // line 394
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_cancel", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "id", [], "any", false, false, false, 394)]), "html", null, true);
             yield "\" method=\"POST\">
-                                            <div class=\"modal-body\">
-                                                <div class=\"mb-3\">
-                                                    <label class=\"form-label\">Motif d'annulation *</label>
-                                                    <textarea name=\"reason\" class=\"form-control\" rows=\"3\" required></textarea>
+                                                <div class=\"modal-body\">
+                                                    <div class=\"mb-3\">
+                                                        <label class=\"form-label\">Motif d'annulation *</label>
+                                                        <textarea name=\"reason\" class=\"form-control\" rows=\"3\" required></textarea>
+                                                    </div>
+                                                    <div class=\"alert alert-warning\">
+                                                        <i class=\"fas fa-exclamation-triangle\"></i>
+                                                        L'annulation enverra une notification au fournisseur.
+                                                    </div>
                                                 </div>
-                                                <div class=\"alert alert-warning\">
-                                                    <i class=\"fas fa-exclamation-triangle\"></i>
-                                                    L'annulation enverra une notification au fournisseur.
+                                                <div class=\"modal-footer\">
+                                                    <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Fermer</button>
+                                                    <button type=\"submit\" class=\"btn btn-danger\">Confirmer l'annulation</button>
                                                 </div>
-                                            </div>
-                                            <div class=\"modal-footer\">
-                                                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Fermer</button>
-                                                <button type=\"submit\" class=\"btn btn-danger\">Confirmer l'annulation</button>
-                                            </div>
-                                        </form>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                      </tr>
+                            </td>
+                        </tr>
                     ";
             $context['_iterated'] = true;
         }
         // line 415
         if (!$context['_iterated']) {
             // line 416
-            yield "                      <tr>
-                        <td colspan=\"6\" class=\"text-center py-5\">
-                            <i class=\"fas fa-inbox fa-3x text-muted mb-3\"></i>
-                            <p class=\"text-muted\">Aucune commande trouvée.</p>
-                            <a href=\"";
+            yield "                        <tr>
+                            <td colspan=\"6\" class=\"text-center py-5\">
+                                <i class=\"fas fa-inbox fa-3x text-muted mb-3\"></i>
+                                <p class=\"text-muted\">Aucune commande trouvée.</p>
+                                <a href=\"";
             // line 420
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_cart");
             yield "\" class=\"btn btn-primary btn-sm\">
-                                <i class=\"fas fa-plus-circle\"></i> Créer une commande
-                            </a>
-                        </td>
-                      </tr>
+                                    <i class=\"fas fa-plus-circle\"></i> Créer une commande
+                                </a>
+                            </td>
+                        </tr>
                     ";
         }
         $_parent = $context['_parent'];
@@ -864,7 +862,7 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  794 => 465,  781 => 464,  768 => 460,  762 => 456,  754 => 451,  751 => 450,  749 => 449,  746 => 448,  735 => 445,  730 => 444,  726 => 443,  723 => 442,  715 => 437,  712 => 436,  710 => 435,  705 => 432,  703 => 431,  696 => 426,  684 => 420,  678 => 416,  676 => 415,  650 => 394,  640 => 387,  635 => 384,  627 => 380,  624 => 379,  616 => 375,  613 => 374,  605 => 370,  603 => 369,  597 => 366,  591 => 363,  583 => 358,  579 => 357,  575 => 356,  570 => 354,  566 => 353,  563 => 352,  559 => 350,  554 => 348,  549 => 347,  547 => 346,  543 => 344,  535 => 339,  532 => 338,  530 => 337,  526 => 336,  522 => 334,  517 => 333,  487 => 306,  481 => 303,  474 => 299,  468 => 295,  455 => 293,  451 => 292,  443 => 286,  430 => 284,  426 => 283,  415 => 275,  389 => 252,  368 => 234,  350 => 219,  332 => 204,  314 => 189,  296 => 174,  279 => 160,  267 => 150,  254 => 149,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  792 => 465,  779 => 464,  766 => 460,  760 => 456,  752 => 451,  749 => 450,  747 => 449,  744 => 448,  733 => 445,  728 => 444,  724 => 443,  721 => 442,  713 => 437,  710 => 436,  708 => 435,  703 => 432,  701 => 431,  694 => 426,  682 => 420,  676 => 416,  674 => 415,  648 => 394,  638 => 387,  633 => 384,  625 => 380,  622 => 379,  614 => 375,  611 => 374,  603 => 370,  600 => 369,  592 => 365,  590 => 364,  584 => 361,  578 => 358,  570 => 353,  566 => 352,  562 => 351,  557 => 349,  553 => 348,  550 => 347,  546 => 345,  541 => 343,  536 => 342,  534 => 341,  528 => 338,  524 => 336,  519 => 335,  487 => 306,  481 => 303,  474 => 299,  468 => 295,  455 => 293,  451 => 292,  443 => 286,  430 => 284,  426 => 283,  415 => 275,  389 => 252,  368 => 234,  350 => 219,  332 => 204,  314 => 189,  296 => 174,  279 => 160,  267 => 150,  254 => 149,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -880,7 +878,7 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
 <link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
 <link href=\"https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css\" rel=\"stylesheet\" />
 <style>
-    /* --- Styles généraux (inchangés) --- */
+    /* --- Styles généraux --- */
     .stat-card {
         transition: transform 0.2s ease;
         border-left: 4px solid var(--primary-color);
@@ -1034,7 +1032,7 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
         </div>
     </div>
 
-    <!-- Cartes de statistiques (5 premières) -->
+    <!-- Cartes de statistiques -->
     <div class=\"row g-4 mb-4 equal-height\">
         <div class=\"col-sm-6 col-md-6 col-lg-4\">
             <div class=\"card shadow-sm stat-card h-100\">
@@ -1113,7 +1111,7 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
         </div>
     </div>
 
-    <!-- Carte Montant total (pleine largeur) -->
+    <!-- Carte Montant total -->
     <div class=\"row mb-4\">
         <div class=\"col-12\">
             <div class=\"card shadow-sm stat-card h-100\">
@@ -1136,18 +1134,18 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
             <h5 class=\"mb-0\"><i class=\"fas fa-filter me-2\"></i>Filtres</h5>
         </div>
         <div class=\"card-body\">
-            <form method=\"get\" class=\"row g-3\">
-                <div class=\"col-lg-3 col-md-6\">
+            <form method=\"get\" class=\"row g-4\">
+                <div class=\"col-md-6 col-lg-3\">
                     <label for=\"search\" class=\"form-label fw-bold\">Recherche</label>
                     <div class=\"input-group\">
                         <span class=\"input-group-text bg-white border-end-0\">
                             <i class=\"fas fa-search text-muted\"></i>
                         </span>
                         <input type=\"text\" name=\"search\" id=\"search\" value=\"{{ filters.search }}\" 
-                               class=\"form-control border-start-0\" placeholder=\"N° commande, fournisseur, utilisateur...\">
+                            class=\"form-control border-start-0\" placeholder=\"N° commande, fournisseur, utilisateur...\">
                     </div>
                 </div>
-                <div class=\"col-lg-2 col-md-6\">
+                <div class=\"col-md-6 col-lg-2\">
                     <label for=\"status\" class=\"form-label fw-bold\">Statut</label>
                     <select name=\"status\" id=\"status\" class=\"form-select\">
                         <option value=\"\">Tous</option>
@@ -1156,7 +1154,7 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
                         {% endfor %}
                     </select>
                 </div>
-                <div class=\"col-lg-2 col-md-6\">
+                <div class=\"col-md-6 col-lg-2\">
                     <label for=\"supplier_id\" class=\"form-label fw-bold\">Fournisseur</label>
                     <select name=\"supplier_id\" id=\"supplier_id\" class=\"form-select select2\">
                         <option value=\"\">Tous</option>
@@ -1165,15 +1163,15 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
                         {% endfor %}
                     </select>
                 </div>
-                <div class=\"col-lg-2 col-md-6\">
+                <div class=\"col-md-6 col-lg-2\">
                     <label for=\"start_date\" class=\"form-label fw-bold\">Date de début</label>
                     <input type=\"text\" name=\"start_date\" id=\"start_date\" class=\"form-control datepicker\" placeholder=\"jj/mm/aaaa\" value=\"{{ filters.start_date }}\">
                 </div>
-                <div class=\"col-lg-2 col-md-6\">
+                <div class=\"col-md-6 col-lg-3\">
                     <label for=\"end_date\" class=\"form-label fw-bold\">Date de fin</label>
                     <input type=\"text\" name=\"end_date\" id=\"end_date\" class=\"form-control datepicker\" placeholder=\"jj/mm/aaaa\" value=\"{{ filters.end_date }}\">
                 </div>
-                <div class=\"col-12 d-flex justify-content-end gap-2 mt-4\">
+                <div class=\"col-12 d-flex justify-content-end gap-3 mt-4\">
                     <a href=\"{{ path('purchase_index') }}\" class=\"btn btn-outline-secondary px-4\">
                         <i class=\"fas fa-undo me-1\"></i> Effacer
                     </a>
@@ -1193,106 +1191,106 @@ class __TwigTemplate_0274e86db4d3013e8c84d78ff3053b42 extends Template
         <div class=\"table-responsive\">
             <table class=\"table table-hover mb-0 align-middle\">
                 <thead class=\"table-light\">
+                    <tr>
                         <th>N° commande</th>
                         <th>Fournisseur</th>
                         <th>Date</th>
                         <th>Total</th>
                         <th>Statut</th>
                         <th>Actions</th>
-                     </thead>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for purchase in purchases %}
-                      <tr>
-                        <td>
-                            <strong>{{ purchase.purchaseNumber }}</strong>
-                            {% if purchase.bonCommande %}
-                                <br><small class=\"text-muted\">
-                                    <a href=\"{{ asset('uploads/bons-commande/' ~ purchase.bonCommande) }}\" target=\"_blank\" class=\"text-primary\">
-                                        <i class=\"fas fa-file-pdf\"></i> BC
-                                    </a>
-                                </small>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if purchase.supplier %}
-                                {{ purchase.supplier.name }}
-                                <br><small class=\"text-muted\">{{ purchase.supplier.phone }}</small>
-                            {% else %}
-                                <span class=\"text-muted\">-</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ purchase.createdAt|date('d/m/Y H:i') }}</td>
-                        <td class=\"fw-bold text-primary\">{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</td>
-                        <td>
-                            <span class=\"badge badge-status-{{ purchase.status }}\">
-                                <i class=\"fas {{ purchase.statusIcon }} me-1\"></i>
-                                {{ purchase.statusLabel }}
-                            </span>
-                        </td>
-                        <td>
-                            <div class=\"btn-group btn-group-sm\">
-                                <a href=\"{{ path('purchase_show', {id: purchase.id}) }}\" class=\"btn btn-outline-info\" title=\"Voir\">
-                                    <i class=\"fas fa-eye\"></i>
-                                </a>
-                                <a href=\"{{ path('purchase_print', {id: purchase.id}) }}\" class=\"btn btn-outline-secondary\" title=\"Imprimer\" target=\"_blank\">
-                                    <i class=\"fas fa-print\"></i>
-                                </a>
-                                {% if purchase.recuAchat and (purchase.status == 'confirmed' or purchase.status == 'received') %}
-                                    <a href=\"{{ asset('uploads/recus-achat/' ~ purchase.recuAchat) }}\" class=\"btn btn-outline-success\" target=\"_blank\" title=\"Reçu\">
-                                        <i class=\"fas fa-file-pdf\"></i> Reçu
-                                    </a>
+                        <tr>
+                            <td>
+                                <strong>{{ purchase.purchaseNumber }}</strong>
+                            </td>
+                            <td>
+                                {% if purchase.supplier %}
+                                    {{ purchase.supplier.name }}
+                                    <br><small class=\"text-muted\">{{ purchase.supplier.phone }}</small>
+                                {% else %}
+                                    <span class=\"text-muted\">-</span>
                                 {% endif %}
-                                {% if purchase.status == 'confirmed' %}
-                                    <a href=\"{{ path('purchase_receive', {id: purchase.id}) }}\" class=\"btn btn-outline-success\" title=\"Réceptionner\">
-                                        <i class=\"fas fa-box-open\"></i>
+                            </td>
+                            <td>{{ purchase.createdAt|date('d/m/Y H:i') }}</td>
+                            <td class=\"fw-bold text-primary\">{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</td>
+                            <td>
+                                <span class=\"badge badge-status-{{ purchase.status }}\">
+                                    <i class=\"fas {{ purchase.statusIcon }} me-1\"></i>
+                                    {{ purchase.statusLabel }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class=\"btn-group btn-group-sm\">
+                                    <a href=\"{{ path('purchase_show', {id: purchase.id}) }}\" class=\"btn btn-outline-info\" title=\"Voir\">
+                                        <i class=\"fas fa-eye\"></i> Voir
                                     </a>
-                                {% endif %}
-                                {% if purchase.canCancel %}
-                                    <button type=\"button\" class=\"btn btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#cancelModal{{ purchase.id }}\" title=\"Annuler\">
-                                        <i class=\"fas fa-ban\"></i>
-                                    </button>
-                                {% endif %}
-                            </div>
+                                    <a href=\"{{ path('purchase_print', {id: purchase.id}) }}\" class=\"btn btn-outline-secondary\" title=\"Imprimer\" target=\"_blank\">
+                                        <i class=\"fas fa-print\"></i> Imprimer
+                                    </a>
+                                    {% if purchase.bonCommande %}
+                                        <a href=\"{{ asset('uploads/bons-commande/' ~ purchase.bonCommande) }}\" class=\"btn btn-outline-primary\" target=\"_blank\" title=\"Bon de commande\">
+                                            <i class=\"fas fa-file-pdf\"></i> Bon commande
+                                        </a>
+                                    {% endif %}
+                                    {% if purchase.recuAchat and (purchase.status == 'confirmed' or purchase.status == 'received') %}
+                                        <a href=\"{{ asset('uploads/recus-achat/' ~ purchase.recuAchat) }}\" class=\"btn btn-outline-success\" target=\"_blank\" title=\"Reçu\">
+                                            <i class=\"fas fa-file-pdf\"></i> Reçu
+                                        </a>
+                                    {% endif %}
+                                    {% if purchase.status == 'confirmed' %}
+                                        <a href=\"{{ path('purchase_receive', {id: purchase.id}) }}\" class=\"btn btn-outline-success\" title=\"Réceptionner\">
+                                            <i class=\"fas fa-box-open\"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if purchase.canCancel %}
+                                        <button type=\"button\" class=\"btn btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#cancelModal{{ purchase.id }}\" title=\"Annuler\">
+                                            <i class=\"fas fa-ban\"></i>
+                                        </button>
+                                    {% endif %}
+                                </div>
 
-                            <!-- Modal d'annulation -->
-                            <div class=\"modal fade\" id=\"cancelModal{{ purchase.id }}\" tabindex=\"-1\">
-                                <div class=\"modal-dialog modal-dialog-centered\">
-                                    <div class=\"modal-content\">
-                                        <div class=\"modal-header\">
-                                            <h5 class=\"modal-title\">Annuler la commande</h5>
-                                            <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
+                                <!-- Modal d'annulation -->
+                                <div class=\"modal fade\" id=\"cancelModal{{ purchase.id }}\" tabindex=\"-1\">
+                                    <div class=\"modal-dialog modal-dialog-centered\">
+                                        <div class=\"modal-content\">
+                                            <div class=\"modal-header\">
+                                                <h5 class=\"modal-title\">Annuler la commande</h5>
+                                                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
+                                            </div>
+                                            <form action=\"{{ path('purchase_cancel', {id: purchase.id}) }}\" method=\"POST\">
+                                                <div class=\"modal-body\">
+                                                    <div class=\"mb-3\">
+                                                        <label class=\"form-label\">Motif d'annulation *</label>
+                                                        <textarea name=\"reason\" class=\"form-control\" rows=\"3\" required></textarea>
+                                                    </div>
+                                                    <div class=\"alert alert-warning\">
+                                                        <i class=\"fas fa-exclamation-triangle\"></i>
+                                                        L'annulation enverra une notification au fournisseur.
+                                                    </div>
+                                                </div>
+                                                <div class=\"modal-footer\">
+                                                    <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Fermer</button>
+                                                    <button type=\"submit\" class=\"btn btn-danger\">Confirmer l'annulation</button>
+                                                </div>
+                                            </form>
                                         </div>
-                                        <form action=\"{{ path('purchase_cancel', {id: purchase.id}) }}\" method=\"POST\">
-                                            <div class=\"modal-body\">
-                                                <div class=\"mb-3\">
-                                                    <label class=\"form-label\">Motif d'annulation *</label>
-                                                    <textarea name=\"reason\" class=\"form-control\" rows=\"3\" required></textarea>
-                                                </div>
-                                                <div class=\"alert alert-warning\">
-                                                    <i class=\"fas fa-exclamation-triangle\"></i>
-                                                    L'annulation enverra une notification au fournisseur.
-                                                </div>
-                                            </div>
-                                            <div class=\"modal-footer\">
-                                                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Fermer</button>
-                                                <button type=\"submit\" class=\"btn btn-danger\">Confirmer l'annulation</button>
-                                            </div>
-                                        </form>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                      </tr>
+                            </td>
+                        </tr>
                     {% else %}
-                      <tr>
-                        <td colspan=\"6\" class=\"text-center py-5\">
-                            <i class=\"fas fa-inbox fa-3x text-muted mb-3\"></i>
-                            <p class=\"text-muted\">Aucune commande trouvée.</p>
-                            <a href=\"{{ path('purchase_cart') }}\" class=\"btn btn-primary btn-sm\">
-                                <i class=\"fas fa-plus-circle\"></i> Créer une commande
-                            </a>
-                        </td>
-                      </tr>
+                        <tr>
+                            <td colspan=\"6\" class=\"text-center py-5\">
+                                <i class=\"fas fa-inbox fa-3x text-muted mb-3\"></i>
+                                <p class=\"text-muted\">Aucune commande trouvée.</p>
+                                <a href=\"{{ path('purchase_cart') }}\" class=\"btn btn-primary btn-sm\">
+                                    <i class=\"fas fa-plus-circle\"></i> Créer une commande
+                                </a>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

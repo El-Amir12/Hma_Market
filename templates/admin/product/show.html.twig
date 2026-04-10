@@ -37,91 +37,111 @@
 
     <!-- Stats rapides -->
     <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-3">
+        <!-- Carte 1 : Stock actuel (toujours visible) -->
+        <div class="{% if companyType == 'restaurant' %}col-xl-4 col-md-6{% else %}col-xl-3 col-md-6{% endif %} mb-3">
             <div class="card border-0 bg-primary bg-opacity-10 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <h6 class="text-muted mb-1">Stock actuel</h6>
-                            <h3 class="mb-0 fw-bold">{{ product.stockQuantity }}</h3>
+                            <h6 class="text-white-50 mb-1">Stock actuel</h6>
+                            <h3 class="mb-0 fw-bold text-white">
+                                {{ product.stockQuantity }} {{ product.unit|default('pièce(s)') }}
+                            </h3>
                         </div>
                         <div class="bg-primary bg-opacity-25 p-3 rounded">
-                            <i class="fas fa-boxes fa-lg text-primary"></i>
+                            <i class="fas fa-boxes fa-lg text-white"></i>
                         </div>
                     </div>
                     {% if product.minQuantity > 0 %}
-                        <small class="text-muted">
+                        <small class="text-white-50">
                             <i class="fas fa-exclamation-circle me-1"></i>
-                            Seuil d'alerte: {{ product.minQuantity }}
+                            Seuil d'alerte: {{ product.minQuantity }} {{ product.unit|default('pièce(s)') }}
                         </small>
                     {% endif %}
                 </div>
             </div>
         </div>
         
-        <div class="col-xl-3 col-md-6 mb-3">
+        <!-- Carte 2 : Valeur stock (basée sur les lots réels) -->
+        <div class="{% if companyType == 'restaurant' %}col-xl-4 col-md-6{% else %}col-xl-3 col-md-6{% endif %} mb-3">
             <div class="card border-0 bg-success bg-opacity-10 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <h6 class="text-muted mb-1">Valeur stock</h6>
-                            <h3 class="mb-0 fw-bold">
-                                {{ (product.stockQuantity * product.purchasePrice)|price_with_currency(product.hmaService) }}
+                            <h6 class="text-white-50 mb-1">Valeur stock</h6>
+                            <h3 class="mb-0 fw-bold text-white">
+                                {% set totalStockValue = 0 %}
+                                {% for batch in product.stockBatches %}
+                                    {% if batch.isActive %}
+                                        {% set totalStockValue = totalStockValue + (batch.currentQuantity * batch.unitPrice) %}
+                                    {% endif %}
+                                {% endfor %}
+                                {{ totalStockValue|price_with_currency(product.hmaService) }}
                             </h3>
                         </div>
                         <div class="bg-success bg-opacity-25 p-3 rounded">
-                            <i class="fas fa-coins fa-lg text-success"></i>
+                            <i class="fas fa-coins fa-lg text-white"></i>
                         </div>
                     </div>
-                    <small class="text-muted">
+                    <small class="text-white-50">
                         <i class="fas fa-calculator me-1"></i>
-                        {{ product.purchasePrice|price_with_currency(product.hmaService) }} × {{ product.stockQuantity }}
+                        Basé sur le coût d'achat réel des lots
+                        {% if companyType == 'restaurant' %}
+                            <span class="d-block mt-1">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Calculé à partir des prix d'achat des lots actifs
+                            </span>
+                        {% endif %}
                     </small>
                 </div>
             </div>
         </div>
         
+        <!-- Carte 3 : Marge (uniquement pour non restaurant) -->
+        {% if companyType != 'restaurant' %}
         <div class="col-xl-3 col-md-6 mb-3">
             <div class="card border-0 bg-info bg-opacity-10 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <h6 class="text-muted mb-1">Marge</h6>
-                            <h3 class="mb-0 fw-bold">
+                            <h6 class="text-white-50 mb-1">Marge</h6>
+                            <h3 class="mb-0 fw-bold text-white">
                                 {% set margin = product.salePrice - product.purchasePrice %}
                                 {% set marginPercentage = product.purchasePrice > 0 ? (margin / product.purchasePrice * 100)|round(1) : 0 %}
                                 {{ marginPercentage }}%
                             </h3>
                         </div>
                         <div class="bg-info bg-opacity-25 p-3 rounded">
-                            <i class="fas fa-chart-line fa-lg text-info"></i>
+                            <i class="fas fa-chart-line fa-lg text-white"></i>
                         </div>
                     </div>
-                    <small class="text-muted">
+                    <small class="text-white-50">
                         <i class="fas fa-arrow-up me-1"></i>
                         {{ margin|price_with_currency(product.hmaService) }} par unité
                     </small>
                 </div>
             </div>
         </div>
+        {% endif %}
         
-        <div class="col-xl-3 col-md-6 mb-3">
+        <!-- Carte 4 : Statut (toujours visible) -->
+        <div class="{% if companyType == 'restaurant' %}col-xl-4 col-md-6{% else %}col-xl-3 col-md-6{% endif %} mb-3">
             <div class="card border-0 {{ product.isActive ? 'bg-success' : 'bg-danger' }} bg-opacity-10 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <h6 class="text-muted mb-1">Statut</h6>
-                            <h3 class="mb-0 fw-bold">
-                                <span class="badge {{ product.isActive ? 'bg-success' : 'bg-danger' }}">
+                            <h6 class="text-white-50 mb-1">Statut</h6>
+                            <div>
+                                <span class="badge {{ product.isActive ? 'bg-success' : 'bg-danger' }} px-3 py-2">
                                     {{ product.isActive ? 'ACTIF' : 'INACTIF' }}
                                 </span>
-                            </h3>
+                            </div>
                         </div>
                         <div class="{{ product.isActive ? 'bg-success' : 'bg-danger' }} bg-opacity-25 p-3 rounded">
-                            <i class="fas {{ product.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }} fa-lg {{ product.isActive ? 'text-success' : 'text-danger' }}"></i>
+                            <i class="fas {{ product.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }} fa-lg text-white"></i>
                         </div>
                     </div>
-                    <small class="text-muted">
+                    <small class="text-white-50">
                         <i class="fas fa-calendar me-1"></i>
                         Créé le {{ product.createdAt|date('d/m/Y') }}
                     </small>
@@ -208,12 +228,14 @@
                                     </span>
                                 </dd>
                                 
-                                <dt class="col-sm-5 text-muted">Prix de vente</dt>
-                                <dd class="col-sm-7">
-                                    <span class="text-success fw-bold">
-                                        {{ product.salePrice|price_with_currency(product.hmaService) }}
-                                    </span>
-                                </dd>
+                                {% if companyType != 'restaurant' %}
+                                    <dt class="col-sm-5 text-muted">Prix de vente</dt>
+                                    <dd class="col-sm-7">
+                                        <span class="text-success fw-bold">
+                                            {{ product.salePrice|price_with_currency(product.hmaService) }}
+                                        </span>
+                                    </dd>
+                                {% endif %}
                                 
                                 <dt class="col-sm-5 text-muted">Stock min.</dt>
                                 <dd class="col-sm-7">
@@ -297,7 +319,7 @@
                                                         <h6 class="mb-1">Lot {{ batch.batchNumber }}</h6>
                                                         <p class="mb-0 text-muted small">
                                                             <i class="fas fa-box me-1"></i>
-                                                            Quantité: {{ batch.quantity }}
+                                                            Quantité: {{ batch.initialQuantity }}
                                                             {% if batch.expiryDate %}
                                                                 <span class="ms-2">
                                                                     <i class="fas fa-calendar-alt me-1"></i>
@@ -321,8 +343,9 @@
                                 </div>
                                 {% if product.stockBatches|length > 5 %}
                                     <div class="text-center mt-3">
-                                        <a href="{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}" class="btn btn-sm btn-outline-primary">
-                                            Voir tous les lots ({{ product.stockBatches|length }})
+                                        <a href="{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}" 
+                                            class="btn btn-sm btn-outline-info flex-fill" title="Lots de stock">
+                                            <i class="fas fa-boxes"></i> Lots
                                         </a>
                                     </div>
                                 {% endif %}
@@ -353,8 +376,26 @@
                            class="btn btn-warning">
                             <i class="fas fa-edit me-2"></i> Modifier le produit
                         </a>
+
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-print me-2"></i> Imprimer
+                            </button>
+                            <ul class="dropdown-menu w-100">
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="window.open('{{ path('app_admin_product_print_barcode', {'id': product.id}) }}', '_blank'); return false;">
+                                        <i class="fas fa-barcode me-2"></i> Étiquette code-barres
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="window.open('{{ path('app_admin_product_print_sheet', {'id': product.id}) }}', '_blank'); return false;">
+                                        <i class="fas fa-file-alt me-2"></i> Fiche produit
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                         
-                        <a href="{{ path('admin_purchase_new', {'productId': product.id}) }}" 
+                        <a href="{{ path('purchase_cart') }}" 
                            class="btn btn-success">
                             <i class="fas fa-plus me-2"></i> Nouvel achat
                         </a>
@@ -377,10 +418,12 @@
                         </a>
                         {% endif %}
                         
-                        <!-- Lien vers les promotions (à créer) -->
-                        <a href="#" class="btn btn-outline-warning">
-                            <i class="fas fa-tags me-2"></i> Promotions
-                        </a>
+                        {% if companyType != 'restaurant' %}
+                            <a href="{{ path('app_admin_product_promotions', {'id': product.id}) }}" 
+                            class="btn btn-sm btn-outline-warning flex-fill" title="Promotions">
+                                <i class="fas fa-tags me-1"></i> Promos
+                            </a>
+                        {% endif %}
                         
                         <!-- Bouton toggle status (ouvre modal) -->
                         <button type="button" 
@@ -410,24 +453,6 @@
                                 <i class="fas fa-trash me-2"></i> Supprimer le produit
                             </button>
                         {% endif %}
-                        
-                        <div class="dropdown">
-                            <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-print me-2"></i> Imprimer
-                            </button>
-                            <ul class="dropdown-menu w-100">
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-barcode me-2"></i> Étiquette code-barres
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-file-alt me-2"></i> Fiche produit
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -440,7 +465,7 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    {% set activeBatches = product.stockBatches|filter(b => b.isActive and b.remainingQuantity > 0)|sort((a, b) => a.expiryDate <=> b.expiryDate) %}
+                    {% set activeBatches = product.stockBatches|filter(b => b.isActive and b.currentQuantity > 0)|sort((a, b) => a.expiryDate <=> b.expiryDate) %}
                     
                     {% if activeBatches|length > 0 %}
                         <div class="list-group list-group-flush">
@@ -451,7 +476,7 @@
                                             <h6 class="mb-1">Lot {{ batch.batchNumber }}</h6>
                                             <small class="text-muted">
                                                 <i class="fas fa-box me-1"></i>
-                                                {{ batch.remainingQuantity }}/{{ batch.quantity }}
+                                                {{ batch.currentQuantity }}/{{ batch.initialQuantity }}
                                             </small>
                                         </div>
                                         <div class="text-end">
@@ -463,8 +488,8 @@
                                                     </small>
                                                 </div>
                                             {% endif %}
-                                            <span class="badge {{ batch.remainingQuantity <= 10 ? 'bg-warning' : 'bg-success' }}">
-                                                {{ batch.remainingQuantity }} restants
+                                            <span class="badge {{ batch.currentQuantity <= 10 ? 'bg-warning' : 'bg-success' }}">
+                                                {{ batch.currentQuantity }} restants
                                             </span>
                                         </div>
                                     </div>

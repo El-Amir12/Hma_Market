@@ -280,21 +280,15 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         gap: 0.5rem;
     }
     .cart-item-quantity {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
         margin: 0 1rem;
     }
-    .cart-item-quantity input {
-        width: 60px;
-        text-align: center;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        padding: 0.25rem;
+    .cart-item-quantity .badge {
+        font-size: 1rem;
+        padding: 0.5rem 0.75rem;
     }
     .cart-item-price {
         text-align: right;
-        min-width: 120px;
+        min-width: 140px;
     }
     .cart-item-price .total {
         font-weight: 700;
@@ -318,7 +312,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         .cart-item-quantity {
             margin: 0.5rem 0;
             width: 100%;
-            justify-content: center;
+            text-align: center;
         }
         .cart-item-price {
             width: 100%;
@@ -330,6 +324,12 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         width: 1rem;
         height: 1rem;
         border-width: 0.2em;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
     }
 </style>
 ";
@@ -490,50 +490,43 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                 yield "                                    </div>
                                 </div>
                                 <div class=\"cart-item-quantity\">
-                                    <button class=\"btn btn-sm btn-outline-secondary qty-btn\" data-action=\"decrement\" data-id=\"";
+                                    <span class=\"badge bg-secondary\">";
                 // line 325
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 325), "html", null, true);
-                yield "\">
-                                        <i class=\"bi bi-dash\"></i>
-                                    </button>
-                                    <input type=\"text\" class=\"form-control text-center quantity-input\" value=\"";
-                // line 328
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 328), "html", null, true);
-                yield "\" data-product-id=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 328), "html", null, true);
-                yield "\">
-                                    <button class=\"btn btn-sm btn-outline-secondary qty-btn\" data-action=\"increment\" data-id=\"";
-                // line 329
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 329), "html", null, true);
-                yield "\">
-                                        <i class=\"bi bi-plus\"></i>
-                                    </button>
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 325), "html", null, true);
+                yield "</span>
                                 </div>
                                 <div class=\"cart-item-price\">
                                     <div class=\"total\">";
-                // line 334
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "total_price", [], "any", false, false, false, 334), 0, ",", " "), "html", null, true);
+                // line 328
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "total_price", [], "any", false, false, false, 328), 0, ",", " "), "html", null, true);
                 yield " FCFA</div>
                                     <small class=\"text-muted\">";
-                // line 335
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 335), 0, ",", " "), "html", null, true);
+                // line 329
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 329), 0, ",", " "), "html", null, true);
                 yield " FCFA/unité</small>
-                                    <div class=\"mt-2\">
-                                        <button class=\"btn btn-sm btn-outline-primary edit-btn\" data-id=\"";
-                // line 337
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 337), "html", null, true);
-                yield "\" data-name=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 337), "html", null, true);
-                yield "\" data-quantity=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 337), "html", null, true);
-                yield "\" data-price=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 337), "html", null, true);
+                                    <div class=\"action-buttons\">
+                                        <button class=\"btn btn-sm btn-outline-primary edit-item\" 
+                                                data-id=\"";
+                // line 332
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 332), "html", null, true);
+                yield "\"
+                                                data-name=\"";
+                // line 333
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 333), "html", null, true);
+                yield "\"
+                                                data-quantity=\"";
+                // line 334
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 334), "html", null, true);
+                yield "\"
+                                                data-price=\"";
+                // line 335
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 335), "html", null, true);
                 yield "\">
                                             <i class=\"bi bi-pencil\"></i> Modifier
                                         </button>
-                                        <button class=\"btn btn-sm btn-danger remove-btn\" data-id=\"";
-                // line 340
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 340), "html", null, true);
+                                        <button class=\"btn btn-sm btn-outline-danger remove-btn\" data-id=\"";
+                // line 338
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 338), "html", null, true);
                 yield "\">
                                             <i class=\"bi bi-trash\"></i> Supprimer
                                         </button>
@@ -545,17 +538,17 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['item'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 347
+            // line 345
             yield "                    </ul>
                 ";
         }
-        // line 349
+        // line 347
         yield "            </div>
             <div class=\"cart-footer\">
                 <strong>Total TTC :</strong>
                 <h4 class=\"mb-0 text-primary\" id=\"cartTotal\">";
-        // line 352
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["cart_total"]) || array_key_exists("cart_total", $context) ? $context["cart_total"] : (function () { throw new RuntimeError('Variable "cart_total" does not exist.', 352, $this->source); })()), 0, ",", " "), "html", null, true);
+        // line 350
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["cart_total"]) || array_key_exists("cart_total", $context) ? $context["cart_total"] : (function () { throw new RuntimeError('Variable "cart_total" does not exist.', 350, $this->source); })()), 0, ",", " "), "html", null, true);
         yield " FCFA</h4>
             </div>
         </div>
@@ -604,7 +597,38 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     </div>
 </div>
 
-<!-- Modal de suppression d'élément du panier -->
+<!-- Modal de modification d'article (quantité + prix) -->
+<div class=\"modal fade\" id=\"editItemModal\" tabindex=\"-1\" aria-hidden=\"true\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header\">
+                <h5 class=\"modal-title\">Modifier l'article</h5>
+                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body\">
+                <input type=\"hidden\" id=\"editProductId\" value=\"\">
+                <div class=\"mb-3\">
+                    <label class=\"form-label\">Produit</label>
+                    <input type=\"text\" id=\"editProductName\" class=\"form-control\" readonly>
+                </div>
+                <div class=\"mb-3\">
+                    <label class=\"form-label\">Quantité</label>
+                    <input type=\"number\" id=\"editQuantity\" class=\"form-control\" min=\"1\" step=\"1\" value=\"1\">
+                </div>
+                <div class=\"mb-3\">
+                    <label class=\"form-label\">Prix unitaire (FCFA)</label>
+                    <input type=\"number\" id=\"editUnitPrice\" class=\"form-control\" step=\"0.01\" min=\"0.01\">
+                </div>
+            </div>
+            <div class=\"modal-footer\">
+                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"saveEditChanges\">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de suppression -->
 <div class=\"modal fade\" id=\"removeCartItemModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -626,38 +650,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     </div>
 </div>
 
-<!-- Modal de modification d'élément du panier (nouveau) -->
-<div class=\"modal fade\" id=\"editCartItemModal\" tabindex=\"-1\" aria-hidden=\"true\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header\">
-                <h5 class=\"modal-title\">Modifier l'article</h5>
-                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <input type=\"hidden\" id=\"editProductId\" value=\"\">
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Nom du produit</label>
-                    <input type=\"text\" id=\"editProductName\" class=\"form-control\" readonly disabled>
-                </div>
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Quantité</label>
-                    <input type=\"number\" id=\"editQuantity\" class=\"form-control\" min=\"1\" step=\"1\">
-                </div>
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Prix unitaire (FCFA)</label>
-                    <input type=\"number\" id=\"editUnitPrice\" class=\"form-control\" step=\"0.01\" min=\"0\">
-                </div>
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmEditBtn\">Enregistrer</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de confirmation de commande (inchangé) -->
+<!-- Modal de confirmation de commande -->
 <div class=\"modal fade\" id=\"confirmationModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-lg modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -673,22 +666,22 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                             <select name=\"supplier_id\" id=\"supplierSelect\" class=\"form-select\" required>
                                 <option value=\"\">Sélectionner un fournisseur</option>
                                 ";
-        // line 468
+        // line 466
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["suppliers"]) || array_key_exists("suppliers", $context) ? $context["suppliers"] : (function () { throw new RuntimeError('Variable "suppliers" does not exist.', 468, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["suppliers"]) || array_key_exists("suppliers", $context) ? $context["suppliers"] : (function () { throw new RuntimeError('Variable "suppliers" does not exist.', 466, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["supplier"]) {
-            // line 469
+            // line 467
             yield "                                    <option value=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "id", [], "any", false, false, false, 469), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "id", [], "any", false, false, false, 467), "html", null, true);
             yield "\">";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "name", [], "any", false, false, false, 469), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "name", [], "any", false, false, false, 467), "html", null, true);
             yield "</option>
                                 ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['supplier'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 471
+        // line 469
         yield "                            </select>
                         </div>
                         <div class=\"col-md-6\">
@@ -751,7 +744,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         yield from [];
     }
 
-    // line 525
+    // line 523
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -764,32 +757,36 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 526
+        // line 524
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
 <script>
     // URLs
     const searchUrl = \"";
-        // line 530
+        // line 528
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_search_products");
         yield "\";
     const addToCartUrl = \"";
-        // line 531
+        // line 529
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_add_product");
         yield "\";
     const cartDataUrl = \"";
-        // line 532
+        // line 530
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_cart_data");
         yield "\";
     const confirmUrl = \"";
-        // line 533
+        // line 531
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_confirm");
         yield "\";
-    const updateCartItemUrl = \"";
-        // line 534
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::replace($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_update_cart_item", ["productId" => 0]), ["0" => ""]), "html", null, true);
-        yield "\"; // will append productId
+    const removeProductUrlTemplate = \"";
+        // line 532
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_remove_product", ["productId" => "PLACEHOLDER"]);
+        yield "\".replace('PLACEHOLDER', '{productId}');
+    const updateItemUrlTemplate = \"";
+        // line 533
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_update_item", ["productId" => "PLACEHOLDER"]);
+        yield "\".replace('PLACEHOLDER', '{productId}');
 
     let searchTimeout = null;
     let currentProduct = null;
@@ -804,22 +801,10 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
 
     // Modals
     const addProductModal = new bootstrap.Modal(document.getElementById('addProductModal'));
+    const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
     const removeModal = new bootstrap.Modal(document.getElementById('removeCartItemModal'));
-    const editModal = new bootstrap.Modal(document.getElementById('editCartItemModal'));
 
-    // Remove modal elements
-    const removeProductIdInput = document.getElementById('removeProductId');
-    const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
-    let pendingRemoveProductId = null;
-
-    // Edit modal elements
-    const editProductId = document.getElementById('editProductId');
-    const editProductName = document.getElementById('editProductName');
-    const editQuantity = document.getElementById('editQuantity');
-    const editUnitPrice = document.getElementById('editUnitPrice');
-    const confirmEditBtn = document.getElementById('confirmEditBtn');
-
-    // Modal d'ajout
+    // Elements du modal d'ajout
     const modalProductImageContainer = document.getElementById('modalProductImageContainer');
     const modalProductName = document.getElementById('modalProductName');
     const modalProductBarcode = document.getElementById('modalProductBarcode');
@@ -830,6 +815,17 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     const decrementQty = document.getElementById('decrementQty');
     const incrementQty = document.getElementById('incrementQty');
     const confirmAddBtn = document.getElementById('confirmAddToCartBtn');
+
+    // Elements du modal d'édition
+    const editProductId = document.getElementById('editProductId');
+    const editProductName = document.getElementById('editProductName');
+    const editQuantity = document.getElementById('editQuantity');
+    const editUnitPrice = document.getElementById('editUnitPrice');
+    const saveEditChangesBtn = document.getElementById('saveEditChanges');
+
+    // Éléments du modal de suppression
+    const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
+    let pendingRemoveProductId = null;
 
     // Gestion des quantités dans le modal d'ajout
     incrementQty.addEventListener('click', () => {
@@ -876,6 +872,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                 // Vider la recherche
                 searchInput.value = '';
                 resultsContainer.innerHTML = '<div class=\"text-center text-muted py-5\"><i class=\"bi bi-search fs-1\"></i><p class=\"mt-2\">Commencez à taper pour voir les produits</p></div>';
+                document.getElementById('resultCount').textContent = '0';
             } else {
                 showToast('error', data.error);
             }
@@ -991,27 +988,8 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         addProductModal.show();
     }
 
-    // Gestion du panier avec délégation d'événements
+    // Gestion du panier (uniquement les boutons Modifier et Supprimer)
     cartContainer.addEventListener('click', async (e) => {
-        // Bouton quantité
-        const qtyBtn = e.target.closest('.qty-btn');
-        if (qtyBtn) {
-            const productId = parseInt(qtyBtn.dataset.id);
-            const action = qtyBtn.dataset.action;
-            const input = document.querySelector(`.quantity-input[data-product-id=\"\${productId}\"]`);
-            if (input) {
-                let newQty = parseInt(input.value);
-                if (action === 'increment') newQty++;
-                else if (action === 'decrement') newQty--;
-                if (isNaN(newQty) || newQty < 1) newQty = 1;
-                // Désactiver temporairement le bouton pour éviter les doubles clics
-                qtyBtn.disabled = true;
-                await updateQuantity(productId, newQty);
-                qtyBtn.disabled = false;
-            }
-            return;
-        }
-
         // Bouton supprimer
         const removeBtn = e.target.closest('.remove-btn');
         if (removeBtn) {
@@ -1020,60 +998,53 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             removeModal.show();
             return;
         }
-
         // Bouton modifier
-        const editBtn = e.target.closest('.edit-btn');
+        const editBtn = e.target.closest('.edit-item');
         if (editBtn) {
             const productId = parseInt(editBtn.dataset.id);
             const productName = editBtn.dataset.name;
-            const currentQuantity = parseInt(editBtn.dataset.quantity);
-            const currentPrice = parseFloat(editBtn.dataset.price);
-            openEditModal(productId, productName, currentQuantity, currentPrice);
+            const quantity = parseInt(editBtn.dataset.quantity);
+            const price = parseFloat(editBtn.dataset.price);
+            editProductId.value = productId;
+            editProductName.value = productName;
+            editQuantity.value = quantity;
+            editUnitPrice.value = price;
+            editModal.show();
         }
     });
 
-    // Ouvre le modal de modification avec les valeurs actuelles
-    function openEditModal(productId, productName, quantity, unitPrice) {
-        editProductId.value = productId;
-        editProductName.value = productName;
-        editQuantity.value = quantity;
-        editUnitPrice.value = unitPrice;
-        editModal.show();
-    }
-
-    // Confirmation de modification
-    confirmEditBtn.addEventListener('click', async () => {
-        const productId = parseInt(editProductId.value);
-        const newQuantity = parseInt(editQuantity.value);
-        const newUnitPrice = parseFloat(editUnitPrice.value);
-        if (isNaN(newQuantity) || newQuantity < 1) {
+    // Sauvegarde des modifications (envoi JSON)
+    saveEditChangesBtn.addEventListener('click', async () => {
+        const productId = editProductId.value;
+        const quantity = parseInt(editQuantity.value);
+        const unitPrice = parseFloat(editUnitPrice.value);
+        if (isNaN(quantity) || quantity < 1) {
             showToast('error', 'Quantité invalide');
             return;
         }
-        if (isNaN(newUnitPrice) || newUnitPrice <= 0) {
+        if (isNaN(unitPrice) || unitPrice <= 0) {
             showToast('error', 'Prix unitaire invalide');
             return;
         }
-        confirmEditBtn.disabled = true;
+
+        const updateUrl = updateItemUrlTemplate.replace('{productId}', productId);
         try {
-            const url = `\${updateCartItemUrl}\${productId}`;
-            const formData = new FormData();
-            formData.append('quantity', newQuantity);
-            formData.append('unit_price', newUnitPrice);
-            const response = await fetch(url, { method: 'PUT', body: formData });
+            const response = await fetch(updateUrl, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ quantity: quantity, unit_price: unitPrice })
+            });
             const data = await response.json();
             if (data.success) {
                 await refreshCart();
-                showToast('success', 'Article modifié');
                 editModal.hide();
+                showToast('success', 'Article modifié avec succès');
             } else {
                 showToast('error', data.error);
             }
         } catch (error) {
-            console.error('Erreur modification:', error);
+            console.error('Erreur updateItem:', error);
             showToast('error', 'Erreur lors de la modification');
-        } finally {
-            confirmEditBtn.disabled = false;
         }
     });
 
@@ -1088,34 +1059,9 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         }
     });
 
-    // Mise à jour d'une quantité (via +/-)
-    async function updateQuantity(productId, quantity) {
-        const updateUrl = \"";
-        // line 835
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::replace($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_update_quantity", ["productId" => 0]), ["0" => ""]), "html", null, true);
-        yield "\" + productId;
-        const formData = new FormData();
-        formData.append('quantity', quantity);
-        try {
-            const response = await fetch(updateUrl, { method: 'PUT', body: formData });
-            const data = await response.json();
-            if (data.success) {
-                await refreshCart();
-            } else {
-                showToast('error', data.error);
-            }
-        } catch (error) {
-            console.error('Erreur updateQuantity:', error);
-            showToast('error', 'Erreur lors de la mise à jour');
-        }
-    }
-
     // Suppression d'un produit
     async function removeFromCart(productId) {
-        const removeUrl = \"";
-        // line 854
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::replace($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_remove_product", ["productId" => 0]), ["0" => ""]), "html", null, true);
-        yield "\" + productId;
+        const removeUrl = removeProductUrlTemplate.replace('{productId}', productId);
         try {
             const response = await fetch(removeUrl, { method: 'DELETE' });
             const data = await response.json();
@@ -1178,18 +1124,20 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                         </div>
                     </div>
                     <div class=\"cart-item-quantity\">
-                        <button class=\"btn btn-sm btn-outline-secondary qty-btn\" data-action=\"decrement\" data-id=\"\${item.product_id}\"><i class=\"bi bi-dash\"></i></button>
-                        <input type=\"text\" class=\"form-control text-center quantity-input\" value=\"\${item.quantity}\" data-product-id=\"\${item.product_id}\">
-                        <button class=\"btn btn-sm btn-outline-secondary qty-btn\" data-action=\"increment\" data-id=\"\${item.product_id}\"><i class=\"bi bi-plus\"></i></button>
+                        <span class=\"badge bg-secondary\">\${item.quantity}</span>
                     </div>
                     <div class=\"cart-item-price\">
                         <div class=\"total\">\${formatPrice(item.total_price)} FCFA</div>
                         <small class=\"text-muted\">\${formatPrice(item.unit_price)} FCFA/unité</small>
-                        <div class=\"mt-2\">
-                            <button class=\"btn btn-sm btn-outline-primary edit-btn\" data-id=\"\${item.product_id}\" data-name=\"\${escapeHtml(item.product_name)}\" data-quantity=\"\${item.quantity}\" data-price=\"\${item.unit_price}\">
+                        <div class=\"action-buttons\">
+                            <button class=\"btn btn-sm btn-outline-primary edit-item\" 
+                                    data-id=\"\${item.product_id}\"
+                                    data-name=\"\${escapeHtml(item.product_name)}\"
+                                    data-quantity=\"\${item.quantity}\"
+                                    data-price=\"\${item.unit_price}\">
                                 <i class=\"bi bi-pencil\"></i> Modifier
                             </button>
-                            <button class=\"btn btn-sm btn-danger remove-btn\" data-id=\"\${item.product_id}\">
+                            <button class=\"btn btn-sm btn-outline-danger remove-btn\" data-id=\"\${item.product_id}\">
                                 <i class=\"bi bi-trash\"></i> Supprimer
                             </button>
                         </div>
@@ -1209,13 +1157,13 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         const barcode = prompt('Entrez le code-barres à scanner:');
         if (!barcode || barcode.length < 3) return;
         try {
-            const response = await fetch(`/api/products/search/barcode?barcode=\${encodeURIComponent(barcode)}`);
-            const product = await response.json();
-            if (product.error) {
-                showToast('error', product.error);
+            const response = await fetch(`\${searchUrl}?q=\${encodeURIComponent(barcode)}`);
+            const products = await response.json();
+            if (!products.length) {
+                showToast('error', 'Aucun produit trouvé avec ce code-barres');
                 return;
             }
-            // Créer un élément factice pour ouvrir le modal
+            const product = products[0];
             const dummy = document.createElement('div');
             dummy.dataset.productId = product.id;
             dummy.dataset.productName = product.name;
@@ -1227,11 +1175,11 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             openAddProductModal(dummy);
         } catch (error) {
             console.error('Erreur scan:', error);
-            showToast('error', 'Produit non trouvé');
+            showToast('error', 'Erreur lors de la recherche du produit');
         }
     });
 
-    // Confirmation commande
+    // Confirmation de commande
     const confirmModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
     confirmOrderBtn.addEventListener('click', () => confirmModal.show());
     document.getElementById('confirmPurchaseBtn').addEventListener('click', async () => {
@@ -1331,7 +1279,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  1117 => 854,  1095 => 835,  791 => 534,  787 => 533,  783 => 532,  779 => 531,  775 => 530,  768 => 526,  755 => 525,  692 => 471,  681 => 469,  677 => 468,  558 => 352,  553 => 349,  549 => 347,  536 => 340,  524 => 337,  519 => 335,  515 => 334,  507 => 329,  501 => 328,  495 => 325,  490 => 322,  486 => 320,  483 => 319,  477 => 317,  475 => 316,  471 => 315,  466 => 313,  459 => 310,  451 => 308,  449 => 307,  443 => 305,  439 => 304,  436 => 303,  426 => 295,  424 => 294,  418 => 291,  375 => 253,  369 => 250,  359 => 242,  346 => 241,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  788 => 533,  784 => 532,  780 => 531,  776 => 530,  772 => 529,  768 => 528,  761 => 524,  748 => 523,  685 => 469,  674 => 467,  670 => 466,  551 => 350,  546 => 347,  542 => 345,  529 => 338,  523 => 335,  519 => 334,  515 => 333,  511 => 332,  505 => 329,  501 => 328,  495 => 325,  490 => 322,  486 => 320,  483 => 319,  477 => 317,  475 => 316,  471 => 315,  466 => 313,  459 => 310,  451 => 308,  449 => 307,  443 => 305,  439 => 304,  436 => 303,  426 => 295,  424 => 294,  418 => 291,  375 => 253,  369 => 250,  359 => 242,  346 => 241,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1522,21 +1470,15 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         gap: 0.5rem;
     }
     .cart-item-quantity {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
         margin: 0 1rem;
     }
-    .cart-item-quantity input {
-        width: 60px;
-        text-align: center;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        padding: 0.25rem;
+    .cart-item-quantity .badge {
+        font-size: 1rem;
+        padding: 0.5rem 0.75rem;
     }
     .cart-item-price {
         text-align: right;
-        min-width: 120px;
+        min-width: 140px;
     }
     .cart-item-price .total {
         font-weight: 700;
@@ -1560,7 +1502,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         .cart-item-quantity {
             margin: 0.5rem 0;
             width: 100%;
-            justify-content: center;
+            text-align: center;
         }
         .cart-item-price {
             width: 100%;
@@ -1572,6 +1514,12 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         width: 1rem;
         height: 1rem;
         border-width: 0.2em;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
     }
 </style>
 {% endblock %}
@@ -1660,22 +1608,20 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                                     </div>
                                 </div>
                                 <div class=\"cart-item-quantity\">
-                                    <button class=\"btn btn-sm btn-outline-secondary qty-btn\" data-action=\"decrement\" data-id=\"{{ item.product_id }}\">
-                                        <i class=\"bi bi-dash\"></i>
-                                    </button>
-                                    <input type=\"text\" class=\"form-control text-center quantity-input\" value=\"{{ item.quantity }}\" data-product-id=\"{{ item.product_id }}\">
-                                    <button class=\"btn btn-sm btn-outline-secondary qty-btn\" data-action=\"increment\" data-id=\"{{ item.product_id }}\">
-                                        <i class=\"bi bi-plus\"></i>
-                                    </button>
+                                    <span class=\"badge bg-secondary\">{{ item.quantity }}</span>
                                 </div>
                                 <div class=\"cart-item-price\">
                                     <div class=\"total\">{{ item.total_price|number_format(0, ',', ' ') }} FCFA</div>
                                     <small class=\"text-muted\">{{ item.unit_price|number_format(0, ',', ' ') }} FCFA/unité</small>
-                                    <div class=\"mt-2\">
-                                        <button class=\"btn btn-sm btn-outline-primary edit-btn\" data-id=\"{{ item.product_id }}\" data-name=\"{{ item.product_name }}\" data-quantity=\"{{ item.quantity }}\" data-price=\"{{ item.unit_price }}\">
+                                    <div class=\"action-buttons\">
+                                        <button class=\"btn btn-sm btn-outline-primary edit-item\" 
+                                                data-id=\"{{ item.product_id }}\"
+                                                data-name=\"{{ item.product_name }}\"
+                                                data-quantity=\"{{ item.quantity }}\"
+                                                data-price=\"{{ item.unit_price }}\">
                                             <i class=\"bi bi-pencil\"></i> Modifier
                                         </button>
-                                        <button class=\"btn btn-sm btn-danger remove-btn\" data-id=\"{{ item.product_id }}\">
+                                        <button class=\"btn btn-sm btn-outline-danger remove-btn\" data-id=\"{{ item.product_id }}\">
                                             <i class=\"bi bi-trash\"></i> Supprimer
                                         </button>
                                     </div>
@@ -1735,7 +1681,38 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     </div>
 </div>
 
-<!-- Modal de suppression d'élément du panier -->
+<!-- Modal de modification d'article (quantité + prix) -->
+<div class=\"modal fade\" id=\"editItemModal\" tabindex=\"-1\" aria-hidden=\"true\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header\">
+                <h5 class=\"modal-title\">Modifier l'article</h5>
+                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body\">
+                <input type=\"hidden\" id=\"editProductId\" value=\"\">
+                <div class=\"mb-3\">
+                    <label class=\"form-label\">Produit</label>
+                    <input type=\"text\" id=\"editProductName\" class=\"form-control\" readonly>
+                </div>
+                <div class=\"mb-3\">
+                    <label class=\"form-label\">Quantité</label>
+                    <input type=\"number\" id=\"editQuantity\" class=\"form-control\" min=\"1\" step=\"1\" value=\"1\">
+                </div>
+                <div class=\"mb-3\">
+                    <label class=\"form-label\">Prix unitaire (FCFA)</label>
+                    <input type=\"number\" id=\"editUnitPrice\" class=\"form-control\" step=\"0.01\" min=\"0.01\">
+                </div>
+            </div>
+            <div class=\"modal-footer\">
+                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"saveEditChanges\">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de suppression -->
 <div class=\"modal fade\" id=\"removeCartItemModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -1757,38 +1734,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     </div>
 </div>
 
-<!-- Modal de modification d'élément du panier (nouveau) -->
-<div class=\"modal fade\" id=\"editCartItemModal\" tabindex=\"-1\" aria-hidden=\"true\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header\">
-                <h5 class=\"modal-title\">Modifier l'article</h5>
-                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <input type=\"hidden\" id=\"editProductId\" value=\"\">
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Nom du produit</label>
-                    <input type=\"text\" id=\"editProductName\" class=\"form-control\" readonly disabled>
-                </div>
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Quantité</label>
-                    <input type=\"number\" id=\"editQuantity\" class=\"form-control\" min=\"1\" step=\"1\">
-                </div>
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Prix unitaire (FCFA)</label>
-                    <input type=\"number\" id=\"editUnitPrice\" class=\"form-control\" step=\"0.01\" min=\"0\">
-                </div>
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmEditBtn\">Enregistrer</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de confirmation de commande (inchangé) -->
+<!-- Modal de confirmation de commande -->
 <div class=\"modal fade\" id=\"confirmationModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-lg modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -1869,7 +1815,8 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     const addToCartUrl = \"{{ path('purchase_add_product') }}\";
     const cartDataUrl = \"{{ path('purchase_cart_data') }}\";
     const confirmUrl = \"{{ path('purchase_confirm') }}\";
-    const updateCartItemUrl = \"{{ path('purchase_update_cart_item', {'productId': 0})|replace({'0': ''}) }}\"; // will append productId
+    const removeProductUrlTemplate = \"{{ path('purchase_remove_product', {'productId': 'PLACEHOLDER'}) }}\".replace('PLACEHOLDER', '{productId}');
+    const updateItemUrlTemplate = \"{{ path('purchase_update_item', {'productId': 'PLACEHOLDER'}) }}\".replace('PLACEHOLDER', '{productId}');
 
     let searchTimeout = null;
     let currentProduct = null;
@@ -1884,22 +1831,10 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
 
     // Modals
     const addProductModal = new bootstrap.Modal(document.getElementById('addProductModal'));
+    const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
     const removeModal = new bootstrap.Modal(document.getElementById('removeCartItemModal'));
-    const editModal = new bootstrap.Modal(document.getElementById('editCartItemModal'));
 
-    // Remove modal elements
-    const removeProductIdInput = document.getElementById('removeProductId');
-    const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
-    let pendingRemoveProductId = null;
-
-    // Edit modal elements
-    const editProductId = document.getElementById('editProductId');
-    const editProductName = document.getElementById('editProductName');
-    const editQuantity = document.getElementById('editQuantity');
-    const editUnitPrice = document.getElementById('editUnitPrice');
-    const confirmEditBtn = document.getElementById('confirmEditBtn');
-
-    // Modal d'ajout
+    // Elements du modal d'ajout
     const modalProductImageContainer = document.getElementById('modalProductImageContainer');
     const modalProductName = document.getElementById('modalProductName');
     const modalProductBarcode = document.getElementById('modalProductBarcode');
@@ -1910,6 +1845,17 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     const decrementQty = document.getElementById('decrementQty');
     const incrementQty = document.getElementById('incrementQty');
     const confirmAddBtn = document.getElementById('confirmAddToCartBtn');
+
+    // Elements du modal d'édition
+    const editProductId = document.getElementById('editProductId');
+    const editProductName = document.getElementById('editProductName');
+    const editQuantity = document.getElementById('editQuantity');
+    const editUnitPrice = document.getElementById('editUnitPrice');
+    const saveEditChangesBtn = document.getElementById('saveEditChanges');
+
+    // Éléments du modal de suppression
+    const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
+    let pendingRemoveProductId = null;
 
     // Gestion des quantités dans le modal d'ajout
     incrementQty.addEventListener('click', () => {
@@ -1956,6 +1902,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                 // Vider la recherche
                 searchInput.value = '';
                 resultsContainer.innerHTML = '<div class=\"text-center text-muted py-5\"><i class=\"bi bi-search fs-1\"></i><p class=\"mt-2\">Commencez à taper pour voir les produits</p></div>';
+                document.getElementById('resultCount').textContent = '0';
             } else {
                 showToast('error', data.error);
             }
@@ -2071,27 +2018,8 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         addProductModal.show();
     }
 
-    // Gestion du panier avec délégation d'événements
+    // Gestion du panier (uniquement les boutons Modifier et Supprimer)
     cartContainer.addEventListener('click', async (e) => {
-        // Bouton quantité
-        const qtyBtn = e.target.closest('.qty-btn');
-        if (qtyBtn) {
-            const productId = parseInt(qtyBtn.dataset.id);
-            const action = qtyBtn.dataset.action;
-            const input = document.querySelector(`.quantity-input[data-product-id=\"\${productId}\"]`);
-            if (input) {
-                let newQty = parseInt(input.value);
-                if (action === 'increment') newQty++;
-                else if (action === 'decrement') newQty--;
-                if (isNaN(newQty) || newQty < 1) newQty = 1;
-                // Désactiver temporairement le bouton pour éviter les doubles clics
-                qtyBtn.disabled = true;
-                await updateQuantity(productId, newQty);
-                qtyBtn.disabled = false;
-            }
-            return;
-        }
-
         // Bouton supprimer
         const removeBtn = e.target.closest('.remove-btn');
         if (removeBtn) {
@@ -2100,60 +2028,53 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             removeModal.show();
             return;
         }
-
         // Bouton modifier
-        const editBtn = e.target.closest('.edit-btn');
+        const editBtn = e.target.closest('.edit-item');
         if (editBtn) {
             const productId = parseInt(editBtn.dataset.id);
             const productName = editBtn.dataset.name;
-            const currentQuantity = parseInt(editBtn.dataset.quantity);
-            const currentPrice = parseFloat(editBtn.dataset.price);
-            openEditModal(productId, productName, currentQuantity, currentPrice);
+            const quantity = parseInt(editBtn.dataset.quantity);
+            const price = parseFloat(editBtn.dataset.price);
+            editProductId.value = productId;
+            editProductName.value = productName;
+            editQuantity.value = quantity;
+            editUnitPrice.value = price;
+            editModal.show();
         }
     });
 
-    // Ouvre le modal de modification avec les valeurs actuelles
-    function openEditModal(productId, productName, quantity, unitPrice) {
-        editProductId.value = productId;
-        editProductName.value = productName;
-        editQuantity.value = quantity;
-        editUnitPrice.value = unitPrice;
-        editModal.show();
-    }
-
-    // Confirmation de modification
-    confirmEditBtn.addEventListener('click', async () => {
-        const productId = parseInt(editProductId.value);
-        const newQuantity = parseInt(editQuantity.value);
-        const newUnitPrice = parseFloat(editUnitPrice.value);
-        if (isNaN(newQuantity) || newQuantity < 1) {
+    // Sauvegarde des modifications (envoi JSON)
+    saveEditChangesBtn.addEventListener('click', async () => {
+        const productId = editProductId.value;
+        const quantity = parseInt(editQuantity.value);
+        const unitPrice = parseFloat(editUnitPrice.value);
+        if (isNaN(quantity) || quantity < 1) {
             showToast('error', 'Quantité invalide');
             return;
         }
-        if (isNaN(newUnitPrice) || newUnitPrice <= 0) {
+        if (isNaN(unitPrice) || unitPrice <= 0) {
             showToast('error', 'Prix unitaire invalide');
             return;
         }
-        confirmEditBtn.disabled = true;
+
+        const updateUrl = updateItemUrlTemplate.replace('{productId}', productId);
         try {
-            const url = `\${updateCartItemUrl}\${productId}`;
-            const formData = new FormData();
-            formData.append('quantity', newQuantity);
-            formData.append('unit_price', newUnitPrice);
-            const response = await fetch(url, { method: 'PUT', body: formData });
+            const response = await fetch(updateUrl, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ quantity: quantity, unit_price: unitPrice })
+            });
             const data = await response.json();
             if (data.success) {
                 await refreshCart();
-                showToast('success', 'Article modifié');
                 editModal.hide();
+                showToast('success', 'Article modifié avec succès');
             } else {
                 showToast('error', data.error);
             }
         } catch (error) {
-            console.error('Erreur modification:', error);
+            console.error('Erreur updateItem:', error);
             showToast('error', 'Erreur lors de la modification');
-        } finally {
-            confirmEditBtn.disabled = false;
         }
     });
 
@@ -2168,28 +2089,9 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         }
     });
 
-    // Mise à jour d'une quantité (via +/-)
-    async function updateQuantity(productId, quantity) {
-        const updateUrl = \"{{ path('purchase_update_quantity', {'productId': 0})|replace({'0': ''}) }}\" + productId;
-        const formData = new FormData();
-        formData.append('quantity', quantity);
-        try {
-            const response = await fetch(updateUrl, { method: 'PUT', body: formData });
-            const data = await response.json();
-            if (data.success) {
-                await refreshCart();
-            } else {
-                showToast('error', data.error);
-            }
-        } catch (error) {
-            console.error('Erreur updateQuantity:', error);
-            showToast('error', 'Erreur lors de la mise à jour');
-        }
-    }
-
     // Suppression d'un produit
     async function removeFromCart(productId) {
-        const removeUrl = \"{{ path('purchase_remove_product', {'productId': 0})|replace({'0': ''}) }}\" + productId;
+        const removeUrl = removeProductUrlTemplate.replace('{productId}', productId);
         try {
             const response = await fetch(removeUrl, { method: 'DELETE' });
             const data = await response.json();
@@ -2252,18 +2154,20 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                         </div>
                     </div>
                     <div class=\"cart-item-quantity\">
-                        <button class=\"btn btn-sm btn-outline-secondary qty-btn\" data-action=\"decrement\" data-id=\"\${item.product_id}\"><i class=\"bi bi-dash\"></i></button>
-                        <input type=\"text\" class=\"form-control text-center quantity-input\" value=\"\${item.quantity}\" data-product-id=\"\${item.product_id}\">
-                        <button class=\"btn btn-sm btn-outline-secondary qty-btn\" data-action=\"increment\" data-id=\"\${item.product_id}\"><i class=\"bi bi-plus\"></i></button>
+                        <span class=\"badge bg-secondary\">\${item.quantity}</span>
                     </div>
                     <div class=\"cart-item-price\">
                         <div class=\"total\">\${formatPrice(item.total_price)} FCFA</div>
                         <small class=\"text-muted\">\${formatPrice(item.unit_price)} FCFA/unité</small>
-                        <div class=\"mt-2\">
-                            <button class=\"btn btn-sm btn-outline-primary edit-btn\" data-id=\"\${item.product_id}\" data-name=\"\${escapeHtml(item.product_name)}\" data-quantity=\"\${item.quantity}\" data-price=\"\${item.unit_price}\">
+                        <div class=\"action-buttons\">
+                            <button class=\"btn btn-sm btn-outline-primary edit-item\" 
+                                    data-id=\"\${item.product_id}\"
+                                    data-name=\"\${escapeHtml(item.product_name)}\"
+                                    data-quantity=\"\${item.quantity}\"
+                                    data-price=\"\${item.unit_price}\">
                                 <i class=\"bi bi-pencil\"></i> Modifier
                             </button>
-                            <button class=\"btn btn-sm btn-danger remove-btn\" data-id=\"\${item.product_id}\">
+                            <button class=\"btn btn-sm btn-outline-danger remove-btn\" data-id=\"\${item.product_id}\">
                                 <i class=\"bi bi-trash\"></i> Supprimer
                             </button>
                         </div>
@@ -2283,13 +2187,13 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         const barcode = prompt('Entrez le code-barres à scanner:');
         if (!barcode || barcode.length < 3) return;
         try {
-            const response = await fetch(`/api/products/search/barcode?barcode=\${encodeURIComponent(barcode)}`);
-            const product = await response.json();
-            if (product.error) {
-                showToast('error', product.error);
+            const response = await fetch(`\${searchUrl}?q=\${encodeURIComponent(barcode)}`);
+            const products = await response.json();
+            if (!products.length) {
+                showToast('error', 'Aucun produit trouvé avec ce code-barres');
                 return;
             }
-            // Créer un élément factice pour ouvrir le modal
+            const product = products[0];
             const dummy = document.createElement('div');
             dummy.dataset.productId = product.id;
             dummy.dataset.productName = product.name;
@@ -2301,11 +2205,11 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             openAddProductModal(dummy);
         } catch (error) {
             console.error('Erreur scan:', error);
-            showToast('error', 'Produit non trouvé');
+            showToast('error', 'Erreur lors de la recherche du produit');
         }
     });
 
-    // Confirmation commande
+    // Confirmation de commande
     const confirmModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
     confirmOrderBtn.addEventListener('click', () => confirmModal.show());
     document.getElementById('confirmPurchaseBtn').addEventListener('click', async () => {

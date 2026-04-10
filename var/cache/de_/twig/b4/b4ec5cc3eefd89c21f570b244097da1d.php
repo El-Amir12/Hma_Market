@@ -578,14 +578,24 @@ class __TwigTemplate_b7e1296334dac1568af52ba28500a9a4 extends Template
             </div>
 
             <!-- Boutons d'actions secondaires (à implémenter) -->
-            <div class=\"d-flex flex-wrap gap-2 mt-4\">
-                <a href=\"#\" class=\"btn btn-outline-info btn-lg flex-fill\">
+           <div class=\"d-flex flex-wrap gap-2 mt-4\">
+                <a href=\"#\" class=\"btn btn-outline-info flex-fill\">
                     <i class=\"fas fa-exchange-alt me-2\"></i> Mouvements stock
                 </a>
-                <a href=\"#\" class=\"btn btn-outline-warning btn-lg flex-fill\">
-                    <i class=\"fas fa-tags me-2\"></i> Promotions
-                </a>
-                <a href=\"#\" class=\"btn btn-outline-success btn-lg flex-fill\">
+                ";
+        // line 280
+        if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 280, $this->source); })()) == "restaurant")) {
+            // line 281
+            yield "                    <a href=\"";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_restaurant_recipe_promotions", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 281, $this->source); })()), "id", [], "any", false, false, false, 281)]), "html", null, true);
+            yield "\" 
+                    class=\"btn btn-outline-warning flex-fill\">
+                        <i class=\"fas fa-percent me-2\"></i> Promotions menu
+                    </a>
+                ";
+        }
+        // line 286
+        yield "                <a href=\"#\" class=\"btn btn-outline-success flex-fill\">
                     <i class=\"fas fa-shopping-cart me-2\"></i> Commandes liées
                 </a>
             </div>
@@ -626,7 +636,7 @@ class __TwigTemplate_b7e1296334dac1568af52ba28500a9a4 extends Template
         yield from [];
     }
 
-    // line 316
+    // line 319
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -639,7 +649,7 @@ class __TwigTemplate_b7e1296334dac1568af52ba28500a9a4 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 317
+        // line 320
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
 <style>
@@ -707,7 +717,7 @@ class __TwigTemplate_b7e1296334dac1568af52ba28500a9a4 extends Template
         yield from [];
     }
 
-    // line 375
+    // line 378
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -720,7 +730,7 @@ class __TwigTemplate_b7e1296334dac1568af52ba28500a9a4 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 376
+        // line 379
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
@@ -733,21 +743,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteContent = document.getElementById('deleteRecipeContent');
 
     const hasOrders = ";
-        // line 386
-        yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 386, $this->source); })()), "orderItems", [], "any", false, false, false, 386)) > 0)) ? ("true") : ("false"));
+        // line 389
+        yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 389, $this->source); })()), "orderItems", [], "any", false, false, false, 389)) > 0)) ? ("true") : ("false"));
         yield ";
     const recipeName = \"";
-        // line 387
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 387, $this->source); })()), "name", [], "any", false, false, false, 387), "js"), "html", null, true);
+        // line 390
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 390, $this->source); })()), "name", [], "any", false, false, false, 390), "js"), "html", null, true);
         yield "\";
 
     deleteForm.action = \"";
-        // line 389
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_delete", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 389, $this->source); })()), "id", [], "any", false, false, false, 389)]), "html", null, true);
+        // line 392
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_delete", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 392, $this->source); })()), "id", [], "any", false, false, false, 392)]), "html", null, true);
         yield "\";
     deleteToken.value = \"";
-        // line 390
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 390, $this->source); })()), "id", [], "any", false, false, false, 390))), "html", null, true);
+        // line 393
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 393, $this->source); })()), "id", [], "any", false, false, false, 393))), "html", null, true);
         yield "\";
 
     if (hasOrders) {
@@ -809,7 +819,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  750 => 390,  746 => 389,  741 => 387,  737 => 386,  724 => 376,  711 => 375,  643 => 317,  630 => 316,  577 => 272,  569 => 267,  564 => 264,  561 => 263,  551 => 256,  546 => 255,  535 => 252,  530 => 251,  526 => 250,  519 => 246,  515 => 245,  511 => 243,  509 => 242,  502 => 237,  493 => 234,  489 => 233,  484 => 231,  479 => 229,  475 => 227,  468 => 222,  461 => 218,  456 => 217,  454 => 216,  450 => 214,  446 => 213,  433 => 202,  431 => 201,  423 => 196,  418 => 194,  400 => 179,  388 => 170,  383 => 168,  378 => 165,  371 => 160,  364 => 156,  359 => 155,  357 => 154,  345 => 145,  333 => 136,  322 => 127,  316 => 124,  312 => 122,  310 => 121,  306 => 119,  300 => 116,  296 => 114,  294 => 113,  285 => 107,  279 => 103,  275 => 101,  272 => 100,  266 => 97,  263 => 96,  261 => 95,  256 => 94,  254 => 93,  246 => 88,  239 => 83,  235 => 81,  232 => 80,  228 => 78,  224 => 76,  222 => 75,  219 => 74,  212 => 69,  205 => 65,  200 => 64,  198 => 63,  182 => 49,  172 => 45,  169 => 44,  164 => 43,  154 => 39,  151 => 38,  147 => 37,  133 => 26,  126 => 22,  119 => 18,  112 => 14,  103 => 7,  90 => 6,  66 => 4,  43 => 2,);
+        return array (  760 => 393,  756 => 392,  751 => 390,  747 => 389,  734 => 379,  721 => 378,  653 => 320,  640 => 319,  598 => 286,  589 => 281,  587 => 280,  577 => 272,  569 => 267,  564 => 264,  561 => 263,  551 => 256,  546 => 255,  535 => 252,  530 => 251,  526 => 250,  519 => 246,  515 => 245,  511 => 243,  509 => 242,  502 => 237,  493 => 234,  489 => 233,  484 => 231,  479 => 229,  475 => 227,  468 => 222,  461 => 218,  456 => 217,  454 => 216,  450 => 214,  446 => 213,  433 => 202,  431 => 201,  423 => 196,  418 => 194,  400 => 179,  388 => 170,  383 => 168,  378 => 165,  371 => 160,  364 => 156,  359 => 155,  357 => 154,  345 => 145,  333 => 136,  322 => 127,  316 => 124,  312 => 122,  310 => 121,  306 => 119,  300 => 116,  296 => 114,  294 => 113,  285 => 107,  279 => 103,  275 => 101,  272 => 100,  266 => 97,  263 => 96,  261 => 95,  256 => 94,  254 => 93,  246 => 88,  239 => 83,  235 => 81,  232 => 80,  228 => 78,  224 => 76,  222 => 75,  219 => 74,  212 => 69,  205 => 65,  200 => 64,  198 => 63,  182 => 49,  172 => 45,  169 => 44,  164 => 43,  154 => 39,  151 => 38,  147 => 37,  133 => 26,  126 => 22,  119 => 18,  112 => 14,  103 => 7,  90 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1089,14 +1099,17 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
 
             <!-- Boutons d'actions secondaires (à implémenter) -->
-            <div class=\"d-flex flex-wrap gap-2 mt-4\">
-                <a href=\"#\" class=\"btn btn-outline-info btn-lg flex-fill\">
+           <div class=\"d-flex flex-wrap gap-2 mt-4\">
+                <a href=\"#\" class=\"btn btn-outline-info flex-fill\">
                     <i class=\"fas fa-exchange-alt me-2\"></i> Mouvements stock
                 </a>
-                <a href=\"#\" class=\"btn btn-outline-warning btn-lg flex-fill\">
-                    <i class=\"fas fa-tags me-2\"></i> Promotions
-                </a>
-                <a href=\"#\" class=\"btn btn-outline-success btn-lg flex-fill\">
+                {% if companyType == 'restaurant' %}
+                    <a href=\"{{ path('app_restaurant_recipe_promotions', {'id': recipe.id}) }}\" 
+                    class=\"btn btn-outline-warning flex-fill\">
+                        <i class=\"fas fa-percent me-2\"></i> Promotions menu
+                    </a>
+                {% endif %}
+                <a href=\"#\" class=\"btn btn-outline-success flex-fill\">
                     <i class=\"fas fa-shopping-cart me-2\"></i> Commandes liées
                 </a>
             </div>

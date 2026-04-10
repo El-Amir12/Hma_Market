@@ -117,6 +117,7 @@ final class CategoryRecipeController extends AbstractController
             'plan' => $plan,
             'promotions' => $promotions,
             'selectedPromotion' => $promotionId,
+            'companyType' => $hmaService->getType(),
         ]);
     }
 
@@ -197,7 +198,7 @@ final class CategoryRecipeController extends AbstractController
         $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) throw new AccessDeniedException('Aucun service associé.');
         $this->checkOwnership($category, $hmaService);
-        return $this->render('admin/category_recipe/show.html.twig', ['category' => $category]);
+        return $this->render('admin/category_recipe/show.html.twig', ['category' => $category, 'companyType' => $hmaService->getType(),]);
     }
 
     #[Route('/{id}/edit', name: 'app_admin_category_recipe_edit', methods: ['GET', 'POST'])]

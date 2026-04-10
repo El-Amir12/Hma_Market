@@ -222,7 +222,7 @@ class ResetPasswordController extends AbstractController
         ]);
     }
         
-        /**
+    /**
      * Route pour forcer le changement de mot de passe à la première connexion
      */
     #[Route('/first-login-change-password', name: 'app_first_login_change_password')]
@@ -349,16 +349,16 @@ class ResetPasswordController extends AbstractController
             error_log("URL générée: " . $resetUrl);
             
             $email = (new TemplatedEmail())
-                ->from(new Address('no-reply@hmamarket.com', 'HMA Market'))
-                ->to($user->getEmail())
-                ->subject('Réinitialisation de votre mot de passe - HMA Market')
-                ->htmlTemplate('reset_password/email.html.twig')
-                ->context([
-                    'resetToken' => $resetToken,
-                    'user' => $user,
-                    'resetUrl' => $resetUrl,
-                    'expiration_date' => new \DateTime('+1 hour'),
-                ]);
+            ->from(new Address('no-reply@hmamarket.com', 'HMA Market'))
+            ->to($user->getEmail())
+            ->subject('Réinitialisation de votre mot de passe - HMA Market')
+            ->htmlTemplate('reset_password/email.html.twig')
+            ->context([
+                'resetToken' => $resetToken,
+                'user' => $user,
+                'resetUrl' => $resetUrl,
+                'expiration_date' => $resetToken->getExpiresAt(), // ✅ Utiliser la vraie date d'expiration
+            ]);
 
             $mailer->send($email);
             error_log("Email envoyé avec succès!");

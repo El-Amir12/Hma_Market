@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 #[Route('/admin/restaurant/promotion')]
 class RestaurantPromotionController extends AbstractController
@@ -532,5 +533,173 @@ class RestaurantPromotionController extends AbstractController
             $this->addFlash('success', 'Promotion supprimée.');
         }
         return $this->redirectToRoute('app_restaurant_promotion_index');
+    }
+
+    #[Route('/recipe/{id}/promotions', name: 'app_restaurant_recipe_promotions', methods: ['GET'])]
+    public function recipePromotions(Recipe $recipe, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->checkAccess();
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService || $recipe->getHmaService()->getId() !== $hmaService->getId()) {
+            throw new AccessDeniedException('Accès non autorisé.');
+        }
+
+        // Filtres
+        $search = $request->query->get('search', '');
+        $status = $request->query->get('status', 'all');
+        $period = $request->query->get('period', 'all');
+        $page = $request->query->getInt('page', 1);
+        $limit = 12;
+
+        // Récupérer toutes les promotions associées à ce plat
+        $queryBuilder = $entityManager->createQueryBuilder()
+            ->select('p')
+            ->from(Promotion::class, 'p')
+            ->leftJoin('p.promotionRecipes', 'pr')
+            ->where('pr.recipe = :recipe')
+            ->setParameter('recipe', $recipe)
+            ->andWhere('p.hma_service = :hmaService')
+            ->setParameter('hmaService', $hmaService);
+
+        // Filtre par recherche
+        if ($search) {
+            $queryBuilder->andWhere('p.name LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        // Filtre par statut
+        if ($status === 'active') {
+            $queryBuilder->andWhere('p.is_active = true');
+        } elseif ($status === 'inactive') {
+            $queryBuilder->andWhere('p.is_active = false');
+        }
+
+        // Filtre par période
+        $now = new \DateTime();
+        if ($period === 'ongoing') {
+            $queryBuilder->andWhere('p.startDate <= :now')
+                ->andWhere('p.endDate IS NULL OR p.endDate >= :now')
+                ->setParameter('now', $now);
+        } elseif ($period === 'upcoming') {
+            $queryBuilder->andWhere('p.startDate > :now')
+                ->setParameter('now', $now);
+        } elseif ($period === 'ended') {
+            $queryBuilder->andWhere('p.endDate IS NOT NULL')
+                ->andWhere('p.endDate < :now')
+                ->setParameter('now', $now);
+        }
+
+        // Pagination
+        $queryBuilder->orderBy('p.created_at', 'DESC');
+        $query = $queryBuilder->getQuery();
+        
+        $paginator = new Paginator($query);
+        $totalItems = count($paginator);
+        $totalPages = ceil($totalItems / $limit);
+        
+        $paginator->getQuery()
+            ->setFirstResult($limit * ($page - 1))
+            ->setMaxResults($limit);
+
+        $promotions = iterator_to_array($paginator);
+
+        return $this->render('admin/restaurant/promotion/recipe_promotions.html.twig', [
+            'recipe' => $recipe,
+            'promotions' => $promotions,
+            'search' => $search,
+            'status' => $status,
+            'period' => $period,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+        ]);
+    }
+
+    #[Route('/category-recipe/{id}/promotions', name: 'app_restaurant_category_recipe_promotions', methods: ['GET'])]
+    public function categoryRecipePromotions(CategoryRecipe $categoryRecipe, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->checkAccess();
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService || $categoryRecipe->getHmaService()->getId() !== $hmaService->getId()) {
+            throw new AccessDeniedException('Accès non autorisé.');
+        }
+
+        // Filtres
+        $search = $request->query->get('search', '');
+        $status = $request->query->get('status', 'all');
+        $period = $request->query->get('period', 'all');
+        $page = $request->query->getInt('page', 1);
+        $limit = 12;
+
+        // Récupérer toutes les promotions associées à cette catégorie de plats
+        $queryBuilder = $entityManager->createQueryBuilder()
+            ->select('p')
+            ->from(Promotion::class, 'p')
+            ->leftJoin('p.promotionCategoryRecipes', 'pcr')
+            ->where('pcr.categoryRecipe = :categoryRecipe')
+            ->setParameter('categoryRecipe', $categoryRecipe)
+            ->andWhere('p.hma_service = :hmaService')
+            ->setParameter('hmaService', $hmaService);
+
+        // Filtre par recherche
+        if ($search) {
+            $queryBuilder->andWhere('p.name LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        // Filtre par statut
+        if ($status === 'active') {
+            $queryBuilder->andWhere('p.is_active = true');
+        } elseif ($status === 'inactive') {
+            $queryBuilder->andWhere('p.is_active = false');
+        }
+
+        // Filtre par période
+        $now = new \DateTime();
+        if ($period === 'ongoing') {
+            $queryBuilder->andWhere('p.startDate <= :now')
+                ->andWhere('p.endDate IS NULL OR p.endDate >= :now')
+                ->setParameter('now', $now);
+        } elseif ($period === 'upcoming') {
+            $queryBuilder->andWhere('p.startDate > :now')
+                ->setParameter('now', $now);
+        } elseif ($period === 'ended') {
+            $queryBuilder->andWhere('p.endDate IS NOT NULL')
+                ->andWhere('p.endDate < :now')
+                ->setParameter('now', $now);
+        }
+
+        // Pagination
+        $queryBuilder->orderBy('p.created_at', 'DESC');
+        $query = $queryBuilder->getQuery();
+        
+        $paginator = new Paginator($query);
+        $totalItems = count($paginator);
+        $totalPages = ceil($totalItems / $limit);
+        
+        $paginator->getQuery()
+            ->setFirstResult($limit * ($page - 1))
+            ->setMaxResults($limit);
+
+        $promotions = iterator_to_array($paginator);
+
+        // Récupérer les plats de cette catégorie pour les stats
+        $recipesCount = $entityManager->getRepository(Recipe::class)
+            ->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->where('r.category = :categoryRecipe')
+            ->setParameter('categoryRecipe', $categoryRecipe)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $this->render('admin/restaurant/promotion/category_recipe_promotions.html.twig', [
+            'categoryRecipe' => $categoryRecipe,
+            'promotions' => $promotions,
+            'recipesCount' => $recipesCount,
+            'search' => $search,
+            'status' => $status,
+            'period' => $period,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+        ]);
     }
 }

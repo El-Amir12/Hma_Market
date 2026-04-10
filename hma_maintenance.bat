@@ -40,6 +40,13 @@ echo [%date% %time%] 👥 Application des quotas utilisateurs...
 php bin/console app:enforce-user-quotas --no-interaction
 if %errorlevel% neq 0 echo ⚠️ Erreur lors de l'application des quotas utilisateurs
 
+echo [%date% %time%] 🔓 Déblocage des comptes utilisateurs expirés...
+php bin/console app:unlock-locked-users --no-interaction
+if %errorlevel% neq 0 echo ⚠️ Erreur lors du déblocage
+
+echo [%date% %time%] ✅ Déblocage terminé
+echo.
+
 echo ========================================
 echo    TÂCHES TERMINÉES À %date% %time%
 echo ========================================

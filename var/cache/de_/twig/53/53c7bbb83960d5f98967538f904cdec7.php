@@ -614,34 +614,44 @@ class __TwigTemplate_a4f0ab18a991b0e034f2b340e2b5bb86 extends Template
                         <a href=\"#\" class=\"btn btn-sm btn-outline-success flex-fill\" title=\"Commandes liées\">
                             <i class=\"fas fa-shopping-cart\"></i>
                         </a>
-                        <a href=\"#\" class=\"btn btn-sm btn-outline-warning flex-fill\" title=\"Promotions\">
-                            <i class=\"fas fa-tags\"></i> 
-                        </a>
                         ";
-            // line 334
+            // line 330
+            if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 330, $this->source); })()) == "restaurant")) {
+                // line 331
+                yield "                            <a href=\"";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_restaurant_recipe_promotions", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 331)]), "html", null, true);
+                yield "\" 
+                            class=\"btn btn-sm btn-outline-warning\" title=\"Promotions du plat\">
+                                <i class=\"fas fa-percent me-1\"></i> 
+                            </a>
+                        ";
+            }
+            // line 336
             yield "                        ";
-            if (($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") && (Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "orderItems", [], "any", false, false, false, 334)) == 0))) {
-                // line 335
+            // line 337
+            yield "                        ";
+            if (($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") && (Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "orderItems", [], "any", false, false, false, 337)) == 0))) {
+                // line 338
                 yield "                            <button type=\"button\" 
                                     class=\"btn btn-sm btn-outline-danger flex-fill delete-recipe-btn\"
                                     data-recipe-id=\"";
-                // line 337
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 337), "html", null, true);
+                // line 340
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 340), "html", null, true);
                 yield "\"
                                     data-recipe-name=\"";
-                // line 338
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "name", [], "any", false, false, false, 338), "html", null, true);
+                // line 341
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "name", [], "any", false, false, false, 341), "html", null, true);
                 yield "\"
                                     data-token=\"";
-                // line 339
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 339))), "html", null, true);
+                // line 342
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 342))), "html", null, true);
                 yield "\"
                                     title=\"Supprimer\">
                                 <i class=\"fas fa-trash\"></i>
                             </button>
                         ";
             }
-            // line 344
+            // line 347
             yield "                    </div>
                 </div>
             </div>
@@ -649,9 +659,9 @@ class __TwigTemplate_a4f0ab18a991b0e034f2b340e2b5bb86 extends Template
         ";
             $context['_iterated'] = true;
         }
-        // line 348
+        // line 351
         if (!$context['_iterated']) {
-            // line 349
+            // line 352
             yield "        <div class=\"col-12\">
             <div class=\"card border-0 shadow-sm\">
                 <div class=\"card-body text-center py-5\">
@@ -659,7 +669,7 @@ class __TwigTemplate_a4f0ab18a991b0e034f2b340e2b5bb86 extends Template
                     <h4 class=\"text-muted fw-light\">Aucun plat trouvé</h4>
                     <p class=\"text-muted mb-4\">Modifiez vos filtres ou créez un nouveau plat.</p>
                     <a href=\"";
-            // line 355
+            // line 358
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index");
             yield "\" class=\"btn btn-outline-primary px-4\">
                         <i class=\"fas fa-undo me-2\"></i> Réinitialiser les filtres
@@ -672,48 +682,48 @@ class __TwigTemplate_a4f0ab18a991b0e034f2b340e2b5bb86 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['recipe'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 362
+        // line 365
         yield "    </div>
 
     <!-- Pagination -->
     ";
-        // line 365
-        if (((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 365, $this->source); })()) > 1)) {
-            // line 366
+        // line 368
+        if (((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 368, $this->source); })()) > 1)) {
+            // line 369
             yield "    <div class=\"d-flex justify-content-between align-items-center mt-4\">
         <div class=\"text-muted small\">
             Page ";
-            // line 368
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 368, $this->source); })()), "html", null, true);
+            // line 371
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 371, $this->source); })()), "html", null, true);
             yield " sur ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 368, $this->source); })()), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 371, $this->source); })()), "html", null, true);
             yield " (";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["totalItems"]) || array_key_exists("totalItems", $context) ? $context["totalItems"] : (function () { throw new RuntimeError('Variable "totalItems" does not exist.', 368, $this->source); })()), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["totalItems"]) || array_key_exists("totalItems", $context) ? $context["totalItems"] : (function () { throw new RuntimeError('Variable "totalItems" does not exist.', 371, $this->source); })()), "html", null, true);
             yield " résultats)
         </div>
         <nav aria-label=\"Pagination\">
             <ul class=\"pagination pagination-sm mb-0\">
                 <li class=\"page-item ";
-            // line 372
-            yield ((((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 372, $this->source); })()) <= 1)) ? ("disabled") : (""));
+            // line 375
+            yield ((((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 375, $this->source); })()) <= 1)) ? ("disabled") : (""));
             yield "\">
                     <a class=\"page-link\" href=\"";
-            // line 373
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 373, $this->source); })()), "request", [], "any", false, false, false, 373), "query", [], "any", false, false, false, 373), "all", [], "any", false, false, false, 373), ["page" => ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 373, $this->source); })()) - 1)])), "html", null, true);
+            // line 376
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 376, $this->source); })()), "request", [], "any", false, false, false, 376), "query", [], "any", false, false, false, 376), "all", [], "any", false, false, false, 376), ["page" => ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 376, $this->source); })()) - 1)])), "html", null, true);
             yield "\"><i class=\"fas fa-chevron-left\"></i></a>
                 </li>
                 ";
-            // line 375
+            // line 378
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable(range(1, (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 375, $this->source); })())));
+            $context['_seq'] = CoreExtension::ensureTraversable(range(1, (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 378, $this->source); })())));
             foreach ($context['_seq'] as $context["_key"] => $context["i"]) {
-                // line 376
+                // line 379
                 yield "                    <li class=\"page-item ";
-                yield ((($context["i"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 376, $this->source); })()))) ? ("active") : (""));
+                yield ((($context["i"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 379, $this->source); })()))) ? ("active") : (""));
                 yield "\">
                         <a class=\"page-link\" href=\"";
-                // line 377
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 377, $this->source); })()), "request", [], "any", false, false, false, 377), "query", [], "any", false, false, false, 377), "all", [], "any", false, false, false, 377), ["page" => $context["i"]])), "html", null, true);
+                // line 380
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 380, $this->source); })()), "request", [], "any", false, false, false, 380), "query", [], "any", false, false, false, 380), "all", [], "any", false, false, false, 380), ["page" => $context["i"]])), "html", null, true);
                 yield "\">";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["i"], "html", null, true);
                 yield "</a>
@@ -723,13 +733,13 @@ class __TwigTemplate_a4f0ab18a991b0e034f2b340e2b5bb86 extends Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['i'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 380
+            // line 383
             yield "                <li class=\"page-item ";
-            yield ((((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 380, $this->source); })()) >= (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 380, $this->source); })()))) ? ("disabled") : (""));
+            yield ((((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 383, $this->source); })()) >= (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 383, $this->source); })()))) ? ("disabled") : (""));
             yield "\">
                     <a class=\"page-link\" href=\"";
-            // line 381
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 381, $this->source); })()), "request", [], "any", false, false, false, 381), "query", [], "any", false, false, false, 381), "all", [], "any", false, false, false, 381), ["page" => ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 381, $this->source); })()) + 1)])), "html", null, true);
+            // line 384
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 384, $this->source); })()), "request", [], "any", false, false, false, 384), "query", [], "any", false, false, false, 384), "all", [], "any", false, false, false, 384), ["page" => ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 384, $this->source); })()) + 1)])), "html", null, true);
             yield "\"><i class=\"fas fa-chevron-right\"></i></a>
                 </li>
             </ul>
@@ -737,7 +747,7 @@ class __TwigTemplate_a4f0ab18a991b0e034f2b340e2b5bb86 extends Template
     </div>
     ";
         }
-        // line 387
+        // line 390
         yield "</div>
 
 <!-- Modals -->
@@ -751,14 +761,14 @@ class __TwigTemplate_a4f0ab18a991b0e034f2b340e2b5bb86 extends Template
             <div class=\"modal-body text-center py-4\">
                 <i class=\"fas fa-ban fa-4x text-warning mb-3\"></i>
                 <h5>Vous avez atteint votre limite de ";
-        // line 399
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["quota"]) || array_key_exists("quota", $context) ? $context["quota"] : (function () { throw new RuntimeError('Variable "quota" does not exist.', 399, $this->source); })()), "html", null, true);
+        // line 402
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["quota"]) || array_key_exists("quota", $context) ? $context["quota"] : (function () { throw new RuntimeError('Variable "quota" does not exist.', 402, $this->source); })()), "html", null, true);
         yield " plats actifs.</h5>
                 <p class=\"text-muted\">Pour ajouter de nouveaux plats, passez à un plan supérieur.</p>
             </div>
             <div class=\"modal-footer border-0 justify-content-center\">
                 <a href=\"";
-        // line 403
+        // line 406
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_subscription_plans");
         yield "\" class=\"btn btn-warning btn-lg px-4\">
                     <i class=\"fas fa-arrow-up me-2\"></i> Voir les offres
@@ -822,7 +832,7 @@ class __TwigTemplate_a4f0ab18a991b0e034f2b340e2b5bb86 extends Template
         yield from [];
     }
 
-    // line 457
+    // line 460
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -835,7 +845,7 @@ class __TwigTemplate_a4f0ab18a991b0e034f2b340e2b5bb86 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 458
+        // line 461
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
 <style>
@@ -903,7 +913,7 @@ class __TwigTemplate_a4f0ab18a991b0e034f2b340e2b5bb86 extends Template
         yield from [];
     }
 
-    // line 516
+    // line 519
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -916,7 +926,7 @@ class __TwigTemplate_a4f0ab18a991b0e034f2b340e2b5bb86 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 517
+        // line 520
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
@@ -927,19 +937,19 @@ document.addEventListener('DOMContentLoaded', function() {
         newBtn.addEventListener('click', function(e) {
             e.preventDefault();
             ";
-        // line 525
-        if ((($tmp = (isset($context["quotaReached"]) || array_key_exists("quotaReached", $context) ? $context["quotaReached"] : (function () { throw new RuntimeError('Variable "quotaReached" does not exist.', 525, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 526
+        // line 528
+        if ((($tmp = (isset($context["quotaReached"]) || array_key_exists("quotaReached", $context) ? $context["quotaReached"] : (function () { throw new RuntimeError('Variable "quotaReached" does not exist.', 528, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 529
             yield "                new bootstrap.Modal(document.getElementById('quotaReachedModal')).show();
             ";
         } else {
-            // line 528
+            // line 531
             yield "                window.location.href = \"";
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_new");
             yield "\";
             ";
         }
-        // line 530
+        // line 533
         yield "        });
     }
 
@@ -1028,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  943 => 530,  937 => 528,  933 => 526,  931 => 525,  920 => 517,  907 => 516,  839 => 458,  826 => 457,  762 => 403,  755 => 399,  741 => 387,  732 => 381,  727 => 380,  716 => 377,  711 => 376,  707 => 375,  702 => 373,  698 => 372,  687 => 368,  683 => 366,  681 => 365,  676 => 362,  663 => 355,  655 => 349,  653 => 348,  645 => 344,  637 => 339,  633 => 338,  629 => 337,  625 => 335,  622 => 334,  602 => 316,  598 => 315,  591 => 310,  587 => 307,  581 => 303,  575 => 300,  571 => 299,  567 => 298,  563 => 297,  559 => 296,  555 => 295,  551 => 293,  549 => 292,  541 => 287,  533 => 282,  521 => 273,  516 => 271,  507 => 264,  503 => 262,  500 => 261,  496 => 259,  492 => 257,  490 => 256,  484 => 252,  478 => 248,  472 => 245,  467 => 244,  465 => 243,  460 => 240,  455 => 239,  442 => 229,  432 => 222,  428 => 221,  416 => 212,  412 => 211,  402 => 203,  390 => 200,  381 => 199,  374 => 198,  370 => 197,  357 => 187,  325 => 158,  309 => 145,  293 => 132,  277 => 119,  261 => 106,  244 => 91,  234 => 87,  231 => 86,  227 => 85,  224 => 84,  214 => 80,  211 => 79,  206 => 78,  203 => 76,  193 => 69,  188 => 67,  182 => 63,  179 => 62,  170 => 54,  162 => 49,  151 => 40,  148 => 39,  141 => 33,  137 => 31,  135 => 30,  129 => 29,  125 => 28,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  953 => 533,  947 => 531,  943 => 529,  941 => 528,  930 => 520,  917 => 519,  849 => 461,  836 => 460,  772 => 406,  765 => 402,  751 => 390,  742 => 384,  737 => 383,  726 => 380,  721 => 379,  717 => 378,  712 => 376,  708 => 375,  697 => 371,  693 => 369,  691 => 368,  686 => 365,  673 => 358,  665 => 352,  663 => 351,  655 => 347,  647 => 342,  643 => 341,  639 => 340,  635 => 338,  632 => 337,  630 => 336,  621 => 331,  619 => 330,  602 => 316,  598 => 315,  591 => 310,  587 => 307,  581 => 303,  575 => 300,  571 => 299,  567 => 298,  563 => 297,  559 => 296,  555 => 295,  551 => 293,  549 => 292,  541 => 287,  533 => 282,  521 => 273,  516 => 271,  507 => 264,  503 => 262,  500 => 261,  496 => 259,  492 => 257,  490 => 256,  484 => 252,  478 => 248,  472 => 245,  467 => 244,  465 => 243,  460 => 240,  455 => 239,  442 => 229,  432 => 222,  428 => 221,  416 => 212,  412 => 211,  402 => 203,  390 => 200,  381 => 199,  374 => 198,  370 => 197,  357 => 187,  325 => 158,  309 => 145,  293 => 132,  277 => 119,  261 => 106,  244 => 91,  234 => 87,  231 => 86,  227 => 85,  224 => 84,  214 => 80,  211 => 79,  206 => 78,  203 => 76,  193 => 69,  188 => 67,  182 => 63,  179 => 62,  170 => 54,  162 => 49,  151 => 40,  148 => 39,  141 => 33,  137 => 31,  135 => 30,  129 => 29,  125 => 28,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1362,9 +1372,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <a href=\"#\" class=\"btn btn-sm btn-outline-success flex-fill\" title=\"Commandes liées\">
                             <i class=\"fas fa-shopping-cart\"></i>
                         </a>
-                        <a href=\"#\" class=\"btn btn-sm btn-outline-warning flex-fill\" title=\"Promotions\">
-                            <i class=\"fas fa-tags\"></i> 
-                        </a>
+                        {% if companyType == 'restaurant' %}
+                            <a href=\"{{ path('app_restaurant_recipe_promotions', {'id': recipe.id}) }}\" 
+                            class=\"btn btn-sm btn-outline-warning\" title=\"Promotions du plat\">
+                                <i class=\"fas fa-percent me-1\"></i> 
+                            </a>
+                        {% endif %}
                         {# Bouton Supprimer ajouté ici #}
                         {% if is_granted('ROLE_ADMIN') and recipe.orderItems|length == 0 %}
                             <button type=\"button\" 
