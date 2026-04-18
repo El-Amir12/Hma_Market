@@ -60,6 +60,9 @@ class Order
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    private ?bool $is_active = true;
+
     /**
      * @var Collection<int, OrderItem>
      */
@@ -233,6 +236,17 @@ class Order
     {
         $this->user = $user;
 
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(bool $is_active): static
+    {
+        $this->is_active = $is_active;
         return $this;
     }
 

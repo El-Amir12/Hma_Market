@@ -26,6 +26,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
         self::PLAN_TRIAL => [
             'max_users_per_role' => PHP_INT_MAX,
             'max_products' => PHP_INT_MAX,
+            'max_orders_per_day' => PHP_INT_MAX,
             'max_orders_per_month' => PHP_INT_MAX,
             'max_categories' => PHP_INT_MAX,
             'max_suppliers' => PHP_INT_MAX,
@@ -36,6 +37,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
         self::PLAN_FREEMIUM => [
             'max_users_per_role' => 1,
             'max_products' => 50,
+            'max_orders_per_day' => 10,
             'max_orders_per_month' => 100,
             'max_categories' => 10,
             'max_suppliers' => 5,
@@ -46,6 +48,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
         self::PLAN_BASIC => [
             'max_users_per_role' => 2,
             'max_products' => 200,
+            'max_orders_per_day' => 50,
             'max_orders_per_month' => 500,
             'max_categories' => 20,
             'max_suppliers' => 15,
@@ -56,6 +59,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
         self::PLAN_PREMIUM => [
             'max_users_per_role' => PHP_INT_MAX,
             'max_products' => PHP_INT_MAX,
+            'max_orders_per_day' => PHP_INT_MAX,
             'max_orders_per_month' => PHP_INT_MAX,
             'max_categories' => PHP_INT_MAX,
             'max_suppliers' => PHP_INT_MAX,
@@ -1441,6 +1445,32 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $limits = $this->getCurrentLimits();
         return $limits['max_products'] ?? PHP_INT_MAX;
+    }
+
+    /**
+     * Récupère les limites du plan actuel
+     */
+    public function getCurrentPlanLimits(): array
+    {
+        $plan = $this->getCurrentPlan();
+        return self::PLAN_LIMITS[$plan] ?? self::PLAN_LIMITS[self::PLAN_FREEMIUM];
+    }
+
+    /**
+     * Récupère la limite quotidienne de ventes
+     */
+    public function getMaxOrdersPerDay(): int
+    {
+        $limits = $this->getCurrentPlanLimits();
+        return $limits['max_orders_per_day'] ?? PHP_INT_MAX;
+    }
+    
+    /**
+     * Vérifie si les ventes sont illimitées
+     */
+    public function isUnlimitedSales(): bool
+    {
+        return $this->getMaxOrdersPerDay() === PHP_INT_MAX;
     }
 
 }

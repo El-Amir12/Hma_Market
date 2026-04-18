@@ -115,6 +115,7 @@ class __TwigTemplate_62b223b4c990a3b28520acfc6520f4d5 extends Template
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans(CoreExtension::getAttribute($this->env, $this->source, (isset($context["resetToken"]) || array_key_exists("resetToken", $context) ? $context["resetToken"] : (function () { throw new RuntimeError('Variable "resetToken" does not exist.', 19, $this->source); })()), "expirationMessageKey", [], "any", false, false, false, 19), CoreExtension::getAttribute($this->env, $this->source, (isset($context["resetToken"]) || array_key_exists("resetToken", $context) ? $context["resetToken"] : (function () { throw new RuntimeError('Variable "resetToken" does not exist.', 19, $this->source); })()), "expirationMessageData", [], "any", false, false, false, 19), "ResetPasswordBundle"), "html", null, true);
         yield "</strong>.
                 </div>
+                
             </div>
             
             <hr class=\"my-4\">
@@ -122,7 +123,7 @@ class __TwigTemplate_62b223b4c990a3b28520acfc6520f4d5 extends Template
             <div class=\"text-center\">
                 <p class=\"mb-3\">
                     <a href=\"";
-        // line 27
+        // line 28
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_login");
         yield "\" class=\"btn btn-primary\">
                         <i class=\"fas fa-sign-in-alt me-2\"></i>Retour à la connexion
@@ -131,7 +132,7 @@ class __TwigTemplate_62b223b4c990a3b28520acfc6520f4d5 extends Template
                 <p class=\"small text-muted mb-0\">
                     Vous n'avez pas reçu l'email ? 
                     <a href=\"";
-        // line 33
+        // line 34
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_forgot_password_request");
         yield "\" class=\"text-decoration-none\">
                         Renvoyer
@@ -172,7 +173,7 @@ class __TwigTemplate_62b223b4c990a3b28520acfc6520f4d5 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  135 => 33,  126 => 27,  115 => 19,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  136 => 34,  127 => 28,  115 => 19,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -197,6 +198,7 @@ class __TwigTemplate_62b223b4c990a3b28520acfc6520f4d5 extends Template
                     <i class=\"fas fa-info-circle me-2\"></i>
                     Le lien expirera dans <strong>{{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}</strong>.
                 </div>
+                
             </div>
             
             <hr class=\"my-4\">

@@ -39,6 +39,21 @@ class OrderItem
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
     private ?Recipe $recipe = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $promotionId = null;
+
+    #[ORM\Column(nullable: true, length: 255)]
+    private ?string $promotionName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $promotionDiscountAmount = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $promotionDiscountPercentage = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $originalUnitPrice = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -138,5 +153,94 @@ class OrderItem
         $this->recipe = $recipe;
 
         return $this;
+    }
+
+    public function getPromotionId(): ?int
+    {
+        return $this->promotionId;
+    }
+
+    public function setPromotionId(?int $promotionId): static
+    {
+        $this->promotionId = $promotionId;
+        return $this;
+    }
+
+    public function getPromotionName(): ?string
+    {
+        return $this->promotionName;
+    }
+
+    public function setPromotionName(?string $promotionName): static
+    {
+        $this->promotionName = $promotionName;
+        return $this;
+    }
+
+    public function getPromotionDiscountAmount(): ?string
+    {
+        return $this->promotionDiscountAmount;
+    }
+
+    public function setPromotionDiscountAmount(?string $promotionDiscountAmount): static
+    {
+        $this->promotionDiscountAmount = $promotionDiscountAmount;
+        return $this;
+    }
+
+    public function getPromotionDiscountPercentage(): ?string
+    {
+        return $this->promotionDiscountPercentage;
+    }
+
+    public function setPromotionDiscountPercentage(?string $promotionDiscountPercentage): static
+    {
+        $this->promotionDiscountPercentage = $promotionDiscountPercentage;
+        return $this;
+    }
+
+    public function getOriginalUnitPrice(): ?string
+    {
+        return $this->originalUnitPrice;
+    }
+
+    public function setOriginalUnitPrice(?string $originalUnitPrice): static
+    {
+        $this->originalUnitPrice = $originalUnitPrice;
+        return $this;
+    }
+
+    // ==================== MÉTHODES UTILITAIRES ====================
+
+    /**
+     * Vérifie si l'article a bénéficié d'une promotion
+     */
+    public function hasPromotion(): bool
+    {
+        return $this->promotionId !== null && $this->promotionDiscountAmount !== null;
+    }
+
+    /**
+     * Retourne le prix unitaire original (avant promotion)
+     */
+    public function getOriginalUnitPriceValue(): ?float
+    {
+        return $this->originalUnitPrice !== null ? (float) $this->originalUnitPrice : null;
+    }
+
+    /**
+     * Retourne le montant de la remise
+     */
+    public function getDiscountAmountValue(): ?float
+    {
+        return $this->promotionDiscountAmount !== null ? (float) $this->promotionDiscountAmount : null;
+    }
+
+    /**
+     * Retourne le pourcentage de remise
+     */
+    public function getDiscountPercentageValue(): ?float
+    {
+        return $this->promotionDiscountPercentage !== null ? (float) $this->promotionDiscountPercentage : null;
     }
 }

@@ -1,0 +1,979 @@
+{# templates/sale/orders/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des ventes - HMA Market{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<style>
+    :root { --primary-color: #0463f1; --success-color: #10b981; --danger-color: #ef4444; --warning-color: #f59e0b; --info-color: #3b82f6; }
+    
+    /* Cartes statistiques - TOUTES IDENTIQUES avec fond blanc pur */
+    .stats-card {
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 16px !important;
+        transition: transform 0.2s, box-shadow 0.2s;
+        overflow: hidden;
+        cursor: pointer;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+    .stats-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .stats-card .card-body {
+        padding: 1rem;
+        background: #ffffff !important;
+    }
+    .stats-card h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+    .stats-card h6 {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+    .stats-card .text-primary { color: var(--primary-color) !important; }
+    .stats-card .text-success { color: var(--success-color) !important; }
+    .stats-card .text-info { color: var(--info-color) !important; }
+    .stats-card .text-warning { color: var(--warning-color) !important; }
+    .stats-card .text-danger { color: var(--danger-color) !important; }
+    .stats-card .text-secondary { color: #6c757d !important; }
+    .stats-card .text-dark { color: #1f2937 !important; }
+    .stats-card .text-cyan { color: #06b6d4 !important; }
+    .stats-card .text-emerald { color: #10b981 !important; }
+    .stats-card .text-gray { color: #6b7280 !important; }
+    .stats-card .text-purple { color: #8b5cf6 !important; }
+    .stats-card .text-rose { color: #f43f5e !important; }
+    
+    .filter-section {
+        background: white;
+        border-radius: 16px;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .table-order-row {
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .table-order-row:hover {
+        background-color: #f8f9fa;
+    }
+    .badge-payment-paid { background-color: #10b981; }
+    .badge-payment-partial { background-color: #f59e0b; }
+    .badge-status-completed { background-color: #10b981; }
+    .badge-status-cancelled { background-color: #ef4444; }
+    .badge-status-refunded { background-color: #8b5cf6; }
+    .badge-status-disabled { background-color: #6c757d; }
+    
+    .filter-info {
+        background: #e0f2fe !important;
+        border-left: 4px solid #0284c7 !important;
+        padding: 0.75rem 1rem !important;
+        border-radius: 8px !important;
+        margin-bottom: 1rem !important;
+        color: #0c4a6e !important;
+    }
+    .filter-info .btn-outline-secondary {
+        border-color: #0284c7;
+        color: #0284c7;
+    }
+    .filter-info .btn-outline-secondary:hover {
+        background: #0284c7;
+        color: white;
+    }
+    
+    .contact-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        color: white;
+        transition: transform 0.2s;
+    }
+    
+    .contact-card:hover {
+        transform: translateY(-2px);
+    }
+    
+    .table-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    @media (max-width: 768px) {
+        .filter-section .row > div {
+            margin-bottom: 1rem;
+        }
+        .stats-card h3 {
+            font-size: 1.2rem;
+        }
+        .table-header-actions {
+            margin-top: 0.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
+                            <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-shopping-cart me-1"></i> Ventes
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0">
+                <i class="fas fa-shopping-cart me-2 text-primary"></i>
+                Historique des ventes
+            </h1>
+            <p class="text-muted mt-2">
+                <i class="fas fa-info-circle me-1"></i>
+                Consultez et analysez toutes vos ventes
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="fas fa-file-export me-1"></i> Exporter
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="{{ path('app_orders_export_excel', app.request.query.all) }}">
+                            <i class="fas fa-file-excel me-2 text-success"></i> Excel (.xlsx)
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ path('app_orders_export_pdf', app.request.query.all) }}">
+                            <i class="fas fa-file-pdf me-2 text-danger"></i> PDF (.pdf)
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <a href="{{ isRestaurant ? path('restaurant_sale_index') : path('retail_sale_index') }}" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-2"></i> Nouvelle vente
+            </a>
+        </div>
+    </div>
+
+    <!-- Message contact Super Admin -->
+    <a href="{{ path('app_orders_contact_super_admin') }}" class="text-decoration-none">
+        <div class="contact-card">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <i class="fas fa-chart-line fa-2x me-3 float-start"></i>
+                    <h5 class="mb-1">Analyse approfondie des données</h5>
+                    <p class="mb-0 opacity-75">Pour une analyse détaillée de vos ventes, contactez notre équipe Super Admin</p>
+                </div>
+                <div class="btn btn-light">
+                    <i class="fab fa-whatsapp me-2 text-success"></i> Contacter le support
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <!-- 12 Cartes statistiques (TOUTES AVEC LE MÊME FOND BLANC) -->
+    <div class="row g-3 mb-4">
+        <!-- Carte 1: Chiffre d'affaires -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-primary">Chiffre d'affaires</h6>
+                            <h3 class="mb-0 text-primary">{{ stats.total_sales|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="text-muted">FCFA</small>
+                        </div>
+                        <i class="fas fa-chart-line fa-2x text-primary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carte 2: Nombre de ventes -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-success">Nombre de ventes</h6>
+                            <h3 class="mb-0 text-success">{{ stats.total_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="text-muted">commandes</small>
+                        </div>
+                        <i class="fas fa-receipt fa-2x text-success opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carte 3: Panier moyen -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-info">Panier moyen</h6>
+                            <h3 class="mb-0 text-info">{{ stats.average_basket|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="text-muted">FCFA/vente</small>
+                        </div>
+                        <i class="fas fa-shopping-basket fa-2x text-info opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carte 4: Clients uniques -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-warning">Clients uniques</h6>
+                            <h3 class="mb-0 text-warning">{{ stats.unique_customers|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="text-muted">personnes</small>
+                        </div>
+                        <i class="fas fa-users fa-2x text-warning opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carte 5: Ticket moyen -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-danger">Ticket moyen</h6>
+                            <h3 class="mb-0 text-danger">{{ stats.average_ticket|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="text-muted">FCFA/client</small>
+                        </div>
+                        <i class="fas fa-ticket-alt fa-2x text-danger opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carte 6: Vente max -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-secondary">Vente max</h6>
+                            <h3 class="mb-0 text-secondary">{{ stats.max_sale|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="text-muted">FCFA</small>
+                        </div>
+                        <i class="fas fa-arrow-up fa-2x text-secondary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carte 7: Vente min -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-dark">Vente min</h6>
+                            <h3 class="mb-0 text-dark">{{ stats.min_sale|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="text-muted">FCFA</small>
+                        </div>
+                        <i class="fas fa-arrow-down fa-2x text-dark opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carte 8: Articles vendus -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-cyan">Articles vendus</h6>
+                            <h3 class="mb-0 text-cyan">{{ stats.total_items|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="text-muted">unités</small>
+                        </div>
+                        <i class="fas fa-boxes fa-2x text-cyan opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carte 9: Ventes actives -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-emerald">Ventes actives</h6>
+                            <h3 class="mb-0 text-emerald">{{ stats.active_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="text-muted">commandes</small>
+                        </div>
+                        <i class="fas fa-check-circle fa-2x text-emerald opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carte 10: Ventes désactivées -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-gray">Ventes désactivées</h6>
+                            <h3 class="mb-0 text-gray">{{ stats.disabled_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="text-muted">commandes</small>
+                        </div>
+                        <i class="fas fa-ban fa-2x text-gray opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carte 11: Taux désactivation -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-purple">Taux désactivation</h6>
+                            <h3 class="mb-0 text-purple">{{ stats.disabled_percentage|default(0)|number_format(1, ',', ' ') }}%</h3>
+                            <small class="text-muted">des ventes</small>
+                        </div>
+                        <i class="fas fa-chart-pie fa-2x text-purple opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carte 12: Ventes annulées -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-rose">Ventes annulées</h6>
+                            <h3 class="mb-0 text-rose">{{ stats.cancelled_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="text-muted">commandes</small>
+                        </div>
+                        <i class="fas fa-times-circle fa-2x text-rose opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message info filtres (visible quand des filtres sont actifs) -->
+    {% if filters.date_from or filters.date_to or filters.status or filters.payment_method or filters.user_id or filters.min_amount or filters.max_amount %}
+    <div class="filter-info">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Filtres actifs :</strong> Les statistiques ci-dessus sont basées sur les filtres appliqués.
+            </div>
+            <a href="{{ path('app_orders_index') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-times me-1"></i> Effacer les filtres
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Filtres -->
+    <div class="filter-section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0"><i class="fas fa-filter me-2 text-primary"></i> Filtres</h5>
+            <div class="d-flex gap-2">
+                <a href="{{ path('app_orders_index') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-undo me-1"></i> Effacer
+                </a>
+                <button type="submit" form="filter-form" class="btn btn-primary btn-sm">
+                    <i class="fas fa-search me-1"></i> Filtrer
+                </button>
+            </div>
+        </div>
+
+        <form method="get" id="filter-form">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Recherche</label>
+                    <input type="text" name="search" class="form-control" 
+                           placeholder="N° commande, client..." value="{{ filters.search|default('') }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Statut</label>
+                    <select name="status" class="form-select select2-status">
+                        <option value="">Tous</option>
+                        {% for status in statuses %}
+                            <option value="{{ status }}" {{ filters.status == status ? 'selected' }}>{{ status|capitalize }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Mode de paiement</label>
+                    <select name="payment_method" class="form-select select2-payment">
+                        <option value="">Tous</option>
+                        {% for method in payment_methods %}
+                            <option value="{{ method }}" {{ filters.payment_method == method ? 'selected' }}>{{ method|replace({'_': ' '})|capitalize }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Caissier</label>
+                    <select name="user_id" id="user-select" class="form-select select2-user">
+                        <option value="">Tous les caissiers</option>
+                        {% for user in users %}
+                            <option value="{{ user.id }}" {{ filters.user_id == user.id ? 'selected' }}>
+                                {% if user.photo %}
+                                    <img src="{{ asset('uploads/users/' ~ user.photo) }}" class="rounded-circle me-2" style="width: 20px; height: 20px; object-fit: cover;">
+                                {% endif %}
+                                {{ user.fullName|default(user.email) }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Période</label>
+                    <select name="date_preset" id="date-preset" class="form-select select2-preset">
+                        <option value="">Personnalisée</option>
+                        {% for key, label in date_presets %}
+                            <option value="{{ key }}" {{ filters.date_preset == key ? 'selected' }}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row g-3 mt-2" id="custom-dates" style="display: {{ filters.date_preset ? 'none' : 'flex' }};">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Date du</label>
+                    <input type="date" name="date_from" class="form-control" value="{{ filters.date_from|default('') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Date au</label>
+                    <input type="date" name="date_to" class="form-control" value="{{ filters.date_to|default('') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Montant min (FCFA)</label>
+                    <input type="number" name="min_amount" class="form-control" placeholder="Min" value="{{ filters.min_amount|default('') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Montant max (FCFA)</label>
+                    <input type="number" name="max_amount" class="form-control" placeholder="Max" value="{{ filters.max_amount|default('') }}">
+                </div>
+            </div>
+
+            <div class="row g-3 mt-2">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Trier par</label>
+                    <select name="sort" class="form-select">
+                        <option value="created_at" {{ filters.sort == 'created_at' ? 'selected' }}>Date de vente</option>
+                        <option value="total_amount" {{ filters.sort == 'total_amount' ? 'selected' }}>Montant</option>
+                        <option value="customer_name" {{ filters.sort == 'customer_name' ? 'selected' }}>Nom client</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Ordre</label>
+                    <select name="direction" class="form-select">
+                        <option value="desc" {{ filters.direction == 'desc' ? 'selected' }}>Plus récent d'abord</option>
+                        <option value="asc" {{ filters.direction == 'asc' ? 'selected' }}>Plus ancien d'abord</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tableau des ventes -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <h5 class="mb-0"><i class="fas fa-list me-2"></i> Liste des ventes</h5>
+                <div class="table-header-actions">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="selectAllCheckbox">
+                        <label class="form-check-label small" for="selectAllCheckbox">Tout cocher</label>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" id="deselectAllBtn">
+                        <i class="fas fa-times me-1"></i> Tout décocher
+                    </button>
+                    <button class="btn btn-sm btn-primary" id="printSelectedBtn" disabled>
+                        <i class="fas fa-print me-1"></i> Imprimer sélection
+                    </button>
+                    <span class="badge bg-secondary">{{ totalItems }} vente(s)</span>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 40px;"></th>
+                            <th>N° commande</th>
+                            <th>Date</th>
+                            <th>Client</th>
+                            <th>Articles</th>
+                            <th>Total</th>
+                            <th>Paiement</th>
+                            <th>Statut</th>
+                            <th>Caissier</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            {% set itemCount = order.orderItems|length %}
+                            <tr class="table-order-row" data-href="{{ path('app_orders_show', {'id': order.id}) }}">
+                                <td><input type="checkbox" class="form-check-input row-checkbox" data-order-id="{{ order.id }}" data-order-number="{{ order.orderNumber }}"></td>
+                                <td>
+                                    <strong>{{ order.orderNumber }}</strong>
+                                    <br>
+                                    <small class="text-muted">#{{ order.id }}</small>
+                                </td>
+                                <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                                <td>
+                                    <div>{{ order.customerName }}</div>
+                                    {% if order.customerPhone %}
+                                        <small class="text-muted"><i class="fas fa-phone me-1"></i>{{ order.customerPhone }}</small>
+                                    {% endif %}
+                                  </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ itemCount }} article(s)</span>
+                                    {% if isRestaurant %}
+                                        <br>
+                                        <small class="text-muted">Plats</small>
+                                    {% endif %}
+                                  </td>
+                                <td>
+                                    <strong class="text-primary">{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</strong>
+                                  </td>
+                                <td>
+                                    <span class="badge bg-{{ order.paymentMethod == 'cash' ? 'success' : 'info' }}">
+                                        {{ order.paymentMethod|replace({'_': ' '})|capitalize }}
+                                    </span>
+                                  </td>
+                                <td>
+                                    {% if order.isActive %}
+                                        <span class="badge badge-status-completed">Active</span>
+                                    {% else %}
+                                        <span class="badge badge-status-disabled">Désactivée</span>
+                                    {% endif %}
+                                  </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if order.user.photo %}
+                                            <img src="{{ asset('uploads/users/' ~ order.user.photo) }}" 
+                                                 class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" 
+                                                 style="width: 30px; height: 30px; font-size: 12px;">
+                                                {{ order.user.fullName|first|upper }}
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <div>{{ order.user.fullName|default(order.user.email) }}</div>
+                                            <small class="text-muted">{{ order.user.roles|first|replace({'ROLE_': ''}) }}</small>
+                                        </div>
+                                    </div>
+                                  </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ path('app_orders_show', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary print-single" data-id="{{ order.id }}" title="Imprimer le reçu">
+                                            <i class="fas fa-print"></i>
+                                        </button>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            {% if order.isActive %}
+                                                <button type="button" class="btn btn-sm btn-outline-warning toggle-order" data-id="{{ order.id }}" data-number="{{ order.orderNumber }}" data-action="disable" title="Désactiver">
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                            {% else %}
+                                                <button type="button" class="btn btn-sm btn-outline-success toggle-order" data-id="{{ order.id }}" data-number="{{ order.orderNumber }}" data-action="enable" title="Activer">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </button>
+                                            {% endif %}
+                                            <button type="button" class="btn btn-sm btn-outline-danger delete-order" data-id="{{ order.id }}" data-number="{{ order.orderNumber }}" title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                  </td>
+                               </tr>
+                        {% else %}
+                             <tr>
+                                <td colspan="10" class="text-center py-5">
+                                    <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted mb-0">Aucune vente trouvée</p>
+                                    <p class="text-muted small">Modifiez vos filtres pour voir plus de résultats</p>
+                                  </td>
+                               </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        {% if totalPages > 1 %}
+        <div class="card-footer bg-white">
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center mb-0">
+                    {% if currentPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_orders_index', app.request.query.all|merge({'page': currentPage - 1})) }}">
+                                <i class="fas fa-chevron-left"></i> Précédent
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for page in 1..totalPages %}
+                        {% if page == currentPage or (page >= currentPage - 2 and page <= currentPage + 2) or page == 1 or page == totalPages %}
+                            {% if page == currentPage - 3 or page == currentPage + 3 %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% else %}
+                                <li class="page-item {{ page == currentPage ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ path('app_orders_index', app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if currentPage < totalPages %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_orders_index', app.request.query.all|merge({'page': currentPage + 1})) }}">
+                                Suivant <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modales (inchangées) -->
+<div class="modal fade" id="toggleOrderModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exchange-alt me-2"></i> Changer le statut
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="toggleOrderMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form id="toggleOrderForm" method="post">
+                    <input type="hidden" name="_token" id="toggleOrderToken">
+                    <button type="submit" class="btn btn-warning" id="toggleOrderBtn">Confirmer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteOrderModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Confirmer la suppression
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer la vente <strong id="deleteOrderNumber"></strong> ?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Attention :</strong> Cette action est irréversible et supprimera également tous les articles associés.
+                </div>
+                <p class="text-danger mb-0"><small>⚠️ La suppression d'une vente ne restaure pas le stock !</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form id="deleteOrderForm" method="post">
+                    <input type="hidden" name="_token" id="deleteOrderToken">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-2"></i> Supprimer définitivement
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="receiptModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-print me-2"></i> Aperçu du reçu
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="receiptContent">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" id="printReceiptBtn">
+                    <i class="fas fa-print me-2"></i> Imprimer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisation Select2
+    $('.select2-status, .select2-payment, .select2-user, .select2-preset').select2({
+        theme: 'bootstrap-5',
+        language: 'fr',
+        width: '100%'
+    });
+
+    $('#user-select').select2({
+        theme: 'bootstrap-5',
+        language: 'fr',
+        placeholder: 'Tous les caissiers',
+        allowClear: true,
+        width: '100%'
+    });
+
+    // Gestion des dates personnalisées
+    const datePreset = document.getElementById('date-preset');
+    const customDates = document.getElementById('custom-dates');
+    
+    if (datePreset) {
+        datePreset.addEventListener('change', function() {
+            if (this.value) {
+                customDates.style.display = 'none';
+                document.querySelectorAll('input[name="date_from"], input[name="date_to"]').forEach(input => input.value = '');
+            } else {
+                customDates.style.display = 'flex';
+            }
+        });
+    }
+
+    // Rendre les lignes cliquables
+    document.querySelectorAll('.table-order-row').forEach(row => {
+        row.addEventListener('click', function(e) {
+            if (!e.target.closest('a') && !e.target.closest('button') && !e.target.closest('input[type="checkbox"]')) {
+                window.location.href = this.dataset.href;
+            }
+        });
+    });
+
+    // ========== GESTION DES CHECKBOX ==========
+    const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const deselectAllBtn = document.getElementById('deselectAllBtn');
+    const printSelectedBtn = document.getElementById('printSelectedBtn');
+    
+    function updateSelectedCount() {
+        const checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
+        if (printSelectedBtn) {
+            printSelectedBtn.disabled = checkedCount === 0;
+            printSelectedBtn.innerHTML = `<i class="fas fa-print me-1"></i> Imprimer sélection (${checkedCount})`;
+        }
+        if (selectAllCheckbox) {
+            selectAllCheckbox.checked = checkedCount === rowCheckboxes.length && rowCheckboxes.length > 0;
+            selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < rowCheckboxes.length;
+        }
+    }
+    
+    function toggleAllCheckboxes(checked) {
+        rowCheckboxes.forEach(cb => cb.checked = checked);
+        updateSelectedCount();
+    }
+    
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            toggleAllCheckboxes(this.checked);
+        });
+    }
+    
+    if (deselectAllBtn) {
+        deselectAllBtn.addEventListener('click', function() {
+            toggleAllCheckboxes(false);
+        });
+    }
+    
+    rowCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateSelectedCount);
+    });
+    
+    updateSelectedCount();
+
+    // ========== IMPRESSION ==========
+    const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+    const receiptContent = document.getElementById('receiptContent');
+    
+    // Impression unique
+    document.querySelectorAll('.print-single').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const orderId = this.dataset.id;
+            loadReceipt(orderId);
+        });
+    });
+    
+    // Impression multiple
+    if (printSelectedBtn) {
+        printSelectedBtn.addEventListener('click', function() {
+            const selectedIds = Array.from(document.querySelectorAll('.row-checkbox:checked')).map(cb => cb.dataset.orderId);
+            if (selectedIds.length === 0) return;
+            
+            if (selectedIds.length === 1) {
+                loadReceipt(selectedIds[0]);
+            } else {
+                loadMultipleReceipts(selectedIds);
+            }
+        });
+    }
+    
+    function loadReceipt(orderId) {
+        receiptContent.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div><p class="mt-2">Chargement du reçu...</p></div>';
+        receiptModal.show();
+        
+        fetch(`/orders/${orderId}/receipt-content`)
+            .then(response => response.text())
+            .then(html => {
+                receiptContent.innerHTML = html;
+            })
+            .catch(error => {
+                receiptContent.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement du reçu</div>';
+            });
+    }
+    
+    function loadMultipleReceipts(orderIds) {
+        receiptContent.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div><p class="mt-2">Chargement des reçus...</p></div>';
+        receiptModal.show();
+        
+        fetch(`/orders/receipts-content?ids=${orderIds.join(',')}`)
+            .then(response => response.text())
+            .then(html => {
+                receiptContent.innerHTML = html;
+            })
+            .catch(error => {
+                receiptContent.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement des reçus</div>';
+            });
+    }
+    
+    document.getElementById('printReceiptBtn')?.addEventListener('click', function() {
+        const printContent = receiptContent.innerHTML;
+        const printWindow = window.open('', '_blank', 'width=400,height=600');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Reçu de vente</title>
+                <meta charset="UTF-8">
+                <style>
+                    body { font-family: monospace; margin: 0; padding: 20px; width: 350px; margin: 0 auto; }
+                    .receipt { text-align: center; }
+                    .receipt-header { margin-bottom: 15px; }
+                    .receipt-header h2 { margin: 0; font-size: 18px; }
+                    .receipt-header p { margin: 5px 0; font-size: 12px; }
+                    .receipt-line { border-top: 1px dashed #000; margin: 10px 0; }
+                    .receipt-items { width: 100%; margin: 10px 0; font-size: 12px; }
+                    .receipt-items th, .receipt-items td { text-align: left; padding: 3px 0; }
+                    .receipt-items td:last-child { text-align: right; }
+                    .receipt-total { font-weight: bold; margin-top: 10px; }
+                    .receipt-footer { margin-top: 15px; font-size: 10px; text-align: center; }
+                    @media print {
+                        body { margin: 0; padding: 10px; }
+                        .no-print { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                ${printContent}
+                <div class="receipt-footer no-print">
+                    <button onclick="window.print()" style="margin-top: 20px; padding: 8px 16px;">Imprimer</button>
+                </div>
+                <script>
+                    window.print();
+                <\/script>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+    });
+
+    // Toggle (désactiver/activer) une vente
+    const toggleModal = new bootstrap.Modal(document.getElementById('toggleOrderModal'));
+    const toggleOrderMessage = document.getElementById('toggleOrderMessage');
+    const toggleOrderForm = document.getElementById('toggleOrderForm');
+    const toggleOrderToken = document.getElementById('toggleOrderToken');
+    const toggleOrderBtn = document.getElementById('toggleOrderBtn');
+    
+    document.querySelectorAll('.toggle-order').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const orderId = this.dataset.id;
+            const orderNumber = this.dataset.number;
+            const action = this.dataset.action;
+            
+            const isDisable = action === 'disable';
+            toggleOrderMessage.textContent = isDisable 
+                ? `Êtes-vous sûr de vouloir désactiver la vente "${orderNumber}" ? Elle ne sera plus visible dans les rapports.`
+                : `Êtes-vous sûr de vouloir réactiver la vente "${orderNumber}" ?`;
+            
+            toggleOrderForm.action = '/orders/' + orderId + '/toggle';
+            toggleOrderToken.value = '{{ csrf_token("toggle_order") }}'.replace('ID_PLACEHOLDER', orderId);
+            toggleOrderBtn.className = isDisable ? 'btn btn-warning' : 'btn btn-success';
+            toggleOrderBtn.textContent = isDisable ? 'Désactiver' : 'Activer';
+            
+            toggleModal.show();
+        });
+    });
+
+    // Suppression d'une vente
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteOrderModal'));
+    const deleteOrderNumber = document.getElementById('deleteOrderNumber');
+    const deleteOrderForm = document.getElementById('deleteOrderForm');
+    const deleteOrderToken = document.getElementById('deleteOrderToken');
+    
+    document.querySelectorAll('.delete-order').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const orderId = this.dataset.id;
+            const orderNumber = this.dataset.number;
+            
+            deleteOrderNumber.textContent = orderNumber;
+            deleteOrderForm.action = '/orders/' + orderId + '/delete';
+            deleteOrderToken.value = '{{ csrf_token("delete_order") }}'.replace('ID_PLACEHOLDER', orderId);
+            
+            deleteModal.show();
+        });
+    });
+});
+</script>
+{% endblock %}

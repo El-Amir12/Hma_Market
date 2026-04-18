@@ -8,6 +8,7 @@ use App\Entity\HmaService;
 use App\Entity\User;
 use App\Form\TypePromotionType;
 use App\Repository\TypePromotionRepository;
+use App\Service\UniqueNameValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +19,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 #[Route('/admin/type-promotion')]
 class TypePromotionController extends AbstractController
 {
+    public function __construct(
+        private readonly UniqueNameValidator $uniqueNameValidator
+    ) {
+    }
+
     private function getCurrentHmaService(): ?HmaService
     {
         $user = $this->getUser();
@@ -42,7 +48,7 @@ class TypePromotionController extends AbstractController
     }
 
     #[Route('/', name: 'app_admin_type_promotion_index', methods: ['GET'])]
-    public function index(Request $request, TypePromotionRepository $repository, EntityManagerInterface $em): Response
+    public function index(Request $request, TypePromotionRepository $repository): Response
     {
         $this->checkAccess();
         $hmaService = $this->getCurrentHmaService();
@@ -51,7 +57,7 @@ class TypePromotionController extends AbstractController
         $page = $request->query->getInt('page', 1);
         $limit = 12;
         $search = $request->query->get('search', '');
-        $status = $request->query->get('status', 'all'); // all, active, inactive
+        $status = $request->query->get('status', 'all');
 
         $onlyActive = null;
         if ($status === 'active') $onlyActive = true;
@@ -83,19 +89,16 @@ class TypePromotionController extends AbstractController
     {
         $this->checkAccess();
 
-        // Récupérer l'utilisateur connecté
         $user = $this->getUser();
         if (!$user) throw new AccessDeniedException('Utilisateur non connecté.');
         if (!$user instanceof User) throw new AccessDeniedException('Seuls les utilisateurs peuvent créer des types.');
 
-        // Recharger l'utilisateur pour qu'il soit géré par l'EntityManager
         $user = $em->getRepository(User::class)->find($user->getId());
         if (!$user) throw new AccessDeniedException('Utilisateur introuvable.');
 
         $hmaService = $user->getHmaService();
         if (!$hmaService) throw new AccessDeniedException('Aucun service associé.');
 
-        // Recharger le service pour qu'il soit géré
         $hmaService = $em->getRepository(HmaService::class)->find($hmaService->getId());
         if (!$hmaService) throw new AccessDeniedException('Service introuvable.');
 
@@ -109,6 +112,16 @@ class TypePromotionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $validation = $this->uniqueNameValidator->validate($type, TypePromotion::class, 'type de promotion', $hmaService->getId());
+            
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/type_promotion/new.html.twig', [
+                    'form' => $form->createView(),
+                    'type' => $type
+                ]);
+            }
+
             $em->persist($type);
             $em->flush();
             $this->addFlash('success', 'Type de promotion créé.');
@@ -130,6 +143,16 @@ class TypePromotionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $validation = $this->uniqueNameValidator->validate($type, TypePromotion::class, 'type de promotion', $hmaService->getId());
+            
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/type_promotion/edit.html.twig', [
+                    'form' => $form->createView(),
+                    'type' => $type
+                ]);
+            }
+
             $type->setUpdatedAt(new \DateTimeImmutable());
             $em->flush();
             $this->addFlash('success', 'Type modifié.');
@@ -137,6 +160,47 @@ class TypePromotionController extends AbstractController
         }
 
         return $this->render('admin/type_promotion/edit.html.twig', ['form' => $form, 'type' => $type]);
+    }
+
+    #[Route('/{id}', name: 'app_admin_type_promotion_show', methods: ['GET'])]
+    public function show(TypePromotion $type): Response
+    {
+        $this->checkAccess();
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService) throw new AccessDeniedException('Aucun service associé.');
+        $this->checkOwnership($type, $hmaService);
+
+        // Compter les promotions associées
+        $promotionsCount = $type->getPromotions()->count();
+
+        return $this->render('admin/type_promotion/show.html.twig', [
+            'type' => $type,
+            'promotionsCount' => $promotionsCount,
+            'hmaService' => $hmaService
+        ]);
+    }
+
+    // ✅ NOUVELLE ROUTE : Activer/Désactiver le statut
+    #[Route('/{id}/toggle-status', name: 'app_admin_type_promotion_toggle_status', methods: ['POST'])]
+    public function toggleStatus(Request $request, TypePromotion $type, EntityManagerInterface $em): Response
+    {
+        $this->checkAccess();
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService) throw new AccessDeniedException('Aucun service associé.');
+        $this->checkOwnership($type, $hmaService);
+
+        if (!$this->isCsrfTokenValid('toggle-status' . $type->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token CSRF invalide.');
+            return $this->redirectToRoute('app_admin_type_promotion_index');
+        }
+
+        $type->setIsActive(!$type->isActive());
+        $type->setUpdatedAt(new \DateTimeImmutable());
+        $em->flush();
+
+        $status = $type->isActive() ? 'activé' : 'désactivé';
+        $this->addFlash('success', "Type de promotion {$status} avec succès.");
+        return $this->redirectToRoute('app_admin_type_promotion_index');
     }
 
     #[Route('/{id}/delete', name: 'app_admin_type_promotion_delete', methods: ['POST'])]

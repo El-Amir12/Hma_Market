@@ -1,10 +1,13 @@
 <?php
+// src/Twig/AppExtension.php
 
 namespace App\Twig;
 
+use App\Entity\CategoryRecipe;
 use App\Entity\HmaService;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 class AppExtension extends AbstractExtension
 {
@@ -25,13 +28,20 @@ class AppExtension extends AbstractExtension
         ];
     }
 
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('build_category_tree', [$this, 'buildCategoryTree']),
+        ];
+    }
+
     public function formatPriceWithCurrency($price, ?HmaService $hmaService = null): string
     {
         if ($price === null) {
             return '';
         }
 
-        $currency = 'XAF'; // défaut
+        $currency = 'XAF';
 
         if ($hmaService && $hmaService->getCountry()) {
             $currency = self::CURRENCY_MAP[$hmaService->getCountry()] ?? 'XAF';
@@ -41,35 +51,49 @@ class AppExtension extends AbstractExtension
         return $formatted . ' ' . $currency;
     }
 
-    /**
-     * Calcule la somme d'une propriété sur un tableau d'objets
-     * 
-     * @param array $array Le tableau d'objets
-     * @param string $property Le nom de la propriété (ex: 'currentQuantity', 'unitPrice')
-     * @return float La somme calculée
-     */
     public function calculateSum(array $array, string $property): float
     {
         $sum = 0;
         
         foreach ($array as $item) {
-            // Construire le nom du getter (ex: getCurrentQuantity)
             $getter = 'get' . ucfirst($property);
             
-            // Vérifier si la méthode existe
             if (method_exists($item, $getter)) {
                 $sum += (float) $item->$getter();
-            } 
-            // Vérifier si la propriété existe (accès direct)
-            elseif (property_exists($item, $property)) {
+            } elseif (property_exists($item, $property)) {
                 $sum += (float) $item->$property;
-            }
-            // Vérifier si c'est un tableau associatif
-            elseif (is_array($item) && isset($item[$property])) {
+            } elseif (is_array($item) && isset($item[$property])) {
                 $sum += (float) $item[$property];
             }
         }
         
         return $sum;
+    }
+
+    /**
+     * Construit l'arbre des catégories pour le select
+     */
+    public function buildCategoryTree($categories, $parentId = 0, $level = 0): string
+    {
+        $html = '';
+        foreach ($categories as $category) {
+            $parent = $category->getParent();
+            $parentMatch = ($parent && $parent->getId() == $parentId) || ($parentId == 0 && !$parent);
+            
+            if ($parentMatch) {
+                $indent = str_repeat('&nbsp;&nbsp;&nbsp;', $level);
+                $indentDash = str_repeat('— ', $level);
+                $displayIndent = $level > 0 ? $indent . $indentDash : '';
+                
+                $html .= sprintf(
+                    '<option value="%d">%s%s</option>',
+                    $category->getId(),
+                    $displayIndent,
+                    htmlspecialchars($category->getName())
+                );
+                $html .= $this->buildCategoryTree($categories, $category->getId(), $level + 1);
+            }
+        }
+        return $html;
     }
 }

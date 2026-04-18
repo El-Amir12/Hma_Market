@@ -8,6 +8,7 @@ use App\Entity\Product;
 use App\Entity\Recipe;
 use App\Entity\RecipeItem;
 use App\Form\RecipeType;
+use App\Service\UniqueNameValidator;
 use App\Repository\CategoryRecipeRepository;
 use App\Repository\RecipeRepository;
 use App\Service\UnitConverter;
@@ -28,7 +29,8 @@ final class RecipeController extends AbstractController
 
     public function __construct(
         private readonly SluggerInterface $slugger,
-        private readonly UnitConverter $unitConverter
+        private readonly UnitConverter $unitConverter,
+        private readonly UniqueNameValidator $uniqueNameValidator
     ) {}
 
     private function getCurrentHmaService(): ?HmaService
@@ -169,6 +171,16 @@ final class RecipeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ✅ Vérification de l'unicité du nom
+            $validation = $this->uniqueNameValidator->validate($recipe, Recipe::class, 'recette', $hmaService->getId());
+
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/recipe/new.html.twig', [
+                    'form' => $form->createView(),
+                    'recipe' => $recipe
+                ]);
+            }
             if (!$this->validateUnitCompatibility($recipe)) {
                 $availableProducts = $this->getProductsData($entityManager, $hmaService);
                 return $this->render('admin/recipe/new.html.twig', [
@@ -251,6 +263,16 @@ final class RecipeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ✅ Vérification de l'unicité du nom
+            $validation = $this->uniqueNameValidator->validate($recipe, Recipe::class, 'recette', $hmaService->getId());
+
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/recipe/edit.html.twig', [
+                    'form' => $form->createView(),
+                    'recipe' => $recipe
+                ]);
+            }
             if (!$this->validateUnitCompatibility($recipe)) {
                 $availableProducts = $this->getProductsData($entityManager, $hmaService);
                 return $this->render('admin/recipe/edit.html.twig', [

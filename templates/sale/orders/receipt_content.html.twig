@@ -1,0 +1,261 @@
+{# templates/sale/orders/receipt_content.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reçu de vente - {{ order.orderNumber }}</title>
+    <style>
+        /* Styles pour papier reçu 80mm */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', 'Courier', monospace;
+            font-size: 12px;
+            line-height: 1.3;
+            color: #000;
+            background: white;
+            padding: 8px;
+            width: 80mm;
+            margin: 0 auto;
+        }
+        
+        /* En-tête */
+        .header {
+            text-align: center;
+            border-bottom: 1px dashed #000;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .company-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .company-info {
+            font-size: 10px;
+            color: #555;
+        }
+        
+        .receipt-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        /* Informations vente */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+        }
+        
+        /* Tableau des articles */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0;
+        }
+        
+        .items-table th {
+            text-align: left;
+            border-bottom: 1px dashed #000;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+        
+        .items-table td {
+            padding: 4px 0;
+            vertical-align: top;
+        }
+        
+        .item-name {
+            font-size: 11px;
+        }
+        
+        .item-quantity {
+            text-align: center;
+            width: 40px;
+        }
+        
+        .item-price {
+            text-align: right;
+            width: 60px;
+        }
+        
+        /* Totaux */
+        .totals {
+            border-top: 1px dashed #000;
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+        
+        .total-amount {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        /* Pied de page */
+        .footer {
+            text-align: center;
+            border-top: 1px dashed #000;
+            padding-top: 8px;
+            margin-top: 8px;
+            font-size: 10px;
+            color: #555;
+        }
+        
+        /* Diviseurs */
+        .divider {
+            border-top: 1px dotted #ccc;
+            margin: 8px 0;
+        }
+        
+        /* Message remerciement */
+        .thanks {
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+                margin: 0;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="company-name">{{ company.name ?? company.companyName ?? 'Votre Entreprise' }}</div>
+        <div class="company-info">
+            {% if company.address %}
+                {{ company.address }}<br>
+            {% endif %}
+            {% if company.phone %}
+                Tél: {{ company.phone }}<br>
+            {% endif %}
+            {% if company.email %}
+                Email: {{ company.email }}
+            {% endif %}
+        </div>
+        <div class="receipt-title">REÇU DE VENTE</div>
+    </div>
+
+    <div class="info-row">
+        <span class="info-label">N° Commande:</span>
+        <span>{{ order.orderNumber }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Date:</span>
+        <span>{{ order.createdAt|date('d/m/Y H:i:s') }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Caissier:</span>
+        <span>{{ order.user.fullName ?? order.user.email ?? 'N/A' }}</span>
+    </div>
+    {% if order.customerName %}
+    <div class="info-row">
+        <span class="info-label">Client:</span>
+        <span>{{ order.customerName }}</span>
+    </div>
+    {% endif %}
+    {% if order.customerPhone %}
+    <div class="info-row">
+        <span class="info-label">Téléphone:</span>
+        <span>{{ order.customerPhone }}</span>
+    </div>
+    {% endif %}
+
+    <div class="divider"></div>
+
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Désignation</th>
+                <th class="item-quantity">Qté</th>
+                <th class="item-price">Prix</th>
+                <th class="item-price">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.orderItems %}
+            <tr>
+                <td class="item-name">{{ item.productName }}</td>
+                <td class="item-quantity">{{ item.quantity }}</td>
+                <td class="item-price">{{ item.unitPrice|number_format(0, ',', ' ') }}</td>
+                <td class="item-price">{{ item.totalPrice|number_format(0, ',', ' ') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <div class="totals">
+        <div class="total-row">
+            <span>Total TTC:</span>
+            <span class="total-amount">{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</span>
+        </div>
+        <div class="total-row">
+            <span>Montant payé:</span>
+            <span>{{ order.amountPaid|number_format(0, ',', ' ') }} FCFA</span>
+        </div>
+        <div class="total-row">
+            <span>Monnaie rendue:</span>
+            <span>{{ order.changeAmount|number_format(0, ',', ' ') }} FCFA</span>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="info-row">
+        <span class="info-label">Mode de paiement:</span>
+        <span>
+            {% if order.paymentMethod == 'cash' %}💰 Espèces
+            {% elseif order.paymentMethod == 'card' %}💳 Carte bancaire
+            {% elseif order.paymentMethod == 'mobile_money' %}📱 Mobile Money
+            {% else %}{{ order.paymentMethod }}
+            {% endif %}
+        </span>
+    </div>
+
+    {% if order.notes %}
+    <div class="info-row">
+        <span class="info-label">Notes:</span>
+        <span>{{ order.notes }}</span>
+    </div>
+    {% endif %}
+
+    <div class="thanks">
+        Merci de votre visite !<br>
+        À bientôt
+    </div>
+
+    <div class="footer">
+        Ce document fait office de reçu<br>
+        {{ 'now'|date('Y-m-d H:i:s') }}
+    </div>
+</body>
+</html>

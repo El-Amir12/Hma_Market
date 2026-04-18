@@ -375,4 +375,58 @@ class Promotion
         return $endDate !== null && $endDate < $now;
     }
 
+    /**
+     * Calcule le prix après application de la promotion
+     * 
+     * @param float $originalPrice Prix original
+     * @return float Prix après promotion
+     */
+    public function applyToPrice(float $originalPrice): float
+    {
+        $typePromotion = $this->getTypePromotion();
+        $value = (float) $this->getValue();
+        
+        if (!$typePromotion) {
+            return $originalPrice;
+        }
+        
+        $typeName = strtolower(trim($typePromotion->getName()));
+        
+        // Support pour différents formats de noms
+        if ($typeName === 'pourcentage' || $typeName === 'percentage' || $typeName === '%') {
+            // Réduction en pourcentage
+            $reduction = $originalPrice * ($value / 100);
+            return round($originalPrice - $reduction, 2);
+        } 
+        
+        if ($typeName === 'Montant fixe' || $typeName === 'fixed' || $typeName === 'fixe') {
+            // Réduction fixe
+            return max(0, $originalPrice - $value);
+        }
+        
+        return $originalPrice;
+    }
+    
+    /**
+     * Vérifie si la promotion est actuellement active
+     */
+    public function isCurrentlyActive(): bool
+    {
+        $now = new \DateTime();
+        
+        if (!$this->isActive()) {
+            return false;
+        }
+        
+        if ($this->getStartDate() && $this->getStartDate() > $now) {
+            return false;
+        }
+        
+        if ($this->getEndDate() && $this->getEndDate() < $now) {
+            return false;
+        }
+        
+        return true;
+    }
+
 }

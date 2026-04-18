@@ -33,3 +33,15 @@ git branch
 # Testez la connexion
 php bin/console doctrine:query:sql "SELECT COUNT(*) FROM product"
 
+# Supprime les fichiers log 
+git filter-repo --path-glob '*.log' --invert-paths --force
+Après exécuter 
+
+# 1. Ajouter le remote origin
+git remote add origin https://github.com/El-Amir12/Hma_Market.git
+
+# 2. Vérifier que le remote est bien ajouté
+git remote -v
+
+# 3. Pousser les changements
+git push origin hma-market-saas --force

@@ -1,11 +1,11 @@
 # config/services.yaml
+
 parameters:
     kernel.secret: '%env(APP_SECRET)%'
     app.secret: '%env(APP_SECRET)%'
     
-    
     # Configuration environnement
-    app.is_local: false  # Valeur par défaut, sera surchargée en dev
+    app.is_local: false
     
     # Chemins des répertoires
     uploads_directory: '%kernel.project_dir%/public/uploads'
@@ -16,6 +16,9 @@ parameters:
     categories_plats_directory: '%kernel.project_dir%/public/uploads/categories_plats'
     images_plats_directory: '%kernel.project_dir%/public/uploads/images_plats'
     promotions_directory: '%kernel.project_dir%/public/uploads/promotions'
+    exports_directory: '%kernel.project_dir%/public/uploads/exports'
+    sales_exports_directory: '%kernel.project_dir%/public/uploads/exports/sales'
+    sale_receipts_directory: '%kernel.project_dir%/public/uploads/receipts'
     
     # Emails
     app.email_from: 'contact@hma-market.com'
@@ -32,13 +35,11 @@ parameters:
     recus_abonnement_directory: '%kernel.project_dir%/public/uploads/recus-abonnement'
 
 services:
-    # defaults
     _defaults:
         autowire: true
         autoconfigure: true
         public: false
         bind:
-            # ✅ Liaison des paramètres string
             string $logosDirectory: '%logos_directory%'
             string $photosDirectory: '%photos_directory%'
             string $uploadsDirectory: '%uploads_directory%'
@@ -50,8 +51,10 @@ services:
             string $categoriesPlatsDirectory: '%categories_plats_directory%'
             string $imagesPlatsDirectory: '%images_plats_directory%'
             string $promotionsDirectory: '%promotions_directory%'
+            string $exportsDirectory: '%exports_directory%'
+            string $salesExportsDirectory: '%sales_exports_directory%'
+            string $saleReceiptsDirectory: '%sale_receipts_directory%'
             
-            # ✅ Liaison des valeurs d'email
             string $fromEmail: '%mailer_from_email%'
             string $fromName: '%mailer_from_name%'
             string $appName: '%app_name%'
@@ -60,7 +63,7 @@ services:
             string $supportEmail: '%support_email%'
             string $appEnv: '%kernel.environment%'
 
-    # makes classes in src/ available to be used as services
+    # ==================== CHARGEMENT AUTOMATIQUE DES SERVICES ====================
     App\:
         resource: '../src/'
         exclude:
@@ -69,27 +72,33 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
-    # controllers are imported separately to make sure they're public
-    # and have a tag that allows actions to type-hint services
+    # ==================== CONTROLEURS ====================
+    # Le chargement automatique des contrôleurs ne doit pas inclure la classe abstraite
     App\Controller\:
         resource: '../src/Controller/'
+        exclude:
+            - '../src/Controller/Sale/BaseSaleController.php'  # Exclure la classe abstraite
         tags: ['controller.service_arguments']
 
-    # Extension Twig
+    # ==================== EXTENSIONS TWIG ====================
     App\Twig\FcfaExtension:
         tags: ['twig.extension']
         public: false
 
-    # Service Dompdf
+    App\Twig\AppExtension:
+        tags: ['twig.extension']
+        public: false
+
+    # ==================== SERVICES PDF ====================
     Dompdf\Dompdf:
         public: false
 
-    # Service de génération de numéros d'abonnement
+    # ==================== SERVICES D'ABONNEMENT ====================
     App\Service\SubscriptionNumberGenerator:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
 
-    # Service d'envoi d'emails
+    # ==================== SERVICES EMAIL ET NOTIFICATION ====================
     App\Service\EmailService:
         arguments:
             $mailer: '@mailer.mailer'
@@ -97,7 +106,6 @@ services:
             $urlGenerator: '@router.default'
         public: true
 
-    # Service de notification (email + WhatsApp)
     App\Service\NotificationService:
         arguments:
             $mailer: '@mailer.mailer'
@@ -108,61 +116,23 @@ services:
             $isLocal: '%app.is_local%' 
         public: true
 
-    
-
-    # Service de gestion du stock
+    # ==================== SERVICES DE GESTION ====================
     App\Service\StockService:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $logger: '@monolog.logger'
         public: true
 
-    # Service de recherche de produits
     App\Service\ProductSearchService:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
         public: true
 
-    # Service d'upload de fichiers
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%logos_directory%'
             $slugger: '@Symfony\Component\String\Slugger\SluggerInterface'
         public: false
-
-    # Gestionnaire de succès de connexion
-    App\Security\LoginSuccessHandler:
-        arguments:
-            $urlGenerator: '@router'
-            $requestStack: '@request_stack'
-            $entityManager: '@doctrine.orm.entity_manager'
-            $passwordHasher: '@security.user_password_hasher'
-            $subscriptionGenerator: '@App\Service\SubscriptionNumberGenerator'
-            $emailService: '@App\Service\EmailService'
-        public: true
-
-    # Subscriber pour les événements de connexion
-    App\EventSubscriber\UserDisabledSubscriber:
-        tags:
-            - { name: kernel.event_subscriber }
-
-    App\EventListener\LoginListener:
-        tags:
-            - { name: kernel.event_subscriber }
-
-    App\EventListener\LogoutListener:
-        tags:
-            - { name: kernel.event_subscriber }
-
-    App\EventListener\ActivityListener:
-        tags:
-            - { name: kernel.event_subscriber }
-
-    # Menu Builder
-    App\Service\MenuBuilder:
-        arguments:
-            $security: '@security.helper'
-        public: true
 
     App\Service\CompanyDeletionService:
         arguments:
@@ -179,7 +149,14 @@ services:
             $apiKey: '%env(FEDAPAY_API_KEY)%'
             $environment: '%env(FEDAPAY_ENVIRONMENT)%'
 
-    # Service de génération de facture PDF
+    App\Service\UnitConverter:
+        public: false
+
+    App\Service\MenuBuilder:
+        arguments:
+            $security: '@security.helper'
+        public: true
+
     App\Service\InvoicePdfGenerator:
         arguments:
             $twig: '@twig'
@@ -189,8 +166,83 @@ services:
             $pdfDirectory: '%recus_abonnement_directory%'
         public: false
 
-    # Service de conversion d'unités
-    App\Service\UnitConverter:
-        public: false
+    # ==================== SERVICES DE VENTE ====================
+    App\Service\Sale\PromotionCalculator:
+        arguments:
+            $promotionRepository: '@App\Repository\PromotionRepository'
+            $logger: '@monolog.logger'
+        public: true
 
+    App\Service\Sale\StockDeductionService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $stockBatchRepository: '@App\Repository\StockBatchRepository'
+            $logger: '@monolog.logger'
+        public: true
+
+    App\Service\Sale\SaleService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $stockDeductionService: '@App\Service\Sale\StockDeductionService'
+            $promotionCalculator: '@App\Service\Sale\PromotionCalculator'
+            $unitConverter: '@App\Service\UnitConverter'
+            $productRepository: '@App\Repository\ProductRepository'
+            $recipeRepository: '@App\Repository\RecipeRepository'
+            $logger: '@monolog.logger'
+            $requestStack: '@request_stack'
+        public: true
+
+    App\Service\Sale\ReceiptGenerator:
+        arguments:
+            $twig: '@twig'
+            $dompdf: '@Dompdf\Dompdf'
+            $logger: '@monolog.logger'
+            $receiptsDirectory: '%sale_receipts_directory%'
+        public: true
+
+    # ==================== SERVICES D'EXPORT ====================
+    App\Service\Export\SaleExportService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $orderRepository: '@App\Repository\OrderRepository'
+            $salesExportsDirectory: '%sales_exports_directory%'  # ← Changé de $exportDirectory à $salesExportsDirectory
+        public: true
+
+    # ==================== SÉCURITÉ ET ÉVÉNEMENTS ====================
+    App\Security\LoginSuccessHandler:
+        arguments:
+            $urlGenerator: '@router'
+            $requestStack: '@request_stack'
+            $entityManager: '@doctrine.orm.entity_manager'
+            $passwordHasher: '@security.user_password_hasher'
+            $subscriptionGenerator: '@App\Service\SubscriptionNumberGenerator'
+            $emailService: '@App\Service\EmailService'
+        public: true
+
+    App\EventSubscriber\UserDisabledSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    App\EventListener\LoginListener:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    App\EventListener\LogoutListener:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    App\EventListener\ActivityListener:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    # ==================== COMMANDES CONSOLE ====================
+    App\Command\DeactivateExpiredBatchesCommand:
+        tags:
+            - { name: console.command }
+        arguments:
+            $stockDeductionService: '@App\Service\Sale\StockDeductionService'
+
+    App\Service\UniqueNameValidator:
+        autowire: true
+        autoconfigure: true
    

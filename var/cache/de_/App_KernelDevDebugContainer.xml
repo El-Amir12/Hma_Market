@@ -104,7 +104,9 @@
     <parameter key="categories_plats_directory">C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/categories_plats</parameter>
     <parameter key="images_plats_directory">C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/images_plats</parameter>
     <parameter key="promotions_directory">C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/promotions</parameter>
-    <parameter key="stock_batch_exports_directory">C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/stock_batch/exports</parameter>
+    <parameter key="exports_directory">C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/exports</parameter>
+    <parameter key="sales_exports_directory">C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/exports/sales</parameter>
+    <parameter key="sale_receipts_directory">C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/receipts</parameter>
     <parameter key="app.email_from">contact@hma-market.com</parameter>
     <parameter key="admin_email">%env(ADMIN_EMAIL)%</parameter>
     <parameter key="support_email">%env(SUPPORT_EMAIL)%</parameter>
@@ -441,6 +443,14 @@
         <argument>Create an admin user</argument>
       </call>
     </service>
+    <service id="App\Command\DeactivateExpiredBatchesCommand" class="App\Command\DeactivateExpiredBatchesCommand" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="App\Service\Sale\StockDeductionService"/>
+      <call method="setName">
+        <argument>app:batches:deactivate-expired</argument>
+      </call>
+    </service>
     <service id="App\Command\EnforceQuotasCommand" class="App\Command\EnforceQuotasCommand" autowire="true" autoconfigure="true">
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
@@ -462,6 +472,16 @@
       </call>
       <call method="setDescription">
         <argument>Applique les quotas d'utilisateurs à toutes les entreprises (active/désactive selon les rôles).</argument>
+      </call>
+    </service>
+    <service id="App\Command\GenerateSalesReportCommand" class="App\Command\GenerateSalesReportCommand" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <call method="setName">
+        <argument>app:generate-sales-report</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Génère un rapport de ventes Excel (à implémenter)</argument>
       </call>
     </service>
     <service id="App\Command\SendExpirationRemindersCommand" class="App\Command\SendExpirationRemindersCommand" autowire="true" autoconfigure="true">
@@ -493,27 +513,58 @@
         <argument>Test l'envoi des emails de confirmation d'abonnement aux utilisateurs d'une entreprise.</argument>
       </call>
     </service>
+    <service id="App\Command\UnlockLockedUsersCommand" class="App\Command\UnlockLockedUsersCommand" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setName">
+        <argument>app:unlock-locked-users</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Débloque tous les utilisateurs dont la période de blocage est expirée</argument>
+      </call>
+    </service>
+    <service id="App\Command\UnlockUserCommand" class="App\Command\UnlockUserCommand" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setName">
+        <argument>app:user:unlock</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Débloque un utilisateur spécifique par email</argument>
+      </call>
+    </service>
     <service id="App\Controller\Admin\CartController" class="App\Controller\Admin\CartController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\CartController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\CartController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\CategoryController" class="App\Controller\Admin\CategoryController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <argument type="service" id="slugger"/>
+      <argument type="service" id="App\Service\UniqueNameValidator"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\CategoryController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\CategoryController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\CategoryRecipeController" class="App\Controller\Admin\CategoryRecipeController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <argument type="service" id="slugger"/>
+      <argument type="service" id="App\Service\UniqueNameValidator"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\CategoryRecipeController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\CategoryRecipeController"/>
+      </call>
+    </service>
+    <service id="App\Controller\Admin\LocationController" class="App\Controller\Admin\LocationController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\LocationController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\ProductController" class="App\Controller\Admin\ProductController" public="true" autowire="true" autoconfigure="true">
@@ -521,23 +572,25 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="slugger"/>
       <argument type="service" id="App\Service\UnitConverter"/>
+      <argument type="service" id="App\Service\UniqueNameValidator"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\ProductController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\ProductController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\PromotionController" class="App\Controller\Admin\PromotionController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
+      <argument type="service" id="App\Service\UniqueNameValidator"/>
       <argument type="service" id="monolog.logger"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\PromotionController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\PromotionController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\PurchaseItemController" class="App\Controller\Admin\PurchaseItemController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\PurchaseItemController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\PurchaseItemController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\RecipeController" class="App\Controller\Admin\RecipeController" public="true" autowire="true" autoconfigure="true">
@@ -545,8 +598,9 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="slugger"/>
       <argument type="service" id="App\Service\UnitConverter"/>
+      <argument type="service" id="App\Service\UniqueNameValidator"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\RecipeController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\RecipeController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\RestaurantPromotionController" class="App\Controller\Admin\RestaurantPromotionController" public="true" autowire="true" autoconfigure="true">
@@ -554,29 +608,30 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="monolog.logger"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\RestaurantPromotionController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\RestaurantPromotionController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\StockBatchController" class="App\Controller\Admin\StockBatchController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
-      <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/stock_batch/exports</argument>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\StockBatchController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\StockBatchController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\SupplierController" class="App\Controller\Admin\SupplierController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\SupplierController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\SupplierController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\TypePromotionController" class="App\Controller\Admin\TypePromotionController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
+      <argument type="service" id="App\Service\UniqueNameValidator"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\TypePromotionController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\TypePromotionController"/>
       </call>
     </service>
     <service id="App\Controller\Admin\UserController" class="App\Controller\Admin\UserController" public="true" autowire="true" autoconfigure="true">
@@ -590,7 +645,7 @@
       <argument type="service" id="mailer.mailer"/>
       <argument type="service" id="monolog.logger"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Admin\UserController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\UserController"/>
       </call>
     </service>
     <service id="App\Controller\Api\ProductSearchController" class="App\Controller\Api\ProductSearchController" public="true" autowire="true" autoconfigure="true">
@@ -598,21 +653,21 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="App\Service\ProductSearchService"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Api\ProductSearchController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Api\ProductSearchController"/>
       </call>
     </service>
     <service id="App\Controller\DashboardController" class="App\Controller\DashboardController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\DashboardController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\DashboardController"/>
       </call>
     </service>
     <service id="App\Controller\Dashboard\HmaServiceProfileController" class="App\Controller\Dashboard\HmaServiceProfileController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Dashboard\HmaServiceProfileController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Dashboard\HmaServiceProfileController"/>
       </call>
     </service>
     <service id="App\Controller\FirstLoginController" class="App\Controller\FirstLoginController" public="true" autowire="true" autoconfigure="true">
@@ -620,14 +675,14 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="request_stack"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\FirstLoginController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\FirstLoginController"/>
       </call>
     </service>
     <service id="App\Controller\HomeController" class="App\Controller\HomeController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\HomeController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\HomeController"/>
       </call>
     </service>
     <service id="App\Controller\Manager\TeamController" class="App\Controller\Manager\TeamController" public="true" autowire="true" autoconfigure="true">
@@ -637,7 +692,7 @@
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="monolog.logger"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\Manager\TeamController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Manager\TeamController"/>
       </call>
     </service>
     <service id="App\Controller\ProfileController" class="App\Controller\ProfileController" public="true" autowire="true" autoconfigure="true">
@@ -648,7 +703,7 @@
       <argument type="service" id="security.user_password_hasher"/>
       <argument type="service" id="monolog.logger"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\ProfileController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\ProfileController"/>
       </call>
     </service>
     <service id="App\Controller\PurchaseController" class="App\Controller\PurchaseController" public="true" autowire="true" autoconfigure="true">
@@ -658,14 +713,14 @@
       <argument type="service" id="App\Service\PurchaseFlowService"/>
       <argument type="service" id="monolog.logger"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\PurchaseController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\PurchaseController"/>
       </call>
     </service>
     <service id="App\Controller\RegistrationController" class="App\Controller\RegistrationController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\RegistrationController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\RegistrationController"/>
       </call>
     </service>
     <service id="App\Controller\ResetPasswordController" class="App\Controller\ResetPasswordController" public="true" autowire="true" autoconfigure="true">
@@ -674,14 +729,46 @@
       <argument type="service" id="symfonycasts.reset_password.helper"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\ResetPasswordController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\ResetPasswordController"/>
+      </call>
+    </service>
+    <service id="App\Controller\Sale\OrderController" class="App\Controller\Sale\OrderController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="monolog.logger"/>
+      <argument type="service" id="App\Service\Sale\PromotionCalculator"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Sale\OrderController"/>
+      </call>
+    </service>
+    <service id="App\Controller\Sale\RestaurantSaleController" class="App\Controller\Sale\RestaurantSaleController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Sale\SaleService"/>
+      <argument type="service" id="App\Service\Sale\PromotionCalculator"/>
+      <argument type="service" id="App\Service\UnitConverter"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Sale\RestaurantSaleController"/>
+      </call>
+    </service>
+    <service id="App\Controller\Sale\RetailSaleController" class="App\Controller\Sale\RetailSaleController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Sale\SaleService"/>
+      <argument type="service" id="App\Service\Sale\PromotionCalculator"/>
+      <argument type="service" id="App\Service\UnitConverter"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Sale\RetailSaleController"/>
       </call>
     </service>
     <service id="App\Controller\SecurityController" class="App\Controller\SecurityController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\SecurityController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\SecurityController"/>
       </call>
     </service>
     <service id="App\Controller\SubscriptionController" class="App\Controller\SubscriptionController" public="true" autowire="true" autoconfigure="true">
@@ -691,7 +778,7 @@
       <argument type="service" id="App\Service\InvoicePdfGenerator"/>
       <argument type="service" id="App\Service\QuotaEnforcementService"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\SubscriptionController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\SubscriptionController"/>
       </call>
     </service>
     <service id="App\Controller\SuperAdmin\HmaServiceController" class="App\Controller\SuperAdmin\HmaServiceController" public="true" autowire="true" autoconfigure="true">
@@ -709,14 +796,14 @@
       <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/logos</argument>
       <argument type="service" id="App\Service\CompanyDeletionService"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\SuperAdmin\HmaServiceController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\SuperAdmin\HmaServiceController"/>
       </call>
     </service>
     <service id="App\Controller\SuperAdmin\SubscriptionController" class="App\Controller\SuperAdmin\SubscriptionController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\SuperAdmin\SubscriptionController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\SuperAdmin\SubscriptionController"/>
       </call>
     </service>
     <service id="App\Controller\SuperAdmin\SubscriptionPlanController" class="App\Controller\SuperAdmin\SubscriptionPlanController" public="true" autowire="true" autoconfigure="true">
@@ -724,14 +811,24 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\SuperAdmin\SubscriptionPlanController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\SuperAdmin\SubscriptionPlanController"/>
+      </call>
+    </service>
+    <service id="App\Controller\SuperAdmin\SuperAdminExportController" class="App\Controller\SuperAdmin\SuperAdminExportController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Export\SaleExportService"/>
+      <argument type="service" id="App\Repository\HmaServiceRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\SuperAdmin\SuperAdminExportController"/>
       </call>
     </service>
     <service id="App\Controller\ToastController" class="App\Controller\ToastController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.2ZRjhdO.App\Controller\ToastController"/>
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\ToastController"/>
       </call>
     </service>
     <service id="App\EventListener\ActivityListener" class="App\EventListener\ActivityListener" autowire="true" autoconfigure="true">
@@ -779,6 +876,9 @@
       <tag name="form.type"/>
     </service>
     <service id="App\Form\HmaServiceType" class="App\Form\HmaServiceType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\LocationType" class="App\Form\LocationType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
     <service id="App\Form\ProductAutocompleteType" class="App\Form\ProductAutocompleteType" autowire="true" autoconfigure="true">
@@ -885,6 +985,10 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="App\Repository\LocationRepository" class="App\Repository\LocationRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
     <service id="App\Repository\OrderItemRepository" class="App\Repository\OrderItemRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
@@ -971,6 +1075,8 @@
     </service>
     <service id="App\Security\LoginFormAuthentificatorAuthenticator" class="App\Security\LoginFormAuthentificatorAuthenticator" autowire="true" autoconfigure="true">
       <argument type="service" id="router.default"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="request_stack"/>
     </service>
     <service id="App\Security\LoginSuccessHandler" class="App\Security\LoginSuccessHandler" public="true" autowire="true" autoconfigure="true">
       <argument type="service" id="router.default"/>
@@ -1001,6 +1107,13 @@
       <argument>dev</argument>
       <argument>%env(ADMIN_EMAIL)%</argument>
       <argument>%env(SUPPORT_EMAIL)%</argument>
+    </service>
+    <service id="App\Service\Export\SaleExportService" class="App\Service\Export\SaleExportService" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\OrderRepository"/>
+      <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/exports/sales</argument>
+      <argument type="service" id="security.helper"/>
+      <argument type="service" id="twig"/>
     </service>
     <service id="App\Service\FedaPayService" class="App\Service\FedaPayService" autowire="true" autoconfigure="true">
       <argument>%env(FEDAPAY_API_KEY)%</argument>
@@ -1055,6 +1168,32 @@
       <argument type="service" id="monolog.logger"/>
       <argument type="service" id="App\Service\EmailService"/>
     </service>
+    <service id="App\Service\Sale\PromotionCalculator" class="App\Service\Sale\PromotionCalculator" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="App\Repository\PromotionRepository"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="monolog.logger"/>
+    </service>
+    <service id="App\Service\Sale\ReceiptGenerator" class="App\Service\Sale\ReceiptGenerator" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="twig"/>
+      <argument type="service" id="Dompdf\Dompdf"/>
+      <argument type="service" id="monolog.logger"/>
+      <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/receipts</argument>
+    </service>
+    <service id="App\Service\Sale\SaleService" class="App\Service\Sale\SaleService" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Sale\StockDeductionService"/>
+      <argument type="service" id="App\Service\Sale\PromotionCalculator"/>
+      <argument type="service" id="App\Service\UnitConverter"/>
+      <argument type="service" id="App\Repository\ProductRepository"/>
+      <argument type="service" id="App\Repository\RecipeRepository"/>
+      <argument type="service" id="monolog.logger"/>
+      <argument type="service" id="request_stack"/>
+    </service>
+    <service id="App\Service\Sale\StockDeductionService" class="App\Service\Sale\StockDeductionService" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\StockBatchRepository"/>
+      <argument type="service" id="monolog.logger"/>
+    </service>
     <service id="App\Service\SearchService" class="App\Service\SearchService" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
@@ -1065,6 +1204,9 @@
     <service id="App\Service\SubscriptionNumberGenerator" class="App\Service\SubscriptionNumberGenerator" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="monolog.logger"/>
+    </service>
+    <service id="App\Service\UniqueNameValidator" class="App\Service\UniqueNameValidator" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
     <service id="App\Service\UnitConverter" class="App\Service\UnitConverter" autowire="true" autoconfigure="true"/>
     <service id="App\Twig\AppExtension" class="App\Twig\AppExtension" autowire="true" autoconfigure="true">
@@ -1086,6 +1228,9 @@
     <service id="App\Twig\SubscriptionExtension" class="App\Twig\SubscriptionExtension" autowire="true" autoconfigure="true">
       <tag name="twig.extension"/>
       <argument type="service" id="App\Repository\SubscriptionRepository"/>
+    </service>
+    <service id="App\Controller\Sale\BaseSaleController" class="App\Controller\Sale\BaseSaleController" abstract="true">
+      <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
     <service id="Dompdf\Dompdf" class="Dompdf\Dompdf" autowire="true" autoconfigure="true"/>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
@@ -1115,7 +1260,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.Qctnd0r"/>
+      <argument type="service" id=".service_locator.JrMDTEo"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -2062,6 +2207,7 @@
         <argument>App\Form\HmaServiceProfileType</argument>
         <argument>App\Form\HmaServiceRegistrationType</argument>
         <argument>App\Form\HmaServiceType</argument>
+        <argument>App\Form\LocationType</argument>
         <argument>App\Form\ProductAutocompleteType</argument>
         <argument>App\Form\ProductType</argument>
         <argument>App\Form\ProfileType</argument>
@@ -4269,7 +4415,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.Qctnd0r"/>
+      <argument type="service" id=".service_locator.JrMDTEo"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -4369,7 +4515,7 @@
     <service id="router.default" class="Symfony\Bundle\FrameworkBundle\Routing\Router">
       <tag name="monolog.logger" channel="router"/>
       <tag name="container.service_subscriber" id="routing.loader"/>
-      <argument type="service" id=".service_locator.8xmdTk1.router.default"/>
+      <argument type="service" id=".service_locator.5c7GaP9.router.default"/>
       <argument>kernel::loadRoutes</argument>
       <argument type="collection">
         <argument key="cache_dir">C:\wamp64\www\Mes projets en Symfony\hma_market\var\cache\de_</argument>
@@ -4758,7 +4904,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.MZRflS3"/>
+      <argument type="service" id=".service_locator.aim4HmH"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -6011,7 +6157,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.naODXo4"/>
+      <argument type="service" id=".service_locator.kIjDPYN"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -7187,7 +7333,7 @@
       <argument type="service" id=".service_locator.e_.xxAP"/>
       <argument type="collection">
         <argument key="dev">null</argument>
-        <argument key="main" type="service" id=".service_locator.I5Q3J1s"/>
+        <argument key="main" type="service" id=".service_locator.kd7.iq6"/>
       </argument>
     </service>
     <service id="security.user_value_resolver" class="Symfony\Component\Security\Http\Controller\UserValueResolver">
@@ -7937,7 +8083,7 @@
       <argument type="service" id=".service_locator._1SGciK"/>
       <argument type="collection">
         <argument key="main" type="collection">
-          <argument type="service" id="security.authenticator.form_login.main"/>
+          <argument type="service" id="App\Security\LoginFormAuthentificatorAuthenticator"/>
           <argument type="service" id="security.authenticator.remember_me.main"/>
         </argument>
       </argument>
@@ -8011,12 +8157,12 @@
       <argument>false</argument>
       <argument>security.user.provider.concrete.chain_provider</argument>
       <argument>main</argument>
-      <argument>security.authenticator.form_login.main</argument>
+      <argument>App\Security\LoginFormAuthentificatorAuthenticator</argument>
       <argument>null</argument>
       <argument>null</argument>
       <argument type="collection">
-        <argument>form_login</argument>
         <argument>remember_me</argument>
+        <argument>App\Security\LoginFormAuthentificatorAuthenticator</argument>
       </argument>
       <argument>null</argument>
       <argument type="collection">
@@ -8096,59 +8242,6 @@
           <argument key="partitioned">false</argument>
         </argument>
       </argument>
-    </service>
-    <service id="security.authenticator.form_login.main" class="Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator">
-      <argument type="service" id="security.http_utils"/>
-      <argument type="service" id="security.user.provider.concrete.chain_provider"/>
-      <argument type="service" id="security.authentication.success_handler.main.form_login"/>
-      <argument type="service" id="security.authentication.failure_handler.main.form_login"/>
-      <argument type="collection">
-        <argument key="login_path">app_login</argument>
-        <argument key="check_path">app_login</argument>
-        <argument key="username_parameter">email</argument>
-        <argument key="password_parameter">password</argument>
-        <argument key="enable_csrf">true</argument>
-        <argument key="require_previous_session">false</argument>
-        <argument key="use_forward">false</argument>
-        <argument key="csrf_parameter">_csrf_token</argument>
-        <argument key="csrf_token_id">authenticate</argument>
-        <argument key="post_only">true</argument>
-        <argument key="form_only">false</argument>
-      </argument>
-    </service>
-    <service id="security.authentication.success_handler.main.form_login" class="Symfony\Component\Security\Http\Authentication\CustomAuthenticationSuccessHandler">
-      <argument type="service">
-        <service class="App\Security\LoginSuccessHandler" public="true" autowire="true">
-          <argument type="service" id="router.default"/>
-          <argument type="service" id="request_stack"/>
-          <argument type="service" id="doctrine.orm.default_entity_manager"/>
-          <argument type="service" id="security.user_password_hasher"/>
-          <argument type="service" id="App\Service\SubscriptionNumberGenerator"/>
-          <argument type="service" id="App\Service\EmailService"/>
-        </service>
-      </argument>
-      <argument type="collection">
-        <argument key="login_path">app_login</argument>
-        <argument key="default_target_path">app_home</argument>
-        <argument key="always_use_default_target_path">false</argument>
-        <argument key="use_referer">false</argument>
-        <argument key="target_path_parameter">_target_path</argument>
-      </argument>
-      <argument>main</argument>
-    </service>
-    <service id="security.authentication.failure_handler.main.form_login" class="Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler">
-      <argument type="service" id="http_kernel"/>
-      <argument type="service" id="security.http_utils"/>
-      <argument type="collection"/>
-      <argument type="service" id="monolog.logger.security" on-invalid="null"/>
-      <call method="setOptions">
-        <argument type="collection">
-          <argument key="login_path">app_login</argument>
-          <argument key="failure_path">null</argument>
-          <argument key="failure_forward">false</argument>
-          <argument key="failure_path_parameter">_failure_path</argument>
-        </argument>
-      </call>
     </service>
     <service id="security.rememberme.response_listener" class="Symfony\Component\Security\Http\RememberMe\ResponseListener">
       <tag name="kernel.event_subscriber"/>
@@ -8261,7 +8354,7 @@
     <service id="security.authenticator.manager.main" class="Symfony\Component\Security\Http\Authentication\AuthenticatorManager">
       <tag name="monolog.logger" channel="security"/>
       <argument type="collection">
-        <argument type="service" id="security.authenticator.form_login.main"/>
+        <argument type="service" id="App\Security\LoginFormAuthentificatorAuthenticator"/>
         <argument type="service" id="security.authenticator.remember_me.main"/>
       </argument>
       <argument type="service" id="security.token_storage"/>
@@ -8286,16 +8379,16 @@
       <argument type="service" id="security.authentication.trust_resolver"/>
       <argument type="service" id="security.http_utils"/>
       <argument>main</argument>
-      <argument type="service" id="security.authenticator.form_login.main"/>
+      <argument type="service" id="App\Security\LoginFormAuthentificatorAuthenticator"/>
       <argument>null</argument>
       <argument>null</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument>false</argument>
     </service>
-    <service id=".service_locator.I5Q3J1s" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.kd7.iq6" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="security.authenticator.form_login.main" type="service_closure" id="security.authenticator.form_login.main"/>
+        <argument key="App\Security\LoginFormAuthentificatorAuthenticator" type="service_closure" id="App\Security\LoginFormAuthentificatorAuthenticator"/>
         <argument key="security.authenticator.remember_me.main" type="service_closure" id="security.authenticator.remember_me.main"/>
       </argument>
     </service>
@@ -8942,16 +9035,24 @@
     <service id=".abstract.instanceof.App\Command\CleanIncompleteRegistrationsCommand" class="App\Command\CleanIncompleteRegistrationsCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\CreateAdminCommand" class="App\Command\CreateAdminCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\CreateAdminCommand" class="App\Command\CreateAdminCommand" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\DeactivateExpiredBatchesCommand" class="App\Command\DeactivateExpiredBatchesCommand" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\DeactivateExpiredBatchesCommand" class="App\Command\DeactivateExpiredBatchesCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\EnforceQuotasCommand" class="App\Command\EnforceQuotasCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\EnforceQuotasCommand" class="App\Command\EnforceQuotasCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\EnforceUserQuotasCommand" class="App\Command\EnforceUserQuotasCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\EnforceUserQuotasCommand" class="App\Command\EnforceUserQuotasCommand" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\GenerateSalesReportCommand" class="App\Command\GenerateSalesReportCommand" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\GenerateSalesReportCommand" class="App\Command\GenerateSalesReportCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\SendExpirationRemindersCommand" class="App\Command\SendExpirationRemindersCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\SendExpirationRemindersCommand" class="App\Command\SendExpirationRemindersCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\TestEmailCommand" class="App\Command\TestEmailCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\TestEmailCommand" class="App\Command\TestEmailCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\TestSubscriptionEmailCommand" class="App\Command\TestSubscriptionEmailCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\TestSubscriptionEmailCommand" class="App\Command\TestSubscriptionEmailCommand" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\UnlockLockedUsersCommand" class="App\Command\UnlockLockedUsersCommand" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\UnlockLockedUsersCommand" class="App\Command\UnlockLockedUsersCommand" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\UnlockUserCommand" class="App\Command\UnlockUserCommand" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\UnlockUserCommand" class="App\Command\UnlockUserCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Admin\CartController" class="App\Controller\Admin\CartController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Admin\CartController" class="App\Controller\Admin\CartController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Admin\CartController" class="App\Controller\Admin\CartController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -8961,6 +9062,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Admin\CategoryRecipeController" class="App\Controller\Admin\CategoryRecipeController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Admin\CategoryRecipeController" class="App\Controller\Admin\CategoryRecipeController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Admin\CategoryRecipeController" class="App\Controller\Admin\CategoryRecipeController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Admin\LocationController" class="App\Controller\Admin\LocationController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Admin\LocationController" class="App\Controller\Admin\LocationController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Admin\LocationController" class="App\Controller\Admin\LocationController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Admin\ProductController" class="App\Controller\Admin\ProductController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Admin\ProductController" class="App\Controller\Admin\ProductController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Admin\ProductController" class="App\Controller\Admin\ProductController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -9018,6 +9122,15 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ResetPasswordController" class="App\Controller\ResetPasswordController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ResetPasswordController" class="App\Controller\ResetPasswordController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ResetPasswordController" class="App\Controller\ResetPasswordController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Sale\OrderController" class="App\Controller\Sale\OrderController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Sale\OrderController" class="App\Controller\Sale\OrderController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Sale\OrderController" class="App\Controller\Sale\OrderController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Sale\RestaurantSaleController" class="App\Controller\Sale\RestaurantSaleController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Sale\RestaurantSaleController" class="App\Controller\Sale\RestaurantSaleController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Sale\RestaurantSaleController" class="App\Controller\Sale\RestaurantSaleController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Sale\RetailSaleController" class="App\Controller\Sale\RetailSaleController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Sale\RetailSaleController" class="App\Controller\Sale\RetailSaleController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Sale\RetailSaleController" class="App\Controller\Sale\RetailSaleController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -9033,6 +9146,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SuperAdmin\SubscriptionPlanController" class="App\Controller\SuperAdmin\SubscriptionPlanController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SuperAdmin\SubscriptionPlanController" class="App\Controller\SuperAdmin\SubscriptionPlanController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SuperAdmin\SubscriptionPlanController" class="App\Controller\SuperAdmin\SubscriptionPlanController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SuperAdmin\SuperAdminExportController" class="App\Controller\SuperAdmin\SuperAdminExportController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SuperAdmin\SuperAdminExportController" class="App\Controller\SuperAdmin\SuperAdminExportController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\SuperAdmin\SuperAdminExportController" class="App\Controller\SuperAdmin\SuperAdminExportController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ToastController" class="App\Controller\ToastController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ToastController" class="App\Controller\ToastController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ToastController" class="App\Controller\ToastController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -9060,6 +9176,8 @@
     <service id=".abstract.instanceof.App\Form\HmaServiceRegistrationType" class="App\Form\HmaServiceRegistrationType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\HmaServiceType" class="App\Form\HmaServiceType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\HmaServiceType" class="App\Form\HmaServiceType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\LocationType" class="App\Form\LocationType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\LocationType" class="App\Form\LocationType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProductAutocompleteType" class="App\Form\ProductAutocompleteType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\ProductAutocompleteType" class="App\Form\ProductAutocompleteType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProductType" class="App\Form\ProductType" autowire="true" abstract="true"/>
@@ -9124,6 +9242,8 @@
     <service id=".abstract.instanceof.App\Repository\HmaServiceRepository" class="App\Repository\HmaServiceRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\InvoiceRepository" class="App\Repository\InvoiceRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\InvoiceRepository" class="App\Repository\InvoiceRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\LocationRepository" class="App\Repository\LocationRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\LocationRepository" class="App\Repository\LocationRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\OrderItemRepository" class="App\Repository\OrderItemRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\OrderItemRepository" class="App\Repository\OrderItemRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\OrderRepository" class="App\Repository\OrderRepository" autowire="true" abstract="true"/>
@@ -9655,6 +9775,42 @@
         <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
       </argument>
     </service>
+    <service id=".service_locator.VxucSxB" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="repository" type="service_closure" id="App\Repository\LocationRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.9kKwU2t" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+      </argument>
+    </service>
+    <service id=".service_locator.epX10X9" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="batchRepository" type="service_closure" id="App\Repository\StockBatchRepository"/>
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="location" type="service_closure" id=".errored..service_locator.epX10X9.App\Entity\Location"/>
+        <argument key="locationRepository" type="service_closure" id="App\Repository\LocationRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.GCnJrcb" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="location" type="service_closure" id=".errored..service_locator.GCnJrcb.App\Entity\Location"/>
+      </argument>
+    </service>
+    <service id=".service_locator.gAatUmJ" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="location" type="service_closure" id=".errored..service_locator.gAatUmJ.App\Entity\Location"/>
+        <argument key="locationRepository" type="service_closure" id="App\Repository\LocationRepository"/>
+      </argument>
+    </service>
     <service id=".service_locator.sVYdUcQ" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -9687,12 +9843,6 @@
       <argument type="collection">
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="repository" type="service_closure" id="App\Repository\PromotionRepository"/>
-      </argument>
-    </service>
-    <service id=".service_locator.9kKwU2t" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
       </argument>
     </service>
     <service id=".service_locator.rC6pteX" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -9800,6 +9950,14 @@
         <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
       </argument>
     </service>
+    <service id=".service_locator.0uzFUN6" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="batchRepository" type="service_closure" id="App\Repository\StockBatchRepository"/>
+        <argument key="locationRepository" type="service_closure" id="App\Repository\LocationRepository"/>
+        <argument key="productRepository" type="service_closure" id="App\Repository\ProductRepository"/>
+      </argument>
+    </service>
     <service id=".service_locator.zrfOspp" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -9824,14 +9982,6 @@
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="batchRepository" type="service_closure" id="App\Repository\StockBatchRepository"/>
-      </argument>
-    </service>
-    <service id=".service_locator.Oyj9whn" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="batchRepository" type="service_closure" id="App\Repository\StockBatchRepository"/>
-        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
-        <argument key="productRepository" type="service_closure" id="App\Repository\ProductRepository"/>
       </argument>
     </service>
     <service id=".service_locator.zVX5.kU" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -9860,10 +10010,9 @@
         <argument key="supplier" type="service_closure" id=".errored..service_locator.dvS6U1..App\Entity\Supplier"/>
       </argument>
     </service>
-    <service id=".service_locator.lIJBS2U" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.fOuwJxM" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="repository" type="service_closure" id="App\Repository\TypePromotionRepository"/>
       </argument>
     </service>
@@ -9872,6 +10021,12 @@
       <argument type="collection">
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="type" type="service_closure" id=".errored..service_locator.EsReoji.App\Entity\TypePromotion"/>
+      </argument>
+    </service>
+    <service id=".service_locator.zIb6dGh" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="type" type="service_closure" id=".errored..service_locator.zIb6dGh.App\Entity\TypePromotion"/>
       </argument>
     </service>
     <service id=".service_locator.V8HB.cV" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -9893,10 +10048,11 @@
         <argument key="fileUploader" type="service_closure" id="App\Service\FileUploader"/>
       </argument>
     </service>
-    <service id=".service_locator.GBRGGXk" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.arpVjFC" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="purchase" type="service_closure" id=".errored..service_locator.GBRGGXk.App\Entity\Purchase"/>
+        <argument key="locationRepository" type="service_closure" id="App\Repository\LocationRepository"/>
+        <argument key="purchase" type="service_closure" id=".errored..service_locator.arpVjFC.App\Entity\Purchase"/>
       </argument>
     </service>
     <service id=".service_locator.dC4Tbs0" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -9904,6 +10060,12 @@
       <argument type="collection">
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="purchase" type="service_closure" id=".errored..service_locator.dC4Tbs0.App\Entity\Purchase"/>
+      </argument>
+    </service>
+    <service id=".service_locator.GBRGGXk" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="purchase" type="service_closure" id=".errored..service_locator.GBRGGXk.App\Entity\Purchase"/>
       </argument>
     </service>
     <service id=".service_locator.6LV_x97" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -9939,6 +10101,39 @@
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="passwordHasher" type="service_closure" id="security.user_password_hasher"/>
+      </argument>
+    </service>
+    <service id=".service_locator.gQbEjC7" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="exportService" type="service_closure" id="App\Service\Export\SaleExportService"/>
+        <argument key="orderRepository" type="service_closure" id="App\Repository\OrderRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.GDL6NRn" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="orderRepository" type="service_closure" id="App\Repository\OrderRepository"/>
+        <argument key="userRepository" type="service_closure" id="App\Repository\UserRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.WlzNspm" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="order" type="service_closure" id=".errored..service_locator.WlzNspm.App\Entity\Order"/>
+      </argument>
+    </service>
+    <service id=".service_locator.ruxHxcA" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="order" type="service_closure" id=".errored..service_locator.ruxHxcA.App\Entity\Order"/>
+      </argument>
+    </service>
+    <service id=".service_locator.4n4ylFv" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="orderRepository" type="service_closure" id="App\Repository\OrderRepository"/>
       </argument>
     </service>
     <service id=".service_locator.Qe.FMtv" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -10000,7 +10195,7 @@
         <argument key="plan" type="service_closure" id=".errored..service_locator.sSPFBVg.App\Entity\SubscriptionPlan"/>
       </argument>
     </service>
-    <service id=".service_locator.Qctnd0r" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.JrMDTEo" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Admin\CartController::receiveCart" type="service_closure" id=".service_locator.nnTODkK"/>
@@ -10024,6 +10219,13 @@
         <argument key="App\Controller\Admin\CategoryRecipeController::recipes" type="service_closure" id=".service_locator.lLJkxGi"/>
         <argument key="App\Controller\Admin\CategoryRecipeController::show" type="service_closure" id=".service_locator.lLJkxGi"/>
         <argument key="App\Controller\Admin\CategoryRecipeController::toggleStatus" type="service_closure" id=".service_locator.VJEETNR"/>
+        <argument key="App\Controller\Admin\LocationController::apiSearch" type="service_closure" id=".service_locator.VxucSxB"/>
+        <argument key="App\Controller\Admin\LocationController::delete" type="service_closure" id=".service_locator.gAatUmJ"/>
+        <argument key="App\Controller\Admin\LocationController::edit" type="service_closure" id=".service_locator.GCnJrcb"/>
+        <argument key="App\Controller\Admin\LocationController::index" type="service_closure" id=".service_locator.VxucSxB"/>
+        <argument key="App\Controller\Admin\LocationController::new" type="service_closure" id=".service_locator.9kKwU2t"/>
+        <argument key="App\Controller\Admin\LocationController::show" type="service_closure" id=".service_locator.epX10X9"/>
+        <argument key="App\Controller\Admin\LocationController::toggle" type="service_closure" id=".service_locator.GCnJrcb"/>
         <argument key="App\Controller\Admin\ProductController::apiDetails" type="service_closure" id=".service_locator.TxLdxz8"/>
         <argument key="App\Controller\Admin\ProductController::checkBarcode" type="service_closure" id=".service_locator.DZowHzb"/>
         <argument key="App\Controller\Admin\ProductController::delete" type="service_closure" id=".service_locator.N7dcDh9"/>
@@ -10078,10 +10280,11 @@
         <argument key="App\Controller\Admin\RestaurantPromotionController::recipeShow" type="service_closure" id=".service_locator.WeDmv2U"/>
         <argument key="App\Controller\Admin\RestaurantPromotionController::show" type="service_closure" id=".service_locator.4lf9RTo"/>
         <argument key="App\Controller\Admin\RestaurantPromotionController::toggleStatus" type="service_closure" id=".service_locator._6jyvEd"/>
-        <argument key="App\Controller\Admin\StockBatchController::all" type="service_closure" id=".service_locator.zrfOspp"/>
+        <argument key="App\Controller\Admin\StockBatchController::all" type="service_closure" id=".service_locator.0uzFUN6"/>
         <argument key="App\Controller\Admin\StockBatchController::delete" type="service_closure" id=".service_locator.ioxjhbP"/>
         <argument key="App\Controller\Admin\StockBatchController::edit" type="service_closure" id=".service_locator.ioxjhbP"/>
-        <argument key="App\Controller\Admin\StockBatchController::exportExcel" type="service_closure" id=".service_locator.Oyj9whn"/>
+        <argument key="App\Controller\Admin\StockBatchController::exportExcel" type="service_closure" id=".service_locator.zrfOspp"/>
+        <argument key="App\Controller\Admin\StockBatchController::exportPdf" type="service_closure" id=".service_locator.zrfOspp"/>
         <argument key="App\Controller\Admin\StockBatchController::importExcel" type="service_closure" id=".service_locator.zVX5.kU"/>
         <argument key="App\Controller\Admin\StockBatchController::index" type="service_closure" id=".service_locator.zrfOspp"/>
         <argument key="App\Controller\Admin\StockBatchController::print" type="service_closure" id=".service_locator.lIYMlB2"/>
@@ -10097,8 +10300,10 @@
         <argument key="App\Controller\Admin\SupplierController::toggleStatus" type="service_closure" id=".service_locator.dvS6U1."/>
         <argument key="App\Controller\Admin\TypePromotionController::delete" type="service_closure" id=".service_locator.EsReoji"/>
         <argument key="App\Controller\Admin\TypePromotionController::edit" type="service_closure" id=".service_locator.EsReoji"/>
-        <argument key="App\Controller\Admin\TypePromotionController::index" type="service_closure" id=".service_locator.lIJBS2U"/>
+        <argument key="App\Controller\Admin\TypePromotionController::index" type="service_closure" id=".service_locator.fOuwJxM"/>
         <argument key="App\Controller\Admin\TypePromotionController::new" type="service_closure" id=".service_locator.9kKwU2t"/>
+        <argument key="App\Controller\Admin\TypePromotionController::show" type="service_closure" id=".service_locator.zIb6dGh"/>
+        <argument key="App\Controller\Admin\TypePromotionController::toggleStatus" type="service_closure" id=".service_locator.EsReoji"/>
         <argument key="App\Controller\Admin\UserController::delete" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Admin\UserController::deletePhoto" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Admin\UserController::edit" type="service_closure" id=".service_locator.Hz5btge"/>
@@ -10113,7 +10318,7 @@
         <argument key="App\Controller\Manager\TeamController::show" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\PurchaseController::cancel" type="service_closure" id=".service_locator.dC4Tbs0"/>
         <argument key="App\Controller\PurchaseController::print" type="service_closure" id=".service_locator.GBRGGXk"/>
-        <argument key="App\Controller\PurchaseController::receive" type="service_closure" id=".service_locator.GBRGGXk"/>
+        <argument key="App\Controller\PurchaseController::receive" type="service_closure" id=".service_locator.arpVjFC"/>
         <argument key="App\Controller\PurchaseController::show" type="service_closure" id=".service_locator.GBRGGXk"/>
         <argument key="App\Controller\RegistrationController::login" type="service_closure" id=".service_locator.rSTd.nA"/>
         <argument key="App\Controller\RegistrationController::register" type="service_closure" id=".service_locator.6LV_x97"/>
@@ -10121,6 +10326,19 @@
         <argument key="App\Controller\ResetPasswordController::firstLoginChangePassword" type="service_closure" id=".service_locator.Mhqdd2r"/>
         <argument key="App\Controller\ResetPasswordController::request" type="service_closure" id=".service_locator.EE0.cm9"/>
         <argument key="App\Controller\ResetPasswordController::reset" type="service_closure" id=".service_locator.Z9ydiC1"/>
+        <argument key="App\Controller\Sale\OrderController::delete" type="service_closure" id=".service_locator.WlzNspm"/>
+        <argument key="App\Controller\Sale\OrderController::downloadPdf" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Sale\OrderController::exportExcel" type="service_closure" id=".service_locator.gQbEjC7"/>
+        <argument key="App\Controller\Sale\OrderController::exportPdf" type="service_closure" id=".service_locator.gQbEjC7"/>
+        <argument key="App\Controller\Sale\OrderController::index" type="service_closure" id=".service_locator.GDL6NRn"/>
+        <argument key="App\Controller\Sale\OrderController::printReceipt" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Sale\OrderController::receiptContent" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Sale\OrderController::receiptsContent" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Sale\OrderController::searchCustomer" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Sale\OrderController::show" type="service_closure" id=".service_locator.ruxHxcA"/>
+        <argument key="App\Controller\Sale\OrderController::toggle" type="service_closure" id=".service_locator.WlzNspm"/>
+        <argument key="App\Controller\Sale\RestaurantSaleController::receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
+        <argument key="App\Controller\Sale\RetailSaleController::receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\SecurityController::login" type="service_closure" id=".service_locator.rSTd.nA"/>
         <argument key="App\Controller\SubscriptionController::callback" type="service_closure" id=".service_locator.pZ9vOm3"/>
         <argument key="App\Controller\SubscriptionController::checkout" type="service_closure" id=".service_locator.7876JS0"/>
@@ -10166,6 +10384,13 @@
         <argument key="App\Controller\Admin\CategoryRecipeController:recipes" type="service_closure" id=".service_locator.lLJkxGi"/>
         <argument key="App\Controller\Admin\CategoryRecipeController:show" type="service_closure" id=".service_locator.lLJkxGi"/>
         <argument key="App\Controller\Admin\CategoryRecipeController:toggleStatus" type="service_closure" id=".service_locator.VJEETNR"/>
+        <argument key="App\Controller\Admin\LocationController:apiSearch" type="service_closure" id=".service_locator.VxucSxB"/>
+        <argument key="App\Controller\Admin\LocationController:delete" type="service_closure" id=".service_locator.gAatUmJ"/>
+        <argument key="App\Controller\Admin\LocationController:edit" type="service_closure" id=".service_locator.GCnJrcb"/>
+        <argument key="App\Controller\Admin\LocationController:index" type="service_closure" id=".service_locator.VxucSxB"/>
+        <argument key="App\Controller\Admin\LocationController:new" type="service_closure" id=".service_locator.9kKwU2t"/>
+        <argument key="App\Controller\Admin\LocationController:show" type="service_closure" id=".service_locator.epX10X9"/>
+        <argument key="App\Controller\Admin\LocationController:toggle" type="service_closure" id=".service_locator.GCnJrcb"/>
         <argument key="App\Controller\Admin\ProductController:apiDetails" type="service_closure" id=".service_locator.TxLdxz8"/>
         <argument key="App\Controller\Admin\ProductController:checkBarcode" type="service_closure" id=".service_locator.DZowHzb"/>
         <argument key="App\Controller\Admin\ProductController:delete" type="service_closure" id=".service_locator.N7dcDh9"/>
@@ -10220,10 +10445,11 @@
         <argument key="App\Controller\Admin\RestaurantPromotionController:recipeShow" type="service_closure" id=".service_locator.WeDmv2U"/>
         <argument key="App\Controller\Admin\RestaurantPromotionController:show" type="service_closure" id=".service_locator.4lf9RTo"/>
         <argument key="App\Controller\Admin\RestaurantPromotionController:toggleStatus" type="service_closure" id=".service_locator._6jyvEd"/>
-        <argument key="App\Controller\Admin\StockBatchController:all" type="service_closure" id=".service_locator.zrfOspp"/>
+        <argument key="App\Controller\Admin\StockBatchController:all" type="service_closure" id=".service_locator.0uzFUN6"/>
         <argument key="App\Controller\Admin\StockBatchController:delete" type="service_closure" id=".service_locator.ioxjhbP"/>
         <argument key="App\Controller\Admin\StockBatchController:edit" type="service_closure" id=".service_locator.ioxjhbP"/>
-        <argument key="App\Controller\Admin\StockBatchController:exportExcel" type="service_closure" id=".service_locator.Oyj9whn"/>
+        <argument key="App\Controller\Admin\StockBatchController:exportExcel" type="service_closure" id=".service_locator.zrfOspp"/>
+        <argument key="App\Controller\Admin\StockBatchController:exportPdf" type="service_closure" id=".service_locator.zrfOspp"/>
         <argument key="App\Controller\Admin\StockBatchController:importExcel" type="service_closure" id=".service_locator.zVX5.kU"/>
         <argument key="App\Controller\Admin\StockBatchController:index" type="service_closure" id=".service_locator.zrfOspp"/>
         <argument key="App\Controller\Admin\StockBatchController:print" type="service_closure" id=".service_locator.lIYMlB2"/>
@@ -10239,8 +10465,10 @@
         <argument key="App\Controller\Admin\SupplierController:toggleStatus" type="service_closure" id=".service_locator.dvS6U1."/>
         <argument key="App\Controller\Admin\TypePromotionController:delete" type="service_closure" id=".service_locator.EsReoji"/>
         <argument key="App\Controller\Admin\TypePromotionController:edit" type="service_closure" id=".service_locator.EsReoji"/>
-        <argument key="App\Controller\Admin\TypePromotionController:index" type="service_closure" id=".service_locator.lIJBS2U"/>
+        <argument key="App\Controller\Admin\TypePromotionController:index" type="service_closure" id=".service_locator.fOuwJxM"/>
         <argument key="App\Controller\Admin\TypePromotionController:new" type="service_closure" id=".service_locator.9kKwU2t"/>
+        <argument key="App\Controller\Admin\TypePromotionController:show" type="service_closure" id=".service_locator.zIb6dGh"/>
+        <argument key="App\Controller\Admin\TypePromotionController:toggleStatus" type="service_closure" id=".service_locator.EsReoji"/>
         <argument key="App\Controller\Admin\UserController:delete" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Admin\UserController:deletePhoto" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Admin\UserController:edit" type="service_closure" id=".service_locator.Hz5btge"/>
@@ -10255,7 +10483,7 @@
         <argument key="App\Controller\Manager\TeamController:show" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\PurchaseController:cancel" type="service_closure" id=".service_locator.dC4Tbs0"/>
         <argument key="App\Controller\PurchaseController:print" type="service_closure" id=".service_locator.GBRGGXk"/>
-        <argument key="App\Controller\PurchaseController:receive" type="service_closure" id=".service_locator.GBRGGXk"/>
+        <argument key="App\Controller\PurchaseController:receive" type="service_closure" id=".service_locator.arpVjFC"/>
         <argument key="App\Controller\PurchaseController:show" type="service_closure" id=".service_locator.GBRGGXk"/>
         <argument key="App\Controller\RegistrationController:login" type="service_closure" id=".service_locator.rSTd.nA"/>
         <argument key="App\Controller\RegistrationController:register" type="service_closure" id=".service_locator.6LV_x97"/>
@@ -10263,6 +10491,19 @@
         <argument key="App\Controller\ResetPasswordController:firstLoginChangePassword" type="service_closure" id=".service_locator.Mhqdd2r"/>
         <argument key="App\Controller\ResetPasswordController:request" type="service_closure" id=".service_locator.EE0.cm9"/>
         <argument key="App\Controller\ResetPasswordController:reset" type="service_closure" id=".service_locator.Z9ydiC1"/>
+        <argument key="App\Controller\Sale\OrderController:delete" type="service_closure" id=".service_locator.WlzNspm"/>
+        <argument key="App\Controller\Sale\OrderController:downloadPdf" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Sale\OrderController:exportExcel" type="service_closure" id=".service_locator.gQbEjC7"/>
+        <argument key="App\Controller\Sale\OrderController:exportPdf" type="service_closure" id=".service_locator.gQbEjC7"/>
+        <argument key="App\Controller\Sale\OrderController:index" type="service_closure" id=".service_locator.GDL6NRn"/>
+        <argument key="App\Controller\Sale\OrderController:printReceipt" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Sale\OrderController:receiptContent" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Sale\OrderController:receiptsContent" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Sale\OrderController:searchCustomer" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Sale\OrderController:show" type="service_closure" id=".service_locator.ruxHxcA"/>
+        <argument key="App\Controller\Sale\OrderController:toggle" type="service_closure" id=".service_locator.WlzNspm"/>
+        <argument key="App\Controller\Sale\RestaurantSaleController:receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
+        <argument key="App\Controller\Sale\RetailSaleController:receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\SecurityController:login" type="service_closure" id=".service_locator.rSTd.nA"/>
         <argument key="App\Controller\SubscriptionController:callback" type="service_closure" id=".service_locator.pZ9vOm3"/>
         <argument key="App\Controller\SubscriptionController:checkout" type="service_closure" id=".service_locator.7876JS0"/>
@@ -10444,7 +10685,7 @@
       <argument type="service" id="argument_resolver.query_parameter_value_resolver"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.MZRflS3" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.aim4HmH" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Form\CartItemType" type="service_closure" id="App\Form\CartItemType"/>
@@ -10455,6 +10696,7 @@
         <argument key="App\Form\HmaServiceProfileType" type="service_closure" id="App\Form\HmaServiceProfileType"/>
         <argument key="App\Form\HmaServiceRegistrationType" type="service_closure" id="App\Form\HmaServiceRegistrationType"/>
         <argument key="App\Form\HmaServiceType" type="service_closure" id="App\Form\HmaServiceType"/>
+        <argument key="App\Form\LocationType" type="service_closure" id="App\Form\LocationType"/>
         <argument key="App\Form\ProductAutocompleteType" type="service_closure" id="App\Form\ProductAutocompleteType"/>
         <argument key="App\Form\ProductType" type="service_closure" id="App\Form\ProductType"/>
         <argument key="App\Form\ProfileType" type="service_closure" id="App\Form\ProfileType"/>
@@ -10606,7 +10848,7 @@
         <argument key="turbo.doctrine.event_listener" type="service_closure" id="turbo.doctrine.event_listener"/>
       </argument>
     </service>
-    <service id=".service_locator.naODXo4" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.kIjDPYN" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\CategoryRecipeRepository" type="service_closure" id="App\Repository\CategoryRecipeRepository"/>
@@ -10615,6 +10857,7 @@
         <argument key="App\Repository\EmployeeRoleCountRepository" type="service_closure" id="App\Repository\EmployeeRoleCountRepository"/>
         <argument key="App\Repository\HmaServiceRepository" type="service_closure" id="App\Repository\HmaServiceRepository"/>
         <argument key="App\Repository\InvoiceRepository" type="service_closure" id="App\Repository\InvoiceRepository"/>
+        <argument key="App\Repository\LocationRepository" type="service_closure" id="App\Repository\LocationRepository"/>
         <argument key="App\Repository\OrderItemRepository" type="service_closure" id="App\Repository\OrderItemRepository"/>
         <argument key="App\Repository\OrderRepository" type="service_closure" id="App\Repository\OrderRepository"/>
         <argument key="App\Repository\PaymentRepository" type="service_closure" id="App\Repository\PaymentRepository"/>
@@ -11033,7 +11276,7 @@
         <argument>0</argument>
       </call>
     </service>
-    <service id=".service_locator.2ZRjhdO" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="form.factory" type="service_closure" id="form.factory" on-invalid="ignore"/>
@@ -11049,173 +11292,203 @@
         <argument key="web_link.http_header_serializer" type="service_closure" id="web_link.http_header_serializer" on-invalid="ignore"/>
       </argument>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\CartController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\CartController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\CartController"/>
       <argument>App\Controller\Admin\CartController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\CategoryController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\CategoryController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\CategoryController"/>
       <argument>App\Controller\Admin\CategoryController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\CategoryRecipeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\CategoryRecipeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\CategoryRecipeController"/>
       <argument>App\Controller\Admin\CategoryRecipeController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\ProductController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\LocationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Admin\LocationController"/>
+      <argument>App\Controller\Admin\LocationController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\Admin\ProductController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\ProductController"/>
       <argument>App\Controller\Admin\ProductController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\PromotionController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\PromotionController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\PromotionController"/>
       <argument>App\Controller\Admin\PromotionController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\PurchaseItemController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\PurchaseItemController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\PurchaseItemController"/>
       <argument>App\Controller\Admin\PurchaseItemController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\RecipeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\RecipeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\RecipeController"/>
       <argument>App\Controller\Admin\RecipeController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\RestaurantPromotionController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\RestaurantPromotionController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\RestaurantPromotionController"/>
       <argument>App\Controller\Admin\RestaurantPromotionController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\StockBatchController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\StockBatchController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\StockBatchController"/>
       <argument>App\Controller\Admin\StockBatchController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\SupplierController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\SupplierController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\SupplierController"/>
       <argument>App\Controller\Admin\SupplierController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\TypePromotionController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\TypePromotionController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\TypePromotionController"/>
       <argument>App\Controller\Admin\TypePromotionController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Admin\UserController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Admin\UserController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\UserController"/>
       <argument>App\Controller\Admin\UserController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Api\ProductSearchController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Api\ProductSearchController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\ProductSearchController"/>
       <argument>App\Controller\Api\ProductSearchController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\DashboardController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\DashboardController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\DashboardController"/>
       <argument>App\Controller\DashboardController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Dashboard\HmaServiceProfileController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Dashboard\HmaServiceProfileController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Dashboard\HmaServiceProfileController"/>
       <argument>App\Controller\Dashboard\HmaServiceProfileController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\FirstLoginController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\FirstLoginController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\FirstLoginController"/>
       <argument>App\Controller\FirstLoginController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\HomeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\HomeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\HomeController"/>
       <argument>App\Controller\HomeController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\Manager\TeamController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Manager\TeamController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Manager\TeamController"/>
       <argument>App\Controller\Manager\TeamController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\ProfileController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\ProfileController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ProfileController"/>
       <argument>App\Controller\ProfileController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\PurchaseController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\PurchaseController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\PurchaseController"/>
       <argument>App\Controller\PurchaseController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\RegistrationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\RegistrationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\RegistrationController"/>
       <argument>App\Controller\RegistrationController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\ResetPasswordController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\ResetPasswordController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ResetPasswordController"/>
       <argument>App\Controller\ResetPasswordController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\SecurityController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\Sale\OrderController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Sale\OrderController"/>
+      <argument>App\Controller\Sale\OrderController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\Sale\RestaurantSaleController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Sale\RestaurantSaleController"/>
+      <argument>App\Controller\Sale\RestaurantSaleController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\Sale\RetailSaleController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Sale\RetailSaleController"/>
+      <argument>App\Controller\Sale\RetailSaleController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\SecurityController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SecurityController"/>
       <argument>App\Controller\SecurityController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\SubscriptionController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\SubscriptionController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SubscriptionController"/>
       <argument>App\Controller\SubscriptionController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\SuperAdmin\HmaServiceController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\SuperAdmin\HmaServiceController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SuperAdmin\HmaServiceController"/>
       <argument>App\Controller\SuperAdmin\HmaServiceController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\SuperAdmin\SubscriptionController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\SuperAdmin\SubscriptionController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SuperAdmin\SubscriptionController"/>
       <argument>App\Controller\SuperAdmin\SubscriptionController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\SuperAdmin\SubscriptionPlanController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\SuperAdmin\SubscriptionPlanController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SuperAdmin\SubscriptionPlanController"/>
       <argument>App\Controller\SuperAdmin\SubscriptionPlanController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
-    <service id=".service_locator.2ZRjhdO.App\Controller\ToastController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.siKanuc.App\Controller\SuperAdmin\SuperAdminExportController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\SuperAdmin\SuperAdminExportController"/>
+      <argument>App\Controller\SuperAdmin\SuperAdminExportController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\ToastController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ToastController"/>
       <argument>App\Controller\ToastController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.2ZRjhdO" method="withContext"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
     <service id=".service_locator.fuYM_Z." class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -11229,17 +11502,17 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.fuYM_Z." method="withContext"/>
     </service>
-    <service id=".service_locator.8xmdTk1" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.5c7GaP9" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="routing.loader" type="service_closure" id="routing.loader"/>
       </argument>
     </service>
-    <service id=".service_locator.8xmdTk1.router.default" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.5c7GaP9.router.default" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="router.default"/>
       <argument>router.default</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.8xmdTk1" method="withContext"/>
+      <factory service=".service_locator.5c7GaP9" method="withContext"/>
     </service>
     <service id=".service_locator.cUcW89y" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -11400,6 +11673,7 @@
           <argument>App\Controller\Admin\CartController</argument>
           <argument>App\Controller\Admin\CategoryController</argument>
           <argument>App\Controller\Admin\CategoryRecipeController</argument>
+          <argument>App\Controller\Admin\LocationController</argument>
           <argument>App\Controller\Admin\ProductController</argument>
           <argument>App\Controller\Admin\PromotionController</argument>
           <argument>App\Controller\Admin\PurchaseItemController</argument>
@@ -11419,11 +11693,15 @@
           <argument>App\Controller\PurchaseController</argument>
           <argument>App\Controller\RegistrationController</argument>
           <argument>App\Controller\ResetPasswordController</argument>
+          <argument>App\Controller\Sale\OrderController</argument>
+          <argument>App\Controller\Sale\RestaurantSaleController</argument>
+          <argument>App\Controller\Sale\RetailSaleController</argument>
           <argument>App\Controller\SecurityController</argument>
           <argument>App\Controller\SubscriptionController</argument>
           <argument>App\Controller\SuperAdmin\HmaServiceController</argument>
           <argument>App\Controller\SuperAdmin\SubscriptionController</argument>
           <argument>App\Controller\SuperAdmin\SubscriptionPlanController</argument>
+          <argument>App\Controller\SuperAdmin\SuperAdminExportController</argument>
           <argument>App\Controller\ToastController</argument>
           <argument>Doctrine\Bundle\DoctrineBundle\Controller\ProfilerController</argument>
         </argument>
@@ -11641,6 +11919,15 @@
     <service id=".errored..service_locator.VJEETNR.App\Entity\CategoryRecipe" class="App\Entity\CategoryRecipe">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.VJEETNR&quot;: it needs an instance of &quot;App\Entity\CategoryRecipe&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
+    <service id=".errored..service_locator.epX10X9.App\Entity\Location" class="App\Entity\Location">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.epX10X9&quot;: it needs an instance of &quot;App\Entity\Location&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.GCnJrcb.App\Entity\Location" class="App\Entity\Location">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.GCnJrcb&quot;: it needs an instance of &quot;App\Entity\Location&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.gAatUmJ.App\Entity\Location" class="App\Entity\Location">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.gAatUmJ&quot;: it needs an instance of &quot;App\Entity\Location&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
     <service id=".errored..service_locator.TxLdxz8.App\Entity\Product" class="App\Entity\Product">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.TxLdxz8&quot;: it needs an instance of &quot;App\Entity\Product&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
@@ -11704,14 +11991,26 @@
     <service id=".errored..service_locator.EsReoji.App\Entity\TypePromotion" class="App\Entity\TypePromotion">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.EsReoji&quot;: it needs an instance of &quot;App\Entity\TypePromotion&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
+    <service id=".errored..service_locator.zIb6dGh.App\Entity\TypePromotion" class="App\Entity\TypePromotion">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.zIb6dGh&quot;: it needs an instance of &quot;App\Entity\TypePromotion&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
     <service id=".errored..service_locator.Hz5btge.App\Entity\User" class="App\Entity\User">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.Hz5btge&quot;: it needs an instance of &quot;App\Entity\User&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.arpVjFC.App\Entity\Purchase" class="App\Entity\Purchase">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.arpVjFC&quot;: it needs an instance of &quot;App\Entity\Purchase&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.dC4Tbs0.App\Entity\Purchase" class="App\Entity\Purchase">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.dC4Tbs0&quot;: it needs an instance of &quot;App\Entity\Purchase&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.GBRGGXk.App\Entity\Purchase" class="App\Entity\Purchase">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.GBRGGXk&quot;: it needs an instance of &quot;App\Entity\Purchase&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
-    <service id=".errored..service_locator.dC4Tbs0.App\Entity\Purchase" class="App\Entity\Purchase">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.dC4Tbs0&quot;: it needs an instance of &quot;App\Entity\Purchase&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    <service id=".errored..service_locator.WlzNspm.App\Entity\Order" class="App\Entity\Order">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.WlzNspm&quot;: it needs an instance of &quot;App\Entity\Order&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.ruxHxcA.App\Entity\Order" class="App\Entity\Order">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ruxHxcA&quot;: it needs an instance of &quot;App\Entity\Order&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.NEOlKDh.App\Entity\Subscription" class="App\Entity\Subscription">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.NEOlKDh&quot;: it needs an instance of &quot;App\Entity\Subscription&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
@@ -11753,12 +12052,33 @@
       <argument>false</argument>
       <argument type="service_closure" id="App\Command\EnforceUserQuotasCommand"/>
     </service>
+    <service id=".App\Command\GenerateSalesReportCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>app:generate-sales-report</argument>
+      <argument type="collection"/>
+      <argument>Génère un rapport de ventes Excel (à implémenter)</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="App\Command\GenerateSalesReportCommand"/>
+    </service>
     <service id=".App\Command\TestSubscriptionEmailCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>app:test-subscription-email</argument>
       <argument type="collection"/>
       <argument>Test l'envoi des emails de confirmation d'abonnement aux utilisateurs d'une entreprise.</argument>
       <argument>false</argument>
       <argument type="service_closure" id="App\Command\TestSubscriptionEmailCommand"/>
+    </service>
+    <service id=".App\Command\UnlockLockedUsersCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>app:unlock-locked-users</argument>
+      <argument type="collection"/>
+      <argument>Débloque tous les utilisateurs dont la période de blocage est expirée</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="App\Command\UnlockLockedUsersCommand"/>
+    </service>
+    <service id=".App\Command\UnlockUserCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>app:user:unlock</argument>
+      <argument type="collection"/>
+      <argument>Débloque un utilisateur spécifique par email</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="App\Command\UnlockUserCommand"/>
     </service>
     <service id=".console.command.about.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>about</argument>
@@ -12439,16 +12759,20 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.3hidi_G"/>
+      <argument type="service" id=".service_locator.TvvC3Fy"/>
       <argument type="collection">
         <argument key="app:check-expired-subscriptions">App\Command\CheckExpiredSubscriptionsCommand</argument>
         <argument key="app:clean-incomplete-registrations">App\Command\CleanIncompleteRegistrationsCommand</argument>
         <argument key="create-admin">App\Command\CreateAdminCommand</argument>
+        <argument key="app:batches:deactivate-expired">App\Command\DeactivateExpiredBatchesCommand</argument>
         <argument key="app:enforce-quotas">App\Command\EnforceQuotasCommand</argument>
         <argument key="app:enforce-user-quotas">App\Command\EnforceUserQuotasCommand</argument>
+        <argument key="app:generate-sales-report">App\Command\GenerateSalesReportCommand</argument>
         <argument key="app:send-expiration-reminders">App\Command\SendExpirationRemindersCommand</argument>
         <argument key="app:test-email">App\Command\TestEmailCommand</argument>
         <argument key="app:test-subscription-email">App\Command\TestSubscriptionEmailCommand</argument>
+        <argument key="app:unlock-locked-users">App\Command\UnlockLockedUsersCommand</argument>
+        <argument key="app:user:unlock">App\Command\UnlockUserCommand</argument>
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
         <argument key="cache:clear">console.command.cache_clear</argument>
@@ -12568,17 +12892,21 @@
         <argument key="make:webhook">maker.auto_command.make_webhook</argument>
       </argument>
     </service>
-    <service id=".service_locator.3hidi_G" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.TvvC3Fy" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Command\CheckExpiredSubscriptionsCommand" type="service_closure" id="App\Command\CheckExpiredSubscriptionsCommand"/>
         <argument key="App\Command\CleanIncompleteRegistrationsCommand" type="service_closure" id=".App\Command\CleanIncompleteRegistrationsCommand.lazy"/>
         <argument key="App\Command\CreateAdminCommand" type="service_closure" id=".App\Command\CreateAdminCommand.lazy"/>
+        <argument key="App\Command\DeactivateExpiredBatchesCommand" type="service_closure" id="App\Command\DeactivateExpiredBatchesCommand"/>
         <argument key="App\Command\EnforceQuotasCommand" type="service_closure" id=".App\Command\EnforceQuotasCommand.lazy"/>
         <argument key="App\Command\EnforceUserQuotasCommand" type="service_closure" id=".App\Command\EnforceUserQuotasCommand.lazy"/>
+        <argument key="App\Command\GenerateSalesReportCommand" type="service_closure" id=".App\Command\GenerateSalesReportCommand.lazy"/>
         <argument key="App\Command\SendExpirationRemindersCommand" type="service_closure" id="App\Command\SendExpirationRemindersCommand"/>
         <argument key="App\Command\TestEmailCommand" type="service_closure" id="App\Command\TestEmailCommand"/>
         <argument key="App\Command\TestSubscriptionEmailCommand" type="service_closure" id=".App\Command\TestSubscriptionEmailCommand.lazy"/>
+        <argument key="App\Command\UnlockLockedUsersCommand" type="service_closure" id=".App\Command\UnlockLockedUsersCommand.lazy"/>
+        <argument key="App\Command\UnlockUserCommand" type="service_closure" id=".App\Command\UnlockUserCommand.lazy"/>
         <argument key="console.command.about" type="service_closure" id=".console.command.about.lazy"/>
         <argument key="console.command.assets_install" type="service_closure" id=".console.command.assets_install.lazy"/>
         <argument key="console.command.cache_clear" type="service_closure" id=".console.command.cache_clear.lazy"/>
@@ -12980,7 +13308,7 @@
     <service id="Knp\Bundle\TimeBundle\DateTimeFormatter" alias="time.datetime_formatter"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.Qctnd0r"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.JrMDTEo"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -13020,6 +13348,9 @@
     <service id=".service_locator.bJ.4HC5" alias=".service_locator.w7.f4fT"/>
     <service id=".service_locator.pU_c4N5" alias=".service_locator.nnTODkK"/>
     <service id=".service_locator.FRafMWw" alias=".service_locator.KVwBjna"/>
+    <service id=".service_locator.fYvw.Ss" alias=".service_locator.epX10X9"/>
+    <service id=".service_locator.sNtwTIY" alias=".service_locator.GCnJrcb"/>
+    <service id=".service_locator.Xtsnz0X" alias=".service_locator.gAatUmJ"/>
     <service id=".service_locator.xhWewe4" alias=".service_locator.sVYdUcQ"/>
     <service id=".service_locator.oZvIfEr" alias=".service_locator.N7dcDh9"/>
     <service id=".service_locator.Kzvcvcq" alias=".service_locator.QwF46cK"/>
@@ -13031,22 +13362,24 @@
     <service id=".service_locator.1aG6AFE" alias=".service_locator.YAFqnUg"/>
     <service id=".service_locator.IzHPArP" alias=".service_locator.ZigbG7g"/>
     <service id=".service_locator.KN4JkaV" alias=".service_locator.8dgelli"/>
+    <service id=".service_locator.qhECiVU" alias=".service_locator.0uzFUN6"/>
     <service id=".service_locator.qIwv0LW" alias=".service_locator.zrfOspp"/>
-    <service id=".service_locator.PWnpSeM" alias=".service_locator.Oyj9whn"/>
     <service id=".service_locator.T6ncYvc" alias=".service_locator.dvS6U1."/>
-    <service id=".service_locator.5ua1aq6" alias=".service_locator.lIJBS2U"/>
     <service id=".service_locator.AA8lBq2" alias=".service_locator.EsReoji"/>
+    <service id=".service_locator.a.d9AuT" alias=".service_locator.arpVjFC"/>
     <service id=".service_locator.Tsb.wpJ" alias=".service_locator.dC4Tbs0"/>
     <service id=".service_locator.KnFk7IB" alias=".service_locator.6LV_x97"/>
+    <service id=".service_locator.9Bn7ebq" alias=".service_locator.gQbEjC7"/>
+    <service id=".service_locator.FOXgEKi" alias=".service_locator.WlzNspm"/>
     <service id=".service_locator.VDGhXYh" alias=".service_locator.7876JS0"/>
     <service id=".service_locator.w64.HFj" alias=".service_locator.pZ9vOm3"/>
     <service id=".service_locator.blXgkPv" alias=".service_locator.aQv.1uC"/>
-    <service id=".service_locator.5YuCcFO" alias=".service_locator.Qctnd0r"/>
+    <service id=".service_locator.Hyq2p5i" alias=".service_locator.JrMDTEo"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
-    <service id=".service_locator.c5L77Dp" alias=".service_locator.MZRflS3"/>
+    <service id=".service_locator.bJWLeFO" alias=".service_locator.aim4HmH"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>
     <service id=".service_locator.O24_MAy" alias=".service_locator.yY.p4P7"/>
-    <service id=".service_locator.AAoWXv3" alias=".service_locator.2ZRjhdO"/>
+    <service id=".service_locator.N8tb5Jh" alias=".service_locator.siKanuc"/>
     <service id="validator" alias="debug.validator"/>
     <service id="http_client" alias=".debug.http_client"/>
     <service id=".debug.http_client.inner" alias="http_client.uri_template"/>
@@ -13075,12 +13408,16 @@
     <service id=".service_locator.PsE_k8y" alias=".service_locator.KVwBjna"/>
     <service id=".service_locator.JTwdEjf" alias=".service_locator.lLJkxGi"/>
     <service id=".service_locator.aAQKbsB" alias=".service_locator.VJEETNR"/>
+    <service id=".service_locator.f2Oh_Bm" alias=".service_locator.VxucSxB"/>
+    <service id=".service_locator.gaTSUXr" alias=".service_locator.9kKwU2t"/>
+    <service id=".service_locator.gLaDDOf" alias=".service_locator.epX10X9"/>
+    <service id=".service_locator.YX0iPbT" alias=".service_locator.GCnJrcb"/>
+    <service id=".service_locator.8RUZ2aO" alias=".service_locator.gAatUmJ"/>
     <service id=".service_locator.yMryrSD" alias=".service_locator.sVYdUcQ"/>
     <service id=".service_locator.72pxXVD" alias=".service_locator.TxLdxz8"/>
     <service id=".service_locator.Qw6JF4f" alias=".service_locator.N7dcDh9"/>
     <service id=".service_locator.YAVoKZL" alias=".service_locator.DZowHzb"/>
     <service id=".service_locator.AavQnsK" alias=".service_locator.QwF46cK"/>
-    <service id=".service_locator.gaTSUXr" alias=".service_locator.9kKwU2t"/>
     <service id=".service_locator..Mbk006" alias=".service_locator.rC6pteX"/>
     <service id=".service_locator.LVUMlTu" alias=".service_locator.Brzkho4"/>
     <service id=".service_locator.VGBtaMT" alias=".service_locator.Ys0sGM."/>
@@ -13097,27 +13434,34 @@
     <service id=".service_locator.MwhyHwH" alias=".service_locator.WeDmv2U"/>
     <service id=".service_locator.yf82JOA" alias=".service_locator.8dgelli"/>
     <service id=".service_locator.3JhOIgS" alias=".service_locator.ewb7EEl"/>
+    <service id=".service_locator.wtEmIsj" alias=".service_locator.0uzFUN6"/>
     <service id=".service_locator.G1WMlmi" alias=".service_locator.zrfOspp"/>
     <service id=".service_locator.Lk4pMVQ" alias=".service_locator.lIYMlB2"/>
     <service id=".service_locator.ZPcRZ9v" alias=".service_locator.ioxjhbP"/>
     <service id=".service_locator.fA6DRb8" alias=".service_locator.o.HdHhU"/>
-    <service id=".service_locator.D5h80FK" alias=".service_locator.Oyj9whn"/>
     <service id=".service_locator.u5R6Esu" alias=".service_locator.zVX5.kU"/>
     <service id=".service_locator.Kv4bFX6" alias=".service_locator.3VaP2SM"/>
     <service id=".service_locator.euQWjYy" alias=".service_locator.FM.zRi8"/>
     <service id=".service_locator..ObGyYY" alias=".service_locator.dvS6U1."/>
-    <service id=".service_locator._duADDg" alias=".service_locator.lIJBS2U"/>
+    <service id=".service_locator.aHjJFDh" alias=".service_locator.fOuwJxM"/>
     <service id=".service_locator.qK1gVvI" alias=".service_locator.EsReoji"/>
+    <service id=".service_locator.zTaZM5D" alias=".service_locator.zIb6dGh"/>
     <service id=".service_locator.cCPevwB" alias=".service_locator.V8HB.cV"/>
     <service id=".service_locator.EmZ4cZI" alias=".service_locator.Hz5btge"/>
     <service id=".service_locator.J4v_dgx" alias=".service_locator.fNvIwJr"/>
-    <service id=".service_locator.WvsB0MA" alias=".service_locator.GBRGGXk"/>
+    <service id=".service_locator.3C1KyRe" alias=".service_locator.arpVjFC"/>
     <service id=".service_locator.qcDUZnU" alias=".service_locator.dC4Tbs0"/>
+    <service id=".service_locator.WvsB0MA" alias=".service_locator.GBRGGXk"/>
     <service id=".service_locator.1Bj4zw5" alias=".service_locator.6LV_x97"/>
     <service id=".service_locator.7NIAq8D" alias=".service_locator.rSTd.nA"/>
     <service id=".service_locator.ostNlSn" alias=".service_locator.EE0.cm9"/>
     <service id=".service_locator.uPguXMt" alias=".service_locator.Z9ydiC1"/>
     <service id=".service_locator.W47vLMj" alias=".service_locator.Mhqdd2r"/>
+    <service id=".service_locator.kXBjOS8" alias=".service_locator.gQbEjC7"/>
+    <service id=".service_locator.J9PF4hF" alias=".service_locator.GDL6NRn"/>
+    <service id=".service_locator.gtgK4ct" alias=".service_locator.WlzNspm"/>
+    <service id=".service_locator.qDoK7Nx" alias=".service_locator.ruxHxcA"/>
+    <service id=".service_locator.BvvBT9K" alias=".service_locator.4n4ylFv"/>
     <service id=".service_locator.Mtz1awR" alias=".service_locator.Qe.FMtv"/>
     <service id=".service_locator.DNo38ky" alias=".service_locator.7876JS0"/>
     <service id=".service_locator.4qBqTbv" alias=".service_locator.pZ9vOm3"/>
@@ -13127,7 +13471,7 @@
     <service id=".service_locator.UjavzA5" alias=".service_locator.aQv.1uC"/>
     <service id=".service_locator.JmdYh6n" alias=".service_locator.CZ5qyP3"/>
     <service id=".service_locator.8_da1Kz" alias=".service_locator.sSPFBVg"/>
-    <service id=".service_locator.WpVNRBw" alias=".service_locator.2ZRjhdO"/>
+    <service id=".service_locator.FShRLqn" alias=".service_locator.siKanuc"/>
     <service id=".service_locator.dGUCsbe" alias=".service_locator.oR77BOj"/>
     <service id=".service_locator._kIAbz1" alias=".service_locator.TpoC7U9"/>
     <service id=".service_locator.hnz5ZNh" alias=".service_locator.0TACwl3"/>

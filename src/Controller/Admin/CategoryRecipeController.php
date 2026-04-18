@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 use App\Entity\CategoryRecipe;
 use App\Entity\HmaService;
 use App\Form\CategoryRecipeType;
+use App\Service\UniqueNameValidator;
 use App\Repository\CategoryRecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Promotion;
@@ -20,7 +21,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 final class CategoryRecipeController extends AbstractController
 {
     public function __construct(
-        private readonly SluggerInterface $slugger
+        private readonly SluggerInterface $slugger,
+        private readonly UniqueNameValidator $uniqueNameValidator
     ) {}
 
     private function getCurrentHmaService(): ?HmaService
@@ -167,6 +169,16 @@ final class CategoryRecipeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ✅ Vérification de l'unicité du nom
+            $validation = $this->uniqueNameValidator->validate($category, CategoryRecipe::class, 'catégorie de plat', $hmaService->getId());
+            
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/category_recipe/new.html.twig', [
+                    'form' => $form->createView(),
+                    'category' => $category
+                ]);
+            }
             if (!$category->getSlug()) {
                 $slug = $this->slugger->slug($category->getName())->lower();
                 $category->setSlug($slug);
@@ -214,6 +226,16 @@ final class CategoryRecipeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ✅ Vérification de l'unicité du nom
+            $validation = $this->uniqueNameValidator->validate($category, CategoryRecipe::class, 'catégorie de plat', $hmaService->getId());
+            
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/category_recipe/edit.html.twig', [
+                    'form' => $form->createView(),
+                    'category' => $category
+                ]);
+            }
             $newSlug = $this->slugger->slug($category->getName())->lower();
             $category->setSlug($newSlug);
 

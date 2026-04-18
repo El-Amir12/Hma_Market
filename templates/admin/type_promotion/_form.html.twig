@@ -1,3 +1,4 @@
+{# templates/admin/type_promotion/_form.html.twig #}
 {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
 <div class="row g-4">
     <div class="col-lg-12">
@@ -18,9 +19,10 @@
                         <div class="form-floating">
                             {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': ' ', 'autocomplete': 'off'}}) }}
                             <label for="{{ form.name.vars.id }}">
-                                <i class="fas fa-tag me-1"></i> Nom *
+                                <i class="fas fa-tag me-1"></i> Type de promotion *
                             </label>
                             <div class="invalid-feedback d-block">{{ form_errors(form.name) }}</div>
+                            <small class="text-muted">{{ form.name.vars.help|default('') }}</small>
                         </div>
                     </div>
                 </div>
@@ -32,6 +34,7 @@
                                 <i class="fas fa-align-left me-1"></i> Description
                             </label>
                             <div class="invalid-feedback d-block">{{ form_errors(form.description) }}</div>
+                            <small class="text-muted">{{ form.description.vars.help|default('') }}</small>
                         </div>
                     </div>
                 </div>
@@ -82,6 +85,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Gestion du switch actif/inactif
     const activeSwitch = document.getElementById('{{ form.is_active.vars.id }}');
     const statusBadge = document.getElementById('status-badge');
     const statusLabel = document.getElementById('status-label');
@@ -100,6 +104,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         activeSwitch.addEventListener('change', updateStatus);
         updateStatus();
+    }
+    
+    // ✅ CORRECTION : Gestion de la description automatique
+    const typeSelect = document.getElementById('type_promotion_name');
+    const descriptionField = document.getElementById('type_promotion_description');
+    
+    // Descriptions prédéfinies
+    const descriptions = {
+        'Pourcentage': 'Réduction en pourcentage sur le prix (ex: 10% de réduction)',
+        'Montant fixe': 'Réduction d\'un montant précis en devise locale (ex: 500 FCFA de réduction)',
+        'Achat multiple': 'Réduction pour l\'achat de plusieurs articles (ex: 2 achetés = 1 offert)',
+        'Seuil minimum': 'Réduction basée sur un montant minimum d\'achat (ex: -10% dès 10000 FCFA)',
+        'Happy Hour': 'Réduction sur une plage horaire spécifique (ex: -20% entre 14h et 17h)'
+    };
+    
+    if (typeSelect && descriptionField) {
+        function updateDescription() {
+            // ✅ Récupérer la valeur sélectionnée (qui est maintenant le nom du type)
+            const selectedValue = typeSelect.value;
+            console.log('Valeur sélectionnée:', selectedValue); // Debug
+            
+            if (selectedValue && descriptions[selectedValue]) {
+                descriptionField.value = descriptions[selectedValue];
+            } else {
+                descriptionField.value = '';
+            }
+        }
+        
+        typeSelect.addEventListener('change', updateDescription);
+        updateDescription(); // Appel initial
     }
     
     // Validation Bootstrap

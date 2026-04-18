@@ -78,15 +78,15 @@
             <h5 class="mb-0"><i class="fas fa-filter me-2 text-primary"></i>Filtres</h5>
         </div>
         <div class="card-body">
-            <form method="get" class="row g-3">
-                <div class="col-lg-4 col-md-6">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-4">
                     <label class="form-label fw-semibold">Recherche</label>
                     <div class="input-group">
                         <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
                         <input type="text" name="search" value="{{ search }}" class="form-control border-start-0" placeholder="Nom, description...">
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
+                <div class="col-4">
                     <label class="form-label fw-semibold">Statut</label>
                     <select name="status" class="form-select">
                         <option value="all" {{ status == 'all' ? 'selected' }}>Tous</option>
@@ -94,7 +94,7 @@
                         <option value="inactive" {{ status == 'inactive' ? 'selected' }}>Inactifs</option>
                     </select>
                 </div>
-                <div class="col-lg-5 d-flex gap-2 align-items-end justify-content-lg-end justify-content-start">
+                <div class="col-4 d-flex gap-2 justify-content-end">
                     <a href="{{ path('app_admin_type_promotion_index') }}" class="btn btn-outline-secondary">
                         <i class="fas fa-undo-alt me-1"></i> Effacer
                     </a>
@@ -106,40 +106,52 @@
         </div>
     </div>
 
-    <!-- Grille des types (cartes) -->
+    <!-- Grille des types (cartes) - 4 cartes sur une ligne -->
     <div class="row g-4">
         {% for type in types %}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
                 <div class="card h-100 border-0 shadow-sm hover-shadow transition-all rounded-4 overflow-hidden">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
                             <h5 class="card-title fw-bold mb-0">{{ type.name|slice(0, 30) }}</h5>
-                            <span class="badge {{ type.isActive ? 'bg-success' : 'bg-secondary' }} px-2 py-1 ms-1 flex-shrink-0">
+                            <span class="badge {{ type.isActive ? 'bg-success' : 'bg-secondary' }} px-2 py-1 ms-2 flex-shrink-0">
                                 {{ type.isActive ? 'Actif' : 'Inactif' }}
                             </span>
                         </div>
-                        <p class="card-text small text-muted mb-3">
-                            {{ type.description|default('Aucune description')|slice(0, 80) }}
-                            {% if type.description|length > 80 %}...{% endif %}
+                        <p class="card-text text-muted mb-3" style="min-height: 70px;">
+                            {{ type.description|default('Aucune description')|slice(0, 100) }}
+                            {% if type.description|length > 100 %}...{% endif %}
                         </p>
                         <div class="small text-muted">
-                            <i class="fas fa-calendar-alt me-1"></i> Créé le {{ type.createdAt|date('d/m/Y') }}
+                            <i class="fas fa-calendar-alt me-1"></i> {{ type.createdAt|date('d/m/Y') }}
                         </div>
                     </div>
-                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between gap-2 pt-0 pb-3">
-                        <a href="{{ path('app_admin_type_promotion_edit', {id: type.id}) }}" class="btn btn-sm btn-outline-primary flex-fill">
-                            <i class="fas fa-edit me-1"></i> Modifier
+                  
+                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between gap-2 pt-0 pb-4 px-4">
+                        <a href="{{ path('app_admin_type_promotion_show', {id: type.id}) }}" class="btn btn-sm btn-outline-info flex-fill">
+                            <i class="fas fa-eye me-1"></i> 
                         </a>
+                        <a href="{{ path('app_admin_type_promotion_edit', {id: type.id}) }}" class="btn btn-sm btn-outline-primary flex-fill">
+                            <i class="fas fa-edit me-1"></i> 
+                        </a>
+                        <!-- Formulaire Activer/Désactiver -->
+                        <form method="post" action="{{ path('app_admin_type_promotion_toggle_status', {id: type.id}) }}" class="flex-fill">
+                            <input type="hidden" name="_token" value="{{ csrf_token('toggle-status' ~ type.id) }}">
+                            <button type="submit" class="btn btn-sm {{ type.isActive ? 'btn-outline-warning' : 'btn-outline-success' }} w-100">
+                                <i class="fas {{ type.isActive ? 'fa-pause' : 'fa-play' }} me-1"></i>
+                                {{ type.isActive ? 'Désactiver' : 'Activer' }}
+                            </button>
+                        </form>
                         {% if is_granted('ROLE_ADMIN') %}
                             <button type="button" class="btn btn-sm btn-outline-danger flex-fill" data-bs-toggle="modal" data-bs-target="#deleteModal{{ type.id }}">
-                                <i class="fas fa-trash-alt me-1"></i> Supprimer
+                                <i class="fas fa-trash-alt me-1"></i> 
                             </button>
                         {% endif %}
                     </div>
                 </div>
             </div>
 
-            <!-- Modal de suppression pour chaque type -->
+            <!-- Modal de suppression -->
             {% if is_granted('ROLE_ADMIN') %}
             <div class="modal fade" id="deleteModal{{ type.id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">

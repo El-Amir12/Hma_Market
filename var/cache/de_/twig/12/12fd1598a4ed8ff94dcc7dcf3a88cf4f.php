@@ -152,20 +152,14 @@ class __TwigTemplate_025183edfca94cc1af2bd0a7fe882f09 extends Template
             
             <div class=\"expiry\">
                 <strong>⚠️ IMPORTANT : Ce lien expire dans 1 heure</strong>
-                <p style=\"margin: 5px 0 0 0; font-size: 14px;\">
-                    Expire le : ";
-        // line 106
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["expiration_date"]) || array_key_exists("expiration_date", $context) ? $context["expiration_date"] : (function () { throw new RuntimeError('Variable "expiration_date" does not exist.', 106, $this->source); })()), "d/m/Y à H:i"), "html", null, true);
-        yield "
-                </p>
             </div>
             
             <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
             
             <div style=\"text-align: center; margin: 30px 0;\">
                 <a href=\"";
-        // line 113
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["resetUrl"]) || array_key_exists("resetUrl", $context) ? $context["resetUrl"] : (function () { throw new RuntimeError('Variable "resetUrl" does not exist.', 113, $this->source); })()), "html", null, true);
+        // line 110
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["resetUrl"]) || array_key_exists("resetUrl", $context) ? $context["resetUrl"] : (function () { throw new RuntimeError('Variable "resetUrl" does not exist.', 110, $this->source); })()), "html", null, true);
         yield "\" class=\"button\">
                     🔑 Réinitialiser mon mot de passe
                 </a>
@@ -175,8 +169,8 @@ class __TwigTemplate_025183edfca94cc1af2bd0a7fe882f09 extends Template
             
             <div class=\"token-display\">
                 ";
-        // line 121
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["resetUrl"]) || array_key_exists("resetUrl", $context) ? $context["resetUrl"] : (function () { throw new RuntimeError('Variable "resetUrl" does not exist.', 121, $this->source); })()), "html", null, true);
+        // line 118
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["resetUrl"]) || array_key_exists("resetUrl", $context) ? $context["resetUrl"] : (function () { throw new RuntimeError('Variable "resetUrl" does not exist.', 118, $this->source); })()), "html", null, true);
         yield "
             </div>
             
@@ -210,7 +204,7 @@ class __TwigTemplate_025183edfca94cc1af2bd0a7fe882f09 extends Template
             <p style=\"font-size: 11px; margin-top: 10px;\">
                 Cet email a été envoyé automatiquement. Merci de ne pas y répondre.<br>
                 © ";
-        // line 153
+        // line 150
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate("now", "Y"), "html", null, true);
         yield " HMA Market. Tous droits réservés.
             </p>
@@ -248,7 +242,7 @@ class __TwigTemplate_025183edfca94cc1af2bd0a7fe882f09 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  214 => 153,  179 => 121,  168 => 113,  158 => 106,  148 => 99,  48 => 1,);
+        return array (  208 => 150,  173 => 118,  162 => 110,  148 => 99,  48 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -357,9 +351,6 @@ class __TwigTemplate_025183edfca94cc1af2bd0a7fe882f09 extends Template
             
             <div class=\"expiry\">
                 <strong>⚠️ IMPORTANT : Ce lien expire dans 1 heure</strong>
-                <p style=\"margin: 5px 0 0 0; font-size: 14px;\">
-                    Expire le : {{ expiration_date|date('d/m/Y à H:i') }}
-                </p>
             </div>
             
             <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>

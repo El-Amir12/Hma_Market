@@ -15,22 +15,13 @@ echo [%date% %time%] 🧹 Nettoyage des inscriptions incomplètes...
 php bin/console app:clean-incomplete-registrations --no-interaction
 if %errorlevel% neq 0 echo ⚠️ Erreur lors du nettoyage
 
-echo [%date% %time%] ✅ Nettoyage terminé
-echo.
-
 echo [%date% %time%] 🔍 Vérification des abonnements expirés...
 php bin/console app:check-expired-subscriptions
 if %errorlevel% neq 0 echo ⚠️ Erreur lors de la vérification
 
-echo [%date% %time%] ✅ Vérification terminée
-echo.
-
 echo [%date% %time%] 📧 Envoi des rappels d'expiration...
 php bin/console app:send-expiration-reminders
 if %errorlevel% neq 0 echo ⚠️ Erreur lors de l'envoi
-
-echo [%date% %time%] ✅ Envoi terminé
-echo.
 
 echo [%date% %time%] ⚙️ Application des quotas (entités)...
 php bin/console app:enforce-quotas --no-interaction
@@ -44,9 +35,11 @@ echo [%date% %time%] 🔓 Déblocage des comptes utilisateurs expirés...
 php bin/console app:unlock-locked-users --no-interaction
 if %errorlevel% neq 0 echo ⚠️ Erreur lors du déblocage
 
-echo [%date% %time%] ✅ Déblocage terminé
-echo.
+echo [%date% %time%] 🔄 Désactivation des lots expirés...
+php bin/console app:batches:deactivate-expired --no-interaction
+if %errorlevel% neq 0 echo ⚠️ Erreur lors de la désactivation des lots
 
+echo.
 echo ========================================
 echo    TÂCHES TERMINÉES À %date% %time%
 echo ========================================

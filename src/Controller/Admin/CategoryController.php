@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 use App\Entity\Category;
 use App\Entity\HmaService;
 use App\Form\CategoryType;
+use App\Service\UniqueNameValidator;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Promotion; 
@@ -20,7 +21,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 final class CategoryController extends AbstractController
 {
     public function __construct(
-        private readonly SluggerInterface $slugger
+        private readonly SluggerInterface $slugger,
+        private readonly UniqueNameValidator $uniqueNameValidator
     ) {}
 
     /**
@@ -182,6 +184,17 @@ final class CategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // ✅ Vérification de l'unicité du nom
+            $validation = $this->uniqueNameValidator->validate($category, Category::class, 'catégorie', $hmaService->getId());
+            
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/category/new.html.twig', [
+                    'form' => $form->createView(),
+                    'category' => $category
+                ]);
+            }
             // Slug
             if (!$category->getSlug()) {
                 $slug = $this->slugger->slug($category->getName())->lower();
@@ -240,6 +253,16 @@ final class CategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $validation = $this->uniqueNameValidator->validate($category, Category::class, 'catégorie', $hmaService->getId());
+            
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/category/edit.html.twig', [
+                    'category' => $category,
+                    'form' => $form,
+                ]);
+            }
             $newSlug = $this->slugger->slug($category->getName())->lower();
             $category->setSlug($newSlug);
 

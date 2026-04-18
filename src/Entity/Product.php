@@ -251,6 +251,17 @@ class Product
         return $this->has_expiry_date ?? false;
     }
 
+    public function getExpiryDate(): ?\DateTimeInterface
+    {
+        return $this->has_expiry_date;
+    }
+
+    public function setExpiryDate(?\DateTimeInterface $expiry_date): static
+    {
+        $this->has_expiry_date = $expiry_date;
+        return $this;
+    }
+
     public function isActive(): ?bool
     {
         return $this->is_active;

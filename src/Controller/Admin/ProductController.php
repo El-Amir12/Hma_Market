@@ -6,6 +6,7 @@ use App\Entity\HmaService;
 use App\Entity\Product;
 use App\Entity\Promotion;
 use App\Form\ProductType;
+use App\Service\UniqueNameValidator;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use App\Service\UnitConverter; // Ajout de l'import
@@ -25,7 +26,8 @@ final class ProductController extends AbstractController
 
     public function __construct(
         private readonly SluggerInterface $slugger,
-        private readonly UnitConverter $unitConverter // Injection de UnitConverter
+        private readonly UnitConverter $unitConverter,
+        private readonly UniqueNameValidator $uniqueNameValidator
     ) {}
 
     private function getCurrentHmaService(): ?HmaService
@@ -306,6 +308,16 @@ final class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ✅ Vérification de l'unicité du nom
+            $validation = $this->uniqueNameValidator->validate($product, Product::class, 'produit', $hmaService->getId());
+
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/product/new.html.twig', [
+                    'form' => $form->createView(),
+                    'product' => $product
+                ]);
+            }
             // Slug
             $slug = $this->slugger->slug($product->getName())->lower();
             $product->setSlug($slug);
@@ -372,6 +384,16 @@ final class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ✅ Vérification de l'unicité du nom
+            $validation = $this->uniqueNameValidator->validate($product, Product::class, 'produit', $hmaService->getId());
+
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/product/new.html.twig', [
+                    'form' => $form->createView(),
+                    'product' => $product
+                ]);
+            }
             // Mettre à jour le slug si le nom a changé
             $newSlug = $this->slugger->slug($product->getName())->lower();
             $product->setSlug($newSlug);

@@ -210,8 +210,8 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
             <h5 class=\"mb-0\"><i class=\"fas fa-filter me-2 text-primary\"></i>Filtres</h5>
         </div>
         <div class=\"card-body\">
-            <form method=\"get\" class=\"row g-3\">
-                <div class=\"col-lg-4 col-md-6\">
+            <form method=\"get\" class=\"row g-3 align-items-end\">
+                <div class=\"col-4\">
                     <label class=\"form-label fw-semibold\">Recherche</label>
                     <div class=\"input-group\">
                         <span class=\"input-group-text bg-white border-end-0\"><i class=\"fas fa-search text-muted\"></i></span>
@@ -221,7 +221,7 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
         yield "\" class=\"form-control border-start-0\" placeholder=\"Nom, description...\">
                     </div>
                 </div>
-                <div class=\"col-lg-3 col-md-6\">
+                <div class=\"col-4\">
                     <label class=\"form-label fw-semibold\">Statut</label>
                     <select name=\"status\" class=\"form-select\">
                         <option value=\"all\" ";
@@ -238,7 +238,7 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
         yield ">Inactifs</option>
                     </select>
                 </div>
-                <div class=\"col-lg-5 d-flex gap-2 align-items-end justify-content-lg-end justify-content-start\">
+                <div class=\"col-4 d-flex gap-2 justify-content-end\">
                     <a href=\"";
         // line 98
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_type_promotion_index");
@@ -253,7 +253,7 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
         </div>
     </div>
 
-    <!-- Grille des types (cartes) -->
+    <!-- Grille des types (cartes) - 4 cartes sur une ligne -->
     <div class=\"row g-4\">
         ";
         // line 111
@@ -262,10 +262,10 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["type"]) {
             // line 112
-            yield "            <div class=\"col-xl-3 col-lg-4 col-md-6 col-sm-12\">
+            yield "            <div class=\"col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12\">
                 <div class=\"card h-100 border-0 shadow-sm hover-shadow transition-all rounded-4 overflow-hidden\">
-                    <div class=\"card-body\">
-                        <div class=\"d-flex justify-content-between align-items-start mb-2\">
+                    <div class=\"card-body p-4\">
+                        <div class=\"d-flex justify-content-between align-items-start mb-3\">
                             <h5 class=\"card-title fw-bold mb-0\">";
             // line 116
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["type"], "name", [], "any", false, false, false, 116), 0, 30), "html", null, true);
@@ -273,62 +273,92 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
                             <span class=\"badge ";
             // line 117
             yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["type"], "isActive", [], "any", false, false, false, 117)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("bg-success") : ("bg-secondary"));
-            yield " px-2 py-1 ms-1 flex-shrink-0\">
+            yield " px-2 py-1 ms-2 flex-shrink-0\">
                                 ";
             // line 118
             yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["type"], "isActive", [], "any", false, false, false, 118)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Actif") : ("Inactif"));
             yield "
                             </span>
                         </div>
-                        <p class=\"card-text small text-muted mb-3\">
+                        <p class=\"card-text text-muted mb-3\" style=\"min-height: 70px;\">
                             ";
             // line 122
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::slice($this->env->getCharset(), ((CoreExtension::getAttribute($this->env, $this->source, $context["type"], "description", [], "any", true, true, false, 122)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["type"], "description", [], "any", false, false, false, 122), "Aucune description")) : ("Aucune description")), 0, 80), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::slice($this->env->getCharset(), ((CoreExtension::getAttribute($this->env, $this->source, $context["type"], "description", [], "any", true, true, false, 122)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["type"], "description", [], "any", false, false, false, 122), "Aucune description")) : ("Aucune description")), 0, 100), "html", null, true);
             yield "
                             ";
             // line 123
-            if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["type"], "description", [], "any", false, false, false, 123)) > 80)) {
+            if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["type"], "description", [], "any", false, false, false, 123)) > 100)) {
                 yield "...";
             }
             // line 124
             yield "                        </p>
                         <div class=\"small text-muted\">
-                            <i class=\"fas fa-calendar-alt me-1\"></i> Créé le ";
+                            <i class=\"fas fa-calendar-alt me-1\"></i> ";
             // line 126
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["type"], "createdAt", [], "any", false, false, false, 126), "d/m/Y"), "html", null, true);
             yield "
                         </div>
                     </div>
-                    <div class=\"card-footer bg-transparent border-0 d-flex justify-content-between gap-2 pt-0 pb-3\">
+                  
+                    <div class=\"card-footer bg-transparent border-0 d-flex justify-content-between gap-2 pt-0 pb-4 px-4\">
                         <a href=\"";
-            // line 130
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_type_promotion_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 130)]), "html", null, true);
-            yield "\" class=\"btn btn-sm btn-outline-primary flex-fill\">
-                            <i class=\"fas fa-edit me-1\"></i> Modifier
+            // line 131
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_type_promotion_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 131)]), "html", null, true);
+            yield "\" class=\"btn btn-sm btn-outline-info flex-fill\">
+                            <i class=\"fas fa-eye me-1\"></i> 
                         </a>
+                        <a href=\"";
+            // line 134
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_type_promotion_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 134)]), "html", null, true);
+            yield "\" class=\"btn btn-sm btn-outline-primary flex-fill\">
+                            <i class=\"fas fa-edit me-1\"></i> 
+                        </a>
+                        <!-- Formulaire Activer/Désactiver -->
+                        <form method=\"post\" action=\"";
+            // line 138
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_type_promotion_toggle_status", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 138)]), "html", null, true);
+            yield "\" class=\"flex-fill\">
+                            <input type=\"hidden\" name=\"_token\" value=\"";
+            // line 139
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("toggle-status" . CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 139))), "html", null, true);
+            yield "\">
+                            <button type=\"submit\" class=\"btn btn-sm ";
+            // line 140
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["type"], "isActive", [], "any", false, false, false, 140)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("btn-outline-warning") : ("btn-outline-success"));
+            yield " w-100\">
+                                <i class=\"fas ";
+            // line 141
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["type"], "isActive", [], "any", false, false, false, 141)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("fa-pause") : ("fa-play"));
+            yield " me-1\"></i>
+                                ";
+            // line 142
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["type"], "isActive", [], "any", false, false, false, 142)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Désactiver") : ("Activer"));
+            yield "
+                            </button>
+                        </form>
                         ";
-            // line 133
+            // line 145
             if ((($tmp = $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN")) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 134
+                // line 146
                 yield "                            <button type=\"button\" class=\"btn btn-sm btn-outline-danger flex-fill\" data-bs-toggle=\"modal\" data-bs-target=\"#deleteModal";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 134), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 146), "html", null, true);
                 yield "\">
-                                <i class=\"fas fa-trash-alt me-1\"></i> Supprimer
+                                <i class=\"fas fa-trash-alt me-1\"></i> 
                             </button>
                         ";
             }
-            // line 138
+            // line 150
             yield "                    </div>
                 </div>
             </div>
 
-            <!-- Modal de suppression pour chaque type -->
+            <!-- Modal de suppression -->
             ";
-            // line 143
+            // line 155
             if ((($tmp = $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN")) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 144
+                // line 156
                 yield "            <div class=\"modal fade\" id=\"deleteModal";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 144), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 156), "html", null, true);
                 yield "\" tabindex=\"-1\" aria-hidden=\"true\">
                 <div class=\"modal-dialog modal-dialog-centered\">
                     <div class=\"modal-content\">
@@ -343,54 +373,54 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
                             <h5>Êtes-vous sûr de vouloir supprimer ce type ?</h5>
                             <p class=\"text-muted\">Cette action est irréversible.</p>
                             ";
-                // line 157
-                if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["type"], "promotions", [], "any", false, false, false, 157)) > 0)) {
-                    // line 158
+                // line 169
+                if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["type"], "promotions", [], "any", false, false, false, 169)) > 0)) {
+                    // line 170
                     yield "                                <div class=\"alert alert-warning mt-3\">
                                     <i class=\"fas fa-exclamation-circle me-2\"></i>
                                     Ce type est utilisé par <strong>";
-                    // line 160
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["type"], "promotions", [], "any", false, false, false, 160)), "html", null, true);
+                    // line 172
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["type"], "promotions", [], "any", false, false, false, 172)), "html", null, true);
                     yield "</strong> promotion(s). Vous ne pouvez pas le supprimer.
                                 </div>
                             ";
                 }
-                // line 163
+                // line 175
                 yield "                        </div>
                         <div class=\"modal-footer border-0\">
                             <button type=\"button\" class=\"btn btn-outline-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
                             ";
-                // line 166
-                if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["type"], "promotions", [], "any", false, false, false, 166)) == 0)) {
-                    // line 167
+                // line 178
+                if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["type"], "promotions", [], "any", false, false, false, 178)) == 0)) {
+                    // line 179
                     yield "                                <form method=\"post\" action=\"";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_type_promotion_delete", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 167)]), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_type_promotion_delete", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 179)]), "html", null, true);
                     yield "\">
                                     <input type=\"hidden\" name=\"_token\" value=\"";
-                    // line 168
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 168))), "html", null, true);
+                    // line 180
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, $context["type"], "id", [], "any", false, false, false, 180))), "html", null, true);
                     yield "\">
                                     <button type=\"submit\" class=\"btn btn-danger\">Supprimer définitivement</button>
                                 </form>
                             ";
                 } else {
-                    // line 172
+                    // line 184
                     yield "                                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Fermer</button>
                             ";
                 }
-                // line 174
+                // line 186
                 yield "                        </div>
                     </div>
                 </div>
             </div>
             ";
             }
-            // line 179
+            // line 191
             yield "        ";
             $context['_iterated'] = true;
         }
         if (!$context['_iterated']) {
-            // line 180
+            // line 192
             yield "            <div class=\"col-12\">
                 <div class=\"card border-0 shadow-sm rounded-4 text-center py-5\">
                     <div class=\"card-body\">
@@ -398,7 +428,7 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
                         <h4 class=\"text-muted\">Aucun type de promotion trouvé</h4>
                         <p class=\"text-muted\">Modifiez vos filtres ou créez un nouveau type.</p>
                         <a href=\"";
-            // line 186
+            // line 198
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_type_promotion_new");
             yield "\" class=\"btn btn-primary mt-2\">
                             <i class=\"fas fa-plus-circle me-2\"></i> Nouveau type
@@ -411,28 +441,28 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['type'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 193
+        // line 205
         yield "    </div>
 
     <!-- Pagination -->
     ";
-        // line 196
-        if (((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 196, $this->source); })()) > 1)) {
-            // line 197
+        // line 208
+        if (((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 208, $this->source); })()) > 1)) {
+            // line 209
             yield "        <nav class=\"mt-5\">
             <ul class=\"pagination justify-content-center\">
                 ";
-            // line 199
+            // line 211
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable(range(1, (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 199, $this->source); })())));
+            $context['_seq'] = CoreExtension::ensureTraversable(range(1, (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 211, $this->source); })())));
             foreach ($context['_seq'] as $context["_key"] => $context["page"]) {
-                // line 200
+                // line 212
                 yield "                    <li class=\"page-item ";
-                yield ((($context["page"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 200, $this->source); })()))) ? ("active") : (""));
+                yield ((($context["page"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 212, $this->source); })()))) ? ("active") : (""));
                 yield "\">
                         <a class=\"page-link\" href=\"";
-                // line 201
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_type_promotion_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 201, $this->source); })()), "request", [], "any", false, false, false, 201), "query", [], "any", false, false, false, 201), "all", [], "any", false, false, false, 201), ["page" => $context["page"]])), "html", null, true);
+                // line 213
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_type_promotion_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 213, $this->source); })()), "request", [], "any", false, false, false, 213), "query", [], "any", false, false, false, 213), "all", [], "any", false, false, false, 213), ["page" => $context["page"]])), "html", null, true);
                 yield "\">";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["page"], "html", null, true);
                 yield "</a>
@@ -442,12 +472,12 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['page'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 204
+            // line 216
             yield "            </ul>
         </nav>
     ";
         }
-        // line 207
+        // line 219
         yield "</div>
 
 <style>
@@ -501,7 +531,7 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  451 => 207,  446 => 204,  435 => 201,  430 => 200,  426 => 199,  422 => 197,  420 => 196,  415 => 193,  402 => 186,  394 => 180,  389 => 179,  382 => 174,  378 => 172,  371 => 168,  366 => 167,  364 => 166,  359 => 163,  353 => 160,  349 => 158,  347 => 157,  330 => 144,  328 => 143,  321 => 138,  313 => 134,  311 => 133,  305 => 130,  298 => 126,  294 => 124,  290 => 123,  286 => 122,  279 => 118,  275 => 117,  271 => 116,  265 => 112,  260 => 111,  244 => 98,  237 => 94,  233 => 93,  229 => 92,  220 => 86,  196 => 65,  182 => 54,  168 => 43,  153 => 30,  144 => 28,  139 => 27,  130 => 25,  126 => 24,  117 => 18,  111 => 15,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  481 => 219,  476 => 216,  465 => 213,  460 => 212,  456 => 211,  452 => 209,  450 => 208,  445 => 205,  432 => 198,  424 => 192,  419 => 191,  412 => 186,  408 => 184,  401 => 180,  396 => 179,  394 => 178,  389 => 175,  383 => 172,  379 => 170,  377 => 169,  360 => 156,  358 => 155,  351 => 150,  343 => 146,  341 => 145,  335 => 142,  331 => 141,  327 => 140,  323 => 139,  319 => 138,  312 => 134,  306 => 131,  298 => 126,  294 => 124,  290 => 123,  286 => 122,  279 => 118,  275 => 117,  271 => 116,  265 => 112,  260 => 111,  244 => 98,  237 => 94,  233 => 93,  229 => 92,  220 => 86,  196 => 65,  182 => 54,  168 => 43,  153 => 30,  144 => 28,  139 => 27,  130 => 25,  126 => 24,  117 => 18,  111 => 15,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -586,15 +616,15 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
             <h5 class=\"mb-0\"><i class=\"fas fa-filter me-2 text-primary\"></i>Filtres</h5>
         </div>
         <div class=\"card-body\">
-            <form method=\"get\" class=\"row g-3\">
-                <div class=\"col-lg-4 col-md-6\">
+            <form method=\"get\" class=\"row g-3 align-items-end\">
+                <div class=\"col-4\">
                     <label class=\"form-label fw-semibold\">Recherche</label>
                     <div class=\"input-group\">
                         <span class=\"input-group-text bg-white border-end-0\"><i class=\"fas fa-search text-muted\"></i></span>
                         <input type=\"text\" name=\"search\" value=\"{{ search }}\" class=\"form-control border-start-0\" placeholder=\"Nom, description...\">
                     </div>
                 </div>
-                <div class=\"col-lg-3 col-md-6\">
+                <div class=\"col-4\">
                     <label class=\"form-label fw-semibold\">Statut</label>
                     <select name=\"status\" class=\"form-select\">
                         <option value=\"all\" {{ status == 'all' ? 'selected' }}>Tous</option>
@@ -602,7 +632,7 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
                         <option value=\"inactive\" {{ status == 'inactive' ? 'selected' }}>Inactifs</option>
                     </select>
                 </div>
-                <div class=\"col-lg-5 d-flex gap-2 align-items-end justify-content-lg-end justify-content-start\">
+                <div class=\"col-4 d-flex gap-2 justify-content-end\">
                     <a href=\"{{ path('app_admin_type_promotion_index') }}\" class=\"btn btn-outline-secondary\">
                         <i class=\"fas fa-undo-alt me-1\"></i> Effacer
                     </a>
@@ -614,40 +644,52 @@ class __TwigTemplate_e25df14144c623136d3e30f217499480 extends Template
         </div>
     </div>
 
-    <!-- Grille des types (cartes) -->
+    <!-- Grille des types (cartes) - 4 cartes sur une ligne -->
     <div class=\"row g-4\">
         {% for type in types %}
-            <div class=\"col-xl-3 col-lg-4 col-md-6 col-sm-12\">
+            <div class=\"col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12\">
                 <div class=\"card h-100 border-0 shadow-sm hover-shadow transition-all rounded-4 overflow-hidden\">
-                    <div class=\"card-body\">
-                        <div class=\"d-flex justify-content-between align-items-start mb-2\">
+                    <div class=\"card-body p-4\">
+                        <div class=\"d-flex justify-content-between align-items-start mb-3\">
                             <h5 class=\"card-title fw-bold mb-0\">{{ type.name|slice(0, 30) }}</h5>
-                            <span class=\"badge {{ type.isActive ? 'bg-success' : 'bg-secondary' }} px-2 py-1 ms-1 flex-shrink-0\">
+                            <span class=\"badge {{ type.isActive ? 'bg-success' : 'bg-secondary' }} px-2 py-1 ms-2 flex-shrink-0\">
                                 {{ type.isActive ? 'Actif' : 'Inactif' }}
                             </span>
                         </div>
-                        <p class=\"card-text small text-muted mb-3\">
-                            {{ type.description|default('Aucune description')|slice(0, 80) }}
-                            {% if type.description|length > 80 %}...{% endif %}
+                        <p class=\"card-text text-muted mb-3\" style=\"min-height: 70px;\">
+                            {{ type.description|default('Aucune description')|slice(0, 100) }}
+                            {% if type.description|length > 100 %}...{% endif %}
                         </p>
                         <div class=\"small text-muted\">
-                            <i class=\"fas fa-calendar-alt me-1\"></i> Créé le {{ type.createdAt|date('d/m/Y') }}
+                            <i class=\"fas fa-calendar-alt me-1\"></i> {{ type.createdAt|date('d/m/Y') }}
                         </div>
                     </div>
-                    <div class=\"card-footer bg-transparent border-0 d-flex justify-content-between gap-2 pt-0 pb-3\">
-                        <a href=\"{{ path('app_admin_type_promotion_edit', {id: type.id}) }}\" class=\"btn btn-sm btn-outline-primary flex-fill\">
-                            <i class=\"fas fa-edit me-1\"></i> Modifier
+                  
+                    <div class=\"card-footer bg-transparent border-0 d-flex justify-content-between gap-2 pt-0 pb-4 px-4\">
+                        <a href=\"{{ path('app_admin_type_promotion_show', {id: type.id}) }}\" class=\"btn btn-sm btn-outline-info flex-fill\">
+                            <i class=\"fas fa-eye me-1\"></i> 
                         </a>
+                        <a href=\"{{ path('app_admin_type_promotion_edit', {id: type.id}) }}\" class=\"btn btn-sm btn-outline-primary flex-fill\">
+                            <i class=\"fas fa-edit me-1\"></i> 
+                        </a>
+                        <!-- Formulaire Activer/Désactiver -->
+                        <form method=\"post\" action=\"{{ path('app_admin_type_promotion_toggle_status', {id: type.id}) }}\" class=\"flex-fill\">
+                            <input type=\"hidden\" name=\"_token\" value=\"{{ csrf_token('toggle-status' ~ type.id) }}\">
+                            <button type=\"submit\" class=\"btn btn-sm {{ type.isActive ? 'btn-outline-warning' : 'btn-outline-success' }} w-100\">
+                                <i class=\"fas {{ type.isActive ? 'fa-pause' : 'fa-play' }} me-1\"></i>
+                                {{ type.isActive ? 'Désactiver' : 'Activer' }}
+                            </button>
+                        </form>
                         {% if is_granted('ROLE_ADMIN') %}
                             <button type=\"button\" class=\"btn btn-sm btn-outline-danger flex-fill\" data-bs-toggle=\"modal\" data-bs-target=\"#deleteModal{{ type.id }}\">
-                                <i class=\"fas fa-trash-alt me-1\"></i> Supprimer
+                                <i class=\"fas fa-trash-alt me-1\"></i> 
                             </button>
                         {% endif %}
                     </div>
                 </div>
             </div>
 
-            <!-- Modal de suppression pour chaque type -->
+            <!-- Modal de suppression -->
             {% if is_granted('ROLE_ADMIN') %}
             <div class=\"modal fade\" id=\"deleteModal{{ type.id }}\" tabindex=\"-1\" aria-hidden=\"true\">
                 <div class=\"modal-dialog modal-dialog-centered\">

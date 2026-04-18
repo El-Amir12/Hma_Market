@@ -1,0 +1,60 @@
+{# templates/sale/orders/receipts_content.html.twig #}
+{% for order in orders %}
+    <div class="receipt" style="page-break-after: always; margin-bottom: 20px; border-bottom: 1px dashed #ccc; padding-bottom: 20px;">
+        <div class="receipt-header">
+            <h2>{{ company.companyName }}</h2>
+            <p>{{ company.address|default('Adresse non renseignée') }}</p>
+            <p>Tél: {{ company.phone|default('Non renseigné') }}</p>
+            <div class="receipt-line"></div>
+            <p><strong>Reçu N°:</strong> {{ order.orderNumber }}</p>
+            <p><strong>Date:</strong> {{ order.createdAt|date('d/m/Y H:i') }}</p>
+            <p><strong>Caissier:</strong> {{ order.user.fullName|default(order.user.email) }}</p>
+            <div class="receipt-line"></div>
+        </div>
+
+        <div class="receipt-body">
+            <p><strong>Client:</strong> {{ order.customerName }}</p>
+            {% if order.customerPhone %}
+                <p><strong>Tél:</strong> {{ order.customerPhone }}</p>
+            {% endif %}
+            <div class="receipt-line"></div>
+            
+            <table class="receipt-items">
+                <thead>
+                    <tr>
+                        <th>Article</th>
+                        <th>Qté</th>
+                        <th>Prix</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.orderItems %}
+                        <tr>
+                            <td>{{ item.productName }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.unitPrice|number_format(0, ',', ' ') }} FCFA</td>
+                            <td>{{ item.totalPrice|number_format(0, ',', ' ') }} FCFA</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="receipt-line"></div>
+            
+            <div class="receipt-total">
+                <p><strong>Total:</strong> {{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</p>
+                <p><strong>Payé:</strong> {{ order.amountPaid|number_format(0, ',', ' ') }} FCFA</p>
+                <p><strong>Monnaie:</strong> {{ order.changeAmount|number_format(0, ',', ' ') }} FCFA</p>
+                <p><strong>Mode:</strong> {{ order.paymentMethod|replace({'_': ' '})|capitalize }}</p>
+            </div>
+        </div>
+
+        <div class="receipt-footer">
+            <div class="receipt-line"></div>
+            <p>Merci de votre visite !</p>
+            <p>{{ company.companyName }}</p>
+            <small>Document généré par HMA Market</small>
+        </div>
+    </div>
+{% endfor %}

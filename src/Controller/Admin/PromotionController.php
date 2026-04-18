@@ -12,6 +12,7 @@ use App\Entity\HmaService;
 use App\Entity\User;
 use App\Entity\TypePromotion;
 use App\Form\PromotionType;
+use App\Service\UniqueNameValidator;
 use App\Repository\PromotionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,11 +26,10 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 #[Route('/admin/promotion')]
 class PromotionController extends AbstractController
 {
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        private readonly UniqueNameValidator $uniqueNameValidator,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     /**
@@ -367,6 +367,16 @@ class PromotionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ✅ Validation de l'unicité
+            $validation = $this->uniqueNameValidator->validate($promotion, Promotion::class, 'promotion', $hmaService->getId());
+            
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/promotion/new.html.twig', [
+                    'form' => $form->createView(),
+                    'promotion' => $promotion
+                ]);
+            }
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $newFilename = uniqid() . '.' . $imageFile->guessExtension();
@@ -423,6 +433,16 @@ class PromotionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ✅ Validation de l'unicité
+            $validation = $this->uniqueNameValidator->validate($promotion, Promotion::class, 'promotion', $hmaService->getId());
+            
+            if (!$validation['valid']) {
+                $this->addFlash('error', $validation['message']);
+                return $this->render('admin/promotion/edit.html.twig', [
+                    'form' => $form->createView(),
+                    'promotion' => $promotion
+                ]);
+            }
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 if ($oldImage) {
