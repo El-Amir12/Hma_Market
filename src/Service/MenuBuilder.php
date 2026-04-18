@@ -25,10 +25,8 @@ class MenuBuilder
 
         $menus = [];
         
-        // Menu commun à tous les utilisateurs connectés
         $menus[] = $this->getDashboardMenuItem();
         
-        // Ajout des menus selon la hiérarchie des rôles
         if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             $menus = array_merge($menus, $this->getSuperAdminMenu());
         }
@@ -39,7 +37,6 @@ class MenuBuilder
             $menus = array_merge($menus, $this->getManagerMenu());
         }
         
-        // Rôles indépendants (peuvent être combinés avec d'autres)
         if ($this->security->isGranted('ROLE_STOCK_MANAGER') && !$this->security->isGranted('ROLE_MANAGER')) {
             $menus = array_merge($menus, $this->getStockManagerMenu());
         }
@@ -48,14 +45,12 @@ class MenuBuilder
             $menus = array_merge($menus, $this->getCashierMenu());
         }
         
-        // Menu rapport (uniquement pour les rôles autorisés)
         if ($this->security->isGranted('ROLE_ADMIN') || 
             $this->security->isGranted('ROLE_MANAGER') || 
             $this->security->isGranted('ROLE_STOCK_MANAGER')) {
             $menus = array_merge($menus, $this->getReportsMenu());
         }
         
-        // Menu profil
         $menus = array_merge($menus, $this->getProfileMenu());
         
         return $menus;
@@ -74,6 +69,11 @@ class MenuBuilder
     private function isRestaurant(): bool
     {
         return $this->getCompanyType() === 'restaurant';
+    }
+
+    private function isRetail(): bool
+    {
+        return $this->getCompanyType() === 'retail';
     }
 
     private function getPublicMenu(): array
@@ -99,25 +99,60 @@ class MenuBuilder
     }
 
     /**
-     * Menu VENTES selon le type d'entreprise
+     * ✅ NOUVEAU : Menu VENTES dropdown avec sous-menus
      */
     private function getSalesMenu(): array
     {
-        if ($this->isRestaurant()) {
-            return [
+        $salesChildren = [
+            [
+                'type' => 'link',
+                'route' => $this->isRestaurant() ? 'restaurant_sale_index' : 'retail_sale_index',
+                'label' => 'Nouvelle vente',
+                'icon' => 'fas fa-plus-circle'
+            ],
+            [
                 'type' => 'link',
                 'route' => 'app_orders_index',
-                'label' => 'Vente',
-                'icon' => 'fas fa-utensils'
-            ];
-        } else {
-            return [
+                'label' => 'Historique des ventes',
+                'icon' => 'fas fa-history'
+            ],
+            [
+                'type' => 'divider'
+            ],
+            [
                 'type' => 'link',
-                'route' => 'retail_sale_index',
-                'label' => 'Vente rapide',
-                'icon' => 'fas fa-shopping-cart'
+                'route' => 'app_orders_index',
+                'label' => 'Retours & Avoirs',
+                'icon' => 'fas fa-undo-alt',
+                'badge' => 'new'
+            ]
+        ];
+
+        // Réimpression des tickets (uniquement pour restaurant)
+        if ($this->isRestaurant()) {
+            $salesChildren[] = [
+                'type' => 'link',
+                'route' => 'app_orders_index',
+                'label' => 'Réimpression tickets',
+                'icon' => 'fas fa-print'
             ];
         }
+
+        // Statistiques des ventes (optionnel)
+        $salesChildren[] = [
+            'type' => 'link',
+            'route' => 'app_orders_index',
+            'label' => 'Statistiques',
+            'icon' => 'fas fa-chart-line',
+            'coming_soon' => true
+        ];
+
+        return [
+            'type' => 'dropdown',
+            'label' => 'Ventes',
+            'icon' => 'fas fa-shopping-cart',
+            'children' => $salesChildren
+        ];
     }
 
     private function getSuperAdminMenu(): array
@@ -322,14 +357,14 @@ class MenuBuilder
             ]
         ];
 
-        // Section VENTES (selon le type d'entreprise)
+        // ✅ SECTION VENTES (dropdown)
         $menu[] = [
             'type' => 'section',
             'label' => 'VENTES'
         ];
         $menu[] = $this->getSalesMenu();
 
-        // Section Catalogue (produits) pour tous les types d'entreprises
+        // Section Catalogue (produits)
         $catalogueChildren = [
             [
                 'type' => 'link',
@@ -354,7 +389,6 @@ class MenuBuilder
             ],
         ];
 
-        // Si ce n'est pas un restaurant, on ajoute les promotions dans Catalogue
         if (!$this->isRestaurant()) {
             $catalogueChildren[] = [
                 'type' => 'link',
@@ -386,7 +420,6 @@ class MenuBuilder
             'children' => $catalogueChildren
         ];
 
-        // Si restaurant, on ajoute la section Menu (plats) avec ses propres promotions
         if ($this->isRestaurant()) {
             $menuChildren = [
                 [
@@ -458,14 +491,13 @@ class MenuBuilder
             ]
         ];
 
-        // Section VENTES (selon le type d'entreprise)
+        // ✅ SECTION VENTES (dropdown)
         $menu[] = [
             'type' => 'section',
             'label' => 'VENTES'
         ];
         $menu[] = $this->getSalesMenu();
 
-        // Section Produits pour tous
         $produitsChildren = [
             [
                 'type' => 'link',
@@ -518,7 +550,6 @@ class MenuBuilder
             ],
         ];
 
-        // Si ce n'est pas un restaurant, on ajoute les promotions dans Produits
         if (!$this->isRestaurant()) {
             $produitsChildren[] = [
                 'type' => 'link',
@@ -550,7 +581,6 @@ class MenuBuilder
             'children' => $produitsChildren
         ];
 
-        // Si restaurant, on ajoute la section Menu
         if ($this->isRestaurant()) {
             $menuChildren = [
                 [
@@ -636,13 +666,6 @@ class MenuBuilder
                     [
                         'type' => 'link',
                         'route' => 'app_user_index',
-                        'label' => 'Mouvements',
-                        'icon' => 'fas fa-exchange-alt',
-                        'coming_soon' => true
-                    ],
-                    [
-                        'type' => 'link',
-                        'route' => 'app_user_index',
                         'label' => 'Alertes stock',
                         'icon' => 'fas fa-exclamation-triangle',
                         'coming_soon' => true
@@ -696,21 +719,20 @@ class MenuBuilder
             ],
             [
                 'type' => 'link',
-                'route' => 'retail_sale_index',
+                'route' => $this->isRestaurant() ? 'restaurant_sale_index' : 'retail_sale_index',
                 'label' => 'Caisse',
                 'icon' => 'fas fa-cash-register',
                 'coming_soon' => false
             ]
         ];
 
-        // Section VENTES (selon le type d'entreprise)
+        // ✅ SECTION VENTES (dropdown)
         $menu[] = [
             'type' => 'section',
             'label' => 'VENTES'
         ];
         $menu[] = $this->getSalesMenu();
 
-        // Section Catalogue pour caissier (non restaurant)
         if (!$this->isRestaurant()) {
             $catalogueChildren = [
                 [
@@ -772,7 +794,6 @@ class MenuBuilder
             ];
         }
 
-        // Section Restauration pour caissier (restaurant)
         if ($this->isRestaurant()) {
             $restaurantChildren = [
                 [

@@ -1045,6 +1045,14 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="App\Repository\ReturnItemRepository" class="App\Repository\ReturnItemRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\ReturnOrderRepository" class="App\Repository\ReturnOrderRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
     <service id="App\Repository\StockBatchRepository" class="App\Repository\StockBatchRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
@@ -6157,7 +6165,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.kIjDPYN"/>
+      <argument type="service" id=".service_locator.OT4Pb0d"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -9272,6 +9280,10 @@
     <service id=".abstract.instanceof.App\Repository\RecipeRepository" class="App\Repository\RecipeRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ResetPasswordRequestRepository" class="App\Repository\ResetPasswordRequestRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\ResetPasswordRequestRepository" class="App\Repository\ResetPasswordRequestRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ReturnItemRepository" class="App\Repository\ReturnItemRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\ReturnItemRepository" class="App\Repository\ReturnItemRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ReturnOrderRepository" class="App\Repository\ReturnOrderRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\ReturnOrderRepository" class="App\Repository\ReturnOrderRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\StockBatchRepository" class="App\Repository\StockBatchRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\StockBatchRepository" class="App\Repository\StockBatchRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\StockMovementRepository" class="App\Repository\StockMovementRepository" autowire="true" abstract="true"/>
@@ -10848,7 +10860,7 @@
         <argument key="turbo.doctrine.event_listener" type="service_closure" id="turbo.doctrine.event_listener"/>
       </argument>
     </service>
-    <service id=".service_locator.kIjDPYN" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.OT4Pb0d" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\CategoryRecipeRepository" type="service_closure" id="App\Repository\CategoryRecipeRepository"/>
@@ -10872,6 +10884,8 @@
         <argument key="App\Repository\RecipeItemRepository" type="service_closure" id="App\Repository\RecipeItemRepository"/>
         <argument key="App\Repository\RecipeRepository" type="service_closure" id="App\Repository\RecipeRepository"/>
         <argument key="App\Repository\ResetPasswordRequestRepository" type="service_closure" id="App\Repository\ResetPasswordRequestRepository"/>
+        <argument key="App\Repository\ReturnItemRepository" type="service_closure" id="App\Repository\ReturnItemRepository"/>
+        <argument key="App\Repository\ReturnOrderRepository" type="service_closure" id="App\Repository\ReturnOrderRepository"/>
         <argument key="App\Repository\StockBatchRepository" type="service_closure" id="App\Repository\StockBatchRepository"/>
         <argument key="App\Repository\StockMovementRepository" type="service_closure" id="App\Repository\StockMovementRepository"/>
         <argument key="App\Repository\SubscriptionPlanRepository" type="service_closure" id="App\Repository\SubscriptionPlanRepository"/>

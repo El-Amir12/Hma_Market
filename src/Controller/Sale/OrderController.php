@@ -695,15 +695,13 @@ class OrderController extends AbstractController
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
         
-        // Calculer la hauteur en fonction du nombre d'articles
-        $itemCount = count($order->getOrderItems());
-        // Hauteur de base: 300 points, +20 points par article
-        $height = 300 + ($itemCount * 20);
-        
-        // Largeur 80mm
+        // ✅ FORCER UNE SEULE PAGE - Hauteur automatique très grande
+        // Largeur 80mm = 226.77 points
         $width = 226.77;
+        // Hauteur très grande pour que tout tienne sur une page
+        $height = 800;
         
-        // Définir le papier
+        // Définir le papier avec une hauteur fixe suffisante
         $dompdf->setPaper([0, 0, $width, $height], 'portrait');
         $dompdf->render();
         
