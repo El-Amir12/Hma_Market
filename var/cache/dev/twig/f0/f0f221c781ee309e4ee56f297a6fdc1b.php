@@ -1027,25 +1027,156 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                 box-shadow: 0 0 0 0 rgba(4, 99, 241, 0);
             }
         }
+
+        /* ==================== MODAL LOADING EFFECTS UNIVERSELLES ==================== */
+
+        /* Animation d'entrée pour tous les modals */
+        .modal.fade .modal-dialog {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.95);
+            opacity: 0;
+        }
+
+        .modal.fade.show .modal-dialog {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Overlay avec fond animé */
+        .modal-backdrop {
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-backdrop.fade {
+            opacity: 0;
+        }
+
+        .modal-backdrop.fade.show {
+            opacity: 0.7;
+        }
+
+        /* Spinner de chargement intégré - visible automatiquement */
+        .modal-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1060;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-loading .spinner-container {
+            text-align: center;
+        }
+
+        .modal-loading .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.25rem;
+            color: var(--primary-color);
+        }
+
+        .modal-loading .loading-text {
+            margin-top: 1rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Animation d'entrée du contenu */
+        .modal-content {
+            animation: modalSlideIn 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Effet de pulse pour les boutons */
+        .modal-footer .btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .modal-footer .btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Scroll personnalisé */
+        .modal-body {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .modal-dialog {
+                margin: 1rem;
+            }
+            
+            .modal-content {
+                border-radius: 16px;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .modal-footer .btn {
+                width: 100%;
+                margin: 0;
+            }
+        }
     </style>
     
     ";
-        // line 975
+        // line 1106
         yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
-        // line 976
+        // line 1107
         yield "</head>
 <body>
     ";
-        // line 979
+        // line 1110
         yield "    ";
-        yield from $this->load("components/_session_toast.html.twig", 979)->unwrap()->yield($context);
-        // line 980
+        yield from $this->load("components/_session_toast.html.twig", 1110)->unwrap()->yield($context);
+        // line 1111
         yield "    
     ";
-        // line 982
+        // line 1113
         yield "    ";
-        yield from $this->load("components/_toast.html.twig", 982)->unwrap()->yield($context);
-        // line 983
+        yield from $this->load("components/_toast.html.twig", 1113)->unwrap()->yield($context);
+        // line 1114
         yield "    
     <!-- Navigation principale - SIMPLIFIÉE -->
     <nav class=\"navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top\">
@@ -1057,70 +1188,70 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
             
             <!-- À GAUCHE : Logo et nom de l'entreprise - VERSION SÉCURISÉE -->
             <a class=\"navbar-brand d-flex align-items-center\" href=\"";
-        // line 993
+        // line 1124
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_dashboard");
         yield "\">
                 <div class=\"company-logo\" id=\"companyLogo\">
                     ";
-        // line 995
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 995, $this->source); })()), "user", [], "any", false, false, false, 995) && CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 995, $this->source); })()), "user", [], "any", false, false, false, 995), "hasCompany", [], "any", false, false, false, 995))) {
-            // line 996
+        // line 1126
+        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1126, $this->source); })()), "user", [], "any", false, false, false, 1126) && CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1126, $this->source); })()), "user", [], "any", false, false, false, 1126), "hasCompany", [], "any", false, false, false, 1126))) {
+            // line 1127
             yield "                        ";
-            // line 997
+            // line 1128
             yield "                        ";
-            $context["companyName"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 997, $this->source); })()), "user", [], "any", false, false, false, 997), "companyDisplayName", [], "any", false, false, false, 997);
-            // line 998
+            $context["companyName"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1128, $this->source); })()), "user", [], "any", false, false, false, 1128), "companyDisplayName", [], "any", false, false, false, 1128);
+            // line 1129
             yield "                        ";
-            $context["initial"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 998, $this->source); })()), "user", [], "any", false, false, false, 998), "companyInitial", [], "any", false, false, false, 998);
-            // line 999
+            $context["initial"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1129, $this->source); })()), "user", [], "any", false, false, false, 1129), "companyInitial", [], "any", false, false, false, 1129);
+            // line 1130
             yield "                        ";
-            $context["logo"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 999, $this->source); })()), "user", [], "any", false, false, false, 999), "companyLogo", [], "any", false, false, false, 999);
-            // line 1000
+            $context["logo"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1130, $this->source); })()), "user", [], "any", false, false, false, 1130), "companyLogo", [], "any", false, false, false, 1130);
+            // line 1131
             yield "                        
                         ";
-            // line 1001
-            if ((($tmp = (isset($context["logo"]) || array_key_exists("logo", $context) ? $context["logo"] : (function () { throw new RuntimeError('Variable "logo" does not exist.', 1001, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 1002
+            // line 1132
+            if ((($tmp = (isset($context["logo"]) || array_key_exists("logo", $context) ? $context["logo"] : (function () { throw new RuntimeError('Variable "logo" does not exist.', 1132, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 1133
                 yield "                            <img src=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/logos/" . (isset($context["logo"]) || array_key_exists("logo", $context) ? $context["logo"] : (function () { throw new RuntimeError('Variable "logo" does not exist.', 1002, $this->source); })()))), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/logos/" . (isset($context["logo"]) || array_key_exists("logo", $context) ? $context["logo"] : (function () { throw new RuntimeError('Variable "logo" does not exist.', 1133, $this->source); })()))), "html", null, true);
                 yield "\" 
                                 alt=\"";
-                // line 1003
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["companyName"]) || array_key_exists("companyName", $context) ? $context["companyName"] : (function () { throw new RuntimeError('Variable "companyName" does not exist.', 1003, $this->source); })()), "html", null, true);
+                // line 1134
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["companyName"]) || array_key_exists("companyName", $context) ? $context["companyName"] : (function () { throw new RuntimeError('Variable "companyName" does not exist.', 1134, $this->source); })()), "html", null, true);
                 yield "\"
                                 class=\"logo-img\"
                                 data-initial=\"";
-                // line 1005
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1005, $this->source); })()), "html", null, true);
+                // line 1136
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1136, $this->source); })()), "html", null, true);
                 yield "\">
                         ";
             } else {
-                // line 1007
+                // line 1138
                 yield "                            <img src=\"";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("uploads/logos/logo.png"), "html", null, true);
                 yield "\" 
                                 alt=\"";
-                // line 1008
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["companyName"]) || array_key_exists("companyName", $context) ? $context["companyName"] : (function () { throw new RuntimeError('Variable "companyName" does not exist.', 1008, $this->source); })()), "html", null, true);
+                // line 1139
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["companyName"]) || array_key_exists("companyName", $context) ? $context["companyName"] : (function () { throw new RuntimeError('Variable "companyName" does not exist.', 1139, $this->source); })()), "html", null, true);
                 yield "\"
                                 class=\"logo-img\"
                                 data-initial=\"";
-                // line 1010
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1010, $this->source); })()), "html", null, true);
+                // line 1141
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1141, $this->source); })()), "html", null, true);
                 yield "\"
                                 onerror=\"this.style.display='none'; this.nextElementSibling.style.display='flex';\">
                             <div class=\"logo-fallback\" style=\"display: none;\">
                                 ";
-                // line 1013
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1013, $this->source); })()), "html", null, true);
+                // line 1144
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1144, $this->source); })()), "html", null, true);
                 yield "
                             </div>
                         ";
             }
-            // line 1016
+            // line 1147
             yield "                    ";
         } else {
-            // line 1017
+            // line 1148
             yield "                        <img src=\"";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("uploads/logos/logo.png"), "html", null, true);
             yield "\" 
@@ -1133,13 +1264,13 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                         </div>
                     ";
         }
-        // line 1026
+        // line 1157
         yield "                </div>
                 
                 <div class=\"company-name\" id=\"companyName\">
                     ";
-        // line 1029
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1029, $this->source); })()), "user", [], "any", false, false, false, 1029)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1029, $this->source); })()), "user", [], "any", false, false, false, 1029), "companyDisplayName", [], "any", false, false, false, 1029), "html", null, true)) : ("HMA MARKET"));
+        // line 1160
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1160, $this->source); })()), "user", [], "any", false, false, false, 1160)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1160, $this->source); })()), "user", [], "any", false, false, false, 1160), "companyDisplayName", [], "any", false, false, false, 1160), "html", null, true)) : ("HMA MARKET"));
         yield "
                 </div>
             </a>
@@ -1153,8 +1284,8 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                            name=\"search\" 
                            placeholder=\"Rechercher...\" 
                            value=\"";
-        // line 1041
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1041, $this->source); })()), "request", [], "any", false, false, false, 1041), "query", [], "any", false, false, false, 1041), "get", ["search", ""], "method", false, false, false, 1041), "html", null, true);
+        // line 1172
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1172, $this->source); })()), "request", [], "any", false, false, false, 1172), "query", [], "any", false, false, false, 1172), "get", ["search", ""], "method", false, false, false, 1172), "html", null, true);
         yield "\"
                            autocomplete=\"off\">
                     <button type=\"button\" id=\"universalSearchClear\" class=\"universal-search-clear\">
@@ -1178,8 +1309,8 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                                name=\"search\" 
                                placeholder=\"Rechercher...\" 
                                value=\"";
-        // line 1063
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1063, $this->source); })()), "request", [], "any", false, false, false, 1063), "query", [], "any", false, false, false, 1063), "get", ["search", ""], "method", false, false, false, 1063), "html", null, true);
+        // line 1194
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1194, $this->source); })()), "request", [], "any", false, false, false, 1194), "query", [], "any", false, false, false, 1194), "get", ["search", ""], "method", false, false, false, 1194), "html", null, true);
         yield "\"
                                autocomplete=\"off\">
                         <button type=\"button\" id=\"universalSearchClearMobile\" class=\"universal-search-clear\">
@@ -1196,15 +1327,15 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
 
                     <!-- Bouton Upgrade (visible pour admin/manager si l'entreprise n'a pas déjà le plan premium) -->
                     ";
-        // line 1078
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1078, $this->source); })()), "user", [], "any", false, false, false, 1078) && CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1078, $this->source); })()), "user", [], "any", false, false, false, 1078), "hmaServiceId", [], "any", false, false, false, 1078))) {
-            // line 1079
+        // line 1209
+        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1209, $this->source); })()), "user", [], "any", false, false, false, 1209) && CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1209, $this->source); })()), "user", [], "any", false, false, false, 1209), "hmaServiceId", [], "any", false, false, false, 1209))) {
+            // line 1210
             yield "                    ";
-            $context["service"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1079, $this->source); })()), "user", [], "any", false, false, false, 1079), "hmaServiceId", [], "any", false, false, false, 1079);
-            // line 1080
+            $context["service"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1210, $this->source); })()), "user", [], "any", false, false, false, 1210), "hmaServiceId", [], "any", false, false, false, 1210);
+            // line 1211
             yield "                    ";
-            if ((($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") || $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_MANAGER")) && (CoreExtension::getAttribute($this->env, $this->source, (isset($context["service"]) || array_key_exists("service", $context) ? $context["service"] : (function () { throw new RuntimeError('Variable "service" does not exist.', 1080, $this->source); })()), "currentPlan", [], "any", false, false, false, 1080) != "premium"))) {
-                // line 1081
+            if ((($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") || $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_MANAGER")) && (CoreExtension::getAttribute($this->env, $this->source, (isset($context["service"]) || array_key_exists("service", $context) ? $context["service"] : (function () { throw new RuntimeError('Variable "service" does not exist.', 1211, $this->source); })()), "currentPlan", [], "any", false, false, false, 1211) != "premium"))) {
+                // line 1212
                 yield "                        <a href=\"";
                 yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_subscription_plans");
                 yield "\" class=\"btn-upgrade me-3 ms-3\">
@@ -1212,108 +1343,108 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                         </a>
                     ";
             }
-            // line 1085
+            // line 1216
             yield "                ";
         }
-        // line 1086
+        // line 1217
         yield "
                     <!-- Utilisateur connecté -->
                     ";
-        // line 1088
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1088, $this->source); })()), "user", [], "any", false, false, false, 1088)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 1089
+        // line 1219
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1219, $this->source); })()), "user", [], "any", false, false, false, 1219)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 1220
             yield "                    <li class=\"nav-item dropdown\">
                         <a class=\"nav-link dropdown-toggle d-flex align-items-center\" href=\"#\" role=\"button\" data-bs-toggle=\"dropdown\">
                             <div class=\"user-avatar me-2\" id=\"userAvatar\">
                                 ";
-            // line 1092
-            $context["user"] = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1092, $this->source); })()), "user", [], "any", false, false, false, 1092);
-            // line 1093
+            // line 1223
+            $context["user"] = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1223, $this->source); })()), "user", [], "any", false, false, false, 1223);
+            // line 1224
             yield "                                ";
-            $context["userName"] = ((CoreExtension::getAttribute($this->env, $this->source, ($context["user"] ?? null), "fullName", [], "any", true, true, false, 1093)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1093, $this->source); })()), "fullName", [], "any", false, false, false, 1093), "Utilisateur")) : ("Utilisateur"));
-            // line 1094
+            $context["userName"] = ((CoreExtension::getAttribute($this->env, $this->source, ($context["user"] ?? null), "fullName", [], "any", true, true, false, 1224)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1224, $this->source); })()), "fullName", [], "any", false, false, false, 1224), "Utilisateur")) : ("Utilisateur"));
+            // line 1225
             yield "                                ";
-            $context["initial"] = Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), (isset($context["userName"]) || array_key_exists("userName", $context) ? $context["userName"] : (function () { throw new RuntimeError('Variable "userName" does not exist.', 1094, $this->source); })())));
-            // line 1095
+            $context["initial"] = Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), (isset($context["userName"]) || array_key_exists("userName", $context) ? $context["userName"] : (function () { throw new RuntimeError('Variable "userName" does not exist.', 1225, $this->source); })())));
+            // line 1226
             yield "                                
                                 ";
-            // line 1096
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1096, $this->source); })()), "photo", [], "any", false, false, false, 1096)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 1097
+            // line 1227
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1227, $this->source); })()), "photo", [], "any", false, false, false, 1227)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 1228
                 yield "                                    <img src=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1097, $this->source); })()), "photo", [], "any", false, false, false, 1097))), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1228, $this->source); })()), "photo", [], "any", false, false, false, 1228))), "html", null, true);
                 yield "\" 
                                          alt=\"";
-                // line 1098
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["userName"]) || array_key_exists("userName", $context) ? $context["userName"] : (function () { throw new RuntimeError('Variable "userName" does not exist.', 1098, $this->source); })()), "html", null, true);
+                // line 1229
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["userName"]) || array_key_exists("userName", $context) ? $context["userName"] : (function () { throw new RuntimeError('Variable "userName" does not exist.', 1229, $this->source); })()), "html", null, true);
                 yield "\"
                                          class=\"avatar-img\"
                                          data-initial=\"";
-                // line 1100
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1100, $this->source); })()), "html", null, true);
+                // line 1231
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1231, $this->source); })()), "html", null, true);
                 yield "\">
                                     <div class=\"avatar-initials\" style=\"display: none;\">
                                         ";
-                // line 1102
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1102, $this->source); })()), "html", null, true);
+                // line 1233
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1233, $this->source); })()), "html", null, true);
                 yield "
                                     </div>
                                 ";
             } else {
-                // line 1105
+                // line 1236
                 yield "                                    <div class=\"avatar-initials\">
                                         ";
-                // line 1106
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1106, $this->source); })()), "html", null, true);
+                // line 1237
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1237, $this->source); })()), "html", null, true);
                 yield "
                                     </div>
                                 ";
             }
-            // line 1109
+            // line 1240
             yield "                            </div>
                             <div class=\"d-none d-md-block text-start\">
                                 <div class=\"fw-medium\" id=\"userName\">
                                     ";
-            // line 1112
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["app"] ?? null), "user", [], "any", false, true, false, 1112), "fullName", [], "any", true, true, false, 1112)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1112, $this->source); })()), "user", [], "any", false, false, false, 1112), "fullName", [], "any", false, false, false, 1112), "Utilisateur")) : ("Utilisateur")), "html", null, true);
+            // line 1243
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["app"] ?? null), "user", [], "any", false, true, false, 1243), "fullName", [], "any", true, true, false, 1243)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1243, $this->source); })()), "user", [], "any", false, false, false, 1243), "fullName", [], "any", false, false, false, 1243), "Utilisateur")) : ("Utilisateur")), "html", null, true);
             yield "
                                 </div>
                                 <small class=\"text-muted\">
                                     ";
-            // line 1115
-            $context["user"] = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1115, $this->source); })()), "user", [], "any", false, false, false, 1115);
-            // line 1116
+            // line 1246
+            $context["user"] = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1246, $this->source); })()), "user", [], "any", false, false, false, 1246);
+            // line 1247
             yield "                                    ";
-            if (CoreExtension::inFilter("ROLE_ADMIN", CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1116, $this->source); })()), "roles", [], "any", false, false, false, 1116))) {
-                // line 1117
+            if (CoreExtension::inFilter("ROLE_ADMIN", CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1247, $this->source); })()), "roles", [], "any", false, false, false, 1247))) {
+                // line 1248
                 yield "                                        <i class=\"bi bi-shield-check text-primary me-1\"></i>Administrateur
                                     ";
-            } elseif (CoreExtension::inFilter("ROLE_MANAGER", CoreExtension::getAttribute($this->env, $this->source,             // line 1118
-(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1118, $this->source); })()), "roles", [], "any", false, false, false, 1118))) {
-                // line 1119
+            } elseif (CoreExtension::inFilter("ROLE_MANAGER", CoreExtension::getAttribute($this->env, $this->source,             // line 1249
+(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1249, $this->source); })()), "roles", [], "any", false, false, false, 1249))) {
+                // line 1250
                 yield "                                        <i class=\"bi bi-graph-up text-success me-1\"></i>Gestionnaire
                                     ";
-            } elseif (CoreExtension::inFilter("ROLE_STOCK_MANAGER", CoreExtension::getAttribute($this->env, $this->source,             // line 1120
-(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1120, $this->source); })()), "roles", [], "any", false, false, false, 1120))) {
-                // line 1121
+            } elseif (CoreExtension::inFilter("ROLE_STOCK_MANAGER", CoreExtension::getAttribute($this->env, $this->source,             // line 1251
+(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1251, $this->source); })()), "roles", [], "any", false, false, false, 1251))) {
+                // line 1252
                 yield "                                        <i class=\"bi bi-box-seam text-warning me-1\"></i>Responsable Stock
                                     ";
-            } elseif (CoreExtension::inFilter("ROLE_CASHIER", CoreExtension::getAttribute($this->env, $this->source,             // line 1122
-(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1122, $this->source); })()), "roles", [], "any", false, false, false, 1122))) {
-                // line 1123
+            } elseif (CoreExtension::inFilter("ROLE_CASHIER", CoreExtension::getAttribute($this->env, $this->source,             // line 1253
+(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1253, $this->source); })()), "roles", [], "any", false, false, false, 1253))) {
+                // line 1254
                 yield "                                        <i class=\"bi bi-cash-coin text-info me-1\"></i>Caissier
                                     ";
-            } elseif (CoreExtension::inFilter("ROLE_SUPER_ADMIN", CoreExtension::getAttribute($this->env, $this->source,             // line 1124
-(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1124, $this->source); })()), "roles", [], "any", false, false, false, 1124))) {
-                // line 1125
+            } elseif (CoreExtension::inFilter("ROLE_SUPER_ADMIN", CoreExtension::getAttribute($this->env, $this->source,             // line 1255
+(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1255, $this->source); })()), "roles", [], "any", false, false, false, 1255))) {
+                // line 1256
                 yield "                                        <i class=\"bi bi-shield-check text-danger me-1\"></i>Super Administrateur
                                     ";
             } else {
-                // line 1127
+                // line 1258
                 yield "                                        <i class=\"bi bi-person me-1\"></i>Utilisateur
                                     ";
             }
-            // line 1129
+            // line 1260
             yield "                                </small>
                             </div>
                         </a>
@@ -1326,94 +1457,94 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                                     <div class=\"d-flex align-items-center\">
                                         <div class=\"user-avatar me-3\">
                                             ";
-            // line 1140
-            $context["user"] = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1140, $this->source); })()), "user", [], "any", false, false, false, 1140);
-            // line 1141
+            // line 1271
+            $context["user"] = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1271, $this->source); })()), "user", [], "any", false, false, false, 1271);
+            // line 1272
             yield "                                            ";
-            $context["userName"] = ((CoreExtension::getAttribute($this->env, $this->source, ($context["user"] ?? null), "fullName", [], "any", true, true, false, 1141)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1141, $this->source); })()), "fullName", [], "any", false, false, false, 1141), "Utilisateur")) : ("Utilisateur"));
-            // line 1142
+            $context["userName"] = ((CoreExtension::getAttribute($this->env, $this->source, ($context["user"] ?? null), "fullName", [], "any", true, true, false, 1272)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1272, $this->source); })()), "fullName", [], "any", false, false, false, 1272), "Utilisateur")) : ("Utilisateur"));
+            // line 1273
             yield "                                            ";
-            $context["initial"] = Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), (isset($context["userName"]) || array_key_exists("userName", $context) ? $context["userName"] : (function () { throw new RuntimeError('Variable "userName" does not exist.', 1142, $this->source); })())));
-            // line 1143
+            $context["initial"] = Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), (isset($context["userName"]) || array_key_exists("userName", $context) ? $context["userName"] : (function () { throw new RuntimeError('Variable "userName" does not exist.', 1273, $this->source); })())));
+            // line 1274
             yield "                                            
                                             ";
-            // line 1144
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1144, $this->source); })()), "photo", [], "any", false, false, false, 1144)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 1145
+            // line 1275
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1275, $this->source); })()), "photo", [], "any", false, false, false, 1275)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 1276
                 yield "                                                <img src=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1145, $this->source); })()), "photo", [], "any", false, false, false, 1145))), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1276, $this->source); })()), "photo", [], "any", false, false, false, 1276))), "html", null, true);
                 yield "\" 
                                                      alt=\"";
-                // line 1146
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["userName"]) || array_key_exists("userName", $context) ? $context["userName"] : (function () { throw new RuntimeError('Variable "userName" does not exist.', 1146, $this->source); })()), "html", null, true);
+                // line 1277
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["userName"]) || array_key_exists("userName", $context) ? $context["userName"] : (function () { throw new RuntimeError('Variable "userName" does not exist.', 1277, $this->source); })()), "html", null, true);
                 yield "\"
                                                      class=\"avatar-img\"
                                                      data-initial=\"";
-                // line 1148
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1148, $this->source); })()), "html", null, true);
+                // line 1279
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1279, $this->source); })()), "html", null, true);
                 yield "\">
                                                 <div class=\"avatar-initials\" style=\"display: none;\">
                                                     ";
-                // line 1150
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1150, $this->source); })()), "html", null, true);
+                // line 1281
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1281, $this->source); })()), "html", null, true);
                 yield "
                                                 </div>
                                             ";
             } else {
-                // line 1153
+                // line 1284
                 yield "                                                <div class=\"avatar-initials\">
                                                     ";
-                // line 1154
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1154, $this->source); })()), "html", null, true);
+                // line 1285
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["initial"]) || array_key_exists("initial", $context) ? $context["initial"] : (function () { throw new RuntimeError('Variable "initial" does not exist.', 1285, $this->source); })()), "html", null, true);
                 yield "
                                                 </div>
                                             ";
             }
-            // line 1157
+            // line 1288
             yield "                                        </div>
                                         <div>
                                             <div class=\"fw-medium\">
                                                 ";
-            // line 1160
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["app"] ?? null), "user", [], "any", false, true, false, 1160), "fullName", [], "any", true, true, false, 1160)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1160, $this->source); })()), "user", [], "any", false, false, false, 1160), "fullName", [], "any", false, false, false, 1160), "Utilisateur")) : ("Utilisateur")), "html", null, true);
+            // line 1291
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["app"] ?? null), "user", [], "any", false, true, false, 1291), "fullName", [], "any", true, true, false, 1291)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1291, $this->source); })()), "user", [], "any", false, false, false, 1291), "fullName", [], "any", false, false, false, 1291), "Utilisateur")) : ("Utilisateur")), "html", null, true);
             yield "
                                             </div>
                                             <small class=\"text-muted\">
                                                 ";
-            // line 1163
-            $context["user"] = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1163, $this->source); })()), "user", [], "any", false, false, false, 1163);
-            // line 1164
+            // line 1294
+            $context["user"] = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1294, $this->source); })()), "user", [], "any", false, false, false, 1294);
+            // line 1295
             yield "                                                ";
-            if (CoreExtension::inFilter("ROLE_ADMIN", CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1164, $this->source); })()), "roles", [], "any", false, false, false, 1164))) {
-                // line 1165
+            if (CoreExtension::inFilter("ROLE_ADMIN", CoreExtension::getAttribute($this->env, $this->source, (isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1295, $this->source); })()), "roles", [], "any", false, false, false, 1295))) {
+                // line 1296
                 yield "                                                    Administrateur
                                                 ";
-            } elseif (CoreExtension::inFilter("ROLE_MANAGER", CoreExtension::getAttribute($this->env, $this->source,             // line 1166
-(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1166, $this->source); })()), "roles", [], "any", false, false, false, 1166))) {
-                // line 1167
+            } elseif (CoreExtension::inFilter("ROLE_MANAGER", CoreExtension::getAttribute($this->env, $this->source,             // line 1297
+(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1297, $this->source); })()), "roles", [], "any", false, false, false, 1297))) {
+                // line 1298
                 yield "                                                    Gestionnaire
                                                 ";
-            } elseif (CoreExtension::inFilter("ROLE_STOCK_MANAGER", CoreExtension::getAttribute($this->env, $this->source,             // line 1168
-(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1168, $this->source); })()), "roles", [], "any", false, false, false, 1168))) {
-                // line 1169
+            } elseif (CoreExtension::inFilter("ROLE_STOCK_MANAGER", CoreExtension::getAttribute($this->env, $this->source,             // line 1299
+(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1299, $this->source); })()), "roles", [], "any", false, false, false, 1299))) {
+                // line 1300
                 yield "                                                    Responsable Stock
                                                 ";
-            } elseif (CoreExtension::inFilter("ROLE_CASHIER", CoreExtension::getAttribute($this->env, $this->source,             // line 1170
-(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1170, $this->source); })()), "roles", [], "any", false, false, false, 1170))) {
-                // line 1171
+            } elseif (CoreExtension::inFilter("ROLE_CASHIER", CoreExtension::getAttribute($this->env, $this->source,             // line 1301
+(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1301, $this->source); })()), "roles", [], "any", false, false, false, 1301))) {
+                // line 1302
                 yield "                                                    Caissier
                                                 ";
-            } elseif (CoreExtension::inFilter("ROLE_SUPER_ADMIN", CoreExtension::getAttribute($this->env, $this->source,             // line 1172
-(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1172, $this->source); })()), "roles", [], "any", false, false, false, 1172))) {
-                // line 1173
+            } elseif (CoreExtension::inFilter("ROLE_SUPER_ADMIN", CoreExtension::getAttribute($this->env, $this->source,             // line 1303
+(isset($context["user"]) || array_key_exists("user", $context) ? $context["user"] : (function () { throw new RuntimeError('Variable "user" does not exist.', 1303, $this->source); })()), "roles", [], "any", false, false, false, 1303))) {
+                // line 1304
                 yield "                                                    Super Administrateur    
                                                 ";
             } else {
-                // line 1175
+                // line 1306
                 yield "                                                    Utilisateur
                                                 ";
             }
-            // line 1177
+            // line 1308
             yield "                                            </small>
                                         </div>
                                     </div>
@@ -1424,12 +1555,12 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                             
                             <!-- Bouton \"Gérer l'entreprise\" -->
                             ";
-            // line 1186
-            if (((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["app"] ?? null), "user", [], "any", false, true, false, 1186), "isHmaOwner", [], "any", true, true, false, 1186) && CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1186, $this->source); })()), "user", [], "any", false, false, false, 1186), "isHmaOwner", [], "any", false, false, false, 1186)) && CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1186, $this->source); })()), "user", [], "any", false, false, false, 1186), "hmaServiceId", [], "any", false, false, false, 1186))) {
-                // line 1187
+            // line 1317
+            if (((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["app"] ?? null), "user", [], "any", false, true, false, 1317), "isHmaOwner", [], "any", true, true, false, 1317) && CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1317, $this->source); })()), "user", [], "any", false, false, false, 1317), "isHmaOwner", [], "any", false, false, false, 1317)) && CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1317, $this->source); })()), "user", [], "any", false, false, false, 1317), "hmaServiceId", [], "any", false, false, false, 1317))) {
+                // line 1318
                 yield "                            <li>
                                 <a class=\"dropdown-item d-flex align-items-center\" href=\"";
-                // line 1188
+                // line 1319
                 yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_dashboard_hmaservice_details");
                 yield "\">
                                     <i class=\"bi bi-building me-2 text-info\"></i>
@@ -1439,12 +1570,12 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                             <li><hr class=\"dropdown-divider\"></li>
                             ";
             }
-            // line 1195
+            // line 1326
             yield "                            
                             <!-- Liens standards -->
                             <li>
                                 <a class=\"dropdown-item d-flex align-items-center\" href=\"";
-            // line 1198
+            // line 1329
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_profile_show");
             yield "\">
                                     <i class=\"bi bi-person me-2 text-primary\"></i>
@@ -1453,7 +1584,7 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                             </li>
                             <li>
                                 <a class=\"dropdown-item d-flex align-items-center\" href=\"";
-            // line 1204
+            // line 1335
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_change_password");
             yield "\">
                                     <i class=\"bi bi-shield-lock me-2 text-success\"></i>
@@ -1463,7 +1594,7 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                             <li><hr class=\"dropdown-divider\"></li>
                             <li>
                                 <a class=\"dropdown-item d-flex align-items-center text-danger\" href=\"";
-            // line 1211
+            // line 1342
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
             yield "\">
                                     <i class=\"bi bi-box-arrow-right me-2\"></i>
@@ -1474,7 +1605,7 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
                     </li>
                     ";
         }
-        // line 1219
+        // line 1350
         yield "                </ul>
             </div>
         </div>
@@ -1489,333 +1620,333 @@ class __TwigTemplate_eddd1045d3caadc24f91ac4aa6042bfe extends Template
         <div class=\"col-md-3 col-lg-2 d-md-block sidebar\" id=\"sidebarMenu\">
             <div class=\"sidebar-content\">
                 ";
-        // line 1232
-        $context["currentRoute"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1232, $this->source); })()), "request", [], "any", false, false, false, 1232), "get", ["_route"], "method", false, false, false, 1232);
-        // line 1233
+        // line 1363
+        $context["currentRoute"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1363, $this->source); })()), "request", [], "any", false, false, false, 1363), "get", ["_route"], "method", false, false, false, 1363);
+        // line 1364
         yield "                ";
         $context["menuItems"] = $this->extensions['App\Twig\MenuExtension']->getMenu();
-        // line 1234
+        // line 1365
         yield "                ";
         $context["counter"] = 0;
-        // line 1235
+        // line 1366
         yield "                
                 ";
-        // line 1236
+        // line 1367
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["menuItems"]) || array_key_exists("menuItems", $context) ? $context["menuItems"] : (function () { throw new RuntimeError('Variable "menuItems" does not exist.', 1236, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["menuItems"]) || array_key_exists("menuItems", $context) ? $context["menuItems"] : (function () { throw new RuntimeError('Variable "menuItems" does not exist.', 1367, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["item"]) {
-            // line 1237
+            // line 1368
             yield "                    ";
-            // line 1238
+            // line 1369
             yield "                    ";
-            if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1238) == "section")) {
-                // line 1239
+            if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1369) == "section")) {
+                // line 1370
                 yield "                        <div class=\"menu-title\">";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1239), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1370), "html", null, true);
                 yield "</div>
                     
                     ";
-                // line 1242
+                // line 1373
                 yield "                    ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1242) == "dropdown")) {
-                // line 1243
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1373) == "dropdown")) {
+                // line 1374
                 yield "                        ";
-                $context["counter"] = ((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1243, $this->source); })()) + 1);
-                // line 1244
+                $context["counter"] = ((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1374, $this->source); })()) + 1);
+                // line 1375
                 yield "                        ";
                 $context["isActive"] = false;
-                // line 1245
+                // line 1376
                 yield "                        ";
                 $context['_parent'] = $context;
-                $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "children", [], "any", false, false, false, 1245));
+                $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "children", [], "any", false, false, false, 1376));
                 foreach ($context['_seq'] as $context["_key"] => $context["child"]) {
-                    // line 1246
+                    // line 1377
                     yield "                            ";
-                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", true, true, false, 1246) && (CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1246) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1246, $this->source); })())))) {
-                        // line 1247
+                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", true, true, false, 1377) && (CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1377) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1377, $this->source); })())))) {
+                        // line 1378
                         yield "                                ";
                         $context["isActive"] = true;
-                        // line 1248
+                        // line 1379
                         yield "                            ";
                     }
-                    // line 1249
+                    // line 1380
                     yield "                        ";
                 }
                 $_parent = $context['_parent'];
                 unset($context['_seq'], $context['_key'], $context['child'], $context['_parent']);
                 $context = array_intersect_key($context, $_parent) + $_parent;
-                // line 1250
+                // line 1381
                 yield "                        
                         <a href=\"#submenu";
-                // line 1251
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1251, $this->source); })()), "html", null, true);
+                // line 1382
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1382, $this->source); })()), "html", null, true);
                 yield "\" 
                            class=\"nav-link has-arrow ";
-                // line 1252
-                if ((($tmp = (isset($context["isActive"]) || array_key_exists("isActive", $context) ? $context["isActive"] : (function () { throw new RuntimeError('Variable "isActive" does not exist.', 1252, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 1383
+                if ((($tmp = (isset($context["isActive"]) || array_key_exists("isActive", $context) ? $context["isActive"] : (function () { throw new RuntimeError('Variable "isActive" does not exist.', 1383, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                     yield "active";
                 }
                 yield "\" 
                            data-bs-toggle=\"collapse\"
                            aria-expanded=\"";
-                // line 1254
-                yield (((($tmp = (isset($context["isActive"]) || array_key_exists("isActive", $context) ? $context["isActive"] : (function () { throw new RuntimeError('Variable "isActive" does not exist.', 1254, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("true") : ("false"));
+                // line 1385
+                yield (((($tmp = (isset($context["isActive"]) || array_key_exists("isActive", $context) ? $context["isActive"] : (function () { throw new RuntimeError('Variable "isActive" does not exist.', 1385, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("true") : ("false"));
                 yield "\">
                             <i class=\"";
-                // line 1255
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1255), "html", null, true);
+                // line 1386
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1386), "html", null, true);
                 yield "\"></i>
                             <span>";
-                // line 1256
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1256), "html", null, true);
+                // line 1387
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1387), "html", null, true);
                 yield "</span>
                             ";
-                // line 1257
-                if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", true, true, false, 1257) && CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", false, false, false, 1257))) {
-                    // line 1258
+                // line 1388
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", true, true, false, 1388) && CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", false, false, false, 1388))) {
+                    // line 1389
                     yield "                                <span class=\"badge bg-warning ms-auto\">Bientôt</span>
                             ";
                 }
-                // line 1260
+                // line 1391
                 yield "                        </a>
                         <div class=\"sub-menu collapse ";
-                // line 1261
-                if ((($tmp = (isset($context["isActive"]) || array_key_exists("isActive", $context) ? $context["isActive"] : (function () { throw new RuntimeError('Variable "isActive" does not exist.', 1261, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 1392
+                if ((($tmp = (isset($context["isActive"]) || array_key_exists("isActive", $context) ? $context["isActive"] : (function () { throw new RuntimeError('Variable "isActive" does not exist.', 1392, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                     yield "show";
                 }
                 yield "\" id=\"submenu";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1261, $this->source); })()), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1392, $this->source); })()), "html", null, true);
                 yield "\">
                             ";
-                // line 1262
+                // line 1393
                 $context['_parent'] = $context;
-                $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "children", [], "any", false, false, false, 1262));
+                $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "children", [], "any", false, false, false, 1393));
                 foreach ($context['_seq'] as $context["_key"] => $context["child"]) {
-                    // line 1263
+                    // line 1394
                     yield "                                ";
-                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "type", [], "any", true, true, false, 1263) && (CoreExtension::getAttribute($this->env, $this->source, $context["child"], "type", [], "any", false, false, false, 1263) == "divider"))) {
-                        // line 1264
+                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "type", [], "any", true, true, false, 1394) && (CoreExtension::getAttribute($this->env, $this->source, $context["child"], "type", [], "any", false, false, false, 1394) == "divider"))) {
+                        // line 1395
                         yield "                                    <hr class=\"dropdown-divider\">
                                 ";
-                    } elseif (CoreExtension::getAttribute($this->env, $this->source,                     // line 1265
-$context["child"], "route", [], "any", true, true, false, 1265)) {
-                        // line 1266
+                    } elseif (CoreExtension::getAttribute($this->env, $this->source,                     // line 1396
+$context["child"], "route", [], "any", true, true, false, 1396)) {
+                        // line 1397
                         yield "                                    ";
-                        // line 1267
+                        // line 1398
                         yield "                                    ";
-                        $context["route_params"] = ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "params", [], "any", true, true, false, 1267)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "params", [], "any", false, false, false, 1267), [])) : ([]));
-                        // line 1268
+                        $context["route_params"] = ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "params", [], "any", true, true, false, 1398)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "params", [], "any", false, false, false, 1398), [])) : ([]));
+                        // line 1399
                         yield "                                    
                                     ";
-                        // line 1270
+                        // line 1401
                         yield "                                    ";
-                        if (((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1270) == "app_admin_stock_batch_index") &&  !CoreExtension::getAttribute($this->env, $this->source, ($context["route_params"] ?? null), "productId", [], "any", true, true, false, 1270))) {
-                            // line 1271
+                        if (((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1401) == "app_admin_stock_batch_index") &&  !CoreExtension::getAttribute($this->env, $this->source, ($context["route_params"] ?? null), "productId", [], "any", true, true, false, 1401))) {
+                            // line 1402
                             yield "                                        ";
-                            $context["route_params"] = Twig\Extension\CoreExtension::merge((isset($context["route_params"]) || array_key_exists("route_params", $context) ? $context["route_params"] : (function () { throw new RuntimeError('Variable "route_params" does not exist.', 1271, $this->source); })()), ["productId" => 0]);
-                            // line 1272
+                            $context["route_params"] = Twig\Extension\CoreExtension::merge((isset($context["route_params"]) || array_key_exists("route_params", $context) ? $context["route_params"] : (function () { throw new RuntimeError('Variable "route_params" does not exist.', 1402, $this->source); })()), ["productId" => 0]);
+                            // line 1403
                             yield "                                    ";
                         }
-                        // line 1273
+                        // line 1404
                         yield "                                    
                                     ";
-                        // line 1275
+                        // line 1406
                         yield "                                    ";
-                        if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "coming_soon", [], "any", true, true, false, 1275) && CoreExtension::getAttribute($this->env, $this->source, $context["child"], "coming_soon", [], "any", false, false, false, 1275))) {
-                            // line 1276
+                        if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "coming_soon", [], "any", true, true, false, 1406) && CoreExtension::getAttribute($this->env, $this->source, $context["child"], "coming_soon", [], "any", false, false, false, 1406))) {
+                            // line 1407
                             yield "                                        <a href=\"#\" class=\"nav-link disabled\" onclick=\"return false;\">
                                             <i class=\"";
-                            // line 1277
-                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", false, false, false, 1277), "html", null, true);
+                            // line 1408
+                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", false, false, false, 1408), "html", null, true);
                             yield " me-2\"></i>
                                             ";
-                            // line 1278
-                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", false, false, false, 1278), "html", null, true);
+                            // line 1409
+                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", false, false, false, 1409), "html", null, true);
                             yield "
                                             <span class=\"badge bg-warning ms-2\">Bientôt</span>
                                         </a>
                                     ";
                         } else {
-                            // line 1282
+                            // line 1413
                             yield "                                        <a href=\"";
-                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1282), (isset($context["route_params"]) || array_key_exists("route_params", $context) ? $context["route_params"] : (function () { throw new RuntimeError('Variable "route_params" does not exist.', 1282, $this->source); })())), "html", null, true);
+                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1413), (isset($context["route_params"]) || array_key_exists("route_params", $context) ? $context["route_params"] : (function () { throw new RuntimeError('Variable "route_params" does not exist.', 1413, $this->source); })())), "html", null, true);
                             yield "\" 
                                         class=\"nav-link ";
-                            // line 1283
-                            if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1283) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1283, $this->source); })()))) {
+                            // line 1414
+                            if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "route", [], "any", false, false, false, 1414) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1414, $this->source); })()))) {
                                 yield "active";
                             }
                             yield "\">
                                             <i class=\"";
-                            // line 1284
-                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", false, false, false, 1284), "html", null, true);
+                            // line 1415
+                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", false, false, false, 1415), "html", null, true);
                             yield " me-2\"></i>
                                             ";
-                            // line 1285
-                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", false, false, false, 1285), "html", null, true);
+                            // line 1416
+                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", false, false, false, 1416), "html", null, true);
                             yield "
                                             ";
-                            // line 1286
-                            if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "badge", [], "any", true, true, false, 1286) && CoreExtension::getAttribute($this->env, $this->source, $context["child"], "badge", [], "any", false, false, false, 1286))) {
-                                // line 1287
+                            // line 1417
+                            if ((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "badge", [], "any", true, true, false, 1417) && CoreExtension::getAttribute($this->env, $this->source, $context["child"], "badge", [], "any", false, false, false, 1417))) {
+                                // line 1418
                                 yield "                                                <span class=\"badge bg-info ms-2\">";
-                                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "badge", [], "any", false, false, false, 1287), "html", null, true);
+                                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "badge", [], "any", false, false, false, 1418), "html", null, true);
                                 yield "</span>
                                             ";
                             }
-                            // line 1289
+                            // line 1420
                             yield "                                        </a>
                                     ";
                         }
-                        // line 1291
+                        // line 1422
                         yield "                                ";
                     } else {
-                        // line 1292
+                        // line 1423
                         yield "                                    <a href=\"#\" class=\"nav-link disabled\" onclick=\"return false;\">
                                         <i class=\"";
-                        // line 1293
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", true, true, false, 1293)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", false, false, false, 1293), "fas fa-ban")) : ("fas fa-ban")), "html", null, true);
+                        // line 1424
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", true, true, false, 1424)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "icon", [], "any", false, false, false, 1424), "fas fa-ban")) : ("fas fa-ban")), "html", null, true);
                         yield " me-2\"></i>
                                         ";
-                        // line 1294
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", true, true, false, 1294)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", false, false, false, 1294), "Lien indisponible")) : ("Lien indisponible")), "html", null, true);
+                        // line 1425
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", true, true, false, 1425)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "label", [], "any", false, false, false, 1425), "Lien indisponible")) : ("Lien indisponible")), "html", null, true);
                         yield "
                                     </a>
                                 ";
                     }
-                    // line 1297
+                    // line 1428
                     yield "                            ";
                 }
                 $_parent = $context['_parent'];
                 unset($context['_seq'], $context['_key'], $context['child'], $context['_parent']);
                 $context = array_intersect_key($context, $_parent) + $_parent;
-                // line 1298
+                // line 1429
                 yield "                        </div>
                     
                     ";
-                // line 1301
+                // line 1432
                 yield "                    ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1301) == "link")) {
-                // line 1302
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1432) == "link")) {
+                // line 1433
                 yield "                        ";
-                $context["counter"] = ((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1302, $this->source); })()) + 1);
-                // line 1303
+                $context["counter"] = ((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1433, $this->source); })()) + 1);
+                // line 1434
                 yield "                        ";
-                if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", true, true, false, 1303)) {
-                    // line 1304
+                if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", true, true, false, 1434)) {
+                    // line 1435
                     yield "                            <a href=\"";
-                    yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1304));
+                    yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1435));
                     yield "\" 
                                class=\"nav-link ";
-                    // line 1305
-                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1305) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1305, $this->source); })()))) {
+                    // line 1436
+                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1436) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1436, $this->source); })()))) {
                         yield "active";
                     }
                     yield "\">
                                 <i class=\"";
-                    // line 1306
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1306), "html", null, true);
+                    // line 1437
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1437), "html", null, true);
                     yield "\"></i>
                                 <span>";
-                    // line 1307
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1307), "html", null, true);
+                    // line 1438
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1438), "html", null, true);
                     yield "</span>
                                 ";
-                    // line 1308
-                    if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "badge", [], "any", true, true, false, 1308)) {
-                        // line 1309
+                    // line 1439
+                    if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "badge", [], "any", true, true, false, 1439)) {
+                        // line 1440
                         yield "                                    <span class=\"badge bg-danger ms-auto\">";
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "badge", [], "any", false, false, false, 1309), "html", null, true);
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "badge", [], "any", false, false, false, 1440), "html", null, true);
                         yield "</span>
                                 ";
                     }
-                    // line 1311
+                    // line 1442
                     yield "                                ";
-                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", true, true, false, 1311) && CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", false, false, false, 1311))) {
-                        // line 1312
+                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", true, true, false, 1442) && CoreExtension::getAttribute($this->env, $this->source, $context["item"], "coming_soon", [], "any", false, false, false, 1442))) {
+                        // line 1443
                         yield "                                    <span class=\"badge bg-warning ms-auto\">Bientôt</span>
                                 ";
                     }
-                    // line 1314
+                    // line 1445
                     yield "                            </a>
                         ";
                 } else {
-                    // line 1316
+                    // line 1447
                     yield "                            <a href=\"#\" class=\"nav-link disabled\">
                                 <i class=\"";
-                    // line 1317
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1317), "html", null, true);
+                    // line 1448
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1448), "html", null, true);
                     yield "\"></i>
                                 <span>";
-                    // line 1318
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1318), "html", null, true);
+                    // line 1449
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1449), "html", null, true);
                     yield "</span>
                             </a>
                         ";
                 }
-                // line 1321
+                // line 1452
                 yield "                    
                     ";
-                // line 1323
+                // line 1454
                 yield "                    ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1323) == "title")) {
-                // line 1324
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 1454) == "title")) {
+                // line 1455
                 yield "                        <div class=\"menu-title\">";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1324), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1455), "html", null, true);
                 yield "</div>
                     
                     ";
             } else {
-                // line 1327
+                // line 1458
                 yield "                        ";
-                $context["counter"] = ((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1327, $this->source); })()) + 1);
-                // line 1328
+                $context["counter"] = ((isset($context["counter"]) || array_key_exists("counter", $context) ? $context["counter"] : (function () { throw new RuntimeError('Variable "counter" does not exist.', 1458, $this->source); })()) + 1);
+                // line 1459
                 yield "                        ";
-                if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", true, true, false, 1328)) {
-                    // line 1329
+                if (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", true, true, false, 1459)) {
+                    // line 1460
                     yield "                            <a href=\"";
-                    yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1329));
+                    yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1460));
                     yield "\" 
                                class=\"nav-link ";
-                    // line 1330
-                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1330) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1330, $this->source); })()))) {
+                    // line 1461
+                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "route", [], "any", false, false, false, 1461) == (isset($context["currentRoute"]) || array_key_exists("currentRoute", $context) ? $context["currentRoute"] : (function () { throw new RuntimeError('Variable "currentRoute" does not exist.', 1461, $this->source); })()))) {
                         yield "active";
                     }
                     yield "\">
                                 <i class=\"";
-                    // line 1331
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1331), "html", null, true);
+                    // line 1462
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1462), "html", null, true);
                     yield "\"></i>
                                 <span>";
-                    // line 1332
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1332), "html", null, true);
+                    // line 1463
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1463), "html", null, true);
                     yield "</span>
                             </a>
                         ";
                 } else {
-                    // line 1335
+                    // line 1466
                     yield "                            <a href=\"#\" class=\"nav-link disabled\">
                                 <i class=\"";
-                    // line 1336
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1336), "html", null, true);
+                    // line 1467
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "icon", [], "any", false, false, false, 1467), "html", null, true);
                     yield "\"></i>
                                 <span>";
-                    // line 1337
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1337), "html", null, true);
+                    // line 1468
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "label", [], "any", false, false, false, 1468), "html", null, true);
                     yield "</span>
                             </a>
                         ";
                 }
-                // line 1340
+                // line 1471
                 yield "                    ";
             }
-            // line 1341
+            // line 1472
             yield "                ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['item'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 1342
+        // line 1473
         yield "            </div>
         </div>
         
@@ -1823,45 +1954,45 @@ $context["child"], "route", [], "any", true, true, false, 1265)) {
         <main class=\"col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4\">
             <!-- Messages flash -->
             ";
-        // line 1348
+        // line 1479
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1348, $this->source); })()), "flashes", [], "any", false, false, false, 1348));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1479, $this->source); })()), "flashes", [], "any", false, false, false, 1479));
         foreach ($context['_seq'] as $context["label"] => $context["messages"]) {
-            // line 1349
+            // line 1480
             yield "                <div class=\"alert alert-";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["label"], "html", null, true);
             yield " alert-dismissible fade show shadow-sm border-0\" role=\"alert\">
                     <div class=\"d-flex align-items-center\">
                         ";
-            // line 1351
+            // line 1482
             if (($context["label"] == "success")) {
-                // line 1352
+                // line 1483
                 yield "                            <i class=\"bi bi-check-circle-fill me-2\"></i>
                         ";
-            } elseif (((            // line 1353
+            } elseif (((            // line 1484
 $context["label"] == "error") || ($context["label"] == "danger"))) {
-                // line 1354
+                // line 1485
                 yield "                            <i class=\"bi bi-exclamation-circle-fill me-2\"></i>
                         ";
-            } elseif ((            // line 1355
+            } elseif ((            // line 1486
 $context["label"] == "warning")) {
-                // line 1356
+                // line 1487
                 yield "                            <i class=\"bi bi-exclamation-triangle-fill me-2\"></i>
                         ";
-            } elseif ((            // line 1357
+            } elseif ((            // line 1488
 $context["label"] == "info")) {
-                // line 1358
+                // line 1489
                 yield "                            <i class=\"bi bi-info-circle-fill me-2\"></i>
                         ";
             }
-            // line 1360
+            // line 1491
             yield "                        <div>
                             ";
-            // line 1361
+            // line 1492
             $context['_parent'] = $context;
             $context['_seq'] = CoreExtension::ensureTraversable($context["messages"]);
             foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
-                // line 1362
+                // line 1493
                 yield "                                ";
                 yield $context["message"];
                 yield "
@@ -1870,7 +2001,7 @@ $context["label"] == "info")) {
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 1364
+            // line 1495
             yield "                        </div>
                     </div>
                     <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>
@@ -1880,13 +2011,13 @@ $context["label"] == "info")) {
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['label'], $context['messages'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 1369
+        // line 1500
         yield "            
             <!-- Contenu de la page -->
             ";
-        // line 1371
+        // line 1502
         yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
-        // line 1372
+        // line 1503
         yield "        </main>
     </div>
 </div>
@@ -1921,7 +2052,7 @@ $context["label"] == "info")) {
                         <ul class=\"list-unstyled mb-0\">
                             <li class=\"mb-2\">
                                 <a href=\"";
-        // line 1405
+        // line 1536
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_home");
         yield "\" class=\"footer-link\">
                                     <i class=\"bi bi-house-door me-1\"></i>Accueil
@@ -1964,7 +2095,7 @@ $context["label"] == "info")) {
                     <div class=\"col-md-6\">
                         <span class=\"footer-text\">
                             <i class=\"bi bi-copyright me-1\"></i>";
-        // line 1445
+        // line 1576
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate("now", "Y"), "html", null, true);
         yield " HMA Market. Tous droits réservés.
                         </span>
@@ -1979,208 +2110,346 @@ $context["label"] == "info")) {
         </div>
     </footer>
     
-    <!-- Bootstrap 5 JS -->
-    <!-- CDN JavaScript -->
+   <!-- Bootstrap 5 JS -->
     <script src=\"https://code.jquery.com/jquery-3.6.4.min.js\"></script>
     <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js\"></script>
     <script src=\"https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js\"></script>
     <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
 
-    
-    <!-- Custom JS SIMPLIFIÉ -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Toggle sidebar sur mobile
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebar = document.getElementById('sidebarMenu');
-            const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-            
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('show');
-                    sidebarBackdrop.classList.toggle('show');
-                    document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
-                });
-            }
-            
-            if (sidebarBackdrop) {
-                sidebarBackdrop.addEventListener('click', function() {
+    // ==================== SCRIPT PRINCIPAL UNIFIÉ ====================
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // ---------- SIDEBAR MOBILE ----------
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebarMenu');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                sidebarBackdrop.classList.toggle('show');
+                document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
+            });
+        }
+        
+        if (sidebarBackdrop) {
+            sidebarBackdrop.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+                sidebarBackdrop.classList.remove('show');
+                document.body.style.overflow = '';
+            });
+        }
+        
+        if (window.innerWidth < 768) {
+            const sidebarLinks = sidebar?.querySelectorAll('.nav-link') || [];
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function() {
                     sidebar.classList.remove('show');
-                    sidebarBackdrop.classList.remove('show');
+                    sidebarBackdrop?.classList.remove('show');
                     document.body.style.overflow = '';
                 });
-            }
-            
-            // Fermer le sidebar quand on clique sur un lien (mobile)
-            if (window.innerWidth < 768) {
-                const sidebarLinks = sidebar.querySelectorAll('.nav-link');
-                sidebarLinks.forEach(link => {
-                    link.addEventListener('click', function() {
-                        sidebar.classList.remove('show');
-                        sidebarBackdrop.classList.remove('show');
-                        document.body.style.overflow = '';
-                    });
-                });
-            }
-            
-            // Gestion des alertes flash
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }, 5000);
             });
-            
-            // Gestion des erreurs d'images SIMPLIFIÉE (sans les images produits)
-            document.querySelectorAll('img:not(.product-img)').forEach(img => {
-                img.addEventListener('error', function() {
-                    const parent = this.parentElement;
-                    const initial = this.getAttribute('data-initial') || 'H';
-                    
-                    // Créer un élément pour les initiales
-                    const fallback = document.createElement('div');
-                    if (parent.classList.contains('company-logo')) {
-                        fallback.className = 'logo-fallback';
-                    } else if (parent.classList.contains('user-avatar')) {
-                        fallback.className = 'avatar-initials';
-                    }
-                    fallback.textContent = initial;
-                    
-                    // Remplacer l'image
-                    this.style.display = 'none';
-                    parent.appendChild(fallback);
-                });
-            });
-            
-            // Gestion de la recherche universelle
-            function setupUniversalSearch(searchInputId, searchClearId, searchFormId, searchHintId) {
-                const searchInput = document.getElementById(searchInputId);
-                const searchClear = document.getElementById(searchClearId);
-                const searchForm = document.getElementById(searchFormId);
-                const searchHint = document.getElementById(searchHintId);
-                
-                if (!searchInput || !searchClear || !searchForm) return;
-                
-                function toggleClearButton() {
-                    if (searchInput.value.trim() !== '') {
-                        searchClear.classList.add('show');
-                    } else {
-                        searchClear.classList.remove('show');
-                    }
-                }
-                
-                function updateSearchPlaceholder() {
-                    const currentRoute = window.location.pathname;
-                    let placeholder = 'Rechercher...';
-                    let hint = 'Appuyez sur Entrée pour rechercher';
-                    
-                    if (currentRoute.includes('/admin/user')) {
-                        placeholder = 'Rechercher un utilisateur...';
-                        hint = 'Recherche par nom, email ou téléphone';
-                    } else if (currentRoute.includes('/admin/product')) {
-                        placeholder = 'Rechercher un produit...';
-                        hint = 'Recherche par nom, référence ou catégorie';
-                    } else if (currentRoute.includes('/admin/category')) {
-                        placeholder = 'Rechercher une catégorie...';
-                        hint = 'Recherche par nom ou description';
-                    } else if (currentRoute.includes('/admin/order')) {
-                        placeholder = 'Rechercher une commande...';
-                        hint = 'Recherche par numéro, client ou statut';
-                    } else if (currentRoute.includes('/admin/stock')) {
-                        placeholder = 'Rechercher un mouvement de stock...';
-                        hint = 'Recherche par produit ou type';
-                    } else if (currentRoute.includes('/admin/purchase')) {
-                        placeholder = 'Rechercher un achat...';
-                        hint = 'Recherche par fournisseur ou référence';
-                    }
-                    
-                    searchInput.placeholder = placeholder;
-                    if (searchHint) {
-                        searchHint.textContent = hint;
-                    }
-                }
-                
-                searchInput.addEventListener('input', toggleClearButton);
-                
-                searchClear.addEventListener('click', function() {
-                    searchInput.value = '';
-                    searchInput.focus();
-                    toggleClearButton();
-                    
-                    if (searchInput.value === '') {
-                        const url = new URL(window.location);
-                        url.searchParams.delete('search');
-                        url.searchParams.delete('page');
-                        window.location.href = url.toString();
-                    }
-                });
-                
-                searchForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const searchTerm = searchInput.value.trim();
-                    const currentUrl = new URL(window.location);
-                    
-                    if (searchTerm) {
-                        currentUrl.searchParams.set('search', searchTerm);
-                        currentUrl.searchParams.set('page', '1');
-                    } else {
-                        currentUrl.searchParams.delete('search');
-                        currentUrl.searchParams.delete('page');
-                    }
-                    
-                    window.location.href = currentUrl.toString();
-                });
-                
-                updateSearchPlaceholder();
-                toggleClearButton();
-            }
-            
-            // Configurer les deux barres de recherche
-            setupUniversalSearch('universalSearchInput', 'universalSearchClear', 'universalSearchForm', 'searchHint');
-            setupUniversalSearch('universalSearchInputMobile', 'universalSearchClearMobile', 'universalSearchFormMobile', 'searchHintMobile');
-            
-            // Synchroniser les deux champs de recherche
-            const desktopInput = document.getElementById('universalSearchInput');
-            const mobileInput = document.getElementById('universalSearchInputMobile');
-            
-            if (desktopInput && mobileInput) {
-                desktopInput.addEventListener('input', function() {
-                    mobileInput.value = this.value;
-                    const mobileClear = document.getElementById('universalSearchClearMobile');
-                    if (mobileClear) {
-                        mobileClear.classList.toggle('show', this.value.trim() !== '');
-                    }
-                });
-                
-                mobileInput.addEventListener('input', function() {
-                    desktopInput.value = this.value;
-                    const desktopClear = document.getElementById('universalSearchClear');
-                    if (desktopClear) {
-                        desktopClear.classList.toggle('show', this.value.trim() !== '');
-                    }
-                });
-            }
-        });
+        }
         
-        // Fermer automatiquement les alertes après 5 secondes
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                const alerts = document.querySelectorAll('.alert');
-                alerts.forEach(alert => {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                });
+        // ---------- ALERTES FLASH ----------
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
             }, 5000);
         });
+        
+        // ---------- GESTION DES ERREURS D'IMAGES ----------
+        document.querySelectorAll('img:not(.product-img)').forEach(img => {
+            img.addEventListener('error', function() {
+                const parent = this.parentElement;
+                const initial = this.getAttribute('data-initial') || 'H';
+                
+                const fallback = document.createElement('div');
+                if (parent?.classList.contains('company-logo')) {
+                    fallback.className = 'logo-fallback';
+                } else if (parent?.classList.contains('user-avatar')) {
+                    fallback.className = 'avatar-initials';
+                }
+                fallback.textContent = initial;
+                
+                this.style.display = 'none';
+                parent?.appendChild(fallback);
+            });
+        });
+        
+        // ---------- RECHERCHE UNIVERSELLE ----------
+        function setupUniversalSearch(searchInputId, searchClearId, searchFormId, searchHintId) {
+            const searchInput = document.getElementById(searchInputId);
+            const searchClear = document.getElementById(searchClearId);
+            const searchForm = document.getElementById(searchFormId);
+            const searchHint = document.getElementById(searchHintId);
+            
+            if (!searchInput || !searchClear || !searchForm) return;
+            
+            function toggleClearButton() {
+                searchClear.classList.toggle('show', searchInput.value.trim() !== '');
+            }
+            
+            function updateSearchPlaceholder() {
+                const currentRoute = window.location.pathname;
+                let placeholder = 'Rechercher...';
+                let hint = 'Appuyez sur Entrée pour rechercher';
+                
+                if (currentRoute.includes('/admin/user')) {
+                    placeholder = 'Rechercher un utilisateur...';
+                    hint = 'Recherche par nom, email ou téléphone';
+                } else if (currentRoute.includes('/admin/product')) {
+                    placeholder = 'Rechercher un produit...';
+                    hint = 'Recherche par nom, référence ou catégorie';
+                } else if (currentRoute.includes('/admin/category')) {
+                    placeholder = 'Rechercher une catégorie...';
+                    hint = 'Recherche par nom ou description';
+                } else if (currentRoute.includes('/admin/order')) {
+                    placeholder = 'Rechercher une commande...';
+                    hint = 'Recherche par numéro, client ou statut';
+                } else if (currentRoute.includes('/admin/stock')) {
+                    placeholder = 'Rechercher un mouvement de stock...';
+                    hint = 'Recherche par produit ou type';
+                } else if (currentRoute.includes('/admin/purchase')) {
+                    placeholder = 'Rechercher un achat...';
+                    hint = 'Recherche par fournisseur ou référence';
+                }
+                
+                searchInput.placeholder = placeholder;
+                if (searchHint) searchHint.textContent = hint;
+            }
+            
+            searchInput.addEventListener('input', toggleClearButton);
+            
+            searchClear.addEventListener('click', function() {
+                searchInput.value = '';
+                searchInput.focus();
+                toggleClearButton();
+                
+                if (searchInput.value === '') {
+                    const url = new URL(window.location);
+                    url.searchParams.delete('search');
+                    url.searchParams.delete('page');
+                    window.location.href = url.toString();
+                }
+            });
+            
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const searchTerm = searchInput.value.trim();
+                const currentUrl = new URL(window.location);
+                
+                if (searchTerm) {
+                    currentUrl.searchParams.set('search', searchTerm);
+                    currentUrl.searchParams.set('page', '1');
+                } else {
+                    currentUrl.searchParams.delete('search');
+                    currentUrl.searchParams.delete('page');
+                }
+                window.location.href = currentUrl.toString();
+            });
+            
+            updateSearchPlaceholder();
+            toggleClearButton();
+        }
+        
+        setupUniversalSearch('universalSearchInput', 'universalSearchClear', 'universalSearchForm', 'searchHint');
+        setupUniversalSearch('universalSearchInputMobile', 'universalSearchClearMobile', 'universalSearchFormMobile', 'searchHintMobile');
+        
+        // Synchronisation des champs de recherche
+        const desktopInput = document.getElementById('universalSearchInput');
+        const mobileInput = document.getElementById('universalSearchInputMobile');
+        
+        if (desktopInput && mobileInput) {
+            desktopInput.addEventListener('input', function() {
+                mobileInput.value = this.value;
+                const mobileClear = document.getElementById('universalSearchClearMobile');
+                if (mobileClear) mobileClear.classList.toggle('show', this.value.trim() !== '');
+            });
+            
+            mobileInput.addEventListener('input', function() {
+                desktopInput.value = this.value;
+                const desktopClear = document.getElementById('universalSearchClear');
+                if (desktopClear) desktopClear.classList.toggle('show', this.value.trim() !== '');
+            });
+        }
+        
+        // ---------- GESTION UNIVERSELLE DES MODALS ----------
+        function addLoadingIndicator(modalElement) {
+            if (modalElement.querySelector('.modal-loading')) return;
+            
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'modal-loading';
+            loadingDiv.style.display = 'none';
+            loadingDiv.innerHTML = `
+                <div class=\"spinner-container\">
+                    <div class=\"spinner-border\" role=\"status\">
+                        <span class=\"visually-hidden\">Chargement...</span>
+                    </div>
+                    <div class=\"loading-text\">Chargement en cours...</div>
+                </div>
+            `;
+            
+            const modalContent = modalElement.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.style.position = 'relative';
+                modalContent.appendChild(loadingDiv);
+            }
+        }
+        
+        function setModalLoading(modalElement, isLoading) {
+            const loadingDiv = modalElement.querySelector('.modal-loading');
+            if (loadingDiv) loadingDiv.style.display = isLoading ? 'flex' : 'none';
+        }
+        
+        function initModal(modal) {
+            // Éviter les doubles initialisations
+            if (modal.hasAttribute('data-modal-initialized')) return;
+            modal.setAttribute('data-modal-initialized', 'true');
+            
+            addLoadingIndicator(modal);
+            
+            modal.addEventListener('show.bs.modal', function() {
+                setModalLoading(this, false);
+            });
+            
+            const form = modal.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', () => setModalLoading(modal, true));
+            }
+            
+            const actionBtns = modal.querySelectorAll('.btn-primary, .btn-danger, .btn-success, .btn-warning');
+            actionBtns.forEach(btn => {
+                if (!btn.hasAttribute('data-bs-dismiss') && btn.type !== 'button') {
+                    btn.addEventListener('click', () => setModalLoading(modal, true));
+                }
+            });
+        }
+        
+        // Initialiser tous les modals existants
+        document.querySelectorAll('.modal').forEach(modal => initModal(modal));
+        
+        // Observer les nouveaux modals
+        const modalObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1) {
+                        if (node.classList?.contains('modal')) initModal(node);
+                        node.querySelectorAll?.('.modal').forEach(modal => initModal(modal));
+                    }
+                });
+            });
+        });
+        modalObserver.observe(document.body, { childList: true, subtree: true });
+        
+        // ---------- FONCTIONS GLOBALES ----------
+        window.showModalWithLoading = function(modalId, loadContentCallback) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            
+            const bsModal = bootstrap.Modal.getOrCreateInstance(modal);
+            
+            modal.addEventListener('show.bs.modal', async function onShow() {
+                modal.removeEventListener('show.bs.modal', onShow);
+                setModalLoading(modal, true);
+                try {
+                    if (loadContentCallback) await loadContentCallback(modal);
+                } finally {
+                    setModalLoading(modal, false);
+                }
+            }, { once: true });
+            
+            bsModal.show();
+        };
+        
+        window.showConfirmModal = function(options) {
+            const {
+                title = 'Confirmation',
+                message = 'Êtes-vous sûr de vouloir effectuer cette action ?',
+                type = 'info',
+                confirmText = 'Confirmer',
+                cancelText = 'Annuler',
+                onConfirm = null,
+                onCancel = null
+            } = options;
+            
+            const modalId = 'dynamic-confirm-modal-' + Date.now();
+            const modalHtml = `
+                <div class=\"modal fade modal-confirm\" id=\"\${modalId}\" tabindex=\"-1\">
+                    <div class=\"modal-dialog modal-dialog-centered\">
+                        <div class=\"modal-content\">
+                            <div class=\"modal-header \${type === 'danger' ? 'bg-danger text-white' : (type === 'success' ? 'bg-success text-white' : (type === 'warning' ? 'bg-warning text-dark' : 'bg-primary text-white'))}\">
+                                <h5 class=\"modal-title\">
+                                    <i class=\"fas \${type === 'danger' ? 'fa-exclamation-triangle' : (type === 'success' ? 'fa-check-circle' : (type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'))} me-2\"></i>
+                                    \${title}
+                                </h5>
+                                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+                            </div>
+                            <div class=\"modal-body text-center py-4\">
+                                <div class=\"confirm-icon \${type} mb-3\">
+                                    <i class=\"fas \${type === 'danger' ? 'fa-times-circle' : (type === 'success' ? 'fa-check-circle' : (type === 'warning' ? 'fa-exclamation-triangle' : 'fa-question-circle'))} fa-3x\"></i>
+                                </div>
+                                <p class=\"mb-0 fs-5\">\${message}</p>
+                            </div>
+                            <div class=\"modal-footer justify-content-center\">
+                                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">\${cancelText}</button>
+                                <button type=\"button\" class=\"btn btn-\${type === 'danger' ? 'danger' : (type === 'success' ? 'success' : 'primary')}\" id=\"confirm-action-\${modalId}\">\${confirmText}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            const modalElement = document.getElementById(modalId);
+            
+            initModal(modalElement);
+            const modal = new bootstrap.Modal(modalElement);
+            
+            document.getElementById(`confirm-action-\${modalId}`).addEventListener('click', async function() {
+                if (onConfirm) {
+                    setModalLoading(modalElement, true);
+                    try {
+                        await onConfirm();
+                    } finally {
+                        setModalLoading(modalElement, false);
+                        modal.hide();
+                    }
+                } else {
+                    modal.hide();
+                }
+            });
+            
+            modalElement.addEventListener('hidden.bs.modal', () => setTimeout(() => modalElement.remove(), 300));
+            if (onCancel) modalElement.addEventListener('hidden.bs.modal', onCancel, { once: true });
+            
+            modal.show();
+        };
+        
+        window.setModalLoadingState = function(modalId, isLoading) {
+            const modal = document.getElementById(modalId);
+            if (modal) setModalLoading(modal, isLoading);
+        };
+    });
+
+    // Fermeture automatique des alertes au chargement
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    });
     </script>
-    
-    
+
     ";
-        // line 1656
+        // line 1925
         yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
-        // line 1657
+        // line 1926
         yield "    ";
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getFunction('encore_entry_script_tags')->getCallable()("app"), "html", null, true);
         yield "
@@ -2219,7 +2488,7 @@ $context["label"] == "info")) {
         yield from [];
     }
 
-    // line 975
+    // line 1106
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -2241,7 +2510,7 @@ $context["label"] == "info")) {
         yield from [];
     }
 
-    // line 1371
+    // line 1502
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -2263,7 +2532,7 @@ $context["label"] == "info")) {
         yield from [];
     }
 
-    // line 1656
+    // line 1925
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -2306,7 +2575,7 @@ $context["label"] == "info")) {
      */
     public function getDebugInfo(): array
     {
-        return array (  2267 => 1656,  2245 => 1371,  2223 => 975,  2200 => 7,  2184 => 1657,  2182 => 1656,  1968 => 1445,  1925 => 1405,  1890 => 1372,  1888 => 1371,  1884 => 1369,  1874 => 1364,  1865 => 1362,  1861 => 1361,  1858 => 1360,  1854 => 1358,  1852 => 1357,  1849 => 1356,  1847 => 1355,  1844 => 1354,  1842 => 1353,  1839 => 1352,  1837 => 1351,  1831 => 1349,  1827 => 1348,  1819 => 1342,  1813 => 1341,  1810 => 1340,  1804 => 1337,  1800 => 1336,  1797 => 1335,  1791 => 1332,  1787 => 1331,  1781 => 1330,  1776 => 1329,  1773 => 1328,  1770 => 1327,  1763 => 1324,  1760 => 1323,  1757 => 1321,  1751 => 1318,  1747 => 1317,  1744 => 1316,  1740 => 1314,  1736 => 1312,  1733 => 1311,  1727 => 1309,  1725 => 1308,  1721 => 1307,  1717 => 1306,  1711 => 1305,  1706 => 1304,  1703 => 1303,  1700 => 1302,  1697 => 1301,  1693 => 1298,  1687 => 1297,  1681 => 1294,  1677 => 1293,  1674 => 1292,  1671 => 1291,  1667 => 1289,  1661 => 1287,  1659 => 1286,  1655 => 1285,  1651 => 1284,  1645 => 1283,  1640 => 1282,  1633 => 1278,  1629 => 1277,  1626 => 1276,  1623 => 1275,  1620 => 1273,  1617 => 1272,  1614 => 1271,  1611 => 1270,  1608 => 1268,  1605 => 1267,  1603 => 1266,  1601 => 1265,  1598 => 1264,  1595 => 1263,  1591 => 1262,  1583 => 1261,  1580 => 1260,  1576 => 1258,  1574 => 1257,  1570 => 1256,  1566 => 1255,  1562 => 1254,  1555 => 1252,  1551 => 1251,  1548 => 1250,  1542 => 1249,  1539 => 1248,  1536 => 1247,  1533 => 1246,  1528 => 1245,  1525 => 1244,  1522 => 1243,  1519 => 1242,  1513 => 1239,  1510 => 1238,  1508 => 1237,  1504 => 1236,  1501 => 1235,  1498 => 1234,  1495 => 1233,  1493 => 1232,  1478 => 1219,  1467 => 1211,  1457 => 1204,  1448 => 1198,  1443 => 1195,  1433 => 1188,  1430 => 1187,  1428 => 1186,  1417 => 1177,  1413 => 1175,  1409 => 1173,  1407 => 1172,  1404 => 1171,  1402 => 1170,  1399 => 1169,  1397 => 1168,  1394 => 1167,  1392 => 1166,  1389 => 1165,  1386 => 1164,  1384 => 1163,  1378 => 1160,  1373 => 1157,  1367 => 1154,  1364 => 1153,  1358 => 1150,  1353 => 1148,  1348 => 1146,  1343 => 1145,  1341 => 1144,  1338 => 1143,  1335 => 1142,  1332 => 1141,  1330 => 1140,  1317 => 1129,  1313 => 1127,  1309 => 1125,  1307 => 1124,  1304 => 1123,  1302 => 1122,  1299 => 1121,  1297 => 1120,  1294 => 1119,  1292 => 1118,  1289 => 1117,  1286 => 1116,  1284 => 1115,  1278 => 1112,  1273 => 1109,  1267 => 1106,  1264 => 1105,  1258 => 1102,  1253 => 1100,  1248 => 1098,  1243 => 1097,  1241 => 1096,  1238 => 1095,  1235 => 1094,  1232 => 1093,  1230 => 1092,  1225 => 1089,  1223 => 1088,  1219 => 1086,  1216 => 1085,  1208 => 1081,  1205 => 1080,  1202 => 1079,  1200 => 1078,  1182 => 1063,  1157 => 1041,  1142 => 1029,  1137 => 1026,  1124 => 1017,  1121 => 1016,  1115 => 1013,  1109 => 1010,  1104 => 1008,  1099 => 1007,  1094 => 1005,  1089 => 1003,  1084 => 1002,  1082 => 1001,  1079 => 1000,  1076 => 999,  1073 => 998,  1070 => 997,  1068 => 996,  1066 => 995,  1061 => 993,  1049 => 983,  1046 => 982,  1043 => 980,  1040 => 979,  1036 => 976,  1034 => 975,  63 => 7,  59 => 6,  52 => 1,);
+        return array (  2536 => 1925,  2514 => 1502,  2492 => 1106,  2469 => 7,  2453 => 1926,  2451 => 1925,  2099 => 1576,  2056 => 1536,  2021 => 1503,  2019 => 1502,  2015 => 1500,  2005 => 1495,  1996 => 1493,  1992 => 1492,  1989 => 1491,  1985 => 1489,  1983 => 1488,  1980 => 1487,  1978 => 1486,  1975 => 1485,  1973 => 1484,  1970 => 1483,  1968 => 1482,  1962 => 1480,  1958 => 1479,  1950 => 1473,  1944 => 1472,  1941 => 1471,  1935 => 1468,  1931 => 1467,  1928 => 1466,  1922 => 1463,  1918 => 1462,  1912 => 1461,  1907 => 1460,  1904 => 1459,  1901 => 1458,  1894 => 1455,  1891 => 1454,  1888 => 1452,  1882 => 1449,  1878 => 1448,  1875 => 1447,  1871 => 1445,  1867 => 1443,  1864 => 1442,  1858 => 1440,  1856 => 1439,  1852 => 1438,  1848 => 1437,  1842 => 1436,  1837 => 1435,  1834 => 1434,  1831 => 1433,  1828 => 1432,  1824 => 1429,  1818 => 1428,  1812 => 1425,  1808 => 1424,  1805 => 1423,  1802 => 1422,  1798 => 1420,  1792 => 1418,  1790 => 1417,  1786 => 1416,  1782 => 1415,  1776 => 1414,  1771 => 1413,  1764 => 1409,  1760 => 1408,  1757 => 1407,  1754 => 1406,  1751 => 1404,  1748 => 1403,  1745 => 1402,  1742 => 1401,  1739 => 1399,  1736 => 1398,  1734 => 1397,  1732 => 1396,  1729 => 1395,  1726 => 1394,  1722 => 1393,  1714 => 1392,  1711 => 1391,  1707 => 1389,  1705 => 1388,  1701 => 1387,  1697 => 1386,  1693 => 1385,  1686 => 1383,  1682 => 1382,  1679 => 1381,  1673 => 1380,  1670 => 1379,  1667 => 1378,  1664 => 1377,  1659 => 1376,  1656 => 1375,  1653 => 1374,  1650 => 1373,  1644 => 1370,  1641 => 1369,  1639 => 1368,  1635 => 1367,  1632 => 1366,  1629 => 1365,  1626 => 1364,  1624 => 1363,  1609 => 1350,  1598 => 1342,  1588 => 1335,  1579 => 1329,  1574 => 1326,  1564 => 1319,  1561 => 1318,  1559 => 1317,  1548 => 1308,  1544 => 1306,  1540 => 1304,  1538 => 1303,  1535 => 1302,  1533 => 1301,  1530 => 1300,  1528 => 1299,  1525 => 1298,  1523 => 1297,  1520 => 1296,  1517 => 1295,  1515 => 1294,  1509 => 1291,  1504 => 1288,  1498 => 1285,  1495 => 1284,  1489 => 1281,  1484 => 1279,  1479 => 1277,  1474 => 1276,  1472 => 1275,  1469 => 1274,  1466 => 1273,  1463 => 1272,  1461 => 1271,  1448 => 1260,  1444 => 1258,  1440 => 1256,  1438 => 1255,  1435 => 1254,  1433 => 1253,  1430 => 1252,  1428 => 1251,  1425 => 1250,  1423 => 1249,  1420 => 1248,  1417 => 1247,  1415 => 1246,  1409 => 1243,  1404 => 1240,  1398 => 1237,  1395 => 1236,  1389 => 1233,  1384 => 1231,  1379 => 1229,  1374 => 1228,  1372 => 1227,  1369 => 1226,  1366 => 1225,  1363 => 1224,  1361 => 1223,  1356 => 1220,  1354 => 1219,  1350 => 1217,  1347 => 1216,  1339 => 1212,  1336 => 1211,  1333 => 1210,  1331 => 1209,  1313 => 1194,  1288 => 1172,  1273 => 1160,  1268 => 1157,  1255 => 1148,  1252 => 1147,  1246 => 1144,  1240 => 1141,  1235 => 1139,  1230 => 1138,  1225 => 1136,  1220 => 1134,  1215 => 1133,  1213 => 1132,  1210 => 1131,  1207 => 1130,  1204 => 1129,  1201 => 1128,  1199 => 1127,  1197 => 1126,  1192 => 1124,  1180 => 1114,  1177 => 1113,  1174 => 1111,  1171 => 1110,  1167 => 1107,  1165 => 1106,  63 => 7,  59 => 6,  52 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -3283,6 +3552,137 @@ $context["label"] == "info")) {
                 box-shadow: 0 0 0 0 rgba(4, 99, 241, 0);
             }
         }
+
+        /* ==================== MODAL LOADING EFFECTS UNIVERSELLES ==================== */
+
+        /* Animation d'entrée pour tous les modals */
+        .modal.fade .modal-dialog {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.95);
+            opacity: 0;
+        }
+
+        .modal.fade.show .modal-dialog {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Overlay avec fond animé */
+        .modal-backdrop {
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-backdrop.fade {
+            opacity: 0;
+        }
+
+        .modal-backdrop.fade.show {
+            opacity: 0.7;
+        }
+
+        /* Spinner de chargement intégré - visible automatiquement */
+        .modal-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1060;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-loading .spinner-container {
+            text-align: center;
+        }
+
+        .modal-loading .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.25rem;
+            color: var(--primary-color);
+        }
+
+        .modal-loading .loading-text {
+            margin-top: 1rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Animation d'entrée du contenu */
+        .modal-content {
+            animation: modalSlideIn 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Effet de pulse pour les boutons */
+        .modal-footer .btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .modal-footer .btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Scroll personnalisé */
+        .modal-body {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .modal-dialog {
+                margin: 1rem;
+            }
+            
+            .modal-content {
+                border-radius: 16px;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .modal-footer .btn {
+                width: 100%;
+                margin: 0;
+            }
+        }
     </style>
     
     {% block stylesheets %}{% endblock %}
@@ -3768,204 +4168,342 @@ $context["label"] == "info")) {
         </div>
     </footer>
     
-    <!-- Bootstrap 5 JS -->
-    <!-- CDN JavaScript -->
+   <!-- Bootstrap 5 JS -->
     <script src=\"https://code.jquery.com/jquery-3.6.4.min.js\"></script>
     <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js\"></script>
     <script src=\"https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js\"></script>
     <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
 
-    
-    <!-- Custom JS SIMPLIFIÉ -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Toggle sidebar sur mobile
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebar = document.getElementById('sidebarMenu');
-            const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-            
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('show');
-                    sidebarBackdrop.classList.toggle('show');
-                    document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
-                });
-            }
-            
-            if (sidebarBackdrop) {
-                sidebarBackdrop.addEventListener('click', function() {
+    // ==================== SCRIPT PRINCIPAL UNIFIÉ ====================
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // ---------- SIDEBAR MOBILE ----------
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebarMenu');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                sidebarBackdrop.classList.toggle('show');
+                document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
+            });
+        }
+        
+        if (sidebarBackdrop) {
+            sidebarBackdrop.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+                sidebarBackdrop.classList.remove('show');
+                document.body.style.overflow = '';
+            });
+        }
+        
+        if (window.innerWidth < 768) {
+            const sidebarLinks = sidebar?.querySelectorAll('.nav-link') || [];
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function() {
                     sidebar.classList.remove('show');
-                    sidebarBackdrop.classList.remove('show');
+                    sidebarBackdrop?.classList.remove('show');
                     document.body.style.overflow = '';
                 });
-            }
-            
-            // Fermer le sidebar quand on clique sur un lien (mobile)
-            if (window.innerWidth < 768) {
-                const sidebarLinks = sidebar.querySelectorAll('.nav-link');
-                sidebarLinks.forEach(link => {
-                    link.addEventListener('click', function() {
-                        sidebar.classList.remove('show');
-                        sidebarBackdrop.classList.remove('show');
-                        document.body.style.overflow = '';
-                    });
-                });
-            }
-            
-            // Gestion des alertes flash
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }, 5000);
             });
-            
-            // Gestion des erreurs d'images SIMPLIFIÉE (sans les images produits)
-            document.querySelectorAll('img:not(.product-img)').forEach(img => {
-                img.addEventListener('error', function() {
-                    const parent = this.parentElement;
-                    const initial = this.getAttribute('data-initial') || 'H';
-                    
-                    // Créer un élément pour les initiales
-                    const fallback = document.createElement('div');
-                    if (parent.classList.contains('company-logo')) {
-                        fallback.className = 'logo-fallback';
-                    } else if (parent.classList.contains('user-avatar')) {
-                        fallback.className = 'avatar-initials';
-                    }
-                    fallback.textContent = initial;
-                    
-                    // Remplacer l'image
-                    this.style.display = 'none';
-                    parent.appendChild(fallback);
-                });
-            });
-            
-            // Gestion de la recherche universelle
-            function setupUniversalSearch(searchInputId, searchClearId, searchFormId, searchHintId) {
-                const searchInput = document.getElementById(searchInputId);
-                const searchClear = document.getElementById(searchClearId);
-                const searchForm = document.getElementById(searchFormId);
-                const searchHint = document.getElementById(searchHintId);
-                
-                if (!searchInput || !searchClear || !searchForm) return;
-                
-                function toggleClearButton() {
-                    if (searchInput.value.trim() !== '') {
-                        searchClear.classList.add('show');
-                    } else {
-                        searchClear.classList.remove('show');
-                    }
-                }
-                
-                function updateSearchPlaceholder() {
-                    const currentRoute = window.location.pathname;
-                    let placeholder = 'Rechercher...';
-                    let hint = 'Appuyez sur Entrée pour rechercher';
-                    
-                    if (currentRoute.includes('/admin/user')) {
-                        placeholder = 'Rechercher un utilisateur...';
-                        hint = 'Recherche par nom, email ou téléphone';
-                    } else if (currentRoute.includes('/admin/product')) {
-                        placeholder = 'Rechercher un produit...';
-                        hint = 'Recherche par nom, référence ou catégorie';
-                    } else if (currentRoute.includes('/admin/category')) {
-                        placeholder = 'Rechercher une catégorie...';
-                        hint = 'Recherche par nom ou description';
-                    } else if (currentRoute.includes('/admin/order')) {
-                        placeholder = 'Rechercher une commande...';
-                        hint = 'Recherche par numéro, client ou statut';
-                    } else if (currentRoute.includes('/admin/stock')) {
-                        placeholder = 'Rechercher un mouvement de stock...';
-                        hint = 'Recherche par produit ou type';
-                    } else if (currentRoute.includes('/admin/purchase')) {
-                        placeholder = 'Rechercher un achat...';
-                        hint = 'Recherche par fournisseur ou référence';
-                    }
-                    
-                    searchInput.placeholder = placeholder;
-                    if (searchHint) {
-                        searchHint.textContent = hint;
-                    }
-                }
-                
-                searchInput.addEventListener('input', toggleClearButton);
-                
-                searchClear.addEventListener('click', function() {
-                    searchInput.value = '';
-                    searchInput.focus();
-                    toggleClearButton();
-                    
-                    if (searchInput.value === '') {
-                        const url = new URL(window.location);
-                        url.searchParams.delete('search');
-                        url.searchParams.delete('page');
-                        window.location.href = url.toString();
-                    }
-                });
-                
-                searchForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const searchTerm = searchInput.value.trim();
-                    const currentUrl = new URL(window.location);
-                    
-                    if (searchTerm) {
-                        currentUrl.searchParams.set('search', searchTerm);
-                        currentUrl.searchParams.set('page', '1');
-                    } else {
-                        currentUrl.searchParams.delete('search');
-                        currentUrl.searchParams.delete('page');
-                    }
-                    
-                    window.location.href = currentUrl.toString();
-                });
-                
-                updateSearchPlaceholder();
-                toggleClearButton();
-            }
-            
-            // Configurer les deux barres de recherche
-            setupUniversalSearch('universalSearchInput', 'universalSearchClear', 'universalSearchForm', 'searchHint');
-            setupUniversalSearch('universalSearchInputMobile', 'universalSearchClearMobile', 'universalSearchFormMobile', 'searchHintMobile');
-            
-            // Synchroniser les deux champs de recherche
-            const desktopInput = document.getElementById('universalSearchInput');
-            const mobileInput = document.getElementById('universalSearchInputMobile');
-            
-            if (desktopInput && mobileInput) {
-                desktopInput.addEventListener('input', function() {
-                    mobileInput.value = this.value;
-                    const mobileClear = document.getElementById('universalSearchClearMobile');
-                    if (mobileClear) {
-                        mobileClear.classList.toggle('show', this.value.trim() !== '');
-                    }
-                });
-                
-                mobileInput.addEventListener('input', function() {
-                    desktopInput.value = this.value;
-                    const desktopClear = document.getElementById('universalSearchClear');
-                    if (desktopClear) {
-                        desktopClear.classList.toggle('show', this.value.trim() !== '');
-                    }
-                });
-            }
-        });
+        }
         
-        // Fermer automatiquement les alertes après 5 secondes
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                const alerts = document.querySelectorAll('.alert');
-                alerts.forEach(alert => {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                });
+        // ---------- ALERTES FLASH ----------
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
             }, 5000);
         });
+        
+        // ---------- GESTION DES ERREURS D'IMAGES ----------
+        document.querySelectorAll('img:not(.product-img)').forEach(img => {
+            img.addEventListener('error', function() {
+                const parent = this.parentElement;
+                const initial = this.getAttribute('data-initial') || 'H';
+                
+                const fallback = document.createElement('div');
+                if (parent?.classList.contains('company-logo')) {
+                    fallback.className = 'logo-fallback';
+                } else if (parent?.classList.contains('user-avatar')) {
+                    fallback.className = 'avatar-initials';
+                }
+                fallback.textContent = initial;
+                
+                this.style.display = 'none';
+                parent?.appendChild(fallback);
+            });
+        });
+        
+        // ---------- RECHERCHE UNIVERSELLE ----------
+        function setupUniversalSearch(searchInputId, searchClearId, searchFormId, searchHintId) {
+            const searchInput = document.getElementById(searchInputId);
+            const searchClear = document.getElementById(searchClearId);
+            const searchForm = document.getElementById(searchFormId);
+            const searchHint = document.getElementById(searchHintId);
+            
+            if (!searchInput || !searchClear || !searchForm) return;
+            
+            function toggleClearButton() {
+                searchClear.classList.toggle('show', searchInput.value.trim() !== '');
+            }
+            
+            function updateSearchPlaceholder() {
+                const currentRoute = window.location.pathname;
+                let placeholder = 'Rechercher...';
+                let hint = 'Appuyez sur Entrée pour rechercher';
+                
+                if (currentRoute.includes('/admin/user')) {
+                    placeholder = 'Rechercher un utilisateur...';
+                    hint = 'Recherche par nom, email ou téléphone';
+                } else if (currentRoute.includes('/admin/product')) {
+                    placeholder = 'Rechercher un produit...';
+                    hint = 'Recherche par nom, référence ou catégorie';
+                } else if (currentRoute.includes('/admin/category')) {
+                    placeholder = 'Rechercher une catégorie...';
+                    hint = 'Recherche par nom ou description';
+                } else if (currentRoute.includes('/admin/order')) {
+                    placeholder = 'Rechercher une commande...';
+                    hint = 'Recherche par numéro, client ou statut';
+                } else if (currentRoute.includes('/admin/stock')) {
+                    placeholder = 'Rechercher un mouvement de stock...';
+                    hint = 'Recherche par produit ou type';
+                } else if (currentRoute.includes('/admin/purchase')) {
+                    placeholder = 'Rechercher un achat...';
+                    hint = 'Recherche par fournisseur ou référence';
+                }
+                
+                searchInput.placeholder = placeholder;
+                if (searchHint) searchHint.textContent = hint;
+            }
+            
+            searchInput.addEventListener('input', toggleClearButton);
+            
+            searchClear.addEventListener('click', function() {
+                searchInput.value = '';
+                searchInput.focus();
+                toggleClearButton();
+                
+                if (searchInput.value === '') {
+                    const url = new URL(window.location);
+                    url.searchParams.delete('search');
+                    url.searchParams.delete('page');
+                    window.location.href = url.toString();
+                }
+            });
+            
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const searchTerm = searchInput.value.trim();
+                const currentUrl = new URL(window.location);
+                
+                if (searchTerm) {
+                    currentUrl.searchParams.set('search', searchTerm);
+                    currentUrl.searchParams.set('page', '1');
+                } else {
+                    currentUrl.searchParams.delete('search');
+                    currentUrl.searchParams.delete('page');
+                }
+                window.location.href = currentUrl.toString();
+            });
+            
+            updateSearchPlaceholder();
+            toggleClearButton();
+        }
+        
+        setupUniversalSearch('universalSearchInput', 'universalSearchClear', 'universalSearchForm', 'searchHint');
+        setupUniversalSearch('universalSearchInputMobile', 'universalSearchClearMobile', 'universalSearchFormMobile', 'searchHintMobile');
+        
+        // Synchronisation des champs de recherche
+        const desktopInput = document.getElementById('universalSearchInput');
+        const mobileInput = document.getElementById('universalSearchInputMobile');
+        
+        if (desktopInput && mobileInput) {
+            desktopInput.addEventListener('input', function() {
+                mobileInput.value = this.value;
+                const mobileClear = document.getElementById('universalSearchClearMobile');
+                if (mobileClear) mobileClear.classList.toggle('show', this.value.trim() !== '');
+            });
+            
+            mobileInput.addEventListener('input', function() {
+                desktopInput.value = this.value;
+                const desktopClear = document.getElementById('universalSearchClear');
+                if (desktopClear) desktopClear.classList.toggle('show', this.value.trim() !== '');
+            });
+        }
+        
+        // ---------- GESTION UNIVERSELLE DES MODALS ----------
+        function addLoadingIndicator(modalElement) {
+            if (modalElement.querySelector('.modal-loading')) return;
+            
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'modal-loading';
+            loadingDiv.style.display = 'none';
+            loadingDiv.innerHTML = `
+                <div class=\"spinner-container\">
+                    <div class=\"spinner-border\" role=\"status\">
+                        <span class=\"visually-hidden\">Chargement...</span>
+                    </div>
+                    <div class=\"loading-text\">Chargement en cours...</div>
+                </div>
+            `;
+            
+            const modalContent = modalElement.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.style.position = 'relative';
+                modalContent.appendChild(loadingDiv);
+            }
+        }
+        
+        function setModalLoading(modalElement, isLoading) {
+            const loadingDiv = modalElement.querySelector('.modal-loading');
+            if (loadingDiv) loadingDiv.style.display = isLoading ? 'flex' : 'none';
+        }
+        
+        function initModal(modal) {
+            // Éviter les doubles initialisations
+            if (modal.hasAttribute('data-modal-initialized')) return;
+            modal.setAttribute('data-modal-initialized', 'true');
+            
+            addLoadingIndicator(modal);
+            
+            modal.addEventListener('show.bs.modal', function() {
+                setModalLoading(this, false);
+            });
+            
+            const form = modal.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', () => setModalLoading(modal, true));
+            }
+            
+            const actionBtns = modal.querySelectorAll('.btn-primary, .btn-danger, .btn-success, .btn-warning');
+            actionBtns.forEach(btn => {
+                if (!btn.hasAttribute('data-bs-dismiss') && btn.type !== 'button') {
+                    btn.addEventListener('click', () => setModalLoading(modal, true));
+                }
+            });
+        }
+        
+        // Initialiser tous les modals existants
+        document.querySelectorAll('.modal').forEach(modal => initModal(modal));
+        
+        // Observer les nouveaux modals
+        const modalObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1) {
+                        if (node.classList?.contains('modal')) initModal(node);
+                        node.querySelectorAll?.('.modal').forEach(modal => initModal(modal));
+                    }
+                });
+            });
+        });
+        modalObserver.observe(document.body, { childList: true, subtree: true });
+        
+        // ---------- FONCTIONS GLOBALES ----------
+        window.showModalWithLoading = function(modalId, loadContentCallback) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            
+            const bsModal = bootstrap.Modal.getOrCreateInstance(modal);
+            
+            modal.addEventListener('show.bs.modal', async function onShow() {
+                modal.removeEventListener('show.bs.modal', onShow);
+                setModalLoading(modal, true);
+                try {
+                    if (loadContentCallback) await loadContentCallback(modal);
+                } finally {
+                    setModalLoading(modal, false);
+                }
+            }, { once: true });
+            
+            bsModal.show();
+        };
+        
+        window.showConfirmModal = function(options) {
+            const {
+                title = 'Confirmation',
+                message = 'Êtes-vous sûr de vouloir effectuer cette action ?',
+                type = 'info',
+                confirmText = 'Confirmer',
+                cancelText = 'Annuler',
+                onConfirm = null,
+                onCancel = null
+            } = options;
+            
+            const modalId = 'dynamic-confirm-modal-' + Date.now();
+            const modalHtml = `
+                <div class=\"modal fade modal-confirm\" id=\"\${modalId}\" tabindex=\"-1\">
+                    <div class=\"modal-dialog modal-dialog-centered\">
+                        <div class=\"modal-content\">
+                            <div class=\"modal-header \${type === 'danger' ? 'bg-danger text-white' : (type === 'success' ? 'bg-success text-white' : (type === 'warning' ? 'bg-warning text-dark' : 'bg-primary text-white'))}\">
+                                <h5 class=\"modal-title\">
+                                    <i class=\"fas \${type === 'danger' ? 'fa-exclamation-triangle' : (type === 'success' ? 'fa-check-circle' : (type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'))} me-2\"></i>
+                                    \${title}
+                                </h5>
+                                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+                            </div>
+                            <div class=\"modal-body text-center py-4\">
+                                <div class=\"confirm-icon \${type} mb-3\">
+                                    <i class=\"fas \${type === 'danger' ? 'fa-times-circle' : (type === 'success' ? 'fa-check-circle' : (type === 'warning' ? 'fa-exclamation-triangle' : 'fa-question-circle'))} fa-3x\"></i>
+                                </div>
+                                <p class=\"mb-0 fs-5\">\${message}</p>
+                            </div>
+                            <div class=\"modal-footer justify-content-center\">
+                                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">\${cancelText}</button>
+                                <button type=\"button\" class=\"btn btn-\${type === 'danger' ? 'danger' : (type === 'success' ? 'success' : 'primary')}\" id=\"confirm-action-\${modalId}\">\${confirmText}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            const modalElement = document.getElementById(modalId);
+            
+            initModal(modalElement);
+            const modal = new bootstrap.Modal(modalElement);
+            
+            document.getElementById(`confirm-action-\${modalId}`).addEventListener('click', async function() {
+                if (onConfirm) {
+                    setModalLoading(modalElement, true);
+                    try {
+                        await onConfirm();
+                    } finally {
+                        setModalLoading(modalElement, false);
+                        modal.hide();
+                    }
+                } else {
+                    modal.hide();
+                }
+            });
+            
+            modalElement.addEventListener('hidden.bs.modal', () => setTimeout(() => modalElement.remove(), 300));
+            if (onCancel) modalElement.addEventListener('hidden.bs.modal', onCancel, { once: true });
+            
+            modal.show();
+        };
+        
+        window.setModalLoadingState = function(modalId, isLoading) {
+            const modal = document.getElementById(modalId);
+            if (modal) setModalLoading(modal, isLoading);
+        };
+    });
+
+    // Fermeture automatique des alertes au chargement
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    });
     </script>
-    
-    
+
     {% block javascripts %}{% endblock %}
     {{ encore_entry_script_tags('app') }}
 

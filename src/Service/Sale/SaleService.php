@@ -11,6 +11,7 @@ use App\Entity\User;
 use App\Entity\HmaService;
 use App\Entity\DailyUsage;
 use App\Service\UnitConverter;
+use App\Service\StockSyncService;
 use App\Repository\ProductRepository;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,6 +30,7 @@ class SaleService
         private StockDeductionService $stockDeductionService,
         private PromotionCalculator $promotionCalculator,
         private UnitConverter $unitConverter,
+        private StockSyncService $stockSyncService,
         private ProductRepository $productRepository,
         private RecipeRepository $recipeRepository,
         private LoggerInterface $logger,
@@ -75,7 +77,8 @@ class SaleService
                             $item['promotion'] = null;
                         }
                     }
-                    $updatedCart[] = $item;
+                    // 🔥 CORRECTION: Garder la même clé (qui est l'ID du produit)
+                    $updatedCart[$key] = $item;
                 }
             } else {
                 $recipe = $this->recipeRepository->find($item['id']);
@@ -106,7 +109,7 @@ class SaleService
                             $item['promotion'] = null;
                         }
                     }
-                    $updatedCart[] = $item;
+                    $updatedCart[$key] = $item;
                 }
             }
         }
@@ -169,6 +172,7 @@ class SaleService
                 'unit_price' => $promotionInfo['final_price'],
                 'total_price' => $quantity * $promotionInfo['final_price'],
                 'has_promotion' => $promotionInfo['has_promotion'],
+                'prescription_required' => $product->isPrescriptionRequired(),
                 'promotion' => $promotionInfo['promotion'] ? [
                     'id' => $promotionInfo['promotion']->getId(),
                     'name' => $promotionInfo['promotion']->getName(),
@@ -328,10 +332,15 @@ class SaleService
     
     /**
      * Met à jour la quantité d'un article dans le panier
+     * 
+     * 🔥 CORRECTION IMPORTANTE:
+     * - Pour les produits: la clé est l'ID du produit (ex: 123)
+     * - Pour les recettes: la clé est 'recipe_' . ID (ex: recipe_456)
      */
     public function updateCartItemQuantity(int $itemId, string $type, int $quantity): array
     {
-        $cartKey = $type . '_' . $itemId;
+        // Construction de la clé correcte
+        $cartKey = ($type === 'product') ? $itemId : 'recipe_' . $itemId;
         
         if (!isset($this->cart[$cartKey])) {
             throw new \Exception('Article non trouvé dans le panier');
@@ -347,9 +356,10 @@ class SaleService
             $product = $this->productRepository->find($itemId);
             if ($product && $product->getStockQuantity() < $quantity) {
                 throw new \Exception(sprintf(
-                    'Stock insuffisant pour "%s". Disponible: %d',
+                    'Stock insuffisant pour "%s". Disponible: %d %s',
                     $product->getName(),
-                    $product->getStockQuantity()
+                    $product->getStockQuantity(),
+                    $product->getUnit() ?? 'unités'
                 ));
             }
             if ($product && $product->hasExpiryDate() && $product->getExpiryDate() < new \DateTime()) {
@@ -362,9 +372,7 @@ class SaleService
             }
         }
         
-        // 🔥 Recalculer la promotion après modification de quantité
-        $item = $this->cart[$cartKey];
-        
+        // Recalculer la promotion
         if ($type === 'product') {
             $product = $this->productRepository->find($itemId);
             if ($product) {
@@ -376,6 +384,7 @@ class SaleService
                 $this->cart[$cartKey]['unit_price'] = $unitPrice;
                 $this->cart[$cartKey]['total_price'] = $totalPrice;
                 $this->cart[$cartKey]['has_promotion'] = $promotionInfo['has_promotion'];
+                $this->cart[$cartKey]['original_unit_price'] = $promotionInfo['original_price'];
                 if ($promotionInfo['has_promotion'] && $promotionInfo['promotion']) {
                     $this->cart[$cartKey]['promotion'] = [
                         'id' => $promotionInfo['promotion']->getId(),
@@ -401,6 +410,7 @@ class SaleService
                 $this->cart[$cartKey]['unit_price'] = $unitPrice;
                 $this->cart[$cartKey]['total_price'] = $totalPrice;
                 $this->cart[$cartKey]['has_promotion'] = $promotionInfo['has_promotion'];
+                $this->cart[$cartKey]['original_unit_price'] = $promotionInfo['original_price'];
                 if ($promotionInfo['has_promotion'] && $promotionInfo['promotion']) {
                     $this->cart[$cartKey]['promotion'] = [
                         'id' => $promotionInfo['promotion']->getId(),
@@ -421,17 +431,23 @@ class SaleService
         $this->saveCart();
         return $this->cart[$cartKey];
     }
-    
+
     /**
      * Supprime un article du panier
      */
     public function removeFromCart(int $itemId, string $type): void
     {
-        $cartKey = $type . '_' . $itemId;
+        // Construction de la clé correcte
+        $cartKey = ($type === 'product') ? $itemId : 'recipe_' . $itemId;
         
         if (isset($this->cart[$cartKey])) {
             unset($this->cart[$cartKey]);
             $this->saveCart();
+            $this->logger->info('Article supprimé du panier', [
+                'type' => $type,
+                'id' => $itemId,
+                'cart_key' => $cartKey
+            ]);
         }
     }
     
@@ -464,7 +480,7 @@ class SaleService
         return $total;
     }
     
-    /**
+        /**
      * Valide une vente avec vérification complète des promotions
      */
     public function validateSale(
@@ -480,7 +496,7 @@ class SaleService
             throw new \Exception('Le panier est vide');
         }
         
-        // 🔥 Rafraîchir les promotions avant validation
+        // Rafraîchir les promotions avant validation
         $this->refreshCartPromotions();
         
         $dailyCheck = $this->checkDailyLimit($hmaService);
@@ -538,6 +554,28 @@ class SaleService
         
         $this->recordDailyUsage($managedHmaService);
         $this->entityManager->flush();
+        
+        // 🔥 SYNCHRONISER LE STOCK APRÈS LA VENTE
+        foreach ($this->cart as $item) {
+            if ($item['type'] === 'product') {
+                $product = $this->productRepository->find($item['id']);
+                if ($product) {
+                    $this->stockSyncService->syncProductStock($product);
+                }
+            } else {
+                // Pour les recettes, synchroniser les ingrédients
+                $recipe = $this->recipeRepository->find($item['id']);
+                if ($recipe) {
+                    foreach ($recipe->getRecipeItems() as $recipeItem) {
+                        $product = $recipeItem->getProduct();
+                        if ($product) {
+                            $this->stockSyncService->syncProductStock($product);
+                        }
+                    }
+                }
+            }
+        }
+        
         $this->clearCart();
         
         return $order;
@@ -619,6 +657,14 @@ class SaleService
         $orderItem->setTotalPrice((string) $totalPrice);
         $orderItem->setCreatedAt(new \DateTime());
         $orderItem->setVente($order);
+        
+        // 🔥 ENREGISTRER L'ID DU PRODUIT
+        $orderItem->setProductId($product->getId());
+        
+        // 🔥 ENREGISTRER LE LOT UTILISÉ POUR LE RETOUR
+        if (!empty($usedBatches) && isset($usedBatches[0]['batch'])) {
+            $orderItem->setStockBatchId($usedBatches[0]['batch']->getId());
+        }
         
         if (!empty($item['has_promotion']) && !empty($item['promotion'])) {
             $orderItem->setPromotionId($item['promotion']['id']);

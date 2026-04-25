@@ -64,17 +64,49 @@ abstract class BaseSaleController extends AbstractController
             'payment_methods' => self::PAYMENT_METHODS
         ]);
     }
-    
+
     #[Route('/sale/cart-data', name: 'sale_cart_data', methods: ['GET'])]
     public function cartData(): JsonResponse
     {
         $this->checkSaleAccess();
         
-        return $this->json([
-            'items' => $this->saleService->getCart(),
-            'total' => $this->saleService->getCartTotal(),
-            'count' => count($this->saleService->getCart())
-        ]);
+        try {
+            $cart = $this->saleService->getCart();
+            $cartTotal = $this->saleService->getCartTotal();
+            
+            $items = array_map(function($item) {
+                return [
+                    'id' => $item['id'],
+                    'type' => $item['type'],
+                    'name' => $item['name'],
+                    'barcode' => $item['barcode'] ?? null,
+                    'unit' => $item['unit'] ?? null,
+                    'unit_price' => (float) $item['unit_price'],
+                    'total_price' => (float) $item['total_price'],
+                    'quantity' => (int) $item['quantity'],
+                    'original_unit_price' => (float) ($item['original_unit_price'] ?? $item['unit_price']),
+                    'has_promotion' => (bool) ($item['has_promotion'] ?? false),
+                    'prescription_required' => (bool) ($item['prescription_required'] ?? false),
+                    'promotion' => $item['promotion'] ?? null,
+                    'image' => $item['image'] ?? null,
+                ];
+            }, $cart);
+            
+            return $this->json([
+                'success' => true,
+                'items' => $items,
+                'total' => $cartTotal,
+                'count' => count($items)
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'items' => [],
+                'total' => 0,
+                'count' => 0
+            ]);
+        }
     }
     
     #[Route('/sale/add-product/{id}', name: 'sale_add_product', methods: ['POST'])]

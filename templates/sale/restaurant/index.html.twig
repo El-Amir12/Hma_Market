@@ -574,7 +574,7 @@
                                     {% if item.has_promotion %}
                                         <div class="total text-primary fw-bold">
                                             {{ item.total_price|number_format(0, ',', ' ') }} FCFA
-                                            <span class="badge bg-primary bg-opacity-10 text-primary ms-2">
+                                            <span class="badge ms-2" style="background-color: #0463f1 !important; color: white !important;">
                                                 -{{ item.promotion.discount_percentage }}%
                                             </span>
                                         </div>

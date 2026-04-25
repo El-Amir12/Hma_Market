@@ -1,0 +1,334 @@
+{# templates/return/new.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau retour - Commande {{ order.orderNumber }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<style>
+    .order-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        color: white;
+        margin-bottom: 1.5rem;
+    }
+    .items-table {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .items-table thead {
+        background: #f8fafc;
+    }
+    .select-item-checkbox {
+        width: 40px;
+        text-align: center;
+    }
+    .quantity-input {
+        width: 100px;
+        text-align: center;
+    }
+    .selected-item {
+        background-color: #e0f2fe !important;
+    }
+    .already-returned-info {
+        font-size: 0.7rem;
+        margin-top: 0.25rem;
+    }
+    .already-returned-info.text-warning { color: #d97706; }
+    .already-returned-info.text-danger { color: #dc2626; }
+    .already-returned-info.text-success { color: #16a34a; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-1">
+                <i class="fas fa-undo-alt text-primary me-2"></i>
+                Nouveau retour
+            </h1>
+            <p class="text-muted">Commande #{{ order.orderNumber }}</p>
+        </div>
+        <a href="{{ path('app_orders_show', {'id': order.id}) }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Retour à la commande
+        </a>
+    </div>
+
+    <div class="order-card">
+        <div class="row">
+            <div class="col-md-4">
+                <small class="opacity-75">N° commande</small>
+                <h5 class="mb-0">{{ order.orderNumber }}</h5>
+            </div>
+            <div class="col-md-4">
+                <small class="opacity-75">Client</small>
+                <h5 class="mb-0">{{ order.customerName ?: 'Non renseigné' }}</h5>
+                <small>{{ order.customerPhone }}</small>
+            </div>
+            <div class="col-md-4">
+                <small class="opacity-75">Date</small>
+                <h5 class="mb-0">{{ order.createdAt|date('d/m/Y H:i') }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" id="returnForm">
+        <div class="items-table mb-4">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="select-item-checkbox">
+                                <input type="checkbox" id="selectAll">
+                            </th>
+                            <th>Produit</th>
+                            <th class="text-center">Quantité vendue</th>
+                            <th class="text-center">Déjà retourné</th>
+                            <th class="text-center">Restant</th>
+                            <th class="text-center">Prix unitaire</th>
+                            <th class="text-center">Total retour</th>
+                            <th class="text-center">Quantité à retourner</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.orderItems %}
+                            {% set alreadyReturned = returned_quantities[item.id]|default(0) %}
+                            {% set maxReturnable = item.quantity - alreadyReturned %}
+                            <tr class="order-item-row" 
+                                data-item-id="{{ item.id }}" 
+                                data-max-returnable="{{ maxReturnable }}"
+                                data-unit-price="{{ item.unitPrice }}">
+                                <td class="text-center">
+                                    <input type="checkbox" class="item-checkbox" value="{{ item.id }}" {% if maxReturnable <= 0 %}disabled{% endif %}>
+                                </td>
+                                <td>
+                                    <strong>{{ item.productName }}</strong>
+                                    {% if item.promotionName %}
+                                        <br><small class="text-primary"><i class="fas fa-tag"></i> {{ item.promotionName }}</small>
+                                    {% endif %}
+                                    {% if item.recipe %}
+                                        <br><small class="text-muted"><i class="fas fa-utensils"></i> Menu/Recette</small>
+                                    {% else %}
+                                        <br><small class="text-muted"><i class="fas fa-box"></i> Produit simple</small>
+                                    {% endif %}
+                                    <div class="already-returned-info">
+                                        {% if alreadyReturned > 0 %}
+                                            <span class="text-warning">
+                                                <i class="fas fa-info-circle"></i> Déjà retourné: {{ alreadyReturned }}/{{ item.quantity }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-success">
+                                                <i class="fas fa-check-circle"></i> Aucun retour
+                                            </span>
+                                        {% endif %}
+                                        {% if maxReturnable <= 0 %}
+                                            <span class="text-danger d-block">
+                                                <i class="fas fa-times-circle"></i> Complètement retourné
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-secondary">{{ item.quantity }}</span>
+                                </td>
+                                <td class="text-center">
+                                    {% if alreadyReturned > 0 %}
+                                        <span class="badge bg-warning">{{ alreadyReturned }}</span>
+                                    {% else %}
+                                        <span class="badge bg-success">0</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <strong class="text-{% if maxReturnable > 0 %}success{% else %}danger{% endif %}">
+                                        {{ maxReturnable }}
+                                    </strong>
+                                </td>
+                                <td class="text-center">
+                                    {{ item.unitPrice|number_format(0, ',', ' ') }} FCFA
+                                </td>
+                                <td class="text-center total-item-{{ item.id }}">
+                                    0 FCFA
+                                </td>
+                                <td class="text-center">
+                                    <input type="number" class="form-control quantity-input return-quantity" 
+                                           data-item-id="{{ item.id }}" 
+                                           min="0" 
+                                           max="{{ maxReturnable }}" 
+                                           value="0" 
+                                           {% if maxReturnable <= 0 %}disabled{% endif %}>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Informations du retour</h5>
+            </div>
+            <div class="card-body">
+                {% include 'return/_form.html.twig' with {
+                    'reasons': reasons,
+                    'refund_methods': refund_methods
+                } %}
+            </div>
+            <div class="card-footer bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>Montant total à rembourser :</strong>
+                        <span id="totalRefundAmount" class="h4 text-primary ms-2">0 FCFA</span>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary me-2" onclick="history.back()">
+                            <i class="fas fa-times me-1"></i> Annuler
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-save me-1"></i> Créer la demande
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
+<script>
+$(document).ready(function() {
+    $('.select2').select2({
+        theme: 'bootstrap-5',
+        language: 'fr',
+        width: '100%'
+    });
+
+    $('#selectAll').change(function() {
+        let isChecked = $(this).is(':checked');
+        $('.item-checkbox:not(:disabled)').each(function() {
+            $(this).prop('checked', isChecked).trigger('change');
+        });
+    });
+
+    $('.item-checkbox').change(function() {
+        let row = $(this).closest('tr');
+        let quantityInput = row.find('.return-quantity');
+        let isChecked = $(this).is(':checked');
+        let maxReturnable = row.data('max-returnable');
+        
+        if (isChecked) {
+            quantityInput.prop('disabled', false);
+            if (quantityInput.val() == 0 || quantityInput.val() > maxReturnable) {
+                quantityInput.val(Math.min(1, maxReturnable));
+            }
+            row.addClass('selected-item');
+        } else {
+            quantityInput.prop('disabled', true).val(0);
+            row.removeClass('selected-item');
+        }
+        calculateTotalRefund();
+    });
+
+    $('.return-quantity').on('input', function() {
+        let row = $(this).closest('tr');
+        let maxReturnable = row.data('max-returnable');
+        let currentVal = parseInt($(this).val()) || 0;
+        
+        if (currentVal > maxReturnable) {
+            $(this).val(maxReturnable);
+            alert(`Vous ne pouvez retourner que ${maxReturnable} unité(s) maximum pour cet article.`);
+        }
+        if (currentVal < 0) {
+            $(this).val(0);
+        }
+        calculateTotalRefund();
+    });
+
+    function calculateTotalRefund() {
+        let total = 0;
+        $('.order-item-row').each(function() {
+            let checkbox = $(this).find('.item-checkbox');
+            if (checkbox.is(':checked') && !checkbox.is(':disabled')) {
+                let quantity = parseInt($(this).find('.return-quantity').val()) || 0;
+                let unitPrice = parseFloat($(this).data('unit-price'));
+                let itemTotal = quantity * unitPrice;
+                total += itemTotal;
+                $(this).find('.total-item-' + $(this).data('item-id')).text(itemTotal.toLocaleString('fr-FR') + ' FCFA');
+            } else {
+                $(this).find('.total-item-' + $(this).data('item-id')).text('0 FCFA');
+            }
+        });
+        $('#totalRefundAmount').text(total.toLocaleString('fr-FR') + ' FCFA');
+    }
+
+    $('#returnForm').submit(function(e) {
+        let selectedItems = [];
+        let hasError = false;
+        
+        $('.order-item-row').each(function() {
+            let checkbox = $(this).find('.item-checkbox');
+            if (checkbox.is(':checked') && !checkbox.is(':disabled')) {
+                let itemId = $(this).data('item-id');
+                let quantity = parseInt($(this).find('.return-quantity').val()) || 0;
+                let maxReturnable = $(this).data('max-returnable');
+                
+                if (quantity > maxReturnable) {
+                    alert(`La quantité pour "${$(this).find('strong').first().text()}" dépasse la quantité retournable (${maxReturnable}).`);
+                    hasError = true;
+                    return false;
+                }
+                
+                if (quantity > 0) {
+                    selectedItems[itemId] = quantity;
+                }
+            }
+        });
+
+        if (hasError) {
+            e.preventDefault();
+            return false;
+        }
+
+        if (Object.keys(selectedItems).length === 0) {
+            e.preventDefault();
+            alert('Veuillez sélectionner au moins un article à retourner.');
+            return false;
+        }
+
+        for (let itemId in selectedItems) {
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'items[' + itemId + ']',
+                value: selectedItems[itemId]
+            }).appendTo('#returnForm');
+        }
+
+        let reason = $('#reason').val();
+        if (!reason) {
+            e.preventDefault();
+            alert('Veuillez sélectionner un motif de retour.');
+            return false;
+        }
+
+        let refundMethod = $('#refund_method').val();
+        if (!refundMethod) {
+            e.preventDefault();
+            alert('Veuillez sélectionner une méthode de remboursement.');
+            return false;
+        }
+        
+        $('#submitBtn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span> Création en cours...');
+    });
+});
+</script>
+{% endblock %}

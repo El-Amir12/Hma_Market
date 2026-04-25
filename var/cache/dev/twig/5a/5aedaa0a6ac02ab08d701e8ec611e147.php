@@ -284,7 +284,7 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
                         </div>
                         <h5 class=\"fw-semibold mb-2\">Gain de temps</h5>
                         <p class=\"text-muted small mb-0\">
-                            Automatisez 80% de vos tâches administratives
+                            Automatisez jusqu'à 80% de votre gestion de stock 
                         </p>
                     </div>
                 </div>
@@ -552,7 +552,7 @@ class __TwigTemplate_4daf6458bdc5fe341e4a7d86a4648eb1 extends Template
                         </div>
                         <h5 class=\"fw-semibold mb-2\">Gain de temps</h5>
                         <p class=\"text-muted small mb-0\">
-                            Automatisez 80% de vos tâches administratives
+                            Automatisez jusqu'à 80% de votre gestion de stock 
                         </p>
                     </div>
                 </div>

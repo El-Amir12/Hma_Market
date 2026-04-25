@@ -832,7 +832,7 @@ class __TwigTemplate_1da90f738855b447730a3e84152cd450 extends Template
                     // line 576
                     yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "total_price", [], "any", false, false, false, 576), 0, ",", " "), "html", null, true);
                     yield " FCFA
-                                            <span class=\"badge bg-primary bg-opacity-10 text-primary ms-2\">
+                                            <span class=\"badge ms-2\" style=\"background-color: #0463f1 !important; color: white !important;\">
                                                 -";
                     // line 578
                     yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["item"], "promotion", [], "any", false, false, false, 578), "discount_percentage", [], "any", false, false, false, 578), "html", null, true);
@@ -2570,7 +2570,7 @@ refreshCart();
                                     {% if item.has_promotion %}
                                         <div class=\"total text-primary fw-bold\">
                                             {{ item.total_price|number_format(0, ',', ' ') }} FCFA
-                                            <span class=\"badge bg-primary bg-opacity-10 text-primary ms-2\">
+                                            <span class=\"badge ms-2\" style=\"background-color: #0463f1 !important; color: white !important;\">
                                                 -{{ item.promotion.discount_percentage }}%
                                             </span>
                                         </div>

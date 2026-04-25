@@ -186,6 +186,7 @@ services:
             $stockDeductionService: '@App\Service\Sale\StockDeductionService'
             $promotionCalculator: '@App\Service\Sale\PromotionCalculator'
             $unitConverter: '@App\Service\UnitConverter'
+            $stockSyncService: '@App\Service\StockSyncService'
             $productRepository: '@App\Repository\ProductRepository'
             $recipeRepository: '@App\Repository\RecipeRepository'
             $logger: '@monolog.logger'
@@ -235,14 +236,23 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    # ==================== COMMANDES CONSOLE ====================
-    App\Command\DeactivateExpiredBatchesCommand:
-        tags:
-            - { name: console.command }
-        arguments:
-            $stockDeductionService: '@App\Service\Sale\StockDeductionService'
-
     App\Service\UniqueNameValidator:
         autowire: true
         autoconfigure: true
-   
+
+    App\Service\Return\ReturnService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $returnOrderRepository: '@App\Repository\ReturnOrderRepository'
+            $stockBatchRepository: '@App\Repository\StockBatchRepository'
+            $stockSyncService: '@App\Service\StockSyncService'
+            $logger: '@monolog.logger'
+        public: true
+
+    # ==================== SERVICE DE SYNCHRONISATION STOCK ====================
+    App\Service\StockSyncService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $stockBatchRepository: '@App\Repository\StockBatchRepository'
+            $logger: '@monolog.logger'
+        public: true

@@ -153,12 +153,15 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Unité de mesure -->
                 <div class="row g-3 mt-3">
                     <div class="col-md-12">
                         <div class="form-floating">
-                            {{ form_widget(form.unit, {'attr': {'class': 'form-select', 'id': 'product_unit', 'placeholder': ' '}}) }}
+                            {{ form_widget(form.unit, {'attr': {
+                                'class': 'form-select select2-unit',  
+                                'id': 'product_unit', 
+                                'placeholder': ' '
+                            }}) }}
                             <label for="{{ form.unit.vars.id }}">
                                 <i class="fas fa-weight-hanging me-1"></i> Unité de mesure
                             </label>
@@ -426,6 +429,43 @@
                 </div>
                 {% endif %}
             </div>
+
+            {# templates/product/_form.html.twig - Remplacer is_ingredient par is_storable #}
+            {% if companyType == 'restaurant' %}
+                <div class="row g-3 mt-3">
+                    <div class="col-md-12">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body">
+                                <div class="form-check form-switch">
+                                    {{ form_widget(form.is_storable, {'attr': {
+                                        'class': 'form-check-input',
+                                        'role': 'switch'
+                                    }}) }}
+                                    <label class="form-check-label fw-bold" for="{{ form.is_storable.vars.id }}">
+                                        <i class="fas fa-boxes me-2"></i>Produit stockable
+                                    </label>
+                                    <div class="form-text mt-2">
+                                        <i class="fas fa-info-circle me-1 text-info"></i>
+                                        <strong>À quoi sert cette option ?</strong>
+                                        <ul class="mt-1 mb-0 ps-3">
+                                            <li>✅ <strong>Stockable (activé)</strong> : Le produit sera remis en stock lors d'un retour client</li>
+                                            <li>❌ <strong>Non stockable (désactivé)</strong> : Le produit ne sera PAS remis en stock (plat préparé, cocktail, produit frais déjà préparé)</li>
+                                        </ul>
+                                        <p class="mt-2 mb-0 text-warning small">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>
+                                            <strong>Important pour les restaurants :</strong> Seuls les produits stockables (canettes, bouteilles, ingrédients non préparés) seront remis en stock lors d'un retour.
+                                            Les plats préparés et cocktails mélangés ne seront jamais remis en stock.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback d-block">
+                                    {{ form_errors(form.is_storable) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
             
             <!-- Footer avec boutons d'action -->
             <div class="card-footer bg-light py-3">
@@ -573,23 +613,32 @@ function calculateMargin() {
         const marginAmount = salePrice - purchasePrice;
         const marginPercentage = ((marginAmount / purchasePrice) * 100).toFixed(1);
         
-        document.getElementById('margin-amount').textContent = marginAmount.toLocaleString('fr-FR') + ' FCFA';
+        const marginAmountSpan = document.getElementById('margin-amount');
+        const marginPercentageSpan = document.getElementById('margin-percentage');
         
-        const badge = document.getElementById('margin-percentage');
-        badge.textContent = marginPercentage + '%';
-        
-        // Changer la couleur selon la marge
-        if (marginPercentage >= 50) {
-            badge.className = 'badge bg-success ms-2';
-        } else if (marginPercentage >= 20) {
-            badge.className = 'badge bg-warning text-dark ms-2';
-        } else {
-            badge.className = 'badge bg-danger ms-2';
+        if (marginAmountSpan) marginAmountSpan.textContent = marginAmount.toLocaleString('fr-FR') + ' FCFA';
+        if (marginPercentageSpan) {
+            marginPercentageSpan.textContent = marginPercentage + '%';
+            
+            // Changer la couleur selon la marge
+            marginPercentageSpan.className = 'badge ms-2';
+            if (marginPercentage >= 50) {
+                marginPercentageSpan.classList.add('bg-success');
+            } else if (marginPercentage >= 20) {
+                marginPercentageSpan.classList.add('bg-warning', 'text-dark');
+            } else {
+                marginPercentageSpan.classList.add('bg-danger');
+            }
         }
     } else {
-        document.getElementById('margin-amount').textContent = '0 FCFA';
-        document.getElementById('margin-percentage').textContent = '0%';
-        document.getElementById('margin-percentage').className = 'badge bg-secondary ms-2';
+        const marginAmountSpan = document.getElementById('margin-amount');
+        const marginPercentageSpan = document.getElementById('margin-percentage');
+        
+        if (marginAmountSpan) marginAmountSpan.textContent = '0 FCFA';
+        if (marginPercentageSpan) {
+            marginPercentageSpan.textContent = '0%';
+            marginPercentageSpan.className = 'badge bg-secondary ms-2';
+        }
     }
     {% endif %}
 }
@@ -608,9 +657,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const selectedOption = unitSelect.options[unitSelect.selectedIndex];
             let unitText = selectedOption ? selectedOption.text : 'pièce';
             // Si l'option est le placeholder, on affiche "pièce"
-            if (unitSelect.value === '') unitText = 'pièce';
-            stockUnitHelp.textContent = `Unité : ${unitText}`;
-            minQuantityHelp.textContent = `Alerte en ${unitText}`;
+            if (unitSelect.value === '' || !unitSelect.value) {
+                unitText = 'pièce';
+            }
+            stockUnitHelp.textContent = 'Unité : ' + unitText;
+            minQuantityHelp.textContent = 'Alerte en ' + unitText;
         }
         
         // Initialiser
@@ -618,6 +669,43 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Écouter le changement
         unitSelect.addEventListener('change', updateUnitHelps);
+    }
+    
+    // ========== SELECT2 POUR CATÉGORIE ==========
+    if (typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
+        // Catégorie
+        if ($('.select2-category').length) {
+            // Détruire toute instance existante avant de recréer
+            if ($('.select2-category').data('select2')) {
+                $('.select2-category').select2('destroy');
+            }
+            
+            $('.select2-category').select2({
+                theme: "bootstrap-5",
+                language: "fr",
+                width: "100%",
+                placeholder: "Sélectionnez une catégorie...",
+                allowClear: false,
+                minimumInputLength: 0
+            });
+        }
+        
+        // ========== SELECT2 POUR UNITÉ ==========
+        if ($('.select2-unit').length) {
+            if ($('.select2-unit').data('select2')) {
+                $('.select2-unit').select2('destroy');
+            }
+            
+            $('.select2-unit').select2({
+                theme: "bootstrap-5",
+                language: "fr",
+                width: "100%",
+                placeholder: "-- Choisir une unité --",
+                allowClear: true
+            });
+        }
+    } else {
+        console.warn('jQuery ou Select2 non chargé');
     }
     
     // ========== SCANNER ==========
@@ -633,7 +721,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (scanBtn) {
             scanBtn.addEventListener('click', function() {
                 scannerModal.show();
-                if (scannerInput) scannerInput.focus();
+                if (scannerInput) setTimeout(function() { scannerInput.focus(); }, 500);
             });
         }
         
@@ -658,7 +746,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (scannerInput && barcodeInput) {
             scannerInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === 'Tab') {
+                if (e.key === 'Enter') {
                     e.preventDefault();
                     if (this.value.trim()) {
                         barcodeInput.value = this.value.trim();
@@ -672,32 +760,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.warn('Bootstrap non chargé ou modal introuvable');
     }
     
-    // ========== SELECT2 ==========
-    if (typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
-        console.log('=== DÉBOGAGE SELECT2 ===');
-        console.log('Nombre d\'éléments .select2-category :', $('.select2-category').length);
-        console.log('Instance Select2 existante ?', $('.select2-category').data('select2') ? 'OUI' : 'NON');
-        
-        // Détruire toute instance existante avant de recréer
-        if ($('.select2-category').data('select2')) {
-            console.log('Destruction de l\'instance existante');
-            $('.select2-category').select2('destroy');
-        }
-        
-        console.log('Initialisation de Select2...');
-        $('.select2-category').select2({
-            theme: "bootstrap-5",
-            language: "fr",
-            width: "100%",
-            placeholder: "Sélectionnez une catégorie...",
-            allowClear: false,
-            minimumInputLength: 0
-        });
-        console.log('Select2 initialisé');
-    } else {
-        console.warn('jQuery ou Select2 non chargé');
-    }
-    
     // ========== MARGE ==========
     {% if companyType != 'restaurant' %}
     calculateMargin();
@@ -705,8 +767,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ========== VALIDATION BOOTSTRAP ==========
     const forms = document.querySelectorAll('.needs-validation');
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
+    Array.from(forms).forEach(function(form) {
+        form.addEventListener('submit', function(event) {
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -716,31 +778,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // ========== GESTION DU SWITCH "AUTRES INFORMATIONS" ==========
-    console.log('Recherche du switch avec ID :', '{{ form.show_extra.vars.id }}');
     const showExtraSwitch = document.getElementById('{{ form.show_extra.vars.id }}');
     const extraFields = document.getElementById('extraFields');
-
-    if (showExtraSwitch) {
-        console.log('✅ Switch trouvé :', showExtraSwitch);
-        console.log('État initial du switch (checked) :', showExtraSwitch.checked);
-    } else {
-        console.error('❌ Switch non trouvé avec ID :', '{{ form.show_extra.vars.id }}');
-    }
-
-    if (extraFields) {
-        console.log('✅ Div extraFields trouvée :', extraFields);
-        console.log('Style display initial de extraFields :', extraFields.style.display);
-    } else {
-        console.error('❌ Div extraFields non trouvée');
-    }
 
     if (showExtraSwitch && extraFields) {
         // Fonction pour basculer l'affichage
         function toggleExtraFields() {
-            console.log('Événement change déclenché. Nouvel état checked :', showExtraSwitch.checked);
-            const newDisplay = showExtraSwitch.checked ? 'block' : 'none';
-            extraFields.style.display = newDisplay;
-            console.log('Nouveau style display de extraFields :', newDisplay);
+            extraFields.style.display = showExtraSwitch.checked ? 'block' : 'none';
         }
         
         // Appliquer l'état initial
@@ -748,9 +792,74 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Ajouter l'écouteur d'événement
         showExtraSwitch.addEventListener('change', toggleExtraFields);
-        console.log('Écouteur d\'événement change attaché avec succès.');
-    } else {
-        console.error('Impossible d\'attacher l\'événement : un des éléments est manquant.');
+    }
+    
+    // ========== GESTION DES SWITCHES STATUT ET DATE ==========
+    // Switch statut
+    const statusSwitch = document.getElementById('{{ form.is_active.vars.id }}');
+    const statusBadge = document.getElementById('status-badge');
+    const statusLabel = document.getElementById('status-label');
+    
+    if (statusSwitch && statusBadge && statusLabel) {
+        function updateStatusDisplay() {
+            if (statusSwitch.checked) {
+                statusBadge.textContent = 'ACTIF';
+                statusBadge.className = 'badge bg-success';
+                statusLabel.textContent = 'Produit actif';
+            } else {
+                statusBadge.textContent = 'INACTIF';
+                statusBadge.className = 'badge bg-danger';
+                statusLabel.textContent = 'Produit inactif';
+            }
+        }
+        
+        updateStatusDisplay();
+        statusSwitch.addEventListener('change', updateStatusDisplay);
+    }
+    
+    // Switch date critique
+    const dateSwitch = document.getElementById('{{ form.has_expiry_date.vars.id }}');
+    const dateBadge = document.getElementById('date-badge');
+    const dateLabel = document.getElementById('date-label');
+    
+    if (dateSwitch && dateBadge && dateLabel) {
+        function updateDateDisplay() {
+            if (dateSwitch.checked) {
+                dateBadge.textContent = 'AVEC DATE';
+                dateBadge.className = 'badge bg-warning text-dark';
+                dateLabel.textContent = 'Produit périssable';
+            } else {
+                dateBadge.textContent = 'SANS DATE';
+                dateBadge.className = 'badge bg-secondary';
+                dateLabel.textContent = 'Produit non périssable';
+            }
+        }
+        
+        updateDateDisplay();
+        dateSwitch.addEventListener('change', updateDateDisplay);
+    }
+    
+    // ========== MISE À JOUR DE L'UNITÉ DANS LES CHAMPS STOCK ==========
+    function updateStockUnitHelp() {
+        const unitSelectField = document.getElementById('product_unit');
+        const stockHelp = document.getElementById('stock_unit_help');
+        const minHelp = document.getElementById('min_quantity_unit_help');
+        
+        if (unitSelectField && stockHelp && minHelp) {
+            let selectedText = unitSelectField.options[unitSelectField.selectedIndex]?.text || 'pièce';
+            if (selectedText === '-- Choisir une unité --' || !selectedText) {
+                selectedText = 'pièce';
+            }
+            stockHelp.textContent = 'Unité : ' + selectedText;
+            minHelp.textContent = 'Alerte en ' + selectedText;
+        }
+    }
+    
+    // Initialiser et écouter les changements d'unité
+    const unitField = document.getElementById('product_unit');
+    if (unitField) {
+        updateStockUnitHelp();
+        unitField.addEventListener('change', updateStockUnitHelp);
     }
 });
 </script>

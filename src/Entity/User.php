@@ -103,6 +103,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: StockMovement::class, mappedBy: 'user')]
     private Collection $stockMovements;
 
+    /**
+     * @var Collection<int, ReturnOrder>
+     */
+    #[ORM\OneToMany(targetEntity: ReturnOrder::class, mappedBy: 'returned_by')]
+    private Collection $returns;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
@@ -145,6 +151,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->purchases = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->stockMovements = new ArrayCollection();
+        $this->returns = new ArrayCollection();
         
         // Par défaut, un nouvel utilisateur n'a pas changé son mot de passe
         $this->passwordChanged = false;
@@ -435,6 +442,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             }
         }
         return $this;
+    }
+
+    /**
+     * @return Collection<int, ReturnOrder>
+     */
+    public function getReturns(): Collection
+    {
+        return $this->returns;
+    }
+
+    public function addReturn(ReturnOrder $return): static
+    {
+        if (!$this->returns->contains($return)) {
+            $this->returns->add($return);
+            $return->setReturnedBy($this);
+        }
+        return $this;
+    }
+
+    public function removeReturn(ReturnOrder $return): static
+    {
+        if ($this->returns->removeElement($return)) {
+            if ($return->getReturnedBy() === $this) {
+                $return->setReturnedBy(null);
+            }
+        }
+        return $this;
+    }
+
+    // Ajouter les méthodes pour les rôles si non existantes
+    public function isAdmin(): bool
+    {
+        return in_array('ROLE_ADMIN', $this->getRoles());
+    }
+
+    public function isManager(): bool
+    {
+        return in_array('ROLE_MANAGER', $this->getRoles());
     }
 
     // ==================== MÉTHODES UTILITAIRES ====================

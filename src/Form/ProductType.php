@@ -1,4 +1,5 @@
 <?php
+// src/Form/ProductType.php
 
 namespace App\Form;
 
@@ -34,6 +35,7 @@ class ProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $hmaService = $options['hma_service'];
+        $companyType = $hmaService ? $hmaService->getType() : 'retail';
 
         $builder
             ->add('name', TextType::class, [
@@ -65,21 +67,15 @@ class ProductType extends AbstractType
                         ->andWhere('c.subscription_active = true')
                         ->orderBy('c.name', 'ASC')
                         ->setParameter('hmaService', $hmaService);
-                },
-                'group_by' => function($choice) {
-                    $parent = $choice->getParent();
-                    if ($parent) {
-                        return $parent->getName();
-                    }
-                    return 'Catégories principales';
                 }
             ])
+            // 🔥 CORRECTION : Utiliser buildUnitChoices() au lieu de getGroupedUnits() directement
             ->add('unit', ChoiceType::class, [
                 'label' => 'Unité de mesure',
                 'choices' => $this->buildUnitChoices(),
-                'placeholder' => 'Choisir une unité',
+                'placeholder' => '-- Choisir une unité --',
                 'required' => false,
-                'attr' => ['class' => 'form-select']
+                'attr' => ['class' => 'form-select select2-unit']
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
@@ -98,7 +94,7 @@ class ProductType extends AbstractType
             ]);
 
         // Ajouter sale_price uniquement si l'entreprise n'est pas un restaurant
-        if ($hmaService && $hmaService->getType() !== 'restaurant') {
+        if ($companyType !== 'restaurant') {
             $builder->add('sale_price', MoneyType::class, [
                 'label' => 'Prix de vente (HT)',
                 'currency' => 'XAF',
@@ -148,7 +144,21 @@ class ProductType extends AbstractType
                 'label' => 'Produit actif',
                 'required' => false,
                 'attr' => ['class' => 'form-check-input']
-            ])
+            ]);
+
+        if ($companyType === 'restaurant') {
+            $builder->add('is_storable', CheckboxType::class, [
+                'label' => '✅ Produit stockable (remis en stock lors des retours)',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-check-input',
+                    'role' => 'switch'
+                ],
+                'help' => 'Activez cette option si ce produit peut être remis en stock lors d\'un retour (ex: canette, bouteille, ingrédient non préparé). Désactivez pour les plats préparés, cocktails mélangés...'
+            ]);
+        }
+
+        $builder
             ->add('show_extra', CheckboxType::class, [
                 'label' => 'Afficher les informations supplémentaires',
                 'mapped' => false,
@@ -170,18 +180,13 @@ class ProductType extends AbstractType
             ]);
 
         // Ajouter prescription_required uniquement si c'est une pharmacie
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($hmaService) {
-            $product = $event->getData();
-            $form = $event->getForm();
-
-            if ($hmaService && $hmaService->getType() === 'pharmacy') {
-                $form->add('prescription_required', CheckboxType::class, [
-                    'label' => 'Prescription obligatoire',
-                    'required' => false,
-                    'attr' => ['class' => 'form-check-input']
-                ]);
-            }
-        });
+        if ($companyType === 'pharmacy') {
+            $builder->add('prescription_required', CheckboxType::class, [
+                'label' => 'Prescription obligatoire',
+                'required' => false,
+                'attr' => ['class' => 'form-check-input']
+            ]);
+        }
 
         // Définir la valeur par défaut "pièce" pour l'unité
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -202,30 +207,22 @@ class ProductType extends AbstractType
     }
 
     /**
-     * Construit la liste des unités sans doublons.
-     * On garde les unités françaises lorsqu'il y a un choix (pièce vs piece).
+     * Construit la liste des unités groupées pour Select2
+     * 🔥 CORRECTION : Format correct [ 'Libellé' => 'valeur' ]
      */
     private function buildUnitChoices(): array
     {
-        // Vérifier si unitConverter existe, sinon utiliser une liste statique
-        if ($this->unitConverter) {
-            $units = $this->unitConverter->getSupportedUnits();
-        } else {
-            // Liste statique de fallback
-            $units = ['kg', 'g', 'mg', 'L', 'ml', 'cl', 'pièce', 'boîte', 'carton', 'paquet', 'pack'];
+        $groupedUnits = $this->unitConverter->getGroupedUnits();
+        $choices = [];
+        
+        foreach ($groupedUnits as $groupLabel => $units) {
+            foreach ($units as $unit) {
+                // Format attendu par Symfony : [ 'Libellé' => 'valeur' ]
+                $choices[$groupLabel][$unit] = $unit;
+            }
         }
         
-        $filtered = [];
-        $preferFrench = ['piece' => 'pièce'];
-        foreach ($units as $unit) {
-            if (isset($preferFrench[$unit])) {
-                $unit = $preferFrench[$unit];
-            }
-            $filtered[$unit] = $unit;
-        }
-        $filtered = array_unique($filtered);
-        asort($filtered);
-        return $filtered;
+        return $choices;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

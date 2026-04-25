@@ -106,6 +106,9 @@ class Product
     #[ORM\Column(nullable: true)]
     private ?bool $prescription_required = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $is_storable = false;
+
     /**
      * @var Collection<int, PromotionProduct>
      */
@@ -119,6 +122,7 @@ class Product
         $this->stockMovements = new ArrayCollection();
         $this->promotionProducts = new ArrayCollection();
         $this->is_active = true;
+        $this->is_storable = false;
     }
 
     public function getId(): ?int
@@ -598,6 +602,17 @@ class Product
             }
         }
 
+        return $this;
+    }
+
+    public function isStorable(): bool
+    {
+        return $this->is_storable;
+    }
+
+    public function setIsStorable(bool $is_storable): self
+    {
+        $this->is_storable = $is_storable;
         return $this;
     }
 }

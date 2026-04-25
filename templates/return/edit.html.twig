@@ -1,0 +1,293 @@
+{# templates/return/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le retour #{{ returnOrder.returnNumber }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<style>
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .status-pending { background: #fef3c7; color: #d97706; }
+    .info-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    .info-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+    .quantity-edit {
+        width: 100px;
+        text-align: center;
+    }
+    .selected-item {
+        background-color: #e0f2fe !important;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-1">
+                <i class="fas fa-edit text-primary me-2"></i>
+                Modifier le retour
+            </h1>
+            <p class="text-muted">Retour #{{ returnOrder.returnNumber }} - Commande #{{ returnOrder.orderNumber }}</p>
+        </div>
+        <a href="{{ path('returns_show', {'id': returnOrder.id}) }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Retour
+        </a>
+    </div>
+
+    <div class="alert alert-info mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        Vous pouvez modifier les informations du retour tant qu'il est en attente de validation.
+        <strong>Les quantités peuvent être modifiées.</strong>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="info-card">
+                <div class="info-label">Articles retournés</div>
+                <div class="h5 mb-0">{{ returnOrder.returnItems|length }} article(s)</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-card">
+                <div class="info-label">Montant total</div>
+                <div class="h5 mb-0 text-primary">{{ returnOrder.totalRefundAmount|number_format(0, ',', ' ') }} FCFA</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-card">
+                <div class="info-label">Date de création</div>
+                <div class="h6 mb-0">{{ returnOrder.createdAt|date('d/m/Y H:i') }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Informations du retour</h5>
+                <span class="status-badge status-pending">⏳ En attente</span>
+            </div>
+        </div>
+        <form method="post" id="editReturnForm">
+            <div class="card-body">
+                {% include 'return/_form.html.twig' with {
+                    'returnOrder': returnOrder,
+                    'reasons': reasons,
+                    'refund_methods': refund_methods
+                } %}
+                
+                <div class="mt-4">
+                    <h6 class="fw-bold mb-3"><i class="fas fa-boxes me-2"></i>Articles retournés</h6>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Produit</th>
+                                    <th class="text-center">Quantité vendue</th>
+                                    <th class="text-center">Quantité retournée</th>
+                                    <th class="text-center">Prix unitaire</th>
+                                    <th class="text-center">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in returnOrder.returnItems %}
+                                    {% set maxQty = item.originalOrderItem.quantity %}
+                                    <tr class="return-item-row" 
+                                        data-item-id="{{ item.id }}" 
+                                        data-max-qty="{{ maxQty }}" 
+                                        data-unit-price="{{ item.unitPriceAtSale }}"
+                                        data-order-item-id="{{ item.originalOrderItem.id }}">
+                                        <td>
+                                            <strong>{{ item.productName }}</strong>
+                                            {% if item.promotionName %}
+                                                <br><small class="text-primary"><i class="fas fa-tag"></i> {{ item.promotionName }}</small>
+                                            {% endif %}
+                                            {% if item.itemType == 'recipe' %}
+                                                <br><small class="text-muted"><i class="fas fa-utensils"></i> Menu</small>
+                                            {% else %}
+                                                <br><small class="text-muted"><i class="fas fa-box"></i> Produit</small>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-secondary">{{ maxQty }}</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="number" 
+                                                   class="form-control quantity-edit return-quantity-edit" 
+                                                   name="quantities[{{ item.id }}]" 
+                                                   value="{{ item.quantityReturned }}" 
+                                                   min="0" 
+                                                   max="{{ maxQty }}" 
+                                                   style="width: 100px; margin: 0 auto; display: inline-block;">
+                                            <div class="small text-muted mt-1" id="max-warning-{{ item.id }}" style="display: none; color: #dc2626;">
+                                                <i class="fas fa-exclamation-triangle"></i> Max: {{ maxQty }}
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            {{ item.unitPriceAtSale|number_format(0, ',', ' ') }} FCFA
+                                        </td>
+                                        <td class="text-center">
+                                            <strong class="item-total text-primary" data-item-id="{{ item.id }}">
+                                                {{ item.totalRefund|number_format(0, ',', ' ') }} FCFA
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="table-light">
+                                <tr>
+                                    <td colspan="4" class="text-end fw-bold">Total :</td>
+                                    <td class="text-center fw-bold text-primary h5" id="grandTotal">
+                                        {{ returnOrder.totalRefundAmount|number_format(0, ',', ' ') }} FCFA
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="alert alert-info mt-2">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <small>Vous pouvez modifier les quantités. Le montant total sera recalculé automatiquement.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>Montant à rembourser :</strong>
+                        <span class="h4 text-primary ms-2" id="totalRefundDisplay">{{ returnOrder.totalRefundAmount|number_format(0, ',', ' ') }} FCFA</span>
+                    </div>
+                    <div>
+                        <a href="{{ path('returns_show', {'id': returnOrder.id}) }}" class="btn btn-secondary me-2">
+                            <i class="fas fa-times me-1"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="submitEditBtn">
+                            <i class="fas fa-save me-1"></i> Enregistrer les modifications
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
+<script>
+$(document).ready(function() {
+    $('.select2').select2({
+        theme: 'bootstrap-5',
+        language: 'fr',
+        width: '100%'
+    });
+
+    function calculateTotal() {
+        let grandTotal = 0;
+        
+        $('.return-item-row').each(function() {
+            let quantity = parseInt($(this).find('.return-quantity-edit').val()) || 0;
+            let unitPrice = parseFloat($(this).data('unit-price'));
+            let maxQty = $(this).data('max-qty');
+            let itemId = $(this).data('item-id');
+            let total = quantity * unitPrice;
+            
+            if (quantity > maxQty) {
+                $(this).find('.return-quantity-edit').val(maxQty);
+                quantity = maxQty;
+                total = quantity * unitPrice;
+                $('#max-warning-' + itemId).show();
+            } else {
+                $('#max-warning-' + itemId).hide();
+            }
+            
+            $('.item-total[data-item-id="' + itemId + '"]').text(total.toLocaleString('fr-FR') + ' FCFA');
+            grandTotal += total;
+        });
+        
+        $('#grandTotal').text(grandTotal.toLocaleString('fr-FR') + ' FCFA');
+        $('#totalRefundDisplay').text(grandTotal.toLocaleString('fr-FR') + ' FCFA');
+        
+        return grandTotal;
+    }
+
+    $('.return-quantity-edit').on('input', function() {
+        let row = $(this).closest('.return-item-row');
+        let maxQty = row.data('max-qty');
+        let currentVal = parseInt($(this).val()) || 0;
+        
+        if (currentVal > maxQty) {
+            $(this).val(maxQty);
+            alert(`La quantité ne peut pas dépasser ${maxQty} pour cet article.`);
+        }
+        if (currentVal < 0) {
+            $(this).val(0);
+        }
+        calculateTotal();
+    });
+
+    $('#editReturnForm').submit(function(e) {
+        let hasError = false;
+        
+        $('.return-item-row').each(function() {
+            let quantity = parseInt($(this).find('.return-quantity-edit').val()) || 0;
+            let maxQty = $(this).data('max-qty');
+            
+            if (quantity > maxQty) {
+                alert(`La quantité pour "${$(this).find('strong').text()}" dépasse la quantité vendue (${maxQty}).`);
+                hasError = true;
+                return false;
+            }
+        });
+        
+        if (hasError) {
+            e.preventDefault();
+            return false;
+        }
+        
+        let totalQuantity = 0;
+        $('.return-quantity-edit').each(function() {
+            totalQuantity += parseInt($(this).val()) || 0;
+        });
+        
+        if (totalQuantity === 0) {
+            e.preventDefault();
+            alert('Veuillez indiquer au moins une quantité à retourner.');
+            return false;
+        }
+        
+        let reason = $('#reason').val();
+        if (!reason) {
+            e.preventDefault();
+            alert('Veuillez sélectionner un motif de retour.');
+            return false;
+        }
+        
+        let refundMethod = $('#refund_method').val();
+        if (!refundMethod) {
+            e.preventDefault();
+            alert('Veuillez sélectionner une méthode de remboursement.');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

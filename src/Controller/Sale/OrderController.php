@@ -8,6 +8,7 @@ use App\Entity\Order;
 use App\Entity\User;
 use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
+use App\Repository\ReturnOrderRepository;
 use App\Service\Export\SaleExportService;
 use App\Service\Sale\PromotionCalculator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -125,7 +126,8 @@ class OrderController extends AbstractController
     public function index(
         Request $request,
         OrderRepository $orderRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        ReturnOrderRepository $returnOrderRepository // Ajouter ce paramètre
     ): Response {
         $this->checkAccess();
         $hmaService = $this->getCurrentHmaService();
@@ -242,16 +244,20 @@ class OrderController extends AbstractController
         $totalPages = ceil($totalItems / $limit);
         
         $query->setFirstResult(($page - 1) * $limit)
-              ->setMaxResults($limit);
+            ->setMaxResults($limit);
         
         $orders = $query->getResult();
 
-        // Calculer les statistiques
+        // Calculer les statistiques des ventes
         $stats = $orderRepository->getStats($hmaService, $dateFrom, $dateTo);
+        
+        // 🔥 AJOUTER LES STATISTIQUES DES RETOURS
+        $returnStats = $returnOrderRepository->getReturnStats($hmaService, $dateFrom, $dateTo);
 
         return $this->render('sale/orders/index.html.twig', [
             'orders' => $orders,
             'stats' => $stats,
+            'returnStats' => $returnStats, // ← AJOUTER CETTE LIGNE
             'filters' => $filters,
             'users' => $users,
             'currentPage' => $page,
@@ -330,7 +336,7 @@ class OrderController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_orders_show', methods: ['GET'])]
-    public function show(Order $order): Response
+    public function show(Order $order, ReturnOrderRepository $returnOrderRepository): Response
     {
         $this->checkAccess();
         $hmaService = $this->getCurrentHmaService();
@@ -339,10 +345,29 @@ class OrderController extends AbstractController
         }
 
         $isRestaurant = $hmaService->getType() === 'restaurant';
+        
+        // Récupérer les retours associés à cette commande
+        $returns = $returnOrderRepository->findBy(['original_order' => $order], ['created_at' => 'DESC']);
+
+        $hmaService = $this->getCurrentHmaService();
+        $companyType = $hmaService ? $hmaService->getType() : 'retail';
+        
+        $reasons = [
+            'product_defective' => 'Produit défectueux',
+            'wrong_product' => 'Produit non conforme',
+            'customer_cancellation' => 'Annulation client',
+            'quality_issue' => 'Problème de qualité',
+            'expired_product' => 'Produit expiré',
+            'customer_change_mind' => 'Client changé d\'avis',
+            'other' => 'Autre motif'
+        ];
 
         return $this->render('sale/orders/show.html.twig', [
             'order' => $order,
             'isRestaurant' => $isRestaurant,
+            'returns' => $returns,
+            'reasons' => $reasons,
+            'companyType' => $companyType
         ]);
     }
 
@@ -732,5 +757,5 @@ class OrderController extends AbstractController
             'sort' => $request->query->get('sort', 'created_at'),
             'direction' => $request->query->get('direction', 'desc'),
         ];
-    }
+    }  
 }

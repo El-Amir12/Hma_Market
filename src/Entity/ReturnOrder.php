@@ -34,9 +34,23 @@ class ReturnOrder
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $customer_phone = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $returned_by = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $approved_by = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $completed_by = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $approved_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $completed_at = null;
 
     #[ORM\Column]
     private ?\DateTime $return_date = null;
@@ -148,6 +162,50 @@ class ReturnOrder
     public function setReturnedBy(?User $returned_by): static
     {
         $this->returned_by = $returned_by;
+        return $this;
+    }
+
+        public function getApprovedBy(): ?User
+    {
+        return $this->approved_by;
+    }
+
+    public function setApprovedBy(?User $approved_by): static
+    {
+        $this->approved_by = $approved_by;
+        return $this;
+    }
+
+    public function getCompletedBy(): ?User
+    {
+        return $this->completed_by;
+    }
+
+    public function setCompletedBy(?User $completed_by): static
+    {
+        $this->completed_by = $completed_by;
+        return $this;
+    }
+
+    public function getApprovedAt(): ?\DateTime
+    {
+        return $this->approved_at;
+    }
+
+    public function setApprovedAt(?\DateTime $approved_at): static
+    {
+        $this->approved_at = $approved_at;
+        return $this;
+    }
+
+    public function getCompletedAt(): ?\DateTime
+    {
+        return $this->completed_at;
+    }
+
+    public function setCompletedAt(?\DateTime $completed_at): static
+    {
+        $this->completed_at = $completed_at;
         return $this;
     }
 

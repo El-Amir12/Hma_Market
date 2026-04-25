@@ -169,6 +169,7 @@ class PromotionCalculator
     {
         $value = (float) $promotion->getValue();
         $typePromotion = $promotion->getTypePromotion();
+        $promotionName = $promotion->getName(); // 🔥 Récupère le nom de la promotion
         
         $currency = 'FCFA';
         if ($hmaService && $hmaService->getCountry()) {
@@ -184,16 +185,18 @@ class PromotionCalculator
         };
         
         if (!$typePromotion) {
-            return $promotion->getName() ?? 'Promotion appliquée';
+            return $promotionName ?? 'Promotion appliquée';
         }
         
         $typeName = strtolower(trim($typePromotion->getName()));
         
+        // 🔥 Pour les promotions en pourcentage
         if ($typeName === 'pourcentage' || $typeName === 'percentage' || $typeName === '%') {
-            return sprintf("Promotion : -%s%%", $value);
+            return sprintf("%s : -%s%%", $promotionName, $value);
         }
         
-        return sprintf("Promotion : -%s", $formatPrice($value));
+        // 🔥 Pour les promotions à montant fixe
+        return sprintf("%s : -%s", $promotionName, $formatPrice($value));
     }
 
     public function canCreateSale(HmaService $hmaService): bool

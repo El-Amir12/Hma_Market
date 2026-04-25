@@ -1,0 +1,180 @@
+{# templates/return/receipt_pdf.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reçu de retour - {{ returnOrder.returnNumber }}</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            margin: 15px;
+            font-size: 11px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #2E86C1;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .header h1 {
+            color: #2E86C1;
+            font-size: 16px;
+            margin: 0 0 5px 0;
+        }
+        .header p {
+            margin: 0;
+            color: #666;
+            font-size: 10px;
+        }
+        .info-section {
+            margin-bottom: 15px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .info-row {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        .info-label {
+            font-weight: bold;
+            width: 100px;
+        }
+        .info-value {
+            flex: 1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th {
+            background: #2E86C1;
+            color: white;
+            padding: 8px;
+            text-align: left;
+            font-size: 10px;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            font-size: 10px;
+        }
+        .total {
+            text-align: right;
+            font-weight: bold;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #ddd;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 9px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        .status-pending { color: #d97706; font-weight: bold; }
+        .status-approved { color: #2563eb; font-weight: bold; }
+        .status-completed { color: #16a34a; font-weight: bold; }
+        .status-rejected { color: #dc2626; font-weight: bold; }
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>REÇU DE RETOUR</h1>
+        <p>{{ hmaService.companyName }}</p>
+        <p>Tél: {{ hmaService.phone }} | Email: {{ hmaService.email }}</p>
+    </div>
+
+    <div class="info-section">
+        <div class="info-row">
+            <div class="info-label">N° Retour :</div>
+            <div class="info-value"><strong>{{ returnOrder.returnNumber }}</strong></div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">N° Commande :</div>
+            <div class="info-value">{{ returnOrder.orderNumber }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Client :</div>
+            <div class="info-value">{{ returnOrder.customerName ?: 'Non renseigné' }} ({{ returnOrder.customerPhone }})</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Date retour :</div>
+            <div class="info-value">{{ returnOrder.createdAt|date('d/m/Y H:i') }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Statut :</div>
+            <div class="info-value">
+                {% if returnOrder.status == 'pending' %}
+                    <span class="badge" style="background:#fef3c7; color:#d97706;">En attente</span>
+                {% elseif returnOrder.status == 'approved' %}
+                    <span class="badge" style="background:#dbeafe; color:#2563eb;">Approuvé</span>
+                {% elseif returnOrder.status == 'completed' %}
+                    <span class="badge" style="background:#dcfce7; color:#16a34a;">Remboursé</span>
+                {% elseif returnOrder.status == 'rejected' %}
+                    <span class="badge" style="background:#fee2e2; color:#dc2626;">Rejeté</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Motif :</div>
+            <div class="info-value">{{ reasons[returnOrder.reason]|default(returnOrder.reason) }}</div>
+        </div>
+        {% if returnOrder.reasonNotes %}
+        <div class="info-row">
+            <div class="info-label">Notes :</div>
+            <div class="info-value">{{ returnOrder.reasonNotes }}</div>
+        </div>
+        {% endif %}
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Total remboursé</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in returnOrder.returnItems %}
+            <tr>
+                <td>{{ item.productName }}</td>
+                <td style="text-align: center;">{{ item.quantityReturned }}</td>
+                <td style="text-align: right;">{{ item.unitPriceAtSale|number_format(0, ',', ' ') }} FCFA</td>
+                <td style="text-align: right;"><strong>{{ item.refundAmount|number_format(0, ',', ' ') }} FCFA</strong></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total">
+        <p>Total à rembourser : <strong>{{ returnOrder.totalRefundAmount|number_format(0, ',', ' ') }} FCFA</strong></p>
+        <p>Mode de remboursement : 
+            {% if returnOrder.refundMethod == 'cash' %}💰 Espèces
+            {% elseif returnOrder.refundMethod == 'mobile_money' %}📱 Mobile Money
+            {% elseif returnOrder.refundMethod == 'bank_transfer' %}🏦 Virement bancaire
+            {% elseif returnOrder.refundMethod == 'wallet' %}📱 Porte-monnaie électronique
+            {% elseif returnOrder.refundMethod == 'credit_note' %}📝 Avoir
+            {% else %}{{ returnOrder.refundMethod }}
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="footer">
+        Document généré le {{ printDate|date('d/m/Y H:i') }}<br>
+        Merci de votre confiance !
+    </div>
+</body>
+</html>

@@ -63,45 +63,52 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
         
         body {
             font-family: 'Courier New', 'Courier', monospace;
-            font-size: 12px;
-            line-height: 1.3;
+            font-size: 11px;
+            line-height: 1.2;
             color: #000;
             background: white;
-            padding: 8px;
+            padding: 6px;
             width: 80mm;
             margin: 0 auto;
+        }
+        
+        /* Éviter les sauts de page */
+        .header, .items-table, .totals, .footer, .thanks {
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
         
         /* En-tête */
         .header {
             text-align: center;
             border-bottom: 1px dashed #000;
-            padding-bottom: 8px;
-            margin-bottom: 8px;
+            padding-bottom: 6px;
+            margin-bottom: 6px;
         }
         
         .company-name {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         
         .company-info {
-            font-size: 10px;
+            font-size: 9px;
             color: #555;
         }
         
         .receipt-title {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
-            margin: 8px 0;
+            margin: 6px 0;
         }
         
         /* Informations vente */
         .info-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
+            font-size: 10px;
         }
         
         .info-label {
@@ -112,51 +119,52 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 8px 0;
+            margin: 6px 0;
         }
         
         .items-table th {
             text-align: left;
             border-bottom: 1px dashed #000;
-            padding-bottom: 4px;
-            margin-bottom: 4px;
-            font-size: 11px;
+            padding-bottom: 3px;
+            font-size: 10px;
         }
         
         .items-table td {
-            padding: 4px 0;
+            padding: 3px 0;
             vertical-align: top;
+            font-size: 10px;
         }
         
         .item-name {
-            font-size: 11px;
+            font-size: 10px;
         }
         
         .item-quantity {
             text-align: center;
-            width: 40px;
+            width: 35px;
         }
         
         .item-price {
             text-align: right;
-            width: 60px;
+            width: 55px;
         }
         
         /* Totaux */
         .totals {
             border-top: 1px dashed #000;
-            padding-top: 8px;
-            margin-top: 8px;
+            padding-top: 6px;
+            margin-top: 6px;
         }
         
         .total-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
+            font-size: 11px;
         }
         
         .total-amount {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
         }
         
@@ -164,24 +172,24 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
         .footer {
             text-align: center;
             border-top: 1px dashed #000;
-            padding-top: 8px;
-            margin-top: 8px;
-            font-size: 10px;
+            padding-top: 6px;
+            margin-top: 6px;
+            font-size: 9px;
             color: #555;
         }
         
         /* Diviseurs */
         .divider {
             border-top: 1px dotted #ccc;
-            margin: 8px 0;
+            margin: 6px 0;
         }
         
         /* Message remerciement */
         .thanks {
             text-align: center;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
-            margin: 8px 0;
+            margin: 6px 0;
         }
         
         @media print {
@@ -198,38 +206,38 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
 <body>
     <div class=\"header\">
         <div class=\"company-name\">";
-        // line 151
-        yield (((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "name", [], "any", true, true, false, 151) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 151, $this->source); })()), "name", [], "any", false, false, false, 151)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 151, $this->source); })()), "name", [], "any", false, false, false, 151), "html", null, true)) : ((((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "companyName", [], "any", true, true, false, 151) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 151, $this->source); })()), "companyName", [], "any", false, false, false, 151)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 151, $this->source); })()), "companyName", [], "any", false, false, false, 151), "html", null, true)) : ("Votre Entreprise"))));
+        // line 159
+        yield (((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "name", [], "any", true, true, false, 159) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 159, $this->source); })()), "name", [], "any", false, false, false, 159)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 159, $this->source); })()), "name", [], "any", false, false, false, 159), "html", null, true)) : ((((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "companyName", [], "any", true, true, false, 159) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 159, $this->source); })()), "companyName", [], "any", false, false, false, 159)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 159, $this->source); })()), "companyName", [], "any", false, false, false, 159), "html", null, true)) : ("Votre Entreprise"))));
         yield "</div>
         <div class=\"company-info\">
             ";
-        // line 153
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 153, $this->source); })()), "address", [], "any", false, false, false, 153)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 154
+        // line 161
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 161, $this->source); })()), "address", [], "any", false, false, false, 161)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 162
             yield "                ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 154, $this->source); })()), "address", [], "any", false, false, false, 154), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 162, $this->source); })()), "address", [], "any", false, false, false, 162), "html", null, true);
             yield "<br>
             ";
         }
-        // line 156
+        // line 164
         yield "            ";
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 156, $this->source); })()), "phone", [], "any", false, false, false, 156)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 157
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 164, $this->source); })()), "phone", [], "any", false, false, false, 164)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 165
             yield "                Tél: ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 157, $this->source); })()), "phone", [], "any", false, false, false, 157), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 165, $this->source); })()), "phone", [], "any", false, false, false, 165), "html", null, true);
             yield "<br>
             ";
         }
-        // line 159
+        // line 167
         yield "            ";
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 159, $this->source); })()), "email", [], "any", false, false, false, 159)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 160
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 167, $this->source); })()), "email", [], "any", false, false, false, 167)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 168
             yield "                Email: ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 160, $this->source); })()), "email", [], "any", false, false, false, 160), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 168, $this->source); })()), "email", [], "any", false, false, false, 168), "html", null, true);
             yield "
             ";
         }
-        // line 162
+        // line 170
         yield "        </div>
         <div class=\"receipt-title\">REÇU DE VENTE</div>
     </div>
@@ -237,51 +245,51 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
     <div class=\"info-row\">
         <span class=\"info-label\">N° Commande:</span>
         <span>";
-        // line 168
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 168, $this->source); })()), "orderNumber", [], "any", false, false, false, 168), "html", null, true);
+        // line 176
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 176, $this->source); })()), "orderNumber", [], "any", false, false, false, 176), "html", null, true);
         yield "</span>
     </div>
     <div class=\"info-row\">
         <span class=\"info-label\">Date:</span>
         <span>";
-        // line 172
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 172, $this->source); })()), "createdAt", [], "any", false, false, false, 172), "d/m/Y H:i:s"), "html", null, true);
+        // line 180
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 180, $this->source); })()), "createdAt", [], "any", false, false, false, 180), "d/m/Y H:i"), "html", null, true);
         yield "</span>
     </div>
     <div class=\"info-row\">
         <span class=\"info-label\">Caissier:</span>
         <span>";
-        // line 176
-        yield (((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["order"] ?? null), "user", [], "any", false, true, false, 176), "fullName", [], "any", true, true, false, 176) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 176, $this->source); })()), "user", [], "any", false, false, false, 176), "fullName", [], "any", false, false, false, 176)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 176, $this->source); })()), "user", [], "any", false, false, false, 176), "fullName", [], "any", false, false, false, 176), "html", null, true)) : ((((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["order"] ?? null), "user", [], "any", false, true, false, 176), "email", [], "any", true, true, false, 176) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 176, $this->source); })()), "user", [], "any", false, false, false, 176), "email", [], "any", false, false, false, 176)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 176, $this->source); })()), "user", [], "any", false, false, false, 176), "email", [], "any", false, false, false, 176), "html", null, true)) : ("N/A"))));
+        // line 184
+        yield (((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["order"] ?? null), "user", [], "any", false, true, false, 184), "fullName", [], "any", true, true, false, 184) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 184, $this->source); })()), "user", [], "any", false, false, false, 184), "fullName", [], "any", false, false, false, 184)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 184, $this->source); })()), "user", [], "any", false, false, false, 184), "fullName", [], "any", false, false, false, 184), "html", null, true)) : ((((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["order"] ?? null), "user", [], "any", false, true, false, 184), "email", [], "any", true, true, false, 184) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 184, $this->source); })()), "user", [], "any", false, false, false, 184), "email", [], "any", false, false, false, 184)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 184, $this->source); })()), "user", [], "any", false, false, false, 184), "email", [], "any", false, false, false, 184), "html", null, true)) : ("N/A"))));
         yield "</span>
     </div>
     ";
-        // line 178
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 178, $this->source); })()), "customerName", [], "any", false, false, false, 178)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 179
+        // line 186
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 186, $this->source); })()), "customerName", [], "any", false, false, false, 186)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 187
             yield "    <div class=\"info-row\">
         <span class=\"info-label\">Client:</span>
         <span>";
-            // line 181
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 181, $this->source); })()), "customerName", [], "any", false, false, false, 181), "html", null, true);
+            // line 189
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 189, $this->source); })()), "customerName", [], "any", false, false, false, 189), "html", null, true);
             yield "</span>
     </div>
     ";
         }
-        // line 184
+        // line 192
         yield "    ";
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 184, $this->source); })()), "customerPhone", [], "any", false, false, false, 184)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 185
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 192, $this->source); })()), "customerPhone", [], "any", false, false, false, 192)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 193
             yield "    <div class=\"info-row\">
         <span class=\"info-label\">Téléphone:</span>
         <span>";
-            // line 187
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 187, $this->source); })()), "customerPhone", [], "any", false, false, false, 187), "html", null, true);
+            // line 195
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 195, $this->source); })()), "customerPhone", [], "any", false, false, false, 195), "html", null, true);
             yield "</span>
     </div>
     ";
         }
-        // line 190
+        // line 198
         yield "
     <div class=\"divider\"></div>
 
@@ -296,27 +304,27 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
         </thead>
         <tbody>
             ";
-        // line 203
+        // line 211
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 203, $this->source); })()), "orderItems", [], "any", false, false, false, 203));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 211, $this->source); })()), "orderItems", [], "any", false, false, false, 211));
         foreach ($context['_seq'] as $context["_key"] => $context["item"]) {
-            // line 204
+            // line 212
             yield "            <tr>
                 <td class=\"item-name\">";
-            // line 205
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "productName", [], "any", false, false, false, 205), "html", null, true);
+            // line 213
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["item"], "productName", [], "any", false, false, false, 213), 0, 25), "html", null, true);
             yield "</td>
                 <td class=\"item-quantity\">";
-            // line 206
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 206), "html", null, true);
+            // line 214
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 214), "html", null, true);
             yield "</td>
                 <td class=\"item-price\">";
-            // line 207
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unitPrice", [], "any", false, false, false, 207), 0, ",", " "), "html", null, true);
+            // line 215
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unitPrice", [], "any", false, false, false, 215), 0, ",", " "), "html", null, true);
             yield "</td>
                 <td class=\"item-price\">";
-            // line 208
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "totalPrice", [], "any", false, false, false, 208), 0, ",", " "), "html", null, true);
+            // line 216
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "totalPrice", [], "any", false, false, false, 216), 0, ",", " "), "html", null, true);
             yield "</td>
             </tr>
             ";
@@ -324,7 +332,7 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['item'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 211
+        // line 219
         yield "        </tbody>
     </table>
 
@@ -334,22 +342,22 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
         <div class=\"total-row\">
             <span>Total TTC:</span>
             <span class=\"total-amount\">";
-        // line 219
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 219, $this->source); })()), "totalAmount", [], "any", false, false, false, 219), 0, ",", " "), "html", null, true);
+        // line 227
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 227, $this->source); })()), "totalAmount", [], "any", false, false, false, 227), 0, ",", " "), "html", null, true);
         yield " FCFA</span>
         </div>
         <div class=\"total-row\">
             <span>Montant payé:</span>
             <span>";
-        // line 223
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 223, $this->source); })()), "amountPaid", [], "any", false, false, false, 223), 0, ",", " "), "html", null, true);
+        // line 231
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 231, $this->source); })()), "amountPaid", [], "any", false, false, false, 231), 0, ",", " "), "html", null, true);
         yield " FCFA</span>
         </div>
         <div class=\"total-row\">
             <span>Monnaie rendue:</span>
             <span>";
-        // line 227
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 227, $this->source); })()), "changeAmount", [], "any", false, false, false, 227), 0, ",", " "), "html", null, true);
+        // line 235
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 235, $this->source); })()), "changeAmount", [], "any", false, false, false, 235), 0, ",", " "), "html", null, true);
         yield " FCFA</span>
         </div>
     </div>
@@ -360,42 +368,42 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
         <span class=\"info-label\">Mode de paiement:</span>
         <span>
             ";
-        // line 236
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 236, $this->source); })()), "paymentMethod", [], "any", false, false, false, 236) == "cash")) {
+        // line 244
+        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 244, $this->source); })()), "paymentMethod", [], "any", false, false, false, 244) == "cash")) {
             yield "💰 Espèces
             ";
-        } elseif ((CoreExtension::getAttribute($this->env, $this->source,         // line 237
-(isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 237, $this->source); })()), "paymentMethod", [], "any", false, false, false, 237) == "card")) {
+        } elseif ((CoreExtension::getAttribute($this->env, $this->source,         // line 245
+(isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 245, $this->source); })()), "paymentMethod", [], "any", false, false, false, 245) == "card")) {
             yield "💳 Carte bancaire
             ";
-        } elseif ((CoreExtension::getAttribute($this->env, $this->source,         // line 238
-(isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 238, $this->source); })()), "paymentMethod", [], "any", false, false, false, 238) == "mobile_money")) {
+        } elseif ((CoreExtension::getAttribute($this->env, $this->source,         // line 246
+(isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 246, $this->source); })()), "paymentMethod", [], "any", false, false, false, 246) == "mobile_money")) {
             yield "📱 Mobile Money
             ";
         } else {
-            // line 239
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 239, $this->source); })()), "paymentMethod", [], "any", false, false, false, 239), "html", null, true);
+            // line 247
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 247, $this->source); })()), "paymentMethod", [], "any", false, false, false, 247), "html", null, true);
             yield "
             ";
         }
-        // line 241
+        // line 249
         yield "        </span>
     </div>
 
     ";
-        // line 244
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 244, $this->source); })()), "notes", [], "any", false, false, false, 244)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 245
+        // line 252
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 252, $this->source); })()), "notes", [], "any", false, false, false, 252)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 253
             yield "    <div class=\"info-row\">
         <span class=\"info-label\">Notes:</span>
         <span>";
-            // line 247
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 247, $this->source); })()), "notes", [], "any", false, false, false, 247), "html", null, true);
+            // line 255
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 255, $this->source); })()), "notes", [], "any", false, false, false, 255), 0, 50), "html", null, true);
             yield "</span>
     </div>
     ";
         }
-        // line 250
+        // line 258
         yield "
     <div class=\"thanks\">
         Merci de votre visite !<br>
@@ -403,10 +411,9 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
     </div>
 
     <div class=\"footer\">
-        Ce document fait office de reçu<br>
         ";
-        // line 258
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate("now", "Y-m-d H:i:s"), "html", null, true);
+        // line 265
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate("now", "d/m/Y H:i"), "html", null, true);
         yield "
     </div>
 </body>
@@ -441,7 +448,7 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  409 => 258,  399 => 250,  393 => 247,  389 => 245,  387 => 244,  382 => 241,  377 => 239,  372 => 238,  368 => 237,  364 => 236,  352 => 227,  345 => 223,  338 => 219,  328 => 211,  319 => 208,  315 => 207,  311 => 206,  307 => 205,  304 => 204,  300 => 203,  285 => 190,  279 => 187,  275 => 185,  272 => 184,  266 => 181,  262 => 179,  260 => 178,  255 => 176,  248 => 172,  241 => 168,  233 => 162,  227 => 160,  224 => 159,  218 => 157,  215 => 156,  209 => 154,  207 => 153,  202 => 151,  54 => 6,  48 => 2,);
+        return array (  416 => 265,  407 => 258,  401 => 255,  397 => 253,  395 => 252,  390 => 249,  385 => 247,  380 => 246,  376 => 245,  372 => 244,  360 => 235,  353 => 231,  346 => 227,  336 => 219,  327 => 216,  323 => 215,  319 => 214,  315 => 213,  312 => 212,  308 => 211,  293 => 198,  287 => 195,  283 => 193,  280 => 192,  274 => 189,  270 => 187,  268 => 186,  263 => 184,  256 => 180,  249 => 176,  241 => 170,  235 => 168,  232 => 167,  226 => 165,  223 => 164,  217 => 162,  215 => 161,  210 => 159,  54 => 6,  48 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -462,45 +469,52 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
         
         body {
             font-family: 'Courier New', 'Courier', monospace;
-            font-size: 12px;
-            line-height: 1.3;
+            font-size: 11px;
+            line-height: 1.2;
             color: #000;
             background: white;
-            padding: 8px;
+            padding: 6px;
             width: 80mm;
             margin: 0 auto;
+        }
+        
+        /* Éviter les sauts de page */
+        .header, .items-table, .totals, .footer, .thanks {
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
         
         /* En-tête */
         .header {
             text-align: center;
             border-bottom: 1px dashed #000;
-            padding-bottom: 8px;
-            margin-bottom: 8px;
+            padding-bottom: 6px;
+            margin-bottom: 6px;
         }
         
         .company-name {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         
         .company-info {
-            font-size: 10px;
+            font-size: 9px;
             color: #555;
         }
         
         .receipt-title {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
-            margin: 8px 0;
+            margin: 6px 0;
         }
         
         /* Informations vente */
         .info-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
+            font-size: 10px;
         }
         
         .info-label {
@@ -511,51 +525,52 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 8px 0;
+            margin: 6px 0;
         }
         
         .items-table th {
             text-align: left;
             border-bottom: 1px dashed #000;
-            padding-bottom: 4px;
-            margin-bottom: 4px;
-            font-size: 11px;
+            padding-bottom: 3px;
+            font-size: 10px;
         }
         
         .items-table td {
-            padding: 4px 0;
+            padding: 3px 0;
             vertical-align: top;
+            font-size: 10px;
         }
         
         .item-name {
-            font-size: 11px;
+            font-size: 10px;
         }
         
         .item-quantity {
             text-align: center;
-            width: 40px;
+            width: 35px;
         }
         
         .item-price {
             text-align: right;
-            width: 60px;
+            width: 55px;
         }
         
         /* Totaux */
         .totals {
             border-top: 1px dashed #000;
-            padding-top: 8px;
-            margin-top: 8px;
+            padding-top: 6px;
+            margin-top: 6px;
         }
         
         .total-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
+            font-size: 11px;
         }
         
         .total-amount {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
         }
         
@@ -563,24 +578,24 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
         .footer {
             text-align: center;
             border-top: 1px dashed #000;
-            padding-top: 8px;
-            margin-top: 8px;
-            font-size: 10px;
+            padding-top: 6px;
+            margin-top: 6px;
+            font-size: 9px;
             color: #555;
         }
         
         /* Diviseurs */
         .divider {
             border-top: 1px dotted #ccc;
-            margin: 8px 0;
+            margin: 6px 0;
         }
         
         /* Message remerciement */
         .thanks {
             text-align: center;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
-            margin: 8px 0;
+            margin: 6px 0;
         }
         
         @media print {
@@ -617,7 +632,7 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
     </div>
     <div class=\"info-row\">
         <span class=\"info-label\">Date:</span>
-        <span>{{ order.createdAt|date('d/m/Y H:i:s') }}</span>
+        <span>{{ order.createdAt|date('d/m/Y H:i') }}</span>
     </div>
     <div class=\"info-row\">
         <span class=\"info-label\">Caissier:</span>
@@ -650,7 +665,7 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
         <tbody>
             {% for item in order.orderItems %}
             <tr>
-                <td class=\"item-name\">{{ item.productName }}</td>
+                <td class=\"item-name\">{{ item.productName|slice(0, 25) }}</td>
                 <td class=\"item-quantity\">{{ item.quantity }}</td>
                 <td class=\"item-price\">{{ item.unitPrice|number_format(0, ',', ' ') }}</td>
                 <td class=\"item-price\">{{ item.totalPrice|number_format(0, ',', ' ') }}</td>
@@ -692,7 +707,7 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
     {% if order.notes %}
     <div class=\"info-row\">
         <span class=\"info-label\">Notes:</span>
-        <span>{{ order.notes }}</span>
+        <span>{{ order.notes|slice(0, 50) }}</span>
     </div>
     {% endif %}
 
@@ -702,8 +717,7 @@ class __TwigTemplate_575b533288dc2831249a9c765593496a extends Template
     </div>
 
     <div class=\"footer\">
-        Ce document fait office de reçu<br>
-        {{ 'now'|date('Y-m-d H:i:s') }}
+        {{ 'now'|date('d/m/Y H:i') }}
     </div>
 </body>
 </html>", "sale/orders/receipt_content.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\sale\\orders\\receipt_content.html.twig");

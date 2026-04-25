@@ -1,0 +1,229 @@
+{# templates/return/export_pdf.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Export des retours</title>
+    <style>
+        body {
+            font-family: 'DejaVu Sans', 'Arial', 'Helvetica', sans-serif;
+            margin: 20px;
+            font-size: 12px;
+        }
+        h1 {
+            color: #2E86C1;
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .header-info {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .header-info p {
+            margin: 5px 0;
+        }
+        .filters {
+            background: #f5f5f5;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #2E86C1;
+        }
+        .filters-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2E86C1;
+        }
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+        .filter-item {
+            background: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        .filter-label {
+            font-weight: bold;
+            color: #555;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th {
+            background: #2E86C1;
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-size: 11px;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            font-size: 11px;
+        }
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        .status-pending { color: #d97706; font-weight: bold; }
+        .status-approved { color: #2563eb; font-weight: bold; }
+        .status-completed { color: #16a34a; font-weight: bold; }
+        .status-rejected { color: #dc2626; font-weight: bold; }
+        .stats {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .user-info {
+            background: #e8f4fd;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2E86C1;
+        }
+        .role-badge {
+            display: inline-block;
+            background: #2E86C1;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-right: 5px;
+        }
+        .text-muted {
+            color: #666;
+        }
+        small {
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>RAPPORT DES RETOURS & AVOIRS</h1>
+    
+    <div class="header-info">
+        <p><strong>Date d'export :</strong> {{ exportDate|date('d/m/Y H:i:s') }}</p>
+        <p><strong>Entreprise :</strong> {{ hmaService.companyName }}</p>
+    </div>
+
+    <div class="user-info">
+        <p><strong>Exporté par :</strong> {{ userName }}</p>
+        <p><strong>Email :</strong> {{ userEmail }}</p>
+        <p><strong>Rôle(s) :</strong> 
+            {% for role in userRoles %}
+                <span class="role-badge">{{ role }}</span>
+            {% else %}
+                Utilisateur
+            {% endfor %}
+        </p>
+    </div>
+
+    <div class="filters">
+        <div class="filters-title">FILTRES APPLIQUÉS :</div>
+        <div class="filter-row">
+            <div class="filter-item"><span class="filter-label">Recherche :</span> {{ filters.search|default('Aucun') ?: 'Aucun' }}</div>
+            <div class="filter-item"><span class="filter-label">Statut :</span> 
+                {% if filters.status == 'all' or not filters.status %}
+                    Tous les statuts
+                {% else %}
+                    {{ statusLabels[filters.status]|default(filters.status) }}
+                {% endif %}
+            </div>
+            <div class="filter-item"><span class="filter-label">Enregistré par :</span> 
+                {% if filters.user_id and filterUserName %}
+                    {{ filterUserName }}
+                {% elseif filters.user_id %}
+                    ID: {{ filters.user_id }}
+                {% else %}
+                    Tous les utilisateurs
+                {% endif %}
+            </div>
+        </div>
+        <div class="filter-row">
+            <div class="filter-item">
+                <span class="filter-label">Date du :</span> 
+                {% if filters.date_from and filters.date_from != '' %}
+                    {{ filters.date_from }}
+                {% else %}
+                    Non spécifiée
+                {% endif %}
+            </div>
+            <div class="filter-item">
+                <span class="filter-label">Date au :</span> 
+                {% if filters.date_to and filters.date_to != '' %}
+                    {{ filters.date_to }}
+                {% else %}
+                    Non spécifiée
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>N° Retour</th>
+                <th>N° Commande</th>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Montant</th>
+                <th>Motif</th>
+                <th>Enregistré par</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for return in returns %}
+                <tr>
+                    <td><strong>{{ return.returnNumber }}</strong></td>
+                    <td>{{ return.orderNumber }}</td>
+                    <td>
+                        <strong>{{ return.customerName ?: 'Non renseigné' }}</strong><br>
+                        <small>{{ return.customerPhone }}</small>
+                    </td>
+                    <td>{{ return.createdAt|date('d/m/Y H:i') }}</td>
+                    <td><strong>{{ return.totalRefundAmount|number_format(0, ',', ' ') }} FCFA</strong></td>
+                    <td>{{ reasons[return.reason]|default(return.reason) }}</td>
+                    <td>{{ return.returnedBy.fullName }}</td>
+                    <td>
+                        <span class="status-{{ return.status }}">
+                            {% if return.status == 'pending' %}En attente
+                            {% elseif return.status == 'approved' %}Approuvé
+                            {% elseif return.status == 'completed' %}Remboursé
+                            {% elseif return.status == 'rejected' %}Rejeté
+                            {% endif %}
+                        </span>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8" style="text-align: center;">Aucun retour trouvé</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="stats">
+        <strong>RECAPITULATIF :</strong><br>
+        Nombre total de retours : {{ totalReturns }}<br>
+        Montant total rembourse : {{ totalRefunded|number_format(0, ',', ' ') }} FCFA
+    </div>
+
+    <div class="footer">
+        Document genere par HMA Market - {{ exportDate|date('d/m/Y H:i') }}
+    </div>
+</body>
+</html>

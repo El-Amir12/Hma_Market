@@ -1,0 +1,49 @@
+{# templates/return/_form.html.twig #}
+<div class="row">
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label class="form-label fw-bold">Motif du retour <span class="text-danger">*</span></label>
+            <select name="reason" id="reason" class="form-select select2" required>
+                <option value="">-- Sélectionnez un motif --</option>
+                {% for value, label in reasons %}
+                    <option value="{{ value }}" {% if returnOrder is defined and returnOrder.reason == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label class="form-label fw-bold">Méthode de remboursement <span class="text-danger">*</span></label>
+            <select name="refund_method" id="refund_method" class="form-select select2" required>
+                <option value="">-- Sélectionnez une méthode --</option>
+                {% for value, label in refund_methods %}
+                    <option value="{{ value }}" {% if returnOrder is defined and returnOrder.refundMethod == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="mb-3">
+            <label class="form-label fw-bold">Notes supplémentaires</label>
+            <textarea name="reason_notes" id="reason_notes" class="form-control" rows="3" placeholder="Précisez le motif du retour...">{% if returnOrder is defined %}{{ returnOrder.reasonNotes }}{% endif %}</textarea>
+        </div>
+    </div>
+</div>
+
+{% if returnOrder is defined and returnOrder.status == 'pending' %}
+<div class="row">
+    <div class="col-12">
+        <div class="mb-3">
+            <label class="form-label fw-bold">Notes internes</label>
+            <textarea name="notes" id="notes" class="form-control" rows="2" placeholder="Notes internes pour l'administration...">{{ returnOrder.notes }}</textarea>
+        </div>
+    </div>
+</div>
+{% endif %}

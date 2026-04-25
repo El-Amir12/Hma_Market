@@ -121,10 +121,9 @@ class MenuBuilder
             ],
             [
                 'type' => 'link',
-                'route' => 'app_orders_index',
+                'route' => 'returns_index',
                 'label' => 'Retours & Avoirs',
                 'icon' => 'fas fa-undo-alt',
-                'badge' => 'new'
             ]
         ];
 
@@ -137,15 +136,6 @@ class MenuBuilder
                 'icon' => 'fas fa-print'
             ];
         }
-
-        // Statistiques des ventes (optionnel)
-        $salesChildren[] = [
-            'type' => 'link',
-            'route' => 'app_orders_index',
-            'label' => 'Statistiques',
-            'icon' => 'fas fa-chart-line',
-            'coming_soon' => true
-        ];
 
         return [
             'type' => 'dropdown',
@@ -425,21 +415,21 @@ class MenuBuilder
                 [
                     'type' => 'link',
                     'route' => 'app_admin_category_recipe_index', 
-                    'label' => 'Catégories de plats',
+                    'label' => 'Section du menu',
                     'icon' => 'fas fa-th',
                     'coming_soon' => false
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_recipe_new',
-                    'label' => 'Nouveau plat',
+                    'label' => 'Nouvel article',
                     'icon' => 'fas fa-plus-circle',
                     'coming_soon' => false
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_recipe_index',
-                    'label' => 'Plats',
+                    'label' => 'Menu',
                     'icon' => 'fas fa-utensils',
                     'coming_soon' => false
                 ],
@@ -460,7 +450,7 @@ class MenuBuilder
                 [
                     'type' => 'link',
                     'route' => 'app_restaurant_promotion_recipe_index', 
-                    'label' => 'Promotions des plats',
+                    'label' => 'Promotions des articles',
                     'icon' => 'fas fa-tag',
                     'coming_soon' => false
                 ]
@@ -586,21 +576,21 @@ class MenuBuilder
                 [
                     'type' => 'link',
                     'route' => 'app_admin_category_recipe_index', 
-                    'label' => 'Catégories de plats',
+                    'label' => 'Section du menu',
                     'icon' => 'fas fa-th',
                     'coming_soon' => false
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_recipe_new',
-                    'label' => 'Nouveau plat',
+                    'label' => 'Nouvel article',
                     'icon' => 'fas fa-plus-circle',
                     'coming_soon' => false
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_recipe_index',
-                    'label' => 'Plats',
+                    'label' => 'Menu',
                     'icon' => 'fas fa-utensils',
                     'coming_soon' => false
                 ],
@@ -621,7 +611,7 @@ class MenuBuilder
                 [
                     'type' => 'link',
                     'route' => 'app_restaurant_promotion_recipe_index', 
-                    'label' => 'Promotions des plats',
+                    'label' => 'Promotions des articles',
                     'icon' => 'fas fa-tag',
                     'coming_soon' => false
                 ]
@@ -799,14 +789,14 @@ class MenuBuilder
                 [
                     'type' => 'link',
                     'route' => 'app_admin_category_recipe_index', 
-                    'label' => 'Catégories de plats',
+                    'label' => 'Section du menu',
                     'icon' => 'fas fa-utensils',
                     'coming_soon' => false
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_recipe_index',
-                    'label' => 'Plats',
+                    'label' => 'Menu',
                     'icon' => 'fas fa-hamburger',
                     'coming_soon' => false
                 ],
@@ -841,7 +831,7 @@ class MenuBuilder
                 [
                     'type' => 'link',
                     'route' => 'app_restaurant_promotion_recipe_index', 
-                    'label' => 'Promotions des plats',
+                    'label' => 'Promotions des articles',
                     'icon' => 'fas fa-tag',
                     'coming_soon' => false
                 ]

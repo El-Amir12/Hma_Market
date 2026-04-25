@@ -54,6 +54,12 @@ class OrderItem
     #[ORM\Column(nullable: true)]
     private ?string $originalUnitPrice = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $stock_batch_id = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $product_id = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -207,6 +213,28 @@ class OrderItem
     public function setOriginalUnitPrice(?string $originalUnitPrice): static
     {
         $this->originalUnitPrice = $originalUnitPrice;
+        return $this;
+    }
+
+    public function getStockBatchId(): ?int
+    {
+        return $this->stock_batch_id;
+    }
+
+    public function setStockBatchId(?int $stock_batch_id): self
+    {
+        $this->stock_batch_id = $stock_batch_id;
+        return $this;
+    }
+
+    public function getProductId(): ?int
+    {
+        return $this->product_id;
+    }
+
+    public function setProductId(?int $product_id): self
+    {
+        $this->product_id = $product_id;
         return $this;
     }
 

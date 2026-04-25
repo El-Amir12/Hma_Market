@@ -39,7 +39,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             'max_products' => 50,
             'max_orders_per_day' => 10,
             'max_orders_per_month' => 100,
-            'max_categories' => 10,
+            'max_categories' => 15,
             'max_suppliers' => 5,
             'max_recipes' => 15,
             'max_categories_recipes' => 2,

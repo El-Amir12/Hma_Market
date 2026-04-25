@@ -970,6 +970,137 @@
                 box-shadow: 0 0 0 0 rgba(4, 99, 241, 0);
             }
         }
+
+        /* ==================== MODAL LOADING EFFECTS UNIVERSELLES ==================== */
+
+        /* Animation d'entrée pour tous les modals */
+        .modal.fade .modal-dialog {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.95);
+            opacity: 0;
+        }
+
+        .modal.fade.show .modal-dialog {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Overlay avec fond animé */
+        .modal-backdrop {
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-backdrop.fade {
+            opacity: 0;
+        }
+
+        .modal-backdrop.fade.show {
+            opacity: 0.7;
+        }
+
+        /* Spinner de chargement intégré - visible automatiquement */
+        .modal-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1060;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-loading .spinner-container {
+            text-align: center;
+        }
+
+        .modal-loading .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.25rem;
+            color: var(--primary-color);
+        }
+
+        .modal-loading .loading-text {
+            margin-top: 1rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Animation d'entrée du contenu */
+        .modal-content {
+            animation: modalSlideIn 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Effet de pulse pour les boutons */
+        .modal-footer .btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .modal-footer .btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Scroll personnalisé */
+        .modal-body {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .modal-dialog {
+                margin: 1rem;
+            }
+            
+            .modal-content {
+                border-radius: 16px;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .modal-footer .btn {
+                width: 100%;
+                margin: 0;
+            }
+        }
     </style>
     
     {% block stylesheets %}{% endblock %}
@@ -1455,204 +1586,342 @@
         </div>
     </footer>
     
-    <!-- Bootstrap 5 JS -->
-    <!-- CDN JavaScript -->
+   <!-- Bootstrap 5 JS -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    
-    <!-- Custom JS SIMPLIFIÉ -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Toggle sidebar sur mobile
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebar = document.getElementById('sidebarMenu');
-            const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-            
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('show');
-                    sidebarBackdrop.classList.toggle('show');
-                    document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
-                });
-            }
-            
-            if (sidebarBackdrop) {
-                sidebarBackdrop.addEventListener('click', function() {
+    // ==================== SCRIPT PRINCIPAL UNIFIÉ ====================
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // ---------- SIDEBAR MOBILE ----------
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebarMenu');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                sidebarBackdrop.classList.toggle('show');
+                document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
+            });
+        }
+        
+        if (sidebarBackdrop) {
+            sidebarBackdrop.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+                sidebarBackdrop.classList.remove('show');
+                document.body.style.overflow = '';
+            });
+        }
+        
+        if (window.innerWidth < 768) {
+            const sidebarLinks = sidebar?.querySelectorAll('.nav-link') || [];
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function() {
                     sidebar.classList.remove('show');
-                    sidebarBackdrop.classList.remove('show');
+                    sidebarBackdrop?.classList.remove('show');
                     document.body.style.overflow = '';
                 });
-            }
-            
-            // Fermer le sidebar quand on clique sur un lien (mobile)
-            if (window.innerWidth < 768) {
-                const sidebarLinks = sidebar.querySelectorAll('.nav-link');
-                sidebarLinks.forEach(link => {
-                    link.addEventListener('click', function() {
-                        sidebar.classList.remove('show');
-                        sidebarBackdrop.classList.remove('show');
-                        document.body.style.overflow = '';
-                    });
-                });
-            }
-            
-            // Gestion des alertes flash
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }, 5000);
             });
-            
-            // Gestion des erreurs d'images SIMPLIFIÉE (sans les images produits)
-            document.querySelectorAll('img:not(.product-img)').forEach(img => {
-                img.addEventListener('error', function() {
-                    const parent = this.parentElement;
-                    const initial = this.getAttribute('data-initial') || 'H';
-                    
-                    // Créer un élément pour les initiales
-                    const fallback = document.createElement('div');
-                    if (parent.classList.contains('company-logo')) {
-                        fallback.className = 'logo-fallback';
-                    } else if (parent.classList.contains('user-avatar')) {
-                        fallback.className = 'avatar-initials';
-                    }
-                    fallback.textContent = initial;
-                    
-                    // Remplacer l'image
-                    this.style.display = 'none';
-                    parent.appendChild(fallback);
-                });
-            });
-            
-            // Gestion de la recherche universelle
-            function setupUniversalSearch(searchInputId, searchClearId, searchFormId, searchHintId) {
-                const searchInput = document.getElementById(searchInputId);
-                const searchClear = document.getElementById(searchClearId);
-                const searchForm = document.getElementById(searchFormId);
-                const searchHint = document.getElementById(searchHintId);
-                
-                if (!searchInput || !searchClear || !searchForm) return;
-                
-                function toggleClearButton() {
-                    if (searchInput.value.trim() !== '') {
-                        searchClear.classList.add('show');
-                    } else {
-                        searchClear.classList.remove('show');
-                    }
-                }
-                
-                function updateSearchPlaceholder() {
-                    const currentRoute = window.location.pathname;
-                    let placeholder = 'Rechercher...';
-                    let hint = 'Appuyez sur Entrée pour rechercher';
-                    
-                    if (currentRoute.includes('/admin/user')) {
-                        placeholder = 'Rechercher un utilisateur...';
-                        hint = 'Recherche par nom, email ou téléphone';
-                    } else if (currentRoute.includes('/admin/product')) {
-                        placeholder = 'Rechercher un produit...';
-                        hint = 'Recherche par nom, référence ou catégorie';
-                    } else if (currentRoute.includes('/admin/category')) {
-                        placeholder = 'Rechercher une catégorie...';
-                        hint = 'Recherche par nom ou description';
-                    } else if (currentRoute.includes('/admin/order')) {
-                        placeholder = 'Rechercher une commande...';
-                        hint = 'Recherche par numéro, client ou statut';
-                    } else if (currentRoute.includes('/admin/stock')) {
-                        placeholder = 'Rechercher un mouvement de stock...';
-                        hint = 'Recherche par produit ou type';
-                    } else if (currentRoute.includes('/admin/purchase')) {
-                        placeholder = 'Rechercher un achat...';
-                        hint = 'Recherche par fournisseur ou référence';
-                    }
-                    
-                    searchInput.placeholder = placeholder;
-                    if (searchHint) {
-                        searchHint.textContent = hint;
-                    }
-                }
-                
-                searchInput.addEventListener('input', toggleClearButton);
-                
-                searchClear.addEventListener('click', function() {
-                    searchInput.value = '';
-                    searchInput.focus();
-                    toggleClearButton();
-                    
-                    if (searchInput.value === '') {
-                        const url = new URL(window.location);
-                        url.searchParams.delete('search');
-                        url.searchParams.delete('page');
-                        window.location.href = url.toString();
-                    }
-                });
-                
-                searchForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const searchTerm = searchInput.value.trim();
-                    const currentUrl = new URL(window.location);
-                    
-                    if (searchTerm) {
-                        currentUrl.searchParams.set('search', searchTerm);
-                        currentUrl.searchParams.set('page', '1');
-                    } else {
-                        currentUrl.searchParams.delete('search');
-                        currentUrl.searchParams.delete('page');
-                    }
-                    
-                    window.location.href = currentUrl.toString();
-                });
-                
-                updateSearchPlaceholder();
-                toggleClearButton();
-            }
-            
-            // Configurer les deux barres de recherche
-            setupUniversalSearch('universalSearchInput', 'universalSearchClear', 'universalSearchForm', 'searchHint');
-            setupUniversalSearch('universalSearchInputMobile', 'universalSearchClearMobile', 'universalSearchFormMobile', 'searchHintMobile');
-            
-            // Synchroniser les deux champs de recherche
-            const desktopInput = document.getElementById('universalSearchInput');
-            const mobileInput = document.getElementById('universalSearchInputMobile');
-            
-            if (desktopInput && mobileInput) {
-                desktopInput.addEventListener('input', function() {
-                    mobileInput.value = this.value;
-                    const mobileClear = document.getElementById('universalSearchClearMobile');
-                    if (mobileClear) {
-                        mobileClear.classList.toggle('show', this.value.trim() !== '');
-                    }
-                });
-                
-                mobileInput.addEventListener('input', function() {
-                    desktopInput.value = this.value;
-                    const desktopClear = document.getElementById('universalSearchClear');
-                    if (desktopClear) {
-                        desktopClear.classList.toggle('show', this.value.trim() !== '');
-                    }
-                });
-            }
-        });
+        }
         
-        // Fermer automatiquement les alertes après 5 secondes
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                const alerts = document.querySelectorAll('.alert');
-                alerts.forEach(alert => {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                });
+        // ---------- ALERTES FLASH ----------
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
             }, 5000);
         });
+        
+        // ---------- GESTION DES ERREURS D'IMAGES ----------
+        document.querySelectorAll('img:not(.product-img)').forEach(img => {
+            img.addEventListener('error', function() {
+                const parent = this.parentElement;
+                const initial = this.getAttribute('data-initial') || 'H';
+                
+                const fallback = document.createElement('div');
+                if (parent?.classList.contains('company-logo')) {
+                    fallback.className = 'logo-fallback';
+                } else if (parent?.classList.contains('user-avatar')) {
+                    fallback.className = 'avatar-initials';
+                }
+                fallback.textContent = initial;
+                
+                this.style.display = 'none';
+                parent?.appendChild(fallback);
+            });
+        });
+        
+        // ---------- RECHERCHE UNIVERSELLE ----------
+        function setupUniversalSearch(searchInputId, searchClearId, searchFormId, searchHintId) {
+            const searchInput = document.getElementById(searchInputId);
+            const searchClear = document.getElementById(searchClearId);
+            const searchForm = document.getElementById(searchFormId);
+            const searchHint = document.getElementById(searchHintId);
+            
+            if (!searchInput || !searchClear || !searchForm) return;
+            
+            function toggleClearButton() {
+                searchClear.classList.toggle('show', searchInput.value.trim() !== '');
+            }
+            
+            function updateSearchPlaceholder() {
+                const currentRoute = window.location.pathname;
+                let placeholder = 'Rechercher...';
+                let hint = 'Appuyez sur Entrée pour rechercher';
+                
+                if (currentRoute.includes('/admin/user')) {
+                    placeholder = 'Rechercher un utilisateur...';
+                    hint = 'Recherche par nom, email ou téléphone';
+                } else if (currentRoute.includes('/admin/product')) {
+                    placeholder = 'Rechercher un produit...';
+                    hint = 'Recherche par nom, référence ou catégorie';
+                } else if (currentRoute.includes('/admin/category')) {
+                    placeholder = 'Rechercher une catégorie...';
+                    hint = 'Recherche par nom ou description';
+                } else if (currentRoute.includes('/admin/order')) {
+                    placeholder = 'Rechercher une commande...';
+                    hint = 'Recherche par numéro, client ou statut';
+                } else if (currentRoute.includes('/admin/stock')) {
+                    placeholder = 'Rechercher un mouvement de stock...';
+                    hint = 'Recherche par produit ou type';
+                } else if (currentRoute.includes('/admin/purchase')) {
+                    placeholder = 'Rechercher un achat...';
+                    hint = 'Recherche par fournisseur ou référence';
+                }
+                
+                searchInput.placeholder = placeholder;
+                if (searchHint) searchHint.textContent = hint;
+            }
+            
+            searchInput.addEventListener('input', toggleClearButton);
+            
+            searchClear.addEventListener('click', function() {
+                searchInput.value = '';
+                searchInput.focus();
+                toggleClearButton();
+                
+                if (searchInput.value === '') {
+                    const url = new URL(window.location);
+                    url.searchParams.delete('search');
+                    url.searchParams.delete('page');
+                    window.location.href = url.toString();
+                }
+            });
+            
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const searchTerm = searchInput.value.trim();
+                const currentUrl = new URL(window.location);
+                
+                if (searchTerm) {
+                    currentUrl.searchParams.set('search', searchTerm);
+                    currentUrl.searchParams.set('page', '1');
+                } else {
+                    currentUrl.searchParams.delete('search');
+                    currentUrl.searchParams.delete('page');
+                }
+                window.location.href = currentUrl.toString();
+            });
+            
+            updateSearchPlaceholder();
+            toggleClearButton();
+        }
+        
+        setupUniversalSearch('universalSearchInput', 'universalSearchClear', 'universalSearchForm', 'searchHint');
+        setupUniversalSearch('universalSearchInputMobile', 'universalSearchClearMobile', 'universalSearchFormMobile', 'searchHintMobile');
+        
+        // Synchronisation des champs de recherche
+        const desktopInput = document.getElementById('universalSearchInput');
+        const mobileInput = document.getElementById('universalSearchInputMobile');
+        
+        if (desktopInput && mobileInput) {
+            desktopInput.addEventListener('input', function() {
+                mobileInput.value = this.value;
+                const mobileClear = document.getElementById('universalSearchClearMobile');
+                if (mobileClear) mobileClear.classList.toggle('show', this.value.trim() !== '');
+            });
+            
+            mobileInput.addEventListener('input', function() {
+                desktopInput.value = this.value;
+                const desktopClear = document.getElementById('universalSearchClear');
+                if (desktopClear) desktopClear.classList.toggle('show', this.value.trim() !== '');
+            });
+        }
+        
+        // ---------- GESTION UNIVERSELLE DES MODALS ----------
+        function addLoadingIndicator(modalElement) {
+            if (modalElement.querySelector('.modal-loading')) return;
+            
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'modal-loading';
+            loadingDiv.style.display = 'none';
+            loadingDiv.innerHTML = `
+                <div class="spinner-container">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                    <div class="loading-text">Chargement en cours...</div>
+                </div>
+            `;
+            
+            const modalContent = modalElement.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.style.position = 'relative';
+                modalContent.appendChild(loadingDiv);
+            }
+        }
+        
+        function setModalLoading(modalElement, isLoading) {
+            const loadingDiv = modalElement.querySelector('.modal-loading');
+            if (loadingDiv) loadingDiv.style.display = isLoading ? 'flex' : 'none';
+        }
+        
+        function initModal(modal) {
+            // Éviter les doubles initialisations
+            if (modal.hasAttribute('data-modal-initialized')) return;
+            modal.setAttribute('data-modal-initialized', 'true');
+            
+            addLoadingIndicator(modal);
+            
+            modal.addEventListener('show.bs.modal', function() {
+                setModalLoading(this, false);
+            });
+            
+            const form = modal.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', () => setModalLoading(modal, true));
+            }
+            
+            const actionBtns = modal.querySelectorAll('.btn-primary, .btn-danger, .btn-success, .btn-warning');
+            actionBtns.forEach(btn => {
+                if (!btn.hasAttribute('data-bs-dismiss') && btn.type !== 'button') {
+                    btn.addEventListener('click', () => setModalLoading(modal, true));
+                }
+            });
+        }
+        
+        // Initialiser tous les modals existants
+        document.querySelectorAll('.modal').forEach(modal => initModal(modal));
+        
+        // Observer les nouveaux modals
+        const modalObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1) {
+                        if (node.classList?.contains('modal')) initModal(node);
+                        node.querySelectorAll?.('.modal').forEach(modal => initModal(modal));
+                    }
+                });
+            });
+        });
+        modalObserver.observe(document.body, { childList: true, subtree: true });
+        
+        // ---------- FONCTIONS GLOBALES ----------
+        window.showModalWithLoading = function(modalId, loadContentCallback) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            
+            const bsModal = bootstrap.Modal.getOrCreateInstance(modal);
+            
+            modal.addEventListener('show.bs.modal', async function onShow() {
+                modal.removeEventListener('show.bs.modal', onShow);
+                setModalLoading(modal, true);
+                try {
+                    if (loadContentCallback) await loadContentCallback(modal);
+                } finally {
+                    setModalLoading(modal, false);
+                }
+            }, { once: true });
+            
+            bsModal.show();
+        };
+        
+        window.showConfirmModal = function(options) {
+            const {
+                title = 'Confirmation',
+                message = 'Êtes-vous sûr de vouloir effectuer cette action ?',
+                type = 'info',
+                confirmText = 'Confirmer',
+                cancelText = 'Annuler',
+                onConfirm = null,
+                onCancel = null
+            } = options;
+            
+            const modalId = 'dynamic-confirm-modal-' + Date.now();
+            const modalHtml = `
+                <div class="modal fade modal-confirm" id="${modalId}" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header ${type === 'danger' ? 'bg-danger text-white' : (type === 'success' ? 'bg-success text-white' : (type === 'warning' ? 'bg-warning text-dark' : 'bg-primary text-white'))}">
+                                <h5 class="modal-title">
+                                    <i class="fas ${type === 'danger' ? 'fa-exclamation-triangle' : (type === 'success' ? 'fa-check-circle' : (type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'))} me-2"></i>
+                                    ${title}
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body text-center py-4">
+                                <div class="confirm-icon ${type} mb-3">
+                                    <i class="fas ${type === 'danger' ? 'fa-times-circle' : (type === 'success' ? 'fa-check-circle' : (type === 'warning' ? 'fa-exclamation-triangle' : 'fa-question-circle'))} fa-3x"></i>
+                                </div>
+                                <p class="mb-0 fs-5">${message}</p>
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${cancelText}</button>
+                                <button type="button" class="btn btn-${type === 'danger' ? 'danger' : (type === 'success' ? 'success' : 'primary')}" id="confirm-action-${modalId}">${confirmText}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            const modalElement = document.getElementById(modalId);
+            
+            initModal(modalElement);
+            const modal = new bootstrap.Modal(modalElement);
+            
+            document.getElementById(`confirm-action-${modalId}`).addEventListener('click', async function() {
+                if (onConfirm) {
+                    setModalLoading(modalElement, true);
+                    try {
+                        await onConfirm();
+                    } finally {
+                        setModalLoading(modalElement, false);
+                        modal.hide();
+                    }
+                } else {
+                    modal.hide();
+                }
+            });
+            
+            modalElement.addEventListener('hidden.bs.modal', () => setTimeout(() => modalElement.remove(), 300));
+            if (onCancel) modalElement.addEventListener('hidden.bs.modal', onCancel, { once: true });
+            
+            modal.show();
+        };
+        
+        window.setModalLoadingState = function(modalId, isLoading) {
+            const modal = document.getElementById(modalId);
+            if (modal) setModalLoading(modal, isLoading);
+        };
+    });
+
+    // Fermeture automatique des alertes au chargement
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    });
     </script>
-    
-    
+
     {% block javascripts %}{% endblock %}
     {{ encore_entry_script_tags('app') }}
 

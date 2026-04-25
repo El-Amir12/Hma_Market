@@ -35,9 +35,9 @@ echo [%date% %time%] 🔓 Déblocage des comptes utilisateurs expirés...
 php bin/console app:unlock-locked-users --no-interaction
 if %errorlevel% neq 0 echo ⚠️ Erreur lors du déblocage
 
-echo [%date% %time%] 🔄 Désactivation des lots expirés...
-php bin/console app:batches:deactivate-expired --no-interaction
-if %errorlevel% neq 0 echo ⚠️ Erreur lors de la désactivation des lots
+echo [%date% %time%] 🔄 MAINTENANCE DU STOCK (lots expirés, lots vides, synchronisation)...
+php bin/console app:stock:maintenance --no-interaction
+if %errorlevel% neq 0 echo ⚠️ Erreur lors de la maintenance du stock
 
 echo.
 echo ========================================
