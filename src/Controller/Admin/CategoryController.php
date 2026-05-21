@@ -8,8 +8,8 @@ use App\Entity\HmaService;
 use App\Form\CategoryType;
 use App\Service\UniqueNameValidator;
 use App\Repository\CategoryRepository;
+use App\Repository\PromotionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Promotion; 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +25,6 @@ final class CategoryController extends AbstractController
         private readonly UniqueNameValidator $uniqueNameValidator
     ) {}
 
-    /**
-     * Récupère le service HmaService associé à l'utilisateur connecté.
-     */
     private function getCurrentHmaService(): ?HmaService
     {
         $user = $this->getUser();
@@ -37,9 +34,6 @@ final class CategoryController extends AbstractController
         return null;
     }
 
-    /**
-     * Vérifie que l'utilisateur a les droits nécessaires.
-     */
     private function checkAccess(): void
     {
         if (!$this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_MANAGER')) {
@@ -47,9 +41,6 @@ final class CategoryController extends AbstractController
         }
     }
 
-    /**
-     * Vérifie que la catégorie appartient bien au service.
-     */
     private function checkOwnership(Category $category, HmaService $hmaService): void
     {
         $catService = $category->getHmaService();
@@ -59,8 +50,11 @@ final class CategoryController extends AbstractController
     }
 
     #[Route(name: 'app_admin_category_index', methods: ['GET'])]
-    public function index(Request $request, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response
-    {
+    public function index(
+        Request $request, 
+        CategoryRepository $categoryRepository, 
+        PromotionRepository $promotionRepository
+    ): Response {
         $this->checkAccess();
 
         $hmaService = $this->getCurrentHmaService();
@@ -73,13 +67,19 @@ final class CategoryController extends AbstractController
         $search = $request->query->get('search', '');
         $status = $request->query->get('status', 'all');
         $type = $request->query->get('type', 'all');
-        $subStatus = $request->query->get('sub_status', 'active');
+        $subStatus = $request->query->get('sub_status', '');
         $promotionId = $request->query->getInt('promotion', 0);
 
-        $promotions = $entityManager->getRepository(Promotion::class)->findBy(
-            ['hma_service' => $hmaService, 'is_active' => true],
-            ['name' => 'ASC']
-        );
+        // 🔥 Récupérer UNIQUEMENT les promotions qui concernent les catégories de produits
+        // Pour les restaurants, ce filtre n'est pas pertinent car ils ne font pas de promotions sur les catégories de produits
+        // Donc on conditionne l'affichage selon le type d'entreprise
+        $companyType = $hmaService->getType();
+        $promotions = [];
+        
+        if ($companyType !== 'restaurant') {
+            // Pour les entreprises non-restaurant, on récupère les promotions liées aux catégories de produits
+            $promotions = $promotionRepository->findActiveForProductCategories($hmaService);
+        }
 
         $paginator = $categoryRepository->findFilteredPaginated(
             $hmaService, $status, $type, $subStatus, $search, $page, $limit, $promotionId > 0 ? $promotionId : null
@@ -128,7 +128,7 @@ final class CategoryController extends AbstractController
             'plan' => $plan,
             'promotions' => $promotions,
             'selectedPromotion' => $promotionId,
-            'companyType' => $hmaService->getType(),
+            'companyType' => $companyType,
         ]);
     }
 

@@ -43,7 +43,7 @@ class StockMovement
     private ?StockBatch $stock_batch = null;
 
     #[ORM\ManyToOne(inversedBy: 'stockMovements')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'stockMovements')]

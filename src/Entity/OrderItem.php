@@ -26,6 +26,9 @@ class OrderItem
     #[ORM\Column]
     private ?int $quantity = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $notes = null;
+
     #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
     private ?string $total_price = null;
 
@@ -110,6 +113,17 @@ class OrderItem
     {
         $this->quantity = $quantity;
 
+        return $this;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): self
+    {
+        $this->notes = $notes;
         return $this;
     }
 

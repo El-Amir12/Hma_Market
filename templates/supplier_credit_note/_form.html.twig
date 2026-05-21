@@ -1,0 +1,80 @@
+{# templates/supplier_credit_note/_form.html.twig #}
+<div class="card shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">
+            <i class="fas fa-file-alt me-2"></i>
+            Formulaire de signalement
+        </h5>
+    </div>
+    <div class="card-body">
+        {{ form_start(form) }}
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.issueType, 'Type de problème', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.issueType) }}
+                {{ form_errors(form.issueType) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.priority, 'Priorité', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.priority) }}
+                {{ form_errors(form.priority) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.affected_quantity, 'Quantité concernée', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.affected_quantity) }}
+                {{ form_errors(form.affected_quantity) }}
+                <small class="text-muted">Laissez vide pour un montant uniquement</small>
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.declaredAmount, 'Montant déclaré (FCFA)', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.declaredAmount) }}
+                {{ form_errors(form.declaredAmount) }}
+                <small class="text-muted">Calculé automatiquement si vous renseignez la quantité</small>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                {{ form_label(form.stock_action, 'Action recommandée sur le stock', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.stock_action) }}
+                {{ form_errors(form.stock_action) }}
+                <small class="text-muted">Cette action sera enregistrée dans l'historique comme recommandation</small>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                {{ form_label(form.description, 'Description détaillée', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.description) }}
+                {{ form_errors(form.description) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                {{ form_label(form.attachments, 'Pièces jointes', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.attachments) }}
+                {{ form_errors(form.attachments) }}
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Formats supportés: JPG, PNG, GIF, WEBP, MP4, MPEG, MOV (max 50Mo par fichier)
+                </small>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <a href="{{ path('app_supplier_credit_note_index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Annuler
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-1"></i> Signaler le problème
+            </button>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>

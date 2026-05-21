@@ -44,4 +44,6 @@ git remote add origin https://github.com/El-Amir12/Hma_Market.git
 git remote -v
 
 # 3. Pousser les changements
-git push origin hma-market-saas --force
+git push origin hma-market-saas --
+
+https://prospect.omneseducation.com/app/international/study

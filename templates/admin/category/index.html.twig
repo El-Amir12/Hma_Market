@@ -3,6 +3,144 @@
 
 {% block title %}Catégories de produits - HMA Market{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<style>
+.category-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+}
+
+.category-image-wrapper {
+    height: 130px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.category-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.category-card:hover .category-image {
+    transform: scale(1.05);
+}
+
+.category-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fs-10 {
+    font-size: 10px;
+}
+
+.badge {
+    font-weight: 500;
+    font-size: 11px;
+    padding: 4px 8px;
+}
+
+.btn-sm {
+    font-size: 12px;
+}
+
+.rounded-circle {
+    border-radius: 50% !important;
+}
+
+.hover-card {
+    transition: all 0.2s ease;
+}
+
+/* Styles Select2 - Correction d'alignement vertical */
+.select2-container--bootstrap-5 .select2-selection {
+    height: 38px !important;
+    padding: 0 !important;
+}
+.select2-container--bootstrap-5 .select2-selection--single {
+    height: 38px !important;
+    border-radius: 8px !important;
+    background-color: #fff !important;
+    border-color: #dee2e6 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    line-height: normal !important;
+    padding: 8px 12px !important;
+    color: #212529 !important;
+    display: block !important;
+}
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
+    height: 36px !important;
+    position: absolute !important;
+    top: 1px !important;
+    right: 5px !important;
+}
+.select2-container--bootstrap-5 .select2-dropdown {
+    border-color: #e9ecef !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+.select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field {
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    border-color: #e9ecef !important;
+}
+.select2-container--bootstrap-5 .select2-results__option {
+    padding: 8px 12px !important;
+}
+.select2-container--bootstrap-5 .select2-results__option--selected {
+    background-color: #0463f1 !important;
+    color: white !important;
+}
+.select2-container--bootstrap-5 .select2-results__option--highlighted {
+    background-color: #e9ecef !important;
+    color: #0463f1 !important;
+}
+
+@media (max-width: 768px) {
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+    }
+    .stat-icon i {
+        font-size: 1.25rem;
+    }
+    .category-image-wrapper {
+        height: 100px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block body %}
 <div class="container-fluid px-4">
     <!-- En-tête -->
@@ -84,56 +222,94 @@
         </div>
     {% endfor %}
 
-    <!-- Statistiques -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3 col-6">
-            <div class="stat-card bg-white rounded-3 p-3 shadow-sm">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <span class="text-muted small text-uppercase">Total</span>
-                        <h2 class="mb-0 fw-bold">{{ totalFiltered }}</h2>
+    <!-- Container des statistiques dynamiques - 7 cartes -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">
+                <i class="fas fa-chart-pie me-2"></i>Statistiques selon les filtres
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Première ligne : 4 cartes -->
+                <div class="col-md-3 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-primary text-uppercase small fw-bold">Total</span>
+                                <h3 class="mb-0">{{ totalFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-folder fa-2x text-primary opacity-50"></i>
+                        </div>
                     </div>
-                    <div class="stat-icon bg-primary bg-opacity-10 rounded-3 p-3">
-                        <i class="fas fa-folder fa-2x text-primary"></i>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-success text-uppercase small fw-bold">Actives</span>
+                                <h3 class="mb-0 text-success">{{ activeFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-check-circle fa-2x text-success opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-danger text-uppercase small fw-bold">Inactives</span>
+                                <h3 class="mb-0 text-danger">{{ inactiveFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-pause-circle fa-2x text-danger opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-info text-uppercase small fw-bold">Principales</span>
+                                <h3 class="mb-0 text-info">{{ mainFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-sitemap fa-2x text-info opacity-50"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-card bg-white rounded-3 p-3 shadow-sm">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <span class="text-muted small text-uppercase">Actives</span>
-                        <h2 class="mb-0 fw-bold text-success">{{ activeFiltered }}</h2>
-                    </div>
-                    <div class="stat-icon bg-success bg-opacity-10 rounded-3 p-3">
-                        <i class="fas fa-check-circle fa-2x text-success"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-card bg-white rounded-3 p-3 shadow-sm">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <span class="text-muted small text-uppercase">Principales</span>
-                        <h2 class="mb-0 fw-bold text-info">{{ mainFiltered }}</h2>
-                    </div>
-                    <div class="stat-icon bg-info bg-opacity-10 rounded-3 p-3">
-                        <i class="fas fa-sitemap fa-2x text-info"></i>
+            <div class="row">
+                <!-- Deuxième ligne : 3 cartes -->
+                <div class="col-md-4 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-warning text-uppercase small fw-bold">Sous-catégories</span>
+                                <h3 class="mb-0 text-warning">{{ subFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-folder-tree fa-2x text-warning opacity-50"></i>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-card bg-white rounded-3 p-3 shadow-sm">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <span class="text-muted small text-uppercase">Sous-catégories</span>
-                        <h2 class="mb-0 fw-bold text-warning">{{ subFiltered }}</h2>
+                <div class="col-md-4 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-info text-uppercase small fw-bold">Abonnement actif</span>
+                                <h3 class="mb-0 text-info">{{ subscriptionActiveFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-database fa-2x text-info opacity-50"></i>
+                        </div>
                     </div>
-                    <div class="stat-icon bg-warning bg-opacity-10 rounded-3 p-3">
-                        <i class="fas fa-folder-tree fa-2x text-warning"></i>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-secondary text-uppercase small fw-bold">Abonnement inactif</span>
+                                <h3 class="mb-0 text-secondary">{{ subscriptionInactiveFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-clock fa-2x text-secondary opacity-50"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -156,57 +332,105 @@
         <div class="card-body bg-white">
             <form method="get" id="filter-form">
                 <div class="row g-3">
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold small">
-                            <i class="fas fa-search me-1"></i> Recherche
-                        </label>
-                        <input type="text" name="search" class="form-control" 
-                               placeholder="Nom, description..." 
-                               value="{{ search }}">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-semibold small">
-                            <i class="fas fa-toggle-on me-1"></i> Statut
-                        </label>
-                        <select name="status" class="form-select">
-                            <option value="all" {{ status == 'all' ? 'selected' }}>Tous</option>
-                            <option value="active" {{ status == 'active' ? 'selected' }}>Actives</option>
-                            <option value="inactive" {{ status == 'inactive' ? 'selected' }}>Inactives</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-semibold small">
-                            <i class="fas fa-sitemap me-1"></i> Type
-                        </label>
-                        <select name="type" class="form-select">
-                            <option value="all" {{ type == 'all' ? 'selected' }}>Toutes</option>
-                            <option value="main" {{ type == 'main' ? 'selected' }}>Principales</option>
-                            <option value="sub" {{ type == 'sub' ? 'selected' }}>Sous-catégories</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-semibold small">
-                            <i class="fas fa-chart-line me-1"></i> Quota
-                        </label>
-                        <select name="sub_status" class="form-select">
-                            <option value="all" {{ subStatus == 'all' ? 'selected' }}>Tous</option>
-                            <option value="active" {{ subStatus == 'active' ? 'selected' }}>Dans quota</option>
-                            <option value="inactive" {{ subStatus == 'inactive' ? 'selected' }}>Hors quota</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold small">
-                            <i class="fas fa-percent me-1"></i> Promotion
-                        </label>
-                        <select name="promotion" class="form-select">
-                            <option value="">Toutes</option>
-                            {% for promotion in promotions %}
-                                <option value="{{ promotion.id }}" {{ selectedPromotion == promotion.id ? 'selected' }}>
-                                    {{ promotion.name|u.truncate(30) }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                    {% if companyType == 'restaurant' %}
+                        <!-- Cas RESTAURANT : 4 filtres -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-search me-1"></i> Recherche
+                            </label>
+                            <input type="text" name="search" class="form-control" 
+                                placeholder="Nom, description..." 
+                                value="{{ search }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-toggle-on me-1"></i> Statut
+                            </label>
+                            <select name="status" class="form-select">
+                                <option value="all" {{ status == 'all' ? 'selected' : '' }}>Tous</option>
+                                <option value="active" {{ status == 'active' ? 'selected' : '' }}>Actives</option>
+                                <option value="inactive" {{ status == 'inactive' ? 'selected' : '' }}>Inactives</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-sitemap me-1"></i> Type
+                            </label>
+                            <select name="type" class="form-select">
+                                <option value="all" {{ type == 'all' ? 'selected' : '' }}>Toutes</option>
+                                <option value="main" {{ type == 'main' ? 'selected' : '' }}>Principales</option>
+                                <option value="sub" {{ type == 'sub' ? 'selected' : '' }}>Sous-catégories</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-chart-line me-1"></i> Quota
+                            </label>
+                            <select name="sub_status" class="form-select">
+                                <option value="all" {{ subStatus == 'all' ? 'selected' : '' }}>Tous</option>
+                                <option value="active" {{ subStatus == 'active' ? 'selected' : '' }}>Dans quota</option>
+                                <option value="inactive" {{ subStatus == 'inactive' ? 'selected' : '' }}>Hors quota</option>
+                            </select>
+                        </div>
+                    {% else %}
+                        <!-- Cas NON RESTAURANT (market, etc.) : 5 filtres -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-search me-1"></i> Recherche
+                            </label>
+                            <input type="text" name="search" class="form-control" 
+                                placeholder="Nom, description..." 
+                                value="{{ search }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-toggle-on me-1"></i> Statut
+                            </label>
+                            <select name="status" class="form-select">
+                                <option value="all" {{ status == 'all' ? 'selected' : '' }}>Tous</option>
+                                <option value="active" {{ status == 'active' ? 'selected' : '' }}>Actives</option>
+                                <option value="inactive" {{ status == 'inactive' ? 'selected' : '' }}>Inactives</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-sitemap me-1"></i> Type
+                            </label>
+                            <select name="type" class="form-select">
+                                <option value="all" {{ type == 'all' ? 'selected' : '' }}>Toutes</option>
+                                <option value="main" {{ type == 'main' ? 'selected' : '' }}>Principales</option>
+                                <option value="sub" {{ type == 'sub' ? 'selected' : '' }}>Sous-catégories</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-chart-line me-1"></i> Quota
+                            </label>
+                            <select name="sub_status" class="form-select">
+                                <option value="all" {{ subStatus == 'all' ? 'selected' : '' }}>Tous</option>
+                                <option value="active" {{ subStatus == 'active' ? 'selected' : '' }}>Dans quota</option>
+                                <option value="inactive" {{ subStatus == 'inactive' ? 'selected' : '' }}>Hors quota</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-percent me-1"></i> Promotion
+                            </label>
+                            <select name="promotion" id="promotion" class="form-select" style="width: 100%;">
+                                <option value="0">🎯 Toutes les promotions</option>
+                                {% for promotion in promotions %}
+                                    <option value="{{ promotion.id }}" {{ selectedPromotion == promotion.id ? 'selected' : '' }}>
+                                        {{ promotion.name }}
+                                        {% if promotion.discountPercentage %}
+                                            (-{{ promotion.discountPercentage }}%)
+                                        {% elseif promotion.discountAmount %}
+                                            (-{{ promotion.discountAmount|number_format(0, ',', ' ') }} FCFA)
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
                 </div>
             </form>
         </div>
@@ -239,24 +463,26 @@
                         
                         <!-- Badges en haut à droite -->
                         <div class="position-absolute top-0 end-0 p-2">
-                            {% if not category.subscriptionActive %}
-                                <span class="badge bg-warning text-dark mb-1">
-                                    <i class="fas fa-clock fa-xs me-1"></i> Hors quota
-                                </span>
-                            {% elseif category.isActive %}
-                                <span class="badge bg-success mb-1">
-                                    <i class="fas fa-check-circle fa-xs me-1"></i> Active
-                                </span>
-                            {% else %}
-                                <span class="badge bg-danger mb-1">
-                                    <i class="fas fa-pause-circle fa-xs me-1"></i> Inactive
-                                </span>
-                            {% endif %}
-                            {% if category.subscriptionActive %}
-                                <span class="badge bg-info">
-                                    <i class="fas fa-database fa-xs me-1"></i> Quota
-                                </span>
-                            {% endif %}
+                            <div class="d-flex flex-column gap-1">
+                                {% if not category.subscriptionActive %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-clock fa-xs me-1"></i> Hors quota
+                                    </span>
+                                {% elseif category.isActive %}
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle fa-xs me-1"></i> Active
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-pause-circle fa-xs me-1"></i> Inactive
+                                    </span>
+                                {% endif %}
+                                {% if category.subscriptionActive %}
+                                    <span class="badge bg-info">
+                                        <i class="fas fa-database fa-xs me-1"></i> Dans quota
+                                    </span>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
 
@@ -311,8 +537,8 @@
                                             <button type="button" class="dropdown-item text-danger delete-category-btn"
                                                     data-id="{{ category.id }}"
                                                     data-name="{{ category.name }}"
-                                                    data-has-children="{{ (category.childrenCount ?? category.children|length) > 0 ? 'true' : 'false' }}"
-                                                    data-has-products="{{ (category.productCount ?? category.products|length) > 0 ? 'true' : 'false' }}"
+                                                    data-has-children="{{ category.childrenCount ?? category.children|length > 0 ? 'true' : 'false' }}"
+                                                    data-has-products="{{ category.productCount ?? category.products|length > 0 ? 'true' : 'false' }}"
                                                     data-token="{{ csrf_token('delete' ~ category.id) }}">
                                                 <i class="fas fa-trash me-2"></i> Supprimer
                                             </button>
@@ -486,8 +712,21 @@
 
 {% block javascripts %}
 {{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // ========== Initialisation Select2 pour la promotion (uniquement si présent) ==========
+    if (document.getElementById('promotion')) {
+        $('#promotion').select2({
+            theme: 'bootstrap-5',
+            language: 'fr',
+            placeholder: '🎯 Sélectionnez une promotion',
+            allowClear: true,
+            width: '100%'
+        });
+    }
+
     // Nouvelle catégorie avec vérification quota
     const newCategoryBtn = document.getElementById('newCategoryBtn');
     if (newCategoryBtn) {
@@ -557,93 +796,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-{% endblock %}
-
-{% block stylesheets %}
-{{ parent() }}
-<style>
-.category-card {
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.category-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
-}
-
-.category-image-wrapper {
-    height: 130px;
-    overflow: hidden;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-}
-
-.category-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s;
-}
-
-.category-card:hover .category-image {
-    transform: scale(1.05);
-}
-
-.category-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.stat-card {
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
-}
-
-.stat-icon {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.fs-10 {
-    font-size: 10px;
-}
-
-.badge {
-    font-weight: 500;
-    font-size: 11px;
-    padding: 4px 8px;
-}
-
-.btn-sm {
-    font-size: 12px;
-}
-
-.rounded-circle {
-    border-radius: 50% !important;
-}
-
-.hover-card {
-    transition: all 0.2s ease;
-}
-
-@media (max-width: 768px) {
-    .stat-icon {
-        width: 40px;
-        height: 40px;
-    }
-    .stat-icon i {
-        font-size: 1.25rem;
-    }
-    .category-image-wrapper {
-        height: 100px;
-    }
-}
-</style>
 {% endblock %}

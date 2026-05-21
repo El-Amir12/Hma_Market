@@ -12,7 +12,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ path('app_admin_recipe_index') }}" class="text-decoration-none">
-                            <i class="fas fa-utensils me-1"></i> Plats
+                            <i class="fas fa-utensils me-1"></i> Articles
                         </a>
                     </li>
                     <li class="breadcrumb-item active">{{ recipe.name|u.truncate(30, '...') }}</li>
@@ -53,7 +53,7 @@
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-white py-3">
                     <h5 class="card-title mb-0">
-                        <i class="fas fa-info-circle me-2"></i> Informations du plat
+                        <i class="fas fa-info-circle me-2"></i> Informations de l'article
                     </h5>
                 </div>
                 <div class="card-body">
@@ -116,6 +116,28 @@
                         <div class="info-value bg-light p-3 rounded">{{ recipe.description|nl2br }}</div>
                     </div>
                     {% endif %}
+
+                    <!-- 🔥 Type de plat APRÈS la description -->
+                    <div class="mt-4">
+                        <div class="info-label"><i class="fas fa-tag text-primary me-2"></i> Type d'article</div>
+                        <div class="info-value">
+                            <span class="badge bg-primary">
+                                {% if recipe.type == 'food' %}
+                                    🍽️ Plat principal
+                                {% elseif recipe.type == 'starter' %}
+                                    🥗 Entrée
+                                {% elseif recipe.type == 'dessert' %}
+                                    🍰 Dessert
+                                {% elseif recipe.type == 'drink' %}
+                                    🥤 Boisson
+                                {% elseif recipe.type == 'side' %}
+                                    🍟 Accompagnement
+                                {% else %}
+                                    📋 Plat
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
 
                     <!-- Instructions -->
                     {% if recipe.instructions %}

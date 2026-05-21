@@ -3,229 +3,104 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Rapport des lots</title>
+    <title>Rapport des lots - {{ exportDate|date('d/m/Y H:i') }}</title>
     <style>
-        body {
-            font-family: 'Arial', 'Helvetica', sans-serif;
-            margin: 20px;
-            font-size: 12px;
-        }
-        h1 {
-            color: #2E86C1;
-            text-align: center;
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        .header-info {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
-        }
-        .header-info p {
-            margin: 5px 0;
-        }
-        .filters {
-            background: #f5f5f5;
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            border-left: 4px solid #2E86C1;
-        }
-        .filters-title {
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #2E86C1;
-        }
-        .filter-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 5px;
-        }
-        .filter-item {
-            background: white;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-        }
-        .filter-label {
-            font-weight: bold;
-            color: #555;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th {
-            background: #2E86C1;
-            color: white;
-            padding: 10px 8px;
-            text-align: left;
-            font-size: 11px;
-        }
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            font-size: 11px;
-        }
-        .footer {
-            margin-top: 25px;
-            text-align: center;
-            font-size: 10px;
-            color: #666;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
-        }
-        .expired {
-            background: #ffcccc;
-        }
-        .low-stock {
-            background: #ffffcc;
-        }
-        .stats {
-            margin-top: 15px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
-        }
-        .badge {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 10px;
-        }
-        .badge-expired {
-            background: #dc3545;
-            color: white;
-        }
-        .badge-warning {
-            background: #ffc107;
-            color: #333;
-        }
-        .user-info {
-            background: #e8f4fd;
-            padding: 8px 12px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            border-left: 4px solid #2E86C1;
-        }
+        body { font-family: 'Arial', sans-serif; margin: 20px; font-size: 12px; }
+        h1 { color: #2E86C1; text-align: center; font-size: 18px; margin-bottom: 20px; }
+        .header-info { margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .header-info p { margin: 5px 0; }
+        .filters { background: #f5f5f5; padding: 12px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #2E86C1; }
+        .filters-title { font-weight: bold; margin-bottom: 8px; color: #2E86C1; }
+        .filter-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 5px; }
+        .filter-item { background: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; }
+        .filter-label { font-weight: bold; color: #555; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background: #2E86C1; color: white; padding: 10px 8px; text-align: left; font-size: 11px; }
+        td { border: 1px solid #ddd; padding: 8px; font-size: 11px; }
+        .footer { margin-top: 25px; text-align: center; font-size: 10px; color: #666; border-top: 1px solid #ddd; padding-top: 10px; }
+        .expired { background: #ffcccc; }
+        .expiring-soon { background: #ffffcc; }
+        .low-stock { background: #e6f3ff; }
+        .has-issue { background: #ffe0b2; }
+        .stats { margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+        .badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 10px; }
+        .badge-expired { background: #dc3545; color: white; }
+        .badge-warning { background: #ffc107; color: #333; }
+        .badge-pending { background: #ffc107; color: #333; }
+        .badge-recovered { background: #28a745; color: white; }
+        .badge-lost { background: #dc3545; color: white; }
+        .user-info { background: #e8f4fd; padding: 8px 12px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid #2E86C1; }
     </style>
 </head>
 <body>
     <h1>RAPPORT DE GESTION DES LOTS</h1>
-    
     <div class="header-info">
         <p><strong>Date d'export :</strong> {{ exportDate|date('d/m/Y H:i:s') }}</p>
         <p><strong>Entreprise :</strong> {{ hmaService.companyName }}</p>
+        <p><strong>Devise :</strong> {{ hmaService.country == 'CM' ? 'XAF' : 'FCFA' }}</p>
     </div>
-
     <div class="user-info">
         <p><strong>Exporté par :</strong> {{ userName }}</p>
         <p><strong>Email :</strong> {{ userEmail }}</p>
         <p><strong>Rôle :</strong> {{ userRoles|join(', ') }}</p>
     </div>
-
     <div class="filters">
-        <div class="filters-title">FILTRES APPLIQUES :</div>
+        <div class="filters-title">FILTRES APPLIQUÉS :</div>
         <div class="filter-row">
             <div class="filter-item"><span class="filter-label">Recherche :</span> {{ filters.search|default('Aucun') }}</div>
-            <div class="filter-item"><span class="filter-label">Produit :</span> 
-                {% if filters.product_id %}
-                    {% for product in products %}
-                        {% if product.id == filters.product_id %}
-                            {{ product.name }}
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    Tous les produits
-                {% endif %}
-            </div>
-            <div class="filter-item"><span class="filter-label">Statut :</span> 
-                {% if filters.status == 'active' %}Actifs
-                {% elseif filters.status == 'inactive' %}Inactifs
-                {% else %}Tous
-                {% endif %}
-            </div>
+            <div class="filter-item"><span class="filter-label">Produit :</span> {% if filters.product_id %}{% for p in products %}{% if p.id == filters.product_id %}{{ p.name }}{% endif %}{% endfor %}{% else %}Tous les produits{% endif %}</div>
+            <div class="filter-item"><span class="filter-label">Statut :</span> {% if filters.status == 'active' %}Actifs{% elseif filters.status == 'inactive' %}Inactifs{% else %}Tous{% endif %}</div>
         </div>
         <div class="filter-row">
-            <div class="filter-item"><span class="filter-label">Expiration :</span> 
-                {% if filters.expiry_status == 'expired' %}Expires
-                {% elseif filters.expiry_status == 'expiring_soon' %}Expire bientot
-                {% elseif filters.expiry_status == 'not_expiring' %}Non expires
-                {% else %}Tous
-                {% endif %}
-            </div>
-            <div class="filter-item"><span class="filter-label">Stock faible :</span> {{ filters.low_stock == 'yes' ? 'Oui (≤10 unites)' : 'Non' }}</div>
+            <div class="filter-item"><span class="filter-label">Expiration :</span> {% if filters.expiry_status == 'expired' %}Expirés{% elseif filters.expiry_status == 'expiring_soon' %}Expire bientôt{% elseif filters.expiry_status == 'not_expiring' %}Non expirés{% else %}Tous{% endif %}</div>
+            <div class="filter-item"><span class="filter-label">Stock faible :</span> {{ filters.low_stock == 'yes' ? 'Oui (≤10 unités)' : 'Non' }}</div>
             <div class="filter-item"><span class="filter-label">Emplacement :</span> {{ filters.location|default('Tous') }}</div>
         </div>
         <div class="filter-row">
-            <div class="filter-item"><span class="filter-label">Date expiration du :</span> {{ filters.date_from|default('Non specifiee') }}</div>
-            <div class="filter-item"><span class="filter-label">Date expiration au :</span> {{ filters.date_to|default('Non specifiee') }}</div>
-            <div class="filter-item"><span class="filter-label">Tri :</span> {{ filters.sort|default('expiry_date') }} ({{ filters.direction == 'asc' ? 'Croissant' : 'Decroissant' }})</div>
+            <div class="filter-item"><span class="filter-label">Avoir :</span> {% if filters.has_issue == 'yes' %}Avec avoir{% elseif filters.has_issue == 'no' %}Sans avoir{% else %}Tous{% endif %}</div>
+            <div class="filter-item"><span class="filter-label">Statut avoir :</span> {% if filters.issue_status == 'pending' %}En attente{% elseif filters.issue_status == 'acknowledged' %}Accusé réception{% elseif filters.issue_status == 'under_review' %}En analyse{% elseif filters.issue_status == 'recovered' %}Récupéré{% elseif filters.issue_status == 'lost' %}Perdu{% elseif filters.issue_status == 'closed' %}Clôturé{% else %}Tous{% endif %}</div>
+        </div>
+        <div class="filter-row">
+            <div class="filter-item"><span class="filter-label">Date expiration du :</span> {{ filters.date_from|default('Non spécifiée') }}</div>
+            <div class="filter-item"><span class="filter-label">Date expiration au :</span> {{ filters.date_to|default('Non spécifiée') }}</div>
+            <div class="filter-item"><span class="filter-label">Tri :</span> {{ filters.sort|default('expiry_date') }} ({{ filters.direction == 'asc' ? 'Croissant' : 'Décroissant' }})</div>
         </div>
     </div>
-
     <table>
         <thead>
-            <tr>
-                <th>N° Lot</th>
-                <th>Produit</th>
-                <th>Code-barres</th>
-                <th>Emplacement</th>
-                <th>Quantite</th>
-                <th>Prix unitaire</th>
-                <th>Valeur</th>
-                <th>Expiration</th>
-                <th>Statut</th>
-            </tr>
+            <tr><th>N° Lot</th><th>Produit</th><th>Code-barres</th><th>Emplacement</th><th>Qté</th><th>Prix unit.</th><th>Valeur</th><th>Expiration</th><th>Avoir</th><th>Statut avoir</th><th>Montant déclaré</th><th>Statut lot</th></tr>
         </thead>
         <tbody>
             {% for batch in batches %}
             {% set isExpired = batch.expiryDate and batch.expiryDate < date() %}
             {% set isExpiringSoon = batch.expiryDate and batch.expiryDate >= date() and batch.expiryDate < date('+30 days') %}
-            {% set isLowStock = batch.currentQuantity <= 10 %}
-            <tr class="{% if isExpired %}expired{% elseif isLowStock %}low-stock{% endif %}">
-                <td>{{ batch.batchNumber }} {% if batch.purchaseItem %}(Achat #{{ batch.purchaseItem.purchase.id }}){% endif %}</td>
+            {% set locationDisplay = batch.locationEntity ? batch.locationEntity.displayName : (batch.location ?: '—') %}
+            <tr class="{% if isExpired %}expired{% elseif isExpiringSoon %}expiring-soon{% elseif batch.hasIssue %}has-issue{% endif %}">
+                <td>{{ batch.batchNumber }}{% if batch.purchaseItem %}<br><small>({{ batch.purchaseItem.purchase.purchaseNumber }})</small>{% endif %}</td>
                 <td>{{ batch.product.name }}</td>
                 <td>{{ batch.product.barcode }}</td>
-                <td>{{ batch.location|default('—') }}</td>
-                <td>{{ batch.currentQuantity }} / {{ batch.initialQuantity }}</td>
+                <td>{{ locationDisplay }}</td>
+                <td>{{ batch.currentQuantity }} / {{ batch.initialQuantity }}<br>{% if batch.currentQuantity <= 10 %}<span class="badge badge-warning">Stock faible</span>{% endif %}</td>
                 <td>{{ batch.unitPrice|price_with_currency(batch.hmaService) }}</td>
                 <td>{{ (batch.currentQuantity * batch.unitPrice)|price_with_currency(batch.hmaService) }}</td>
-                <td>
-                    {% if batch.expiryDate %}
-                        {{ batch.expiryDate|date('d/m/Y') }}
-                        {% if isExpired %}
-                            [EXPIRE]
-                        {% elseif isExpiringSoon %}
-                            [BIENTOT]
-                        {% endif %}
-                    {% else %}
-                        —
-                    {% endif %}
-                </td>
-                <td>
-                    {{ batch.isActive ? 'Actif' : 'Inactif' }}
-                </td>
+                <td>{% if batch.expiryDate %}{{ batch.expiryDate|date('d/m/Y') }}{% if isExpired %}<br><span class="badge badge-expired">Expiré</span>{% elseif isExpiringSoon %}<br><span class="badge badge-warning">Expire bientôt</span>{% endif %}{% else %}—{% endif %}</td>
+                <td>{% if batch.hasIssue %}Oui{% else %}Non{% endif %}</td>
+                <td>{% if batch.hasIssue %}<span class="badge badge-pending">{{ batch.issueStatusLabel }}</span>{% if batch.issuePriority == 'critical' %}<span class="badge badge-expired">Critique</span>{% endif %}{% else %}—{% endif %}</td>
+                <td>{% if batch.hasIssue %}{{ batch.issueDeclaredAmount|price_with_currency(batch.hmaService) }}{% else %}—{% endif %}</td>
+                <td><span class="badge badge-pending">{{ batch.isActive ? 'Actif' : 'Inactif' }}</span></td>
             </tr>
             {% else %}
-                <tr>
-                    <td colspan="9" style="text-align: center;">Aucun lot trouve</td>
-                </tr>
+                <tr><td colspan="12" style="text-align:center;">Aucun lot trouvé</td></tr>
             {% endfor %}
         </tbody>
     </table>
-
     <div class="stats">
-        <strong>RECAPITULATIF :</strong><br>
+        <strong>RÉCAPITULATIF :</strong><br>
         Nombre total de lots : {{ batches|length }}<br>
-        Quantite totale en stock : {{ totalQuantity }} unites<br>
-        Valeur totale du stock : {{ totalValue|price_with_currency(hmaService) }}
+        Quantité totale en stock : {{ totalQuantity }} unités<br>
+        Valeur totale du stock : {{ totalValue|price_with_currency(hmaService) }}<br>
+        Avoirs ouverts : {{ openIssues|default(0) }} ({{ totalIssueAmount|default(0)|price_with_currency(hmaService) }})
     </div>
-
-    <div class="footer">
-        Document genere par HMA Market - {{ exportDate|date('d/m/Y H:i') }}
-    </div>
+    <div class="footer">Document généré par HMA Market - {{ exportDate|date('d/m/Y H:i') }}</div>
 </body>
 </html>

@@ -100,35 +100,85 @@ class __TwigTemplate_e9f0527c569ddcb0724e30e39d952a22 extends Template
 
         // line 7
         yield "<div class=\"container-fluid px-4\">
-    <div class=\"d-flex justify-content-between align-items-center mb-4\">
+    <div class=\"d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3\">
         <div>
             <nav aria-label=\"breadcrumb\">
                 <ol class=\"breadcrumb\">
-                    <li class=\"breadcrumb-item\"><a href=\"";
-        // line 12
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_index");
-        yield "\">Produits</a></li>
-                    <li class=\"breadcrumb-item\"><a href=\"";
+                    <li class=\"breadcrumb-item\">
+                        <a href=\"";
         // line 13
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 13, $this->source); })()), "id", [], "any", false, false, false, 13)]), "html", null, true);
-        yield "\">";
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 13, $this->source); })()), "name", [], "any", false, false, false, 13)), "truncate", [20], "method", false, false, false, 13), "html", null, true);
-        yield "</a></li>
-                    <li class=\"breadcrumb-item active\">Modifier</li>
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_index");
+        yield "\" class=\"text-decoration-none\">
+                            <i class=\"fas fa-boxes me-1\"></i> Produits
+                        </a>
+                    </li>
+                    <li class=\"breadcrumb-item\">
+                        <a href=\"";
+        // line 18
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 18, $this->source); })()), "id", [], "any", false, false, false, 18)]), "html", null, true);
+        yield "\" class=\"text-decoration-none\">
+                            ";
+        // line 19
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 19, $this->source); })()), "name", [], "any", false, false, false, 19)), "truncate", [30], "method", false, false, false, 19), "html", null, true);
+        yield "
+                        </a>
+                    </li>
+                    <li class=\"breadcrumb-item active\">
+                        <i class=\"fas fa-edit me-1\"></i> Modifier
+                    </li>
                 </ol>
             </nav>
-            <h1 class=\"h3 mb-0 text-gray-800\">
-                <i class=\"fas fa-edit me-2\"></i> Modifier le produit
+            <h1 class=\"h3 mb-0 fw-bold text-gray-800\">
+                <i class=\"fas fa-edit me-2 text-warning\"></i> Modifier le produit
             </h1>
+            <p class=\"text-muted mt-2 mb-0\">
+                <i class=\"fas fa-info-circle me-1\"></i>
+                Modifiez les informations du produit <strong>";
+        // line 32
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 32, $this->source); })()), "name", [], "any", false, false, false, 32), "html", null, true);
+        yield "</strong>
+            </p>
         </div>
         <div>
-            <i class=\"fas fa-box-open fa-3x text-warning opacity-75\"></i>
+            <a href=\"";
+        // line 36
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["product"]) || array_key_exists("product", $context) ? $context["product"] : (function () { throw new RuntimeError('Variable "product" does not exist.', 36, $this->source); })()), "id", [], "any", false, false, false, 36)]), "html", null, true);
+        yield "\" class=\"btn btn-outline-secondary\">
+                <i class=\"fas fa-eye me-2\"></i> Voir le produit
+            </a>
         </div>
     </div>
 
+    <!-- Message informatif sur la modification du stock (si non admin) -->
     ";
-        // line 26
-        yield Twig\Extension\CoreExtension::include($this->env, $context, "admin/product/_form.html.twig", ["button_label" => "Mettre à jour"]);
+        // line 43
+        if ((array_key_exists("canEditStock", $context) &&  !(isset($context["canEditStock"]) || array_key_exists("canEditStock", $context) ? $context["canEditStock"] : (function () { throw new RuntimeError('Variable "canEditStock" does not exist.', 43, $this->source); })()))) {
+            // line 44
+            yield "    <div class=\"alert alert-warning alert-dismissible fade show mb-4\" role=\"alert\">
+        <div class=\"d-flex\">
+            <div class=\"me-3\">
+                <i class=\"fas fa-lock fa-2x\"></i>
+            </div>
+            <div>
+                <strong>⚠️ Modification du stock restreinte</strong><br>
+                Seul un administrateur peut modifier le stock initial manuellement. 
+                Les managers et responsables stock doivent utiliser les <strong>achats</strong> et les <strong>ventes</strong> pour faire varier le stock.
+                <br>
+                <small class=\"text-muted\">Contactez votre administrateur pour toute modification exceptionnelle du stock.</small>
+            </div>
+        </div>
+        <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
+    </div>
+    ";
+        }
+        // line 60
+        yield "
+    <!-- Formulaire avec passage de la variable canEditStock -->
+    ";
+        // line 62
+        yield Twig\Extension\CoreExtension::include($this->env, $context, "admin/product/_form.html.twig", ["button_label" => "Mettre à jour", "canEditStock" => ((        // line 64
+array_key_exists("canEditStock", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["canEditStock"]) || array_key_exists("canEditStock", $context) ? $context["canEditStock"] : (function () { throw new RuntimeError('Variable "canEditStock" does not exist.', 64, $this->source); })()), false)) : (false))]);
+        // line 65
         yield "
 </div>
 ";
@@ -162,7 +212,7 @@ class __TwigTemplate_e9f0527c569ddcb0724e30e39d952a22 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  131 => 26,  113 => 13,  109 => 12,  102 => 7,  89 => 6,  64 => 4,  41 => 2,);
+        return array (  182 => 65,  180 => 64,  179 => 62,  175 => 60,  157 => 44,  155 => 43,  145 => 36,  138 => 32,  122 => 19,  118 => 18,  110 => 13,  102 => 7,  89 => 6,  64 => 4,  41 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -174,25 +224,64 @@ class __TwigTemplate_e9f0527c569ddcb0724e30e39d952a22 extends Template
 
 {% block body %}
 <div class=\"container-fluid px-4\">
-    <div class=\"d-flex justify-content-between align-items-center mb-4\">
+    <div class=\"d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3\">
         <div>
             <nav aria-label=\"breadcrumb\">
                 <ol class=\"breadcrumb\">
-                    <li class=\"breadcrumb-item\"><a href=\"{{ path('app_admin_product_index') }}\">Produits</a></li>
-                    <li class=\"breadcrumb-item\"><a href=\"{{ path('app_admin_product_show', {'id': product.id}) }}\">{{ product.name|u.truncate(20) }}</a></li>
-                    <li class=\"breadcrumb-item active\">Modifier</li>
+                    <li class=\"breadcrumb-item\">
+                        <a href=\"{{ path('app_admin_product_index') }}\" class=\"text-decoration-none\">
+                            <i class=\"fas fa-boxes me-1\"></i> Produits
+                        </a>
+                    </li>
+                    <li class=\"breadcrumb-item\">
+                        <a href=\"{{ path('app_admin_product_show', {'id': product.id}) }}\" class=\"text-decoration-none\">
+                            {{ product.name|u.truncate(30) }}
+                        </a>
+                    </li>
+                    <li class=\"breadcrumb-item active\">
+                        <i class=\"fas fa-edit me-1\"></i> Modifier
+                    </li>
                 </ol>
             </nav>
-            <h1 class=\"h3 mb-0 text-gray-800\">
-                <i class=\"fas fa-edit me-2\"></i> Modifier le produit
+            <h1 class=\"h3 mb-0 fw-bold text-gray-800\">
+                <i class=\"fas fa-edit me-2 text-warning\"></i> Modifier le produit
             </h1>
+            <p class=\"text-muted mt-2 mb-0\">
+                <i class=\"fas fa-info-circle me-1\"></i>
+                Modifiez les informations du produit <strong>{{ product.name }}</strong>
+            </p>
         </div>
         <div>
-            <i class=\"fas fa-box-open fa-3x text-warning opacity-75\"></i>
+            <a href=\"{{ path('app_admin_product_show', {'id': product.id}) }}\" class=\"btn btn-outline-secondary\">
+                <i class=\"fas fa-eye me-2\"></i> Voir le produit
+            </a>
         </div>
     </div>
 
-    {{ include('admin/product/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    <!-- Message informatif sur la modification du stock (si non admin) -->
+    {% if canEditStock is defined and not canEditStock %}
+    <div class=\"alert alert-warning alert-dismissible fade show mb-4\" role=\"alert\">
+        <div class=\"d-flex\">
+            <div class=\"me-3\">
+                <i class=\"fas fa-lock fa-2x\"></i>
+            </div>
+            <div>
+                <strong>⚠️ Modification du stock restreinte</strong><br>
+                Seul un administrateur peut modifier le stock initial manuellement. 
+                Les managers et responsables stock doivent utiliser les <strong>achats</strong> et les <strong>ventes</strong> pour faire varier le stock.
+                <br>
+                <small class=\"text-muted\">Contactez votre administrateur pour toute modification exceptionnelle du stock.</small>
+            </div>
+        </div>
+        <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
+    </div>
+    {% endif %}
+
+    <!-- Formulaire avec passage de la variable canEditStock -->
+    {{ include('admin/product/_form.html.twig', {
+        'button_label': 'Mettre à jour',
+        'canEditStock': canEditStock|default(false)
+    }) }}
 </div>
 {% endblock %}", "admin/product/edit.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\product\\edit.html.twig");
     }

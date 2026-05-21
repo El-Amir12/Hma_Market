@@ -61,8 +61,11 @@ class NotificationService
 
     /**
      * Envoie la confirmation de réception
+     * 
+     * @param Purchase $purchase
+     * @param array $supplierCreditNotes Liste des avoirs créés (optionnel)
      */
-    public function sendPurchaseReceivedConfirmation(Purchase $purchase): void
+    public function sendPurchaseReceivedConfirmation(Purchase $purchase, array $supplierCreditNotes = []): void
     {
         $supplier = $purchase->getSupplier();
         if (!$supplier) {
@@ -72,27 +75,66 @@ class NotificationService
             return;
         }
         
+        // Calcul du montant total déduit
+        $totalDeducted = 0;
+        foreach ($supplierCreditNotes as $creditNote) {
+            $totalDeducted += (float)$creditNote->getDeclaredAmount();
+        }
+        $netAmount = (float)$purchase->getTotalAmount() - $totalDeducted;
+        
+        // Construction du message WhatsApp
         $message = sprintf(
             "✅ CONFIRMATION DE RÉCEPTION\n\n" .
             "Bonjour %s,\n\n" .
             "Nous confirmons la bonne réception de la commande N° %s\n" .
-            "Montant total : %s FCFA\n\n" .
-            "Merci pour votre service !\n\n" .
-            "Cordialement,\n%s",
-            $supplier->getName(), // ✅ Utilisation de getName()
+            "Montant total initial : %s FCFA\n",
+            $supplier->getName(),
             $purchase->getPurchaseNumber(),
-            number_format((float) $purchase->getTotalAmount(), 0, ',', ' '),
+            number_format((float) $purchase->getTotalAmount(), 0, ',', ' ')
+        );
+        
+        // Ajouter les informations sur les problèmes
+        if (count($supplierCreditNotes) > 0) {
+            $message .= "\n⚠️ PROBLÈMES SIGNALÉS :\n";
+            foreach ($supplierCreditNotes as $creditNote) {
+                $message .= sprintf(
+                    "  • %s : %d unité(s) - %s FCFA\n",
+                    $creditNote->getStockBatch()->getProduct()->getName(),
+                    $creditNote->getAffectedQuantity() ?? 0,
+                    number_format((float) $creditNote->getDeclaredAmount(), 0, ',', ' ')
+                );
+            }
+            $message .= sprintf(
+                "\nMontant total déduit : %s FCFA\n",
+                number_format($totalDeducted, 0, ',', ' ')
+            );
+            $message .= sprintf(
+                "Montant net à régler : %s FCFA\n",
+                number_format($netAmount, 0, ',', ' ')
+            );
+        }
+        
+        $message .= sprintf(
+            "\nMerci pour votre service !\n\n" .
+            "Cordialement,\n%s",
             $this->getCompanyName($purchase)
         );
         
         $this->sendWhatsappMessage($supplier->getPhone(), $message);
         
+        // Envoi de l'email avec le template
         if ($supplier->getEmail()) {
             $this->sendEmail(
                 $supplier->getEmail(),
                 'Confirmation de réception - Commande ' . $purchase->getPurchaseNumber(),
                 'emails/purchase_received.html.twig',
-                ['purchase' => $purchase, 'app_url' => $this->appUrl]
+                [
+                    'purchase' => $purchase,
+                    'app_url' => $this->appUrl,
+                    'supplier_credit_notes' => $supplierCreditNotes,
+                    'total_deducted' => $totalDeducted,
+                    'net_amount' => $netAmount
+                ]
             );
         }
     }

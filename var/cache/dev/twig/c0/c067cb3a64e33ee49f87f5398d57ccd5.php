@@ -67,7 +67,7 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
             <div class=\"card shadow-lg border-0 h-100 card-hover\">
                 <div class=\"card-header bg-gradient-primary text-white py-3\">
                     <h5 class=\"card-title mb-0\">
-                        <i class=\"fas fa-image me-2\"></i>Image du plat
+                        <i class=\"fas fa-image me-2\"></i>Image de l'article
                     </h5>
                 </div>
                 <div class=\"card-body text-center d-flex flex-column\">
@@ -164,20 +164,20 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
         // line 81
         if ((CoreExtension::getAttribute($this->env, $this->source, ($context["recipe"] ?? null), "id", [], "any", true, true, false, 81) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 81, $this->source); })()), "id", [], "any", false, false, false, 81)))) {
             // line 82
-            yield "                            Modifier le plat
+            yield "                            Modifier l'article
                         ";
         } else {
             // line 84
-            yield "                            Nouveau plat
+            yield "                            Nouvel article
                         ";
         }
         // line 86
         yield "                    </h5>
                 </div>
                 <div class=\"card-body\">
-                    <!-- Nom et prix -->
+                    <!-- Nom, prix et type -->
                     <div class=\"row g-3\">
-                        <div class=\"col-md-7\">
+                        <div class=\"col-md-6\">
                             <div class=\"form-floating\">
                                 ";
         // line 93
@@ -188,7 +188,7 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
         // line 98
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 98, $this->source); })()), "name", [], "any", false, false, false, 98), "vars", [], "any", false, false, false, 98), "id", [], "any", false, false, false, 98), "html", null, true);
         yield "\">
-                                    <i class=\"fas fa-tag me-1\"></i> Nom du plat *
+                                    <i class=\"fas fa-tag me-1\"></i> Nom *
                                 </label>
                                 <div class=\"invalid-feedback d-block\">
                                     ";
@@ -198,7 +198,7 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
                                 </div>
                             </div>
                         </div>
-                        <div class=\"col-md-5\">
+                        <div class=\"col-md-3\">
                             <div class=\"form-floating\">
                                 ";
         // line 108
@@ -209,12 +209,35 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
         // line 114
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 114, $this->source); })()), "selling_price", [], "any", false, false, false, 114), "vars", [], "any", false, false, false, 114), "id", [], "any", false, false, false, 114), "html", null, true);
         yield "\">
-                                    <i class=\"fas fa-money-bill-wave me-1\"></i> Prix de vente (FCFA) *
+                                    <i class=\"fas fa-money-bill-wave me-1\"></i> Prix (FCFA) *
                                 </label>
                                 <div class=\"invalid-feedback d-block\">
                                     ";
         // line 118
         yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 118, $this->source); })()), "selling_price", [], "any", false, false, false, 118), 'errors');
+        yield "
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 🔥 Type d'article -->
+                        <div class=\"col-md-3\">
+                            <div class=\"form-floating\">
+                                ";
+        // line 126
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 126, $this->source); })()), "type", [], "any", false, false, false, 126), 'widget', ["attr" => ["class" => "form-control", "placeholder" => " "]]);
+        // line 129
+        yield "
+                                <label for=\"";
+        // line 130
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 130, $this->source); })()), "type", [], "any", false, false, false, 130), "vars", [], "any", false, false, false, 130), "id", [], "any", false, false, false, 130), "html", null, true);
+        yield "\">
+                                    <i class=\"fas fa-tag me-1\"></i> Type d'article *
+                                </label>
+                                <div class=\"invalid-feedback d-block\">
+                                    ";
+        // line 134
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 134, $this->source); })()), "type", [], "any", false, false, false, 134), 'errors');
         yield "
                                 </div>
                             </div>
@@ -226,20 +249,20 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
                         <div class=\"col-md-6\">
                             <div class=\"form-floating\">
                                 ";
-        // line 128
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 128, $this->source); })()), "category", [], "any", false, false, false, 128), 'widget', ["attr" => ["class" => "form-select select2-category", "placeholder" => " "]]);
-        // line 131
+        // line 144
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 144, $this->source); })()), "category", [], "any", false, false, false, 144), 'widget', ["attr" => ["class" => "form-select select2-category", "placeholder" => " "]]);
+        // line 147
         yield "
                                 <label for=\"";
-        // line 132
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 132, $this->source); })()), "category", [], "any", false, false, false, 132), "vars", [], "any", false, false, false, 132), "id", [], "any", false, false, false, 132), "html", null, true);
+        // line 148
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 148, $this->source); })()), "category", [], "any", false, false, false, 148), "vars", [], "any", false, false, false, 148), "id", [], "any", false, false, false, 148), "html", null, true);
         yield "\">
                                     <i class=\"fas fa-folder me-1\"></i> Catégorie
                                 </label>
                                 <div class=\"invalid-feedback d-block\">
                                     ";
-        // line 136
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 136, $this->source); })()), "category", [], "any", false, false, false, 136), 'errors');
+        // line 152
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 152, $this->source); })()), "category", [], "any", false, false, false, 152), 'errors');
         yield "
                                 </div>
                             </div>
@@ -250,37 +273,37 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
                                     <div class=\"d-flex align-items-center justify-content-between\">
                                         <div class=\"d-flex align-items-center\">
                                             <i class=\"fas fa-toggle-on me-2 text-primary\"></i>
-                                            <span class=\"fw-bold\">Statut du plat</span>
+                                            <span class=\"fw-bold\">Statut</span>
                                         </div>
                                         <span class=\"badge ";
-        // line 148
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 148, $this->source); })()), "is_active", [], "any", false, false, false, 148), "vars", [], "any", false, false, false, 148), "data", [], "any", false, false, false, 148)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("bg-success") : ("bg-danger"));
+        // line 164
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 164, $this->source); })()), "is_active", [], "any", false, false, false, 164), "vars", [], "any", false, false, false, 164), "data", [], "any", false, false, false, 164)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("bg-success") : ("bg-danger"));
         yield "\" id=\"recipe-status-badge\">
                                             ";
-        // line 149
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 149, $this->source); })()), "is_active", [], "any", false, false, false, 149), "vars", [], "any", false, false, false, 149), "data", [], "any", false, false, false, 149)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("ACTIF") : ("INACTIF"));
+        // line 165
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 165, $this->source); })()), "is_active", [], "any", false, false, false, 165), "vars", [], "any", false, false, false, 165), "data", [], "any", false, false, false, 165)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("ACTIF") : ("INACTIF"));
         yield "
                                         </span>
                                     </div>
                                     <div class=\"form-check form-switch mt-2\">
                                         ";
-        // line 153
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 153, $this->source); })()), "is_active", [], "any", false, false, false, 153), 'widget', ["attr" => ["class" => "form-check-input", "role" => "switch"]]);
-        // line 156
+        // line 169
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 169, $this->source); })()), "is_active", [], "any", false, false, false, 169), 'widget', ["attr" => ["class" => "form-check-input", "role" => "switch"]]);
+        // line 172
         yield "
                                         <label class=\"form-check-label\" for=\"";
-        // line 157
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 157, $this->source); })()), "is_active", [], "any", false, false, false, 157), "vars", [], "any", false, false, false, 157), "id", [], "any", false, false, false, 157), "html", null, true);
+        // line 173
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 173, $this->source); })()), "is_active", [], "any", false, false, false, 173), "vars", [], "any", false, false, false, 173), "id", [], "any", false, false, false, 173), "html", null, true);
         yield "\" id=\"recipe-status-label\">
                                             ";
-        // line 158
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 158, $this->source); })()), "is_active", [], "any", false, false, false, 158), "vars", [], "any", false, false, false, 158), "data", [], "any", false, false, false, 158)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Plat actif") : ("Plat inactif"));
+        // line 174
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 174, $this->source); })()), "is_active", [], "any", false, false, false, 174), "vars", [], "any", false, false, false, 174), "data", [], "any", false, false, false, 174)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Actif") : ("Inactif"));
         yield "
                                         </label>
                                     </div>
                                     <small class=\"text-muted mt-1 d-block\">
                                         <i class=\"fas fa-info-circle me-1\"></i>
-                                        Les plats inactifs ne seront pas visibles
+                                        Les articles inactifs ne seront pas visibles
                                     </small>
                                 </div>
                             </div>
@@ -292,20 +315,20 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
                         <div class=\"col-md-6\">
                             <div class=\"form-floating\">
                                 ";
-        // line 174
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 174, $this->source); })()), "description", [], "any", false, false, false, 174), 'widget', ["attr" => ["class" => "form-control", "placeholder" => " ", "style" => "height: 120px"]]);
-        // line 178
+        // line 190
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 190, $this->source); })()), "description", [], "any", false, false, false, 190), 'widget', ["attr" => ["class" => "form-control", "placeholder" => " ", "style" => "height: 120px"]]);
+        // line 194
         yield "
                                 <label for=\"";
-        // line 179
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 179, $this->source); })()), "description", [], "any", false, false, false, 179), "vars", [], "any", false, false, false, 179), "id", [], "any", false, false, false, 179), "html", null, true);
+        // line 195
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 195, $this->source); })()), "description", [], "any", false, false, false, 195), "vars", [], "any", false, false, false, 195), "id", [], "any", false, false, false, 195), "html", null, true);
         yield "\">
                                     <i class=\"fas fa-align-left me-1\"></i> Description
                                 </label>
                                 <div class=\"invalid-feedback d-block\">
                                     ";
-        // line 183
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 183, $this->source); })()), "description", [], "any", false, false, false, 183), 'errors');
+        // line 199
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 199, $this->source); })()), "description", [], "any", false, false, false, 199), 'errors');
         yield "
                                 </div>
                             </div>
@@ -313,20 +336,20 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
                         <div class=\"col-md-6\">
                             <div class=\"form-floating\">
                                 ";
-        // line 189
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 189, $this->source); })()), "instructions", [], "any", false, false, false, 189), 'widget', ["attr" => ["class" => "form-control", "placeholder" => " ", "style" => "height: 120px"]]);
-        // line 193
+        // line 205
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 205, $this->source); })()), "instructions", [], "any", false, false, false, 205), 'widget', ["attr" => ["class" => "form-control", "placeholder" => " ", "style" => "height: 120px"]]);
+        // line 209
         yield "
                                 <label for=\"";
-        // line 194
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 194, $this->source); })()), "instructions", [], "any", false, false, false, 194), "vars", [], "any", false, false, false, 194), "id", [], "any", false, false, false, 194), "html", null, true);
+        // line 210
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 210, $this->source); })()), "instructions", [], "any", false, false, false, 210), "vars", [], "any", false, false, false, 210), "id", [], "any", false, false, false, 210), "html", null, true);
         yield "\">
                                     <i class=\"fas fa-book-open me-1\"></i> Instructions
                                 </label>
                                 <div class=\"invalid-feedback d-block\">
                                     ";
-        // line 198
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 198, $this->source); })()), "instructions", [], "any", false, false, false, 198), 'errors');
+        // line 214
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 214, $this->source); })()), "instructions", [], "any", false, false, false, 214), 'errors');
         yield "
                                 </div>
                             </div>
@@ -345,8 +368,8 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
                         </div>
                         <div class=\"card-body\">
                             ";
-        // line 215
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 215, $this->source); })()), "recipeItems", [], "any", false, false, false, 215), 'row', ["attr" => ["class" => "recipe-items-collection"]]);
+        // line 231
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 231, $this->source); })()), "recipeItems", [], "any", false, false, false, 231), 'row', ["attr" => ["class" => "recipe-items-collection"]]);
         yield "
                         </div>
                     </div>
@@ -356,7 +379,7 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
                 <div class=\"card-footer bg-light py-3\">
                     <div class=\"d-flex justify-content-between align-items-center\">
                         <a href=\"";
-        // line 223
+        // line 239
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index");
         yield "\" class=\"btn btn-outline-secondary\">
                             <i class=\"fas fa-times me-2\"></i> Annuler
@@ -365,22 +388,22 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
                             <button type=\"submit\" class=\"btn btn-primary btn-lg px-4\">
                                 <i class=\"fas fa-save me-2\"></i>
                                 ";
-        // line 229
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("button_label", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["button_label"]) || array_key_exists("button_label", $context) ? $context["button_label"] : (function () { throw new RuntimeError('Variable "button_label" does not exist.', 229, $this->source); })()), "Enregistrer le plat")) : ("Enregistrer le plat")), "html", null, true);
+        // line 245
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("button_label", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["button_label"]) || array_key_exists("button_label", $context) ? $context["button_label"] : (function () { throw new RuntimeError('Variable "button_label" does not exist.', 245, $this->source); })()), "Enregistrer")) : ("Enregistrer")), "html", null, true);
         yield "
                             </button>
                             ";
-        // line 231
-        if ((CoreExtension::getAttribute($this->env, $this->source, ($context["recipe"] ?? null), "id", [], "any", true, true, false, 231) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 231, $this->source); })()), "id", [], "any", false, false, false, 231)))) {
-            // line 232
+        // line 247
+        if ((CoreExtension::getAttribute($this->env, $this->source, ($context["recipe"] ?? null), "id", [], "any", true, true, false, 247) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 247, $this->source); })()), "id", [], "any", false, false, false, 247)))) {
+            // line 248
             yield "                                <a href=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 232, $this->source); })()), "id", [], "any", false, false, false, 232)]), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 248, $this->source); })()), "id", [], "any", false, false, false, 248)]), "html", null, true);
             yield "\" class=\"btn btn-info btn-lg\">
                                     <i class=\"fas fa-eye me-2\"></i> Voir
                                 </a>
                             ";
         }
-        // line 236
+        // line 252
         yield "                        </div>
                     </div>
                 </div>
@@ -389,16 +412,16 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
     </div>
 
     ";
-        // line 243
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 243, $this->source); })()), 'form_end');
+        // line 259
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 259, $this->source); })()), 'form_end');
         yield "
 </div>
 
 <!-- Modal de suppression d'image -->
 ";
-        // line 247
-        if (((CoreExtension::getAttribute($this->env, $this->source, ($context["recipe"] ?? null), "id", [], "any", true, true, false, 247) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 247, $this->source); })()), "id", [], "any", false, false, false, 247))) && CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 247, $this->source); })()), "image", [], "any", false, false, false, 247))) {
-            // line 248
+        // line 263
+        if (((CoreExtension::getAttribute($this->env, $this->source, ($context["recipe"] ?? null), "id", [], "any", true, true, false, 263) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 263, $this->source); })()), "id", [], "any", false, false, false, 263))) && CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 263, $this->source); })()), "image", [], "any", false, false, false, 263))) {
+            // line 264
             yield "<div class=\"modal fade\" id=\"deleteImageModal\" tabindex=\"-1\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -416,12 +439,12 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
                 </div>
                 <div class=\"mb-3\">
                     <img src=\"";
-            // line 264
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/plats/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 264, $this->source); })()), "image", [], "any", false, false, false, 264))), "html", null, true);
+            // line 280
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/plats/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 280, $this->source); })()), "image", [], "any", false, false, false, 280))), "html", null, true);
             yield "\"
                          alt=\"";
-            // line 265
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 265, $this->source); })()), "name", [], "any", false, false, false, 265), "html", null, true);
+            // line 281
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 281, $this->source); })()), "name", [], "any", false, false, false, 281), "html", null, true);
             yield "\"
                          class=\"rounded shadow-lg\"
                          style=\"width: 150px; height: 150px; object-fit: cover;\">
@@ -432,12 +455,12 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
                     <i class=\"fas fa-times me-2\"></i> Annuler
                 </button>
                 <form action=\"";
-            // line 274
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_delete_image", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 274, $this->source); })()), "id", [], "any", false, false, false, 274)]), "html", null, true);
+            // line 290
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_delete_image", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 290, $this->source); })()), "id", [], "any", false, false, false, 290)]), "html", null, true);
             yield "\" method=\"post\" class=\"d-inline\">
                     <input type=\"hidden\" name=\"_token\" value=\"";
-            // line 275
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete-image" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 275, $this->source); })()), "id", [], "any", false, false, false, 275))), "html", null, true);
+            // line 291
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete-image" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["recipe"]) || array_key_exists("recipe", $context) ? $context["recipe"] : (function () { throw new RuntimeError('Variable "recipe" does not exist.', 291, $this->source); })()), "id", [], "any", false, false, false, 291))), "html", null, true);
             yield "\">
                     <button type=\"submit\" class=\"btn btn-danger\">
                         <i class=\"fas fa-trash me-2\"></i> Supprimer l'image
@@ -449,7 +472,7 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
 </div>
 ";
         }
-        // line 285
+        // line 301
         yield "
 <!-- Modal de suppression d'ingrédient -->
 <div class=\"modal fade\" id=\"deleteIngredientModal\" tabindex=\"-1\">
@@ -479,12 +502,12 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
 </div>
 
 ";
-        // line 313
+        // line 329
         yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
-        // line 562
+        // line 583
         yield "
 ";
-        // line 563
+        // line 584
         yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
         
         $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
@@ -495,7 +518,7 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
         yield from [];
     }
 
-    // line 313
+    // line 329
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -508,7 +531,7 @@ class __TwigTemplate_521ae8af73756e450082134b89255d80 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 314
+        // line 330
         yield "<script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"></script>
 <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
 <script>
@@ -532,8 +555,8 @@ const unitTypes = {
 document.addEventListener('DOMContentLoaded', function() {
     // Données des produits
     const availableProducts = ";
-        // line 336
-        yield json_encode((isset($context["availableProducts"]) || array_key_exists("availableProducts", $context) ? $context["availableProducts"] : (function () { throw new RuntimeError('Variable "availableProducts" does not exist.', 336, $this->source); })()));
+        // line 352
+        yield json_encode((isset($context["availableProducts"]) || array_key_exists("availableProducts", $context) ? $context["availableProducts"] : (function () { throw new RuntimeError('Variable "availableProducts" does not exist.', 352, $this->source); })()));
         yield ";
     const productsMap = {};
     availableProducts.forEach(p => {
@@ -560,11 +583,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // ==================== CALCUL DE MARGE (simulé pour plat) ====================
+    // ==================== CALCUL DE MARGE ====================
     window.calculateRecipeMargin = function() {
         const sellingPrice = parseFloat(document.getElementById('";
-        // line 364
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 364, $this->source); })()), "selling_price", [], "any", false, false, false, 364), "vars", [], "any", false, false, false, 364), "id", [], "any", false, false, false, 364), "html", null, true);
+        // line 380
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 380, $this->source); })()), "selling_price", [], "any", false, false, false, 380), "vars", [], "any", false, false, false, 380), "id", [], "any", false, false, false, 380), "html", null, true);
         yield "').value) || 0;
         const marginAmount = sellingPrice;
         const badge = document.getElementById('margin-percentage');
@@ -599,7 +622,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!originalOptions) return;
 
         if (!product || !product.unitType) {
-            // Restaurer toutes les options
             select.innerHTML = '';
             originalOptions.forEach(opt => select.appendChild(opt.cloneNode(true)));
             return;
@@ -608,7 +630,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const productType = product.unitType;
         const filteredOptions = originalOptions.filter(opt => {
             const unitValue = opt.value;
-            if (!unitValue) return true; // conserver le placeholder
+            if (!unitValue) return true;
             return unitTypes[unitValue] === productType;
         });
 
@@ -643,7 +665,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.product-select').forEach(select => {
         initSelect2(select);
         bindProductChange(select);
-        // Appliquer le filtre initial
         const productId = select.value;
         const itemDiv = select.closest('.recipe-item');
         const unitInput = itemDiv.querySelector('.unit-input');
@@ -654,8 +675,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ==================== AJOUT DYNAMIQUE D'INGRÉDIENT ====================
     let index = ";
-        // line 452
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 452, $this->source); })()), "recipeItems", [], "any", false, false, false, 452)), "html", null, true);
+        // line 466
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 466, $this->source); })()), "recipeItems", [], "any", false, false, false, 466)), "html", null, true);
         yield ";
     const container = document.querySelector('.recipe-items-collection');
     const prototype = container.dataset.prototype;
@@ -669,20 +690,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const newItem = tempDiv.firstElementChild;
             container.appendChild(newItem);
 
-            // Initialiser Select2 et le changement de produit
             const productSelect = newItem.querySelector('.product-select');
             if (productSelect) {
                 initSelect2(productSelect);
                 bindProductChange(productSelect);
             }
 
-            // Sauvegarder les options de l'unité (car c'est un nouvel élément)
             const newUnitSelect = newItem.querySelector('.unit-input');
             if (newUnitSelect) {
                 unitOptionsMap.set(newUnitSelect, Array.from(newUnitSelect.options));
             }
 
-            // Attacher le bouton de suppression
             const deleteBtn = newItem.querySelector('.delete-ingredient');
             if (deleteBtn) {
                 deleteBtn.addEventListener('click', function(e) {
@@ -730,8 +748,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ==================== GESTION DU STATUT ====================
     const activeSwitch = document.getElementById('";
-        // line 525
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 525, $this->source); })()), "is_active", [], "any", false, false, false, 525), "vars", [], "any", false, false, false, 525), "id", [], "any", false, false, false, 525), "html", null, true);
+        // line 536
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 536, $this->source); })()), "is_active", [], "any", false, false, false, 536), "vars", [], "any", false, false, false, 536), "id", [], "any", false, false, false, 536), "html", null, true);
         yield "');
     const statusBadge = document.getElementById('recipe-status-badge');
     const statusLabel = document.getElementById('recipe-status-label');
@@ -740,7 +758,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const isActive = this.checked;
             statusBadge.textContent = isActive ? 'ACTIF' : 'INACTIF';
             statusBadge.className = isActive ? 'badge bg-success' : 'badge bg-danger';
-            statusLabel.textContent = isActive ? 'Plat actif' : 'Plat inactif';
+            statusLabel.textContent = isActive ? 'Actif' : 'Inactif';
         });
     }
 
@@ -752,6 +770,19 @@ document.addEventListener('DOMContentLoaded', function() {
             placeholder: 'Sélectionnez une catégorie...',
             width: '100%',
             allowClear: false
+        });
+    }
+
+    // ==================== GESTION DU TYPE D'ARTICLE ====================
+    const typeSelect = document.getElementById('";
+        // line 560
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 560, $this->source); })()), "type", [], "any", false, false, false, 560), "vars", [], "any", false, false, false, 560), "id", [], "any", false, false, false, 560), "html", null, true);
+        yield "');
+    if (typeSelect) {
+        typeSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const typeLabel = selectedOption ? selectedOption.text : '';
+            console.log('Type sélectionné:', typeLabel);
         });
     }
 
@@ -778,7 +809,7 @@ document.addEventListener('DOMContentLoaded', function() {
         yield from [];
     }
 
-    // line 563
+    // line 584
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -791,7 +822,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 564
+        // line 585
         yield "<link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
 <link href=\"https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css\" rel=\"stylesheet\" />
 <style>
@@ -914,7 +945,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  795 => 564,  782 => 563,  734 => 525,  658 => 452,  567 => 364,  536 => 336,  512 => 314,  499 => 313,  488 => 563,  485 => 562,  483 => 313,  453 => 285,  440 => 275,  436 => 274,  424 => 265,  420 => 264,  402 => 248,  400 => 247,  393 => 243,  384 => 236,  376 => 232,  374 => 231,  369 => 229,  360 => 223,  349 => 215,  329 => 198,  322 => 194,  319 => 193,  317 => 189,  308 => 183,  301 => 179,  298 => 178,  296 => 174,  277 => 158,  273 => 157,  270 => 156,  268 => 153,  261 => 149,  257 => 148,  242 => 136,  235 => 132,  232 => 131,  230 => 128,  217 => 118,  210 => 114,  207 => 113,  205 => 108,  196 => 102,  189 => 98,  186 => 97,  184 => 93,  175 => 86,  171 => 84,  167 => 82,  165 => 81,  148 => 67,  143 => 65,  134 => 59,  126 => 53,  124 => 49,  117 => 44,  110 => 39,  106 => 37,  95 => 28,  93 => 27,  87 => 24,  83 => 23,  80 => 22,  78 => 21,  61 => 7,  57 => 5,  55 => 4,  53 => 3,  50 => 2,);
+        return array (  826 => 585,  813 => 584,  779 => 560,  752 => 536,  679 => 466,  590 => 380,  559 => 352,  535 => 330,  522 => 329,  511 => 584,  508 => 583,  506 => 329,  476 => 301,  463 => 291,  459 => 290,  447 => 281,  443 => 280,  425 => 264,  423 => 263,  416 => 259,  407 => 252,  399 => 248,  397 => 247,  392 => 245,  383 => 239,  372 => 231,  352 => 214,  345 => 210,  342 => 209,  340 => 205,  331 => 199,  324 => 195,  321 => 194,  319 => 190,  300 => 174,  296 => 173,  293 => 172,  291 => 169,  284 => 165,  280 => 164,  265 => 152,  258 => 148,  255 => 147,  253 => 144,  240 => 134,  233 => 130,  230 => 129,  228 => 126,  217 => 118,  210 => 114,  207 => 113,  205 => 108,  196 => 102,  189 => 98,  186 => 97,  184 => 93,  175 => 86,  171 => 84,  167 => 82,  165 => 81,  148 => 67,  143 => 65,  134 => 59,  126 => 53,  124 => 49,  117 => 44,  110 => 39,  106 => 37,  95 => 28,  93 => 27,  87 => 24,  83 => 23,  80 => 22,  78 => 21,  61 => 7,  57 => 5,  55 => 4,  53 => 3,  50 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -933,7 +964,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class=\"card shadow-lg border-0 h-100 card-hover\">
                 <div class=\"card-header bg-gradient-primary text-white py-3\">
                     <h5 class=\"card-title mb-0\">
-                        <i class=\"fas fa-image me-2\"></i>Image du plat
+                        <i class=\"fas fa-image me-2\"></i>Image de l'article
                     </h5>
                 </div>
                 <div class=\"card-body text-center d-flex flex-column\">
@@ -1000,16 +1031,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h5 class=\"card-title mb-0\">
                         <i class=\"fas fa-utensils me-2\"></i>
                         {% if recipe.id is defined and recipe.id is not null %}
-                            Modifier le plat
+                            Modifier l'article
                         {% else %}
-                            Nouveau plat
+                            Nouvel article
                         {% endif %}
                     </h5>
                 </div>
                 <div class=\"card-body\">
-                    <!-- Nom et prix -->
+                    <!-- Nom, prix et type -->
                     <div class=\"row g-3\">
-                        <div class=\"col-md-7\">
+                        <div class=\"col-md-6\">
                             <div class=\"form-floating\">
                                 {{ form_widget(form.name, {'attr': {
                                     'class': 'form-control',
@@ -1017,14 +1048,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                     'autocomplete': 'off'
                                 }}) }}
                                 <label for=\"{{ form.name.vars.id }}\">
-                                    <i class=\"fas fa-tag me-1\"></i> Nom du plat *
+                                    <i class=\"fas fa-tag me-1\"></i> Nom *
                                 </label>
                                 <div class=\"invalid-feedback d-block\">
                                     {{ form_errors(form.name) }}
                                 </div>
                             </div>
                         </div>
-                        <div class=\"col-md-5\">
+                        <div class=\"col-md-3\">
                             <div class=\"form-floating\">
                                 {{ form_widget(form.selling_price, {'attr': {
                                     'class': 'form-control',
@@ -1033,10 +1064,26 @@ document.addEventListener('DOMContentLoaded', function() {
                                     'oninput': 'calculateRecipeMargin()'
                                 }}) }}
                                 <label for=\"{{ form.selling_price.vars.id }}\">
-                                    <i class=\"fas fa-money-bill-wave me-1\"></i> Prix de vente (FCFA) *
+                                    <i class=\"fas fa-money-bill-wave me-1\"></i> Prix (FCFA) *
                                 </label>
                                 <div class=\"invalid-feedback d-block\">
                                     {{ form_errors(form.selling_price) }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 🔥 Type d'article -->
+                        <div class=\"col-md-3\">
+                            <div class=\"form-floating\">
+                                {{ form_widget(form.type, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': ' '
+                                }}) }}
+                                <label for=\"{{ form.type.vars.id }}\">
+                                    <i class=\"fas fa-tag me-1\"></i> Type d'article *
+                                </label>
+                                <div class=\"invalid-feedback d-block\">
+                                    {{ form_errors(form.type) }}
                                 </div>
                             </div>
                         </div>
@@ -1064,7 +1111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class=\"d-flex align-items-center justify-content-between\">
                                         <div class=\"d-flex align-items-center\">
                                             <i class=\"fas fa-toggle-on me-2 text-primary\"></i>
-                                            <span class=\"fw-bold\">Statut du plat</span>
+                                            <span class=\"fw-bold\">Statut</span>
                                         </div>
                                         <span class=\"badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }}\" id=\"recipe-status-badge\">
                                             {{ form.is_active.vars.data ? 'ACTIF' : 'INACTIF' }}
@@ -1076,12 +1123,12 @@ document.addEventListener('DOMContentLoaded', function() {
                                             'role': 'switch'
                                         }}) }}
                                         <label class=\"form-check-label\" for=\"{{ form.is_active.vars.id }}\" id=\"recipe-status-label\">
-                                            {{ form.is_active.vars.data ? 'Plat actif' : 'Plat inactif' }}
+                                            {{ form.is_active.vars.data ? 'Actif' : 'Inactif' }}
                                         </label>
                                     </div>
                                     <small class=\"text-muted mt-1 d-block\">
                                         <i class=\"fas fa-info-circle me-1\"></i>
-                                        Les plats inactifs ne seront pas visibles
+                                        Les articles inactifs ne seront pas visibles
                                     </small>
                                 </div>
                             </div>
@@ -1147,7 +1194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class=\"btn-group\">
                             <button type=\"submit\" class=\"btn btn-primary btn-lg px-4\">
                                 <i class=\"fas fa-save me-2\"></i>
-                                {{ button_label|default('Enregistrer le plat') }}
+                                {{ button_label|default('Enregistrer') }}
                             </button>
                             {% if recipe.id is defined and recipe.id is not null %}
                                 <a href=\"{{ path('app_admin_recipe_show', {'id': recipe.id}) }}\" class=\"btn btn-info btn-lg\">
@@ -1280,7 +1327,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // ==================== CALCUL DE MARGE (simulé pour plat) ====================
+    // ==================== CALCUL DE MARGE ====================
     window.calculateRecipeMargin = function() {
         const sellingPrice = parseFloat(document.getElementById('{{ form.selling_price.vars.id }}').value) || 0;
         const marginAmount = sellingPrice;
@@ -1316,7 +1363,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!originalOptions) return;
 
         if (!product || !product.unitType) {
-            // Restaurer toutes les options
             select.innerHTML = '';
             originalOptions.forEach(opt => select.appendChild(opt.cloneNode(true)));
             return;
@@ -1325,7 +1371,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const productType = product.unitType;
         const filteredOptions = originalOptions.filter(opt => {
             const unitValue = opt.value;
-            if (!unitValue) return true; // conserver le placeholder
+            if (!unitValue) return true;
             return unitTypes[unitValue] === productType;
         });
 
@@ -1360,7 +1406,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.product-select').forEach(select => {
         initSelect2(select);
         bindProductChange(select);
-        // Appliquer le filtre initial
         const productId = select.value;
         const itemDiv = select.closest('.recipe-item');
         const unitInput = itemDiv.querySelector('.unit-input');
@@ -1383,20 +1428,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const newItem = tempDiv.firstElementChild;
             container.appendChild(newItem);
 
-            // Initialiser Select2 et le changement de produit
             const productSelect = newItem.querySelector('.product-select');
             if (productSelect) {
                 initSelect2(productSelect);
                 bindProductChange(productSelect);
             }
 
-            // Sauvegarder les options de l'unité (car c'est un nouvel élément)
             const newUnitSelect = newItem.querySelector('.unit-input');
             if (newUnitSelect) {
                 unitOptionsMap.set(newUnitSelect, Array.from(newUnitSelect.options));
             }
 
-            // Attacher le bouton de suppression
             const deleteBtn = newItem.querySelector('.delete-ingredient');
             if (deleteBtn) {
                 deleteBtn.addEventListener('click', function(e) {
@@ -1451,7 +1493,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const isActive = this.checked;
             statusBadge.textContent = isActive ? 'ACTIF' : 'INACTIF';
             statusBadge.className = isActive ? 'badge bg-success' : 'badge bg-danger';
-            statusLabel.textContent = isActive ? 'Plat actif' : 'Plat inactif';
+            statusLabel.textContent = isActive ? 'Actif' : 'Inactif';
         });
     }
 
@@ -1463,6 +1505,16 @@ document.addEventListener('DOMContentLoaded', function() {
             placeholder: 'Sélectionnez une catégorie...',
             width: '100%',
             allowClear: false
+        });
+    }
+
+    // ==================== GESTION DU TYPE D'ARTICLE ====================
+    const typeSelect = document.getElementById('{{ form.type.vars.id }}');
+    if (typeSelect) {
+        typeSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const typeLabel = selectedOption ? selectedOption.text : '';
+            console.log('Type sélectionné:', typeLabel);
         });
     }
 

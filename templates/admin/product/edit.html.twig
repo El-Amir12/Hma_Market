@@ -5,24 +5,63 @@
 
 {% block body %}
 <div class="container-fluid px-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ path('app_admin_product_index') }}">Produits</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('app_admin_product_show', {'id': product.id}) }}">{{ product.name|u.truncate(20) }}</a></li>
-                    <li class="breadcrumb-item active">Modifier</li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_product_index') }}" class="text-decoration-none">
+                            <i class="fas fa-boxes me-1"></i> Produits
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="text-decoration-none">
+                            {{ product.name|u.truncate(30) }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-edit me-1"></i> Modifier
+                    </li>
                 </ol>
             </nav>
-            <h1 class="h3 mb-0 text-gray-800">
-                <i class="fas fa-edit me-2"></i> Modifier le produit
+            <h1 class="h3 mb-0 fw-bold text-gray-800">
+                <i class="fas fa-edit me-2 text-warning"></i> Modifier le produit
             </h1>
+            <p class="text-muted mt-2 mb-0">
+                <i class="fas fa-info-circle me-1"></i>
+                Modifiez les informations du produit <strong>{{ product.name }}</strong>
+            </p>
         </div>
         <div>
-            <i class="fas fa-box-open fa-3x text-warning opacity-75"></i>
+            <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="btn btn-outline-secondary">
+                <i class="fas fa-eye me-2"></i> Voir le produit
+            </a>
         </div>
     </div>
 
-    {{ include('admin/product/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    <!-- Message informatif sur la modification du stock (si non admin) -->
+    {% if canEditStock is defined and not canEditStock %}
+    <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+        <div class="d-flex">
+            <div class="me-3">
+                <i class="fas fa-lock fa-2x"></i>
+            </div>
+            <div>
+                <strong>⚠️ Modification du stock restreinte</strong><br>
+                Seul un administrateur peut modifier le stock initial manuellement. 
+                Les managers et responsables stock doivent utiliser les <strong>achats</strong> et les <strong>ventes</strong> pour faire varier le stock.
+                <br>
+                <small class="text-muted">Contactez votre administrateur pour toute modification exceptionnelle du stock.</small>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+
+    <!-- Formulaire avec passage de la variable canEditStock -->
+    {{ include('admin/product/_form.html.twig', {
+        'button_label': 'Mettre à jour',
+        'canEditStock': canEditStock|default(false)
+    }) }}
 </div>
 {% endblock %}

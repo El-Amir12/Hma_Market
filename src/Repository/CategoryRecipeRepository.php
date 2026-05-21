@@ -150,6 +150,9 @@ class CategoryRecipeRepository extends ServiceEntityRepository
 
     // ==================== MÉTHODES HIÉRARCHIQUES ====================
 
+    /**
+     * Récupère les catégories racines (sans parent) avec leur nombre de recettes
+     */
     public function findHierarchicalCategoriesWithCount(): array
     {
         $categories = $this->findBy(['parent' => null], ['name' => 'ASC']);
@@ -162,6 +165,9 @@ class CategoryRecipeRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * Construit un nœud de catégorie avec ses enfants
+     */
     private function buildCategoryNode(CategoryRecipe $category): array
     {
         $node = [
@@ -174,12 +180,17 @@ class CategoryRecipeRepository extends ServiceEntityRepository
         ];
 
         foreach ($category->getChildren() as $child) {
-            $node['children'][] = $this->buildCategoryNode($child);
+            if ($child->isActive()) {
+                $node['children'][] = $this->buildCategoryNode($child);
+            }
         }
 
         return $node;
     }
 
+    /**
+     * Compte le nombre total de recettes dans une catégorie et ses sous-catégories
+     */
     private function countRecipesInCategoryHierarchy(CategoryRecipe $category): int
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -191,12 +202,100 @@ class CategoryRecipeRepository extends ServiceEntityRepository
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * Récupère récursivement tous les IDs d'une catégorie et de ses descendants
+     */
     private function getCategoryIdsRecursive(CategoryRecipe $category): array
     {
         $ids = [$category->getId()];
         foreach ($category->getChildren() as $child) {
-            $ids = array_merge($ids, $this->getCategoryIdsRecursive($child));
+            if ($child->isActive()) {
+                $ids = array_merge($ids, $this->getCategoryIdsRecursive($child));
+            }
         }
         return $ids;
+    }
+
+    // ==================== NOUVELLES MÉTHODES POUR LE SELECT HIÉRARCHIQUE ====================
+
+    /**
+     * Récupère toutes les catégories avec leur niveau hiérarchique pour l'affichage dans un select
+     * Retourne un tableau plat avec l'indentation
+     */
+    public function getCategoriesForSelect(HmaService $hmaService): array
+    {
+        $categories = $this->createQueryBuilder('c')
+            ->where('c.hma_service = :service')
+            ->setParameter('service', $hmaService)
+            ->andWhere('c.is_active = true')
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        // Organiser les catégories par parent
+        $grouped = [];
+        foreach ($categories as $category) {
+            $parentId = $category->getParent() ? $category->getParent()->getId() : null;
+            if (!isset($grouped[$parentId])) {
+                $grouped[$parentId] = [];
+            }
+            $grouped[$parentId][] = $category;
+        }
+
+        // Construire la liste plate avec indentation
+        $result = [];
+        if (isset($grouped[null])) {
+            foreach ($grouped[null] as $parent) {
+                $this->addCategoryWithChildren($result, $parent, $grouped, 0);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Ajoute récursivement une catégorie et ses enfants avec indentation
+     */
+    private function addCategoryWithChildren(array &$result, CategoryRecipe $category, array $grouped, int $level): void
+    {
+        // Compter les recettes dans cette catégorie uniquement (sans les enfants)
+        $recipeCount = $this->getEntityManager()->createQueryBuilder()
+            ->select('COUNT(r.id)')
+            ->from('App\Entity\Recipe', 'r')
+            ->where('r.category = :category')
+            ->setParameter('category', $category)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $result[] = [
+            'id' => $category->getId(),
+            'name' => $category->getName(),
+            'level' => $level,
+            'recipeCount' => $recipeCount,
+            'isParent' => isset($grouped[$category->getId()]) && count($grouped[$category->getId()]) > 0
+        ];
+
+        if (isset($grouped[$category->getId()])) {
+            foreach ($grouped[$category->getId()] as $child) {
+                if ($child->isActive()) {
+                    $this->addCategoryWithChildren($result, $child, $grouped, $level + 1);
+                }
+            }
+        }
+    }
+
+    /**
+     * Récupère toutes les catégories (plates) pour un select simple
+     */
+    public function findAllForSelect(HmaService $hmaService): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.id, c.name')
+            ->where('c.hma_service = :service')
+            ->setParameter('service', $hmaService)
+            ->andWhere('c.is_active = true')
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

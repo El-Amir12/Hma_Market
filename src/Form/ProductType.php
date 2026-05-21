@@ -22,20 +22,24 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Symfony\Component\Security\Core\Security;
 
 class ProductType extends AbstractType
 {
     private UnitConverter $unitConverter;
+    private Security $security;
 
-    public function __construct(UnitConverter $unitConverter)
+    public function __construct(UnitConverter $unitConverter, Security $security)
     {
         $this->unitConverter = $unitConverter;
+        $this->security = $security;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $hmaService = $options['hma_service'];
         $companyType = $hmaService ? $hmaService->getType() : 'retail';
+        $canEditStock = $options['can_edit_stock'] ?? false;
 
         $builder
             ->add('name', TextType::class, [
@@ -69,7 +73,6 @@ class ProductType extends AbstractType
                         ->setParameter('hmaService', $hmaService);
                 }
             ])
-            // 🔥 CORRECTION : Utiliser buildUnitChoices() au lieu de getGroupedUnits() directement
             ->add('unit', ChoiceType::class, [
                 'label' => 'Unité de mesure',
                 'choices' => $this->buildUnitChoices(),
@@ -93,7 +96,6 @@ class ProductType extends AbstractType
                 ]
             ]);
 
-        // Ajouter sale_price uniquement si l'entreprise n'est pas un restaurant
         if ($companyType !== 'restaurant') {
             $builder->add('sale_price', MoneyType::class, [
                 'label' => 'Prix de vente (HT)',
@@ -107,17 +109,29 @@ class ProductType extends AbstractType
             ]);
         }
 
+        // Champ stock_quantity avec condition d'affichage
+        $stockAttr = ['placeholder' => '0', 'class' => 'form-control', 'min' => 0];
+        
+        if (!$canEditStock) {
+            $stockAttr['readonly'] = 'readonly';
+            $stockAttr['class'] .= ' bg-light';
+            $stockHelp = '⚠️ Le stock est géré automatiquement via les achats et les ventes. Seul un administrateur peut modifier cette valeur manuellement.';
+        } else {
+            $stockHelp = 'Modifiez le stock initial. Cette action sera tracée dans l\'historique.';
+        }
+
         $builder
             ->add('stock_quantity', IntegerType::class, [
-                'label' => 'Quantité en stock',
-                'attr' => ['placeholder' => '0', 'class' => 'form-control', 'min' => 0],
+                'label' => 'Stock initial *',
+                'attr' => $stockAttr,
                 'constraints' => [
                     new NotBlank(['message' => 'La quantité est obligatoire']),
                     new PositiveOrZero(['message' => 'La quantité doit être positive ou zéro'])
-                ]
+                ],
+                'help' => $stockHelp
             ])
             ->add('min_quantity', IntegerType::class, [
-                'label' => 'Quantité minimale (alerte)',
+                'label' => 'Stock minimum (alerte)',
                 'required' => false,
                 'attr' => ['placeholder' => '0', 'class' => 'form-control', 'min' => 0],
                 'constraints' => [new PositiveOrZero(['message' => 'La quantité minimale doit être positive ou zéro'])]
@@ -148,13 +162,13 @@ class ProductType extends AbstractType
 
         if ($companyType === 'restaurant') {
             $builder->add('is_storable', CheckboxType::class, [
-                'label' => '✅ Produit stockable (remis en stock lors des retours)',
+                'label' => '✅ Produit stockable',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-check-input',
                     'role' => 'switch'
                 ],
-                'help' => 'Activez cette option si ce produit peut être remis en stock lors d\'un retour (ex: canette, bouteille, ingrédient non préparé). Désactivez pour les plats préparés, cocktails mélangés...'
+                'help' => 'Activez cette option pour les produits pouvant être remis en stock lors d\'un retour.'
             ]);
         }
 
@@ -179,7 +193,6 @@ class ProductType extends AbstractType
                 'attr' => ['placeholder' => 'Ex: comprimé, sirop', 'class' => 'form-control']
             ]);
 
-        // Ajouter prescription_required uniquement si c'est une pharmacie
         if ($companyType === 'pharmacy') {
             $builder->add('prescription_required', CheckboxType::class, [
                 'label' => 'Prescription obligatoire',
@@ -208,7 +221,6 @@ class ProductType extends AbstractType
 
     /**
      * Construit la liste des unités groupées pour Select2
-     * 🔥 CORRECTION : Format correct [ 'Libellé' => 'valeur' ]
      */
     private function buildUnitChoices(): array
     {
@@ -217,7 +229,6 @@ class ProductType extends AbstractType
         
         foreach ($groupedUnits as $groupLabel => $units) {
             foreach ($units as $unit) {
-                // Format attendu par Symfony : [ 'Libellé' => 'valeur' ]
                 $choices[$groupLabel][$unit] = $unit;
             }
         }
@@ -230,6 +241,7 @@ class ProductType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Product::class,
             'hma_service' => null,
+            'can_edit_stock' => false,
         ]);
     }
 }

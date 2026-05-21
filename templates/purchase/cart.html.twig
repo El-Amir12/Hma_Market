@@ -235,12 +235,52 @@
         justify-content: flex-end;
         margin-top: 0.5rem;
     }
+    
+    .btn-loading {
+        opacity: 0.7;
+        cursor: wait;
+        pointer-events: none;
+    }
+    .btn-loading .btn-text {
+        display: none;
+    }
+    .btn-loading .btn-spinner {
+        display: inline-block;
+    }
+    .btn-spinner {
+        display: none;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .modal-loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1060;
+        border-radius: 0.5rem;
+    }
+    .modal-content {
+        position: relative;
+    }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="purchase-container">
-    <!-- En‑tête -->
     <div class="header-bar">
         <h1 class="h2 mb-0">
             <i class="bi bi-cart3 text-primary"></i>
@@ -256,7 +296,6 @@
         </div>
     </div>
 
-    <!-- Barre de recherche horizontale -->
     <div class="search-section">
         <div class="search-bar">
             <div class="input-group search-input-group">
@@ -268,9 +307,7 @@
         </div>
     </div>
 
-    <!-- Deux colonnes : produits recherchés + panier -->
     <div class="two-columns">
-        <!-- Panneau des produits recherchés -->
         <div class="products-panel">
             <div class="panel-header">
                 <i class="bi bi-search me-2"></i> Produits disponibles
@@ -284,7 +321,6 @@
             </div>
         </div>
 
-        <!-- Panneau du panier -->
         <div class="cart-panel">
             <div class="panel-header">
                 <i class="bi bi-cart me-2"></i> Votre panier
@@ -389,13 +425,16 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary" id="confirmAddToCartBtn">Ajouter au panier</button>
+                <button type="button" class="btn btn-primary" id="confirmAddToCartBtn">
+                    <span class="btn-text">Ajouter au panier</span>
+                    <span class="btn-spinner"></span>
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal de modification d'article (quantité + prix) -->
+<!-- Modal de modification d'article -->
 <div class="modal fade" id="editItemModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -420,7 +459,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary" id="saveEditChanges">Enregistrer</button>
+                <button type="button" class="btn btn-primary" id="saveEditChanges">
+                    <span class="btn-text">Enregistrer</span>
+                    <span class="btn-spinner"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -442,13 +484,16 @@
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-danger" id="confirmRemoveBtn">Supprimer</button>
+                <button type="button" class="btn btn-danger" id="confirmRemoveBtn">
+                    <span class="btn-text">Supprimer</span>
+                    <span class="btn-spinner"></span>
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal de confirmation de commande -->
+<!-- Modal de confirmation de commande avec vérification des fournisseurs -->
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -457,63 +502,76 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="confirmationForm">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Fournisseur *</label>
-                            <select name="supplier_id" id="supplierSelect" class="form-select" required>
-                                <option value="">Sélectionner un fournisseur</option>
-                                {% for supplier in suppliers %}
-                                    <option value="{{ supplier.id }}">{{ supplier.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Bon de commande</label>
-                            <input type="text" name="bon_commande" class="form-control" placeholder="Optionnel">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Notes</label>
-                            <textarea name="notes" class="form-control" rows="2" placeholder="Instructions de livraison, conditions particulières..."></textarea>
-                        </div>
-                        <div class="col-12">
-                            <hr>
-                            <h6>Options de notification</h6>
-                            <div class="row g-2">
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="notify_by_email" value="1" checked>
-                                        <label class="form-check-label">Email</label>
+                {% if suppliers is empty %}
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Aucun fournisseur disponible</strong><br>
+                        Veuillez activer des fournisseurs ou contacter l'administrateur.
+                    </div>
+                {% else %}
+                    <form id="confirmationForm">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Fournisseur *</label>
+                                <select name="supplier_id" id="supplierSelect" class="form-select" required>
+                                    <option value="">Sélectionner un fournisseur</option>
+                                    {% for supplier in suppliers %}
+                                        <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Bon de commande</label>
+                                <input type="text" name="bon_commande" class="form-control" placeholder="Optionnel - Numéro ou référence">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notes</label>
+                                <textarea name="notes" class="form-control" rows="2" placeholder="Instructions de livraison, conditions particulières..."></textarea>
+                            </div>
+                            <div class="col-12">
+                                <hr>
+                                <h6>Options de notification</h6>
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" name="notify_by_email" value="1" checked>
+                                            <label class="form-check-label">Email</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="notify_by_whatsapp" value="1" checked>
-                                        <label class="form-check-label">WhatsApp</label>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" name="notify_by_whatsapp" value="1" checked>
+                                            <label class="form-check-label">WhatsApp</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="send_image" value="1" checked>
-                                        <label class="form-check-label">Inclure image produit (WhatsApp)</label>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" name="send_image" value="1" checked>
+                                            <label class="form-check-label">Inclure image produit (WhatsApp)</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12">
+                                <label class="form-label">Message personnalisé (optionnel)</label>
+                                <textarea name="confirmation_message" class="form-control" rows="2" placeholder="Ajouter un message pour le fournisseur..."></textarea>
+                            </div>
                         </div>
-                        <div class="col-12">
-                            <label class="form-label">Message personnalisé (optionnel)</label>
-                            <textarea name="confirmation_message" class="form-control" rows="2" placeholder="Ajouter un message pour le fournisseur..."></textarea>
-                        </div>
+                    </form>
+                    <div class="alert alert-info mt-3">
+                        <i class="bi bi-info-circle"></i>
+                        La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
                     </div>
-                </form>
-                <div class="alert alert-info mt-3">
-                    <i class="bi bi-info-circle"></i>
-                    La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
-                </div>
+                {% endif %}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary" id="confirmPurchaseBtn">Confirmer la commande</button>
+                {% if suppliers is not empty %}
+                    <button type="button" class="btn btn-primary" id="confirmPurchaseBtn">
+                        <span class="btn-text">Confirmer la commande</span>
+                        <span class="btn-spinner"></span>
+                    </button>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -535,7 +593,6 @@
     let searchTimeout = null;
     let currentProduct = null;
 
-    // DOM elements
     const searchInput = document.getElementById('productSearch');
     const resultsContainer = document.getElementById('productResultsContainer');
     const cartContainer = document.getElementById('cartContainer');
@@ -543,12 +600,50 @@
     const cartTotalSpan = document.getElementById('cartTotal');
     const confirmOrderBtn = document.getElementById('confirmOrderBtn');
 
-    // Modals
     const addProductModal = new bootstrap.Modal(document.getElementById('addProductModal'));
     const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
     const removeModal = new bootstrap.Modal(document.getElementById('removeCartItemModal'));
+    const confirmModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
 
-    // Elements du modal d'ajout
+    function setButtonLoading(btn, isLoading) {
+        if (!btn) return;
+        if (isLoading) {
+            btn.classList.add('btn-loading');
+            btn.disabled = true;
+        } else {
+            btn.classList.remove('btn-loading');
+            btn.disabled = false;
+        }
+    }
+
+    function setModalLoading(modalElement, isLoading) {
+        if (!modalElement) return;
+        const modalContent = modalElement.querySelector('.modal-content');
+        if (!modalContent) return;
+        
+        let overlay = modalContent.querySelector('.modal-loading-overlay');
+        if (isLoading) {
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'modal-loading-overlay';
+                overlay.innerHTML = `
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                        <p class="mt-2 mb-0">Traitement en cours...</p>
+                    </div>
+                `;
+                modalContent.style.position = 'relative';
+                modalContent.appendChild(overlay);
+            }
+            overlay.style.display = 'flex';
+        } else if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }
+
+    // Éléments du modal d'ajout
     const modalProductImageContainer = document.getElementById('modalProductImageContainer');
     const modalProductName = document.getElementById('modalProductName');
     const modalProductBarcode = document.getElementById('modalProductBarcode');
@@ -560,7 +655,7 @@
     const incrementQty = document.getElementById('incrementQty');
     const confirmAddBtn = document.getElementById('confirmAddToCartBtn');
 
-    // Elements du modal d'édition
+    // Éléments du modal d'édition
     const editProductId = document.getElementById('editProductId');
     const editProductName = document.getElementById('editProductName');
     const editQuantity = document.getElementById('editQuantity');
@@ -571,17 +666,17 @@
     const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
     let pendingRemoveProductId = null;
 
-    // Gestion des quantités dans le modal d'ajout
-    incrementQty.addEventListener('click', () => {
+    // Gestion des quantités
+    incrementQty?.addEventListener('click', () => {
         productQuantityInput.value = parseInt(productQuantityInput.value) + 1;
     });
-    decrementQty.addEventListener('click', () => {
+    decrementQty?.addEventListener('click', () => {
         let val = parseInt(productQuantityInput.value);
         if (val > 1) productQuantityInput.value = val - 1;
     });
 
-    // Ajout au panier depuis le modal d'ajout
-    confirmAddBtn.addEventListener('click', async () => {
+    // Ajout au panier
+    confirmAddBtn?.addEventListener('click', async () => {
         if (!currentProduct) {
             showToast('error', 'Aucun produit sélectionné');
             addProductModal.hide();
@@ -598,10 +693,14 @@
             return;
         }
 
+        setButtonLoading(confirmAddBtn, true);
+        setModalLoading(document.getElementById('addProductModal'), true);
+
         const formData = new FormData();
         formData.append('product_id', currentProduct.id);
         formData.append('quantity', quantity);
         formData.append('unit_price', unitPrice);
+        
         try {
             const response = await fetch(addToCartUrl, { method: 'POST', body: formData });
             const data = await response.json();
@@ -609,11 +708,9 @@
                 await refreshCart();
                 showToast('success', `${currentProduct.name} ajouté au panier`);
                 addProductModal.hide();
-                // Réinitialiser
                 productQuantityInput.value = 1;
                 productPriceInput.value = '';
                 currentProduct = null;
-                // Vider la recherche
                 searchInput.value = '';
                 resultsContainer.innerHTML = '<div class="text-center text-muted py-5"><i class="bi bi-search fs-1"></i><p class="mt-2">Commencez à taper pour voir les produits</p></div>';
                 document.getElementById('resultCount').textContent = '0';
@@ -623,11 +720,14 @@
         } catch (error) {
             console.error('Erreur ajout panier:', error);
             showToast('error', 'Erreur lors de l\'ajout');
+        } finally {
+            setButtonLoading(confirmAddBtn, false);
+            setModalLoading(document.getElementById('addProductModal'), false);
         }
     });
 
-    // Recherche en temps réel (avec debounce)
-    searchInput.addEventListener('input', function(e) {
+    // Recherche en temps réel
+    searchInput?.addEventListener('input', function(e) {
         const query = e.target.value.trim();
         if (searchTimeout) clearTimeout(searchTimeout);
         if (query.length < 2) {
@@ -683,7 +783,6 @@
                     resultsContainer.innerHTML = html;
                     document.getElementById('resultCount').textContent = products.length;
 
-                    // Attacher l'événement de clic sur chaque élément de la liste
                     document.querySelectorAll('.product-list-item').forEach(item => {
                         item.addEventListener('click', () => openAddProductModal(item));
                     });
@@ -695,7 +794,6 @@
         }, 300);
     });
 
-    // Ouvre le modal d'ajout avec les infos du produit
     function openAddProductModal(element) {
         const productId = element.dataset.productId;
         const productName = element.dataset.productName;
@@ -709,18 +807,19 @@
         modalProductBarcode.textContent = productBarcode;
         modalProductUnit.textContent = `Unité : ${productUnit}`;
         productPriceInput.value = productPrice;
-        // Image
+        
         if (productImage) {
             modalProductImageContainer.innerHTML = `<img src="${productImage}" alt="${escapeHtml(productName)}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">`;
         } else {
             modalProductImageContainer.innerHTML = `<div class="product-img-fallback bg-light rounded d-flex align-items-center justify-content-center mx-auto" style="width: 80px; height: 80px;"><i class="fas fa-box text-secondary fs-1"></i></div>`;
         }
-        // Alerte périssable
+        
         if (hasExpiry) {
             perishableWarning.classList.remove('d-none');
         } else {
             perishableWarning.classList.add('d-none');
         }
+        
         currentProduct = {
             id: parseInt(productId),
             name: productName,
@@ -732,9 +831,8 @@
         addProductModal.show();
     }
 
-    // Gestion du panier (uniquement les boutons Modifier et Supprimer)
-    cartContainer.addEventListener('click', async (e) => {
-        // Bouton supprimer
+    // Gestion des actions du panier
+    cartContainer?.addEventListener('click', async (e) => {
         const removeBtn = e.target.closest('.remove-btn');
         if (removeBtn) {
             const productId = parseInt(removeBtn.dataset.id);
@@ -742,7 +840,7 @@
             removeModal.show();
             return;
         }
-        // Bouton modifier
+        
         const editBtn = e.target.closest('.edit-item');
         if (editBtn) {
             const productId = parseInt(editBtn.dataset.id);
@@ -757,11 +855,12 @@
         }
     });
 
-    // Sauvegarde des modifications (envoi JSON)
-    saveEditChangesBtn.addEventListener('click', async () => {
+    // Sauvegarde modification
+    saveEditChangesBtn?.addEventListener('click', async () => {
         const productId = editProductId.value;
         const quantity = parseInt(editQuantity.value);
         const unitPrice = parseFloat(editUnitPrice.value);
+        
         if (isNaN(quantity) || quantity < 1) {
             showToast('error', 'Quantité invalide');
             return;
@@ -770,6 +869,9 @@
             showToast('error', 'Prix unitaire invalide');
             return;
         }
+
+        setButtonLoading(saveEditChangesBtn, true);
+        setModalLoading(document.getElementById('editItemModal'), true);
 
         const updateUrl = updateItemUrlTemplate.replace('{productId}', productId);
         try {
@@ -789,21 +891,25 @@
         } catch (error) {
             console.error('Erreur updateItem:', error);
             showToast('error', 'Erreur lors de la modification');
+        } finally {
+            setButtonLoading(saveEditChangesBtn, false);
+            setModalLoading(document.getElementById('editItemModal'), false);
         }
     });
 
-    // Confirmation de suppression
-    confirmRemoveBtn.addEventListener('click', async () => {
+    // Confirmation suppression
+    confirmRemoveBtn?.addEventListener('click', async () => {
         if (pendingRemoveProductId !== null) {
-            confirmRemoveBtn.disabled = true;
+            setButtonLoading(confirmRemoveBtn, true);
+            setModalLoading(document.getElementById('removeCartItemModal'), true);
             await removeFromCart(pendingRemoveProductId);
-            confirmRemoveBtn.disabled = false;
+            setButtonLoading(confirmRemoveBtn, false);
+            setModalLoading(document.getElementById('removeCartItemModal'), false);
             pendingRemoveProductId = null;
             removeModal.hide();
         }
     });
 
-    // Suppression d'un produit
     async function removeFromCart(productId) {
         const removeUrl = removeProductUrlTemplate.replace('{productId}', productId);
         try {
@@ -821,7 +927,7 @@
         }
     }
 
-    // Rafraîchissement du panier
+    // Rafraîchissement panier
     async function refreshCart() {
         try {
             const response = await fetch(cartDataUrl);
@@ -897,7 +1003,7 @@
     }
 
     // Scanner
-    document.getElementById('scanBarcodeBtn').addEventListener('click', async () => {
+    document.getElementById('scanBarcodeBtn')?.addEventListener('click', async () => {
         const barcode = prompt('Entrez le code-barres à scanner:');
         if (!barcode || barcode.length < 3) return;
         try {
@@ -923,12 +1029,18 @@
         }
     });
 
-    // Confirmation de commande
-    const confirmModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-    confirmOrderBtn.addEventListener('click', () => confirmModal.show());
-    document.getElementById('confirmPurchaseBtn').addEventListener('click', async () => {
+    // Confirmation commande
+    const confirmPurchaseBtn = document.getElementById('confirmPurchaseBtn');
+    
+    confirmOrderBtn?.addEventListener('click', () => confirmModal.show());
+    
+    confirmPurchaseBtn?.addEventListener('click', async () => {
         const form = document.getElementById('confirmationForm');
         const formData = new FormData(form);
+        
+        setButtonLoading(confirmPurchaseBtn, true);
+        setModalLoading(document.getElementById('confirmationModal'), true);
+        
         try {
             const response = await fetch(confirmUrl, { method: 'POST', body: formData });
             const data = await response.json();
@@ -938,10 +1050,14 @@
                 setTimeout(() => window.location.href = data.redirect_url, 1500);
             } else {
                 showToast('error', data.error);
+                setButtonLoading(confirmPurchaseBtn, false);
+                setModalLoading(document.getElementById('confirmationModal'), false);
             }
         } catch (error) {
             console.error('Erreur confirmation:', error);
             showToast('error', 'Erreur lors de la confirmation');
+            setButtonLoading(confirmPurchaseBtn, false);
+            setModalLoading(document.getElementById('confirmationModal'), false);
         }
     });
 

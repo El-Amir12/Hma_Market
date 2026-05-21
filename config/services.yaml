@@ -160,11 +160,11 @@ services:
     App\Service\InvoicePdfGenerator:
         arguments:
             $twig: '@twig'
-            $logger: '@monolog.logger'
+            $pdfDirectory: '%recus_abonnement_directory%'
             $bonCommandeDirectory: '%bon_commande_directory%'
             $recuAchatDirectory: '%recu_achat_directory%'
-            $pdfDirectory: '%recus_abonnement_directory%'
-        public: false
+            $logger: '@monolog.logger'
+            $entityManager: '@doctrine.orm.entity_manager'
 
     # ==================== SERVICES DE VENTE ====================
     App\Service\Sale\PromotionCalculator:
@@ -255,4 +255,15 @@ services:
             $entityManager: '@doctrine.orm.entity_manager'
             $stockBatchRepository: '@App\Repository\StockBatchRepository'
             $logger: '@monolog.logger'
+        public: true
+
+    App\Service\SupplierCreditNoteService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $logger: '@monolog.logger'
+            $mailer: '@mailer.mailer'
+            $twig: '@twig'
+            $urlGenerator: '@router.default'
+            $slugger: '@Symfony\Component\String\Slugger\SluggerInterface'
+            $supportEmail: '%support_email%'
         public: true

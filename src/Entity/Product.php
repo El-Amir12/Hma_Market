@@ -61,6 +61,13 @@ class Product
     #[ORM\Column(nullable: true)]  
     private ?\DateTime $updated_at = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $last_stock_updated_at = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $last_stock_updated_by = null;
+
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $subscription_active = true;
 
@@ -299,6 +306,28 @@ class Product
     {
         $this->updated_at = $updated_at;
 
+        return $this;
+    }
+
+    public function getLastStockUpdatedAt(): ?\DateTime
+    {
+        return $this->last_stock_updated_at;
+    }
+
+    public function setLastStockUpdatedAt(?\DateTime $last_stock_updated_at): static
+    {
+        $this->last_stock_updated_at = $last_stock_updated_at;
+        return $this;
+    }
+
+    public function getLastStockUpdatedBy(): ?User
+    {
+        return $this->last_stock_updated_by;
+    }
+
+    public function setLastStockUpdatedBy(?User $last_stock_updated_by): static
+    {
+        $this->last_stock_updated_by = $last_stock_updated_by;
         return $this;
     }
 
@@ -614,5 +643,40 @@ class Product
     {
         $this->is_storable = $is_storable;
         return $this;
+    }
+
+    /**
+     * Calcule le stock actuel total
+     * Stock = stock_quantity (initial) + somme des quantités des lots actifs
+     */
+    public function getCurrentStock(): int
+    {
+        $totalStock = $this->stock_quantity ?? 0;
+        
+        foreach ($this->getStockBatches() as $batch) {
+            // Vérifier si le lot est actif et a une quantité valide
+            if (($batch->isActive() === null || $batch->isActive() === true) && $batch->getCurrentQuantity() > 0) {
+                $totalStock += $batch->getCurrentQuantity();
+            }
+        }
+        
+        return $totalStock;
+    }
+
+    /**
+     * Calcule le stock actuel en ne comptant que les lots (exclut le stock initial)
+     * Utile si le stock initial a déjà été intégré dans les lots
+     */
+    public function getStockFromBatches(): int
+    {
+        $totalStock = 0;
+        
+        foreach ($this->getStockBatches() as $batch) {
+            if (($batch->isActive() === null || $batch->isActive() === true) && $batch->getCurrentQuantity() > 0) {
+                $totalStock += $batch->getCurrentQuantity();
+            }
+        }
+        
+        return $totalStock;
     }
 }

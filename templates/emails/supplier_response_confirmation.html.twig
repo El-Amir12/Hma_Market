@@ -1,0 +1,86 @@
+{# templates/emails/supplier_response_confirmation.html.twig #}
+{% extends 'base_email.html.twig' %}
+
+{% block title %}Confirmation de votre réponse - Avoir n°{{ creditNote.creditNoteNumber }}{% endblock %}
+
+{% block body %}
+<table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <tr>
+        <td style="padding: 20px;">
+            <!-- En-tête -->
+            <div style="text-align: center; padding-bottom: 20px; border-bottom: 2px solid #e9ecef;">
+                <h1 style="color: #28a745; margin: 0;">
+                    <i class="fas fa-check-circle"></i> Confirmation
+                </h1>
+                <p style="color: #6c757d; margin: 10px 0 0;">
+                    Votre réponse a bien été enregistrée
+                </p>
+            </div>
+
+            <div style="padding: 20px 0;">
+                <p style="font-size: 16px; line-height: 1.5;">
+                    Bonjour <strong>{{ supplier.name }}</strong>,
+                </p>
+                <p style="font-size: 16px; line-height: 1.5;">
+                    Nous accusons réception de votre réponse concernant l'avoir 
+                    <strong>n°{{ creditNote.creditNoteNumber }}</strong>.
+                </p>
+
+                <!-- Récapitulatif de la réponse -->
+                <div style="background-color: #e8f5e9; border-left: 4px solid #28a745; padding: 15px; margin: 20px 0; border-radius: 8px;">
+                    <h3 style="margin-top: 0; color: #28a745; font-size: 18px;">
+                        <i class="fas fa-reply-all"></i> Récapitulatif de votre réponse
+                    </h3>
+                    <p style="margin: 10px 0;">
+                        <strong>Décision :</strong>
+                        {% if creditNote.supplierDecision == 'accept_full' %}
+                            <span style="color: #28a745;">✅ Acceptation totale</span>
+                        {% elseif creditNote.supplierDecision == 'accept_partial' %}
+                            <span style="color: #fd7e14;">🔄 Acceptation partielle</span>
+                        {% elseif creditNote.supplierDecision == 'refuse' %}
+                            <span style="color: #dc3545;">❌ Refus</span>
+                        {% else %}
+                            <span style="color: #0d6efd;">📝 Besoin d'informations</span>
+                        {% endif %}
+                    </p>
+                    {% if creditNote.supplierProposedAmount %}
+                    <p style="margin: 10px 0;">
+                        <strong>Montant proposé :</strong>
+                        {{ creditNote.supplierProposedAmount|price_with_currency(creditNote.hmaService) }}
+                    </p>
+                    {% endif %}
+                    {% if creditNote.supplierReference %}
+                    <p style="margin: 10px 0;">
+                        <strong>Votre référence :</strong>
+                        {{ creditNote.supplierReference }}
+                    </p>
+                    {% endif %}
+                    <p style="margin: 10px 0;">
+                        <strong>Votre réponse :</strong><br>
+                        {{ creditNote.supplierResponse|nl2br }}
+                    </p>
+                </div>
+
+                <!-- Prochaines étapes -->
+                <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 8px;">
+                    <h4 style="margin-top: 0;">
+                        <i class="fas fa-chart-line"></i> Prochaines étapes
+                    </h4>
+                    <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                        <li>Nos équipes vont analyser votre réponse</li>
+                        <li>Nous vous contacterons si nécessaire pour finaliser l'accord</li>
+                        <li>Un avoir sera émis selon la décision finale</li>
+                    </ul>
+                </div>
+
+                <div style="margin: 20px 0; padding: 15px; text-align: center; border-top: 1px solid #e9ecef;">
+                    <p style="font-size: 12px; color: #6c757d;">
+                        Besoin d'aide ? Contactez-nous à 
+                        <a href="mailto:{{ support_email }}" style="color: #0d6efd;">{{ support_email }}</a>
+                    </p>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+{% endblock %}

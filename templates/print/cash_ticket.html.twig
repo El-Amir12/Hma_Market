@@ -1,0 +1,89 @@
+{# templates/print/cash_ticket.html.twig #}
+{% extends 'print/base_ticket.html.twig' %}
+
+{% block header %}
+<div class="header">
+    <h1> {{ company.companyName }}</h1>
+    <p>{{ company.address|default('') }}</p>
+    <p> {{ company.phone|default('') }}</p>
+    <p>SIRET: {{ company.siret|default('Non renseigné') }}</p>
+    <div class="divider"></div>
+    <div class="info-row">
+        <span class="info-label">N° Commande</span>
+        <span>{{ order.orderNumber }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Date</span>
+        <span>{{ order.createdAt|date('d/m/Y H:i') }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Caissier</span>
+        <span>{{ order.user.fullName|default(order.user.email) }}</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="divider"></div>
+<div class="info-row">
+    <span>Désignation</span>
+    <span>Qté</span>
+    <span>Prix</span>
+</div>
+<div class="dotted-divider"></div>
+
+{% for item in items %}
+<div class="info-row">
+    <span style="flex:2">{{ item.productName }}</span>
+    <span style="width:40px; text-align:center">{{ item.quantity }}</span>
+    <span style="width:70px; text-align:right">{{ item.totalPrice|number_format(0, ',', ' ') }}</span>
+</div>
+{% endfor %}
+
+<div class="divider"></div>
+
+<div class="total-row">
+    <span>Total HT</span>
+    <span>{{ (order.totalAmount / 1.18)|number_format(0, ',', ' ') }} FCFA</span>
+</div>
+<div class="total-row">
+    <span>TVA (18%)</span>
+    <span>{{ (order.totalAmount - (order.totalAmount / 1.18))|number_format(0, ',', ' ') }} FCFA</span>
+</div>
+<div class="total-row">
+    <span>TOTAL TTC</span>
+    <span>{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</span>
+</div>
+<div class="total-row">
+    <span>Payé</span>
+    <span>{{ order.amountPaid|number_format(0, ',', ' ') }} FCFA</span>
+</div>
+{% if order.changeAmount > 0 %}
+<div class="total-row">
+    <span>Monnaie</span>
+    <span>{{ order.changeAmount|number_format(0, ',', ' ') }} FCFA</span>
+</div>
+{% endif %}
+
+<div class="cash-summary">
+    <div class="divider"></div>
+    <div class="info-row">
+        <span class="info-label">Mode de paiement</span>
+        <span>{{ order.paymentMethod|replace({'_': ' '})|capitalize }}</span>
+    </div>
+</div>
+
+{% if order.notes %}
+<div class="notes">
+    <strong> Notes:</strong><br>
+    {{ order.notes }}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+<div class="footer">
+    <p> Ticket caisse - À conserver</p>
+    <p>{{ print_date|date('d/m/Y H:i:s') }}</p>
+</div>
+{% endblock %}

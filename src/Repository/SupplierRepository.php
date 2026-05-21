@@ -127,4 +127,38 @@ class SupplierRepository extends ServiceEntityRepository
 
         return $paginator;
     }
+
+    /**
+     * Trouve les fournisseurs actifs et avec abonnement actif par entreprise
+     */
+    public function findActiveAndSubscribedByHmaService(HmaService $hmaService): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.hma_service = :hmaService')
+            ->andWhere('s.is_active = true')
+            ->andWhere('s.subscription_active = true')
+            ->setParameter('hmaService', $hmaService)
+            ->orderBy('s.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Vérifie si un fournisseur est disponible pour une commande
+     */
+    public function isAvailableForOrder(int $supplierId, HmaService $hmaService): bool
+    {
+        $count = $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->where('s.id = :supplierId')
+            ->andWhere('s.hma_service = :hmaService')
+            ->andWhere('s.is_active = true')
+            ->andWhere('s.subscription_active = true')
+            ->setParameter('supplierId', $supplierId)
+            ->setParameter('hmaService', $hmaService)
+            ->getQuery()
+            ->getSingleScalarResult();
+        
+        return $count > 0;
+    }
 }

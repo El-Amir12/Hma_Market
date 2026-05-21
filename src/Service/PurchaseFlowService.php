@@ -196,6 +196,20 @@ class PurchaseFlowService
             throw new \Exception('Le panier est vide');
         }
         
+        // 🔥 VÉRIFICATION SUPPLÉMENTAIRE
+        if (!$supplier->isActive()) {
+            throw new \Exception('Le fournisseur n\'est pas actif');
+        }
+        
+        if (!$supplier->isSubscriptionActive()) {
+            throw new \Exception('L\'abonnement du fournisseur n\'est pas actif');
+        }
+        
+        // 🔥 VÉRIFIER QUE LE FOURNISSEUR APPARTIENT À L'ENTREPRISE
+        if ($supplier->getHmaService()->getId() !== $purchase->getHmaService()->getId()) {
+            throw new \Exception('Fournisseur non autorisé pour cette entreprise');
+        }
+        
         $purchase->setSupplier($supplier);
         $purchase->setNotes($notes);
         $purchase->setStatus(Purchase::STATUS_CONFIRMED);
@@ -339,7 +353,7 @@ class PurchaseFlowService
                 $stockBatch->setCurrentQuantity($receivedQuantity);
                 $stockBatch->setUnitPrice((string)$receivedPrice);
                 $stockBatch->setProduct($product);
-                $stockBatch->setPurchaseItem($item);
+                $stockBatch->setPurchaseItemId($item->getId());
                 $stockBatch->setHmaService($purchase->getHmaService());
                 $stockBatch->setIsActive(true);
                 $stockBatch->setCreatedAt(new \DateTime());
@@ -462,5 +476,32 @@ class PurchaseFlowService
             return true;
         }
         return false;
+    }
+
+    /**
+     * Récupère le service de notification
+     */
+    public function getNotificationService(): NotificationService
+    {
+        return $this->notificationService;
+    }
+
+    /**
+     * Envoie la confirmation de réception au fournisseur
+     */
+    public function sendPurchaseReceivedConfirmation(Purchase $purchase): void
+    {
+        try {
+            $this->notificationService->sendPurchaseReceivedConfirmation($purchase);
+            $this->logger->info('Confirmation de réception envoyée', [
+                'purchase_id' => $purchase->getId(),
+                'supplier' => $purchase->getSupplier()?->getName()
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de l\'envoi de la confirmation de réception', [
+                'purchase_id' => $purchase->getId(),
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

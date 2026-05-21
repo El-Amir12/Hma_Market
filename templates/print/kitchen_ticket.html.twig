@@ -1,0 +1,57 @@
+{# templates/print/kitchen_ticket.html.twig #}
+{% extends 'print/base_ticket.html.twig' %}
+
+{% block header %}
+<div class="header">
+    <h1> {{ company.companyName }}</h1>
+    <p>{{ company.address|default('') }}</p>
+    <p> {{ company.phone|default('') }}</p>
+    <div class="divider"></div>
+    <div class="info-row">
+        <span class="info-label">Commande:</span>
+        <span>{{ order.orderNumber }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Table:</span>
+        <span>{{ order.tableNumber|default('Sur place') }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Heure:</span>
+        <span>{{ order.createdAt|date('H:i') }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Caissier:</span>
+        <span>{{ order.user.fullName|default(order.user.email) }}</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="kitchen-items">
+    {% for item in items %}
+    <div class="kitchen-item">
+        <div class="info-row">
+            <span class="kitchen-item-name"> {{ item.productName }}</span>
+            <span class="kitchen-item-quantity">×{{ item.quantity }}</span>
+        </div>
+        {% if item.notes %}
+        <div class="notes"> {{ item.notes }}</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% if options.include_drinks is defined and not options.include_drinks %}
+<div class="divider"></div>
+<div class="info-row">
+    <span> Boissons à part</span>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+<div class="footer">
+    <p> Bon appétit !</p>
+    <p>{{ print_date|date('d/m/Y H:i:s') }}</p>
+</div>
+{% endblock %}

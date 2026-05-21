@@ -84,6 +84,7 @@ abstract class BaseSaleController extends AbstractController
                     'unit_price' => (float) $item['unit_price'],
                     'total_price' => (float) $item['total_price'],
                     'quantity' => (int) $item['quantity'],
+                    'notes' => $item['notes'] ?? null, // 🔥 Inclure les notes
                     'original_unit_price' => (float) ($item['original_unit_price'] ?? $item['unit_price']),
                     'has_promotion' => (bool) ($item['has_promotion'] ?? false),
                     'prescription_required' => (bool) ($item['prescription_required'] ?? false),
@@ -115,13 +116,14 @@ abstract class BaseSaleController extends AbstractController
         $this->checkSaleAccess();
         
         $quantity = (int) $request->request->get('quantity', 1);
+        $notes = $request->request->get('notes'); // 🔥 Récupérer les notes
         
         try {
             $recipe = $this->entityManager->getRepository(Recipe::class)->find($id);
             if ($recipe) {
                 // ✅ Vérifications avant ajout
                 $this->validateRecipeBeforeAdd($recipe, $quantity);
-                $cartItem = $this->saleService->addRecipeToCart($recipe, $quantity);
+                $cartItem = $this->saleService->addRecipeToCart($recipe, $quantity, $notes); // 🔥 Passer les notes
                 return $this->json([
                     'success' => true,
                     'cart_item' => $cartItem,
@@ -137,7 +139,7 @@ abstract class BaseSaleController extends AbstractController
             
             // ✅ Vérifications avant ajout
             $this->validateProductBeforeAdd($product, $quantity);
-            $cartItem = $this->saleService->addProductToCart($product, $quantity);
+            $cartItem = $this->saleService->addProductToCart($product, $quantity, $notes); // 🔥 Passer les notes
             
             return $this->json([
                 'success' => true,
@@ -388,7 +390,27 @@ abstract class BaseSaleController extends AbstractController
             'company' => $hmaService
         ]);
     }
-    
+
+    #[Route('/sale/update-notes/{type}/{id}', name: 'sale_update_notes', methods: ['PUT'])]
+    public function updateNotes(string $type, int $id, Request $request): JsonResponse
+    {
+        $this->checkSaleAccess();
+        
+        $content = json_decode($request->getContent(), true);
+        $notes = $content['notes'] ?? null;
+        
+        try {
+            $cartItem = $this->saleService->updateCartItemNotes($id, $type, $notes);
+            
+            return $this->json([
+                'success' => true,
+                'cart_item' => $cartItem
+            ]);
+        } catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()], 400);
+        }
+    }
+        
     #[Route('/sale/search', name: 'sale_search', methods: ['GET'])]
     abstract public function search(Request $request): JsonResponse;
 }

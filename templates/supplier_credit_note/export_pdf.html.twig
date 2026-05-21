@@ -1,0 +1,389 @@
+{# templates/supplier_credit_note/export_pdf.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport des avoirs fournisseurs - HMA Market</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DejaVu Sans', 'Arial', 'Helvetica', sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #333;
+            padding: 20px;
+        }
+        
+        /* En-tête */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #2E86C1;
+        }
+        
+        .header h1 {
+            color: #2E86C1;
+            font-size: 20pt;
+            margin-bottom: 5px;
+        }
+        
+        .header .subtitle {
+            color: #666;
+            font-size: 10pt;
+        }
+        
+        /* Infos générales */
+        .info-section {
+            background: #f5f7fa;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #2E86C1;
+        }
+        
+        .info-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        
+        .info-label {
+            width: 150px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .info-value {
+            flex: 1;
+            color: #333;
+        }
+        
+        /* Filtres */
+        .filters-section {
+            background: #f8f9fa;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .filters-title {
+            font-weight: bold;
+            color: #2E86C1;
+            margin-bottom: 10px;
+            font-size: 11pt;
+        }
+        
+        .filters-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .filter-item {
+            background: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 9pt;
+            border: 1px solid #dee2e6;
+        }
+        
+        .filter-label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        /* Statistiques */
+        .stats-section {
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .stat-card {
+            flex: 1;
+            min-width: 120px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        
+        .stat-value {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #2E86C1;
+        }
+        
+        .stat-label {
+            font-size: 8pt;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Tableau */
+        .table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8pt;
+        }
+        
+        th {
+            background: #2E86C1;
+            color: white;
+            padding: 10px 6px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            border: 1px solid #ddd;
+            padding: 8px 6px;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .status-pending { background-color: #fff3cd; }
+        .status-recovered { background-color: #d4edda; }
+        .status-lost { background-color: #f8d7da; }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 7pt;
+            font-weight: bold;
+        }
+        
+        .badge-pending { background: #ffc107; color: #333; }
+        .badge-recovered { background: #28a745; color: white; }
+        .badge-lost { background: #dc3545; color: white; }
+        .badge-review { background: #0d6efd; color: white; }
+        .badge-closed { background: #6c757d; color: white; }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 10px;
+            text-align: center;
+            font-size: 8pt;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+        
+        /* Totaux */
+        .totals-section {
+            margin-top: 20px;
+            padding: 12px;
+            background: #e8f4fd;
+            border-radius: 8px;
+        }
+        
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .total-item {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .total-label {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        .total-value {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #2E86C1;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête -->
+    <div class="header">
+        <h1>RAPPORT DES AVOIRS FOURNISSEURS</h1>
+        <div class="subtitle">{{ hmaService.companyName }} - {{ exportDate|date('d/m/Y H:i:s') }}</div>
+    </div>
+
+    <!-- Informations générales -->
+    <div class="info-section">
+        <div class="info-row">
+            <div class="info-label">Entreprise :</div>
+            <div class="info-value">{{ hmaService.companyName }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Exporté par :</div>
+            <div class="info-value">{{ userName }} ({{ userEmail }})</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Rôle(s) :</div>
+            <div class="info-value">{{ userRoles|join(', ') }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Date d'export :</div>
+            <div class="info-value">{{ exportDate|date('d/m/Y H:i:s') }}</div>
+        </div>
+    </div>
+
+    <!-- Filtres appliqués -->
+    <div class="filters-section">
+        <div class="filters-title">📋 FILTRES APPLIQUÉS</div>
+        <div class="filters-grid">
+            <div class="filter-item"><span class="filter-label">Recherche :</span> {{ filters.search|default('Aucun') }}</div>
+            <div class="filter-item"><span class="filter-label">Statut :</span> {{ filters.status ? statusList[filters.status]|default(filters.status) : 'Tous' }}</div>
+            <div class="filter-item"><span class="filter-label">Priorité :</span> {{ filters.priority ? priorityList[filters.priority]|default(filters.priority) : 'Toutes' }}</div>
+            <div class="filter-item"><span class="filter-label">Type :</span> {{ filters.issue_type ? issueTypeList[filters.issue_type]|default(filters.issue_type) : 'Tous' }}</div>
+            <div class="filter-item"><span class="filter-label">Fournisseur :</span> {{ supplierName|default('Tous') }}</div>
+            <div class="filter-item"><span class="filter-label">Date du :</span> {{ filters.date_from|default('Non spécifiée') }}</div>
+            <div class="filter-item"><span class="filter-label">Date au :</span> {{ filters.date_to|default('Non spécifiée') }}</div>
+            <div class="filter-item"><span class="filter-label">Tri :</span> {{ filters.sort|default('created_at') }} ({{ filters.direction|default('desc') == 'desc' ? 'Décroissant' : 'Croissant' }})</div>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="stats-section">
+        <div class="filters-title">📊 STATISTIQUES</div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">{{ creditNotes|length }}</div>
+                <div class="stat-label">Total avoirs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ pendingCount|default(0) }}</div>
+                <div class="stat-label">En attente</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ recoveredCount|default(0) }}</div>
+                <div class="stat-label">Récupérés</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ lostCount|default(0) }}</div>
+                <div class="stat-label">Perdus</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableau des avoirs -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>N° Avoir</th>
+                    <th>Fournisseur</th>
+                    <th>Lot</th>
+                    <th>Produit</th>
+                    <th>Type</th>
+                    <th>Priorité</th>
+                    <th>Statut</th>
+                    <th>Montant déclaré</th>
+                    <th>Récupéré</th>
+                    <th>Perdu</th>
+                    <th>Date signalement</th>
+                    <th>Réponse fournisseur</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for creditNote in creditNotes %}
+                <tr class="
+                    {% if creditNote.status == 'pending' %}status-pending
+                    {% elseif creditNote.status == 'recovered' %}status-recovered
+                    {% elseif creditNote.status == 'lost' %}status-lost
+                    {% endif %}
+                ">
+                    <td><strong>{{ creditNote.creditNoteNumber }}</strong></td>
+                    <td>{{ creditNote.supplier.name|u.truncate(25) }}</td>
+                    <td>{{ creditNote.stockBatch.batchNumber }}</td>
+                    <td>{{ creditNote.stockBatch.product.name|u.truncate(30) }}</td>
+                    <td>{{ creditNote.issueTypeLabel }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if creditNote.priority == 'critical' %}badge-pending
+                            {% elseif creditNote.priority == 'high' %}badge-pending
+                            {% else %}badge-closed{% endif %}">
+                            {{ creditNote.priorityLabel }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge 
+                            {% if creditNote.status == 'pending' %}badge-pending
+                            {% elseif creditNote.status == 'recovered' %}badge-recovered
+                            {% elseif creditNote.status == 'lost' %}badge-lost
+                            {% elseif creditNote.status == 'under_review' %}badge-review
+                            {% else %}badge-closed{% endif %}">
+                            {{ creditNote.statusLabel }}
+                        </span>
+                    </td>
+                    <td class="amount">{{ creditNote.declaredAmount|price_with_currency(creditNote.hmaService) }}</td>
+                    <td class="amount">{{ (creditNote.recoveredAmount ?: 0)|price_with_currency(creditNote.hmaService) }}</td>
+                    <td class="amount">{{ (creditNote.lostAmount ?: 0)|price_with_currency(creditNote.hmaService) }}</td>
+                    <td>{{ creditNote.reportedAt|date('d/m/Y') }}</td>
+                    <td>
+                        {% if creditNote.supplierResponse %}
+                            <span title="{{ creditNote.supplierResponse|e }}">✓ Répondu</span>
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="12" style="text-align: center;">Aucun avoir trouvé</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totaux -->
+    <div class="totals-section">
+        <div class="totals-row">
+            <div class="total-item">
+                <div class="total-label">Montant total déclaré</div>
+                <div class="total-value">{{ totalDeclaredAmount|price_with_currency(hmaService) }}</div>
+            </div>
+            <div class="total-item">
+                <div class="total-label">Montant total récupéré</div>
+                <div class="total-value">{{ totalRecoveredAmount|price_with_currency(hmaService) }}</div>
+            </div>
+            <div class="total-item">
+                <div class="total-label">Montant total perdu</div>
+                <div class="total-value">{{ totalLostAmount|price_with_currency(hmaService) }}</div>
+            </div>
+            <div class="total-item">
+                <div class="total-label">Taux de récupération</div>
+                <div class="total-value">{{ recoveryRate|default(0) }}%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pied de page -->
+    <div class="footer">
+        Document généré par HMA Market - {{ exportDate|date('d/m/Y H:i:s') }}
+    </div>
+</body>
+</html>

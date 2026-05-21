@@ -1,0 +1,8 @@
+{# templates/supplier_credit_note/export_excel.html.twig #}
+{# Ce template est utilisé par PhpSpreadsheet, pas directement affiché #}
+{% spaceless %}
+ID;N° Avoir;Fournisseur;Lot;Produit;Type problème;Priorité;Statut;Montant déclaré;Montant récupéré;Montant perdu;Quantité concernée;Action stock;Date signalement;Date résolution;Signalé par;Réponse fournisseur;Décision fournisseur;Notes internes
+{% for creditNote in creditNotes %}
+{{ creditNote.id }};{{ creditNote.creditNoteNumber }};{{ creditNote.supplier.name|replace({';':','}) }};{{ creditNote.stockBatch.batchNumber }};{{ creditNote.stockBatch.product.name|replace({';':','}) }};{{ creditNote.issueTypeLabel|replace({';':','}) }};{{ creditNote.priorityLabel }};{{ creditNote.statusLabel }};{{ creditNote.declaredAmount }};{{ creditNote.recoveredAmount ?: 0 }};{{ creditNote.lostAmount ?: 0 }};{{ creditNote.affectedQuantity ?: 0 }};{{ creditNote.stockActionLabel }};{{ creditNote.reportedAt|date('d/m/Y H:i') }};{{ creditNote.resolvedAt ? creditNote.resolvedAt|date('d/m/Y H:i') : '' }};{{ creditNote.reportedBy.fullName|default(creditNote.reportedBy.email)|replace({';':','}) }};{{ creditNote.supplierResponse ? (creditNote.supplierResponse|replace({';':','})|replace({"\n":" "})|u.truncate(200)) : '' }};{{ creditNote.supplierDecision ?: '' }};{{ creditNote.internalNotes ? (creditNote.internalNotes|replace({';':','})|replace({"\n":" "})|u.truncate(200)) : '' }}
+{% endfor %}
+{% endspaceless %}

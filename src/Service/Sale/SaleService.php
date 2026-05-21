@@ -41,6 +41,302 @@ class SaleService
     }
     
     /**
+     * Ajoute un produit au panier
+     */
+    public function addProductToCart(Product $product, int $quantity = 1, ?string $notes = null): array
+    {
+        $this->validateProductBeforeAdd($product, $quantity);
+        
+        $promotionInfo = $this->promotionCalculator->getBestProductPromotion($product);
+        $productId = $product->getId();
+        
+        if (isset($this->cart[$productId])) {
+            $newQuantity = $this->cart[$productId]['quantity'] + $quantity;
+            
+            if ($product->getStockQuantity() < $newQuantity) {
+                throw new \Exception(sprintf(
+                    'Stock insuffisant. Vous avez déjà %d dans le panier. Total demandé: %d',
+                    $this->cart[$productId]['quantity'],
+                    $newQuantity
+                ));
+            }
+            
+            $this->cart[$productId]['quantity'] = $newQuantity;
+            $this->cart[$productId]['total_price'] = $newQuantity * $promotionInfo['final_price'];
+            $this->cart[$productId]['unit_price'] = $promotionInfo['final_price'];
+            $this->cart[$productId]['has_promotion'] = $promotionInfo['has_promotion'];
+            
+            // 🔥 Conserver les notes si elles existent déjà, sinon utiliser la nouvelle
+            if ($notes !== null) {
+                $this->cart[$productId]['notes'] = $notes;
+            }
+            
+            if ($promotionInfo['has_promotion'] && $promotionInfo['promotion']) {
+                $this->cart[$productId]['promotion'] = [
+                    'id' => $promotionInfo['promotion']->getId(),
+                    'name' => $promotionInfo['promotion']->getName(),
+                    'discount_amount' => $promotionInfo['discount_amount'],
+                    'discount_percentage' => $promotionInfo['discount_percentage'],
+                    'message' => $this->promotionCalculator->getPromotionMessage(
+                        $promotionInfo['promotion'],
+                        $promotionInfo['original_price'],
+                        $promotionInfo['final_price']
+                    )
+                ];
+            }
+        } else {
+            $this->cart[$productId] = [
+                'type' => 'product',
+                'id' => $productId,
+                'name' => $product->getName(),
+                'barcode' => $product->getBarcode(),
+                'image' => $product->getImage(),
+                'unit' => $product->getUnit(),
+                'quantity' => $quantity,
+                'notes' => $notes, // 🔥 Ajout des notes
+                'original_unit_price' => $promotionInfo['original_price'],
+                'unit_price' => $promotionInfo['final_price'],
+                'total_price' => $quantity * $promotionInfo['final_price'],
+                'has_promotion' => $promotionInfo['has_promotion'],
+                'prescription_required' => $product->isPrescriptionRequired(),
+                'promotion' => $promotionInfo['promotion'] ? [
+                    'id' => $promotionInfo['promotion']->getId(),
+                    'name' => $promotionInfo['promotion']->getName(),
+                    'discount_amount' => $promotionInfo['discount_amount'],
+                    'discount_percentage' => $promotionInfo['discount_percentage'],
+                    'message' => $this->promotionCalculator->getPromotionMessage(
+                        $promotionInfo['promotion'],
+                        $promotionInfo['original_price'],
+                        $promotionInfo['final_price']
+                    )
+                ] : null,
+                'has_expiry_date' => $product->hasExpiryDate(),
+                'added_at' => date('Y-m-d H:i:s')
+            ];
+        }
+        
+        $this->saveCart();
+        return $this->cart[$productId];
+    }
+    
+    /**
+     * Ajoute une recette au panier
+     */
+    public function addRecipeToCart(Recipe $recipe, int $quantity = 1, ?string $notes = null): array
+    {
+        $this->validateRecipeBeforeAdd($recipe, $quantity);
+        
+        $promotionInfo = $this->promotionCalculator->getBestRecipePromotion($recipe);
+        $cartKey = 'recipe_' . $recipe->getId();
+        
+        if (isset($this->cart[$cartKey])) {
+            $newQuantity = $this->cart[$cartKey]['quantity'] + $quantity;
+            $this->checkRecipeStockAvailability($recipe, $newQuantity);
+            
+            $this->cart[$cartKey]['quantity'] = $newQuantity;
+            $this->cart[$cartKey]['total_price'] = $newQuantity * $promotionInfo['final_price'];
+            $this->cart[$cartKey]['unit_price'] = $promotionInfo['final_price'];
+            $this->cart[$cartKey]['original_unit_price'] = $promotionInfo['original_price'];
+            $this->cart[$cartKey]['has_promotion'] = $promotionInfo['has_promotion'];
+            
+            // 🔥 Conserver les notes si elles existent déjà, sinon utiliser la nouvelle
+            if ($notes !== null) {
+                $this->cart[$cartKey]['notes'] = $notes;
+            }
+            
+            if ($promotionInfo['has_promotion'] && $promotionInfo['promotion']) {
+                $this->cart[$cartKey]['promotion'] = [
+                    'id' => $promotionInfo['promotion']->getId(),
+                    'name' => $promotionInfo['promotion']->getName(),
+                    'discount_amount' => $promotionInfo['discount_amount'],
+                    'discount_percentage' => $promotionInfo['discount_percentage'],
+                    'message' => $this->promotionCalculator->getPromotionMessage(
+                        $promotionInfo['promotion'],
+                        $promotionInfo['original_price'],
+                        $promotionInfo['final_price'],
+                        $recipe->getHmaService()
+                    )
+                ];
+            }
+        } else {
+            $this->checkRecipeStockAvailability($recipe, $quantity);
+            
+            $this->cart[$cartKey] = [
+                'type' => 'recipe',
+                'id' => $recipe->getId(),
+                'name' => $recipe->getName(),
+                'description' => $recipe->getDescription(),
+                'image' => $recipe->getImage(),
+                'quantity' => $quantity,
+                'notes' => $notes, // 🔥 Ajout des notes
+                'original_unit_price' => $promotionInfo['original_price'],
+                'unit_price' => $promotionInfo['final_price'],
+                'total_price' => $quantity * $promotionInfo['final_price'],
+                'has_promotion' => $promotionInfo['has_promotion'],
+                'promotion' => $promotionInfo['promotion'] ? [
+                    'id' => $promotionInfo['promotion']->getId(),
+                    'name' => $promotionInfo['promotion']->getName(),
+                    'discount_amount' => $promotionInfo['discount_amount'],
+                    'discount_percentage' => $promotionInfo['discount_percentage'],
+                    'message' => $this->promotionCalculator->getPromotionMessage(
+                        $promotionInfo['promotion'],
+                        $promotionInfo['original_price'],
+                        $promotionInfo['final_price'],
+                        $recipe->getHmaService()
+                    )
+                ] : null,
+                'added_at' => date('Y-m-d H:i:s')
+            ];
+        }
+        
+        $this->saveCart();
+        return $this->cart[$cartKey];
+    }
+    
+    /**
+     * Met à jour la quantité d'un article dans le panier
+     */
+    public function updateCartItemQuantity(int $itemId, string $type, int $quantity): array
+    {
+        $cartKey = ($type === 'product') ? $itemId : 'recipe_' . $itemId;
+        
+        if (!isset($this->cart[$cartKey])) {
+            throw new \Exception('Article non trouvé dans le panier');
+        }
+        
+        if ($quantity <= 0) {
+            $this->removeFromCart($itemId, $type);
+            return [];
+        }
+        
+        // Vérifier le stock avant mise à jour
+        if ($type === 'product') {
+            $product = $this->productRepository->find($itemId);
+            if ($product && $product->getStockQuantity() < $quantity) {
+                throw new \Exception(sprintf(
+                    'Stock insuffisant pour "%s". Disponible: %d %s',
+                    $product->getName(),
+                    $product->getStockQuantity(),
+                    $product->getUnit() ?? 'unités'
+                ));
+            }
+            if ($product && $product->hasExpiryDate() && $product->getExpiryDate() < new \DateTime()) {
+                throw new \Exception('Ce produit a expiré.');
+            }
+        } else {
+            $recipe = $this->recipeRepository->find($itemId);
+            if ($recipe) {
+                $this->checkRecipeStockAvailability($recipe, $quantity);
+            }
+        }
+        
+        // 🔥 Sauvegarder les notes existantes
+        $existingNotes = $this->cart[$cartKey]['notes'] ?? null;
+        
+        // Recalculer la promotion
+        if ($type === 'product') {
+            $product = $this->productRepository->find($itemId);
+            if ($product) {
+                $promotionInfo = $this->promotionCalculator->getBestProductPromotion($product);
+                $unitPrice = $promotionInfo['final_price'];
+                $totalPrice = $unitPrice * $quantity;
+                
+                $this->cart[$cartKey]['quantity'] = $quantity;
+                $this->cart[$cartKey]['unit_price'] = $unitPrice;
+                $this->cart[$cartKey]['total_price'] = $totalPrice;
+                $this->cart[$cartKey]['has_promotion'] = $promotionInfo['has_promotion'];
+                $this->cart[$cartKey]['original_unit_price'] = $promotionInfo['original_price'];
+                $this->cart[$cartKey]['notes'] = $existingNotes; // 🔥 Conserver les notes
+                
+                if ($promotionInfo['has_promotion'] && $promotionInfo['promotion']) {
+                    $this->cart[$cartKey]['promotion'] = [
+                        'id' => $promotionInfo['promotion']->getId(),
+                        'name' => $promotionInfo['promotion']->getName(),
+                        'discount_amount' => $promotionInfo['discount_amount'],
+                        'discount_percentage' => $promotionInfo['discount_percentage'],
+                        'message' => $this->promotionCalculator->getPromotionMessage(
+                            $promotionInfo['promotion'],
+                            $promotionInfo['original_price'],
+                            $promotionInfo['final_price']
+                        )
+                    ];
+                } else {
+                    $this->cart[$cartKey]['promotion'] = null;
+                }
+            }
+        } else {
+            $recipe = $this->recipeRepository->find($itemId);
+            if ($recipe) {
+                $promotionInfo = $this->promotionCalculator->getBestRecipePromotion($recipe);
+                $unitPrice = $promotionInfo['final_price'];
+                $totalPrice = $unitPrice * $quantity;
+                
+                $this->cart[$cartKey]['quantity'] = $quantity;
+                $this->cart[$cartKey]['unit_price'] = $unitPrice;
+                $this->cart[$cartKey]['total_price'] = $totalPrice;
+                $this->cart[$cartKey]['has_promotion'] = $promotionInfo['has_promotion'];
+                $this->cart[$cartKey]['original_unit_price'] = $promotionInfo['original_price'];
+                $this->cart[$cartKey]['notes'] = $existingNotes; // 🔥 Conserver les notes
+                
+                if ($promotionInfo['has_promotion'] && $promotionInfo['promotion']) {
+                    $this->cart[$cartKey]['promotion'] = [
+                        'id' => $promotionInfo['promotion']->getId(),
+                        'name' => $promotionInfo['promotion']->getName(),
+                        'discount_amount' => $promotionInfo['discount_amount'],
+                        'discount_percentage' => $promotionInfo['discount_percentage'],
+                        'message' => $this->promotionCalculator->getPromotionMessage(
+                            $promotionInfo['promotion'],
+                            $promotionInfo['original_price'],
+                            $promotionInfo['final_price'],
+                            $recipe->getHmaService()
+                        )
+                    ];
+                } else {
+                    $this->cart[$cartKey]['promotion'] = null;
+                }
+            }
+        }
+        
+        $this->saveCart();
+        return $this->cart[$cartKey];
+    }
+    
+    /**
+     * Met à jour les notes d'un article
+     */
+    public function updateCartItemNotes(int $itemId, string $type, ?string $notes): array
+    {
+        $cartKey = ($type === 'product') ? $itemId : 'recipe_' . $itemId;
+        
+        if (!isset($this->cart[$cartKey])) {
+            throw new \Exception('Article non trouvé dans le panier');
+        }
+        
+        $this->cart[$cartKey]['notes'] = $notes;
+        $this->saveCart();
+        
+        return $this->cart[$cartKey];
+    }
+    
+    /**
+     * Supprime un article du panier
+     */
+    public function removeFromCart(int $itemId, string $type): void
+    {
+        $cartKey = ($type === 'product') ? $itemId : 'recipe_' . $itemId;
+        
+        if (isset($this->cart[$cartKey])) {
+            unset($this->cart[$cartKey]);
+            $this->saveCart();
+            $this->logger->info('Article supprimé du panier', [
+                'type' => $type,
+                'id' => $itemId,
+                'cart_key' => $cartKey
+            ]);
+        }
+    }
+    
+    /**
      * Rafraîchit tout le panier en recalculant les promotions
      */
     public function refreshCartPromotions(): void
@@ -77,7 +373,7 @@ class SaleService
                             $item['promotion'] = null;
                         }
                     }
-                    // 🔥 CORRECTION: Garder la même clé (qui est l'ID du produit)
+                    // 🔥 Conserver les notes
                     $updatedCart[$key] = $item;
                 }
             } else {
@@ -109,6 +405,7 @@ class SaleService
                             $item['promotion'] = null;
                         }
                     }
+                    // 🔥 Conserver les notes
                     $updatedCart[$key] = $item;
                 }
             }
@@ -122,142 +419,32 @@ class SaleService
     }
     
     /**
-     * Ajoute un produit au panier
+     * Vide le panier
      */
-    public function addProductToCart(Product $product, int $quantity = 1): array
+    public function clearCart(): void
     {
-        $this->validateProductBeforeAdd($product, $quantity);
-        
-        $promotionInfo = $this->promotionCalculator->getBestProductPromotion($product);
-        $productId = $product->getId();
-        
-        if (isset($this->cart[$productId])) {
-            $newQuantity = $this->cart[$productId]['quantity'] + $quantity;
-            
-            if ($product->getStockQuantity() < $newQuantity) {
-                throw new \Exception(sprintf(
-                    'Stock insuffisant. Vous avez déjà %d dans le panier. Total demandé: %d',
-                    $this->cart[$productId]['quantity'],
-                    $newQuantity
-                ));
-            }
-            
-            $this->cart[$productId]['quantity'] = $newQuantity;
-            $this->cart[$productId]['total_price'] = $newQuantity * $promotionInfo['final_price'];
-            $this->cart[$productId]['unit_price'] = $promotionInfo['final_price'];
-            $this->cart[$productId]['has_promotion'] = $promotionInfo['has_promotion'];
-            if ($promotionInfo['has_promotion'] && $promotionInfo['promotion']) {
-                $this->cart[$productId]['promotion'] = [
-                    'id' => $promotionInfo['promotion']->getId(),
-                    'name' => $promotionInfo['promotion']->getName(),
-                    'discount_amount' => $promotionInfo['discount_amount'],
-                    'discount_percentage' => $promotionInfo['discount_percentage'],
-                    'message' => $this->promotionCalculator->getPromotionMessage(
-                        $promotionInfo['promotion'],
-                        $promotionInfo['original_price'],
-                        $promotionInfo['final_price']
-                    )
-                ];
-            }
-        } else {
-            $this->cart[$productId] = [
-                'type' => 'product',
-                'id' => $productId,
-                'name' => $product->getName(),
-                'barcode' => $product->getBarcode(),
-                'image' => $product->getImage(),
-                'unit' => $product->getUnit(),
-                'quantity' => $quantity,
-                'original_unit_price' => $promotionInfo['original_price'],
-                'unit_price' => $promotionInfo['final_price'],
-                'total_price' => $quantity * $promotionInfo['final_price'],
-                'has_promotion' => $promotionInfo['has_promotion'],
-                'prescription_required' => $product->isPrescriptionRequired(),
-                'promotion' => $promotionInfo['promotion'] ? [
-                    'id' => $promotionInfo['promotion']->getId(),
-                    'name' => $promotionInfo['promotion']->getName(),
-                    'discount_amount' => $promotionInfo['discount_amount'],
-                    'discount_percentage' => $promotionInfo['discount_percentage'],
-                    'message' => $this->promotionCalculator->getPromotionMessage(
-                        $promotionInfo['promotion'],
-                        $promotionInfo['original_price'],
-                        $promotionInfo['final_price']
-                    )
-                ] : null,
-                'has_expiry_date' => $product->hasExpiryDate(),
-                'added_at' => date('Y-m-d H:i:s')
-            ];
-        }
-        
+        $this->cart = [];
         $this->saveCart();
-        return $this->cart[$productId];
     }
     
     /**
-     * Ajoute une recette au panier
+     * Récupère le contenu du panier
      */
-    public function addRecipeToCart(Recipe $recipe, int $quantity = 1): array
+    public function getCart(): array
     {
-        $this->validateRecipeBeforeAdd($recipe, $quantity);
-        
-        $promotionInfo = $this->promotionCalculator->getBestRecipePromotion($recipe);
-        $cartKey = 'recipe_' . $recipe->getId();
-        
-        if (isset($this->cart[$cartKey])) {
-            $newQuantity = $this->cart[$cartKey]['quantity'] + $quantity;
-            $this->checkRecipeStockAvailability($recipe, $newQuantity);
-            
-            $this->cart[$cartKey]['quantity'] = $newQuantity;
-            $this->cart[$cartKey]['total_price'] = $newQuantity * $promotionInfo['final_price'];
-            $this->cart[$cartKey]['unit_price'] = $promotionInfo['final_price'];
-            $this->cart[$cartKey]['original_unit_price'] = $promotionInfo['original_price'];
-            $this->cart[$cartKey]['has_promotion'] = $promotionInfo['has_promotion'];
-            if ($promotionInfo['has_promotion'] && $promotionInfo['promotion']) {
-                $this->cart[$cartKey]['promotion'] = [
-                    'id' => $promotionInfo['promotion']->getId(),
-                    'name' => $promotionInfo['promotion']->getName(),
-                    'discount_amount' => $promotionInfo['discount_amount'],
-                    'discount_percentage' => $promotionInfo['discount_percentage'],
-                    'message' => $this->promotionCalculator->getPromotionMessage(
-                        $promotionInfo['promotion'],
-                        $promotionInfo['original_price'],
-                        $promotionInfo['final_price'],
-                        $recipe->getHmaService()
-                    )
-                ];
-            }
-        } else {
-            $this->checkRecipeStockAvailability($recipe, $quantity);
-            
-            $this->cart[$cartKey] = [
-                'type' => 'recipe',
-                'id' => $recipe->getId(),
-                'name' => $recipe->getName(),
-                'description' => $recipe->getDescription(),
-                'image' => $recipe->getImage(),
-                'quantity' => $quantity,
-                'original_unit_price' => $promotionInfo['original_price'],
-                'unit_price' => $promotionInfo['final_price'],
-                'total_price' => $quantity * $promotionInfo['final_price'],
-                'has_promotion' => $promotionInfo['has_promotion'],
-                'promotion' => $promotionInfo['promotion'] ? [
-                    'id' => $promotionInfo['promotion']->getId(),
-                    'name' => $promotionInfo['promotion']->getName(),
-                    'discount_amount' => $promotionInfo['discount_amount'],
-                    'discount_percentage' => $promotionInfo['discount_percentage'],
-                    'message' => $this->promotionCalculator->getPromotionMessage(
-                        $promotionInfo['promotion'],
-                        $promotionInfo['original_price'],
-                        $promotionInfo['final_price'],
-                        $recipe->getHmaService()
-                    )
-                ] : null,
-                'added_at' => date('Y-m-d H:i:s')
-            ];
+        return array_values($this->cart);
+    }
+    
+    /**
+     * Calcule le total du panier
+     */
+    public function getCartTotal(): float
+    {
+        $total = 0;
+        foreach ($this->cart as $item) {
+            $total += $item['total_price'];
         }
-        
-        $this->saveCart();
-        return $this->cart[$cartKey];
+        return $total;
     }
     
     /**
@@ -331,156 +518,6 @@ class SaleService
     }
     
     /**
-     * Met à jour la quantité d'un article dans le panier
-     * 
-     * 🔥 CORRECTION IMPORTANTE:
-     * - Pour les produits: la clé est l'ID du produit (ex: 123)
-     * - Pour les recettes: la clé est 'recipe_' . ID (ex: recipe_456)
-     */
-    public function updateCartItemQuantity(int $itemId, string $type, int $quantity): array
-    {
-        // Construction de la clé correcte
-        $cartKey = ($type === 'product') ? $itemId : 'recipe_' . $itemId;
-        
-        if (!isset($this->cart[$cartKey])) {
-            throw new \Exception('Article non trouvé dans le panier');
-        }
-        
-        if ($quantity <= 0) {
-            $this->removeFromCart($itemId, $type);
-            return [];
-        }
-        
-        // Vérifier le stock avant mise à jour
-        if ($type === 'product') {
-            $product = $this->productRepository->find($itemId);
-            if ($product && $product->getStockQuantity() < $quantity) {
-                throw new \Exception(sprintf(
-                    'Stock insuffisant pour "%s". Disponible: %d %s',
-                    $product->getName(),
-                    $product->getStockQuantity(),
-                    $product->getUnit() ?? 'unités'
-                ));
-            }
-            if ($product && $product->hasExpiryDate() && $product->getExpiryDate() < new \DateTime()) {
-                throw new \Exception('Ce produit a expiré.');
-            }
-        } else {
-            $recipe = $this->recipeRepository->find($itemId);
-            if ($recipe) {
-                $this->checkRecipeStockAvailability($recipe, $quantity);
-            }
-        }
-        
-        // Recalculer la promotion
-        if ($type === 'product') {
-            $product = $this->productRepository->find($itemId);
-            if ($product) {
-                $promotionInfo = $this->promotionCalculator->getBestProductPromotion($product);
-                $unitPrice = $promotionInfo['final_price'];
-                $totalPrice = $unitPrice * $quantity;
-                
-                $this->cart[$cartKey]['quantity'] = $quantity;
-                $this->cart[$cartKey]['unit_price'] = $unitPrice;
-                $this->cart[$cartKey]['total_price'] = $totalPrice;
-                $this->cart[$cartKey]['has_promotion'] = $promotionInfo['has_promotion'];
-                $this->cart[$cartKey]['original_unit_price'] = $promotionInfo['original_price'];
-                if ($promotionInfo['has_promotion'] && $promotionInfo['promotion']) {
-                    $this->cart[$cartKey]['promotion'] = [
-                        'id' => $promotionInfo['promotion']->getId(),
-                        'name' => $promotionInfo['promotion']->getName(),
-                        'discount_amount' => $promotionInfo['discount_amount'],
-                        'discount_percentage' => $promotionInfo['discount_percentage'],
-                        'message' => $this->promotionCalculator->getPromotionMessage(
-                            $promotionInfo['promotion'],
-                            $promotionInfo['original_price'],
-                            $promotionInfo['final_price']
-                        )
-                    ];
-                }
-            }
-        } else {
-            $recipe = $this->recipeRepository->find($itemId);
-            if ($recipe) {
-                $promotionInfo = $this->promotionCalculator->getBestRecipePromotion($recipe);
-                $unitPrice = $promotionInfo['final_price'];
-                $totalPrice = $unitPrice * $quantity;
-                
-                $this->cart[$cartKey]['quantity'] = $quantity;
-                $this->cart[$cartKey]['unit_price'] = $unitPrice;
-                $this->cart[$cartKey]['total_price'] = $totalPrice;
-                $this->cart[$cartKey]['has_promotion'] = $promotionInfo['has_promotion'];
-                $this->cart[$cartKey]['original_unit_price'] = $promotionInfo['original_price'];
-                if ($promotionInfo['has_promotion'] && $promotionInfo['promotion']) {
-                    $this->cart[$cartKey]['promotion'] = [
-                        'id' => $promotionInfo['promotion']->getId(),
-                        'name' => $promotionInfo['promotion']->getName(),
-                        'discount_amount' => $promotionInfo['discount_amount'],
-                        'discount_percentage' => $promotionInfo['discount_percentage'],
-                        'message' => $this->promotionCalculator->getPromotionMessage(
-                            $promotionInfo['promotion'],
-                            $promotionInfo['original_price'],
-                            $promotionInfo['final_price'],
-                            $recipe->getHmaService()
-                        )
-                    ];
-                }
-            }
-        }
-        
-        $this->saveCart();
-        return $this->cart[$cartKey];
-    }
-
-    /**
-     * Supprime un article du panier
-     */
-    public function removeFromCart(int $itemId, string $type): void
-    {
-        // Construction de la clé correcte
-        $cartKey = ($type === 'product') ? $itemId : 'recipe_' . $itemId;
-        
-        if (isset($this->cart[$cartKey])) {
-            unset($this->cart[$cartKey]);
-            $this->saveCart();
-            $this->logger->info('Article supprimé du panier', [
-                'type' => $type,
-                'id' => $itemId,
-                'cart_key' => $cartKey
-            ]);
-        }
-    }
-    
-    /**
-     * Vide le panier
-     */
-    public function clearCart(): void
-    {
-        $this->cart = [];
-        $this->saveCart();
-    }
-    
-    /**
-     * Récupère le contenu du panier
-     */
-    public function getCart(): array
-    {
-        return array_values($this->cart);
-    }
-    
-    /**
-     * Calcule le total du panier
-     */
-    public function getCartTotal(): float
-    {
-        $total = 0;
-        foreach ($this->cart as $item) {
-            $total += $item['total_price'];
-        }
-        return $total;
-    }
-    
-        /**
      * Valide une vente avec vérification complète des promotions
      */
     public function validateSale(
@@ -654,6 +691,7 @@ class SaleService
         $orderItem->setUnitPrice((string) $unitPrice);
         $orderItem->setBatchPurchasePrice((string) $averageCost);
         $orderItem->setQuantity($quantity);
+        $orderItem->setNotes($item['notes'] ?? null); // 🔥 Inclure les notes
         $orderItem->setTotalPrice((string) $totalPrice);
         $orderItem->setCreatedAt(new \DateTime());
         $orderItem->setVente($order);
@@ -716,6 +754,7 @@ class SaleService
         $orderItem->setUnitPrice((string) $unitPrice);
         $orderItem->setBatchPurchasePrice('0');
         $orderItem->setQuantity($quantity);
+        $orderItem->setNotes($item['notes'] ?? null); // 🔥 Inclure les notes
         $orderItem->setTotalPrice((string) $totalPrice);
         $orderItem->setCreatedAt(new \DateTime());
         $orderItem->setRecipe($recipe);

@@ -234,15 +234,16 @@
                     </div>
                 </div>
                 {% endif %}
-                
+
                 <!-- Stock -->
                 <div class="row g-3 mt-3">
                     <div class="col-md-6">
                         <div class="form-floating">
                             {{ form_widget(form.stock_quantity, {'attr': {
-                                'class': 'form-control',
+                                'class': 'form-control' ~ (canEditStock is defined and not canEditStock ? ' bg-light' : ''),
                                 'placeholder': ' ',
-                                'autocomplete': 'off'
+                                'autocomplete': 'off',
+                                'readonly': canEditStock is defined and not canEditStock ? 'readonly' : false
                             }}) }}
                             <label for="{{ form.stock_quantity.vars.id }}">
                                 <i class="fas fa-box me-1"></i> Stock initial *
@@ -270,6 +271,27 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Message informatif sur le stock (déplacé après les deux champs) -->
+                {% if canEditStock is defined and not canEditStock %}
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div class="alert alert-warning py-2 px-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small>Le stock est géré automatiquement via les achats et les ventes. Seul un administrateur peut modifier cette valeur manuellement.</small>
+                        </div>
+                    </div>
+                </div>
+                {% elseif canEditStock is defined and canEditStock %}
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div class="alert alert-info py-2 px-3">
+                            <i class="fas fa-history me-2"></i>
+                            <small>La modification du stock sera tracée (qui et quand).</small>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
                 
                 <!-- Switches pour Statut et Date critique -->
                 <div class="row g-3 mt-3">
@@ -430,7 +452,6 @@
                 {% endif %}
             </div>
 
-            {# templates/product/_form.html.twig - Remplacer is_ingredient par is_storable #}
             {% if companyType == 'restaurant' %}
                 <div class="row g-3 mt-3">
                     <div class="col-md-12">

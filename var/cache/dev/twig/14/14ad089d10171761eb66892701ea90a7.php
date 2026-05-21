@@ -488,48 +488,74 @@ class __TwigTemplate_df7ef1af6f801f30bb75c016d9146753 extends Template
 <style>
     .rounded-4 {
         border-radius: 1rem;
+        overflow: hidden;
     }
+    
+    /* Styles du tableau */
+    .table {
+        margin-bottom: 0;
+    }
+    
     .table th {
+        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+        color: #ffffff !important;
+        border: none;
         font-weight: 600;
         font-size: 0.8rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        padding: 12px 8px;
+        letter-spacing: 0.8px;
+        padding: 14px 12px;
         vertical-align: middle;
-        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
-        color: #ffffff !important;
+        white-space: nowrap;
     }
+    
     .table td {
         vertical-align: middle;
         padding: 1rem 0.75rem;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e9ecef;
     }
+    
     .table tbody tr:hover {
-        background-color: rgba(4, 99, 241, 0.05);
+        background-color: rgba(4, 99, 241, 0.04);
     }
-    .bg-primary {
-        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+    
+    .table tbody tr:hover td {
+        background-color: transparent;
     }
-    .text-white {
-        color: #ffffff !important;
-    }
+    
+    /* Cartes et badges */
     .bg-primary.bg-opacity-10 {
         background-color: rgba(13, 110, 253, 0.1) !important;
     }
+    
     .bg-dark {
         background-color: #212529 !important;
     }
+    
+    .text-white {
+        color: #ffffff !important;
+    }
+    
     .flex-fill {
         flex: 1 1 auto !important;
     }
+    
+    /* Responsive */
     @media (max-width: 768px) {
         .table th, .table td {
             padding: 0.75rem 0.5rem;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+        }
+        .table th {
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
         }
         .btn-group-sm .btn {
             padding: 0.25rem 0.5rem;
         }
     }
+    
     @media (max-width: 576px) {
         .col-lg-2.col-md-12 {
             margin-top: 0.5rem;
@@ -791,48 +817,74 @@ class __TwigTemplate_df7ef1af6f801f30bb75c016d9146753 extends Template
 <style>
     .rounded-4 {
         border-radius: 1rem;
+        overflow: hidden;
     }
+    
+    /* Styles du tableau */
+    .table {
+        margin-bottom: 0;
+    }
+    
     .table th {
+        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+        color: #ffffff !important;
+        border: none;
         font-weight: 600;
         font-size: 0.8rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        padding: 12px 8px;
+        letter-spacing: 0.8px;
+        padding: 14px 12px;
         vertical-align: middle;
-        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
-        color: #ffffff !important;
+        white-space: nowrap;
     }
+    
     .table td {
         vertical-align: middle;
         padding: 1rem 0.75rem;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e9ecef;
     }
+    
     .table tbody tr:hover {
-        background-color: rgba(4, 99, 241, 0.05);
+        background-color: rgba(4, 99, 241, 0.04);
     }
-    .bg-primary {
-        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+    
+    .table tbody tr:hover td {
+        background-color: transparent;
     }
-    .text-white {
-        color: #ffffff !important;
-    }
+    
+    /* Cartes et badges */
     .bg-primary.bg-opacity-10 {
         background-color: rgba(13, 110, 253, 0.1) !important;
     }
+    
     .bg-dark {
         background-color: #212529 !important;
     }
+    
+    .text-white {
+        color: #ffffff !important;
+    }
+    
     .flex-fill {
         flex: 1 1 auto !important;
     }
+    
+    /* Responsive */
     @media (max-width: 768px) {
         .table th, .table td {
             padding: 0.75rem 0.5rem;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+        }
+        .table th {
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
         }
         .btn-group-sm .btn {
             padding: 0.25rem 0.5rem;
         }
     }
+    
     @media (max-width: 576px) {
         .col-lg-2.col-md-12 {
             margin-top: 0.5rem;

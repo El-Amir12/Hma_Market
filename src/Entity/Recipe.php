@@ -50,6 +50,9 @@ class Recipe
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\Column(length: 50, options: ['default' => 'food'])]
+    private ?string $type = 'food';
+
     #[ORM\Column]
     private ?bool $is_active = null;
 
@@ -192,6 +195,17 @@ class Recipe
     public function setUser(?User $user): static
     {
         $this->user = $user;
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
         return $this;
     }
 

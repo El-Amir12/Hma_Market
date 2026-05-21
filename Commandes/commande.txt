@@ -106,3 +106,17 @@ EX : // src/DataFixtures/LocationFixtures.php
 php bin/console doctrine:fixtures:load --append
 
 
+
+Dis moi, j'avais pas du tout penser à ce coté 
+Comment gérer le retour chez les fournisseurs on a juste penser à celui des clients 
+L'idée qui m'est venue, lors de la réception des lots c'est à dire des achats, l'utilisateur peut cliquer sur signaler un problème il remplit le formulaire on peut avoir de nouvelles tables qui enregistres les problèmes le montant total 
+Le véritable problème c'est comment les photos seront prises avec le pc je crois que le gestionnaire de stock, le manger ou l'admin peuvent prendre de photos ou vidéos on il doit avoir ce champs et les photos ou vidéos seront stockés dans le dossier public/uploads/avoirs_fournisseurs ou tu peux proposer un truc plus professionnel
+Maintenant je crois que dans la liste des lots qu'on a eu a fait on aura un filtre qui pourra filtrer par lots avec avoirs et lots sans avoirs et là il pourra filtrer 
+Dans le détail d'un lot on affichera éventuellement si ce lot a de problème les prolèmes le montant total avec le statut 
+Lorsque l'utilisateur signale un problème et soumet le fournisseur, le fournisseur doit le recevoir par mail et mettant l'accent sur le numéro de lot et possiblement le numéro d'achat 
+Et là le gestionnaire de stock suit le statut du fournisseur 
+Si ce dernier le réponds avec le numéro de lot avec sa décision , il met à jour le statut et les montants seront calculés en fonction du statut je crois que dans la table stockBatch on aura les colonnes montant_probleme, montant_recupere, montant_perdu
+je crois qu'on pourra améliorer après la carte sur la liste des lots pour mettre en avant ces informations . 
+je crois que si le gestionnaire de stock change le statut d'un problème signaler , le manager ou l'admin peuvent le confirmer mais on doit garder les traces de celui qui a confirmer et afficher les informations dans les détails du problèmes mais uniquement les admin et les manger peuvent le voir . 
+Dit moi d'abord si c'est une excellent idée . 
+Discutons en d'abord et améliorons si possibles le flux avant de penser à la mise en place de celui ci 

@@ -1,0 +1,57 @@
+{# templates/emails/supplier_resolution_notification.html.twig #}
+{% extends 'base_email.html.twig' %}
+
+{% block title %}Résolution de l'avoir n°{{ creditNote.creditNoteNumber }}{% endblock %}
+
+{% block body %}
+<table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <tr>
+        <td style="padding: 20px;">
+            <div style="text-align: center; padding-bottom: 20px; border-bottom: 2px solid #e9ecef;">
+                <h1 style="color: #17a2b8; margin: 0;">
+                    <i class="fas fa-file-invoice-dollar"></i> Avoir n°{{ creditNote.creditNoteNumber }}
+                </h1>
+                <p style="color: #6c757d; margin: 10px 0 0;">
+                    Dossier résolu
+                </p>
+            </div>
+
+            <div style="padding: 20px 0;">
+                <p style="font-size: 16px; line-height: 1.5;">
+                    Bonjour <strong>{{ supplier.name }}</strong>,
+                </p>
+                <p style="font-size: 16px; line-height: 1.5;">
+                    Le dossier concernant l'avoir <strong>n°{{ creditNote.creditNoteNumber }}</strong> 
+                    a été résolu.
+                </p>
+
+                <div style="background-color: #d1ecf1; border-left: 4px solid #17a2b8; padding: 15px; margin: 20px 0; border-radius: 8px;">
+                    <h3 style="margin-top: 0; color: #0c5460;">
+                        <i class="fas fa-check-circle"></i> Résolution finale
+                    </h3>
+                    <table width="100%" style="font-size: 14px;">
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Montant récupéré :</strong></td>
+                            <td style="padding: 5px 0; color: #28a745; font-weight: bold;">{{ (creditNote.recoveredAmount ?: 0)|price_with_currency(creditNote.hmaService) }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Montant perdu :</strong></td>
+                            <td style="padding: 5px 0; color: #dc3545;">{{ (creditNote.lostAmount ?: 0)|price_with_currency(creditNote.hmaService) }}</td>
+                        </tr>
+                        {% if creditNote.resolutionNotes %}
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Notes :</strong></td>
+                            <td style="padding: 5px 0;">{{ creditNote.resolutionNotes }}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+
+                <p style="font-size: 14px; color: #6c757d; text-align: center;">
+                    Merci pour votre collaboration.
+                </p>
+            </div>
+        </td>
+    </tr>
+</table>
+{% endblock %}

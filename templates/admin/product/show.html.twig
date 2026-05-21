@@ -529,36 +529,79 @@
                 </div>
             </div>
             
-            <!-- Informations dates -->
+            <!-- Informations dates et historique -->
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white py-3">
                     <h5 class="card-title mb-0">
-                        <i class="fas fa-calendar-alt me-2"></i> Historique
+                        <i class="fas fa-calendar-alt me-2 text-primary"></i> Historique
                     </h5>
                 </div>
                 <div class="card-body">
                     <div class="list-group list-group-flush">
-                        <div class="list-group-item border-0 px-0 py-1">
-                            <small class="text-muted d-flex justify-content-between">
-                                <span><i class="fas fa-plus-circle me-2"></i> Création</span>
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <small class="text-muted d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-plus-circle text-success me-2"></i> Création</span>
                                 <span>{{ product.createdAt|date('d/m/Y H:i') }}</span>
                             </small>
                         </div>
+                        
                         {% if product.updatedAt %}
-                            <div class="list-group-item border-0 px-0 py-1">
-                                <small class="text-muted d-flex justify-content-between">
-                                    <span><i class="fas fa-edit me-2"></i> Dernière modification</span>
-                                    <span>{{ product.updatedAt|date('d/m/Y H:i') }}</span>
-                                </small>
-                            </div>
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <small class="text-muted d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-edit text-warning me-2"></i> Dernière modification</span>
+                                <span>{{ product.updatedAt|date('d/m/Y H:i') }}</span>
+                            </small>
+                        </div>
                         {% endif %}
+                        
                         {% if product.stockBatches|length > 0 %}
-                            <div class="list-group-item border-0 px-0 py-1">
-                                <small class="text-muted d-flex justify-content-between">
-                                    <span><i class="fas fa-cart-plus me-2"></i> Dernier achat</span>
-                                    <span>{{ product.stockBatches|first.createdAt|date('d/m/Y') }}</span>
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <small class="text-muted d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-cart-plus text-info me-2"></i> Dernier achat</span>
+                                <span>{{ product.stockBatches|first.createdAt|date('d/m/Y') }}</span>
+                            </small>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- 🔥 Traçabilité modification du stock -->
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <small class="text-muted d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-boxes text-primary me-2"></i> Stock actuel</span>
+                                <span class="fw-bold">{{ product.stockQuantity }} {{ product.unit|default('pièce(s)') }}</span>
+                            </small>
+                        </div>
+                        
+                        {% if product.lastStockUpdatedBy %}
+                        <div class="list-group-item border-0 px-0 py-2 bg-light rounded mt-1">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <i class="fas fa-history text-info me-2"></i>
+                                    <span class="small fw-semibold">Dernière modification du stock</span>
+                                </div>
+                                <span class="badge bg-secondary">{{ product.lastStockUpdatedAt|date('d/m/Y H:i:s') }}</span>
+                            </div>
+                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-user me-1"></i> 
+                                    <strong>Modifié par :</strong> {{ product.lastStockUpdatedBy.fullName|default(product.lastStockUpdatedBy.email) }}
                                 </small>
                             </div>
+                            {% endif %}
+                            <div class="mt-1">
+                                <small class="text-muted">
+                                    <i class="fas fa-chart-line me-1"></i>
+                                    <strong>Stock après modification :</strong> {{ product.stockQuantity }} {{ product.unit|default('pièce(s)') }}
+                                </small>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <small class="text-muted d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-info-circle me-2"></i> Stock initial</span>
+                                <span>{{ product.stockQuantity }} {{ product.unit|default('pièce(s)') }}</span>
+                            </small>
+                        </div>
                         {% endif %}
                     </div>
                 </div>

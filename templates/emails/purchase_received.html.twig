@@ -5,82 +5,194 @@
     <title>Confirmation de réception - Commande {{ purchase.purchaseNumber }}</title>
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
         h1 { color: #0463f1; }
+        h2 { color: #333; font-size: 18px; margin-top: 20px; }
         .total { font-size: 18px; font-weight: bold; color: #0463f1; }
         .footer { margin-top: 30px; font-size: 12px; color: #777; text-align: center; border-top: 1px solid #eee; padding-top: 15px; }
-        .footer a { color: #0463f1; text-decoration: none; }
-        .footer a:hover { text-decoration: underline; }
         table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: top; }
-        th { background-color: #f2f2f2; }
-        .product-details { font-size: 0.9em; color: #555; }
-        .product-details span { display: block; }
-        @media (max-width: 500px) {
-            th, td { padding: 6px; font-size: 0.85em; }
+        th, td { border: 1px solid #ddd; padding: 12px 8px; text-align: left; vertical-align: top; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .product-details { font-size: 0.85em; color: #555; margin-top: 5px; }
+        .product-details span { display: block; margin: 2px 0; }
+        .problem-row { background-color: #fff3cd; }
+        .problem-badge {
+            display: inline-block;
+            background-color: #dc3545;
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .ok-badge {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .credit-note-info {
+            background-color: #f8f9fa;
+            border-left: 4px solid #dc3545;
+            padding: 12px;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        .summary-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .date-info {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+        @media (max-width: 600px) {
+            th, td { padding: 8px 6px; font-size: 0.85em; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>✅ Confirmation de réception</h1>
-        <p>Bonjour {{ purchase.supplier.name }},</p>
+        <p>Bonjour <strong>{{ purchase.supplier.name }}</strong>,</p>
         <p>Nous vous informons que la commande <strong>{{ purchase.purchaseNumber }}</strong> a été réceptionnée avec succès.</p>
 
-        <h2>Détails de la commande</h2>
+        <h2>📋 Détails de la commande</h2>
         <p><strong>Date de réception :</strong> {{ purchase.receivedAt|date('d/m/Y H:i') }}</p>
 
+        <!-- Tableau principal -->
         <table>
             <thead>
                 <tr>
-                    <th>Produit</th>
-                    <th>Quantité</th>
-                    <th>Prix unitaire</th>
-                    <th>Total</th>
+                    <th style="width: 35%">Produit</th>
+                    <th style="width: 15%">Quantité</th>
+                    <th style="width: 20%">Prix unitaire</th>
+                    <th style="width: 20%">Total</th>
+                    <th style="width: 10%">Statut</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in purchase.purchaseItems %}
-                <tr>
-                    <td>
-                        <strong>{{ item.product.name }}</strong>
-                        {% if item.product.barcode %}
-                            <div class="product-details">
-                                <span>Code: {{ item.product.barcode }}</span>
-                            </div>
+                    {# Récupérer le stock batch associé #}
+                    {% set stockBatch = null %}
+                    {% for batch in item.product.stockBatches %}
+                        {% if batch.purchaseItemId == item.id %}
+                            {% set stockBatch = batch %}
                         {% endif %}
-                        {% if item.batchNumber %}
-                            <div class="product-details">
-                                <span>Lot: {{ item.batchNumber }}</span>
-                            </div>
+                    {% endfor %}
+                    
+                    {# Vérifier si un problème a été signalé #}
+                    {% set hasIssue = false %}
+                    {% set creditNote = null %}
+                    {% for note in supplier_credit_notes|default([]) %}
+                        {% if note.stockBatch.id == stockBatch.id %}
+                            {% set hasIssue = true %}
+                            {% set creditNote = note %}
                         {% endif %}
-                        {% if item.manufacturingDate %}
+                    {% endfor %}
+                    
+                    <tr {% if hasIssue %}class="problem-row"{% endif %}>
+                        <td>
+                            <strong>{{ item.product.name }}</strong>
                             <div class="product-details">
-                                <span>Fabrication: {{ item.manufacturingDate|date('d/m/Y') }}</span>
+                                {% if item.product.barcode %}
+                                    <span>📦 Code: {{ item.product.barcode }}</span>
+                                {% endif %}
+                                {% if stockBatch %}
+                                    <span>🏷️ Lot: {{ stockBatch.batchNumber }}</span>
+                                    {% if stockBatch.manufacturingDate %}
+                                        <span>🏭 Fabrication: {{ stockBatch.manufacturingDate|date('d/m/Y') }}</span>
+                                    {% endif %}
+                                    {% if stockBatch.expiryDate %}
+                                        <span>⏰ Expiration: {{ stockBatch.expiryDate|date('d/m/Y') }}</span>
+                                    {% endif %}
+                                {% endif %}
                             </div>
-                        {% endif %}
-                        {% if item.expiryDate %}
-                            <div class="product-details">
-                                <span>Expiration: {{ item.expiryDate|date('d/m/Y') }}</span>
-                            </div>
-                        {% endif %}
-                    </td>
-                    <td>{{ item.quantity }} {{ item.product.unit|default('pièce') }}</td>
-                    <td>{{ item.unitPrice|number_format(0, ',', ' ') }} FCFA</td>
-                    <td>{{ item.totalPrice|number_format(0, ',', ' ') }} FCFA</td>
-                </tr>
+                        </td>
+                        <td style="text-align: center">{{ item.quantity }}</td>
+                        <td style="text-align: right">{{ item.unitPrice|number_format(0, ',', ' ') }} FCFA</td>
+                        <td style="text-align: right"><strong>{{ item.totalPrice|number_format(0, ',', ' ') }} FCFA</strong></td>
+                        <td style="text-align: center">
+                            {% if hasIssue %}
+                                <span class="problem-badge">⚠️ Problème</span>
+                            {% else %}
+                                <span class="ok-badge">✓ OK</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    
+                    {# Afficher les détails du problème si existant #}
+                    {% if hasIssue and creditNote %}
+                        <tr class="problem-row">
+                            <td colspan="5" style="background-color: #fff3cd; padding: 12px;">
+                                <div class="credit-note-info">
+                                    <strong>📝 Détail du problème :</strong><br>
+                                    • <strong>Type :</strong> {{ creditNote.issueTypeLabel }}<br>
+                                    • <strong>Quantité concernée :</strong> {{ creditNote.affectedQuantity|default(item.quantity) }} unité(s)<br>
+                                    • <strong>Montant déduit :</strong> {{ creditNote.declaredAmount|price_with_currency(purchase.hmaService) }}<br>
+                                    • <strong>Description :</strong> {{ creditNote.description|nl2br }}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>
 
-        <p><strong>Total TTC :</strong> <span class="total">{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</span></p>
+        <!-- Récapitulatif des montants -->
+        {% if supplier_credit_notes|default([])|length > 0 %}
+            <div class="summary-box">
+                <h3>⚠️ Récapitulatif des problèmes signalés</h3>
+                <table style="width: 100%; margin: 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>Produit concerné</th>
+                            <th>Lot</th>
+                            <th>Type</th>
+                            <th>Quantité</th>
+                            <th>Montant déduit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for creditNote in supplier_credit_notes %}
+                            <tr>
+                                <td>{{ creditNote.stockBatch.product.name }}</td>
+                                <td>{{ creditNote.stockBatch.batchNumber }}</td>
+                                <td>{{ creditNote.issueTypeLabel }}</td>
+                                <td>{{ creditNote.affectedQuantity|default(0) }} unité(s)</td>
+                                <td>{{ creditNote.declaredAmount|price_with_currency(purchase.hmaService) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
 
-        <p>Nous vous remercions pour votre service.</p>
-        <p>Cordialement,<br>{{ purchase.hmaService.companyName }}</p>
+        <!-- Récapitulatif final des montants -->
+        <div style="background-color: #e8f4f8; border-radius: 5px; padding: 15px; margin: 15px 0; text-align: center;">
+            <p style="margin: 5px 0;"><strong>💰 Total TTC initial :</strong> {{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</p>
+            {% if supplier_credit_notes|default([])|length > 0 %}
+                <p style="margin: 5px 0; color: #dc3545;"><strong>➖ Montant déduit :</strong> {{ total_deducted|default(0)|number_format(0, ',', ' ') }} FCFA</p>
+                <p style="margin: 5px 0; font-size: 18px;"><strong>✅ Montant net à régler :</strong> {{ net_amount|default(purchase.totalAmount)|number_format(0, ',', ' ') }} FCFA</p>
+            {% else %}
+                <p style="margin: 5px 0; font-size: 18px;"><strong>✅ Montant total :</strong> {{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</p>
+            {% endif %}
+        </div>
+
+        <div style="margin: 20px 0; text-align: center;">
+            <p>Nous vous remercions pour votre service et votre réactivité.</p>
+            <p>Cordialement,<br><strong>{{ purchase.hmaService.companyName }}</strong></p>
+        </div>
         
         <div class="footer">
-            <p>Découvrez nos produits sur <a href="{{ app_url }}">{{ app_url }}</a> – Votre partenaire de confiance.</p>
-            <p>Ce message est un accusé de réception automatique. Merci de ne pas y répondre.</p>
+            <p>📧 Pour toute question, contactez-nous à <a href="mailto:{{ support_email|default('support@hma-market.com') }}">{{ support_email|default('support@hma-market.com') }}</a></p>
+            <p>🌐 Découvrez nos produits sur <a href="{{ app_url }}">{{ app_url }}</a></p>
+            <p>📄 Ce message est un accusé de réception automatique.</p>
         </div>
     </div>
 </body>

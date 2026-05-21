@@ -127,16 +127,6 @@ class MenuBuilder
             ]
         ];
 
-        // Réimpression des tickets (uniquement pour restaurant)
-        if ($this->isRestaurant()) {
-            $salesChildren[] = [
-                'type' => 'link',
-                'route' => 'app_orders_index',
-                'label' => 'Réimpression tickets',
-                'icon' => 'fas fa-print'
-            ];
-        }
-
         return [
             'type' => 'dropdown',
             'label' => 'Ventes',
@@ -320,6 +310,13 @@ class MenuBuilder
                         'route' => 'purchase_index', 
                         'label' => 'Commandes d\'achat',
                         'icon' => 'fas fa-clipboard-list',
+                        'coming_soon' => false
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_supplier_credit_note_index', 
+                        'label' => 'Avoirs Fournisseurs',
+                        'icon' => 'fas fa-file-invoice-dollar',
                         'coming_soon' => false
                     ],
                     [

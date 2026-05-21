@@ -5,11 +5,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\HmaService;
 use App\Entity\Product;
+use App\Entity\Promotion;
 use App\Entity\Recipe;
 use App\Entity\RecipeItem;
 use App\Form\RecipeType;
 use App\Service\UniqueNameValidator;
 use App\Repository\CategoryRecipeRepository;
+use App\Repository\PromotionRepository;
 use App\Repository\RecipeRepository;
 use App\Service\UnitConverter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,7 +23,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-
 #[Route('/admin/recipe')]
 final class RecipeController extends AbstractController
 {
@@ -30,7 +31,8 @@ final class RecipeController extends AbstractController
     public function __construct(
         private readonly SluggerInterface $slugger,
         private readonly UnitConverter $unitConverter,
-        private readonly UniqueNameValidator $uniqueNameValidator
+        private readonly UniqueNameValidator $uniqueNameValidator,
+        private readonly EntityManagerInterface $entityManager
     ) {}
 
     private function getCurrentHmaService(): ?HmaService
@@ -61,7 +63,7 @@ final class RecipeController extends AbstractController
     }
 
     #[Route(name: 'app_admin_recipe_index', methods: ['GET'])]
-    public function index(Request $request, RecipeRepository $recipeRepository, CategoryRecipeRepository $categoryRepository): Response
+    public function index(Request $request, RecipeRepository $recipeRepository, CategoryRecipeRepository $categoryRepository, PromotionRepository $promotionRepository): Response
     {
         $this->checkAccess();
         $hmaService = $this->getCurrentHmaService();
@@ -74,9 +76,15 @@ final class RecipeController extends AbstractController
         $search = $request->query->get('search', '');
         $status = $request->query->get('status', '');
         $categoryId = $request->query->getInt('category', 0);
+        $type = $request->query->get('type', '');
         $subscriptionStatus = $request->query->get('subscription_status', '');
+        $promotionId = $request->query->getInt('promotion', 0);
 
-        $categories = $categoryRepository->findHierarchicalCategoriesWithCount();
+        // Récupérer les catégories pour le select
+        $categoriesForSelect = $categoryRepository->getCategoriesForSelect($hmaService);
+        
+        // 🔥 Récupérer UNIQUEMENT les promotions qui concernent les recettes
+        $promotions = $promotionRepository->findActiveForRecipes($hmaService);
 
         $paginator = $recipeRepository->findFilteredPaginated(
             $hmaService,
@@ -85,14 +93,16 @@ final class RecipeController extends AbstractController
             $subscriptionStatus,
             $search,
             $page,
-            $limit
+            $limit,
+            $type,
+            $promotionId
         );
 
-        $totalFiltered = $recipeRepository->countFiltered($hmaService, $categoryId, $status, $subscriptionStatus, $search);
-        $activeFiltered = $recipeRepository->countFiltered($hmaService, $categoryId, 'active', $subscriptionStatus, $search);
-        $inactiveFiltered = $recipeRepository->countFiltered($hmaService, $categoryId, 'inactive', $subscriptionStatus, $search);
-        $subscriptionActiveFiltered = $recipeRepository->countFiltered($hmaService, $categoryId, $status, 'active', $search);
-        $subscriptionInactiveFiltered = $recipeRepository->countFiltered($hmaService, $categoryId, $status, 'inactive', $search);
+        $totalFiltered = $recipeRepository->countFiltered($hmaService, $categoryId, $status, $subscriptionStatus, $search, $type, $promotionId);
+        $activeFiltered = $recipeRepository->countFiltered($hmaService, $categoryId, 'active', $subscriptionStatus, $search, $type, $promotionId);
+        $inactiveFiltered = $recipeRepository->countFiltered($hmaService, $categoryId, 'inactive', $subscriptionStatus, $search, $type, $promotionId);
+        $subscriptionActiveFiltered = $recipeRepository->countFiltered($hmaService, $categoryId, $status, 'active', $search, $type, $promotionId);
+        $subscriptionInactiveFiltered = $recipeRepository->countFiltered($hmaService, $categoryId, $status, 'inactive', $search, $type, $promotionId);
 
         $activeCount = $recipeRepository->countSubscriptionActive($hmaService);
         $limits = $hmaService->getCurrentLimits();
@@ -102,15 +112,20 @@ final class RecipeController extends AbstractController
         $totalItems = $paginator->count();
         $totalPages = ceil($totalItems / $limit);
 
+        $companyName = $hmaService->getCompanyName() ?? 'Restaurant';
+
         return $this->render('admin/recipe/index.html.twig', [
             'recipes' => $paginator,
             'currentPage' => $page,
             'totalPages' => $totalPages,
             'search' => $search,
-            'categories' => $categories,
+            'categories' => $categoriesForSelect,
             'selectedCategory' => $categoryId,
+            'selectedType' => $type,
             'selectedStatus' => $status,
             'selectedSubscriptionStatus' => $subscriptionStatus,
+            'selectedPromotion' => $promotionId,
+            'promotions' => $promotions,
             'totalItems' => $totalItems,
             'totalFiltered' => $totalFiltered,
             'activeFiltered' => $activeFiltered,
@@ -121,6 +136,7 @@ final class RecipeController extends AbstractController
             'quota' => $quota === PHP_INT_MAX ? 'Illimité' : $quota,
             'quotaReached' => $quotaReached,
             'companyType' => $hmaService->getType(),
+            'companyName' => $companyName,
         ]);
     }
 

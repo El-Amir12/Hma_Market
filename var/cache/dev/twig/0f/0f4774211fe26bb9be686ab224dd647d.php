@@ -552,47 +552,170 @@ class __TwigTemplate_00442496018ad2893eef22e1e52e9ba6 extends Template
 <style>
     .rounded-4 {
         border-radius: 1rem;
+        overflow: hidden;
     }
+    
+    /* Dégradés */
     .bg-gradient-light {
-        background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     }
+    
     .bg-gradient-primary {
         background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
     }
+    
+    /* Cartes d'informations */
     .info-card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+        border-radius: 12px;
     }
+    
     .info-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        border-color: transparent;
     }
+    
+    /* Boutons */
     .btn-primary {
         background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
         border: none;
         transition: all 0.3s ease;
+        border-radius: 10px;
+        font-weight: 500;
     }
+    
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
     }
+    
+    .btn-danger {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        font-weight: 500;
+    }
+    
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+    }
+    
+    .btn-outline-secondary {
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-outline-secondary:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* Styles du tableau */
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table th {
+        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+        color: #ffffff !important;
+        border: none;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 14px 12px;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    
+    .table td {
+        vertical-align: middle;
+        padding: 1rem 0.75rem;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .table tbody tr {
+        transition: background-color 0.2s ease;
+    }
+    
+    .table tbody tr:hover {
+        background-color: rgba(4, 99, 241, 0.04);
+    }
+    
+    .table tbody tr:hover td {
+        background-color: transparent;
+    }
+    
+    /* Badges */
+    .badge {
+        font-weight: 500;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+    }
+    
     .bg-dark {
         background-color: #212529 !important;
     }
+    
     .text-white {
         color: #ffffff !important;
     }
+    
+    /* Modal */
+    .modal-content {
+        border-radius: 1rem;
+        border: none;
+    }
+    
+    .modal-header {
+        border-bottom: none;
+    }
+    
+    .modal-footer {
+        border-top: none;
+    }
+    
+    /* Responsive */
     @media (max-width: 768px) {
         .display-5 {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
         }
         .info-card .fs-1 {
-            font-size: 2rem;
+            font-size: 1.75rem;
         }
         .info-card .fs-4 {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
         }
         .info-card .fs-5 {
-            font-size: 1rem;
+            font-size: 0.9rem;
+        }
+        .table th, .table td {
+            padding: 0.75rem 0.5rem;
+            font-size: 0.7rem;
+        }
+        .table th {
+            font-size: 0.65rem;
+            letter-spacing: 0.5px;
+        }
+        .badge {
+            padding: 0.35rem 0.5rem;
+            font-size: 0.7rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .btn-group {
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .btn-group .btn {
+            flex: 1;
+            min-width: 100px;
+        }
+        .d-flex.gap-2 {
+            flex-wrap: wrap;
         }
     }
 </style>
@@ -933,47 +1056,170 @@ class __TwigTemplate_00442496018ad2893eef22e1e52e9ba6 extends Template
 <style>
     .rounded-4 {
         border-radius: 1rem;
+        overflow: hidden;
     }
+    
+    /* Dégradés */
     .bg-gradient-light {
-        background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     }
+    
     .bg-gradient-primary {
         background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
     }
+    
+    /* Cartes d'informations */
     .info-card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+        border-radius: 12px;
     }
+    
     .info-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        border-color: transparent;
     }
+    
+    /* Boutons */
     .btn-primary {
         background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
         border: none;
         transition: all 0.3s ease;
+        border-radius: 10px;
+        font-weight: 500;
     }
+    
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
     }
+    
+    .btn-danger {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        font-weight: 500;
+    }
+    
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+    }
+    
+    .btn-outline-secondary {
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-outline-secondary:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* Styles du tableau */
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table th {
+        background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+        color: #ffffff !important;
+        border: none;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 14px 12px;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    
+    .table td {
+        vertical-align: middle;
+        padding: 1rem 0.75rem;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .table tbody tr {
+        transition: background-color 0.2s ease;
+    }
+    
+    .table tbody tr:hover {
+        background-color: rgba(4, 99, 241, 0.04);
+    }
+    
+    .table tbody tr:hover td {
+        background-color: transparent;
+    }
+    
+    /* Badges */
+    .badge {
+        font-weight: 500;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+    }
+    
     .bg-dark {
         background-color: #212529 !important;
     }
+    
     .text-white {
         color: #ffffff !important;
     }
+    
+    /* Modal */
+    .modal-content {
+        border-radius: 1rem;
+        border: none;
+    }
+    
+    .modal-header {
+        border-bottom: none;
+    }
+    
+    .modal-footer {
+        border-top: none;
+    }
+    
+    /* Responsive */
     @media (max-width: 768px) {
         .display-5 {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
         }
         .info-card .fs-1 {
-            font-size: 2rem;
+            font-size: 1.75rem;
         }
         .info-card .fs-4 {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
         }
         .info-card .fs-5 {
-            font-size: 1rem;
+            font-size: 0.9rem;
+        }
+        .table th, .table td {
+            padding: 0.75rem 0.5rem;
+            font-size: 0.7rem;
+        }
+        .table th {
+            font-size: 0.65rem;
+            letter-spacing: 0.5px;
+        }
+        .badge {
+            padding: 0.35rem 0.5rem;
+            font-size: 0.7rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .btn-group {
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .btn-group .btn {
+            flex: 1;
+            min-width: 100px;
+        }
+        .d-flex.gap-2 {
+            flex-wrap: wrap;
         }
     }
 </style>

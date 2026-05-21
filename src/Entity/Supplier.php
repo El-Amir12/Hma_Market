@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SupplierRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Supplier
 {
     #[ORM\Id]
@@ -36,7 +37,7 @@ class Supplier
     #[ORM\Column]
     private ?\DateTime $created_at = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $updated_at = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
@@ -55,6 +56,9 @@ class Supplier
     public function __construct()
     {
         $this->purchases = new ArrayCollection();
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
+        $this->is_active = true;
     }
 
     public function getId(): ?int
@@ -70,7 +74,6 @@ class Supplier
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -82,7 +85,6 @@ class Supplier
     public function setContactPerson(string $contact_person): static
     {
         $this->contact_person = $contact_person;
-
         return $this;
     }
 
@@ -94,7 +96,6 @@ class Supplier
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
-
         return $this;
     }
 
@@ -106,7 +107,6 @@ class Supplier
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -118,7 +118,6 @@ class Supplier
     public function setAdress(string $adress): static
     {
         $this->adress = $adress;
-
         return $this;
     }
 
@@ -130,7 +129,6 @@ class Supplier
     public function setIsActive(bool $is_active): static
     {
         $this->is_active = $is_active;
-
         return $this;
     }
 
@@ -142,7 +140,6 @@ class Supplier
     public function setCreatedAt(\DateTime $created_at): static
     {
         $this->created_at = $created_at;
-
         return $this;
     }
 
@@ -154,7 +151,6 @@ class Supplier
     public function setUpdatedAt(\DateTime $updated_at): static
     {
         $this->updated_at = $updated_at;
-
         return $this;
     }
 
@@ -183,19 +179,16 @@ class Supplier
             $this->purchases->add($purchase);
             $purchase->setSupplier($this);
         }
-
         return $this;
     }
 
     public function removePurchase(Purchase $purchase): static
     {
         if ($this->purchases->removeElement($purchase)) {
-            // set the owning side to null (unless already changed)
             if ($purchase->getSupplier() === $this) {
                 $purchase->setSupplier(null);
             }
         }
-
         return $this;
     }
 
@@ -216,5 +209,23 @@ class Supplier
     public function getCompanyName(): ?string
     {
         return $this->getName();
+    }
+
+    // ==================== LIFECYCLE CALLBACKS ====================
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
+        if ($this->is_active === null) {
+            $this->is_active = true;
+        }
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updated_at = new \DateTime();
     }
 }

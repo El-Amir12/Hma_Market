@@ -14,7 +14,7 @@ use Twig\Source;
 use Twig\Template;
 use Twig\TemplateWrapper;
 
-/* admin/location/_form.html.twig */
+/* admin/Location/_form.html.twig */
 class __TwigTemplate_36056cbdbcac6fec9aed4d75955454fd extends Template
 {
     private Source $source;
@@ -41,10 +41,10 @@ class __TwigTemplate_36056cbdbcac6fec9aed4d75955454fd extends Template
     {
         $macros = $this->macros;
         $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
-        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/location/_form.html.twig"));
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/Location/_form.html.twig"));
 
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/location/_form.html.twig"));
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/Location/_form.html.twig"));
 
         // line 2
         yield "
@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getTemplateName(): string
     {
-        return "admin/location/_form.html.twig";
+        return "admin/Location/_form.html.twig";
     }
 
     /**
@@ -768,6 +768,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 </style>
-{% endblock %}", "admin/location/_form.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\Location\\_form.html.twig");
+{% endblock %}", "admin/Location/_form.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\Location\\_form.html.twig");
     }
 }

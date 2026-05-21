@@ -8,299 +8,633 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style>
+    :root {
+        --primary: #0463f1;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --info: #3b82f6;
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+    }
+    
     .batch-card {
         transition: all 0.3s ease;
-        border-left: 4px solid #0463f1;
-        margin-bottom: 1rem;
+        border-left: 4px solid var(--primary);
+        margin-bottom: 1.25rem;
+        border-radius: 0.75rem;
+        overflow: hidden;
     }
     .batch-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
+    .batch-card.has-issue {
+        border-left-color: var(--warning);
+        background-color: #fffbeb;
+    }
+    .batch-card.removed {
+        opacity: 0.6;
+        background-color: var(--gray-100);
+        border-left-color: var(--gray-600);
+    }
+    
     .perishable-badge {
-        background-color: #ffc107;
-        color: #000;
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.25rem;
+        background-color: #fef3c7;
+        color: #92400e;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
     }
+    
     .remove-checkbox {
         width: 1.2rem;
         height: 1.2rem;
         cursor: pointer;
+        accent-color: var(--danger);
     }
-    .card-footer-actions {
-        background: #f8f9fa;
-        border-top: 1px solid #e9ecef;
+    
+    .issue-indicator {
+        background: #fef3c7;
+        border-bottom: 1px solid #fde68a;
+        padding: 0.6rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.85rem;
     }
-    .select2-container--bootstrap-5 .select2-selection {
-        min-height: 38px;
-        border-radius: 0.375rem;
+    .issue-indicator i {
+        color: var(--warning);
+        font-size: 1.1rem;
     }
-    .location-header {
+    .issue-indicator strong {
+        color: #92400e;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+    }
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .reception-toolbar {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
-    .btn-sm-custom {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
+    
+    .select2-container--bootstrap-5 .select2-selection {
+        border-radius: 0.5rem;
+        border-color: var(--gray-200);
+        min-height: 38px;
+    }
+    
+    /* Styles pour les pièces jointes */
+    .attachment-preview {
+        position: relative;
+        display: inline-block;
+        margin: 5px;
+    }
+    .attachment-preview img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+    .attachment-preview .remove-attachment {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: var(--danger);
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        z-index: 10;
+    }
+    .attachment-preview .remove-attachment:hover {
+        background: #c82333;
+        transform: scale(1.1);
+    }
+    .attachment-preview .file-placeholder {
+        width: 80px;
+        height: 80px;
+        background: var(--gray-100);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--gray-200);
+    }
+    
+    @media (max-width: 768px) {
+        .reception-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .batch-card .row {
+            flex-direction: column;
+        }
+        .batch-card .col-md-4, .batch-card .col-md-6 {
+            margin-bottom: 0.75rem;
+        }
     }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1>
-                    <i class="bi bi-box-seam text-primary"></i>
-                    Réceptionner la commande
-                </h1>
-                <div>
-                    <a href="{{ path('purchase_show', {id: purchase.id}) }}" class="btn btn-outline-secondary me-2">
-                        <i class="bi bi-eye"></i> Voir la commande
-                    </a>
-                    <a href="{{ path('purchase_index') }}" class="btn btn-outline-primary">
-                        <i class="bi bi-arrow-left"></i> Retour
-                    </a>
+<div class="container-fluid px-4 py-3">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ path('purchase_index') }}">Commandes</a></li>
+                    <li class="breadcrumb-item active">{{ purchase.purchaseNumber }}</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0 fw-bold">
+                <i class="bi bi-box-seam me-2 text-primary"></i>
+                Réceptionner la commande
+            </h1>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ path('purchase_show', {id: purchase.id}) }}" class="btn btn-outline-secondary">
+                <i class="bi bi-eye me-1"></i> Détails
+            </a>
+            <a href="{{ path('purchase_index') }}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left me-1"></i> Retour
+            </a>
+        </div>
+    </div>
+
+    <!-- Carte récapitulative commande -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body py-3">
+            <div class="row g-3 text-center text-md-start">
+                <div class="col-md-3">
+                    <div class="small text-muted text-uppercase">N° commande</div>
+                    <div class="fw-bold">{{ purchase.purchaseNumber }}</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="small text-muted text-uppercase">Fournisseur</div>
+                    <div class="fw-bold">{{ purchase.supplier.name }}</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="small text-muted text-uppercase">Date commande</div>
+                    <div>{{ purchase.createdAt|date('d/m/Y') }}</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="small text-muted text-uppercase">Montant total</div>
+                    <div class="fw-bold text-primary">{{ purchase.totalAmount|price_with_currency(purchase.hmaService) }}</div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Informations commande -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">
-                        <i class="bi bi-info-circle"></i> Informations commande
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <small class="text-muted">N° commande</small>
-                            <div class="fw-bold">{{ purchase.purchaseNumber }}</div>
-                        </div>
-                        <div class="col-md-3">
-                            <small class="text-muted">Fournisseur</small>
-                            <div class="fw-bold">{{ purchase.supplier.name }}</div>
-                        </div>
-                        <div class="col-md-3">
-                            <small class="text-muted">Date commande</small>
-                            <div class="fw-bold">{{ purchase.createdAt|date('d/m/Y H:i') }}</div>
-                        </div>
-                        <div class="col-md-3">
-                            <small class="text-muted">Total initial</small>
-                            <div class="fw-bold text-primary">{{ purchase.totalAmount|price_with_currency(purchase.hmaService) }}</div>
-                        </div>
-                    </div>
-                </div>
+    {# Récupération des problèmes en session #}
+    {% set sessionIssues = app.session.get('pending_issues', []) %}
+    {% set pendingCount = sessionIssues|length %}
+
+    <!-- Barre d'outils réception -->
+    <div class="reception-toolbar">
+        <div class="d-flex align-items-center gap-3">
+            <div class="stat-card p-2 px-3">
+                <i class="bi bi-box-seam text-primary me-1"></i>
+                <span class="fw-bold">{{ purchase.purchaseItems|length }}</span>
+                <span class="text-muted small">articles</span>
             </div>
+            {% if pendingCount > 0 %}
+            <div class="stat-card p-2 px-3" style="background: #fef3c7;">
+                <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>
+                <span class="fw-bold text-warning">{{ pendingCount }}</span>
+                <span class="text-muted small">problèmes signalés</span>
+            </div>
+            {% endif %}
+        </div>
+        <div class="text-muted small">
+            <i class="bi bi-info-circle me-1"></i>
+            Les problèmes signalés seront traités à la validation
+        </div>
+    </div>
 
-            <!-- Formulaire de réception -->
-            <form method="POST" class="receive-form">
-                {% for item in purchase.purchaseItems %}
-                    {% set product = item.product %}
-                    <div class="card shadow-sm batch-card">
-                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                {% if product.image %}
-                                    <img src="{{ asset('uploads/products/' ~ product.image) }}" 
-                                         alt="{{ product.name }}" 
-                                         class="rounded me-3"
-                                         style="width: 40px; height: 40px; object-fit: cover;">
-                                {% else %}
-                                    <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                        <i class="bi bi-box text-secondary"></i>
-                                    </div>
+    <!-- Formulaire de réception -->
+    <form method="POST" class="receive-form" id="receiveForm">
+        {% for item in purchase.purchaseItems %}
+            {% set product = item.product %}
+            {% set itemTotalPrice = (item.unitPrice ?: 0) * item.quantity %}
+            
+            {# Vérifier si un problème a été signalé #}
+            {% set hasPendingIssue = false %}
+            {% set pendingIssue = null %}
+            {% for issue in sessionIssues %}
+                {% if issue.batch_id == item.id %}
+                    {% set hasPendingIssue = true %}
+                    {% set pendingIssue = issue %}
+                {% endif %}
+            {% endfor %}
+            
+            <div class="card batch-card {% if hasPendingIssue %}has-issue{% endif %}" data-item-id="{{ item.id }}">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div class="d-flex align-items-center gap-3">
+                        {% if product.image %}
+                            <img src="{{ asset('uploads/products/' ~ product.image) }}" 
+                                 alt="{{ product.name }}" 
+                                 class="rounded"
+                                 style="width: 45px; height: 45px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                <i class="bi bi-box text-secondary fs-5"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h6 class="mb-0 fw-semibold">{{ product.name }}</h6>
+                            <div class="small text-muted">
+                                <span class="me-2">Code: {{ product.barcode }}</span>
+                                {% if product.hasExpiryDate %}
+                                    <span class="perishable-badge">
+                                        <i class="bi bi-calendar-exclamation me-1"></i>Périssable
+                                    </span>
                                 {% endif %}
-                                <div>
-                                    <h6 class="mb-0">{{ product.name }}</h6>
-                                    <small class="text-muted">
-                                        Code: {{ product.barcode }} | 
-                                        Unité: {{ product.unit|default('pièce') }}
-                                        {% if product.hasExpiryDate %}
-                                            <span class="perishable-badge ms-2">
-                                                <i class="bi bi-calendar-exclamation"></i> Périssable
-                                            </span>
-                                        {% endif %}
-                                    </small>
-                                </div>
                             </div>
-                            <div class="text-end">
-                                <div class="fw-bold text-primary">{{ item.totalPrice|price_with_currency(purchase.hmaService) }}</div>
-                                <small class="text-muted">{{ item.unitPrice|price_with_currency(purchase.hmaService) }}/unité</small>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <input type="hidden" name="item_id[]" value="{{ item.id }}">
-                            
-                            <div class="row">
-                                <div class="col-md-12 mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input remove-checkbox" type="checkbox" 
-                                               name="remove_{{ item.id }}" id="remove_{{ item.id }}" value="1">
-                                        <label class="form-check-label text-danger" for="remove_{{ item.id }}">
-                                            <i class="bi bi-trash"></i> Ne pas réceptionner cet article
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-bold">
-                                        <i class="bi bi-upc-scan"></i> Numéro de lot
-                                        {% if product.hasExpiryDate %}
-                                            <span class="text-danger">*</span>
-                                        {% endif %}
-                                    </label>
-                                    <input type="text" 
-                                           name="batch_number_{{ item.id }}" 
-                                           class="form-control" 
-                                           value="{{ item.batchNumber ?: 'LOT-' ~ purchase.purchaseNumber ~ '-' ~ loop.index }}"
-                                           {% if product.hasExpiryDate %}required{% endif %}
-                                           placeholder="Ex: LOT-20250328-001">
-                                    <small class="text-muted">Laissez vide pour génération automatique</small>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-bold">
-                                        <i class="bi bi-box-seam"></i> Quantité commandée
-                                    </label>
-                                    <input type="number" 
-                                           class="form-control" 
-                                           value="{{ item.quantity }}" 
-                                           readonly disabled>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-bold">
-                                        <i class="bi bi-check-circle"></i> Quantité reçue
-                                    </label>
-                                    <input type="number" 
-                                           name="received_quantity_{{ item.id }}" 
-                                           class="form-control received-quantity" 
-                                           value="{{ item.quantity }}"
-                                           min="0"
-                                           step="1">
-                                </div>
-                            </div>
-
-                            <div class="row mt-3">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">
-                                        <i class="bi bi-tag"></i> Prix unitaire commandé
-                                    </label>
-                                    <input type="text" 
-                                        class="form-control" 
-                                        value="{{ (item.unitPrice ?: 0)|price_with_currency(purchase.hmaService) }}" 
-                                        readonly disabled>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">
-                                        <i class="bi bi-pencil"></i> Prix unitaire réel
-                                    </label>
-                                    <input type="number" 
-                                        name="received_price_{{ item.id }}" 
-                                        class="form-control received-price" 
-                                        value="{{ item.unitPrice ?: 0 }}"
-                                        step="0.01"
-                                        min="0">
-                                    <small class="text-muted">Prix en {{ purchase.hmaService.country ? (purchase.hmaService.country == 'CM' ? 'XAF' : 'FCFA') : 'XAF' }}</small>
-                                </div>
-                            </div>
-
-                            <!-- Sélection de l'emplacement avec Select2 -->
-                            <div class="row mt-3">
-                                <div class="col-md-12 mb-3">
-                                    <div class="location-header">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-geo-alt"></i> Emplacement
-                                        </label>
-                                        <a href="{{ path('app_admin_location_index') }}" 
-                                           class="btn btn-outline-primary btn-sm-custom" 
-                                           target="_blank"
-                                           title="Gérer les emplacements">
-                                            <i class="bi bi-geo-alt"></i> Gérer les emplacements
-                                        </a>
-                                    </div>
-                                    <select name="location_id_{{ item.id }}" 
-                                            class="form-select location-select"
-                                            data-placeholder="-- Sélectionner un emplacement --">
-                                        <option value="">-- Sélectionner un emplacement --</option>
-                                        {% for location in locations %}
-                                            <option value="{{ location.id }}" 
-                                                    data-code="{{ location.code }}"
-                                                    data-name="{{ location.name }}">
-                                                {{ location.code ? location.code ~ ' - ' : '' }}{{ location.name }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                    <div class="form-text">
-                                        <i class="bi bi-info-circle"></i>
-                                        Sélectionnez l'emplacement physique où seront stockés ces produits.
-                                    </div>
-                                </div>
-                            </div>
-
-                            {% if product.hasExpiryDate %}
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">
-                                        <i class="bi bi-calendar-plus"></i> Date de fabrication
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="date" 
-                                           name="manufacturing_date_{{ item.id }}" 
-                                           class="form-control" 
-                                           required
-                                           value="{{ "now"|date('Y-m-d') }}">
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">
-                                        <i class="bi bi-calendar-x"></i> Date d'expiration
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="date" 
-                                           name="expiry_date_{{ item.id }}" 
-                                           class="form-control" 
-                                           required
-                                           min="{{ "now"|date('Y-m-d') }}">
-                                </div>
-                            </div>
-                            {% else %}
-                            <div class="alert alert-success mb-0">
-                                <i class="bi bi-check-circle"></i>
-                                Ce produit n'est pas périssable. Le lot sera créé automatiquement.
-                            </div>
-                            {% endif %}
                         </div>
                     </div>
-                {% endfor %}
-
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <div class="alert alert-warning">
-                            <i class="bi bi-exclamation-triangle"></i>
-                            <strong>Attention :</strong> La réception va créer des lots de stock et mettre à jour les quantités disponibles.
-                            Les articles non réceptionnés seront supprimés de la commande. Cette action est irréversible.
+                    <div class="text-end">
+                        <div class="fw-bold text-primary">{{ itemTotalPrice|price_with_currency(purchase.hmaService) }}</div>
+                        <div class="small text-muted">{{ (item.unitPrice ?: 0)|price_with_currency(purchase.hmaService) }}/{{ product.unit|default('pièce') }}</div>
+                    </div>
+                </div>
+                
+                {% if hasPendingIssue %}
+                <div class="issue-indicator">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <div>
+                        <strong>⚠️ Problème signalé</strong>
+                        <span class="text-muted mx-2">•</span>
+                        <span>{{ pendingIssue.issue_type|default('Non spécifié')|replace({'_': ' '})|capitalize }}</span>
+                        <span class="text-muted mx-2">•</span>
+                        <span>{{ pendingIssue.affected_quantity|default(0) }} unité(s)</span>
+                        <span class="text-muted mx-2">•</span>
+                        <span>Priorité: {{ pendingIssue.priority|default('medium')|capitalize }}</span>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="card-body">
+                    <input type="hidden" name="item_id[]" value="{{ item.id }}">
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input remove-checkbox" type="checkbox" 
+                                       name="remove_{{ item.id }}" id="remove_{{ item.id }}" value="1">
+                                <label class="form-check-label text-danger" for="remove_{{ item.id }}">
+                                    <i class="bi bi-trash me-1"></i> Ne pas réceptionner cet article
+                                </label>
+                            </div>
                         </div>
-                        
-                        <div class="d-flex justify-content-end gap-2">
-                            <a href="{{ path('purchase_show', {id: purchase.id}) }}" class="btn btn-secondary">
-                                <i class="bi bi-x-lg"></i> Annuler
-                            </a>
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-check-lg"></i> Confirmer la réception
-                            </button>
+                        <div class="col-md-6 text-md-end">
+                            <div class="btn-group">
+                                <button type="button" 
+                                        class="btn btn-sm {% if hasPendingIssue %}btn-warning{% else %}btn-outline-danger{% endif %} report-issue-btn"
+                                        data-item-id="{{ item.id }}"
+                                        data-product-name="{{ product.name }}"
+                                        data-batch-number="LOT-{{ purchase.purchaseNumber }}-{{ loop.index }}"
+                                        data-unit-price="{{ item.unitPrice ?: 0 }}"
+                                        data-quantity="{{ item.quantity }}"
+                                        data-total-price="{{ itemTotalPrice }}"
+                                        data-unit="{{ product.unit|default('pièce') }}"
+                                        {% if hasPendingIssue %}
+                                        data-edit-mode="true"
+                                        data-issue-type="{{ pendingIssue.issue_type }}"
+                                        data-issue-description="{{ pendingIssue.description }}"
+                                        data-issue-priority="{{ pendingIssue.priority }}"
+                                        data-issue-affected-quantity="{{ pendingIssue.affected_quantity }}"
+                                        data-issue-stock-action="{{ pendingIssue.stock_action }}"
+                                        data-issue-attachments="{{ pendingIssue.attachments|json_encode|escape('html_attr') }}"
+                                        {% endif %}>
+                                    <i class="bi bi-exclamation-triangle me-1"></i>
+                                    {% if hasPendingIssue %}Modifier le signalement{% else %}Signaler un problème{% endif %}
+                                </button>
+                                {% if hasPendingIssue %}
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-danger delete-issue-btn"
+                                        data-item-id="{{ item.id }}"
+                                        data-product-name="{{ product.name }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label small fw-semibold text-uppercase text-muted">
+                                <i class="bi bi-upc-scan me-1"></i>Numéro de lot
+                                {% if product.hasExpiryDate %}<span class="text-danger">*</span>{% endif %}
+                            </label>
+                            <input type="text" 
+                                name="batch_number_{{ item.id }}" 
+                                class="form-control form-control-sm" 
+                                value="{{ item.batchNumber ?: 'LOT-' ~ purchase.purchaseNumber ~ '-' ~ loop.index }}"
+                                {% if product.hasExpiryDate %}required{% endif %}
+                                placeholder="Ex: LOT-20250328-001">
+                            <small class="text-muted">Laissez vide pour génération automatique</small>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label small fw-semibold text-uppercase text-muted">
+                                <i class="bi bi-box-seam me-1"></i>Quantité commandée
+                            </label>
+                            <input type="number" class="form-control form-control-sm bg-light" value="{{ item.quantity }}" readonly disabled>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label small fw-semibold text-uppercase text-muted">
+                                <i class="bi bi-check-circle me-1"></i>Quantité reçue
+                            </label>
+                            <input type="number" 
+                                   name="received_quantity_{{ item.id }}" 
+                                   class="form-control form-control-sm received-quantity" 
+                                   value="{{ item.quantity }}"
+                                   min="0"
+                                   step="1"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold text-uppercase text-muted">
+                                <i class="bi bi-tag me-1"></i>Prix unitaire commandé
+                            </label>
+                            <input type="text" class="form-control form-control-sm bg-light" 
+                                   value="{{ (item.unitPrice ?: 0)|price_with_currency(purchase.hmaService) }}" readonly disabled>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold text-uppercase text-muted">
+                                <i class="bi bi-pencil me-1"></i>Prix unitaire réel
+                            </label>
+                            <input type="number" 
+                                   name="received_price_{{ item.id }}" 
+                                   class="form-control form-control-sm received-price" 
+                                   value="{{ item.unitPrice ?: 0 }}"
+                                   step="0.01"
+                                   min="0">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-12">
+                            <label class="form-label small fw-semibold text-uppercase text-muted">
+                                <i class="bi bi-geo-alt me-1"></i>Emplacement
+                            </label>
+                            <select name="location_id_{{ item.id }}" 
+                                    class="form-select form-select-sm location-select"
+                                    data-placeholder="-- Sélectionner --">
+                                <option value="">-- Sélectionner un emplacement --</option>
+                                {% for location in locations %}
+                                    <option value="{{ location.id }}">
+                                        {{ location.code ? location.code ~ ' - ' : '' }}{{ location.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    {% if product.hasExpiryDate %}
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold text-uppercase text-muted">
+                                <i class="bi bi-calendar-plus me-1"></i>Date de fabrication
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="date" 
+                                   name="manufacturing_date_{{ item.id }}" 
+                                   class="form-control form-control-sm" 
+                                   required
+                                   value="{{ "now"|date('Y-m-d') }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold text-uppercase text-muted">
+                                <i class="bi bi-calendar-x me-1"></i>Date d'expiration
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="date" 
+                                   name="expiry_date_{{ item.id }}" 
+                                   class="form-control form-control-sm" 
+                                   required
+                                   min="{{ "now"|date('Y-m-d') }}">
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success bg-light border-0 mt-3 mb-0 py-2 small">
+                        <i class="bi bi-check-circle me-1"></i> Produit non périssable - lot créé automatiquement
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body py-3">
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="{{ path('purchase_show', {id: purchase.id}) }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-lg me-1"></i> Annuler
+                    </a>
+                    <button type="button" class="btn btn-success px-4" id="confirmReceptionBtn">
+                        <i class="bi bi-check-lg me-1"></i> Confirmer la réception
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal de confirmation de réception -->
+<div class="modal fade" id="confirmReceptionModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-check-circle me-2"></i>Confirmer la réception
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir confirmer la réception de cette commande ?</p>
+                <ul class="mb-0">
+                    <li>Les lots de stock seront créés</li>
+                    <li>Le stock sera mis à jour</li>
+                    <li>Les problèmes signalés généreront des avoirs</li>
+                    <li>Les fournisseurs seront notifiés</li>
+                </ul>
+                <div class="alert alert-warning mt-3 mb-0 small">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    Cette action est irréversible.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-success" id="confirmReceptionSubmit">
+                    <i class="bi bi-check-lg me-1"></i> Confirmer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Signaler un problème - AVEC GESTION DES PIÈCES JOINTES -->
+<div class="modal fade" id="reportIssueModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white py-2">
+                <h5 class="modal-title fs-6">
+                    <i class="bi bi-exclamation-triangle me-2"></i><span id="modalTitle">Signaler un problème</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{{ path('purchase_report_issue_temp') }}" enctype="multipart/form-data" id="issueForm">
+                <div class="modal-body py-3">
+                    <input type="hidden" name="batch_id" id="report_batch_id">
+                    <input type="hidden" name="purchase_id" value="{{ purchase.id }}">
+                    <input type="hidden" name="existing_attachments" id="existing_attachments" value="">
+                    
+                    <div class="bg-light p-3 rounded mb-3">
+                        <div class="row small">
+                            <div class="col-6"><span class="text-muted">Produit :</span> <strong id="report_product_name"></strong></div>
+                            <div class="col-6"><span class="text-muted">Lot :</span> <strong id="report_batch_number"></strong></div>
+                            <div class="col-6 mt-2"><span class="text-muted">Prix unitaire :</span> <strong id="report_unit_price"></strong></div>
+                            <div class="col-6 mt-2"><span class="text-muted">Quantité commandée :</span> <strong id="report_ordered_quantity"></strong></div>
+                            <div class="col-12 mt-2"><span class="text-muted">Unité :</span> <strong id="report_unit_name"></strong></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Quantité concernée</label>
+                        <div class="d-flex gap-3 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="quantity_type" id="quantity_all" value="all" checked>
+                                <label class="form-check-label small" for="quantity_all">
+                                    Tout le lot (<span id="total_quantity_label">0</span> <span id="total_unit_label">pièce(s)</span>)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="quantity_type" id="quantity_partial" value="partial">
+                                <label class="form-check-label small" for="quantity_partial">Quantité spécifique</label>
+                            </div>
+                        </div>
+                        <div id="partial_quantity_container" style="display: none;">
+                            <input type="number" name="affected_quantity" id="affected_quantity" class="form-control form-control-sm" 
+                                   placeholder="Saisir la quantité" min="1" step="1">
+                            <small class="text-muted">Saisissez le nombre d'unités concernées</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Type de problème</label>
+                        <select name="issue_type" id="issue_type" class="form-select form-select-sm" required>
+                            <option value="">-- Sélectionner --</option>
+                            <option value="damaged">📦 Produit abîmé</option>
+                            <option value="quality">🔍 Défaut de qualité</option>
+                            <option value="quantity_missing">📉 Quantité manquante</option>
+                            <option value="wrong_product">🔄 Erreur de produit</option>
+                            <option value="short_shelf_life">⏰ Durée de vie courte</option>
+                            <option value="other">❓ Autre</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Priorité</label>
+                        <select name="priority" id="priority" class="form-select form-select-sm">
+                            <option value="low">🟢 Basse</option>
+                            <option value="medium" selected>🟡 Moyenne</option>
+                            <option value="high">🟠 Haute</option>
+                            <option value="critical">🔴 Critique</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Description</label>
+                        <textarea name="description" id="description" class="form-control form-control-sm" rows="3" required placeholder="Décrivez précisément le problème..."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Action sur le stock</label>
+                        <select name="stock_action" id="stock_action" class="form-select form-select-sm">
+                            <option value="none">Aucune action (financier uniquement)</option>
+                            <option value="reduce">⬇️ Réduire le stock</option>
+                            <option value="zero">🗑️ Mettre le stock à zéro</option>
+                            <option value="return">📤 Retour fournisseur</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Pièces jointes</label>
+                        <div id="attachmentsPreview" class="d-flex flex-wrap gap-2 mb-2"></div>
+                        <input type="file" name="attachments[]" id="attachments" class="form-control form-control-sm" multiple accept="image/*,video/*">
+                        <small class="text-muted">Formats supportés: JPG, PNG, GIF, WEBP, MP4, MOV (max 50Mo par fichier)</small>
+                    </div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-danger" id="submitIssueBtn">
+                        <i class="bi bi-send me-1"></i> Signaler
+                    </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de suppression de problème -->
+<div class="modal fade" id="deleteIssueModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle me-2"></i> Confirmer la suppression
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteMessage">Êtes-vous sûr de vouloir supprimer ce signalement ?</p>
+                <p class="text-muted small mb-0">Cette action est irréversible. Le problème ne sera pas pris en compte lors de la réception.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="post" id="deleteIssueForm" action="">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i> Supprimer
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -312,100 +646,311 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ========== INITIALISATION SELECT2 POUR LES EMPLACEMENTS ==========
-    const locationSelects = document.querySelectorAll('.location-select');
-    locationSelects.forEach(select => {
-        $(select).select2({
-            theme: 'bootstrap-5',
-            language: 'fr',
-            placeholder: '-- Sélectionner un emplacement --',
-            allowClear: true,
-            width: '100%'
-        });
+    // Select2
+    document.querySelectorAll('.location-select').forEach(select => {
+        if (typeof $ !== 'undefined') {
+            $(select).select2({
+                theme: 'bootstrap-5',
+                language: 'fr',
+                placeholder: '-- Sélectionner --',
+                allowClear: true,
+                width: '100%'
+            });
+        }
     });
 
-    // ========== GESTION DE LA CASE "NE PAS RÉCEPTIONNER" ==========
-    const checkboxes = document.querySelectorAll('.remove-checkbox');
-    checkboxes.forEach(checkbox => {
+    // Case "Ne pas réceptionner"
+    document.querySelectorAll('.remove-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             const card = this.closest('.batch-card');
             const inputs = card.querySelectorAll('input:not([type="checkbox"]), select');
-            const select2Container = card.querySelector('.select2-container');
+            inputs.forEach(input => input.disabled = this.checked);
             
-            inputs.forEach(input => {
-                input.disabled = this.checked;
-            });
-            
-            // Désactiver Select2
-            if (select2Container) {
+            if (typeof $ !== 'undefined') {
                 const select = card.querySelector('.location-select');
-                if (this.checked) {
-                    $(select).select2('disable');
-                } else {
-                    $(select).select2('enable');
-                }
+                if (select) this.checked ? $(select).select2('disable') : $(select).select2('enable');
             }
             
-            // Désactiver les champs de date
-            const dateInputs = card.querySelectorAll('input[type="date"]');
-            dateInputs.forEach(input => input.disabled = this.checked);
+            card.style.opacity = this.checked ? '0.6' : '1';
         });
     });
 
-    // ========== VALIDATION DES DATES D'EXPIRATION ==========
-    const expiryInputs = document.querySelectorAll('input[name^="expiry_date_"]');
-    expiryInputs.forEach(input => {
+    // Dates expiration
+    document.querySelectorAll('input[name^="expiry_date_"]').forEach(input => {
         input.addEventListener('change', function() {
-            const expiryDate = new Date(this.value);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            if (expiryDate < today) {
+            if (new Date(this.value) < new Date().setHours(0,0,0,0)) {
                 alert('La date d\'expiration ne peut pas être antérieure à aujourd\'hui.');
                 this.value = '';
             }
         });
     });
+
+    // ========== GESTION DES PIÈCES JOINTES ==========
+    let currentAttachments = [];
+    const attachmentsPreview = document.getElementById('attachmentsPreview');
+    const existingAttachmentsInput = document.getElementById('existing_attachments');
     
-    // ========== CONFIRMATION AVANT SOUMISSION ==========
-    const form = document.querySelector('.receive-form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            // Vérifier qu'il y a au moins un article non supprimé
-            let hasReceived = false;
-            const items = document.querySelectorAll('.batch-card');
-            items.forEach(card => {
-                const removeCheck = card.querySelector('.remove-checkbox');
-                if (!removeCheck || !removeCheck.checked) {
-                    hasReceived = true;
+    function updateAttachmentsPreview() {
+        if (!attachmentsPreview) return;
+        
+        attachmentsPreview.innerHTML = '';
+        currentAttachments.forEach((attachment, index) => {
+            const extension = attachment.split('.').pop().toLowerCase();
+            const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension);
+            
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'attachment-preview';
+            previewDiv.innerHTML = `
+                ${isImage ? 
+                    `<img src="/uploads/credit_notes_attachments/${attachment}" alt="Pièce jointe" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23666\' stroke-width=\'1\'%3E%3Crect width=\'80\' height=\'80\' fill=\'%23f3f4f6\'/%3E%3Cpath d=\'M4 4h16v16H4z\'/%3E%3C/svg%3E'">` :
+                    `<div class="file-placeholder">
+                        <i class="bi bi-file-earmark fs-1 text-muted"></i>
+                     </div>`
                 }
+                <div class="remove-attachment" data-index="${index}">
+                    <i class="bi bi-x"></i>
+                </div>
+                <small class="d-block text-truncate" style="max-width:80px">${attachment.length > 15 ? attachment.substring(0, 12) + '...' : attachment}</small>
+            `;
+            attachmentsPreview.appendChild(previewDiv);
+        });
+        
+        // Mettre à jour le champ hidden
+        if (existingAttachmentsInput) {
+            existingAttachmentsInput.value = JSON.stringify(currentAttachments);
+        }
+    }
+    
+    // Suppression d'une pièce jointe
+    document.addEventListener('click', function(e) {
+        const removeBtn = e.target.closest('.remove-attachment');
+        if (removeBtn) {
+            const index = parseInt(removeBtn.dataset.index);
+            if (!isNaN(index)) {
+                currentAttachments.splice(index, 1);
+                updateAttachmentsPreview();
+            }
+        }
+    });
+
+    // ========== MODAL SIGNALEMENT ==========
+    let currentUnitPrice = 0, currentOrderedQuantity = 0, currentUnit = 'pièce(s)', isEditMode = false;
+    const quantityAll = document.getElementById('quantity_all');
+    const quantityPartial = document.getElementById('quantity_partial');
+    const partialContainer = document.getElementById('partial_quantity_container');
+    const affectedQty = document.getElementById('affected_quantity');
+    const modalTitle = document.getElementById('modalTitle');
+    const totalQuantityLabel = document.getElementById('total_quantity_label');
+    const totalUnitLabel = document.getElementById('total_unit_label');
+    const reportUnitName = document.getElementById('report_unit_name');
+    
+    if (quantityAll) {
+        quantityAll.addEventListener('change', () => {
+            if (partialContainer) partialContainer.style.display = 'none';
+            if (affectedQty) affectedQty.value = '';
+        });
+    }
+    
+    if (quantityPartial) {
+        quantityPartial.addEventListener('change', () => {
+            if (partialContainer) partialContainer.style.display = 'block';
+        });
+    }
+    
+    if (affectedQty) {
+        affectedQty.addEventListener('input', function() {
+            let val = parseInt(this.value);
+            if (val > currentOrderedQuantity) this.value = currentOrderedQuantity;
+            if (val < 1) this.value = 1;
+        });
+    }
+
+    const reportModal = new bootstrap.Modal(document.getElementById('reportIssueModal'));
+    document.querySelectorAll('.report-issue-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            isEditMode = this.dataset.editMode === 'true';
+            
+            if (isEditMode) {
+                modalTitle.textContent = 'Modifier le signalement';
+            } else {
+                modalTitle.textContent = 'Signaler un problème';
+            }
+            
+            currentUnitPrice = parseFloat(this.dataset.unitPrice);
+            currentOrderedQuantity = parseInt(this.dataset.quantity);
+            currentUnit = this.dataset.unit || 'pièce(s)';
+            
+            const productNameEl = document.getElementById('report_product_name');
+            const batchNumberEl = document.getElementById('report_batch_number');
+            const orderedQuantityEl = document.getElementById('report_ordered_quantity');
+            const unitPriceEl = document.getElementById('report_unit_price');
+            const batchIdEl = document.getElementById('report_batch_id');
+            
+            if (productNameEl) productNameEl.textContent = this.dataset.productName;
+            if (batchNumberEl) batchNumberEl.textContent = this.dataset.batchNumber;
+            if (orderedQuantityEl) orderedQuantityEl.textContent = this.dataset.quantity + ' ' + currentUnit;
+            if (unitPriceEl) unitPriceEl.textContent = parseFloat(this.dataset.unitPrice).toLocaleString('fr-FR') + ' FCFA';
+            if (batchIdEl) batchIdEl.value = this.dataset.itemId;
+            
+            // Afficher l'unité
+            if (totalQuantityLabel) totalQuantityLabel.textContent = this.dataset.quantity;
+            if (totalUnitLabel) totalUnitLabel.textContent = currentUnit;
+            if (reportUnitName) reportUnitName.textContent = currentUnit;
+            
+            if (affectedQty) affectedQty.max = this.dataset.quantity;
+            
+            // Réinitialiser les pièces jointes
+            currentAttachments = [];
+            updateAttachmentsPreview();
+            
+            if (isEditMode) {
+                const issueType = this.dataset.issueType || '';
+                const issueDesc = this.dataset.issueDescription || '';
+                const issuePriority = this.dataset.issuePriority || 'medium';
+                const issueAffectedQty = parseInt(this.dataset.issueAffectedQuantity) || currentOrderedQuantity;
+                const issueStockAction = this.dataset.issueStockAction || 'none';
+                const issueAttachments = this.dataset.issueAttachments ? JSON.parse(this.dataset.issueAttachments.replace(/&quot;/g, '"')) : [];
+                
+                const issueTypeEl = document.getElementById('issue_type');
+                const descriptionEl = document.getElementById('description');
+                const priorityEl = document.getElementById('priority');
+                const stockActionEl = document.getElementById('stock_action');
+                
+                if (issueTypeEl) issueTypeEl.value = issueType;
+                if (descriptionEl) descriptionEl.value = issueDesc;
+                if (priorityEl) priorityEl.value = issuePriority;
+                if (stockActionEl) stockActionEl.value = issueStockAction;
+                
+                // Charger les pièces jointes existantes
+                if (issueAttachments && issueAttachments.length) {
+                    currentAttachments = [...issueAttachments];
+                    updateAttachmentsPreview();
+                }
+                
+                if (issueAffectedQty < currentOrderedQuantity) {
+                    if (quantityPartial) quantityPartial.checked = true;
+                    if (partialContainer) partialContainer.style.display = 'block';
+                    if (affectedQty) affectedQty.value = issueAffectedQty;
+                } else {
+                    if (quantityAll) quantityAll.checked = true;
+                    if (partialContainer) partialContainer.style.display = 'none';
+                    if (affectedQty) affectedQty.value = '';
+                }
+            } else {
+                const issueTypeEl = document.getElementById('issue_type');
+                const descriptionEl = document.getElementById('description');
+                const priorityEl = document.getElementById('priority');
+                const stockActionEl = document.getElementById('stock_action');
+                
+                if (issueTypeEl) issueTypeEl.value = '';
+                if (descriptionEl) descriptionEl.value = '';
+                if (priorityEl) priorityEl.value = 'medium';
+                if (stockActionEl) stockActionEl.value = 'none';
+                
+                if (quantityAll) quantityAll.checked = true;
+                if (partialContainer) partialContainer.style.display = 'none';
+                if (affectedQty) affectedQty.value = '';
+            }
+            
+            reportModal.show();
+        });
+    });
+    
+    // Submit du formulaire d'issue - ajouter les pièces jointes existantes
+    const issueForm = document.getElementById('issueForm');
+    if (issueForm) {
+        issueForm.addEventListener('submit', function(e) {
+            // S'assurer que les pièces jointes existantes sont bien envoyées
+            if (existingAttachmentsInput && currentAttachments.length > 0) {
+                existingAttachmentsInput.value = JSON.stringify(currentAttachments);
+            }
+        });
+    }
+
+    // ========== SUPPRESSION DE PROBLÈME ==========
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteIssueModal'));
+    const deleteMessage = document.getElementById('deleteMessage');
+    const deleteForm = document.getElementById('deleteIssueForm');
+    
+    document.querySelectorAll('.delete-issue-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            const productName = this.dataset.productName;
+            
+            if (deleteMessage) {
+                deleteMessage.innerHTML = `Êtes-vous sûr de vouloir supprimer le signalement pour le produit <strong>${productName}</strong> ?`;
+            }
+            
+            if (deleteForm) {
+                deleteForm.action = "{{ path('purchase_delete_issue_temp', {batchId: 'BATCH_ID_PLACEHOLDER'}) }}".replace('BATCH_ID_PLACEHOLDER', itemId);
+            }
+            
+            deleteModal.show();
+        });
+    });
+
+    // ========== CONFIRMATION DE RÉCEPTION ==========
+    const confirmModal = new bootstrap.Modal(document.getElementById('confirmReceptionModal'));
+    const confirmBtn = document.getElementById('confirmReceptionBtn');
+    const confirmSubmit = document.getElementById('confirmReceptionSubmit');
+    const receiveForm = document.getElementById('receiveForm');
+    
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Vérifier qu'au moins un article est réceptionné
+            let hasReceived = false;
+            document.querySelectorAll('.batch-card').forEach(card => {
+                if (!card.querySelector('.remove-checkbox')?.checked) hasReceived = true;
             });
+            
             if (!hasReceived) {
-                e.preventDefault();
                 alert('Vous devez réceptionner au moins un article.');
                 return;
             }
-
-            // Vérifier les champs requis pour les produits non supprimés
-            const requiredInputs = form.querySelectorAll('[required]:not(:disabled)');
-            let missing = false;
+            
+            // Vérifier uniquement les champs requis NON désactivés
+            const missingFields = [];
+            const requiredInputs = document.querySelectorAll('[required]');
+            
             requiredInputs.forEach(input => {
-                if (!input.value.trim()) {
-                    missing = true;
+                // Ignorer si désactivé
+                if (input.disabled) return;
+                // Ignorer si caché
+                if (input.offsetParent === null) return;
+                
+                // Vérifier la valeur
+                let value = input.value.trim();
+                if (input.type === 'checkbox') {
+                    value = input.checked ? 'checked' : '';
+                }
+                
+                if (!value) {
+                    missingFields.push(input);
                     input.classList.add('is-invalid');
                 } else {
                     input.classList.remove('is-invalid');
                 }
             });
             
-            if (missing) {
-                e.preventDefault();
-                alert('Veuillez remplir tous les champs obligatoires.');
-            } else {
-                if (!confirm('Confirmez-vous la réception de cette commande ? Les lots seront créés et le stock sera mis à jour.')) {
-                    e.preventDefault();
-                }
+            if (missingFields.length > 0) {
+                const fieldNames = missingFields.map(f => {
+                    const label = f.closest('.row')?.querySelector('.form-label')?.textContent || f.name;
+                    return `- ${label}`;
+                }).join('\n');
+                alert(`Veuillez remplir tous les champs obligatoires :\n${fieldNames}`);
+                missingFields[0].focus();
+                return;
             }
+            
+            confirmModal.show();
+        });
+    }
+    
+    if (confirmSubmit) {
+        confirmSubmit.addEventListener('click', function() {
+            receiveForm.submit();
         });
     }
 });

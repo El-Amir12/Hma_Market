@@ -216,6 +216,12 @@ class PurchaseRepository extends ServiceEntityRepository
      */
     private function applyFilters($qb, array $filters): void
     {
+        // 🔥 FILTRE PAR ENTREPRISE (HMA SERVICE)
+        if (!empty($filters['hma_service_id'])) {
+            $qb->andWhere('p.hma_service = :hmaService')
+                ->setParameter('hmaService', $filters['hma_service_id']);
+        }
+
         if (!empty($filters['status']) && in_array($filters['status'], array_keys(Purchase::getStatuses()))) {
             $qb->andWhere('p.status = :status')
                 ->setParameter('status', $filters['status']);

@@ -1,0 +1,26 @@
+{# templates/supplier_credit_note/thanks.html.twig #}
+{% extends 'base_simple.html.twig' %}
+
+{% block title %}Merci pour votre réponse{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="card shadow">
+                <div class="card-body py-5">
+                    <i class="fas fa-check-circle text-success fa-5x mb-3"></i>
+                    <h2 class="mb-3">Merci !</h2>
+                    <p class="lead">Votre réponse a bien été enregistrée.</p>
+                    <p>Nos équipes traiteront votre demande dans les plus brefs délais.</p>
+                    <hr>
+                    <p class="text-muted">Vous pouvez fermer cette fenêtre.</p>
+                    <button class="btn btn-primary mt-3" onclick="window.close();">
+                        <i class="fas fa-times me-1"></i> Fermer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

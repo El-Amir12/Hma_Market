@@ -1,0 +1,76 @@
+{# templates/print/delivery_ticket.html.twig #}
+{% extends 'print/base_ticket.html.twig' %}
+
+{% block header %}
+<div class="header">
+    <h1> {{ company.companyName }}</h1>
+    <p>{{ company.address|default('') }}</p>
+    <p> {{ company.phone|default('') }}</p>
+    <div class="divider"></div>
+    <div class="info-row">
+        <span class="info-label">N° Commande</span>
+        <span>{{ order.orderNumber }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Date</span>
+        <span>{{ order.createdAt|date('d/m/Y H:i') }}</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="delivery-address">
+    <div class="info-row">
+        <span class="info-label"> Client</span>
+        <span>{{ order.customerName ?: 'Non renseigné' }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label"> Téléphone</span>
+        <span>{{ order.customerPhone }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label"> Adresse</span>
+        <span>{{ order.deliveryAddress|default('À récupérer sur place') }}</span>
+    </div>
+</div>
+
+<div class="divider"></div>
+<div class="info-row">
+    <span>Articles commandés</span>
+    <span>Qté</span>
+</div>
+<div class="dotted-divider"></div>
+
+{% for item in items %}
+<div class="info-row">
+    <span style="flex:2">{{ item.productName }}</span>
+    <span style="width:40px; text-align:center">{{ item.quantity }}</span>
+</div>
+{% endfor %}
+
+<div class="divider"></div>
+
+<div class="total-row">
+    <span>TOTAL</span>
+    <span>{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</span>
+</div>
+
+<div class="info-row">
+    <span>Mode de paiement</span>
+    <span>{{ order.paymentMethod|replace({'_': ' '})|capitalize }}</span>
+</div>
+
+{% if order.notes %}
+<div class="notes">
+    <strong> Instructions spéciales:</strong><br>
+    {{ order.notes }}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+<div class="footer">
+    <p> Livraison - {{ print_date|date('d/m/Y H:i:s') }}</p>
+    <p> Merci de votre commande !</p>
+</div>
+{% endblock %}

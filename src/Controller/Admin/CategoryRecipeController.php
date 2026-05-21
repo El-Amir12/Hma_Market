@@ -8,8 +8,8 @@ use App\Entity\HmaService;
 use App\Form\CategoryRecipeType;
 use App\Service\UniqueNameValidator;
 use App\Repository\CategoryRecipeRepository;
+use App\Repository\PromotionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Promotion;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,8 +50,11 @@ final class CategoryRecipeController extends AbstractController
     }
 
     #[Route(name: 'app_admin_category_recipe_index', methods: ['GET'])]
-    public function index(Request $request, CategoryRecipeRepository $repository, EntityManagerInterface $entityManager): Response
-    {
+    public function index(
+        Request $request, 
+        CategoryRecipeRepository $repository, 
+        PromotionRepository $promotionRepository
+    ): Response {
         $this->checkAccess();
 
         $hmaService = $this->getCurrentHmaService();
@@ -64,16 +67,21 @@ final class CategoryRecipeController extends AbstractController
         $search = $request->query->get('search', '');
         $status = $request->query->get('status', 'all');
         $type = $request->query->get('type', 'all');
-        $subStatus = $request->query->get('sub_status', 'active');
+        $subStatus = $request->query->get('sub_status', '');
         $promotionId = $request->query->getInt('promotion', 0);
 
-        $promotions = $entityManager->getRepository(Promotion::class)->findBy(
-            ['hma_service' => $hmaService, 'is_active' => true],
-            ['name' => 'ASC']
-        );
+        // 🔥 Utilisation de la nouvelle méthode findActiveForCategories()
+        $promotions = $promotionRepository->findActiveForCategories($hmaService);
 
         $paginator = $repository->findFilteredPaginated(
-            $hmaService, $status, $type, $subStatus, $search, $page, $limit, $promotionId > 0 ? $promotionId : null
+            $hmaService, 
+            $status, 
+            $type, 
+            $subStatus, 
+            $search, 
+            $page, 
+            $limit, 
+            $promotionId > 0 ? $promotionId : null
         );
 
         $totalFiltered = $repository->countFiltered($hmaService, $status, $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null);

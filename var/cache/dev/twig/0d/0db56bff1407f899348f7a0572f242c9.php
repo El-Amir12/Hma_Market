@@ -331,6 +331,47 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         justify-content: flex-end;
         margin-top: 0.5rem;
     }
+    
+    .btn-loading {
+        opacity: 0.7;
+        cursor: wait;
+        pointer-events: none;
+    }
+    .btn-loading .btn-text {
+        display: none;
+    }
+    .btn-loading .btn-spinner {
+        display: inline-block;
+    }
+    .btn-spinner {
+        display: none;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .modal-loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1060;
+        border-radius: 0.5rem;
+    }
+    .modal-content {
+        position: relative;
+    }
 </style>
 ";
         
@@ -342,7 +383,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         yield from [];
     }
 
-    // line 241
+    // line 282
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -355,9 +396,8 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 242
+        // line 283
         yield "<div class=\"purchase-container\">
-    <!-- En‑tête -->
     <div class=\"header-bar\">
         <h1 class=\"h2 mb-0\">
             <i class=\"bi bi-cart3 text-primary\"></i>
@@ -365,14 +405,14 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         </h1>
         <div>
             <a href=\"";
-        // line 250
+        // line 290
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_index");
         yield "\" class=\"btn btn-outline-secondary me-2\">
                 <i class=\"bi bi-arrow-left\"></i> Retour
             </a>
             <button type=\"button\" class=\"btn btn-primary\" id=\"confirmOrderBtn\" ";
-        // line 253
-        if (Twig\Extension\CoreExtension::testEmpty((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 253, $this->source); })()))) {
+        // line 293
+        if (Twig\Extension\CoreExtension::testEmpty((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 293, $this->source); })()))) {
             yield "disabled";
         }
         yield ">
@@ -381,7 +421,6 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         </div>
     </div>
 
-    <!-- Barre de recherche horizontale -->
     <div class=\"search-section\">
         <div class=\"search-bar\">
             <div class=\"input-group search-input-group\">
@@ -393,9 +432,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         </div>
     </div>
 
-    <!-- Deux colonnes : produits recherchés + panier -->
     <div class=\"two-columns\">
-        <!-- Panneau des produits recherchés -->
         <div class=\"products-panel\">
             <div class=\"panel-header\">
                 <i class=\"bi bi-search me-2\"></i> Produits disponibles
@@ -409,20 +446,19 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             </div>
         </div>
 
-        <!-- Panneau du panier -->
         <div class=\"cart-panel\">
             <div class=\"panel-header\">
                 <i class=\"bi bi-cart me-2\"></i> Votre panier
                 <span class=\"badge bg-primary rounded-pill ms-2\" id=\"cartCount\">";
-        // line 291
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 291, $this->source); })())), "html", null, true);
+        // line 327
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 327, $this->source); })())), "html", null, true);
         yield "</span>
             </div>
             <div class=\"panel-content\" id=\"cartContainer\">
                 ";
-        // line 294
-        if (Twig\Extension\CoreExtension::testEmpty((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 294, $this->source); })()))) {
-            // line 295
+        // line 330
+        if (Twig\Extension\CoreExtension::testEmpty((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 330, $this->source); })()))) {
+            // line 331
             yield "                    <div class=\"text-center py-5 text-muted\">
                         <i class=\"bi bi-cart-x fs-1\"></i>
                         <p class=\"mt-2\">Votre panier est vide</p>
@@ -432,101 +468,101 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                     </div>
                 ";
         } else {
-            // line 303
+            // line 339
             yield "                    <ul class=\"cart-items\" id=\"cartItemsList\">
                         ";
-            // line 304
+            // line 340
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 304, $this->source); })()));
+            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 340, $this->source); })()));
             foreach ($context['_seq'] as $context["_key"] => $context["item"]) {
-                // line 305
+                // line 341
                 yield "                            <li class=\"cart-item\" data-product-id=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 305), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 341), "html", null, true);
                 yield "\">
                                 <div class=\"cart-item-img\">
                                     ";
-                // line 307
-                if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 307) && (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 307) != "default-product.png"))) {
-                    // line 308
+                // line 343
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 343) && (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 343) != "default-product.png"))) {
+                    // line 344
                     yield "                                        <img src=\"";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/products/" . CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 308))), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/products/" . CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 344))), "html", null, true);
                     yield "\" alt=\"";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 308), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 344), "html", null, true);
                     yield "\" onerror=\"this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='flex';\">
                                     ";
                 }
-                // line 310
+                // line 346
                 yield "                                    <i class=\"fas fa-box fallback-icon\" style=\"display: ";
-                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 310) && (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 310) != "default-product.png"))) ? ("none") : ("flex"));
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 346) && (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 346) != "default-product.png"))) ? ("none") : ("flex"));
                 yield ";\"></i>
                                 </div>
                                 <div class=\"cart-item-details\">
                                     <div class=\"cart-item-title\">";
-                // line 313
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 313), "html", null, true);
+                // line 349
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 349), "html", null, true);
                 yield "</div>
                                     <div class=\"cart-item-meta\">
                                         <i class=\"bi bi-upc-scan\"></i> ";
-                // line 315
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "barcode", [], "any", false, false, false, 315), "html", null, true);
+                // line 351
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "barcode", [], "any", false, false, false, 351), "html", null, true);
                 yield "
                                         ";
-                // line 316
-                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit", [], "any", false, false, false, 316)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 317
+                // line 352
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit", [], "any", false, false, false, 352)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 353
                     yield "                                            <span class=\"ms-2\"><i class=\"bi bi-rulers\"></i> ";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit", [], "any", false, false, false, 317), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit", [], "any", false, false, false, 353), "html", null, true);
                     yield "</span>
                                         ";
                 }
-                // line 319
+                // line 355
                 yield "                                        ";
-                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["item"], "has_expiry_date", [], "any", false, false, false, 319)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 320
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["item"], "has_expiry_date", [], "any", false, false, false, 355)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 356
                     yield "                                            <span class=\"badge bg-warning text-dark\">Périssable</span>
                                         ";
                 }
-                // line 322
+                // line 358
                 yield "                                    </div>
                                 </div>
                                 <div class=\"cart-item-quantity\">
                                     <span class=\"badge bg-secondary\">";
-                // line 325
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 325), "html", null, true);
+                // line 361
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 361), "html", null, true);
                 yield "</span>
                                 </div>
                                 <div class=\"cart-item-price\">
                                     <div class=\"total\">";
-                // line 328
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "total_price", [], "any", false, false, false, 328), 0, ",", " "), "html", null, true);
+                // line 364
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "total_price", [], "any", false, false, false, 364), 0, ",", " "), "html", null, true);
                 yield " FCFA</div>
                                     <small class=\"text-muted\">";
-                // line 329
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 329), 0, ",", " "), "html", null, true);
+                // line 365
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 365), 0, ",", " "), "html", null, true);
                 yield " FCFA/unité</small>
                                     <div class=\"action-buttons\">
                                         <button class=\"btn btn-sm btn-outline-primary edit-item\" 
                                                 data-id=\"";
-                // line 332
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 332), "html", null, true);
+                // line 368
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 368), "html", null, true);
                 yield "\"
                                                 data-name=\"";
-                // line 333
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 333), "html", null, true);
+                // line 369
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 369), "html", null, true);
                 yield "\"
                                                 data-quantity=\"";
-                // line 334
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 334), "html", null, true);
+                // line 370
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 370), "html", null, true);
                 yield "\"
                                                 data-price=\"";
-                // line 335
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 335), "html", null, true);
+                // line 371
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 371), "html", null, true);
                 yield "\">
                                             <i class=\"bi bi-pencil\"></i> Modifier
                                         </button>
                                         <button class=\"btn btn-sm btn-outline-danger remove-btn\" data-id=\"";
-                // line 338
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 338), "html", null, true);
+                // line 374
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 374), "html", null, true);
                 yield "\">
                                             <i class=\"bi bi-trash\"></i> Supprimer
                                         </button>
@@ -538,17 +574,17 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['item'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 345
+            // line 381
             yield "                    </ul>
                 ";
         }
-        // line 347
+        // line 383
         yield "            </div>
             <div class=\"cart-footer\">
                 <strong>Total TTC :</strong>
                 <h4 class=\"mb-0 text-primary\" id=\"cartTotal\">";
-        // line 350
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["cart_total"]) || array_key_exists("cart_total", $context) ? $context["cart_total"] : (function () { throw new RuntimeError('Variable "cart_total" does not exist.', 350, $this->source); })()), 0, ",", " "), "html", null, true);
+        // line 386
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["cart_total"]) || array_key_exists("cart_total", $context) ? $context["cart_total"] : (function () { throw new RuntimeError('Variable "cart_total" does not exist.', 386, $this->source); })()), 0, ",", " "), "html", null, true);
         yield " FCFA</h4>
             </div>
         </div>
@@ -591,13 +627,16 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             </div>
             <div class=\"modal-footer\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmAddToCartBtn\">Ajouter au panier</button>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmAddToCartBtn\">
+                    <span class=\"btn-text\">Ajouter au panier</span>
+                    <span class=\"btn-spinner\"></span>
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal de modification d'article (quantité + prix) -->
+<!-- Modal de modification d'article -->
 <div class=\"modal fade\" id=\"editItemModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -622,7 +661,10 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             </div>
             <div class=\"modal-footer\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"saveEditChanges\">Enregistrer</button>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"saveEditChanges\">
+                    <span class=\"btn-text\">Enregistrer</span>
+                    <span class=\"btn-spinner\"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -644,13 +686,16 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             </div>
             <div class=\"modal-footer justify-content-center\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-danger\" id=\"confirmRemoveBtn\">Supprimer</button>
+                <button type=\"button\" class=\"btn btn-danger\" id=\"confirmRemoveBtn\">
+                    <span class=\"btn-text\">Supprimer</span>
+                    <span class=\"btn-spinner\"></span>
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal de confirmation de commande -->
+<!-- Modal de confirmation de commande avec vérification des fournisseurs -->
 <div class=\"modal fade\" id=\"confirmationModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-lg modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -659,78 +704,103 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                 <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
             </div>
             <div class=\"modal-body\">
-                <form id=\"confirmationForm\">
-                    <div class=\"row g-3\">
-                        <div class=\"col-md-6\">
-                            <label class=\"form-label\">Fournisseur *</label>
-                            <select name=\"supplier_id\" id=\"supplierSelect\" class=\"form-select\" required>
-                                <option value=\"\">Sélectionner un fournisseur</option>
-                                ";
-        // line 466
-        $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["suppliers"]) || array_key_exists("suppliers", $context) ? $context["suppliers"] : (function () { throw new RuntimeError('Variable "suppliers" does not exist.', 466, $this->source); })()));
-        foreach ($context['_seq'] as $context["_key"] => $context["supplier"]) {
-            // line 467
-            yield "                                    <option value=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "id", [], "any", false, false, false, 467), "html", null, true);
-            yield "\">";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "name", [], "any", false, false, false, 467), "html", null, true);
-            yield "</option>
-                                ";
-        }
-        $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_key'], $context['supplier'], $context['_parent']);
-        $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 469
-        yield "                            </select>
-                        </div>
-                        <div class=\"col-md-6\">
-                            <label class=\"form-label\">Bon de commande</label>
-                            <input type=\"text\" name=\"bon_commande\" class=\"form-control\" placeholder=\"Optionnel\">
-                        </div>
-                        <div class=\"col-12\">
-                            <label class=\"form-label\">Notes</label>
-                            <textarea name=\"notes\" class=\"form-control\" rows=\"2\" placeholder=\"Instructions de livraison, conditions particulières...\"></textarea>
-                        </div>
-                        <div class=\"col-12\">
-                            <hr>
-                            <h6>Options de notification</h6>
-                            <div class=\"row g-2\">
-                                <div class=\"col-md-4\">
-                                    <div class=\"form-check\">
-                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_email\" value=\"1\" checked>
-                                        <label class=\"form-check-label\">Email</label>
+                ";
+        // line 505
+        if (Twig\Extension\CoreExtension::testEmpty((isset($context["suppliers"]) || array_key_exists("suppliers", $context) ? $context["suppliers"] : (function () { throw new RuntimeError('Variable "suppliers" does not exist.', 505, $this->source); })()))) {
+            // line 506
+            yield "                    <div class=\"alert alert-danger\">
+                        <i class=\"bi bi-exclamation-triangle me-2\"></i>
+                        <strong>Aucun fournisseur disponible</strong><br>
+                        Veuillez activer des fournisseurs ou contacter l'administrateur.
+                    </div>
+                ";
+        } else {
+            // line 512
+            yield "                    <form id=\"confirmationForm\">
+                        <div class=\"row g-3\">
+                            <div class=\"col-md-12\">
+                                <label class=\"form-label\">Fournisseur *</label>
+                                <select name=\"supplier_id\" id=\"supplierSelect\" class=\"form-select\" required>
+                                    <option value=\"\">Sélectionner un fournisseur</option>
+                                    ";
+            // line 518
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["suppliers"]) || array_key_exists("suppliers", $context) ? $context["suppliers"] : (function () { throw new RuntimeError('Variable "suppliers" does not exist.', 518, $this->source); })()));
+            foreach ($context['_seq'] as $context["_key"] => $context["supplier"]) {
+                // line 519
+                yield "                                        <option value=\"";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "id", [], "any", false, false, false, 519), "html", null, true);
+                yield "\">";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "name", [], "any", false, false, false, 519), "html", null, true);
+                yield "</option>
+                                    ";
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_key'], $context['supplier'], $context['_parent']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 521
+            yield "                                </select>
+                            </div>
+                            <div class=\"col-12\">
+                                <label class=\"form-label\">Bon de commande</label>
+                                <input type=\"text\" name=\"bon_commande\" class=\"form-control\" placeholder=\"Optionnel - Numéro ou référence\">
+                            </div>
+                            <div class=\"col-12\">
+                                <label class=\"form-label\">Notes</label>
+                                <textarea name=\"notes\" class=\"form-control\" rows=\"2\" placeholder=\"Instructions de livraison, conditions particulières...\"></textarea>
+                            </div>
+                            <div class=\"col-12\">
+                                <hr>
+                                <h6>Options de notification</h6>
+                                <div class=\"row g-2\">
+                                    <div class=\"col-md-4\">
+                                        <div class=\"form-check\">
+                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_email\" value=\"1\" checked>
+                                            <label class=\"form-check-label\">Email</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class=\"col-md-4\">
-                                    <div class=\"form-check\">
-                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_whatsapp\" value=\"1\" checked>
-                                        <label class=\"form-check-label\">WhatsApp</label>
+                                    <div class=\"col-md-4\">
+                                        <div class=\"form-check\">
+                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_whatsapp\" value=\"1\" checked>
+                                            <label class=\"form-check-label\">WhatsApp</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class=\"col-md-4\">
-                                    <div class=\"form-check\">
-                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"send_image\" value=\"1\" checked>
-                                        <label class=\"form-check-label\">Inclure image produit (WhatsApp)</label>
+                                    <div class=\"col-md-4\">
+                                        <div class=\"form-check\">
+                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"send_image\" value=\"1\" checked>
+                                            <label class=\"form-check-label\">Inclure image produit (WhatsApp)</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class=\"col-12\">
+                                <label class=\"form-label\">Message personnalisé (optionnel)</label>
+                                <textarea name=\"confirmation_message\" class=\"form-control\" rows=\"2\" placeholder=\"Ajouter un message pour le fournisseur...\"></textarea>
+                            </div>
                         </div>
-                        <div class=\"col-12\">
-                            <label class=\"form-label\">Message personnalisé (optionnel)</label>
-                            <textarea name=\"confirmation_message\" class=\"form-control\" rows=\"2\" placeholder=\"Ajouter un message pour le fournisseur...\"></textarea>
-                        </div>
+                    </form>
+                    <div class=\"alert alert-info mt-3\">
+                        <i class=\"bi bi-info-circle\"></i>
+                        La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
                     </div>
-                </form>
-                <div class=\"alert alert-info mt-3\">
-                    <i class=\"bi bi-info-circle\"></i>
-                    La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
-                </div>
-            </div>
+                ";
+        }
+        // line 566
+        yield "            </div>
             <div class=\"modal-footer\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmPurchaseBtn\">Confirmer la commande</button>
-            </div>
+                ";
+        // line 569
+        if ((($tmp =  !Twig\Extension\CoreExtension::testEmpty((isset($context["suppliers"]) || array_key_exists("suppliers", $context) ? $context["suppliers"] : (function () { throw new RuntimeError('Variable "suppliers" does not exist.', 569, $this->source); })()))) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 570
+            yield "                    <button type=\"button\" class=\"btn btn-primary\" id=\"confirmPurchaseBtn\">
+                        <span class=\"btn-text\">Confirmer la commande</span>
+                        <span class=\"btn-spinner\"></span>
+                    </button>
+                ";
+        }
+        // line 575
+        yield "            </div>
         </div>
     </div>
 </div>
@@ -744,7 +814,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         yield from [];
     }
 
-    // line 523
+    // line 581
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -757,41 +827,40 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 524
+        // line 582
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
 <script>
     // URLs
     const searchUrl = \"";
-        // line 528
+        // line 586
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_search_products");
         yield "\";
     const addToCartUrl = \"";
-        // line 529
+        // line 587
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_add_product");
         yield "\";
     const cartDataUrl = \"";
-        // line 530
+        // line 588
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_cart_data");
         yield "\";
     const confirmUrl = \"";
-        // line 531
+        // line 589
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_confirm");
         yield "\";
     const removeProductUrlTemplate = \"";
-        // line 532
+        // line 590
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_remove_product", ["productId" => "PLACEHOLDER"]);
         yield "\".replace('PLACEHOLDER', '{productId}');
     const updateItemUrlTemplate = \"";
-        // line 533
+        // line 591
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_update_item", ["productId" => "PLACEHOLDER"]);
         yield "\".replace('PLACEHOLDER', '{productId}');
 
     let searchTimeout = null;
     let currentProduct = null;
 
-    // DOM elements
     const searchInput = document.getElementById('productSearch');
     const resultsContainer = document.getElementById('productResultsContainer');
     const cartContainer = document.getElementById('cartContainer');
@@ -799,12 +868,50 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     const cartTotalSpan = document.getElementById('cartTotal');
     const confirmOrderBtn = document.getElementById('confirmOrderBtn');
 
-    // Modals
     const addProductModal = new bootstrap.Modal(document.getElementById('addProductModal'));
     const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
     const removeModal = new bootstrap.Modal(document.getElementById('removeCartItemModal'));
+    const confirmModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
 
-    // Elements du modal d'ajout
+    function setButtonLoading(btn, isLoading) {
+        if (!btn) return;
+        if (isLoading) {
+            btn.classList.add('btn-loading');
+            btn.disabled = true;
+        } else {
+            btn.classList.remove('btn-loading');
+            btn.disabled = false;
+        }
+    }
+
+    function setModalLoading(modalElement, isLoading) {
+        if (!modalElement) return;
+        const modalContent = modalElement.querySelector('.modal-content');
+        if (!modalContent) return;
+        
+        let overlay = modalContent.querySelector('.modal-loading-overlay');
+        if (isLoading) {
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'modal-loading-overlay';
+                overlay.innerHTML = `
+                    <div class=\"text-center\">
+                        <div class=\"spinner-border text-primary\" role=\"status\">
+                            <span class=\"visually-hidden\">Chargement...</span>
+                        </div>
+                        <p class=\"mt-2 mb-0\">Traitement en cours...</p>
+                    </div>
+                `;
+                modalContent.style.position = 'relative';
+                modalContent.appendChild(overlay);
+            }
+            overlay.style.display = 'flex';
+        } else if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }
+
+    // Éléments du modal d'ajout
     const modalProductImageContainer = document.getElementById('modalProductImageContainer');
     const modalProductName = document.getElementById('modalProductName');
     const modalProductBarcode = document.getElementById('modalProductBarcode');
@@ -816,7 +923,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     const incrementQty = document.getElementById('incrementQty');
     const confirmAddBtn = document.getElementById('confirmAddToCartBtn');
 
-    // Elements du modal d'édition
+    // Éléments du modal d'édition
     const editProductId = document.getElementById('editProductId');
     const editProductName = document.getElementById('editProductName');
     const editQuantity = document.getElementById('editQuantity');
@@ -827,17 +934,17 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
     let pendingRemoveProductId = null;
 
-    // Gestion des quantités dans le modal d'ajout
-    incrementQty.addEventListener('click', () => {
+    // Gestion des quantités
+    incrementQty?.addEventListener('click', () => {
         productQuantityInput.value = parseInt(productQuantityInput.value) + 1;
     });
-    decrementQty.addEventListener('click', () => {
+    decrementQty?.addEventListener('click', () => {
         let val = parseInt(productQuantityInput.value);
         if (val > 1) productQuantityInput.value = val - 1;
     });
 
-    // Ajout au panier depuis le modal d'ajout
-    confirmAddBtn.addEventListener('click', async () => {
+    // Ajout au panier
+    confirmAddBtn?.addEventListener('click', async () => {
         if (!currentProduct) {
             showToast('error', 'Aucun produit sélectionné');
             addProductModal.hide();
@@ -854,10 +961,14 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             return;
         }
 
+        setButtonLoading(confirmAddBtn, true);
+        setModalLoading(document.getElementById('addProductModal'), true);
+
         const formData = new FormData();
         formData.append('product_id', currentProduct.id);
         formData.append('quantity', quantity);
         formData.append('unit_price', unitPrice);
+        
         try {
             const response = await fetch(addToCartUrl, { method: 'POST', body: formData });
             const data = await response.json();
@@ -865,11 +976,9 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                 await refreshCart();
                 showToast('success', `\${currentProduct.name} ajouté au panier`);
                 addProductModal.hide();
-                // Réinitialiser
                 productQuantityInput.value = 1;
                 productPriceInput.value = '';
                 currentProduct = null;
-                // Vider la recherche
                 searchInput.value = '';
                 resultsContainer.innerHTML = '<div class=\"text-center text-muted py-5\"><i class=\"bi bi-search fs-1\"></i><p class=\"mt-2\">Commencez à taper pour voir les produits</p></div>';
                 document.getElementById('resultCount').textContent = '0';
@@ -879,11 +988,14 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         } catch (error) {
             console.error('Erreur ajout panier:', error);
             showToast('error', 'Erreur lors de l\\'ajout');
+        } finally {
+            setButtonLoading(confirmAddBtn, false);
+            setModalLoading(document.getElementById('addProductModal'), false);
         }
     });
 
-    // Recherche en temps réel (avec debounce)
-    searchInput.addEventListener('input', function(e) {
+    // Recherche en temps réel
+    searchInput?.addEventListener('input', function(e) {
         const query = e.target.value.trim();
         if (searchTimeout) clearTimeout(searchTimeout);
         if (query.length < 2) {
@@ -939,7 +1051,6 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                     resultsContainer.innerHTML = html;
                     document.getElementById('resultCount').textContent = products.length;
 
-                    // Attacher l'événement de clic sur chaque élément de la liste
                     document.querySelectorAll('.product-list-item').forEach(item => {
                         item.addEventListener('click', () => openAddProductModal(item));
                     });
@@ -951,7 +1062,6 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         }, 300);
     });
 
-    // Ouvre le modal d'ajout avec les infos du produit
     function openAddProductModal(element) {
         const productId = element.dataset.productId;
         const productName = element.dataset.productName;
@@ -965,18 +1075,19 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         modalProductBarcode.textContent = productBarcode;
         modalProductUnit.textContent = `Unité : \${productUnit}`;
         productPriceInput.value = productPrice;
-        // Image
+        
         if (productImage) {
             modalProductImageContainer.innerHTML = `<img src=\"\${productImage}\" alt=\"\${escapeHtml(productName)}\" style=\"width: 80px; height: 80px; object-fit: cover; border-radius: 8px;\">`;
         } else {
             modalProductImageContainer.innerHTML = `<div class=\"product-img-fallback bg-light rounded d-flex align-items-center justify-content-center mx-auto\" style=\"width: 80px; height: 80px;\"><i class=\"fas fa-box text-secondary fs-1\"></i></div>`;
         }
-        // Alerte périssable
+        
         if (hasExpiry) {
             perishableWarning.classList.remove('d-none');
         } else {
             perishableWarning.classList.add('d-none');
         }
+        
         currentProduct = {
             id: parseInt(productId),
             name: productName,
@@ -988,9 +1099,8 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         addProductModal.show();
     }
 
-    // Gestion du panier (uniquement les boutons Modifier et Supprimer)
-    cartContainer.addEventListener('click', async (e) => {
-        // Bouton supprimer
+    // Gestion des actions du panier
+    cartContainer?.addEventListener('click', async (e) => {
         const removeBtn = e.target.closest('.remove-btn');
         if (removeBtn) {
             const productId = parseInt(removeBtn.dataset.id);
@@ -998,7 +1108,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             removeModal.show();
             return;
         }
-        // Bouton modifier
+        
         const editBtn = e.target.closest('.edit-item');
         if (editBtn) {
             const productId = parseInt(editBtn.dataset.id);
@@ -1013,11 +1123,12 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         }
     });
 
-    // Sauvegarde des modifications (envoi JSON)
-    saveEditChangesBtn.addEventListener('click', async () => {
+    // Sauvegarde modification
+    saveEditChangesBtn?.addEventListener('click', async () => {
         const productId = editProductId.value;
         const quantity = parseInt(editQuantity.value);
         const unitPrice = parseFloat(editUnitPrice.value);
+        
         if (isNaN(quantity) || quantity < 1) {
             showToast('error', 'Quantité invalide');
             return;
@@ -1026,6 +1137,9 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             showToast('error', 'Prix unitaire invalide');
             return;
         }
+
+        setButtonLoading(saveEditChangesBtn, true);
+        setModalLoading(document.getElementById('editItemModal'), true);
 
         const updateUrl = updateItemUrlTemplate.replace('{productId}', productId);
         try {
@@ -1045,21 +1159,25 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         } catch (error) {
             console.error('Erreur updateItem:', error);
             showToast('error', 'Erreur lors de la modification');
+        } finally {
+            setButtonLoading(saveEditChangesBtn, false);
+            setModalLoading(document.getElementById('editItemModal'), false);
         }
     });
 
-    // Confirmation de suppression
-    confirmRemoveBtn.addEventListener('click', async () => {
+    // Confirmation suppression
+    confirmRemoveBtn?.addEventListener('click', async () => {
         if (pendingRemoveProductId !== null) {
-            confirmRemoveBtn.disabled = true;
+            setButtonLoading(confirmRemoveBtn, true);
+            setModalLoading(document.getElementById('removeCartItemModal'), true);
             await removeFromCart(pendingRemoveProductId);
-            confirmRemoveBtn.disabled = false;
+            setButtonLoading(confirmRemoveBtn, false);
+            setModalLoading(document.getElementById('removeCartItemModal'), false);
             pendingRemoveProductId = null;
             removeModal.hide();
         }
     });
 
-    // Suppression d'un produit
     async function removeFromCart(productId) {
         const removeUrl = removeProductUrlTemplate.replace('{productId}', productId);
         try {
@@ -1077,7 +1195,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         }
     }
 
-    // Rafraîchissement du panier
+    // Rafraîchissement panier
     async function refreshCart() {
         try {
             const response = await fetch(cartDataUrl);
@@ -1153,7 +1271,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     }
 
     // Scanner
-    document.getElementById('scanBarcodeBtn').addEventListener('click', async () => {
+    document.getElementById('scanBarcodeBtn')?.addEventListener('click', async () => {
         const barcode = prompt('Entrez le code-barres à scanner:');
         if (!barcode || barcode.length < 3) return;
         try {
@@ -1179,12 +1297,18 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         }
     });
 
-    // Confirmation de commande
-    const confirmModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-    confirmOrderBtn.addEventListener('click', () => confirmModal.show());
-    document.getElementById('confirmPurchaseBtn').addEventListener('click', async () => {
+    // Confirmation commande
+    const confirmPurchaseBtn = document.getElementById('confirmPurchaseBtn');
+    
+    confirmOrderBtn?.addEventListener('click', () => confirmModal.show());
+    
+    confirmPurchaseBtn?.addEventListener('click', async () => {
         const form = document.getElementById('confirmationForm');
         const formData = new FormData(form);
+        
+        setButtonLoading(confirmPurchaseBtn, true);
+        setModalLoading(document.getElementById('confirmationModal'), true);
+        
         try {
             const response = await fetch(confirmUrl, { method: 'POST', body: formData });
             const data = await response.json();
@@ -1194,10 +1318,14 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                 setTimeout(() => window.location.href = data.redirect_url, 1500);
             } else {
                 showToast('error', data.error);
+                setButtonLoading(confirmPurchaseBtn, false);
+                setModalLoading(document.getElementById('confirmationModal'), false);
             }
         } catch (error) {
             console.error('Erreur confirmation:', error);
             showToast('error', 'Erreur lors de la confirmation');
+            setButtonLoading(confirmPurchaseBtn, false);
+            setModalLoading(document.getElementById('confirmationModal'), false);
         }
     });
 
@@ -1279,7 +1407,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  788 => 533,  784 => 532,  780 => 531,  776 => 530,  772 => 529,  768 => 528,  761 => 524,  748 => 523,  685 => 469,  674 => 467,  670 => 466,  551 => 350,  546 => 347,  542 => 345,  529 => 338,  523 => 335,  519 => 334,  515 => 333,  511 => 332,  505 => 329,  501 => 328,  495 => 325,  490 => 322,  486 => 320,  483 => 319,  477 => 317,  475 => 316,  471 => 315,  466 => 313,  459 => 310,  451 => 308,  449 => 307,  443 => 305,  439 => 304,  436 => 303,  426 => 295,  424 => 294,  418 => 291,  375 => 253,  369 => 250,  359 => 242,  346 => 241,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  858 => 591,  854 => 590,  850 => 589,  846 => 588,  842 => 587,  838 => 586,  831 => 582,  818 => 581,  803 => 575,  796 => 570,  794 => 569,  789 => 566,  742 => 521,  731 => 519,  727 => 518,  719 => 512,  711 => 506,  709 => 505,  587 => 386,  582 => 383,  578 => 381,  565 => 374,  559 => 371,  555 => 370,  551 => 369,  547 => 368,  541 => 365,  537 => 364,  531 => 361,  526 => 358,  522 => 356,  519 => 355,  513 => 353,  511 => 352,  507 => 351,  502 => 349,  495 => 346,  487 => 344,  485 => 343,  479 => 341,  475 => 340,  472 => 339,  462 => 331,  460 => 330,  454 => 327,  415 => 293,  409 => 290,  400 => 283,  387 => 282,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1521,12 +1649,52 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         justify-content: flex-end;
         margin-top: 0.5rem;
     }
+    
+    .btn-loading {
+        opacity: 0.7;
+        cursor: wait;
+        pointer-events: none;
+    }
+    .btn-loading .btn-text {
+        display: none;
+    }
+    .btn-loading .btn-spinner {
+        display: inline-block;
+    }
+    .btn-spinner {
+        display: none;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .modal-loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1060;
+        border-radius: 0.5rem;
+    }
+    .modal-content {
+        position: relative;
+    }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class=\"purchase-container\">
-    <!-- En‑tête -->
     <div class=\"header-bar\">
         <h1 class=\"h2 mb-0\">
             <i class=\"bi bi-cart3 text-primary\"></i>
@@ -1542,7 +1710,6 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         </div>
     </div>
 
-    <!-- Barre de recherche horizontale -->
     <div class=\"search-section\">
         <div class=\"search-bar\">
             <div class=\"input-group search-input-group\">
@@ -1554,9 +1721,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         </div>
     </div>
 
-    <!-- Deux colonnes : produits recherchés + panier -->
     <div class=\"two-columns\">
-        <!-- Panneau des produits recherchés -->
         <div class=\"products-panel\">
             <div class=\"panel-header\">
                 <i class=\"bi bi-search me-2\"></i> Produits disponibles
@@ -1570,7 +1735,6 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             </div>
         </div>
 
-        <!-- Panneau du panier -->
         <div class=\"cart-panel\">
             <div class=\"panel-header\">
                 <i class=\"bi bi-cart me-2\"></i> Votre panier
@@ -1675,13 +1839,16 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             </div>
             <div class=\"modal-footer\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmAddToCartBtn\">Ajouter au panier</button>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmAddToCartBtn\">
+                    <span class=\"btn-text\">Ajouter au panier</span>
+                    <span class=\"btn-spinner\"></span>
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal de modification d'article (quantité + prix) -->
+<!-- Modal de modification d'article -->
 <div class=\"modal fade\" id=\"editItemModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -1706,7 +1873,10 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             </div>
             <div class=\"modal-footer\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"saveEditChanges\">Enregistrer</button>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"saveEditChanges\">
+                    <span class=\"btn-text\">Enregistrer</span>
+                    <span class=\"btn-spinner\"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -1728,13 +1898,16 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             </div>
             <div class=\"modal-footer justify-content-center\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-danger\" id=\"confirmRemoveBtn\">Supprimer</button>
+                <button type=\"button\" class=\"btn btn-danger\" id=\"confirmRemoveBtn\">
+                    <span class=\"btn-text\">Supprimer</span>
+                    <span class=\"btn-spinner\"></span>
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal de confirmation de commande -->
+<!-- Modal de confirmation de commande avec vérification des fournisseurs -->
 <div class=\"modal fade\" id=\"confirmationModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-lg modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -1743,63 +1916,76 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                 <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
             </div>
             <div class=\"modal-body\">
-                <form id=\"confirmationForm\">
-                    <div class=\"row g-3\">
-                        <div class=\"col-md-6\">
-                            <label class=\"form-label\">Fournisseur *</label>
-                            <select name=\"supplier_id\" id=\"supplierSelect\" class=\"form-select\" required>
-                                <option value=\"\">Sélectionner un fournisseur</option>
-                                {% for supplier in suppliers %}
-                                    <option value=\"{{ supplier.id }}\">{{ supplier.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class=\"col-md-6\">
-                            <label class=\"form-label\">Bon de commande</label>
-                            <input type=\"text\" name=\"bon_commande\" class=\"form-control\" placeholder=\"Optionnel\">
-                        </div>
-                        <div class=\"col-12\">
-                            <label class=\"form-label\">Notes</label>
-                            <textarea name=\"notes\" class=\"form-control\" rows=\"2\" placeholder=\"Instructions de livraison, conditions particulières...\"></textarea>
-                        </div>
-                        <div class=\"col-12\">
-                            <hr>
-                            <h6>Options de notification</h6>
-                            <div class=\"row g-2\">
-                                <div class=\"col-md-4\">
-                                    <div class=\"form-check\">
-                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_email\" value=\"1\" checked>
-                                        <label class=\"form-check-label\">Email</label>
+                {% if suppliers is empty %}
+                    <div class=\"alert alert-danger\">
+                        <i class=\"bi bi-exclamation-triangle me-2\"></i>
+                        <strong>Aucun fournisseur disponible</strong><br>
+                        Veuillez activer des fournisseurs ou contacter l'administrateur.
+                    </div>
+                {% else %}
+                    <form id=\"confirmationForm\">
+                        <div class=\"row g-3\">
+                            <div class=\"col-md-12\">
+                                <label class=\"form-label\">Fournisseur *</label>
+                                <select name=\"supplier_id\" id=\"supplierSelect\" class=\"form-select\" required>
+                                    <option value=\"\">Sélectionner un fournisseur</option>
+                                    {% for supplier in suppliers %}
+                                        <option value=\"{{ supplier.id }}\">{{ supplier.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class=\"col-12\">
+                                <label class=\"form-label\">Bon de commande</label>
+                                <input type=\"text\" name=\"bon_commande\" class=\"form-control\" placeholder=\"Optionnel - Numéro ou référence\">
+                            </div>
+                            <div class=\"col-12\">
+                                <label class=\"form-label\">Notes</label>
+                                <textarea name=\"notes\" class=\"form-control\" rows=\"2\" placeholder=\"Instructions de livraison, conditions particulières...\"></textarea>
+                            </div>
+                            <div class=\"col-12\">
+                                <hr>
+                                <h6>Options de notification</h6>
+                                <div class=\"row g-2\">
+                                    <div class=\"col-md-4\">
+                                        <div class=\"form-check\">
+                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_email\" value=\"1\" checked>
+                                            <label class=\"form-check-label\">Email</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class=\"col-md-4\">
-                                    <div class=\"form-check\">
-                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_whatsapp\" value=\"1\" checked>
-                                        <label class=\"form-check-label\">WhatsApp</label>
+                                    <div class=\"col-md-4\">
+                                        <div class=\"form-check\">
+                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_whatsapp\" value=\"1\" checked>
+                                            <label class=\"form-check-label\">WhatsApp</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class=\"col-md-4\">
-                                    <div class=\"form-check\">
-                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"send_image\" value=\"1\" checked>
-                                        <label class=\"form-check-label\">Inclure image produit (WhatsApp)</label>
+                                    <div class=\"col-md-4\">
+                                        <div class=\"form-check\">
+                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"send_image\" value=\"1\" checked>
+                                            <label class=\"form-check-label\">Inclure image produit (WhatsApp)</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class=\"col-12\">
+                                <label class=\"form-label\">Message personnalisé (optionnel)</label>
+                                <textarea name=\"confirmation_message\" class=\"form-control\" rows=\"2\" placeholder=\"Ajouter un message pour le fournisseur...\"></textarea>
+                            </div>
                         </div>
-                        <div class=\"col-12\">
-                            <label class=\"form-label\">Message personnalisé (optionnel)</label>
-                            <textarea name=\"confirmation_message\" class=\"form-control\" rows=\"2\" placeholder=\"Ajouter un message pour le fournisseur...\"></textarea>
-                        </div>
+                    </form>
+                    <div class=\"alert alert-info mt-3\">
+                        <i class=\"bi bi-info-circle\"></i>
+                        La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
                     </div>
-                </form>
-                <div class=\"alert alert-info mt-3\">
-                    <i class=\"bi bi-info-circle\"></i>
-                    La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
-                </div>
+                {% endif %}
             </div>
             <div class=\"modal-footer\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmPurchaseBtn\">Confirmer la commande</button>
+                {% if suppliers is not empty %}
+                    <button type=\"button\" class=\"btn btn-primary\" id=\"confirmPurchaseBtn\">
+                        <span class=\"btn-text\">Confirmer la commande</span>
+                        <span class=\"btn-spinner\"></span>
+                    </button>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -1821,7 +2007,6 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     let searchTimeout = null;
     let currentProduct = null;
 
-    // DOM elements
     const searchInput = document.getElementById('productSearch');
     const resultsContainer = document.getElementById('productResultsContainer');
     const cartContainer = document.getElementById('cartContainer');
@@ -1829,12 +2014,50 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     const cartTotalSpan = document.getElementById('cartTotal');
     const confirmOrderBtn = document.getElementById('confirmOrderBtn');
 
-    // Modals
     const addProductModal = new bootstrap.Modal(document.getElementById('addProductModal'));
     const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
     const removeModal = new bootstrap.Modal(document.getElementById('removeCartItemModal'));
+    const confirmModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
 
-    // Elements du modal d'ajout
+    function setButtonLoading(btn, isLoading) {
+        if (!btn) return;
+        if (isLoading) {
+            btn.classList.add('btn-loading');
+            btn.disabled = true;
+        } else {
+            btn.classList.remove('btn-loading');
+            btn.disabled = false;
+        }
+    }
+
+    function setModalLoading(modalElement, isLoading) {
+        if (!modalElement) return;
+        const modalContent = modalElement.querySelector('.modal-content');
+        if (!modalContent) return;
+        
+        let overlay = modalContent.querySelector('.modal-loading-overlay');
+        if (isLoading) {
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'modal-loading-overlay';
+                overlay.innerHTML = `
+                    <div class=\"text-center\">
+                        <div class=\"spinner-border text-primary\" role=\"status\">
+                            <span class=\"visually-hidden\">Chargement...</span>
+                        </div>
+                        <p class=\"mt-2 mb-0\">Traitement en cours...</p>
+                    </div>
+                `;
+                modalContent.style.position = 'relative';
+                modalContent.appendChild(overlay);
+            }
+            overlay.style.display = 'flex';
+        } else if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }
+
+    // Éléments du modal d'ajout
     const modalProductImageContainer = document.getElementById('modalProductImageContainer');
     const modalProductName = document.getElementById('modalProductName');
     const modalProductBarcode = document.getElementById('modalProductBarcode');
@@ -1846,7 +2069,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     const incrementQty = document.getElementById('incrementQty');
     const confirmAddBtn = document.getElementById('confirmAddToCartBtn');
 
-    // Elements du modal d'édition
+    // Éléments du modal d'édition
     const editProductId = document.getElementById('editProductId');
     const editProductName = document.getElementById('editProductName');
     const editQuantity = document.getElementById('editQuantity');
@@ -1857,17 +2080,17 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
     let pendingRemoveProductId = null;
 
-    // Gestion des quantités dans le modal d'ajout
-    incrementQty.addEventListener('click', () => {
+    // Gestion des quantités
+    incrementQty?.addEventListener('click', () => {
         productQuantityInput.value = parseInt(productQuantityInput.value) + 1;
     });
-    decrementQty.addEventListener('click', () => {
+    decrementQty?.addEventListener('click', () => {
         let val = parseInt(productQuantityInput.value);
         if (val > 1) productQuantityInput.value = val - 1;
     });
 
-    // Ajout au panier depuis le modal d'ajout
-    confirmAddBtn.addEventListener('click', async () => {
+    // Ajout au panier
+    confirmAddBtn?.addEventListener('click', async () => {
         if (!currentProduct) {
             showToast('error', 'Aucun produit sélectionné');
             addProductModal.hide();
@@ -1884,10 +2107,14 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             return;
         }
 
+        setButtonLoading(confirmAddBtn, true);
+        setModalLoading(document.getElementById('addProductModal'), true);
+
         const formData = new FormData();
         formData.append('product_id', currentProduct.id);
         formData.append('quantity', quantity);
         formData.append('unit_price', unitPrice);
+        
         try {
             const response = await fetch(addToCartUrl, { method: 'POST', body: formData });
             const data = await response.json();
@@ -1895,11 +2122,9 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                 await refreshCart();
                 showToast('success', `\${currentProduct.name} ajouté au panier`);
                 addProductModal.hide();
-                // Réinitialiser
                 productQuantityInput.value = 1;
                 productPriceInput.value = '';
                 currentProduct = null;
-                // Vider la recherche
                 searchInput.value = '';
                 resultsContainer.innerHTML = '<div class=\"text-center text-muted py-5\"><i class=\"bi bi-search fs-1\"></i><p class=\"mt-2\">Commencez à taper pour voir les produits</p></div>';
                 document.getElementById('resultCount').textContent = '0';
@@ -1909,11 +2134,14 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         } catch (error) {
             console.error('Erreur ajout panier:', error);
             showToast('error', 'Erreur lors de l\\'ajout');
+        } finally {
+            setButtonLoading(confirmAddBtn, false);
+            setModalLoading(document.getElementById('addProductModal'), false);
         }
     });
 
-    // Recherche en temps réel (avec debounce)
-    searchInput.addEventListener('input', function(e) {
+    // Recherche en temps réel
+    searchInput?.addEventListener('input', function(e) {
         const query = e.target.value.trim();
         if (searchTimeout) clearTimeout(searchTimeout);
         if (query.length < 2) {
@@ -1969,7 +2197,6 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                     resultsContainer.innerHTML = html;
                     document.getElementById('resultCount').textContent = products.length;
 
-                    // Attacher l'événement de clic sur chaque élément de la liste
                     document.querySelectorAll('.product-list-item').forEach(item => {
                         item.addEventListener('click', () => openAddProductModal(item));
                     });
@@ -1981,7 +2208,6 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         }, 300);
     });
 
-    // Ouvre le modal d'ajout avec les infos du produit
     function openAddProductModal(element) {
         const productId = element.dataset.productId;
         const productName = element.dataset.productName;
@@ -1995,18 +2221,19 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         modalProductBarcode.textContent = productBarcode;
         modalProductUnit.textContent = `Unité : \${productUnit}`;
         productPriceInput.value = productPrice;
-        // Image
+        
         if (productImage) {
             modalProductImageContainer.innerHTML = `<img src=\"\${productImage}\" alt=\"\${escapeHtml(productName)}\" style=\"width: 80px; height: 80px; object-fit: cover; border-radius: 8px;\">`;
         } else {
             modalProductImageContainer.innerHTML = `<div class=\"product-img-fallback bg-light rounded d-flex align-items-center justify-content-center mx-auto\" style=\"width: 80px; height: 80px;\"><i class=\"fas fa-box text-secondary fs-1\"></i></div>`;
         }
-        // Alerte périssable
+        
         if (hasExpiry) {
             perishableWarning.classList.remove('d-none');
         } else {
             perishableWarning.classList.add('d-none');
         }
+        
         currentProduct = {
             id: parseInt(productId),
             name: productName,
@@ -2018,9 +2245,8 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         addProductModal.show();
     }
 
-    // Gestion du panier (uniquement les boutons Modifier et Supprimer)
-    cartContainer.addEventListener('click', async (e) => {
-        // Bouton supprimer
+    // Gestion des actions du panier
+    cartContainer?.addEventListener('click', async (e) => {
         const removeBtn = e.target.closest('.remove-btn');
         if (removeBtn) {
             const productId = parseInt(removeBtn.dataset.id);
@@ -2028,7 +2254,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             removeModal.show();
             return;
         }
-        // Bouton modifier
+        
         const editBtn = e.target.closest('.edit-item');
         if (editBtn) {
             const productId = parseInt(editBtn.dataset.id);
@@ -2043,11 +2269,12 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         }
     });
 
-    // Sauvegarde des modifications (envoi JSON)
-    saveEditChangesBtn.addEventListener('click', async () => {
+    // Sauvegarde modification
+    saveEditChangesBtn?.addEventListener('click', async () => {
         const productId = editProductId.value;
         const quantity = parseInt(editQuantity.value);
         const unitPrice = parseFloat(editUnitPrice.value);
+        
         if (isNaN(quantity) || quantity < 1) {
             showToast('error', 'Quantité invalide');
             return;
@@ -2056,6 +2283,9 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             showToast('error', 'Prix unitaire invalide');
             return;
         }
+
+        setButtonLoading(saveEditChangesBtn, true);
+        setModalLoading(document.getElementById('editItemModal'), true);
 
         const updateUrl = updateItemUrlTemplate.replace('{productId}', productId);
         try {
@@ -2075,21 +2305,25 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         } catch (error) {
             console.error('Erreur updateItem:', error);
             showToast('error', 'Erreur lors de la modification');
+        } finally {
+            setButtonLoading(saveEditChangesBtn, false);
+            setModalLoading(document.getElementById('editItemModal'), false);
         }
     });
 
-    // Confirmation de suppression
-    confirmRemoveBtn.addEventListener('click', async () => {
+    // Confirmation suppression
+    confirmRemoveBtn?.addEventListener('click', async () => {
         if (pendingRemoveProductId !== null) {
-            confirmRemoveBtn.disabled = true;
+            setButtonLoading(confirmRemoveBtn, true);
+            setModalLoading(document.getElementById('removeCartItemModal'), true);
             await removeFromCart(pendingRemoveProductId);
-            confirmRemoveBtn.disabled = false;
+            setButtonLoading(confirmRemoveBtn, false);
+            setModalLoading(document.getElementById('removeCartItemModal'), false);
             pendingRemoveProductId = null;
             removeModal.hide();
         }
     });
 
-    // Suppression d'un produit
     async function removeFromCart(productId) {
         const removeUrl = removeProductUrlTemplate.replace('{productId}', productId);
         try {
@@ -2107,7 +2341,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         }
     }
 
-    // Rafraîchissement du panier
+    // Rafraîchissement panier
     async function refreshCart() {
         try {
             const response = await fetch(cartDataUrl);
@@ -2183,7 +2417,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
     }
 
     // Scanner
-    document.getElementById('scanBarcodeBtn').addEventListener('click', async () => {
+    document.getElementById('scanBarcodeBtn')?.addEventListener('click', async () => {
         const barcode = prompt('Entrez le code-barres à scanner:');
         if (!barcode || barcode.length < 3) return;
         try {
@@ -2209,12 +2443,18 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
         }
     });
 
-    // Confirmation de commande
-    const confirmModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-    confirmOrderBtn.addEventListener('click', () => confirmModal.show());
-    document.getElementById('confirmPurchaseBtn').addEventListener('click', async () => {
+    // Confirmation commande
+    const confirmPurchaseBtn = document.getElementById('confirmPurchaseBtn');
+    
+    confirmOrderBtn?.addEventListener('click', () => confirmModal.show());
+    
+    confirmPurchaseBtn?.addEventListener('click', async () => {
         const form = document.getElementById('confirmationForm');
         const formData = new FormData(form);
+        
+        setButtonLoading(confirmPurchaseBtn, true);
+        setModalLoading(document.getElementById('confirmationModal'), true);
+        
         try {
             const response = await fetch(confirmUrl, { method: 'POST', body: formData });
             const data = await response.json();
@@ -2224,10 +2464,14 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                 setTimeout(() => window.location.href = data.redirect_url, 1500);
             } else {
                 showToast('error', data.error);
+                setButtonLoading(confirmPurchaseBtn, false);
+                setModalLoading(document.getElementById('confirmationModal'), false);
             }
         } catch (error) {
             console.error('Erreur confirmation:', error);
             showToast('error', 'Erreur lors de la confirmation');
+            setButtonLoading(confirmPurchaseBtn, false);
+            setModalLoading(document.getElementById('confirmationModal'), false);
         }
     });
 

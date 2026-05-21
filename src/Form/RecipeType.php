@@ -8,6 +8,7 @@ use App\Entity\Recipe;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -27,10 +28,27 @@ class RecipeType extends AbstractType
 
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom du plat *',
-                'attr' => ['placeholder' => 'Ex: Poulet grillé...', 'class' => 'form-control'],
+                'label' => 'Nom *',
+                'attr' => ['placeholder' => 'Ex: Poulet grillé, Coca-Cola...', 'class' => 'form-control'],
                 'constraints' => [new NotBlank(['message' => 'Le nom est obligatoire'])]
             ])
+            
+            // 🔥 NOUVEAU CHAMP : Type d'article (Food, Drink, Dessert)
+            ->add('type', ChoiceType::class, [
+                'label' => 'Type d\'article *',
+                'choices' => [
+                    '🍽️ Plat principal' => 'food',
+                    '🥤 Boisson' => 'drink',
+                    '🍰 Dessert' => 'dessert',
+                    '🥗 Entrée' => 'starter',
+                    '🍳 Petit-déjeuner' => 'breakfast'
+                ],
+                'placeholder' => '-- Sélectionnez le type --',
+                'attr' => ['class' => 'form-select'],
+                'constraints' => [new NotBlank(['message' => 'Le type est obligatoire'])],
+                'help' => 'Détermine où l\'article apparaîtra (bar, cuisine, etc.)'
+            ])
+            
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'required' => false,
@@ -66,7 +84,6 @@ class RecipeType extends AbstractType
                         ->orderBy('c.name', 'ASC')
                         ->setParameter('hmaService', $hmaService);
                 },
-                // Groupement par catégorie parente
                 'group_by' => function($choice) {
                     $parent = $choice->getParent();
                     if ($parent) {
@@ -76,7 +93,7 @@ class RecipeType extends AbstractType
                 }
             ])
             ->add('image', FileType::class, [
-                'label' => 'Image du plat',
+                'label' => 'Image',
                 'required' => false,
                 'mapped' => false,
                 'attr' => ['class' => 'form-control', 'accept' => 'image/*'],
@@ -97,7 +114,7 @@ class RecipeType extends AbstractType
                 'attr' => ['class' => 'recipe-items-collection'],
             ])
             ->add('is_active', CheckboxType::class, [
-                'label' => 'Activer le plat',
+                'label' => 'Activer',
                 'required' => false,
                 'attr' => ['class' => 'form-check-input'],
                 'label_attr' => ['class' => 'form-check-label']

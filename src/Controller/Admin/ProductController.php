@@ -353,8 +353,10 @@ final class ProductController extends AbstractController
             throw new AccessDeniedException('Aucun service associé.');
         }
         $this->checkOwnership($product, $hmaService);
+        
         return $this->render('admin/product/show.html.twig', [
             'product' => $product,
+            'currentStock' => $product->getCurrentStock(), 
             'companyType' => $hmaService->getType(),
         ]);
     }
@@ -376,24 +378,68 @@ final class ProductController extends AbstractController
         }
 
         $this->checkOwnership($product, $hmaService);
+        
+        // Vérifier si l'utilisateur peut modifier le stock (seul l'admin)
+        $canEditStock = $this->isGranted('ROLE_ADMIN');
+        
+        // Sauvegarder l'ancienne valeur du stock pour traçabilité
+        $oldStockQuantity = $product->getStockQuantity();
+        $oldUpdatedBy = $product->getLastStockUpdatedBy();
+        $oldUpdatedAt = $product->getLastStockUpdatedAt();
 
         $oldImage = $product->getImage();
+        
         $form = $this->createForm(ProductType::class, $product, [
             'hma_service' => $hmaService,
+            'can_edit_stock' => $canEditStock,
         ]);
+        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Vérifier si le stock a changé
+            $newStockQuantity = $product->getStockQuantity();
+            
+            if ($oldStockQuantity != $newStockQuantity) {
+                // Seul l'admin peut modifier le stock
+                if (!$canEditStock) {
+                    $this->addFlash('error', 'Seul un administrateur peut modifier le stock manuellement. Contactez votre administrateur.');
+                    // Restaurer l'ancienne valeur
+                    $product->setStockQuantity($oldStockQuantity);
+                } else {
+                    // 🔥 CORRECTION : Récupérer l'utilisateur géré par Doctrine
+                    $managedUser = $entityManager->getRepository(\App\Entity\User::class)->find($user->getId());
+                    
+                    // Enregistrer la traçabilité avec l'utilisateur géré
+                    $product->setLastStockUpdatedBy($managedUser);
+                    $product->setLastStockUpdatedAt(new \DateTime());
+                    
+                    $difference = $newStockQuantity - $oldStockQuantity;
+                    $this->addFlash('info', sprintf(
+                        'Stock modifié manuellement : %+d %s. Cette action a été enregistrée.',
+                        $difference,
+                        $product->getUnit() ?? 'pièce(s)'
+                    ));
+                }
+            } else {
+                // Restaurer les anciennes valeurs de traçabilité si le stock n'a pas changé
+                $product->setLastStockUpdatedBy($oldUpdatedBy);
+                $product->setLastStockUpdatedAt($oldUpdatedAt);
+            }
+            
             // ✅ Vérification de l'unicité du nom
             $validation = $this->uniqueNameValidator->validate($product, Product::class, 'produit', $hmaService->getId());
 
             if (!$validation['valid']) {
                 $this->addFlash('error', $validation['message']);
-                return $this->render('admin/product/new.html.twig', [
-                    'form' => $form->createView(),
-                    'product' => $product
+                return $this->render('admin/product/edit.html.twig', [
+                    'product' => $product,
+                    'form' => $form,
+                    'companyType' => $hmaService->getType(),
+                    'canEditStock' => $canEditStock,
                 ]);
             }
+            
             // Mettre à jour le slug si le nom a changé
             $newSlug = $this->slugger->slug($product->getName())->lower();
             $product->setSlug($newSlug);
@@ -423,6 +469,7 @@ final class ProductController extends AbstractController
             'product' => $product,
             'form' => $form,
             'companyType' => $hmaService->getType(),
+            'canEditStock' => $canEditStock,
         ]);
     }
 

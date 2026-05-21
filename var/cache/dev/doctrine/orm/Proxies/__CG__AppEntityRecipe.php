@@ -36,6 +36,7 @@ class Recipe extends \App\Entity\Recipe implements \Doctrine\ORM\Proxy\InternalP
         "\0".parent::class."\0".'recipeItems' => [parent::class, 'recipeItems', null, 16],
         "\0".parent::class."\0".'selling_price' => [parent::class, 'selling_price', null, 16],
         "\0".parent::class."\0".'subscription_active' => [parent::class, 'subscription_active', null, 16],
+        "\0".parent::class."\0".'type' => [parent::class, 'type', null, 16],
         "\0".parent::class."\0".'updated_at' => [parent::class, 'updated_at', null, 16],
         "\0".parent::class."\0".'user' => [parent::class, 'user', null, 16],
         'category' => [parent::class, 'category', null, 16],
@@ -52,6 +53,7 @@ class Recipe extends \App\Entity\Recipe implements \Doctrine\ORM\Proxy\InternalP
         'recipeItems' => [parent::class, 'recipeItems', null, 16],
         'selling_price' => [parent::class, 'selling_price', null, 16],
         'subscription_active' => [parent::class, 'subscription_active', null, 16],
+        'type' => [parent::class, 'type', null, 16],
         'updated_at' => [parent::class, 'updated_at', null, 16],
         'user' => [parent::class, 'user', null, 16],
     ];

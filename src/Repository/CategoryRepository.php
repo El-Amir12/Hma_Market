@@ -99,13 +99,12 @@ class CategoryRepository extends ServiceEntityRepository
                ->setParameter('search', '%' . $search . '%');
         }
 
-        // Filtre par promotion
-        if ($promotionId) {
+        // Filtre par promotion (uniquement si promotionId > 0)
+        if ($promotionId && $promotionId > 0) {
             $qb->leftJoin('c.promotionCategories', 'pc')
-            ->leftJoin('pc.promotion', 'promo')
-            ->andWhere('promo.id = :promoId')
-            ->setParameter('promoId', $promotionId)
-            ->groupBy('c.id'); // <-- AJOUT
+               ->leftJoin('pc.promotion', 'promo')
+               ->andWhere('promo.id = :promoId')
+               ->setParameter('promoId', $promotionId);
         }
 
         return $qb;
@@ -120,7 +119,7 @@ class CategoryRepository extends ServiceEntityRepository
         ?int $promotionId = null
     ): int {
         $qb = $this->getBaseQueryBuilder($hmaService, $status, $type, $subStatus, $search, $promotionId);
-        return (int) $qb->select('COUNT(c.id)')
+        return (int) $qb->select('COUNT(DISTINCT c.id)')
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -201,7 +200,7 @@ class CategoryRepository extends ServiceEntityRepository
         return $paginator;
     }
 
-    // === Méthodes hiérarchiques (inchangées) ===
+    // === Méthodes hiérarchiques ===
 
     public function findHierarchicalCategoriesWithCount(): array
     {
@@ -246,5 +245,66 @@ class CategoryRepository extends ServiceEntityRepository
             $ids = array_merge($ids, $this->getCategoryIdsRecursive($child));
         }
         return $ids;
+    }
+
+    /**
+     * Récupère les catégories avec leurs compteurs pour l'affichage
+     * Version simplifiée sans pagination
+     */
+    public function findAllWithCounters(HmaService $hmaService): array
+    {
+        $categories = $this->createQueryBuilder('c')
+            ->where('c.hma_service = :service')
+            ->setParameter('service', $hmaService)
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        // Récupérer les IDs
+        $ids = [];
+        foreach ($categories as $category) {
+            $ids[] = $category->getId();
+        }
+
+        if (empty($ids)) {
+            return $categories;
+        }
+
+        // Compter les produits
+        $productCounts = $this->getEntityManager()->createQueryBuilder()
+            ->select('IDENTITY(p.category) as categoryId, COUNT(p.id) as cnt')
+            ->from('App\Entity\Product', 'p')
+            ->where('p.category IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->groupBy('p.category')
+            ->getQuery()
+            ->getResult();
+
+        // Compter les sous-catégories
+        $childrenCounts = $this->getEntityManager()->createQueryBuilder()
+            ->select('IDENTITY(ch.parent) as parentId, COUNT(ch.id) as cnt')
+            ->from('App\Entity\Category', 'ch')
+            ->where('ch.parent IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->groupBy('ch.parent')
+            ->getQuery()
+            ->getResult();
+
+        $productCountMap = [];
+        foreach ($productCounts as $row) {
+            $productCountMap[$row['categoryId']] = (int) $row['cnt'];
+        }
+
+        $childrenCountMap = [];
+        foreach ($childrenCounts as $row) {
+            $childrenCountMap[$row['parentId']] = (int) $row['cnt'];
+        }
+
+        foreach ($categories as $category) {
+            $category->setProductCount($productCountMap[$category->getId()] ?? 0);
+            $category->setChildrenCount($childrenCountMap[$category->getId()] ?? 0);
+        }
+
+        return $categories;
     }
 }

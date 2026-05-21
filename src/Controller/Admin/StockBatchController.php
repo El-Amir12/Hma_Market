@@ -1,6 +1,6 @@
 <?php
-
 // src/Controller/Admin/StockBatchController.php
+
 namespace App\Controller\Admin;
 
 use App\Entity\HmaService;
@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 #[Route('/admin/stock-batch')]
 final class StockBatchController extends AbstractController
@@ -74,23 +76,22 @@ final class StockBatchController extends AbstractController
         $lowStock = $request->query->get('low_stock', '');
         $location = $request->query->get('location', '');
         $productIdParam = $request->query->get('product_id', '');
+        $hasIssue = $request->query->get('has_issue', '');
+        $issueStatus = $request->query->get('issue_status', '');
         $sort = $request->query->get('sort', 'expiry_date');
         $direction = $request->query->get('direction', 'asc');
         $page = $request->query->getInt('page', 1);
         $limit = 20;
 
-        // Tous les produits pour le select (non filtrés)
         $products = $productRepository->findBy(['hma_service' => $hmaService, 'is_active' => true], ['name' => 'ASC']);
 
-        // Tous les emplacements pour le filtre
         $allLocations = $locationRepository->findActiveByHmaService($hmaService);
-        $allLocationNames = array_map(fn($l) => $l->getDisplayName(), $allLocations);
+        $allLocationNames = array_map(function($l) { return $l->getDisplayName(); }, $allLocations);
 
-        // Convertir en int seulement si non vide, sinon null
         $productId = ($productIdParam !== '' && $productIdParam !== null) ? (int)$productIdParam : null;
 
-        // Récupérer TOUS les lots filtrés (sans pagination) pour les statistiques
-        $allFilteredBatches = $batchRepository->findFilteredForHmaService(
+        /** @var Paginator|StockBatch[] $allFilteredBatchesPaginator */
+        $allFilteredBatchesPaginator = $batchRepository->findFilteredForHmaService(
             $hmaService,
             $search,
             $status,
@@ -100,24 +101,35 @@ final class StockBatchController extends AbstractController
             $lowStock === 'yes',
             $location,
             $productId,
+            $hasIssue,
+            $issueStatus,
             $sort,
             $direction,
             1,
             99999
         );
-        $allFilteredBatches = iterator_to_array($allFilteredBatches);
+        
+        /** @var StockBatch[] $allFilteredBatches */
+        $allFilteredBatches = iterator_to_array($allFilteredBatchesPaginator);
 
-        // Calculer les statistiques sur les lots filtrés
         $statsFiltered = $this->calculateStatsFromBatches($allFilteredBatches);
-
-        // Récupérer les emplacements uniques des lots filtrés
+        $issueStats = $this->calculateIssueStatsFromBatches($allFilteredBatches);
+        $statsFiltered['open_issues'] = $issueStats['open_issues'];
+        $statsFiltered['total_issue_amount'] = $issueStats['total_issue_amount'];
+        
+        $lowStockBatches = 0;
+        foreach ($allFilteredBatches as $batch) {
+            if ($batch->getCurrentQuantity() <= 10) {
+                $lowStockBatches++;
+            }
+        }
+        $statsFiltered['low_stock_batches'] = $lowStockBatches;
+        
         $locationsFiltered = $this->getUniqueLocationsFromBatches($allFilteredBatches);
-
-        // Récupérer les produits concernés par les lots filtrés
         $productsFiltered = $this->getUniqueProductsFromBatches($allFilteredBatches);
         $productsFilteredCount = count($productsFiltered);
 
-        // Récupérer les lots PAGINÉS pour l'affichage
+        /** @var Paginator|StockBatch[] $batches */
         $batches = $batchRepository->findFilteredForHmaService(
             $hmaService,
             $search,
@@ -128,6 +140,8 @@ final class StockBatchController extends AbstractController
             $lowStock === 'yes',
             $location,
             $productId,
+            $hasIssue,
+            $issueStatus,
             $sort,
             $direction,
             $page,
@@ -146,6 +160,7 @@ final class StockBatchController extends AbstractController
             'products_filtered_count' => $productsFilteredCount,
             'totalPages' => $totalPages,
             'currentPage' => $page,
+            'hmaService' => $hmaService,
             'filters' => [
                 'search' => $search,
                 'status' => $status,
@@ -155,6 +170,8 @@ final class StockBatchController extends AbstractController
                 'low_stock' => $lowStock,
                 'location' => $location,
                 'product_id' => $productIdParam,
+                'has_issue' => $hasIssue,
+                'issue_status' => $issueStatus,
                 'sort' => $sort,
                 'direction' => $direction,
             ],
@@ -163,6 +180,9 @@ final class StockBatchController extends AbstractController
 
     /**
      * Calcule les statistiques à partir d'un tableau de lots
+     * 
+     * @param StockBatch[] $batches
+     * @return array<string, int|float>
      */
     private function calculateStatsFromBatches(array $batches): array
     {
@@ -172,6 +192,7 @@ final class StockBatchController extends AbstractController
         $expiredBatches = 0;
         $expiringSoonBatches = 0;
         $totalQuantity = 0;
+        $hasIssueCount = 0;
 
         foreach ($batches as $batch) {
             if ($batch->isActive()) {
@@ -187,6 +208,10 @@ final class StockBatchController extends AbstractController
             }
             
             $totalQuantity += $batch->getCurrentQuantity();
+            
+            if ($batch->hasIssue()) {
+                $hasIssueCount++;
+            }
         }
 
         return [
@@ -195,18 +220,46 @@ final class StockBatchController extends AbstractController
             'expired_batches' => $expiredBatches,
             'expiring_soon_batches' => $expiringSoonBatches,
             'total_quantity' => $totalQuantity,
+            'has_issue_count' => $hasIssueCount,
+        ];
+    }
+
+    /**
+     * Calcule les statistiques des avoirs à partir d'un tableau de lots
+     * 
+     * @param StockBatch[] $batches
+     * @return array<string, int|float>
+     */
+    private function calculateIssueStatsFromBatches(array $batches): array
+    {
+        $openIssues = 0;
+        $totalIssueAmount = 0;
+        
+        foreach ($batches as $batch) {
+            if ($batch->hasIssue() && $batch->getIssueStatus() !== 'closed' && $batch->getIssueStatus() !== 'recovered') {
+                $openIssues++;
+                $totalIssueAmount += (float)($batch->getIssueDeclaredAmount() ?? 0);
+            }
+        }
+        
+        return [
+            'open_issues' => $openIssues,
+            'total_issue_amount' => $totalIssueAmount,
         ];
     }
 
     /**
      * Récupère les emplacements uniques à partir d'un tableau de lots
+     * 
+     * @param StockBatch[] $batches
+     * @return string[]
      */
     private function getUniqueLocationsFromBatches(array $batches): array
     {
         $locations = [];
         foreach ($batches as $batch) {
-            $loc = $batch->getLocation();
-            if ($loc && !in_array($loc, $locations)) {
+            $loc = $batch->getLocationDisplay();
+            if ($loc !== '—' && !in_array($loc, $locations)) {
                 $locations[] = $loc;
             }
         }
@@ -216,6 +269,9 @@ final class StockBatchController extends AbstractController
 
     /**
      * Récupère les produits uniques à partir d'un tableau de lots
+     * 
+     * @param StockBatch[] $batches
+     * @return Product[]
      */
     private function getUniqueProductsFromBatches(array $batches): array
     {
@@ -254,6 +310,8 @@ final class StockBatchController extends AbstractController
         $dateTo = $request->query->get('date_to', '');
         $lowStock = $request->query->get('low_stock', '');
         $location = $request->query->get('location', '');
+        $hasIssue = $request->query->get('has_issue', '');
+        $issueStatus = $request->query->get('issue_status', '');
         $sort = $request->query->get('sort', 'expiry_date');
         $direction = $request->query->get('direction', 'asc');
 
@@ -266,6 +324,8 @@ final class StockBatchController extends AbstractController
             $dateTo ? new \DateTime($dateTo) : null,
             $lowStock === 'yes',
             $location,
+            $hasIssue,
+            $issueStatus,
             $sort,
             $direction
         );
@@ -278,6 +338,7 @@ final class StockBatchController extends AbstractController
             'batches' => $batches,
             'stats' => $stats,
             'locations' => $locations,
+            'hmaService' => $hmaService,
             'companyType' => $hmaService->getType(),
             'filters' => [
                 'search' => $search,
@@ -287,6 +348,8 @@ final class StockBatchController extends AbstractController
                 'date_to' => $dateTo,
                 'low_stock' => $lowStock,
                 'location' => $location,
+                'has_issue' => $hasIssue,
+                'issue_status' => $issueStatus,
                 'sort' => $sort,
                 'direction' => $direction,
             ],
@@ -312,7 +375,7 @@ final class StockBatchController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_stock_batch_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, StockBatch $batch, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, StockBatch $batch): Response
     {
         $this->checkStockManagementAccess();
         $hmaService = $this->getCurrentHmaService();
@@ -324,8 +387,8 @@ final class StockBatchController extends AbstractController
         $product = $batch->getProduct();
         
         $form = $this->createForm(StockBatchEditType::class, $batch, [
-            'product' => $product,      // Passer le produit pour savoir s'il est périssable
-            'has_sales' => $hasSales,   // Passer l'information des ventes
+            'product' => $product,
+            'has_sales' => $hasSales,
         ]);
         
         $form->handleRequest($request);
@@ -346,7 +409,6 @@ final class StockBatchController extends AbstractController
                 }
             }
             
-            // Si le produit est périssable, vérifier la cohérence des dates
             if ($product->hasExpiryDate()) {
                 $manufacturingDate = $request->request->get('manufacturing_date');
                 $expiryDate = $batch->getExpiryDate();
@@ -362,13 +424,12 @@ final class StockBatchController extends AbstractController
             
             $batch->setUpdatedAt(new \DateTimeImmutable());
             
-            // Gérer la date de fabrication si fournie
             if ($request->request->has('manufacturing_date') && $request->request->get('manufacturing_date')) {
                 $manufacturingDate = new \DateTime($request->request->get('manufacturing_date'));
                 $batch->setManufacturingDate($manufacturingDate);
             }
             
-            $entityManager->flush();
+            $this->entityManager->flush();
             
             $this->addFlash('success', 'Lot modifié avec succès.');
             return $this->redirectToRoute('app_admin_stock_batch_show', ['id' => $batch->getId()]);
@@ -386,7 +447,7 @@ final class StockBatchController extends AbstractController
     }
 
     #[Route('/{id}/toggle', name: 'app_admin_stock_batch_toggle', methods: ['POST'])]
-    public function toggle(Request $request, StockBatch $batch, EntityManagerInterface $entityManager): Response
+    public function toggle(Request $request, StockBatch $batch): Response
     {
         $this->checkStockManagementAccess();
         $hmaService = $this->getCurrentHmaService();
@@ -413,7 +474,7 @@ final class StockBatchController extends AbstractController
 
         $batch->setIsActive($newStatus);
         $batch->setUpdatedAt(new \DateTimeImmutable());
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         $status = $batch->isActive() ? 'activé' : 'désactivé';
         $this->addFlash('success', "Lot {$status} avec succès.");
@@ -422,7 +483,7 @@ final class StockBatchController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_admin_stock_batch_delete', methods: ['POST'])]
-    public function delete(Request $request, StockBatch $batch, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, StockBatch $batch): Response
     {
         $this->checkDeleteAccess();
 
@@ -441,13 +502,14 @@ final class StockBatchController extends AbstractController
             return $this->redirectToRoute('app_admin_stock_batch_all');
         }
         
-        if ($batch->getPurchaseItem()) {
+        // ✅ CORRECTION : Utiliser purchaseItemId au lieu de getPurchaseItem()
+        if ($batch->getPurchaseItemId()) {
             $this->addFlash('error', 'Impossible de supprimer ce lot car il est lié à un achat.');
             return $this->redirectToRoute('app_admin_stock_batch_all');
         }
 
-        $entityManager->remove($batch);
-        $entityManager->flush();
+        $this->entityManager->remove($batch);
+        $this->entityManager->flush();
         $this->addFlash('success', 'Lot supprimé avec succès.');
 
         return $this->redirectToRoute('app_admin_stock_batch_all');
@@ -488,21 +550,6 @@ final class StockBatchController extends AbstractController
         ]);
     }
 
-    #[Route('/product/{productId}/add-by-purchase', name: 'app_admin_stock_batch_add_by_purchase', methods: ['GET'])]
-    public function redirectToPurchase(int $productId, ProductRepository $productRepository): Response
-    {
-        $this->checkStockManagementAccess();
-        $hmaService = $this->getCurrentHmaService();
-        
-        $product = $productRepository->find($productId);
-        if (!$product || $product->getHmaService()->getId() !== $hmaService->getId()) {
-            throw $this->createNotFoundException('Produit non trouvé.');
-        }
-        
-        $this->addFlash('info', 'Pour ajouter un lot, veuillez créer un achat pour ce produit.');
-        return $this->redirectToRoute('admin_purchase_new', ['productId' => $productId]);
-    }
-
     private function hasSalesMovements(StockBatch $batch): bool
     {
         foreach ($batch->getStockMovements() as $movement) {
@@ -539,14 +586,14 @@ final class StockBatchController extends AbstractController
             'low_stock' => $request->query->get('low_stock', ''),
             'location' => $request->query->get('location', ''),
             'product_id' => $request->query->get('product_id', ''),
+            'has_issue' => $request->query->get('has_issue', ''),
+            'issue_status' => $request->query->get('issue_status', ''),
             'sort' => $request->query->get('sort', 'expiry_date'),
             'direction' => $request->query->get('direction', 'asc'),
         ];
 
-        // Récupérer TOUS les produits pour afficher le nom dans les filtres
         $products = $productRepository->findBy(['hma_service' => $hmaService, 'is_active' => true], ['name' => 'ASC']);
 
-        // Récupérer les lots avec les filtres
         if ($filters['product_id']) {
             $product = $productRepository->find($filters['product_id']);
             if ($product && $product->getHmaService()->getId() === $hmaService->getId()) {
@@ -559,6 +606,8 @@ final class StockBatchController extends AbstractController
                     $filters['date_to'] ? new \DateTime($filters['date_to']) : null,
                     $filters['low_stock'] === 'yes',
                     $filters['location'],
+                    $filters['has_issue'],
+                    $filters['issue_status'],
                     $filters['sort'],
                     $filters['direction']
                 );
@@ -576,6 +625,8 @@ final class StockBatchController extends AbstractController
                 $filters['low_stock'] === 'yes',
                 $filters['location'],
                 null,
+                $filters['has_issue'],
+                $filters['issue_status'],
                 $filters['sort'],
                 $filters['direction'],
                 1,
@@ -584,7 +635,6 @@ final class StockBatchController extends AbstractController
             $batches = iterator_to_array($batches);
         }
 
-        // Calcul des totaux
         $totalQuantity = 0;
         $totalValue = 0;
         foreach ($batches as $batch) {
@@ -592,19 +642,11 @@ final class StockBatchController extends AbstractController
             $totalValue += $batch->getCurrentQuantity() * (float)$batch->getUnitPrice();
         }
 
-        // Récupérer l'utilisateur connecté et ses rôles
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $userRoles = $user ? $user->getRoles() : [];
+        $userRoles = array_filter($userRoles, fn($role) => $role !== 'ROLE_USER');
 
-        // Filtrer pour exclure ROLE_USER (rôle de base)
-        $userRoles = array_filter($userRoles, function($role) {
-            return $role !== 'ROLE_USER';
-        });
-
-        $userRoleLabels = [];
-
-        // Convertir les rôles en labels lisibles
         $roleLabels = [
             'ROLE_SUPER_ADMIN' => 'Super Administrateur',
             'ROLE_ADMIN' => 'Administrateur',
@@ -613,15 +655,14 @@ final class StockBatchController extends AbstractController
             'ROLE_CASHIER' => 'Caissier',
         ];
 
+        $userRoleLabels = [];
         foreach ($userRoles as $role) {
             $userRoleLabels[] = $roleLabels[$role] ?? $role;
         }
 
-        // Générer le fichier Excel
         $spreadsheet = $this->generateExcelFile($batches, $filters, $hmaService, $products, $user, $userRoleLabels, $totalQuantity, $totalValue);
         
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        
         $filename = 'export_lots_' . (new \DateTime())->format('Ymd_His') . '.xlsx';
         
         $response = new Response();
@@ -636,188 +677,11 @@ final class StockBatchController extends AbstractController
         return $response;
     }
 
-    #[Route('/export/pdf', name: 'app_admin_stock_batch_export_pdf', methods: ['GET'])]
-    public function exportPdf(Request $request, StockBatchRepository $batchRepository, ProductRepository $productRepository): Response
-    {
-        $this->checkStockManagementAccess();
-        $hmaService = $this->getCurrentHmaService();
-        if (!$hmaService) {
-            throw new AccessDeniedException('Aucun service associé.');
-        }
-
-        $filters = [
-            'search' => $request->query->get('search', ''),
-            'status' => $request->query->get('status', ''),
-            'expiry_status' => $request->query->get('expiry_status', ''),
-            'date_from' => $request->query->get('date_from', ''),
-            'date_to' => $request->query->get('date_to', ''),
-            'low_stock' => $request->query->get('low_stock', ''),
-            'location' => $request->query->get('location', ''),
-            'product_id' => $request->query->get('product_id', ''),
-            'sort' => $request->query->get('sort', 'expiry_date'),
-            'direction' => $request->query->get('direction', 'asc'),
-        ];
-
-        // Récupérer TOUS les produits pour afficher le nom dans les filtres
-        $products = $productRepository->findBy(['hma_service' => $hmaService, 'is_active' => true], ['name' => 'ASC']);
-
-        // Récupérer les lots avec les filtres
-        if ($filters['product_id']) {
-            $product = $productRepository->find($filters['product_id']);
-            if ($product && $product->getHmaService()->getId() === $hmaService->getId()) {
-                $batches = $batchRepository->findFilteredForProduct(
-                    $product,
-                    $filters['search'],
-                    $filters['status'],
-                    $filters['expiry_status'],
-                    $filters['date_from'] ? new \DateTime($filters['date_from']) : null,
-                    $filters['date_to'] ? new \DateTime($filters['date_to']) : null,
-                    $filters['low_stock'] === 'yes',
-                    $filters['location'],
-                    $filters['sort'],
-                    $filters['direction']
-                );
-            } else {
-                $batches = [];
-            }
-        } else {
-            $batches = $batchRepository->findFilteredForHmaService(
-                $hmaService,
-                $filters['search'],
-                $filters['status'],
-                $filters['expiry_status'],
-                $filters['date_from'] ? new \DateTime($filters['date_from']) : null,
-                $filters['date_to'] ? new \DateTime($filters['date_to']) : null,
-                $filters['low_stock'] === 'yes',
-                $filters['location'],
-                null,
-                $filters['sort'],
-                $filters['direction'],
-                1,
-                99999
-            );
-            $batches = iterator_to_array($batches);
-        }
-
-        // Calcul des totaux
-        $totalQuantity = 0;
-        $totalValue = 0;
-        foreach ($batches as $batch) {
-            $totalQuantity += $batch->getCurrentQuantity();
-            $totalValue += $batch->getCurrentQuantity() * (float)$batch->getUnitPrice();
-        }
-
-        // Récupérer l'utilisateur connecté et ses rôles
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-        $userRoles = $user ? $user->getRoles() : [];
-
-        // Filtrer pour exclure ROLE_USER (rôle de base)
-        $userRoles = array_filter($userRoles, function($role) {
-            return $role !== 'ROLE_USER';
-        });
-
-        $userRoleLabels = [];
-
-        // Convertir les rôles en labels lisibles
-        $roleLabels = [
-            'ROLE_SUPER_ADMIN' => 'Super Administrateur',
-            'ROLE_ADMIN' => 'Administrateur',
-            'ROLE_MANAGER' => 'Manager',
-            'ROLE_STOCK_MANAGER' => 'Responsable Stock',
-            'ROLE_CASHIER' => 'Caissier',
-        ];
-
-        foreach ($userRoles as $role) {
-            $userRoleLabels[] = $roleLabels[$role] ?? $role;
-        }
-
-        // Générer le HTML pour le PDF
-        $html = $this->renderView('admin/stock_batch/export_pdf.html.twig', [
-            'batches' => $batches,
-            'filters' => $filters,
-            'hmaService' => $hmaService,
-            'exportDate' => new \DateTime(),
-            'products' => $products,
-            'totalQuantity' => $totalQuantity,
-            'totalValue' => $totalValue,
-            'userName' => $user ? ($user->getFullName() ?: $user->getEmail()) : 'Inconnu',
-            'userEmail' => $user ? $user->getEmail() : 'Inconnu',
-            'userRoles' => $userRoleLabels,
-        ]);
-
-        // Générer le PDF avec Dompdf
-        $dompdf = new \Dompdf\Dompdf();
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'landscape');
-        $dompdf->render();
-
-        $filename = 'rapport_lots_' . (new \DateTime())->format('Ymd_His') . '.pdf';
-
-        return new Response($dompdf->output(), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ]);
-    }
-
-    #[Route('/export/excel/template', name: 'app_admin_stock_batch_export_excel_template', methods: ['GET'])]
-    public function exportExcelTemplate(): Response
-    {
-        $this->checkStockManagementAccess();
-        $hmaService = $this->getCurrentHmaService();
-        if (!$hmaService) {
-            throw new AccessDeniedException('Aucun service associé.');
-        }
-
-        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Template Import Lots');
-
-        $headers = ['ID', 'N° Lot', 'Emplacement (à modifier)', 'Date expiration (YYYY-MM-DD)'];
-        $col = 'A';
-        foreach ($headers as $header) {
-            $sheet->setCellValue($col . '1', $header);
-            $sheet->getStyle($col . '1')->getFont()->setBold(true);
-            $col++;
-        }
-        
-        $sheet->setCellValue('A2', '123');
-        $sheet->setCellValue('B2', 'LOT-20241201-1-0001');
-        $sheet->setCellValue('C2', 'A12 - Étagère 3');
-        $sheet->setCellValue('D2', '2025-12-31');
-        
-        foreach (range('A', 'D') as $col) {
-            $sheet->getColumnDimension($col)->setAutoSize(true);
-        }
-        
-        $instructionSheet = $spreadsheet->createSheet();
-        $instructionSheet->setTitle('Instructions');
-        $instructionSheet->setCellValue('A1', 'INSTRUCTIONS D\'IMPORTATION');
-        $instructionSheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-        $instructionSheet->setCellValue('A3', '1. Seuls les champs "Emplacement" peuvent être modifiés');
-        $instructionSheet->setCellValue('A4', '2. Ne modifiez pas les colonnes ID et N° Lot');
-        $instructionSheet->setCellValue('A5', '3. La date d\'expiration peut être modifiée uniquement si aucune vente');
-        $instructionSheet->setCellValue('A6', '4. Format de date : YYYY-MM-DD (ex: 2025-12-31)');
-        $instructionSheet->setCellValue('A7', '5. Les lignes avec des erreurs seront ignorées');
-        $instructionSheet->getColumnDimension('A')->setWidth(60);
-        
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $filename = 'template_import_lots.xlsx';
-        
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->headers->set('Content-Disposition', 'attachment;filename="' . $filename . '"');
-        $response->headers->set('Cache-Control', 'max-age=0');
-        
-        ob_start();
-        $writer->save('php://output');
-        $response->setContent(ob_get_clean());
-        
-        return $response;
-    }
-
+    /**
+     * Import des lots depuis un fichier Excel
+     */
     #[Route('/import/excel', name: 'app_admin_stock_batch_import_excel', methods: ['POST'])]
-    public function importExcel(Request $request, StockBatchRepository $batchRepository, EntityManagerInterface $em): Response
+    public function importExcel(Request $request, StockBatchRepository $batchRepository): Response
     {
         $this->checkStockManagementAccess();
         $hmaService = $this->getCurrentHmaService();
@@ -835,6 +699,8 @@ final class StockBatchController extends AbstractController
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file);
             $sheet = $spreadsheet->getActiveSheet();
             $rows = $sheet->toArray();
+            
+            // Supprimer l'en-tête
             array_shift($rows);
             
             $updated = 0;
@@ -876,13 +742,203 @@ final class StockBatchController extends AbstractController
                 $batch->setUpdatedAt(new \DateTimeImmutable());
             }
             
-            $em->flush();
+            $this->entityManager->flush();
             $this->addFlash('success', "Import terminé : $updated lot(s) mis à jour, $errors erreur(s)");
+            
         } catch (\Exception $e) {
             $this->addFlash('error', 'Erreur lors de l\'import : ' . $e->getMessage());
         }
         
         return $this->redirectToRoute('app_admin_stock_batch_all');
+    }
+
+    #[Route('/export/pdf', name: 'app_admin_stock_batch_export_pdf', methods: ['GET'])]
+    public function exportPdf(Request $request, StockBatchRepository $batchRepository, ProductRepository $productRepository): Response
+    {
+        $this->checkStockManagementAccess();
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé.');
+        }
+
+        $filters = [
+            'search' => $request->query->get('search', ''),
+            'status' => $request->query->get('status', ''),
+            'expiry_status' => $request->query->get('expiry_status', ''),
+            'date_from' => $request->query->get('date_from', ''),
+            'date_to' => $request->query->get('date_to', ''),
+            'low_stock' => $request->query->get('low_stock', ''),
+            'location' => $request->query->get('location', ''),
+            'product_id' => $request->query->get('product_id', ''),
+            'has_issue' => $request->query->get('has_issue', ''),
+            'issue_status' => $request->query->get('issue_status', ''),
+            'sort' => $request->query->get('sort', 'expiry_date'),
+            'direction' => $request->query->get('direction', 'asc'),
+        ];
+
+        $products = $productRepository->findBy(['hma_service' => $hmaService, 'is_active' => true], ['name' => 'ASC']);
+
+        if ($filters['product_id']) {
+            $product = $productRepository->find($filters['product_id']);
+            if ($product && $product->getHmaService()->getId() === $hmaService->getId()) {
+                $batches = $batchRepository->findFilteredForProduct(
+                    $product,
+                    $filters['search'],
+                    $filters['status'],
+                    $filters['expiry_status'],
+                    $filters['date_from'] ? new \DateTime($filters['date_from']) : null,
+                    $filters['date_to'] ? new \DateTime($filters['date_to']) : null,
+                    $filters['low_stock'] === 'yes',
+                    $filters['location'],
+                    $filters['has_issue'],
+                    $filters['issue_status'],
+                    $filters['sort'],
+                    $filters['direction']
+                );
+            } else {
+                $batches = [];
+            }
+        } else {
+            $batches = $batchRepository->findFilteredForHmaService(
+                $hmaService,
+                $filters['search'],
+                $filters['status'],
+                $filters['expiry_status'],
+                $filters['date_from'] ? new \DateTime($filters['date_from']) : null,
+                $filters['date_to'] ? new \DateTime($filters['date_to']) : null,
+                $filters['low_stock'] === 'yes',
+                $filters['location'],
+                null,
+                $filters['has_issue'],
+                $filters['issue_status'],
+                $filters['sort'],
+                $filters['direction'],
+                1,
+                99999
+            );
+            $batches = iterator_to_array($batches);
+        }
+
+        $totalQuantity = 0;
+        $totalValue = 0;
+        foreach ($batches as $batch) {
+            $totalQuantity += $batch->getCurrentQuantity();
+            $totalValue += $batch->getCurrentQuantity() * (float)$batch->getUnitPrice();
+        }
+
+        // Statistiques des avoirs
+        $openIssues = 0;
+        $totalIssueAmount = 0;
+        foreach ($batches as $batch) {
+            if ($batch->hasIssue() && $batch->getIssueStatus() !== 'closed' && $batch->getIssueStatus() !== 'recovered') {
+                $openIssues++;
+                $totalIssueAmount += (float)($batch->getIssueDeclaredAmount() ?? 0);
+            }
+        }
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $userRoles = $user ? $user->getRoles() : [];
+        $userRoles = array_filter($userRoles, fn($role) => $role !== 'ROLE_USER');
+
+        $roleLabels = [
+            'ROLE_SUPER_ADMIN' => 'Super Administrateur',
+            'ROLE_ADMIN' => 'Administrateur',
+            'ROLE_MANAGER' => 'Manager',
+            'ROLE_STOCK_MANAGER' => 'Responsable Stock',
+            'ROLE_CASHIER' => 'Caissier',
+        ];
+
+        $userRoleLabels = [];
+        foreach ($userRoles as $role) {
+            $userRoleLabels[] = $roleLabels[$role] ?? $role;
+        }
+
+        $html = $this->renderView('admin/stock_batch/export_pdf.html.twig', [
+            'batches' => $batches,
+            'filters' => $filters,
+            'hmaService' => $hmaService,
+            'exportDate' => new \DateTime(),
+            'products' => $products,
+            'totalQuantity' => $totalQuantity,
+            'totalValue' => $totalValue,
+            'openIssues' => $openIssues,
+            'totalIssueAmount' => $totalIssueAmount,
+            'userName' => $user ? ($user->getFullName() ?: $user->getEmail()) : 'Inconnu',
+            'userEmail' => $user ? $user->getEmail() : 'Inconnu',
+            'userRoles' => $userRoleLabels,
+        ]);
+
+        $dompdf = new \Dompdf\Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        $filename = 'rapport_lots_' . (new \DateTime())->format('Ymd_His') . '.pdf';
+
+        return new Response($dompdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
+    /**
+     * Export du template Excel pour l'import des lots
+     */
+    #[Route('/export/excel/template', name: 'app_admin_stock_batch_export_excel_template', methods: ['GET'])]
+    public function exportExcelTemplate(): Response
+    {
+        $this->checkStockManagementAccess();
+        
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Template Import Lots');
+
+        // En-têtes
+        $headers = ['ID', 'N° Lot', 'Emplacement (à modifier)', 'Date expiration (YYYY-MM-DD)'];
+        $col = 'A';
+        foreach ($headers as $header) {
+            $sheet->setCellValue($col . '1', $header);
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+            $col++;
+        }
+        
+        // Exemple de données
+        $sheet->setCellValue('A2', '123');
+        $sheet->setCellValue('B2', 'LOT-20241201-1-0001');
+        $sheet->setCellValue('C2', 'A12 - Étagère 3');
+        $sheet->setCellValue('D2', '2025-12-31');
+        
+        // Ajuster les colonnes
+        foreach (range('A', 'D') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+        
+        // Feuille d'instructions
+        $instructionSheet = $spreadsheet->createSheet();
+        $instructionSheet->setTitle('Instructions');
+        $instructionSheet->setCellValue('A1', 'INSTRUCTIONS D\'IMPORTATION');
+        $instructionSheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        $instructionSheet->setCellValue('A3', '1. Seuls les champs "Emplacement" peuvent être modifiés');
+        $instructionSheet->setCellValue('A4', '2. Ne modifiez pas les colonnes ID et N° Lot');
+        $instructionSheet->setCellValue('A5', '3. La date d\'expiration peut être modifiée uniquement si aucune vente');
+        $instructionSheet->setCellValue('A6', '4. Format de date : YYYY-MM-DD (ex: 2025-12-31)');
+        $instructionSheet->setCellValue('A7', '5. Les lignes avec des erreurs seront ignorées');
+        $instructionSheet->getColumnDimension('A')->setWidth(60);
+        
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $filename = 'template_import_lots.xlsx';
+        
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-Disposition', 'attachment;filename="' . $filename . '"');
+        $response->headers->set('Cache-Control', 'max-age=0');
+        
+        ob_start();
+        $writer->save('php://output');
+        $response->setContent(ob_get_clean());
+        
+        return $response;
     }
 
     private function generateExcelFile($batches, array $filters, HmaService $hmaService, array $products, $user, array $userRoles, int $totalQuantity, float $totalValue): \PhpOffice\PhpSpreadsheet\Spreadsheet
@@ -891,67 +947,60 @@ final class StockBatchController extends AbstractController
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Rapport Lots');
 
-        // Style pour les titres
         $titleStyle = [
             'font' => ['bold' => true, 'size' => 14, 'color' => ['rgb' => '2E86C1']],
             'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
         ];
 
-        // Style pour les en-têtes
         $headerStyle = [
             'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF'], 'size' => 11],
             'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => '2E86C1']],
             'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
         ];
 
-        // Style pour les sections
         $sectionStyle = [
             'font' => ['bold' => true, 'size' => 12],
             'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => 'E8F4FD']]
         ];
 
         $row = 1;
-
-        // ========== TITRE PRINCIPAL ==========
-        $sheet->mergeCells('A' . $row . ':R' . $row);
+        $sheet->mergeCells('A' . $row . ':T' . $row);
         $sheet->setCellValue('A' . $row, 'RAPPORT DE GESTION DES LOTS');
         $sheet->getStyle('A' . $row)->applyFromArray($titleStyle);
         $row++;
 
-        // ========== INFORMATIONS GÉNÉRALES ==========
-        $sheet->mergeCells('A' . $row . ':R' . $row);
+        $sheet->mergeCells('A' . $row . ':T' . $row);
         $sheet->setCellValue('A' . $row, 'Informations générales');
         $sheet->getStyle('A' . $row)->applyFromArray($sectionStyle);
         $row++;
 
         $sheet->setCellValue('A' . $row, 'Date d\'export :');
         $sheet->setCellValue('B' . $row, (new \DateTime())->format('d/m/Y H:i:s'));
-        $sheet->mergeCells('B' . $row . ':R' . $row);
+        $sheet->mergeCells('B' . $row . ':T' . $row);
         $row++;
 
         $sheet->setCellValue('A' . $row, 'Entreprise :');
         $sheet->setCellValue('B' . $row, $hmaService->getCompanyName());
-        $sheet->mergeCells('B' . $row . ':R' . $row);
+        $sheet->mergeCells('B' . $row . ':T' . $row);
         $row++;
 
         $sheet->setCellValue('A' . $row, 'Exporté par :');
         $sheet->setCellValue('B' . $row, $user ? ($user->getFullName() ?: $user->getEmail()) : 'Inconnu');
-        $sheet->mergeCells('B' . $row . ':R' . $row);
+        $sheet->mergeCells('B' . $row . ':T' . $row);
         $row++;
 
         $sheet->setCellValue('A' . $row, 'Email :');
         $sheet->setCellValue('B' . $row, $user ? $user->getEmail() : 'Inconnu');
-        $sheet->mergeCells('B' . $row . ':R' . $row);
+        $sheet->mergeCells('B' . $row . ':T' . $row);
         $row++;
 
         $sheet->setCellValue('A' . $row, 'Rôle(s) :');
         $sheet->setCellValue('B' . $row, implode(', ', $userRoles));
-        $sheet->mergeCells('B' . $row . ':R' . $row);
+        $sheet->mergeCells('B' . $row . ':T' . $row);
         $row++;
         $row++;
 
-        // ========== FILTRES APPLIQUÉS ==========
-        $sheet->mergeCells('A' . $row . ':R' . $row);
+        $sheet->mergeCells('A' . $row . ':T' . $row);
         $sheet->setCellValue('A' . $row, 'FILTRES APPLIQUÉS');
         $sheet->getStyle('A' . $row)->applyFromArray($sectionStyle);
         $row++;
@@ -963,6 +1012,8 @@ final class StockBatchController extends AbstractController
             'Expiration' => $this->getExpiryStatusLabel($filters['expiry_status']),
             'Stock faible' => $filters['low_stock'] === 'yes' ? 'Oui (≤10 unités)' : 'Non',
             'Emplacement' => $filters['location'] ?: 'Tous',
+            'Avoir' => $filters['has_issue'] === 'yes' ? 'Avec avoir' : ($filters['has_issue'] === 'no' ? 'Sans avoir' : 'Tous'),
+            'Statut avoir' => $this->getIssueStatusLabel($filters['issue_status']),
             'Date expiration du' => $filters['date_from'] ?: 'Non spécifiée',
             'Date expiration au' => $filters['date_to'] ?: 'Non spécifiée',
             'Tri par' => $filters['sort'] ?: 'expiry_date',
@@ -972,14 +1023,13 @@ final class StockBatchController extends AbstractController
         foreach ($filterLabels as $label => $value) {
             $sheet->setCellValue('A' . $row, $label . ' :');
             $sheet->setCellValue('B' . $row, $value);
-            $sheet->mergeCells('B' . $row . ':R' . $row);
+            $sheet->mergeCells('B' . $row . ':T' . $row);
             $row++;
         }
         $row++;
         $row++;
 
-        // ========== STATISTIQUES ==========
-        $sheet->mergeCells('A' . $row . ':R' . $row);
+        $sheet->mergeCells('A' . $row . ':T' . $row);
         $sheet->setCellValue('A' . $row, 'STATISTIQUES');
         $sheet->getStyle('A' . $row)->applyFromArray($sectionStyle);
         $row++;
@@ -999,16 +1049,27 @@ final class StockBatchController extends AbstractController
         $sheet->setCellValue('A' . $row, 'Lots expirent bientôt :');
         $sheet->setCellValue('B' . $row, count(array_filter($batches, fn($b) => $b->getExpiryDate() && $b->getExpiryDate() >= new \DateTime() && $b->getExpiryDate() < (new \DateTime())->modify('+30 days'))));
         $row++;
+
+        $sheet->setCellValue('A' . $row, 'Avoirs ouverts :');
+        $sheet->setCellValue('B' . $row, count(array_filter($batches, fn($b) => $b->hasIssue() && $b->getIssueStatus() !== 'closed' && $b->getIssueStatus() !== 'recovered')));
         $row++;
 
-        // ========== TABLEAU DES LOTS ==========
-        $sheet->mergeCells('A' . $row . ':R' . $row);
+        $sheet->setCellValue('A' . $row, 'Montant total des avoirs :');
+        $sheet->setCellValue('B' . $row, number_format(array_sum(array_map(fn($b) => (float)($b->getIssueDeclaredAmount() ?? 0), $batches)), 0, ',', ' ') . ' FCFA');
+        $row++;
+        $row++;
+
+        $sheet->mergeCells('A' . $row . ':T' . $row);
         $sheet->setCellValue('A' . $row, 'LISTE DES LOTS');
         $sheet->getStyle('A' . $row)->applyFromArray($sectionStyle);
         $row++;
 
-        // En-têtes du tableau
-        $headers = ['ID', 'N° Lot', 'Produit', 'Code-barres', 'Catégorie', 'Emplacement', 'Qté initiale', 'Qté actuelle', '% restant', 'Prix unitaire', 'Valeur', 'Fabrication', 'Expiration', 'Statut exp.', 'Jours restants', 'Statut', 'Créé le', 'Modifié le'];
+        $headers = [
+            'ID', 'N° Lot', 'Produit', 'Code-barres', 'Catégorie', 'Emplacement', 
+            'Qté initiale', 'Qté actuelle', '% restant', 'Prix unitaire', 'Valeur', 
+            'Fabrication', 'Expiration', 'Avoir', 'Statut avoir', 'Montant déclaré', 
+            'Montant récupéré', 'Statut', 'Créé le', 'Modifié le'
+        ];
         $col = 'A';
         foreach ($headers as $header) {
             $sheet->setCellValue($col . $row, $header);
@@ -1017,22 +1078,10 @@ final class StockBatchController extends AbstractController
         }
         $row++;
 
-        // Données
         $now = new \DateTime();
         foreach ($batches as $batch) {
             $col = 'A';
             $percentage = $batch->getInitialQuantity() > 0 ? round(($batch->getCurrentQuantity() / $batch->getInitialQuantity()) * 100, 1) : 0;
-            
-            $daysLeft = null;
-            $expiryStatus = '';
-            if ($batch->getExpiryDate()) {
-                $diff = $now->diff($batch->getExpiryDate());
-                $daysLeft = $batch->getExpiryDate() < $now ? -$diff->days : $diff->days;
-                $expiryStatus = $batch->getExpiryDate() < $now ? 'Expiré' 
-                    : ($batch->getExpiryDate() < (clone $now)->modify('+30 days') ? 'Expire bientôt' : 'Valide');
-            } else {
-                $expiryStatus = 'Non périssable';
-            }
             
             $locationDisplay = $batch->getLocationEntity() ? $batch->getLocationEntity()->getDisplayName() : ($batch->getLocation() ?: '—');
             
@@ -1049,25 +1098,27 @@ final class StockBatchController extends AbstractController
             $sheet->setCellValue($col++ . $row, number_format($batch->getCurrentQuantity() * (float)$batch->getUnitPrice(), 0, ',', ' ') . ' FCFA');
             $sheet->setCellValue($col++ . $row, $batch->getManufacturingDate()?->format('d/m/Y') ?: '—');
             $sheet->setCellValue($col++ . $row, $batch->getExpiryDate()?->format('d/m/Y') ?: '—');
-            $sheet->setCellValue($col++ . $row, $expiryStatus);
-            $sheet->setCellValue($col++ . $row, $daysLeft !== null ? ($daysLeft < 0 ? 'Expiré depuis ' . abs($daysLeft) . 'j' : $daysLeft . ' jours') : 'N/A');
+            $sheet->setCellValue($col++ . $row, $batch->hasIssue() ? 'Oui' : 'Non');
+            $sheet->setCellValue($col++ . $row, $batch->getIssueStatusLabel());
+            $sheet->setCellValue($col++ . $row, $batch->getIssueDeclaredAmount() ? number_format((float)$batch->getIssueDeclaredAmount(), 0, ',', ' ') . ' FCFA' : '—');
+            $sheet->setCellValue($col++ . $row, $batch->getIssueRecoveredAmount() ? number_format((float)$batch->getIssueRecoveredAmount(), 0, ',', ' ') . ' FCFA' : '—');
             $sheet->setCellValue($col++ . $row, $batch->isActive() ? 'Actif' : 'Inactif');
             $sheet->setCellValue($col++ . $row, $batch->getCreatedAt()->format('d/m/Y H:i'));
             $sheet->setCellValue($col++ . $row, $batch->getUpdatedAt()?->format('d/m/Y H:i') ?: '—');
             
-            // Colorer les lignes
             if ($batch->getExpiryDate() && $batch->getExpiryDate() < $now) {
-                $sheet->getStyle('A' . $row . ':R' . $row)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('33FFCCCC');
+                $sheet->getStyle('A' . $row . ':T' . $row)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('33FFCCCC');
             } elseif ($batch->getCurrentQuantity() <= 10) {
-                $sheet->getStyle('A' . $row . ':R' . $row)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('33FFFF00');
+                $sheet->getStyle('A' . $row . ':T' . $row)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('33FFFF00');
+            } elseif ($batch->hasIssue()) {
+                $sheet->getStyle('A' . $row . ':T' . $row)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('33FFE0B2');
             }
             $row++;
         }
         $row++;
         $row++;
 
-        // ========== RÉCAPITULATIF ==========
-        $sheet->mergeCells('A' . $row . ':R' . $row);
+        $sheet->mergeCells('A' . $row . ':T' . $row);
         $sheet->setCellValue('A' . $row, 'RÉCAPITULATIF');
         $sheet->getStyle('A' . $row)->applyFromArray($sectionStyle);
         $row++;
@@ -1085,23 +1136,18 @@ final class StockBatchController extends AbstractController
         $row++;
         $row++;
 
-        // ========== PIED DE PAGE ==========
-        $sheet->mergeCells('A' . $row . ':R' . $row);
+        $sheet->mergeCells('A' . $row . ':T' . $row);
         $sheet->setCellValue('A' . $row, 'Document généré par HMA Market - ' . (new \DateTime())->format('d/m/Y H:i'));
         $sheet->getStyle('A' . $row)->getFont()->setItalic(true)->setSize(10);
         $sheet->getStyle('A' . $row)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-        // Ajuster les colonnes
-        foreach (range('A', 'R') as $col) {
+        foreach (range('A', 'T') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
         
         return $spreadsheet;
     }
 
-    /**
-     * Récupère le nom du produit à partir de son ID
-     */
     private function getProductNameById(array $products, ?string $productId): string
     {
         if (!$productId) {
@@ -1117,17 +1163,26 @@ final class StockBatchController extends AbstractController
         return 'Produit non trouvé';
     }
 
-    /**
-     * Récupère le libellé du statut d'expiration
-     */
     private function getExpiryStatusLabel(?string $expiryStatus): string
     {
         return match($expiryStatus) {
             'expired' => 'Expirés',
             'expiring_soon' => 'Expire bientôt',
             'not_expiring' => 'Non expirés',
-       
-       
+            default => 'Tous'
+        };
+    }
+
+    private function getIssueStatusLabel(?string $issueStatus): string
+    {
+        return match($issueStatus) {
+            'pending' => 'En attente',
+            'acknowledged' => 'Accusé réception',
+            'under_review' => 'En analyse',
+            'partially_recovered' => 'Partiellement récupéré',
+            'recovered' => 'Récupéré',
+            'lost' => 'Perdu',
+            'closed' => 'Clôturé',
             default => 'Tous'
         };
     }

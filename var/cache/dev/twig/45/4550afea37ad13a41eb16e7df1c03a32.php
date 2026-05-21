@@ -14,7 +14,7 @@ use Twig\Source;
 use Twig\Template;
 use Twig\TemplateWrapper;
 
-/* admin/location/show.html.twig */
+/* admin/Location/show.html.twig */
 class __TwigTemplate_93bc2c93f13cb57aceb19ac9b3b479a8 extends Template
 {
     private Source $source;
@@ -47,10 +47,10 @@ class __TwigTemplate_93bc2c93f13cb57aceb19ac9b3b479a8 extends Template
     {
         $macros = $this->macros;
         $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
-        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/location/show.html.twig"));
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/Location/show.html.twig"));
 
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/location/show.html.twig"));
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/Location/show.html.twig"));
 
         $this->parent = $this->load("base.html.twig", 2);
         yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
@@ -827,7 +827,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getTemplateName(): string
     {
-        return "admin/location/show.html.twig";
+        return "admin/Location/show.html.twig";
     }
 
     /**
@@ -1274,6 +1274,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 </style>
-{% endblock %}", "admin/location/show.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\Location\\show.html.twig");
+{% endblock %}", "admin/Location/show.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\Location\\show.html.twig");
     }
 }

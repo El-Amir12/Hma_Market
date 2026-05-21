@@ -1,0 +1,206 @@
+{# templates/emails/supplier_credit_note_notification.html.twig #}
+{% extends 'base_email.html.twig' %}
+
+{% block title %}Action requise - Avoir fournisseur n°{{ creditNote.creditNoteNumber }}{% endblock %}
+
+{% block body %}
+<table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <tr>
+        <td style="padding: 20px;">
+            <!-- En-tête -->
+            <div style="text-align: center; padding-bottom: 20px; border-bottom: 2px solid #e9ecef;">
+                <h1 style="color: #dc3545; margin: 0;">
+                    ⚠️ Action requise
+                </h1>
+                <p style="color: #6c757d; margin: 10px 0 0;">
+                    Avoir fournisseur n° <strong style="color: #dc3545;">{{ creditNote.creditNoteNumber }}</strong>
+                </p>
+            </div>
+
+            <!-- Message principal -->
+            <div style="padding: 20px 0;">
+                <p style="font-size: 16px; line-height: 1.5;">
+                    Bonjour <strong>{{ supplier.name }}</strong>,
+                </p>
+                <p style="font-size: 16px; line-height: 1.5;">
+                    Un problème a été signalé concernant un lot que vous avez livré à 
+                    <strong>{{ creditNote.hmaService.companyName }}</strong>.
+                </p>
+                
+                <!-- Détails du problème -->
+                <div style="background-color: #f8f9fa; border-left: 4px solid #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px;">
+                    <h3 style="margin-top: 0; color: #dc3545; font-size: 18px;">
+                        📦 Détails du lot concerné
+                    </h3>
+                    <table width="100%" style="font-size: 14px;">
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>N° commande :</strong></td>
+                            <td style="padding: 5px 0;">{{ purchase.purchaseNumber }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Date commande :</strong></td>
+                            <td style="padding: 5px 0;">{{ purchase.createdAt|date('d/m/Y') }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Numéro de lot :</strong></td>
+                            <td style="padding: 5px 0;">{{ creditNote.stockBatch.batchNumber }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Produit :</strong></td>
+                            <td style="padding: 5px 0;">{{ creditNote.stockBatch.product.name }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Quantité concernée :</strong></td>
+                            <td style="padding: 5px 0;">{{ creditNote.affectedQuantity|default(creditNote.stockBatch.currentQuantity) }} {{ creditNote.stockBatch.product.unit|default('pièce(s)') }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Prix unitaire :</strong></td>
+                            <td style="padding: 5px 0;">{{ creditNote.stockBatch.unitPrice|price_with_currency(creditNote.hmaService) }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Montant total :</strong></td>
+                            <td style="padding: 5px 0; font-weight: bold; color: #dc3545;">{{ creditNote.declaredAmount|price_with_currency(creditNote.hmaService) }}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Type de problème -->
+                <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 8px;">
+                    <h3 style="margin-top: 0; color: #856404; font-size: 18px;">
+                        ❓ Nature du problème
+                    </h3>
+                    <p style="margin: 10px 0;">
+                        <strong>Type :</strong> 
+                        {% if creditNote.issueType == 'quality' %}
+                            Défaut de qualité
+                        {% elseif creditNote.issueType == 'quantity_missing' %}
+                            Quantité manquante
+                        {% elseif creditNote.issueType == 'damaged' %}
+                            Produit abîmé
+                        {% elseif creditNote.issueType == 'wrong_product' %}
+                            Erreur de produit
+                        {% elseif creditNote.issueType == 'short_shelf_life' %}
+                            Durée de vie courte
+                        {% else %}
+                            Autre
+                        {% endif %}
+                    </p>
+                    <p style="margin: 10px 0;">
+                        <strong>Description détaillée :</strong><br>
+                        {{ creditNote.description|nl2br }}
+                    </p>
+                    <p style="margin: 10px 0;">
+                        <strong>Priorité :</strong>
+                        {% if creditNote.priority == 'critical' %}
+                            <span style="color: #dc3545; font-weight: bold;">⚠️ CRITIQUE</span>
+                        {% elseif creditNote.priority == 'high' %}
+                            <span style="color: #fd7e14; font-weight: bold;">Haute</span>
+                        {% elseif creditNote.priority == 'medium' %}
+                            <span style="color: #ffc107; font-weight: bold;">Moyenne</span>
+                        {% else %}
+                            <span style="color: #6c757d;">Basse</span>
+                        {% endif %}
+                    </p>
+                </div>
+
+                <!-- 🔥 PIÈCES JOINTES - AVEC AFFICHAGE DES IMAGES -->
+                {% if creditNote.attachments %}
+                <div style="background-color: #e8f4f8; border-left: 4px solid #17a2b8; padding: 15px; margin: 20px 0; border-radius: 8px;">
+                    <h3 style="margin-top: 0; color: #0c5460; font-size: 18px;">
+                        📎 Pièces jointes
+                    </h3>
+                    <p>Des fichiers ont été joints pour illustrer le problème :</p>
+                    
+                    {% for attachment in creditNote.attachments %}
+                        {% set extension = attachment|split('.')|last|lower %}
+                        <div style="margin: 15px 0; padding: 10px; background: white; border-radius: 8px; border: 1px solid #e0e0e0;">
+                            {% if extension in ['jpg', 'jpeg', 'png', 'gif', 'webp'] %}
+                                <div style="margin-bottom: 8px;">
+                                    <strong>📷 Image :</strong> {{ attachment }}
+                                </div>
+                                <div>
+                                    <img src="{{ absolute_url(asset('uploads/credit_notes_attachments/' ~ attachment)) }}" 
+                                         alt="Pièce jointe"
+                                         style="max-width: 100%; max-height: 300px; border-radius: 8px; border: 1px solid #ddd;">
+                                </div>
+                            {% elseif extension in ['mp4', 'mov', 'avi', 'mkv', 'webm'] %}
+                                <div style="margin-bottom: 8px;">
+                                    <strong>🎥 Vidéo :</strong> {{ attachment }}
+                                </div>
+                                <div>
+                                    <video controls style="max-width: 100%; max-height: 300px; border-radius: 8px;">
+                                        <source src="{{ absolute_url(asset('uploads/credit_notes_attachments/' ~ attachment)) }}" type="video/{{ extension }}">
+                                        Votre navigateur ne supporte pas la lecture de vidéos.
+                                    </video>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <strong>📄 Fichier :</strong> 
+                                    <a href="{{ absolute_url(asset('uploads/credit_notes_attachments/' ~ attachment)) }}" 
+                                       style="color: #0d6efd; text-decoration: none;"
+                                       target="_blank">
+                                        {{ attachment }}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    
+                    <p style="margin-top: 15px; font-size: 12px; color: #6c757d;">
+                        Ces fichiers sont également accessibles dans l'espace client.
+                    </p>
+                </div>
+                {% endif %}
+
+                <!-- Action requise -->
+                <div style="background-color: #e7f1ff; border-left: 4px solid #0d6efd; padding: 20px; margin: 20px 0; border-radius: 8px; text-align: center;">
+                    <h3 style="margin-top: 0; color: #0d6efd;">
+                        ⏰ Action requise
+                    </h3>
+                    <p style="font-size: 16px;">
+                        Merci de répondre à ce problème dans les plus brefs délais.
+                    </p>
+                    <p style="font-size: 14px; color: #6c757d;">
+                        Ce lien est valable <strong>30 jours</strong>.
+                    </p>
+                    <a href="{{ link }}" 
+                       style="display: inline-block; background-color: #0d6efd; color: white; padding: 12px 30px; text-decoration: none; border-radius: 50px; margin: 15px 0; font-weight: bold;">
+                        📩 Répondre à ce problème
+                    </a>
+                    <p style="font-size: 12px; color: #6c757d; margin: 10px 0 0; word-break: break-all;">
+                        Ou copiez ce lien : <span style="color: #0d6efd;">{{ link }}</span>
+                    </p>
+                </div>
+
+                <!-- Informations pratiques -->
+                <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 8px;">
+                    <h4 style="margin-top: 0; color: #6c757d;">
+                        ℹ️ Comment répondre ?
+                    </h4>
+                    <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
+                        <li>Cliquez sur le lien ci-dessus</li>
+                        <li>Consultez les détails du problème</li>
+                        <li>Choisissez votre décision (accepter, accepter partiellement, refuser)</li>
+                        <li>Proposez un montant de remboursement si nécessaire</li>
+                        <li>Ajoutez votre réponse et vos références internes</li>
+                        <li>Soumettez le formulaire</li>
+                    </ol>
+                </div>
+
+                <!-- Contact -->
+                <div style="margin: 20px 0; padding: 15px; text-align: center; border-top: 1px solid #e9ecef;">
+                    <p style="font-size: 12px; color: #6c757d;">
+                        Si vous avez des questions, contactez-nous à 
+                        <a href="mailto:{{ support_email|default('support@hma-market.com') }}" style="color: #0d6efd;">
+                            {{ support_email|default('support@hma-market.com') }}
+                        </a>
+                    </p>
+                    <p style="font-size: 12px; color: #6c757d;">
+                        &copy; {{ "now"|date('Y') }} {{ creditNote.hmaService.companyName|default('HMA Market') }}. Tous droits réservés.
+                    </p>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+{% endblock %}

@@ -429,4 +429,64 @@ class Promotion
         return true;
     }
 
+    /**
+     * Retourne le pourcentage de réduction si la promotion est de type pourcentage
+     */
+    public function getDiscountPercentage(): ?float
+    {
+        $typePromotion = $this->getTypePromotion();
+        if (!$typePromotion) {
+            return null;
+        }
+        
+        $typeName = strtolower(trim($typePromotion->getName()));
+        if ($typeName === 'pourcentage' || $typeName === 'percentage' || $typeName === '%') {
+            return (float) $this->getValue();
+        }
+        
+        return null;
+    }
+
+    /**
+     * Retourne le montant de réduction fixe si la promotion est de type montant fixe
+     */
+    public function getDiscountAmount(): ?float
+    {
+        $typePromotion = $this->getTypePromotion();
+        if (!$typePromotion) {
+            return null;
+        }
+        
+        $typeName = strtolower(trim($typePromotion->getName()));
+        if ($typeName === 'montant fixe' || $typeName === 'fixed' || $typeName === 'fixe') {
+            return (float) $this->getValue();
+        }
+        
+        return null;
+    }
+
+    /**
+     * Retourne le texte formaté de la réduction
+     */
+    public function getFormattedDiscount(): string
+    {
+        $typePromotion = $this->getTypePromotion();
+        if (!$typePromotion) {
+            return '';
+        }
+        
+        $typeName = strtolower(trim($typePromotion->getName()));
+        $value = $this->getValue();
+        
+        if ($typeName === 'pourcentage' || $typeName === 'percentage' || $typeName === '%') {
+            return '-' . $value . '%';
+        }
+        
+        if ($typeName === 'montant fixe' || $typeName === 'fixed' || $typeName === 'fixe') {
+            return '-' . number_format((float) $value, 0, ',', ' ') . ' FCFA';
+        }
+        
+        return '-' . $value;
+    }
+
 }

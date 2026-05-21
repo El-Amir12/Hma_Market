@@ -14,7 +14,7 @@ use Twig\Source;
 use Twig\Template;
 use Twig\TemplateWrapper;
 
-/* admin/location/new.html.twig */
+/* admin/Location/new.html.twig */
 class __TwigTemplate_f5a13a47da8d855f2f43cfd73898270b extends Template
 {
     private Source $source;
@@ -45,10 +45,10 @@ class __TwigTemplate_f5a13a47da8d855f2f43cfd73898270b extends Template
     {
         $macros = $this->macros;
         $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
-        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/location/new.html.twig"));
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/Location/new.html.twig"));
 
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/location/new.html.twig"));
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/Location/new.html.twig"));
 
         $this->parent = $this->load("base.html.twig", 2);
         yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
@@ -146,7 +146,7 @@ class __TwigTemplate_f5a13a47da8d855f2f43cfd73898270b extends Template
      */
     public function getTemplateName(): string
     {
-        return "admin/location/new.html.twig";
+        return "admin/Location/new.html.twig";
     }
 
     /**
@@ -203,6 +203,6 @@ class __TwigTemplate_f5a13a47da8d855f2f43cfd73898270b extends Template
         'button_label': 'Créer l\\'emplacement'
     } only %}
 </div>
-{% endblock %}", "admin/location/new.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\Location\\new.html.twig");
+{% endblock %}", "admin/Location/new.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\Location\\new.html.twig");
     }
 }

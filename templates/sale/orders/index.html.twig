@@ -16,7 +16,6 @@
         --info-color: #3b82f6; 
     }
     
-    /* Cartes statistiques - TOUTES IDENTIQUES avec fond blanc pur */
     .stats-card {
         background: #ffffff !important;
         border: 1px solid #e5e7eb !important;
@@ -52,7 +51,6 @@
         margin-bottom: 0.5rem;
     }
     
-    /* Icônes dans les cartes - plus visibles */
     .stats-card i {
         opacity: 0.8;
         transition: opacity 0.2s;
@@ -62,7 +60,6 @@
         opacity: 1;
     }
     
-    /* Couleurs des cartes */
     .stats-card .text-primary { color: var(--primary-color) !important; }
     .stats-card .text-success { color: var(--success-color) !important; }
     .stats-card .text-info { color: var(--info-color) !important; }
@@ -76,7 +73,6 @@
     .stats-card .text-purple { color: #8b5cf6 !important; }
     .stats-card .text-rose { color: #f43f5e !important; }
     
-    /* Section filtres */
     .filter-section {
         background: white;
         border-radius: 16px;
@@ -86,7 +82,6 @@
         border: 1px solid #e5e7eb;
     }
     
-    /* Lignes du tableau */
     .table-order-row {
         cursor: pointer;
         transition: background-color 0.2s ease;
@@ -96,7 +91,6 @@
         background-color: #f8f9fa !important;
     }
     
-    /* Badges de paiement */
     .badge-payment-paid { 
         background-color: var(--success-color) !important; 
         color: white !important;
@@ -122,7 +116,6 @@
         color: white !important;
     }
     
-    /* Message d'information */
     .filter-info {
         background: #e0f2fe !important;
         border-left: 4px solid #0284c7 !important;
@@ -142,7 +135,6 @@
         color: white;
     }
     
-    /* Carte de contact */
     .contact-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         border-radius: 16px;
@@ -156,7 +148,6 @@
         transform: translateY(-2px);
     }
     
-    /* En-tête du tableau */
     .table-header-actions {
         display: flex;
         align-items: center;
@@ -164,7 +155,6 @@
         flex-wrap: wrap;
     }
     
-    /* Section Retours & Avoirs */
     .returns-section {
         margin-top: 2rem;
         margin-bottom: 1.5rem;
@@ -210,7 +200,6 @@
         margin-top: 0.25rem;
     }
     
-    /* Responsive */
     @media (max-width: 768px) {
         .filter-section .row > div {
             margin-bottom: 1rem;
@@ -241,7 +230,6 @@
         }
     }
     
-    /* Petits écrans (tablettes) */
     @media (max-width: 992px) and (min-width: 769px) {
         .stats-card h3 {
             font-size: 1.3rem;
@@ -318,7 +306,6 @@
 
     <!-- 12 Cartes statistiques -->
     <div class="row g-3 mb-4">
-        <!-- Carte 1: Chiffre d'affaires -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -334,7 +321,6 @@
             </div>
         </div>
         
-        <!-- Carte 2: Nombre de ventes -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -350,7 +336,6 @@
             </div>
         </div>
         
-        <!-- Carte 3: Panier moyen -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -366,7 +351,6 @@
             </div>
         </div>
         
-        <!-- Carte 4: Clients uniques -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -382,7 +366,6 @@
             </div>
         </div>
         
-        <!-- Carte 5: Ticket moyen -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -398,7 +381,6 @@
             </div>
         </div>
         
-        <!-- Carte 6: Vente max -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -414,7 +396,6 @@
             </div>
         </div>
         
-        <!-- Carte 7: Vente min -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -430,7 +411,6 @@
             </div>
         </div>
         
-        <!-- Carte 8: Articles vendus -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -446,7 +426,6 @@
             </div>
         </div>
         
-        <!-- Carte 9: Ventes actives -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -462,7 +441,6 @@
             </div>
         </div>
         
-        <!-- Carte 10: Ventes désactivées -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -478,7 +456,6 @@
             </div>
         </div>
         
-        <!-- Carte 11: Taux désactivation -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -494,7 +471,6 @@
             </div>
         </div>
         
-        <!-- Carte 12: Ventes annulées -->
         <div class="col-md-3 col-sm-6">
             <div class="stats-card">
                 <div class="card-body p-3">
@@ -526,7 +502,7 @@
     </div>
     {% endif %}
 
-    <!-- Section Retours & Avoirs (bien organisée) -->
+    <!-- Section Retours & Avoirs -->
     <div class="returns-section">
         <div class="returns-card">
             <div class="card-header">
@@ -763,9 +739,7 @@
                             {% set itemCount = order.orderItems|length %}
                             <tr class="table-order-row" data-href="{{ path('app_orders_show', {'id': order.id}) }}">
                                 <td><input type="checkbox" class="form-check-input row-checkbox" data-order-id="{{ order.id }}" data-order-number="{{ order.orderNumber }}"></td>
-                                <td>
-                                    <strong>{{ order.orderNumber }}</strong>
-                                </td>
+                                <td><strong>{{ order.orderNumber }}</strong></td>
                                 <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
                                 <td>
                                     <div>{{ order.customerName }}</div>
@@ -776,13 +750,10 @@
                                 <td>
                                     <span class="badge bg-secondary">{{ itemCount }} article(s)</span>
                                     {% if isRestaurant %}
-                                        <br>
-                                        <small class="text-muted">Plats</small>
+                                        <br><small class="text-muted">Plats</small>
                                     {% endif %}
                                   </td>
-                                <td>
-                                    <strong class="text-primary">{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</strong>
-                                  </td>
+                                <td><strong class="text-primary">{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</strong></td>
                                 <td>
                                     <span class="badge bg-{{ order.paymentMethod == 'cash' ? 'success' : 'info' }}">
                                         {{ order.paymentMethod|replace({'_': ' '})|capitalize }}
@@ -817,9 +788,49 @@
                                         <a href="{{ path('app_orders_show', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary print-single" data-id="{{ order.id }}" title="Imprimer le reçu">
+                                        
+                                        <button type="button" class="btn btn-sm btn-outline-success quick-print" 
+                                                data-order-id="{{ order.id }}" 
+                                                data-print-type="customer" 
+                                                title="Impression rapide">
                                             <i class="fas fa-print"></i>
+                                            <i class="fas fa-bolt fa-xs"></i>
                                         </button>
+                                        
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class="fas fa-chevron-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <button type="button" class="dropdown-item print-customer" data-order-id="{{ order.id }}" data-print-type="customer">
+                                                        <i class="fas fa-receipt me-2"></i> Ticket client
+                                                    </button>
+                                                </li>
+                                                
+                                                {% if isRestaurant %}
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <button type="button" class="dropdown-item print-kitchen" data-order-id="{{ order.id }}" data-print-type="kitchen">
+                                                        <i class="fas fa-utensils me-2"></i> Ticket cuisine
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button type="button" class="dropdown-item print-delivery" data-order-id="{{ order.id }}" data-print-type="delivery">
+                                                        <i class="fas fa-truck me-2"></i> Ticket livraison
+                                                    </button>
+                                                </li>
+                                                {% endif %}
+                                                
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <button type="button" class="dropdown-item print-cash" data-order-id="{{ order.id }}" data-print-type="cash">
+                                                        <i class="fas fa-money-bill-wave me-2"></i> Ticket caisse
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
                                         {% if is_granted('ROLE_ADMIN') %}
                                             {% if order.isActive %}
                                                 <button type="button" class="btn btn-sm btn-outline-warning toggle-order" data-id="{{ order.id }}" data-number="{{ order.orderNumber }}" data-action="disable" title="Désactiver">
@@ -835,23 +846,22 @@
                                             </button>
                                         {% endif %}
                                     </div>
-                                  </td>
-                               </tr>
+                                </td>
+                            </tr>
                         {% else %}
-                             <tr>
+                            <tr>
                                 <td colspan="10" class="text-center py-5">
                                     <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
                                     <p class="text-muted mb-0">Aucune vente trouvée</p>
                                     <p class="text-muted small">Modifiez vos filtres pour voir plus de résultats</p>
-                                  </td>
-                               </tr>
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Pagination -->
         {% if totalPages > 1 %}
         <div class="card-footer bg-white">
             <nav aria-label="Pagination">
@@ -895,14 +905,10 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-warning text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-exchange-alt me-2"></i> Changer le statut
-                </h5>
+                <h5 class="modal-title"><i class="fas fa-exchange-alt me-2"></i> Changer le statut</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                <p id="toggleOrderMessage"></p>
-            </div>
+            <div class="modal-body"><p id="toggleOrderMessage"></p></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                 <form id="toggleOrderForm" method="post">
@@ -918,9 +924,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-exclamation-triangle me-2"></i> Confirmer la suppression
-                </h5>
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Confirmer la suppression</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -935,9 +939,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                 <form id="deleteOrderForm" method="post">
                     <input type="hidden" name="_token" id="deleteOrderToken">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash-alt me-2"></i> Supprimer définitivement
-                    </button>
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt me-2"></i> Supprimer définitivement</button>
                 </form>
             </div>
         </div>
@@ -948,23 +950,15 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-print me-2"></i> Aperçu du reçu
-                </h5>
+                <h5 class="modal-title"><i class="fas fa-print me-2"></i> Aperçu du reçu</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" id="receiptContent">
-                <div class="text-center py-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Chargement...</span>
-                    </div>
-                </div>
+                <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary" id="printReceiptBtn">
-                    <i class="fas fa-print me-2"></i> Imprimer
-                </button>
+                <button type="button" class="btn btn-primary" id="printReceiptBtn"><i class="fas fa-print me-2"></i> Imprimer</button>
             </div>
         </div>
     </div>
@@ -976,6 +970,249 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
 <script>
+// ==================== PRINT MANAGER ====================
+class PrintManager {
+    constructor() {
+        this.printQueue = [];
+        this.isPrinting = false;
+        this.init();
+    }
+    
+    init() {
+        this.setupEventListeners();
+    }
+    
+    setupEventListeners() {
+        const printButtons = document.querySelectorAll('.print-customer, .print-kitchen, .print-cash, .print-delivery, .quick-print');
+        
+        printButtons.forEach(btn => {
+            btn.removeEventListener('click', this.handlePrintClick);
+            btn.addEventListener('click', this.handlePrintClick.bind(this));
+        });
+        
+        const printSelectedBtn = document.getElementById('printSelectedBtn');
+        if (printSelectedBtn) {
+            printSelectedBtn.removeEventListener('click', this.handleMultiplePrint);
+            printSelectedBtn.addEventListener('click', this.handleMultiplePrint.bind(this));
+        }
+    }
+    
+    handlePrintClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const btn = e.currentTarget;
+        let orderId = btn.dataset.orderId;
+        let type = btn.dataset.printType;
+        
+        if (btn.classList.contains('quick-print') && !type) {
+            type = 'customer';
+        }
+        
+        if (!orderId) {
+            const parent = btn.closest('[data-order-id]');
+            if (parent) orderId = parent.dataset.orderId;
+        }
+        
+        if (!orderId) {
+            this.showToast('error', 'Impossible d\'identifier la commande');
+            return;
+        }
+        
+        this.printTicket(orderId, type);
+    }
+    
+    handleMultiplePrint = async () => {
+        const selectedIds = Array.from(document.querySelectorAll('.row-checkbox:checked'))
+            .map(cb => cb.dataset.orderId)
+            .filter(id => id);
+        
+        if (selectedIds.length === 0) {
+            this.showToast('warning', 'Veuillez sélectionner des commandes');
+            return;
+        }
+        
+        const type = confirm('Imprimer tickets client (OK) ou cuisine (Annuler) ?') ? 'customer' : 'kitchen';
+        await this.printMultipleTickets(selectedIds, type);
+    }
+    
+    async printTicket(orderId, type, options = {}) {
+        this.printQueue.push({ orderId, type, options });
+        this.processQueue();
+    }
+    
+    async processQueue() {
+        if (this.isPrinting || this.printQueue.length === 0) return;
+        
+        this.isPrinting = true;
+        const job = this.printQueue.shift();
+        
+        try {
+            await this.executePrint(job.orderId, job.type, job.options);
+        } catch (error) {
+            console.error('Erreur d\'impression:', error);
+            this.showFallbackPdf(job.orderId, job.type);
+        }
+        
+        this.isPrinting = false;
+        this.processQueue();
+    }
+    
+    async executePrint(orderId, type, options) {
+        const url = `/print/ticket/${orderId}/${type}`;
+        const fullUrl = `${url}?include_drinks=true&show_prices=true&language=fr`;
+        
+        const printWindow = window.open(fullUrl, '_blank', 'width=400,height=600,menubar=yes,toolbar=yes');
+        
+        if (printWindow) {
+            printWindow.onload = () => {
+                setTimeout(() => {
+                    try {
+                        printWindow.print();
+                        printWindow.onafterprint = () => {
+                            printWindow.close();
+                            this.showToast('success', `Ticket ${type} prêt à être imprimé`);
+                        };
+                    } catch (e) {
+                        printWindow.close();
+                        throw e;
+                    }
+                }, 500);
+            };
+        } else {
+            throw new Error('Popup bloqué');
+        }
+    }
+    
+    showFallbackPdf(orderId, type) {
+        let modal = document.getElementById('pdfFallbackModal');
+        if (modal) modal.remove();
+        
+        const modalHtml = `
+            <div class="modal fade" id="pdfFallbackModal" tabindex="-1" data-bs-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning text-dark">
+                            <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Impression impossible</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-center py-4">
+                            <i class="fas fa-print fa-3x text-muted mb-3"></i>
+                            <p>Impossible d'imprimer directement.</p>
+                            <p class="text-muted">Veuillez télécharger le PDF et l'imprimer manuellement.</p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <a href="/print/ticket/${orderId}/${type}" class="btn btn-primary" target="_blank">
+                                <i class="fas fa-file-pdf me-2"></i> Télécharger PDF
+                            </a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        modal = new bootstrap.Modal(document.getElementById('pdfFallbackModal'));
+        modal.show();
+        
+        document.getElementById('pdfFallbackModal').addEventListener('hidden.bs.modal', () => {
+            document.getElementById('pdfFallbackModal').remove();
+        });
+    }
+    
+    async printMultipleTickets(orderIds, type) {
+        this.showLoading('Préparation des tickets...');
+        
+        try {
+            const response = await fetch('/print/multiple', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order_ids: orderIds, type: type })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                const blob = this.base64ToBlob(data.pdf, 'application/pdf');
+                const url = URL.createObjectURL(blob);
+                const printWindow = window.open(url, '_blank');
+                
+                if (printWindow) {
+                    printWindow.onload = () => {
+                        setTimeout(() => {
+                            try {
+                                printWindow.print();
+                                printWindow.onafterprint = () => printWindow.close();
+                            } catch (e) {
+                                printWindow.close();
+                            }
+                        }, 500);
+                    };
+                }
+                
+                this.showToast('success', `${data.count} ticket(s) prêt(s) à imprimer`);
+            } else {
+                this.showToast('error', data.error || 'Erreur lors de l\'impression');
+            }
+        } catch (error) {
+            this.showToast('error', 'Erreur de connexion au serveur');
+        } finally {
+            this.hideLoading();
+        }
+    }
+    
+    base64ToBlob(base64, mimeType) {
+        try {
+            const byteCharacters = atob(base64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            return new Blob([byteArray], { type: mimeType });
+        } catch (error) {
+            return new Blob([], { type: mimeType });
+        }
+    }
+    
+    showToast(type, message) {
+        const toast = document.createElement('div');
+        const bgColor = type === 'success' ? 'bg-success' : (type === 'warning' ? 'bg-warning' : 'bg-danger');
+        const icon = type === 'success' ? 'check-circle' : (type === 'warning' ? 'exclamation-triangle' : 'times-circle');
+        toast.className = `position-fixed bottom-0 end-0 p-3 m-3 ${bgColor} text-white rounded shadow`;
+        toast.style.zIndex = '9999';
+        toast.innerHTML = `<i class="fas fa-${icon} me-2"></i>${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+    
+    showLoading(message) {
+        this.hideLoading();
+        const loader = document.createElement('div');
+        loader.id = 'printLoader';
+        loader.innerHTML = `
+            <div style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:10000; display:flex; align-items:center; justify-content:center;">
+                <div class="bg-white p-4 rounded-4 text-center shadow-lg" style="min-width: 250px;">
+                    <div class="spinner-border text-primary mb-3"></div>
+                    <p class="mb-0">${message}</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(loader);
+    }
+    
+    hideLoading() {
+        const loader = document.getElementById('printLoader');
+        if (loader) loader.remove();
+    }
+    
+    refresh() {
+        this.setupEventListeners();
+    }
+}
+
+// ==================== INITIALISATION PRINCIPALE ====================
 document.addEventListener('DOMContentLoaded', function() {
     // Initialisation Select2
     $('.select2-status, .select2-payment, .select2-user, .select2-preset').select2({
@@ -1131,10 +1368,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .receipt-items td:last-child { text-align: right; }
                     .receipt-total { font-weight: bold; margin-top: 10px; }
                     .receipt-footer { margin-top: 15px; font-size: 10px; text-align: center; }
-                    @media print {
-                        body { margin: 0; padding: 10px; }
-                        .no-print { display: none; }
-                    }
+                    @media print { body { margin: 0; padding: 10px; } .no-print { display: none; } }
                 </style>
             </head>
             <body>
@@ -1142,9 +1376,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="receipt-footer no-print">
                     <button onclick="window.print()" style="margin-top: 20px; padding: 8px 16px;">Imprimer</button>
                 </div>
-                <script>
-                    window.print();
-                <\/script>
+                <script>window.print();<\/script>
             </body>
             </html>
         `);
@@ -1198,6 +1430,9 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteModal.show();
         });
     });
+    
+    // Initialisation du PrintManager
+    window.printManager = new PrintManager();
 });
 </script>
 {% endblock %}
