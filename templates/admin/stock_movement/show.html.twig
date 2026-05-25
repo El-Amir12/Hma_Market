@@ -1,0 +1,557 @@
+{# templates/admin/stock_movement/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail mouvement - {{ movement.movementTypeLabel }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    :root {
+        --primary: #0463f1;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --info: #0ea5e9;
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+    }
+
+    .stat-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 1rem;
+        background: white;
+        border: none;
+    }
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .info-row {
+        border-bottom: 1px solid var(--gray-200);
+        padding: 0.75rem 0;
+    }
+    .info-row:last-child {
+        border-bottom: none;
+    }
+    .info-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--gray-600);
+        letter-spacing: 0.5px;
+    }
+    .info-value {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--gray-700);
+    }
+    .badge-custom {
+        padding: 0.35rem 0.75rem;
+        border-radius: 2rem;
+        font-weight: 500;
+    }
+    .card-header-custom {
+        background: white;
+        border-bottom: 2px solid var(--gray-100);
+        padding: 1rem 1.25rem;
+    }
+    .card-header-custom h5 {
+        font-weight: 600;
+        font-size: 1rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .card-header-custom h5 i {
+        color: var(--primary);
+    }
+    .link-card {
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .link-card:hover {
+        transform: translateY(-3px);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4 py-3">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
+                            <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_admin_stock_movement_index') }}" class="text-decoration-none">
+                            <i class="fas fa-exchange-alt me-1"></i> Mouvements de stock
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">{{ movement.movementTypeLabel }}</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0 fw-bold">
+                <i class="fas fa-exchange-alt me-2 text-primary"></i>
+                Détail du mouvement
+            </h1>
+        </div>
+        <div>
+            <a href="{{ path('app_admin_stock_movement_index', app.request.query.all) }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Colonne gauche -->
+        <div class="col-xl-6">
+            <!-- Carte Informations générales -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header-custom">
+                    <h5>
+                        <i class="fas fa-info-circle"></i>
+                        Informations générales
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="info-row">
+                                <div class="info-label">Date</div>
+                                <div class="info-value">{{ movement.createdAt|date('d/m/Y H:i:s') }}</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-row">
+                                <div class="info-label">Type de mouvement</div>
+                                <div class="info-value">
+                                    <span class="badge {{ movement.movementTypeBadgeClass }} badge-custom">
+                                        <i class="{{ movement.movementTypeIcon }} me-1"></i>
+                                        {{ movement.movementTypeLabel }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-row">
+                                <div class="info-label">Quantité</div>
+                                <div class="info-value {{ movement.movementType in ['purchase_in', 'return_in'] ? 'text-success' : 'text-danger' }}">
+                                    {{ movement.movementType in ['purchase_in', 'return_in'] ? '+' : '-' }}
+                                    {{ movement.quantity|number_format(0, ',', ' ') }} unité(s)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-row">
+                                <div class="info-label">Prix unitaire</div>
+                                <div class="info-value">{{ movement.unitPrice ? (movement.unitPrice|price_with_currency(movement.hmaService)) : '—' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-row">
+                                <div class="info-label">Valeur totale</div>
+                                <div class="info-value">{{ (movement.quantity * (movement.unitPrice|default(0)))|price_with_currency(movement.hmaService) }}</div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="info-row">
+                                <div class="info-label">Notes</div>
+                                <div class="info-value">{{ movement.notes ?: '—' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carte Utilisateur -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header-custom">
+                    <h5>
+                        <i class="fas fa-user"></i>
+                        Utilisateur
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if movement.user %}
+                        <div class="d-flex align-items-center gap-3">
+                            {% if movement.user.photo %}
+                                <img src="{{ asset('uploads/users/' ~ movement.user.photo) }}" alt="{{ movement.user.fullName }}" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                    <i class="fas fa-user fa-2x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <h5 class="mb-1">{{ movement.user.fullName ?: movement.user.email }}</h5>
+                                <div class="text-muted small">
+                                    <i class="fas fa-envelope me-1"></i> {{ movement.user.email }}
+                                    {% if movement.user.phone %}
+                                        <span class="mx-2">•</span>
+                                        <i class="fas fa-phone me-1"></i> {{ movement.user.phone }}
+                                    {% endif %}
+                                </div>
+                                <span class="badge {{ movement.user.roleBadgeClass }} mt-1">
+                                    <i class="{{ movement.user.roleIcon }} me-1"></i>
+                                    {{ movement.user.roleLabel }}
+                                </span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3 text-muted">
+                            <i class="fas fa-robot fa-2x mb-2"></i>
+                            <p class="mb-0">Mouvement automatique (système)</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne droite -->
+        <div class="col-xl-6">
+            <!-- Carte Lot & Produit -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header-custom">
+                    <h5>
+                        <i class="fas fa-boxes"></i>
+                        Lot & Produit
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if movement.stockBatch %}
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="info-row">
+                                    <div class="info-label">N° lot</div>
+                                    <div class="info-value"><code>{{ movement.stockBatch.batchNumber }}</code></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-row">
+                                    <div class="info-label">Produit</div>
+                                    <div class="info-value">{{ movement.stockBatch.product.name }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-row">
+                                    <div class="info-label">Code-barres</div>
+                                    <div class="info-value">{{ movement.stockBatch.product.barcode }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-row">
+                                    <div class="info-label">Catégorie</div>
+                                    <div class="info-value">{{ movement.stockBatch.product.category.name|default('—') }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-row">
+                                    <div class="info-label">Prix unitaire du lot</div>
+                                    <div class="info-value">{{ movement.stockBatch.unitPrice|price_with_currency(movement.hmaService) }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-row">
+                                    <div class="info-label">Stock actuel</div>
+                                    <div class="info-value">{{ movement.stockBatch.currentQuantity|number_format(0, ',', ' ') }} unités</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-row">
+                                    <div class="info-label">Emplacement</div>
+                                    <div class="info-value">{{ movement.stockBatch.locationDisplay }}</div>
+                                </div>
+                            </div>
+                            {% if movement.stockBatch.expiryDate %}
+                            <div class="col-6">
+                                <div class="info-row">
+                                    <div class="info-label">Date d'expiration</div>
+                                    <div class="info-value">{{ movement.stockBatch.expiryDate|date('d/m/Y') }}</div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3 text-muted">
+                            <i class="fas fa-box-open fa-2x mb-2"></i>
+                            <p class="mb-0">Aucun lot associé à ce mouvement</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Carte Élément associé -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header-custom">
+                    <h5>
+                        <i class="fas fa-link"></i>
+                        Élément associé
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if movement.referenceId %}
+                        {# VENTE - Order #}
+                        {% if movement.movementType == 'sale_out' %}
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex p-3">
+                                        <i class="fas fa-shopping-cart fa-3x text-primary"></i>
+                                    </div>
+                                </div>
+                                <h5 class="fw-bold">Vente associée</h5>
+                                <div class="bg-light rounded-3 p-3 mt-3 text-start">
+                                    <div class="row small">
+                                        <div class="col-6 text-muted">Date de la vente</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.createdAt|date('d/m/Y H:i') }}</div>
+                                        <div class="col-6 text-muted mt-2">Quantité vendue</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.quantity|number_format(0, ',', ' ') }} unités</div>
+                                        <div class="col-6 text-muted mt-2">Montant total</div>
+                                        <div class="col-6 text-end fw-semibold">{{ (movement.quantity * (movement.unitPrice|default(0)))|price_with_currency(movement.hmaService) }}</div>
+                                    </div>
+                                </div>
+                                <a href="{{ path('app_orders_show', {'id': movement.referenceId}) }}" class="btn btn-primary mt-3">
+                                    <i class="fas fa-eye me-1"></i> Voir le détail de la vente
+                                </a>
+                            </div>
+
+                        {# ACHAT - Purchase #}
+                        {% elseif movement.movementType == 'purchase_in' %}
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex p-3">
+                                        <i class="fas fa-truck fa-3x text-success"></i>
+                                    </div>
+                                </div>
+                                <h5 class="fw-bold">Achat associé</h5>
+                                <div class="bg-light rounded-3 p-3 mt-3 text-start">
+                                    <div class="row small">
+                                        <div class="col-6 text-muted">N° commande</div>
+                                        <div class="col-6 text-end fw-semibold">
+                                            {% if movement.purchaseItem %}
+                                                {{ movement.purchaseItem.purchase.purchaseNumber }}
+                                            {% else %}
+                                                Référence #{{ movement.referenceId }}
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-6 text-muted mt-2">Fournisseur</div>
+                                        <div class="col-6 text-end fw-semibold">
+                                            {% if movement.purchaseItem %}
+                                                {{ movement.purchaseItem.purchase.supplier.name }}
+                                            {% else %}
+                                                —
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-6 text-muted mt-2">Quantité achetée</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.quantity|number_format(0, ',', ' ') }} unités</div>
+                                    </div>
+                                </div>
+                                <a href="{{ path('purchase_show', {'id': movement.referenceId}) }}" class="btn btn-success mt-3">
+                                    <i class="fas fa-eye me-1"></i> Voir le détail de l'achat
+                                </a>
+                            </div>
+
+                        {# RETOUR CLIENT - ReturnOrder #}
+                        {% elseif movement.movementType == 'return_in' %}
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <div class="rounded-circle bg-info bg-opacity-10 d-inline-flex p-3">
+                                        <i class="fas fa-undo-alt fa-3x text-info"></i>
+                                    </div>
+                                </div>
+                                <h5 class="fw-bold">Retour client associé</h5>
+                                <div class="bg-light rounded-3 p-3 mt-3 text-start">
+                                    <div class="row small">
+                                        <div class="col-6 text-muted">N° retour</div>
+                                        <div class="col-6 text-end fw-semibold">#{{ movement.referenceId }}</div>
+                                        <div class="col-6 text-muted mt-2">Quantité retournée</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.quantity|number_format(0, ',', ' ') }} unités</div>
+                                        <div class="col-6 text-muted mt-2">Date du retour</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.createdAt|date('d/m/Y') }}</div>
+                                    </div>
+                                </div>
+                                <a href="{{ path('returns_show', {'id': movement.referenceId}) }}" class="btn btn-info mt-3">
+                                    <i class="fas fa-eye me-1"></i> Voir le détail du retour
+                                </a>
+                            </div>
+
+                        {# RETOUR FOURNISSEUR - SupplierCreditNote #}
+                        {% elseif movement.movementType == 'return_out' %}
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex p-3">
+                                        <i class="fas fa-truck-loading fa-3x text-warning"></i>
+                                    </div>
+                                </div>
+                                <h5 class="fw-bold">Retour fournisseur associé</h5>
+                                <div class="bg-light rounded-3 p-3 mt-3 text-start">
+                                    <div class="row small">
+                                        <div class="col-6 text-muted">N° avoir</div>
+                                        <div class="col-6 text-end fw-semibold">#{{ movement.referenceId }}</div>
+                                        <div class="col-6 text-muted mt-2">Quantité retournée</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.quantity|number_format(0, ',', ' ') }} unités</div>
+                                        <div class="col-6 text-muted mt-2">Date</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.createdAt|date('d/m/Y') }}</div>
+                                    </div>
+                                </div>
+                                <a href="{{ path('app_supplier_credit_note_show', {'id': movement.referenceId}) }}" class="btn btn-warning mt-3">
+                                    <i class="fas fa-eye me-1"></i> Voir le détail
+                                </a>
+                            </div>
+
+                        {# AJUSTEMENT #}
+                        {% elseif movement.movementType in ['adjustment_in', 'adjustment_out'] %}
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <div class="rounded-circle bg-{{ movement.movementType == 'adjustment_in' ? 'success' : 'danger' }} bg-opacity-10 d-inline-flex p-3">
+                                        <i class="fas {{ movement.movementType == 'adjustment_in' ? 'fa-plus-circle' : 'fa-minus-circle' }} fa-3x text-{{ movement.movementType == 'adjustment_in' ? 'success' : 'danger' }}"></i>
+                                    </div>
+                                </div>
+                                <h5 class="fw-bold">Ajustement de stock {{ movement.movementType == 'adjustment_in' ? '(+)' : '(-)' }}</h5>
+                                <div class="bg-light rounded-3 p-3 mt-3 text-start">
+                                    <div class="row small">
+                                        <div class="col-6 text-muted">Raison</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.notes|default('Ajustement manuel')|u.truncate(40) }}</div>
+                                        <div class="col-6 text-muted mt-2">Quantité</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.quantity|number_format(0, ',', ' ') }} unités</div>
+                                        <div class="col-6 text-muted mt-2">Date</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.createdAt|date('d/m/Y H:i') }}</div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-{{ movement.movementType == 'adjustment_in' ? 'success' : 'danger' }} mt-3">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Ajustement manuel - aucune vente ou achat associé.
+                                </div>
+                            </div>
+
+                        {# TRANSFERT #}
+                        {% elseif movement.movementType in ['transfer_in', 'transfer_out'] %}
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex p-3">
+                                        <i class="fas fa-arrow-{{ movement.movementType == 'transfer_in' ? 'right' : 'left' }} fa-3x text-primary"></i>
+                                    </div>
+                                </div>
+                                <h5 class="fw-bold">Transfert {{ movement.movementType == 'transfer_in' ? 'entrant' : 'sortant' }}</h5>
+                                <div class="bg-light rounded-3 p-3 mt-3 text-start">
+                                    <div class="row small">
+                                        <div class="col-6 text-muted">Référence</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.notes|default('Transfert')|u.truncate(30) }}</div>
+                                        <div class="col-6 text-muted mt-2">Quantité</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.quantity|number_format(0, ',', ' ') }} unités</div>
+                                        <div class="col-6 text-muted mt-2">Date</div>
+                                        <div class="col-6 text-end fw-semibold">{{ movement.createdAt|date('d/m/Y') }}</div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info mt-3">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Transfert {{ movement.movementType == 'transfer_in' ? 'depuis' : 'vers' }} un autre magasin.
+                                </div>
+                            </div>
+
+                        {% else %}
+                            <div class="text-center py-3 text-muted">
+                                <i class="fas fa-question-circle fa-2x mb-2"></i>
+                                <p class="mb-0">Type de mouvement : {{ movement.movementType }}</p>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-3 text-muted">
+                            <i class="fas fa-link fa-2x mb-2 opacity-50"></i>
+                            <p class="mb-0">Aucun élément associé</p>
+                            <small>Ce mouvement n'est lié à aucune vente, achat ou retour.</small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historique des mouvements du lot (pleine largeur) -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header-custom">
+                    <h5>
+                        <i class="fas fa-history"></i>
+                        Historique des mouvements du lot
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if movement.stockBatch and movement.stockBatch.stockMovements|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Quantité</th>
+                                        <th>Référence</th>
+                                        <th>Stock restant</th>
+                                        <th>Utilisateur</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for otherMovement in movement.stockBatch.stockMovements|sort((a, b) => b.createdAt <=> a.createdAt) %}
+                                        <tr>
+                                            <td>
+                                                <div class="fw-semibold">{{ otherMovement.createdAt|date('d/m/Y') }}</div>
+                                                <small class="text-muted">{{ otherMovement.createdAt|date('H:i:s') }}</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge {{ otherMovement.movementTypeBadgeClass }} badge-custom">
+                                                    <i class="{{ otherMovement.movementTypeIcon }} me-1"></i>
+                                                    {{ otherMovement.movementTypeLabel }}
+                                                </span>
+                                            </td>
+                                            <td class="{{ otherMovement.movementType in ['purchase_in', 'return_in'] ? 'text-success' : 'text-danger' }}">
+                                                {{ otherMovement.movementType in ['purchase_in', 'return_in'] ? '+' : '-' }}
+                                                {{ otherMovement.quantity|number_format(0, ',', ' ') }}
+                                            </div>
+                                            <td>
+                                                {% if otherMovement.movementType == 'purchase_in' and otherMovement.purchaseItem %}
+                                                    {{ otherMovement.purchaseItem.purchase.purchaseNumber }}
+                                                {% elseif otherMovement.referenceId %}
+                                                    <span class="text-muted">Réf #{{ otherMovement.referenceId }}</span>
+                                                {% else %}
+                                                    <span class="text-muted">—</span>
+                                                {% endif %}
+                                            </div>
+                                            <td>
+                                                <strong>{{ otherMovement.stockBatch.currentQuantity|number_format(0, ',', ' ') }}</strong>
+                                            </div>
+                                            <td>{{ otherMovement.user ? (otherMovement.user.fullName ?: otherMovement.user.email) : 'Système' }}</div>
+                                            <td class="text-center">
+                                                {% if otherMovement.id != movement.id %}
+                                                    <a href="{{ path('app_admin_stock_movement_show', {'id': otherMovement.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir le détail">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Actuel</span>
+                                                {% endif %}
+                                            </div>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4 text-muted">
+                            <i class="fas fa-history fa-2x mb-2 opacity-50"></i>
+                            <p class="mb-0">Aucun autre mouvement pour ce lot</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

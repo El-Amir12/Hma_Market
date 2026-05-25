@@ -209,6 +209,43 @@ services:
             $salesExportsDirectory: '%sales_exports_directory%'  # ← Changé de $exportDirectory à $salesExportsDirectory
         public: true
 
+    # ==================== SERVICES DE GESTION DES STOCKS ====================
+    App\Service\Stock\StockAdjustmentService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $stockMovementService: '@App\Service\StockMovementService'
+            $notificationService: '@App\Service\NotificationService'
+            $fileUploader: '@App\Service\FileUploader'
+            $adjustmentRepository: '@App\Repository\StockAdjustmentRepository'
+        public: true
+
+    App\Service\Stock\StockInventoryService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $stockMovementService: '@App\Service\StockMovementService'
+            $notificationService: '@App\Service\NotificationService'
+            $logger: '@monolog.logger'
+            $stockBatchRepository: '@App\Repository\StockBatchRepository'
+            $productRepository: '@App\Repository\ProductRepository'
+        public: true
+
+    App\Service\Stock\StockTransferService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $stockMovementService: '@App\Service\StockMovementService'
+            $notificationService: '@App\Service\NotificationService'
+            $logger: '@monolog.logger'
+            $stockBatchRepository: '@App\Repository\StockBatchRepository'
+            $locationRepository: '@App\Repository\LocationRepository'
+        public: true
+
+    # ==================== DÉJÀ EXISTANT - À GARDER ====================
+    App\Service\StockMovementService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $logger: '@monolog.logger'
+        public: true
+
     # ==================== SÉCURITÉ ET ÉVÉNEMENTS ====================
     App\Security\LoginSuccessHandler:
         arguments:

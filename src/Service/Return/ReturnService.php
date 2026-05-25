@@ -113,19 +113,17 @@ class ReturnService
             $returnItem->setOriginalOrderItem($orderItem);
             $returnItem->setProductName($orderItem->getProductName());
             
-            // 🔥 CORRECTION : Bien déterminer le type et l'ID
+            // Déterminer le type et l'ID
             if ($orderItem->getRecipe()) {
                 // C'est une recette
                 $returnItem->setItemType('recipe');
                 $returnItem->setItemId($orderItem->getRecipe()->getId());
             } else {
-                // C'est un produit - utiliser product_id depuis OrderItem
+                // C'est un produit
                 $returnItem->setItemType('product');
                 
-                // Essayer d'abord avec getProductId() (si disponible)
                 $productId = $orderItem->getProductId();
                 
-                // Fallback: chercher le produit par son nom (cas où product_id n'existe pas)
                 if (!$productId) {
                     $product = $this->entityManager->getRepository(Product::class)
                         ->findOneBy(['name' => $orderItem->getProductName(), 'hma_service' => $managedHmaService]);
@@ -201,8 +199,8 @@ class ReturnService
         }
 
         $managedReturnOrder->setStatus('approved');
-        $managedReturnOrder->setApprovedBy($managedApprover);  // 🔥 Qui a approuvé
-        $managedReturnOrder->setApprovedAt(new \DateTime());   // 🔥 Date d'approbation
+        $managedReturnOrder->setApprovedBy($managedApprover);
+        $managedReturnOrder->setApprovedAt(new \DateTime());
         $managedReturnOrder->setUpdatedAt(new \DateTime());
         
         $this->entityManager->flush();
@@ -252,8 +250,8 @@ class ReturnService
         }
 
         $managedReturnOrder->setStatus('completed');
-        $managedReturnOrder->setCompletedBy($managedCompleter);  
-        $managedReturnOrder->setCompletedAt(new \DateTime());     
+        $managedReturnOrder->setCompletedBy($managedCompleter);
+        $managedReturnOrder->setCompletedAt(new \DateTime());
         $managedReturnOrder->setUpdatedAt(new \DateTime());
         
         $this->entityManager->persist($managedReturnOrder);
@@ -265,6 +263,7 @@ class ReturnService
             'items_processed' => $itemCount
         ]);
     }
+
     /**
      * Rejette un retour
      */
@@ -305,8 +304,6 @@ class ReturnService
     {
         $hmaService = $product->getHmaService();
         
-        // 🔥 NOUVELLE LOGIQUE SIMPLIFIÉE
-        
         // Pour les restaurants : se baser sur le flag is_storable
         if ($hmaService && $hmaService->getType() === 'restaurant') {
             $isRestockable = $product->isStorable();
@@ -322,7 +319,6 @@ class ReturnService
         }
         
         // Pour les autres types d'entreprises, se baser sur l'unité
-        // Une pharmacie ou un supermarché peut tout restocker
         $unit = strtolower(trim($product->getUnit() ?? ''));
         $restockableUnits = [
             'piece', 'pièce', 'boîte', 'boite', 'carton', 
@@ -342,7 +338,8 @@ class ReturnService
         
         return $isRestockable;
     }
-   /**
+
+    /**
      * Remet en stock les produits d'un retour
      */
     private function restoreStockFromReturnItem(ReturnItem $returnItem, User $user, ReturnOrder $returnOrder): void
@@ -388,7 +385,7 @@ class ReturnService
             return;
         }
         
-        // 🔥 VÉRIFICATION CRITIQUE : item_id ne doit pas être 0
+        // Vérification CRITIQUE : item_id ne doit pas être 0
         $itemId = $managedReturnItem->getItemId();
         if (!$itemId || $itemId === 0) {
             $this->logger->error('Item ID invalide pour le retour', [
@@ -429,13 +426,13 @@ class ReturnService
         }
         
         // Restaurer le stock
-        $this->restoreProductStock($product, $quantity, $managedUser, $managedReturnOrder, 'RETURN_PRODUCT', $managedReturnItem);
+        $this->restoreProductStock($product, $quantity, $managedUser, $managedReturnOrder, $returnItem);
     }
 
     /**
      * Restaure le stock d'un produit
      */
-    private function restoreProductStock(Product $product, int $quantity, User $user, ReturnOrder $returnOrder, string $movementType, ReturnItem $returnItem): void
+    private function restoreProductStock(Product $product, int $quantity, User $user, ReturnOrder $returnOrder, ReturnItem $returnItem): void
     {
         $this->logger->info('=== DÉBUT RESTORE PRODUCT STOCK ===', [
             'product_id' => $product->getId(),
@@ -503,9 +500,9 @@ class ReturnService
             $managedProduct->setStockQuantity($newStock);
             $this->entityManager->persist($managedProduct);
             
-            // Créer un mouvement de stock sans lot
+            // ✅ CORRECTION: Utiliser 'return_in' comme movement_type
             $movement = new StockMovement();
-            $movement->setMovementType('RETURN');
+            $movement->setMovementType('return_in');
             $movement->setQuantity($quantity);
             $movement->setUnitPrice($managedProduct->getPurchasePrice());
             $movement->setProduct($managedProduct);
@@ -513,17 +510,16 @@ class ReturnService
             $movement->setUser($managedUser);
             $movement->setHmaService($managedProduct->getHmaService());
             $movement->setReferenceId($managedReturnOrder->getId());
-            $movement->setNotes(sprintf('Retour #%s - %s (produit sans lot)', $managedReturnOrder->getReturnNumber(), $movementType));
+            $movement->setNotes(sprintf('Retour #%s - Restauration stock produit', $managedReturnOrder->getReturnNumber()));
             $movement->setCreatedAt(new \DateTime());
             
             $this->entityManager->persist($movement);
             
             $this->logger->info('Mouvement de stock créé', [
-                'movement_type' => 'RETURN',
+                'movement_type' => 'return_in',
                 'quantity' => $quantity
             ]);
             
-            // FLUSH CRITIQUE - Sauvegarde en base
             try {
                 $this->entityManager->flush();
                 $this->logger->info('FLUSH réussi - Stock produit mis à jour', [
@@ -573,9 +569,9 @@ class ReturnService
         $managedProduct->setStockQuantity($newStock);
         $this->entityManager->persist($managedProduct);
         
-        // Créer le mouvement de stock
+        // ✅ CORRECTION: Utiliser 'return_in' comme movement_type
         $movement = new StockMovement();
-        $movement->setMovementType('RETURN');
+        $movement->setMovementType('return_in');
         $movement->setQuantity($quantity);
         $movement->setUnitPrice($managedProduct->getPurchasePrice());
         $movement->setProduct($managedProduct);
@@ -583,11 +579,10 @@ class ReturnService
         $movement->setUser($managedUser);
         $movement->setHmaService($managedProduct->getHmaService());
         $movement->setReferenceId($managedReturnOrder->getId());
-        $movement->setNotes(sprintf('Retour #%s - %s', $managedReturnOrder->getReturnNumber(), $movementType));
+        $movement->setNotes(sprintf('Retour #%s - Restauration dans lot %s', $managedReturnOrder->getReturnNumber(), $targetBatch->getBatchNumber()));
         $movement->setCreatedAt(new \DateTime());
         $this->entityManager->persist($movement);
         
-        // FLUSH CRITIQUE
         try {
             $this->entityManager->flush();
             $this->logger->info('FLUSH réussi - Stock et lot mis à jour');
@@ -598,7 +593,6 @@ class ReturnService
             throw $e;
         }
         
-        // Synchroniser (optionnel, peut être fait après)
         $this->stockSyncService->syncProductStock($managedProduct);
         
         $this->logger->info('Stock restauré avec succès', [
@@ -608,6 +602,7 @@ class ReturnService
             'new_stock' => $newStock
         ]);
     }
+
     /**
      * Récupère les statistiques des retours
      */

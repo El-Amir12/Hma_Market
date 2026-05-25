@@ -14,6 +14,7 @@
         overflow: hidden;
         cursor: pointer;
         background: white;
+        height: 100%;
     }
     .stat-card:hover {
         transform: translateY(-3px);
@@ -26,6 +27,21 @@
         align-items: center;
         justify-content: center;
         border-radius: 1rem;
+        margin: 0 auto 0.75rem auto;
+    }
+    /* Carte montant total - style différent */
+    .stat-card-total {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    .stat-card-total .stat-icon {
+        background: rgba(255,255,255,0.2);
+    }
+    .stat-card-total h3, .stat-card-total small {
+        color: white;
+    }
+    .stat-card-total .text-muted {
+        color: rgba(255,255,255,0.8) !important;
     }
     .credit-card {
         transition: all 0.3s ease;
@@ -86,6 +102,23 @@
         .card { box-shadow: none !important; border: 1px solid #ddd; }
         .credit-card { break-inside: avoid; page-break-inside: avoid; }
     }
+    
+    /* Responsive pour les cartes stats */
+    @media (max-width: 992px) {
+        .stats-row .col-lg-2 {
+            flex: 0 0 auto;
+            width: 33.333%;
+        }
+        .stats-row .col-lg-2:last-child {
+            width: 100%;
+            margin-top: 1rem;
+        }
+    }
+    @media (max-width: 576px) {
+        .stats-row .col-lg-2 {
+            width: 50%;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -138,77 +171,85 @@
         </div>
     </div>
 
-    <div class="row g-3 mb-4">
-        <div class="col-md-2 col-sm-4 col-6">
-            <div class="card stat-card border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="stat-icon bg-primary bg-opacity-10 mx-auto mb-2">
-                        <i class="fas fa-file-invoice-dollar fa-2x text-primary"></i>
+    <!-- Statistiques - 5 cartes sur une ligne + montant total sur une nouvelle ligne -->
+    <div class="stats-row">
+        <div class="row g-3 mb-4">
+            <!-- Ligne 1: 5 cartes avec largeurs égales et responsive -->
+            <div class="row g-3 mb-4">
+                <div class="col-lg col-md-6 col-sm-6 col-12">
+                    <div class="card stat-card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="stat-icon bg-primary bg-opacity-10 mx-auto">
+                                <i class="fas fa-file-invoice-dollar fa-2x text-primary"></i>
+                            </div>
+                            <h3 class="mb-0 fw-bold text-primary">{{ stats.total|default(0) }}</h3>
+                            <small class="text-muted">Total avoirs</small>
+                        </div>
                     </div>
-                    <h3 class="mb-0 fw-bold text-primary">{{ stats.total|default(0) }}</h3>
-                    <small class="text-muted">Total avoirs</small>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-2 col-sm-4 col-6">
-            <div class="card stat-card border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="stat-icon bg-warning bg-opacity-10 mx-auto mb-2">
-                        <i class="fas fa-clock fa-2x text-warning"></i>
+                <div class="col-lg col-md-6 col-sm-6 col-12">
+                    <div class="card stat-card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="stat-icon bg-warning bg-opacity-10 mx-auto">
+                                <i class="fas fa-clock fa-2x text-warning"></i>
+                            </div>
+                            <h3 class="mb-0 fw-bold text-warning">{{ statusCounts.pending|default(0) }}</h3>
+                            <small class="text-muted">En attente</small>
+                        </div>
                     </div>
-                    <h3 class="mb-0 fw-bold text-warning">{{ statusCounts.pending|default(0) }}</h3>
-                    <small class="text-muted">En attente</small>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-2 col-sm-4 col-6">
-            <div class="card stat-card border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="stat-icon bg-info bg-opacity-10 mx-auto mb-2">
-                        <i class="fas fa-exchange-alt fa-2x text-info"></i>
+                <div class="col-lg col-md-6 col-sm-6 col-12">
+                    <div class="card stat-card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="stat-icon bg-info bg-opacity-10 mx-auto">
+                                <i class="fas fa-exchange-alt fa-2x text-info"></i>
+                            </div>
+                            <h3 class="mb-0 fw-bold text-info">{{ statusCounts.under_review|default(0) }}</h3>
+                            <small class="text-muted">En analyse</small>
+                        </div>
                     </div>
-                    <h3 class="mb-0 fw-bold text-info">{{ statusCounts.under_review|default(0) }}</h3>
-                    <small class="text-muted">En analyse</small>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-2 col-sm-4 col-6">
-            <div class="card stat-card border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="stat-icon bg-success bg-opacity-10 mx-auto mb-2">
-                        <i class="fas fa-check-circle fa-2x text-success"></i>
+                <div class="col-lg col-md-6 col-sm-6 col-12">
+                    <div class="card stat-card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="stat-icon bg-success bg-opacity-10 mx-auto">
+                                <i class="fas fa-check-circle fa-2x text-success"></i>
+                            </div>
+                            <h3 class="mb-0 fw-bold text-success">{{ statusCounts.recovered|default(0) }}</h3>
+                            <small class="text-muted">Récupérés</small>
+                        </div>
                     </div>
-                    <h3 class="mb-0 fw-bold text-success">{{ statusCounts.recovered|default(0) }}</h3>
-                    <small class="text-muted">Récupérés</small>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-2 col-sm-4 col-6">
-            <div class="card stat-card border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="stat-icon bg-danger bg-opacity-10 mx-auto mb-2">
-                        <i class="fas fa-times-circle fa-2x text-danger"></i>
+                <div class="col-lg col-md-6 col-sm-6 col-12">
+                    <div class="card stat-card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="stat-icon bg-danger bg-opacity-10 mx-auto">
+                                <i class="fas fa-times-circle fa-2x text-danger"></i>
+                            </div>
+                            <h3 class="mb-0 fw-bold text-danger">{{ statusCounts.lost|default(0) }}</h3>
+                            <small class="text-muted">Perdus</small>
+                        </div>
                     </div>
-                    <h3 class="mb-0 fw-bold text-danger">{{ statusCounts.lost|default(0) }}</h3>
-                    <small class="text-muted">Perdus</small>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-2 col-sm-4 col-6">
-            <div class="card stat-card border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="stat-icon bg-secondary bg-opacity-10 mx-auto mb-2">
-                        <i class="fas fa-chart-line fa-2x text-secondary"></i>
+            </div> 
+        <!-- Ligne 2: Carte Montant total (pleine largeur) -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card stat-card stat-card-total border-0 shadow-sm">
+                    <div class="card-body text-center py-4">
+                        <div class="stat-icon bg-white bg-opacity-25 mx-auto">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                        <h2 class="mb-0 fw-bold display-6">{{ stats.total_amount|default(0)|price_with_currency(hmaService) }}</h2>
+                        <small class="text-white text-opacity-75">Montant total des avoirs</small>
                     </div>
-                    <h3 class="mb-0 fw-bold text-secondary">{{ stats.total_amount|default(0)|price_with_currency(hmaService) }}</h3>
-                    <small class="text-muted">Montant total</small>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="card border-0 shadow-sm mb-4 filters-card">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h5 class="mb-0 fw-semibold">
                 <i class="fas fa-filter me-2 text-primary"></i> Filtres
             </h5>

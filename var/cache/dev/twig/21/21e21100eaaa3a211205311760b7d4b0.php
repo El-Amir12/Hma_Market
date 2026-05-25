@@ -113,78 +113,109 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
     }
     
     .stats-card {
-        background: #ffffff !important;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
         border: 1px solid #e5e7eb !important;
-        border-radius: 16px !important;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: 20px !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         overflow: hidden;
         cursor: pointer;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        position: relative;
+    }
+    
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--primary-color);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .stats-card:hover::before {
+        opacity: 1;
     }
     
     .stats-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-6px);
+        box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.15) !important;
     }
     
     .stats-card .card-body {
-        padding: 1rem;
-        background: #ffffff !important;
+        padding: 1.25rem;
+        background: transparent !important;
     }
     
     .stats-card h3 {
-        font-size: 1.5rem;
-        font-weight: 700;
+        font-size: 1.75rem;
+        font-weight: 800;
         margin-bottom: 0.25rem;
         line-height: 1.2;
     }
     
     .stats-card h6 {
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: 0.7rem;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.8;
     }
     
     .stats-card i {
-        opacity: 0.8;
-        transition: opacity 0.2s;
+        opacity: 0.7;
+        transition: opacity 0.3s, transform 0.3s;
     }
     
     .stats-card:hover i {
         opacity: 1;
+        transform: scale(1.05);
     }
     
-    .stats-card .text-primary { color: var(--primary-color) !important; }
-    .stats-card .text-success { color: var(--success-color) !important; }
-    .stats-card .text-info { color: var(--info-color) !important; }
-    .stats-card .text-warning { color: var(--warning-color) !important; }
-    .stats-card .text-danger { color: var(--danger-color) !important; }
-    .stats-card .text-secondary { color: #6c757d !important; }
-    .stats-card .text-dark { color: #1f2937 !important; }
-    .stats-card .text-cyan { color: #06b6d4 !important; }
-    .stats-card .text-emerald { color: #10b981 !important; }
-    .stats-card .text-gray { color: #6b7280 !important; }
-    .stats-card .text-purple { color: #8b5cf6 !important; }
-    .stats-card .text-rose { color: #f43f5e !important; }
+    /* Cartes avec couleurs spécifiques */
+    .stats-card.primary-bg { background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%) !important; color: white; }
+    .stats-card.success-bg { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; color: white; }
+    .stats-card.info-bg { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; color: white; }
+    .stats-card.warning-bg { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; color: white; }
+    .stats-card.danger-bg { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; color: white; }
+    .stats-card.secondary-bg { background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important; color: white; }
+    .stats-card.cyan-bg { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important; color: white; }
+    .stats-card.purple-bg { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; color: white; }
+    .stats-card.rose-bg { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important; color: white; }
+    .stats-card.emerald-bg { background: linear-gradient(135deg, #059669 0%, #047857 100%) !important; color: white; }
+    
+    .stats-card.primary-bg .stat-icon,
+    .stats-card.success-bg .stat-icon,
+    .stats-card.info-bg .stat-icon,
+    .stats-card.warning-bg .stat-icon,
+    .stats-card.danger-bg .stat-icon,
+    .stats-card.secondary-bg .stat-icon,
+    .stats-card.cyan-bg .stat-icon,
+    .stats-card.purple-bg .stat-icon,
+    .stats-card.rose-bg .stat-icon,
+    .stats-card.emerald-bg .stat-icon {
+        background: rgba(255,255,255,0.2);
+    }
     
     .filter-section {
         background: white;
-        border-radius: 16px;
-        padding: 1.25rem;
+        border-radius: 20px;
+        padding: 1.5rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         border: 1px solid #e5e7eb;
     }
     
     .table-order-row {
         cursor: pointer;
-        transition: background-color 0.2s ease;
+        transition: background-color 0.2s ease, transform 0.1s;
     }
     
     .table-order-row:hover {
-        background-color: #f8f9fa !important;
+        background-color: #f8fafc !important;
     }
     
     .badge-payment-paid { 
@@ -216,64 +247,58 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         background: #e0f2fe !important;
         border-left: 4px solid #0284c7 !important;
         padding: 0.75rem 1rem !important;
-        border-radius: 8px !important;
+        border-radius: 12px !important;
         margin-bottom: 1rem !important;
         color: #0c4a6e !important;
     }
     
-    .filter-info .btn-outline-secondary {
-        border-color: #0284c7;
-        color: #0284c7;
-    }
-    
-    .filter-info .btn-outline-secondary:hover {
-        background: #0284c7;
-        color: white;
-    }
-    
     .contact-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 16px;
-        padding: 1rem;
+        border-radius: 20px;
+        padding: 1.25rem;
         margin-bottom: 1.5rem;
         color: white;
-        transition: transform 0.2s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     
     .contact-card:hover {
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
     }
     
-    .table-header-actions {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-    
-    .returns-section {
-        margin-top: 2rem;
-        margin-bottom: 1.5rem;
-    }
     .returns-card {
         background: white;
-        border-radius: 16px;
+        border-radius: 20px;
         border: 1px solid #e5e7eb;
         overflow: hidden;
+        transition: box-shadow 0.3s ease;
     }
+    
+    .returns-card:hover {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
     .returns-card .card-header {
-        background: #f8fafc;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         border-bottom: 1px solid #e5e7eb;
         padding: 1rem 1.25rem;
     }
+    
     .return-stat-box {
         text-align: center;
-        padding: 1rem;
+        padding: 1.25rem;
         border-right: 1px solid #e5e7eb;
+        transition: background 0.3s ease;
     }
+    
+    .return-stat-box:hover {
+        background: #f8fafc;
+    }
+    
     .return-stat-box:last-child {
         border-right: none;
     }
+    
     .return-stat-label {
         font-size: 0.7rem;
         text-transform: uppercase;
@@ -281,16 +306,13 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         letter-spacing: 0.5px;
         margin-bottom: 0.5rem;
     }
+    
     .return-stat-value {
-        font-size: 1.5rem;
-        font-weight: 700;
+        font-size: 1.75rem;
+        font-weight: 800;
         margin-bottom: 0;
     }
-    .return-stat-unit {
-        font-size: 0.7rem;
-        color: #64748b;
-        margin-left: 0.25rem;
-    }
+    
     .return-stat-sub {
         font-size: 0.7rem;
         margin-top: 0.25rem;
@@ -302,34 +324,54 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         }
         
         .stats-card h3 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
         
         .stats-card h6 {
-            font-size: 0.7rem;
-        }
-        
-        .table-header-actions {
-            margin-top: 0.5rem;
-        }
-        
-        .stats-card .card-body {
-            padding: 0.75rem;
+            font-size: 0.65rem;
         }
         
         .return-stat-box {
             border-right: none;
             border-bottom: 1px solid #e5e7eb;
         }
+        
         .return-stat-box:last-child {
             border-bottom: none;
+        }
+        
+        .return-stat-value {
+            font-size: 1.3rem;
         }
     }
     
     @media (max-width: 992px) and (min-width: 769px) {
         .stats-card h3 {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
         }
+    }
+    
+    .btn-group .btn {
+        transition: all 0.2s ease;
+    }
+    
+    .btn-group .btn:hover {
+        transform: translateY(-1px);
+    }
+    
+    .user-avatar-sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    
+    .initial-avatar {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--primary-color), #0350c4);
+        color: white;
+        font-weight: bold;
     }
 </style>
 ";
@@ -342,7 +384,7 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         yield from [];
     }
 
-    // line 241
+    // line 283
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -355,7 +397,7 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 242
+        // line 284
         yield "<div class=\"container-fluid px-4\">
     <!-- En-tête -->
     <div class=\"d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3\">
@@ -364,7 +406,7 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                 <ol class=\"breadcrumb\">
                     <li class=\"breadcrumb-item\">
                         <a href=\"";
-        // line 249
+        // line 291
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_dashboard");
         yield "\" class=\"text-decoration-none\">
                             <i class=\"fas fa-tachometer-alt me-1\"></i> Tableau de bord
@@ -375,7 +417,7 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                     </li>
                 </ol>
             </nav>
-            <h1 class=\"h3 mb-0\">
+            <h1 class=\"h3 mb-0 fw-bold\">
                 <i class=\"fas fa-shopping-cart me-2 text-primary\"></i>
                 Historique des ventes
             </h1>
@@ -392,16 +434,16 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                 <ul class=\"dropdown-menu dropdown-menu-end\">
                     <li>
                         <a class=\"dropdown-item\" href=\"";
-        // line 274
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_export_excel", CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 274, $this->source); })()), "request", [], "any", false, false, false, 274), "query", [], "any", false, false, false, 274), "all", [], "any", false, false, false, 274)), "html", null, true);
+        // line 316
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_export_excel", CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 316, $this->source); })()), "request", [], "any", false, false, false, 316), "query", [], "any", false, false, false, 316), "all", [], "any", false, false, false, 316)), "html", null, true);
         yield "\">
                             <i class=\"fas fa-file-excel me-2 text-success\"></i> Excel (.xlsx)
                         </a>
                     </li>
                     <li>
                         <a class=\"dropdown-item\" href=\"";
-        // line 279
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_export_pdf", CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 279, $this->source); })()), "request", [], "any", false, false, false, 279), "query", [], "any", false, false, false, 279), "all", [], "any", false, false, false, 279)), "html", null, true);
+        // line 321
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_export_pdf", CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 321, $this->source); })()), "request", [], "any", false, false, false, 321), "query", [], "any", false, false, false, 321), "all", [], "any", false, false, false, 321)), "html", null, true);
         yield "\">
                             <i class=\"fas fa-file-pdf me-2 text-danger\"></i> PDF (.pdf)
                         </a>
@@ -409,246 +451,251 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                 </ul>
             </div>
             <a href=\"";
-        // line 285
-        yield (((($tmp = (isset($context["isRestaurant"]) || array_key_exists("isRestaurant", $context) ? $context["isRestaurant"] : (function () { throw new RuntimeError('Variable "isRestaurant" does not exist.', 285, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("restaurant_sale_index")) : ($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("retail_sale_index")));
+        // line 327
+        yield (((($tmp = (isset($context["isRestaurant"]) || array_key_exists("isRestaurant", $context) ? $context["isRestaurant"] : (function () { throw new RuntimeError('Variable "isRestaurant" does not exist.', 327, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("restaurant_sale_index")) : ($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("retail_sale_index")));
         yield "\" class=\"btn btn-primary\">
                 <i class=\"fas fa-plus-circle me-2\"></i> Nouvelle vente
             </a>
         </div>
     </div>
 
-    <!-- Message contact Super Admin -->
-    <a href=\"";
-        // line 292
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_contact_super_admin");
-        yield "\" class=\"text-decoration-none\">
-        <div class=\"contact-card\">
-            <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3\">
-                <div>
-                    <i class=\"fas fa-chart-line fa-2x me-3 float-start\"></i>
-                    <h5 class=\"mb-1\">Analyse approfondie des données</h5>
-                    <p class=\"mb-0 opacity-75\">Pour une analyse détaillée de vos ventes, contactez notre équipe Super Admin</p>
-                </div>
-                <div class=\"btn btn-light\">
-                    <i class=\"fab fa-whatsapp me-2 text-success\"></i> Contacter le support
-                </div>
-            </div>
-        </div>
-    </a>
-
-    <!-- 12 Cartes statistiques -->
+    <!-- 12 Cartes statistiques avec fonds colorés -->
     <div class=\"row g-3 mb-4\">
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card primary-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"text-primary mb-1\" style=\"font-weight: 600;\">Chiffre d'affaires</h6>
-                            <h3 class=\"mb-0 text-primary\" style=\"font-weight: 700;\">";
-        // line 315
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total_sales", [], "any", true, true, false, 315)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 315, $this->source); })()), "total_sales", [], "any", false, false, false, 315), 0)) : (0)), 0, ",", " "), "html", null, true);
+                            <h6 class=\"mb-1\">Chiffre d'affaires</h6>
+                            <h3 class=\"mb-0\">";
+        // line 341
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total_sales", [], "any", true, true, false, 341)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 341, $this->source); })()), "total_sales", [], "any", false, false, false, 341), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</h3>
-                            <small class=\"text-muted\">FCFA</small>
+                            <small class=\"opacity-75\">FCFA</small>
                         </div>
-                        <i class=\"fas fa-chart-line fa-2x\" style=\"color: #0463f1; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-chart-line fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card success-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"text-success mb-1\" style=\"font-weight: 600;\">Nombre de ventes</h6>
-                            <h3 class=\"mb-0 text-success\" style=\"font-weight: 700;\">";
-        // line 330
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total_orders", [], "any", true, true, false, 330)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 330, $this->source); })()), "total_orders", [], "any", false, false, false, 330), 0)) : (0)), 0, ",", " "), "html", null, true);
+                            <h6 class=\"mb-1\">Nombre de ventes</h6>
+                            <h3 class=\"mb-0\">";
+        // line 358
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total_orders", [], "any", true, true, false, 358)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 358, $this->source); })()), "total_orders", [], "any", false, false, false, 358), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</h3>
-                            <small class=\"text-muted\">commandes</small>
+                            <small class=\"opacity-75\">commandes</small>
                         </div>
-                        <i class=\"fas fa-receipt fa-2x\" style=\"color: #10b981; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-receipt fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card info-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"text-info mb-1\" style=\"font-weight: 600;\">Panier moyen</h6>
-                            <h3 class=\"mb-0 text-info\" style=\"font-weight: 700;\">";
-        // line 345
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "average_basket", [], "any", true, true, false, 345)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 345, $this->source); })()), "average_basket", [], "any", false, false, false, 345), 0)) : (0)), 0, ",", " "), "html", null, true);
-        yield "</h3>
-                            <small class=\"text-muted\">FCFA/vente</small>
-                        </div>
-                        <i class=\"fas fa-shopping-basket fa-2x\" style=\"color: #3b82f6; opacity: 0.8;\"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
-                        <div>
-                            <h6 class=\"text-warning mb-1\" style=\"font-weight: 600;\">Clients uniques</h6>
-                            <h3 class=\"mb-0 text-warning\" style=\"font-weight: 700;\">";
-        // line 360
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "unique_customers", [], "any", true, true, false, 360)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 360, $this->source); })()), "unique_customers", [], "any", false, false, false, 360), 0)) : (0)), 0, ",", " "), "html", null, true);
-        yield "</h3>
-                            <small class=\"text-muted\">personnes</small>
-                        </div>
-                        <i class=\"fas fa-users fa-2x\" style=\"color: #f59e0b; opacity: 0.8;\"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
-                        <div>
-                            <h6 class=\"text-danger mb-1\" style=\"font-weight: 600;\">Ticket moyen</h6>
-                            <h3 class=\"mb-0 text-danger\" style=\"font-weight: 700;\">";
+                            <h6 class=\"mb-1\">Panier moyen</h6>
+                            <h3 class=\"mb-0\">";
         // line 375
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "average_ticket", [], "any", true, true, false, 375)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 375, $this->source); })()), "average_ticket", [], "any", false, false, false, 375), 0)) : (0)), 0, ",", " "), "html", null, true);
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "average_basket", [], "any", true, true, false, 375)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 375, $this->source); })()), "average_basket", [], "any", false, false, false, 375), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</h3>
-                            <small class=\"text-muted\">FCFA/client</small>
+                            <small class=\"opacity-75\">FCFA/vente</small>
                         </div>
-                        <i class=\"fas fa-ticket-alt fa-2x\" style=\"color: #ef4444; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-shopping-basket fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card warning-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"text-secondary mb-1\" style=\"font-weight: 600;\">Vente max</h6>
-                            <h3 class=\"mb-0 text-secondary\" style=\"font-weight: 700;\">";
-        // line 390
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "max_sale", [], "any", true, true, false, 390)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 390, $this->source); })()), "max_sale", [], "any", false, false, false, 390), 0)) : (0)), 0, ",", " "), "html", null, true);
+                            <h6 class=\"mb-1\">Clients uniques</h6>
+                            <h3 class=\"mb-0\">";
+        // line 392
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "unique_customers", [], "any", true, true, false, 392)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 392, $this->source); })()), "unique_customers", [], "any", false, false, false, 392), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</h3>
-                            <small class=\"text-muted\">FCFA</small>
+                            <small class=\"opacity-75\">personnes</small>
                         </div>
-                        <i class=\"fas fa-arrow-up fa-2x\" style=\"color: #6b7280; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-users fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card danger-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #374151;\">Vente min</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #374151;\">";
-        // line 405
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "min_sale", [], "any", true, true, false, 405)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 405, $this->source); })()), "min_sale", [], "any", false, false, false, 405), 0)) : (0)), 0, ",", " "), "html", null, true);
+                            <h6 class=\"mb-1\">Ticket moyen</h6>
+                            <h3 class=\"mb-0\">";
+        // line 409
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "average_ticket", [], "any", true, true, false, 409)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 409, $this->source); })()), "average_ticket", [], "any", false, false, false, 409), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</h3>
-                            <small class=\"text-muted\">FCFA</small>
+                            <small class=\"opacity-75\">FCFA/client</small>
                         </div>
-                        <i class=\"fas fa-arrow-down fa-2x\" style=\"color: #6b7280; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-ticket-alt fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card secondary-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #0d9488;\">Articles vendus</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #0d9488;\">";
-        // line 420
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total_items", [], "any", true, true, false, 420)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 420, $this->source); })()), "total_items", [], "any", false, false, false, 420), 0)) : (0)), 0, ",", " "), "html", null, true);
+                            <h6 class=\"mb-1\">Vente max</h6>
+                            <h3 class=\"mb-0\">";
+        // line 426
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "max_sale", [], "any", true, true, false, 426)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 426, $this->source); })()), "max_sale", [], "any", false, false, false, 426), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</h3>
-                            <small class=\"text-muted\">unités</small>
+                            <small class=\"opacity-75\">FCFA</small>
                         </div>
-                        <i class=\"fas fa-boxes fa-2x\" style=\"color: #0d9488; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-arrow-up fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card\" style=\"background: linear-gradient(135deg, #374151 0%, #1f2937 100%) !important; color: white;\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #10b981;\">Ventes actives</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #10b981;\">";
-        // line 435
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "active_orders", [], "any", true, true, false, 435)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 435, $this->source); })()), "active_orders", [], "any", false, false, false, 435), 0)) : (0)), 0, ",", " "), "html", null, true);
+                            <h6 class=\"mb-1\">Vente min</h6>
+                            <h3 class=\"mb-0\">";
+        // line 443
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "min_sale", [], "any", true, true, false, 443)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 443, $this->source); })()), "min_sale", [], "any", false, false, false, 443), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</h3>
-                            <small class=\"text-muted\">commandes</small>
+                            <small class=\"opacity-75\">FCFA</small>
                         </div>
-                        <i class=\"fas fa-check-circle fa-2x\" style=\"color: #10b981; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2 bg-white bg-opacity-25\">
+                            <i class=\"fas fa-arrow-down fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card cyan-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #6b7280;\">Ventes désactivées</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #6b7280;\">";
-        // line 450
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "disabled_orders", [], "any", true, true, false, 450)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 450, $this->source); })()), "disabled_orders", [], "any", false, false, false, 450), 0)) : (0)), 0, ",", " "), "html", null, true);
+                            <h6 class=\"mb-1\">Articles vendus</h6>
+                            <h3 class=\"mb-0\">";
+        // line 460
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total_items", [], "any", true, true, false, 460)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 460, $this->source); })()), "total_items", [], "any", false, false, false, 460), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</h3>
-                            <small class=\"text-muted\">commandes</small>
+                            <small class=\"opacity-75\">unités</small>
                         </div>
-                        <i class=\"fas fa-ban fa-2x\" style=\"color: #6b7280; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-boxes fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card emerald-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #8b5cf6;\">Taux désactivation</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #8b5cf6;\">";
-        // line 465
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "disabled_percentage", [], "any", true, true, false, 465)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 465, $this->source); })()), "disabled_percentage", [], "any", false, false, false, 465), 0)) : (0)), 1, ",", " "), "html", null, true);
+                            <h6 class=\"mb-1\">Ventes actives</h6>
+                            <h3 class=\"mb-0\">";
+        // line 477
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "active_orders", [], "any", true, true, false, 477)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 477, $this->source); })()), "active_orders", [], "any", false, false, false, 477), 0)) : (0)), 0, ",", " "), "html", null, true);
+        yield "</h3>
+                            <small class=\"opacity-75\">commandes</small>
+                        </div>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-check-circle fa-2x\"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class=\"col-md-3 col-sm-6\">
+            <div class=\"stats-card secondary-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
+                        <div>
+                            <h6 class=\"mb-1\">Ventes désactivées</h6>
+                            <h3 class=\"mb-0\">";
+        // line 494
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "disabled_orders", [], "any", true, true, false, 494)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 494, $this->source); })()), "disabled_orders", [], "any", false, false, false, 494), 0)) : (0)), 0, ",", " "), "html", null, true);
+        yield "</h3>
+                            <small class=\"opacity-75\">commandes</small>
+                        </div>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-ban fa-2x\"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class=\"col-md-3 col-sm-6\">
+            <div class=\"stats-card purple-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
+                        <div>
+                            <h6 class=\"mb-1\">Taux désactivation</h6>
+                            <h3 class=\"mb-0\">";
+        // line 511
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "disabled_percentage", [], "any", true, true, false, 511)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 511, $this->source); })()), "disabled_percentage", [], "any", false, false, false, 511), 0)) : (0)), 1, ",", " "), "html", null, true);
         yield "%</h3>
-                            <small class=\"text-muted\">des ventes</small>
+                            <small class=\"opacity-75\">des ventes</small>
                         </div>
-                        <i class=\"fas fa-chart-pie fa-2x\" style=\"color: #8b5cf6; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-chart-pie fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card rose-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #f43f5e;\">Ventes annulées</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #f43f5e;\">";
-        // line 480
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "cancelled_orders", [], "any", true, true, false, 480)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 480, $this->source); })()), "cancelled_orders", [], "any", false, false, false, 480), 0)) : (0)), 0, ",", " "), "html", null, true);
+                            <h6 class=\"mb-1\">Ventes annulées</h6>
+                            <h3 class=\"mb-0\">";
+        // line 528
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "cancelled_orders", [], "any", true, true, false, 528)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 528, $this->source); })()), "cancelled_orders", [], "any", false, false, false, 528), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</h3>
-                            <small class=\"text-muted\">commandes</small>
+                            <small class=\"opacity-75\">commandes</small>
                         </div>
-                        <i class=\"fas fa-times-circle fa-2x\" style=\"color: #f43f5e; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-times-circle fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -657,9 +704,9 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
 
     <!-- Message info filtres -->
     ";
-        // line 491
-        if (((((((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 491, $this->source); })()), "date_from", [], "any", false, false, false, 491) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 491, $this->source); })()), "date_to", [], "any", false, false, false, 491)) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 491, $this->source); })()), "status", [], "any", false, false, false, 491)) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 491, $this->source); })()), "payment_method", [], "any", false, false, false, 491)) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 491, $this->source); })()), "user_id", [], "any", false, false, false, 491)) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 491, $this->source); })()), "min_amount", [], "any", false, false, false, 491)) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 491, $this->source); })()), "max_amount", [], "any", false, false, false, 491))) {
-            // line 492
+        // line 541
+        if (((((((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 541, $this->source); })()), "date_from", [], "any", false, false, false, 541) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 541, $this->source); })()), "date_to", [], "any", false, false, false, 541)) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 541, $this->source); })()), "status", [], "any", false, false, false, 541)) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 541, $this->source); })()), "payment_method", [], "any", false, false, false, 541)) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 541, $this->source); })()), "user_id", [], "any", false, false, false, 541)) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 541, $this->source); })()), "min_amount", [], "any", false, false, false, 541)) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 541, $this->source); })()), "max_amount", [], "any", false, false, false, 541))) {
+            // line 542
             yield "    <div class=\"filter-info\">
         <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-2\">
             <div>
@@ -667,7 +714,7 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                 <strong>Filtres actifs :</strong> Les statistiques ci-dessus sont basées sur les filtres appliqués.
             </div>
             <a href=\"";
-            // line 498
+            // line 548
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_index");
             yield "\" class=\"btn btn-sm btn-outline-secondary\">
                 <i class=\"fas fa-times me-1\"></i> Effacer les filtres
@@ -676,13 +723,13 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
     </div>
     ";
         }
-        // line 504
+        // line 554
         yield "
     <!-- Section Retours & Avoirs -->
-    <div class=\"returns-section\">
+    <div class=\"mb-4\">
         <div class=\"returns-card\">
             <div class=\"card-header\">
-                <h5 class=\"mb-0\">
+                <h5 class=\"mb-0 fw-semibold\">
                     <i class=\"fas fa-undo-alt me-2 text-warning\"></i>
                     Retours & Avoirs
                 </h5>
@@ -696,8 +743,8 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                             </div>
                             <div class=\"return-stat-value text-primary\">
                                 ";
-        // line 522
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "total_returns", [], "any", true, true, false, 522)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 522, $this->source); })()), "total_returns", [], "any", false, false, false, 522), 0)) : (0)), 0, ",", " "), "html", null, true);
+        // line 572
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "total_returns", [], "any", true, true, false, 572)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 572, $this->source); })()), "total_returns", [], "any", false, false, false, 572), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "
                             </div>
                             <div class=\"return-stat-sub text-muted\">demandes</div>
@@ -710,8 +757,8 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                             </div>
                             <div class=\"return-stat-value text-warning\">
                                 ";
-        // line 533
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "pending", [], "any", true, true, false, 533)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 533, $this->source); })()), "pending", [], "any", false, false, false, 533), 0)) : (0)), 0, ",", " "), "html", null, true);
+        // line 583
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "pending", [], "any", true, true, false, 583)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 583, $this->source); })()), "pending", [], "any", false, false, false, 583), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "
                             </div>
                             <div class=\"return-stat-sub text-muted\">à valider</div>
@@ -724,8 +771,8 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                             </div>
                             <div class=\"return-stat-value text-info\">
                                 ";
-        // line 544
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "approved", [], "any", true, true, false, 544)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 544, $this->source); })()), "approved", [], "any", false, false, false, 544), 0)) : (0)), 0, ",", " "), "html", null, true);
+        // line 594
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "approved", [], "any", true, true, false, 594)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 594, $this->source); })()), "approved", [], "any", false, false, false, 594), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "
                             </div>
                             <div class=\"return-stat-sub text-muted\">en attente remb.</div>
@@ -738,8 +785,8 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                             </div>
                             <div class=\"return-stat-value text-success\">
                                 ";
-        // line 555
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "completed", [], "any", true, true, false, 555)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 555, $this->source); })()), "completed", [], "any", false, false, false, 555), 0)) : (0)), 0, ",", " "), "html", null, true);
+        // line 605
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "completed", [], "any", true, true, false, 605)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 605, $this->source); })()), "completed", [], "any", false, false, false, 605), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "
                             </div>
                             <div class=\"return-stat-sub text-muted\">terminés</div>
@@ -755,8 +802,8 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                                 <i class=\"fas fa-hand-holding-usd me-1 text-danger\"></i> Montant remboursé :
                             </span>
                             <strong class=\"text-danger\">";
-        // line 569
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "total_refund_amount", [], "any", true, true, false, 569)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 569, $this->source); })()), "total_refund_amount", [], "any", false, false, false, 569), 0)) : (0)), 0, ",", " "), "html", null, true);
+        // line 619
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "total_refund_amount", [], "any", true, true, false, 619)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 619, $this->source); })()), "total_refund_amount", [], "any", false, false, false, 619), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield " FCFA</strong>
                         </div>
                     </div>
@@ -766,17 +813,17 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                                 <i class=\"fas fa-chart-line me-1 text-success\"></i> Taux d'approbation :
                             </span>
                             ";
-        // line 577
-        $context["totalReturns"] = ((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "total_returns", [], "any", true, true, false, 577)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 577, $this->source); })()), "total_returns", [], "any", false, false, false, 577), 0)) : (0));
-        // line 578
+        // line 627
+        $context["totalReturns"] = ((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "total_returns", [], "any", true, true, false, 627)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 627, $this->source); })()), "total_returns", [], "any", false, false, false, 627), 0)) : (0));
+        // line 628
         yield "                            ";
-        $context["approvedCompleted"] = (((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "approved", [], "any", true, true, false, 578)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 578, $this->source); })()), "approved", [], "any", false, false, false, 578), 0)) : (0)) + ((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "completed", [], "any", true, true, false, 578)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 578, $this->source); })()), "completed", [], "any", false, false, false, 578), 0)) : (0)));
-        // line 579
+        $context["approvedCompleted"] = (((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "approved", [], "any", true, true, false, 628)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 628, $this->source); })()), "approved", [], "any", false, false, false, 628), 0)) : (0)) + ((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "completed", [], "any", true, true, false, 628)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 628, $this->source); })()), "completed", [], "any", false, false, false, 628), 0)) : (0)));
+        // line 629
         yield "                            ";
-        $context["approvalRate"] = ((((isset($context["totalReturns"]) || array_key_exists("totalReturns", $context) ? $context["totalReturns"] : (function () { throw new RuntimeError('Variable "totalReturns" does not exist.', 579, $this->source); })()) > 0)) ? ((((isset($context["approvedCompleted"]) || array_key_exists("approvedCompleted", $context) ? $context["approvedCompleted"] : (function () { throw new RuntimeError('Variable "approvedCompleted" does not exist.', 579, $this->source); })()) / (isset($context["totalReturns"]) || array_key_exists("totalReturns", $context) ? $context["totalReturns"] : (function () { throw new RuntimeError('Variable "totalReturns" does not exist.', 579, $this->source); })())) * 100)) : (0));
-        // line 580
+        $context["approvalRate"] = ((((isset($context["totalReturns"]) || array_key_exists("totalReturns", $context) ? $context["totalReturns"] : (function () { throw new RuntimeError('Variable "totalReturns" does not exist.', 629, $this->source); })()) > 0)) ? ((((isset($context["approvedCompleted"]) || array_key_exists("approvedCompleted", $context) ? $context["approvedCompleted"] : (function () { throw new RuntimeError('Variable "approvedCompleted" does not exist.', 629, $this->source); })()) / (isset($context["totalReturns"]) || array_key_exists("totalReturns", $context) ? $context["totalReturns"] : (function () { throw new RuntimeError('Variable "totalReturns" does not exist.', 629, $this->source); })())) * 100)) : (0));
+        // line 630
         yield "                            <strong class=\"text-success\">";
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["approvalRate"]) || array_key_exists("approvalRate", $context) ? $context["approvalRate"] : (function () { throw new RuntimeError('Variable "approvalRate" does not exist.', 580, $this->source); })()), 1, ",", " "), "html", null, true);
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["approvalRate"]) || array_key_exists("approvalRate", $context) ? $context["approvalRate"] : (function () { throw new RuntimeError('Variable "approvalRate" does not exist.', 630, $this->source); })()), 1, ",", " "), "html", null, true);
         yield "%</strong>
                         </div>
                     </div>
@@ -786,11 +833,11 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                                 <i class=\"fas fa-chart-pie me-1 text-danger\"></i> Taux de rejet :
                             </span>
                             ";
-        // line 588
-        $context["rejectionRate"] = ((((isset($context["totalReturns"]) || array_key_exists("totalReturns", $context) ? $context["totalReturns"] : (function () { throw new RuntimeError('Variable "totalReturns" does not exist.', 588, $this->source); })()) > 0)) ? (((((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "rejected", [], "any", true, true, false, 588)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 588, $this->source); })()), "rejected", [], "any", false, false, false, 588), 0)) : (0)) / (isset($context["totalReturns"]) || array_key_exists("totalReturns", $context) ? $context["totalReturns"] : (function () { throw new RuntimeError('Variable "totalReturns" does not exist.', 588, $this->source); })())) * 100)) : (0));
-        // line 589
+        // line 638
+        $context["rejectionRate"] = ((((isset($context["totalReturns"]) || array_key_exists("totalReturns", $context) ? $context["totalReturns"] : (function () { throw new RuntimeError('Variable "totalReturns" does not exist.', 638, $this->source); })()) > 0)) ? (((((CoreExtension::getAttribute($this->env, $this->source, ($context["returnStats"] ?? null), "rejected", [], "any", true, true, false, 638)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["returnStats"]) || array_key_exists("returnStats", $context) ? $context["returnStats"] : (function () { throw new RuntimeError('Variable "returnStats" does not exist.', 638, $this->source); })()), "rejected", [], "any", false, false, false, 638), 0)) : (0)) / (isset($context["totalReturns"]) || array_key_exists("totalReturns", $context) ? $context["totalReturns"] : (function () { throw new RuntimeError('Variable "totalReturns" does not exist.', 638, $this->source); })())) * 100)) : (0));
+        // line 639
         yield "                            <strong class=\"text-danger\">";
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["rejectionRate"]) || array_key_exists("rejectionRate", $context) ? $context["rejectionRate"] : (function () { throw new RuntimeError('Variable "rejectionRate" does not exist.', 589, $this->source); })()), 1, ",", " "), "html", null, true);
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["rejectionRate"]) || array_key_exists("rejectionRate", $context) ? $context["rejectionRate"] : (function () { throw new RuntimeError('Variable "rejectionRate" does not exist.', 639, $this->source); })()), 1, ",", " "), "html", null, true);
         yield "%</strong>
                         </div>
                     </div>
@@ -799,13 +846,34 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         </div>
     </div>
 
+    <!-- Contact Super Admin -->
+    <a href=\"";
+        // line 648
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_contact_super_admin");
+        yield "\" class=\"text-decoration-none d-block mb-4\">
+        <div class=\"contact-card\">
+            <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3\">
+                <div class=\"d-flex align-items-center gap-3\">
+                    <i class=\"fas fa-chart-line fa-3x\"></i>
+                    <div>
+                        <h5 class=\"mb-1\">Analyse approfondie des données</h5>
+                        <p class=\"mb-0 opacity-75\">Pour une analyse détaillée de vos ventes, contactez notre équipe Super Admin</p>
+                    </div>
+                </div>
+                <div class=\"btn btn-light\">
+                    <i class=\"fab fa-whatsapp me-2 text-success\"></i> Contacter le support
+                </div>
+            </div>
+        </div>
+    </a>
+
     <!-- Filtres -->
     <div class=\"filter-section\">
-        <div class=\"d-flex justify-content-between align-items-center mb-3\">
-            <h5 class=\"mb-0\"><i class=\"fas fa-filter me-2 text-primary\"></i> Filtres</h5>
+        <div class=\"d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2\">
+            <h5 class=\"mb-0 fw-semibold\"><i class=\"fas fa-filter me-2 text-primary\"></i> Filtres</h5>
             <div class=\"d-flex gap-2\">
                 <a href=\"";
-        // line 602
+        // line 670
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_index");
         yield "\" class=\"btn btn-outline-secondary btn-sm\">
                     <i class=\"fas fa-undo me-1\"></i> Effacer
@@ -819,27 +887,27 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         <form method=\"get\" id=\"filter-form\">
             <div class=\"row g-3\">
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Recherche</label>
+                    <label class=\"form-label fw-bold small\">Recherche</label>
                     <input type=\"text\" name=\"search\" class=\"form-control\" 
                            placeholder=\"N° commande, client...\" value=\"";
-        // line 616
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "search", [], "any", true, true, false, 616)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 616, $this->source); })()), "search", [], "any", false, false, false, 616), "")) : ("")), "html", null, true);
+        // line 684
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "search", [], "any", true, true, false, 684)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 684, $this->source); })()), "search", [], "any", false, false, false, 684), "")) : ("")), "html", null, true);
         yield "\">
                 </div>
                 <div class=\"col-md-2\">
-                    <label class=\"form-label fw-bold\">Statut</label>
+                    <label class=\"form-label fw-bold small\">Statut</label>
                     <select name=\"status\" class=\"form-select select2-status\">
                         <option value=\"\">Tous</option>
                         ";
-        // line 622
+        // line 690
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["statuses"]) || array_key_exists("statuses", $context) ? $context["statuses"] : (function () { throw new RuntimeError('Variable "statuses" does not exist.', 622, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["statuses"]) || array_key_exists("statuses", $context) ? $context["statuses"] : (function () { throw new RuntimeError('Variable "statuses" does not exist.', 690, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["status"]) {
-            // line 623
+            // line 691
             yield "                            <option value=\"";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["status"], "html", null, true);
             yield "\" ";
-            yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 623, $this->source); })()), "status", [], "any", false, false, false, 623) == $context["status"])) ? ("selected") : (""));
+            yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 691, $this->source); })()), "status", [], "any", false, false, false, 691) == $context["status"])) ? ("selected") : (""));
             yield ">";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::capitalize($this->env->getCharset(), $context["status"]), "html", null, true);
             yield "</option>
@@ -848,23 +916,23 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['status'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 625
+        // line 693
         yield "                    </select>
                 </div>
                 <div class=\"col-md-2\">
-                    <label class=\"form-label fw-bold\">Mode de paiement</label>
+                    <label class=\"form-label fw-bold small\">Mode de paiement</label>
                     <select name=\"payment_method\" class=\"form-select select2-payment\">
                         <option value=\"\">Tous</option>
                         ";
-        // line 631
+        // line 699
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["payment_methods"]) || array_key_exists("payment_methods", $context) ? $context["payment_methods"] : (function () { throw new RuntimeError('Variable "payment_methods" does not exist.', 631, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["payment_methods"]) || array_key_exists("payment_methods", $context) ? $context["payment_methods"] : (function () { throw new RuntimeError('Variable "payment_methods" does not exist.', 699, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["method"]) {
-            // line 632
+            // line 700
             yield "                            <option value=\"";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["method"], "html", null, true);
             yield "\" ";
-            yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 632, $this->source); })()), "payment_method", [], "any", false, false, false, 632) == $context["method"])) ? ("selected") : (""));
+            yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 700, $this->source); })()), "payment_method", [], "any", false, false, false, 700) == $context["method"])) ? ("selected") : (""));
             yield ">";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::capitalize($this->env->getCharset(), Twig\Extension\CoreExtension::replace($context["method"], ["_" => " "])), "html", null, true);
             yield "</option>
@@ -873,36 +941,27 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['method'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 634
+        // line 702
         yield "                    </select>
                 </div>
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Caissier</label>
+                    <label class=\"form-label fw-bold small\">Caissier</label>
                     <select name=\"user_id\" id=\"user-select\" class=\"form-select select2-user\">
                         <option value=\"\">Tous les caissiers</option>
                         ";
-        // line 640
+        // line 708
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["users"]) || array_key_exists("users", $context) ? $context["users"] : (function () { throw new RuntimeError('Variable "users" does not exist.', 640, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["users"]) || array_key_exists("users", $context) ? $context["users"] : (function () { throw new RuntimeError('Variable "users" does not exist.', 708, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["user"]) {
-            // line 641
+            // line 709
             yield "                            <option value=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["user"], "id", [], "any", false, false, false, 641), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["user"], "id", [], "any", false, false, false, 709), "html", null, true);
             yield "\" ";
-            yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 641, $this->source); })()), "user_id", [], "any", false, false, false, 641) == CoreExtension::getAttribute($this->env, $this->source, $context["user"], "id", [], "any", false, false, false, 641))) ? ("selected") : (""));
+            yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 709, $this->source); })()), "user_id", [], "any", false, false, false, 709) == CoreExtension::getAttribute($this->env, $this->source, $context["user"], "id", [], "any", false, false, false, 709))) ? ("selected") : (""));
             yield ">
                                 ";
-            // line 642
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["user"], "photo", [], "any", false, false, false, 642)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 643
-                yield "                                    <img src=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, $context["user"], "photo", [], "any", false, false, false, 643))), "html", null, true);
-                yield "\" class=\"rounded-circle me-2\" style=\"width: 20px; height: 20px; object-fit: cover;\">
-                                ";
-            }
-            // line 645
-            yield "                                ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["user"], "fullName", [], "any", true, true, false, 645)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["user"], "fullName", [], "any", false, false, false, 645), CoreExtension::getAttribute($this->env, $this->source, $context["user"], "email", [], "any", false, false, false, 645))) : (CoreExtension::getAttribute($this->env, $this->source, $context["user"], "email", [], "any", false, false, false, 645))), "html", null, true);
+            // line 710
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["user"], "fullName", [], "any", true, true, false, 710)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["user"], "fullName", [], "any", false, false, false, 710), CoreExtension::getAttribute($this->env, $this->source, $context["user"], "email", [], "any", false, false, false, 710))) : (CoreExtension::getAttribute($this->env, $this->source, $context["user"], "email", [], "any", false, false, false, 710))), "html", null, true);
             yield "
                             </option>
                         ";
@@ -910,23 +969,23 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['user'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 648
+        // line 713
         yield "                    </select>
                 </div>
                 <div class=\"col-md-2\">
-                    <label class=\"form-label fw-bold\">Période</label>
+                    <label class=\"form-label fw-bold small\">Période</label>
                     <select name=\"date_preset\" id=\"date-preset\" class=\"form-select select2-preset\">
                         <option value=\"\">Personnalisée</option>
                         ";
-        // line 654
+        // line 719
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["date_presets"]) || array_key_exists("date_presets", $context) ? $context["date_presets"] : (function () { throw new RuntimeError('Variable "date_presets" does not exist.', 654, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["date_presets"]) || array_key_exists("date_presets", $context) ? $context["date_presets"] : (function () { throw new RuntimeError('Variable "date_presets" does not exist.', 719, $this->source); })()));
         foreach ($context['_seq'] as $context["key"] => $context["label"]) {
-            // line 655
+            // line 720
             yield "                            <option value=\"";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["key"], "html", null, true);
             yield "\" ";
-            yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 655, $this->source); })()), "date_preset", [], "any", false, false, false, 655) == $context["key"])) ? ("selected") : (""));
+            yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 720, $this->source); })()), "date_preset", [], "any", false, false, false, 720) == $context["key"])) ? ("selected") : (""));
             yield ">";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["label"], "html", null, true);
             yield "</option>
@@ -935,73 +994,73 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['key'], $context['label'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 657
+        // line 722
         yield "                    </select>
                 </div>
             </div>
 
             <div class=\"row g-3 mt-2\" id=\"custom-dates\" style=\"display: ";
-        // line 661
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 661, $this->source); })()), "date_preset", [], "any", false, false, false, 661)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("none") : ("flex"));
+        // line 726
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 726, $this->source); })()), "date_preset", [], "any", false, false, false, 726)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("none") : ("flex"));
         yield ";\">
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Date du</label>
+                    <label class=\"form-label fw-bold small\">Date du</label>
                     <input type=\"date\" name=\"date_from\" class=\"form-control\" value=\"";
-        // line 664
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "date_from", [], "any", true, true, false, 664)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 664, $this->source); })()), "date_from", [], "any", false, false, false, 664), "")) : ("")), "html", null, true);
+        // line 729
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "date_from", [], "any", true, true, false, 729)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 729, $this->source); })()), "date_from", [], "any", false, false, false, 729), "")) : ("")), "html", null, true);
         yield "\">
                 </div>
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Date au</label>
+                    <label class=\"form-label fw-bold small\">Date au</label>
                     <input type=\"date\" name=\"date_to\" class=\"form-control\" value=\"";
-        // line 668
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "date_to", [], "any", true, true, false, 668)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 668, $this->source); })()), "date_to", [], "any", false, false, false, 668), "")) : ("")), "html", null, true);
+        // line 733
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "date_to", [], "any", true, true, false, 733)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 733, $this->source); })()), "date_to", [], "any", false, false, false, 733), "")) : ("")), "html", null, true);
         yield "\">
                 </div>
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Montant min (FCFA)</label>
+                    <label class=\"form-label fw-bold small\">Montant min (FCFA)</label>
                     <input type=\"number\" name=\"min_amount\" class=\"form-control\" placeholder=\"Min\" value=\"";
-        // line 672
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "min_amount", [], "any", true, true, false, 672)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 672, $this->source); })()), "min_amount", [], "any", false, false, false, 672), "")) : ("")), "html", null, true);
+        // line 737
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "min_amount", [], "any", true, true, false, 737)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 737, $this->source); })()), "min_amount", [], "any", false, false, false, 737), "")) : ("")), "html", null, true);
         yield "\">
                 </div>
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Montant max (FCFA)</label>
+                    <label class=\"form-label fw-bold small\">Montant max (FCFA)</label>
                     <input type=\"number\" name=\"max_amount\" class=\"form-control\" placeholder=\"Max\" value=\"";
-        // line 676
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "max_amount", [], "any", true, true, false, 676)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 676, $this->source); })()), "max_amount", [], "any", false, false, false, 676), "")) : ("")), "html", null, true);
+        // line 741
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "max_amount", [], "any", true, true, false, 741)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 741, $this->source); })()), "max_amount", [], "any", false, false, false, 741), "")) : ("")), "html", null, true);
         yield "\">
                 </div>
             </div>
 
             <div class=\"row g-3 mt-2\">
                 <div class=\"col-md-6\">
-                    <label class=\"form-label fw-bold\">Trier par</label>
+                    <label class=\"form-label fw-bold small\">Trier par</label>
                     <select name=\"sort\" class=\"form-select\">
                         <option value=\"created_at\" ";
-        // line 684
-        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 684, $this->source); })()), "sort", [], "any", false, false, false, 684) == "created_at")) ? ("selected") : (""));
+        // line 749
+        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 749, $this->source); })()), "sort", [], "any", false, false, false, 749) == "created_at")) ? ("selected") : (""));
         yield ">Date de vente</option>
                         <option value=\"total_amount\" ";
-        // line 685
-        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 685, $this->source); })()), "sort", [], "any", false, false, false, 685) == "total_amount")) ? ("selected") : (""));
+        // line 750
+        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 750, $this->source); })()), "sort", [], "any", false, false, false, 750) == "total_amount")) ? ("selected") : (""));
         yield ">Montant</option>
                         <option value=\"customer_name\" ";
-        // line 686
-        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 686, $this->source); })()), "sort", [], "any", false, false, false, 686) == "customer_name")) ? ("selected") : (""));
+        // line 751
+        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 751, $this->source); })()), "sort", [], "any", false, false, false, 751) == "customer_name")) ? ("selected") : (""));
         yield ">Nom client</option>
                     </select>
                 </div>
                 <div class=\"col-md-6\">
-                    <label class=\"form-label fw-bold\">Ordre</label>
+                    <label class=\"form-label fw-bold small\">Ordre</label>
                     <select name=\"direction\" class=\"form-select\">
                         <option value=\"desc\" ";
-        // line 692
-        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 692, $this->source); })()), "direction", [], "any", false, false, false, 692) == "desc")) ? ("selected") : (""));
+        // line 757
+        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 757, $this->source); })()), "direction", [], "any", false, false, false, 757) == "desc")) ? ("selected") : (""));
         yield ">Plus récent d'abord</option>
                         <option value=\"asc\" ";
-        // line 693
-        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 693, $this->source); })()), "direction", [], "any", false, false, false, 693) == "asc")) ? ("selected") : (""));
+        // line 758
+        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 758, $this->source); })()), "direction", [], "any", false, false, false, 758) == "asc")) ? ("selected") : (""));
         yield ">Plus ancien d'abord</option>
                     </select>
                 </div>
@@ -1013,8 +1072,8 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
     <div class=\"card border-0 shadow-sm\">
         <div class=\"card-header bg-white py-3\">
             <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3\">
-                <h5 class=\"mb-0\"><i class=\"fas fa-list me-2\"></i> Liste des ventes</h5>
-                <div class=\"table-header-actions\">
+                <h5 class=\"mb-0 fw-semibold\"><i class=\"fas fa-list me-2\"></i> Liste des ventes</h5>
+                <div class=\"table-header-actions d-flex gap-2 align-items-center flex-wrap\">
                     <div class=\"form-check\">
                         <input type=\"checkbox\" class=\"form-check-input\" id=\"selectAllCheckbox\">
                         <label class=\"form-check-label small\" for=\"selectAllCheckbox\">Tout cocher</label>
@@ -1026,8 +1085,8 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                         <i class=\"fas fa-print me-1\"></i> Imprimer sélection
                     </button>
                     <span class=\"badge bg-secondary\">";
-        // line 716
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["totalItems"]) || array_key_exists("totalItems", $context) ? $context["totalItems"] : (function () { throw new RuntimeError('Variable "totalItems" does not exist.', 716, $this->source); })()), "html", null, true);
+        // line 781
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["totalItems"]) || array_key_exists("totalItems", $context) ? $context["totalItems"] : (function () { throw new RuntimeError('Variable "totalItems" does not exist.', 781, $this->source); })()), "html", null, true);
         yield " vente(s)</span>
                 </div>
             </div>
@@ -1051,144 +1110,142 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                     </thead>
                     <tbody>
                         ";
-        // line 738
+        // line 803
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["orders"]) || array_key_exists("orders", $context) ? $context["orders"] : (function () { throw new RuntimeError('Variable "orders" does not exist.', 738, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["orders"]) || array_key_exists("orders", $context) ? $context["orders"] : (function () { throw new RuntimeError('Variable "orders" does not exist.', 803, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["order"]) {
-            // line 739
+            // line 804
             yield "                            ";
-            $context["itemCount"] = Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderItems", [], "any", false, false, false, 739));
-            // line 740
+            $context["itemCount"] = Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderItems", [], "any", false, false, false, 804));
+            // line 805
             yield "                            <tr class=\"table-order-row\" data-href=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 740)]), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 805)]), "html", null, true);
             yield "\">
                                 <td><input type=\"checkbox\" class=\"form-check-input row-checkbox\" data-order-id=\"";
-            // line 741
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 741), "html", null, true);
+            // line 806
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 806), "html", null, true);
             yield "\" data-order-number=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderNumber", [], "any", false, false, false, 741), "html", null, true);
-            yield "\"></td>
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderNumber", [], "any", false, false, false, 806), "html", null, true);
+            yield "\"></div>
                                 <td><strong>";
-            // line 742
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderNumber", [], "any", false, false, false, 742), "html", null, true);
-            yield "</strong></td>
+            // line 807
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderNumber", [], "any", false, false, false, 807), "html", null, true);
+            yield "</strong></div>
                                 <td>";
-            // line 743
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "createdAt", [], "any", false, false, false, 743), "d/m/Y H:i"), "html", null, true);
-            yield "</td>
+            // line 808
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "createdAt", [], "any", false, false, false, 808), "d/m/Y H:i"), "html", null, true);
+            yield "</div>
                                 <td>
-                                    <div>";
-            // line 745
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "customerName", [], "any", false, false, false, 745), "html", null, true);
+                                    <div class=\"fw-semibold\">";
+            // line 810
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "customerName", [], "any", false, false, false, 810), "html", null, true);
             yield "</div>
                                     ";
-            // line 746
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["order"], "customerPhone", [], "any", false, false, false, 746)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 747
+            // line 811
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["order"], "customerPhone", [], "any", false, false, false, 811)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 812
                 yield "                                        <small class=\"text-muted\"><i class=\"fas fa-phone me-1\"></i>";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "customerPhone", [], "any", false, false, false, 747), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "customerPhone", [], "any", false, false, false, 812), "html", null, true);
                 yield "</small>
                                     ";
             }
-            // line 749
-            yield "                                  </td>
+            // line 814
+            yield "                                 </div>
                                 <td>
                                     <span class=\"badge bg-secondary\">";
-            // line 751
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["itemCount"]) || array_key_exists("itemCount", $context) ? $context["itemCount"] : (function () { throw new RuntimeError('Variable "itemCount" does not exist.', 751, $this->source); })()), "html", null, true);
+            // line 816
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["itemCount"]) || array_key_exists("itemCount", $context) ? $context["itemCount"] : (function () { throw new RuntimeError('Variable "itemCount" does not exist.', 816, $this->source); })()), "html", null, true);
             yield " article(s)</span>
                                     ";
-            // line 752
-            if ((($tmp = (isset($context["isRestaurant"]) || array_key_exists("isRestaurant", $context) ? $context["isRestaurant"] : (function () { throw new RuntimeError('Variable "isRestaurant" does not exist.', 752, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 753
+            // line 817
+            if ((($tmp = (isset($context["isRestaurant"]) || array_key_exists("isRestaurant", $context) ? $context["isRestaurant"] : (function () { throw new RuntimeError('Variable "isRestaurant" does not exist.', 817, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 818
                 yield "                                        <br><small class=\"text-muted\">Plats</small>
                                     ";
             }
-            // line 755
-            yield "                                  </td>
+            // line 820
+            yield "                                 </div>
                                 <td><strong class=\"text-primary\">";
-            // line 756
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "totalAmount", [], "any", false, false, false, 756), 0, ",", " "), "html", null, true);
-            yield " FCFA</strong></td>
+            // line 821
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "totalAmount", [], "any", false, false, false, 821), 0, ",", " "), "html", null, true);
+            yield " FCFA</strong></div>
                                 <td>
                                     <span class=\"badge bg-";
-            // line 758
-            yield (((CoreExtension::getAttribute($this->env, $this->source, $context["order"], "paymentMethod", [], "any", false, false, false, 758) == "cash")) ? ("success") : ("info"));
+            // line 823
+            yield (((CoreExtension::getAttribute($this->env, $this->source, $context["order"], "paymentMethod", [], "any", false, false, false, 823) == "cash")) ? ("success") : ("info"));
             yield "\">
                                         ";
-            // line 759
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::capitalize($this->env->getCharset(), Twig\Extension\CoreExtension::replace(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "paymentMethod", [], "any", false, false, false, 759), ["_" => " "])), "html", null, true);
+            // line 824
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::capitalize($this->env->getCharset(), Twig\Extension\CoreExtension::replace(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "paymentMethod", [], "any", false, false, false, 824), ["_" => " "])), "html", null, true);
             yield "
                                     </span>
-                                  </td>
+                                 </div>
                                 <td>
                                     ";
-            // line 763
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["order"], "isActive", [], "any", false, false, false, 763)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 764
+            // line 828
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["order"], "isActive", [], "any", false, false, false, 828)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 829
                 yield "                                        <span class=\"badge badge-status-completed\">Active</span>
                                     ";
             } else {
-                // line 766
+                // line 831
                 yield "                                        <span class=\"badge badge-status-disabled\">Désactivée</span>
                                     ";
             }
-            // line 768
-            yield "                                  </td>
+            // line 833
+            yield "                                 </div>
                                 <td>
-                                    <div class=\"d-flex align-items-center\">
+                                    <div class=\"d-flex align-items-center gap-2\">
                                         ";
-            // line 771
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 771), "photo", [], "any", false, false, false, 771)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 772
+            // line 836
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 836), "photo", [], "any", false, false, false, 836)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 837
                 yield "                                            <img src=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 772), "photo", [], "any", false, false, false, 772))), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 837), "photo", [], "any", false, false, false, 837))), "html", null, true);
                 yield "\" 
-                                                 class=\"rounded-circle me-2\" style=\"width: 30px; height: 30px; object-fit: cover;\">
+                                                 class=\"rounded-circle user-avatar-sm\" style=\"width: 32px; height: 32px; object-fit: cover;\">
                                         ";
             } else {
-                // line 775
-                yield "                                            <div class=\"rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2\" 
-                                                 style=\"width: 30px; height: 30px; font-size: 12px;\">
+                // line 840
+                yield "                                            <div class=\"rounded-circle initial-avatar d-flex align-items-center justify-content-center\" style=\"width: 32px; height: 32px;\">
                                                 ";
-                // line 777
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 777), "fullName", [], "any", false, false, false, 777))), "html", null, true);
+                // line 841
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 841), "fullName", [], "any", false, false, false, 841))), "html", null, true);
                 yield "
                                             </div>
                                         ";
             }
-            // line 780
+            // line 844
             yield "                                        <div>
-                                            <div>";
-            // line 781
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, true, false, 781), "fullName", [], "any", true, true, false, 781)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 781), "fullName", [], "any", false, false, false, 781), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 781), "email", [], "any", false, false, false, 781))) : (CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 781), "email", [], "any", false, false, false, 781))), "html", null, true);
+                                            <div class=\"small fw-semibold\">";
+            // line 845
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, true, false, 845), "fullName", [], "any", true, true, false, 845)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 845), "fullName", [], "any", false, false, false, 845), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 845), "email", [], "any", false, false, false, 845))) : (CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 845), "email", [], "any", false, false, false, 845))), "html", null, true);
             yield "</div>
                                             <small class=\"text-muted\">";
-            // line 782
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::replace(Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 782), "roles", [], "any", false, false, false, 782)), ["ROLE_" => ""]), "html", null, true);
+            // line 846
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["order"], "user", [], "any", false, false, false, 846), "roleLabel", [], "any", false, false, false, 846), "html", null, true);
             yield "</small>
                                         </div>
                                     </div>
-                                  </td>
+                                 </div>
                                 <td class=\"text-center\">
                                     <div class=\"btn-group\" role=\"group\">
                                         <a href=\"";
-            // line 788
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 788)]), "html", null, true);
+            // line 852
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 852)]), "html", null, true);
             yield "\" class=\"btn btn-sm btn-outline-primary\" title=\"Voir\">
                                             <i class=\"fas fa-eye\"></i>
                                         </a>
                                         
                                         <button type=\"button\" class=\"btn btn-sm btn-outline-success quick-print\" 
                                                 data-order-id=\"";
-            // line 793
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 793), "html", null, true);
+            // line 857
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 857), "html", null, true);
             yield "\" 
                                                 data-print-type=\"customer\" 
                                                 title=\"Impression rapide\">
                                             <i class=\"fas fa-print\"></i>
-                                            <i class=\"fas fa-bolt fa-xs\"></i>
                                         </button>
                                         
                                         <div class=\"btn-group\" role=\"group\">
@@ -1198,43 +1255,43 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                                             <ul class=\"dropdown-menu dropdown-menu-end\">
                                                 <li>
                                                     <button type=\"button\" class=\"dropdown-item print-customer\" data-order-id=\"";
-            // line 806
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 806), "html", null, true);
+            // line 869
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 869), "html", null, true);
             yield "\" data-print-type=\"customer\">
                                                         <i class=\"fas fa-receipt me-2\"></i> Ticket client
                                                     </button>
                                                 </li>
                                                 
                                                 ";
-            // line 811
-            if ((($tmp = (isset($context["isRestaurant"]) || array_key_exists("isRestaurant", $context) ? $context["isRestaurant"] : (function () { throw new RuntimeError('Variable "isRestaurant" does not exist.', 811, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 812
+            // line 874
+            if ((($tmp = (isset($context["isRestaurant"]) || array_key_exists("isRestaurant", $context) ? $context["isRestaurant"] : (function () { throw new RuntimeError('Variable "isRestaurant" does not exist.', 874, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 875
                 yield "                                                <li><hr class=\"dropdown-divider\"></li>
                                                 <li>
                                                     <button type=\"button\" class=\"dropdown-item print-kitchen\" data-order-id=\"";
-                // line 814
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 814), "html", null, true);
+                // line 877
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 877), "html", null, true);
                 yield "\" data-print-type=\"kitchen\">
                                                         <i class=\"fas fa-utensils me-2\"></i> Ticket cuisine
                                                     </button>
                                                 </li>
                                                 <li>
                                                     <button type=\"button\" class=\"dropdown-item print-delivery\" data-order-id=\"";
-                // line 819
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 819), "html", null, true);
+                // line 882
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 882), "html", null, true);
                 yield "\" data-print-type=\"delivery\">
                                                         <i class=\"fas fa-truck me-2\"></i> Ticket livraison
                                                     </button>
                                                 </li>
                                                 ";
             }
-            // line 824
+            // line 887
             yield "                                                
                                                 <li><hr class=\"dropdown-divider\"></li>
                                                 <li>
                                                     <button type=\"button\" class=\"dropdown-item print-cash\" data-order-id=\"";
-            // line 827
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 827), "html", null, true);
+            // line 890
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 890), "html", null, true);
             yield "\" data-print-type=\"cash\">
                                                         <i class=\"fas fa-money-bill-wave me-2\"></i> Ticket caisse
                                                     </button>
@@ -1243,152 +1300,158 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
                                         </div>
                                         
                                         ";
-            // line 834
+            // line 897
             if ((($tmp = $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN")) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 835
+                // line 898
                 yield "                                            ";
-                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["order"], "isActive", [], "any", false, false, false, 835)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 836
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["order"], "isActive", [], "any", false, false, false, 898)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 899
                     yield "                                                <button type=\"button\" class=\"btn btn-sm btn-outline-warning toggle-order\" data-id=\"";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 836), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 899), "html", null, true);
                     yield "\" data-number=\"";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderNumber", [], "any", false, false, false, 836), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderNumber", [], "any", false, false, false, 899), "html", null, true);
                     yield "\" data-action=\"disable\" title=\"Désactiver\">
                                                     <i class=\"fas fa-ban\"></i>
                                                 </button>
                                             ";
                 } else {
-                    // line 840
+                    // line 903
                     yield "                                                <button type=\"button\" class=\"btn btn-sm btn-outline-success toggle-order\" data-id=\"";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 840), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 903), "html", null, true);
                     yield "\" data-number=\"";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderNumber", [], "any", false, false, false, 840), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderNumber", [], "any", false, false, false, 903), "html", null, true);
                     yield "\" data-action=\"enable\" title=\"Activer\">
                                                     <i class=\"fas fa-check-circle\"></i>
                                                 </button>
                                             ";
                 }
-                // line 844
+                // line 907
                 yield "                                            <button type=\"button\" class=\"btn btn-sm btn-outline-danger delete-order\" data-id=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 844), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "id", [], "any", false, false, false, 907), "html", null, true);
                 yield "\" data-number=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderNumber", [], "any", false, false, false, 844), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["order"], "orderNumber", [], "any", false, false, false, 907), "html", null, true);
                 yield "\" title=\"Supprimer\">
                                                 <i class=\"fas fa-trash\"></i>
                                             </button>
                                         ";
             }
-            // line 848
+            // line 911
             yield "                                    </div>
-                                </td>
+                                 </div>
                             </tr>
                         ";
             $context['_iterated'] = true;
         }
-        // line 851
+        // line 914
         if (!$context['_iterated']) {
-            // line 852
+            // line 915
             yield "                            <tr>
                                 <td colspan=\"10\" class=\"text-center py-5\">
-                                    <i class=\"fas fa-shopping-cart fa-3x text-muted mb-3\"></i>
+                                    <i class=\"fas fa-shopping-cart fa-3x text-muted mb-3 opacity-50\"></i>
                                     <p class=\"text-muted mb-0\">Aucune vente trouvée</p>
                                     <p class=\"text-muted small\">Modifiez vos filtres pour voir plus de résultats</p>
-                                </td>
-                            </tr>
+                                    <a href=\"";
+            // line 920
+            yield (((($tmp = (isset($context["isRestaurant"]) || array_key_exists("isRestaurant", $context) ? $context["isRestaurant"] : (function () { throw new RuntimeError('Variable "isRestaurant" does not exist.', 920, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("restaurant_sale_index")) : ($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("retail_sale_index")));
+            yield "\" class=\"btn btn-primary btn-sm mt-2\">
+                                        <i class=\"fas fa-plus me-1\"></i> Créer une vente
+                                    </a>
+                                 </div>
+                             </tr>
                         ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['order'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 860
+        // line 926
         yield "                    </tbody>
                 </table>
             </div>
         </div>
 
         ";
-        // line 865
-        if (((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 865, $this->source); })()) > 1)) {
-            // line 866
+        // line 931
+        if (((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 931, $this->source); })()) > 1)) {
+            // line 932
             yield "        <div class=\"card-footer bg-white\">
             <nav aria-label=\"Pagination\">
                 <ul class=\"pagination justify-content-center mb-0\">
                     ";
-            // line 869
-            if (((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 869, $this->source); })()) > 1)) {
-                // line 870
+            // line 935
+            if (((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 935, $this->source); })()) > 1)) {
+                // line 936
                 yield "                        <li class=\"page-item\">
                             <a class=\"page-link\" href=\"";
-                // line 871
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 871, $this->source); })()), "request", [], "any", false, false, false, 871), "query", [], "any", false, false, false, 871), "all", [], "any", false, false, false, 871), ["page" => ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 871, $this->source); })()) - 1)])), "html", null, true);
+                // line 937
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 937, $this->source); })()), "request", [], "any", false, false, false, 937), "query", [], "any", false, false, false, 937), "all", [], "any", false, false, false, 937), ["page" => ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 937, $this->source); })()) - 1)])), "html", null, true);
                 yield "\">
                                 <i class=\"fas fa-chevron-left\"></i> Précédent
                             </a>
                         </li>
                     ";
             }
-            // line 876
+            // line 942
             yield "                    
                     ";
-            // line 877
+            // line 943
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable(range(1, (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 877, $this->source); })())));
+            $context['_seq'] = CoreExtension::ensureTraversable(range(1, (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 943, $this->source); })())));
             foreach ($context['_seq'] as $context["_key"] => $context["page"]) {
-                // line 878
+                // line 944
                 yield "                        ";
-                if ((((($context["page"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 878, $this->source); })())) || (($context["page"] >= ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 878, $this->source); })()) - 2)) && ($context["page"] <= ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 878, $this->source); })()) + 2)))) || ($context["page"] == 1)) || ($context["page"] == (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 878, $this->source); })())))) {
-                    // line 879
+                if ((((($context["page"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 944, $this->source); })())) || (($context["page"] >= ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 944, $this->source); })()) - 2)) && ($context["page"] <= ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 944, $this->source); })()) + 2)))) || ($context["page"] == 1)) || ($context["page"] == (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 944, $this->source); })())))) {
+                    // line 945
                     yield "                            ";
-                    if ((($context["page"] == ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 879, $this->source); })()) - 3)) || ($context["page"] == ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 879, $this->source); })()) + 3)))) {
-                        // line 880
+                    if ((($context["page"] == ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 945, $this->source); })()) - 3)) || ($context["page"] == ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 945, $this->source); })()) + 3)))) {
+                        // line 946
                         yield "                                <li class=\"page-item disabled\"><span class=\"page-link\">...</span></li>
                             ";
                     } else {
-                        // line 882
+                        // line 948
                         yield "                                <li class=\"page-item ";
-                        yield ((($context["page"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 882, $this->source); })()))) ? ("active") : (""));
+                        yield ((($context["page"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 948, $this->source); })()))) ? ("active") : (""));
                         yield "\">
                                     <a class=\"page-link\" href=\"";
-                        // line 883
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 883, $this->source); })()), "request", [], "any", false, false, false, 883), "query", [], "any", false, false, false, 883), "all", [], "any", false, false, false, 883), ["page" => $context["page"]])), "html", null, true);
+                        // line 949
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 949, $this->source); })()), "request", [], "any", false, false, false, 949), "query", [], "any", false, false, false, 949), "all", [], "any", false, false, false, 949), ["page" => $context["page"]])), "html", null, true);
                         yield "\">";
                         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["page"], "html", null, true);
                         yield "</a>
                                 </li>
                             ";
                     }
-                    // line 886
+                    // line 952
                     yield "                        ";
                 }
-                // line 887
+                // line 953
                 yield "                    ";
             }
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['page'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 888
+            // line 954
             yield "                    
                     ";
-            // line 889
-            if (((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 889, $this->source); })()) < (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 889, $this->source); })()))) {
-                // line 890
+            // line 955
+            if (((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 955, $this->source); })()) < (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 955, $this->source); })()))) {
+                // line 956
                 yield "                        <li class=\"page-item\">
                             <a class=\"page-link\" href=\"";
-                // line 891
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 891, $this->source); })()), "request", [], "any", false, false, false, 891), "query", [], "any", false, false, false, 891), "all", [], "any", false, false, false, 891), ["page" => ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 891, $this->source); })()) + 1)])), "html", null, true);
+                // line 957
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 957, $this->source); })()), "request", [], "any", false, false, false, 957), "query", [], "any", false, false, false, 957), "all", [], "any", false, false, false, 957), ["page" => ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 957, $this->source); })()) + 1)])), "html", null, true);
                 yield "\">
                                 Suivant <i class=\"fas fa-chevron-right\"></i>
                             </a>
                         </li>
                     ";
             }
-            // line 896
+            // line 962
             yield "                </ul>
             </nav>
         </div>
         ";
         }
-        // line 900
+        // line 966
         yield "    </div>
 </div>
 
@@ -1465,7 +1528,7 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         yield from [];
     }
 
-    // line 968
+    // line 1034
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -1478,7 +1541,7 @@ class __TwigTemplate_de0e6ac24bf304e4e329f7acc55d42f1 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 969
+        // line 1035
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
@@ -1729,19 +1792,21 @@ class PrintManager {
 // ==================== INITIALISATION PRINCIPALE ====================
 document.addEventListener('DOMContentLoaded', function() {
     // Initialisation Select2
-    \$('.select2-status, .select2-payment, .select2-user, .select2-preset').select2({
-        theme: 'bootstrap-5',
-        language: 'fr',
-        width: '100%'
-    });
+    if (typeof \$ !== 'undefined' && \$.fn.select2) {
+        \$('.select2-status, .select2-payment, .select2-user, .select2-preset').select2({
+            theme: 'bootstrap-5',
+            language: 'fr',
+            width: '100%'
+        });
 
-    \$('#user-select').select2({
-        theme: 'bootstrap-5',
-        language: 'fr',
-        placeholder: 'Tous les caissiers',
-        allowClear: true,
-        width: '100%'
-    });
+        \$('#user-select').select2({
+            theme: 'bootstrap-5',
+            language: 'fr',
+            placeholder: 'Tous les caissiers',
+            allowClear: true,
+            width: '100%'
+        });
+    }
 
     // Gestion des dates personnalisées
     const datePreset = document.getElementById('date-preset');
@@ -1864,37 +1929,39 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('printReceiptBtn')?.addEventListener('click', function() {
         const printContent = receiptContent.innerHTML;
         const printWindow = window.open('', '_blank', 'width=400,height=600');
-        printWindow.document.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Reçu de vente</title>
-                <meta charset=\"UTF-8\">
-                <style>
-                    body { font-family: monospace; margin: 0; padding: 20px; width: 350px; margin: 0 auto; }
-                    .receipt { text-align: center; }
-                    .receipt-header { margin-bottom: 15px; }
-                    .receipt-header h2 { margin: 0; font-size: 18px; }
-                    .receipt-header p { margin: 5px 0; font-size: 12px; }
-                    .receipt-line { border-top: 1px dashed #000; margin: 10px 0; }
-                    .receipt-items { width: 100%; margin: 10px 0; font-size: 12px; }
-                    .receipt-items th, .receipt-items td { text-align: left; padding: 3px 0; }
-                    .receipt-items td:last-child { text-align: right; }
-                    .receipt-total { font-weight: bold; margin-top: 10px; }
-                    .receipt-footer { margin-top: 15px; font-size: 10px; text-align: center; }
-                    @media print { body { margin: 0; padding: 10px; } .no-print { display: none; } }
-                </style>
-            </head>
-            <body>
-                \${printContent}
-                <div class=\"receipt-footer no-print\">
-                    <button onclick=\"window.print()\" style=\"margin-top: 20px; padding: 8px 16px;\">Imprimer</button>
-                </div>
-                <script>window.print();<\\/script>
-            </body>
-            </html>
-        `);
-        printWindow.document.close();
+        if (printWindow) {
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Reçu de vente</title>
+                    <meta charset=\"UTF-8\">
+                    <style>
+                        body { font-family: monospace; margin: 0; padding: 20px; width: 350px; margin: 0 auto; }
+                        .receipt { text-align: center; }
+                        .receipt-header { margin-bottom: 15px; }
+                        .receipt-header h2 { margin: 0; font-size: 18px; }
+                        .receipt-header p { margin: 5px 0; font-size: 12px; }
+                        .receipt-line { border-top: 1px dashed #000; margin: 10px 0; }
+                        .receipt-items { width: 100%; margin: 10px 0; font-size: 12px; }
+                        .receipt-items th, .receipt-items td { text-align: left; padding: 3px 0; }
+                        .receipt-items td:last-child { text-align: right; }
+                        .receipt-total { font-weight: bold; margin-top: 10px; }
+                        .receipt-footer { margin-top: 15px; font-size: 10px; text-align: center; }
+                        @media print { body { margin: 0; padding: 10px; } .no-print { display: none; } }
+                    </style>
+                </head>
+                <body>
+                    \${printContent}
+                    <div class=\"receipt-footer no-print\">
+                        <button onclick=\"window.print()\" style=\"margin-top: 20px; padding: 8px 16px;\">Imprimer</button>
+                    </div>
+                    <script>window.print();<\\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
     });
 
     // Toggle (désactiver/activer) une vente
@@ -1918,9 +1985,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             toggleOrderForm.action = '/orders/' + orderId + '/toggle';
             toggleOrderToken.value = '";
-        // line 1406
+        // line 1476
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken("toggle_order"), "html", null, true);
-        yield "'.replace('ID_PLACEHOLDER', orderId);
+        yield "';
             toggleOrderBtn.className = isDisable ? 'btn btn-warning' : 'btn btn-success';
             toggleOrderBtn.textContent = isDisable ? 'Désactiver' : 'Activer';
             
@@ -1943,9 +2010,9 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteOrderNumber.textContent = orderNumber;
             deleteOrderForm.action = '/orders/' + orderId + '/delete';
             deleteOrderToken.value = '";
-        // line 1428
+        // line 1498
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken("delete_order"), "html", null, true);
-        yield "'.replace('ID_PLACEHOLDER', orderId);
+        yield "';
             
             deleteModal.show();
         });
@@ -1986,7 +2053,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  1947 => 1428,  1922 => 1406,  1482 => 969,  1469 => 968,  1392 => 900,  1386 => 896,  1378 => 891,  1375 => 890,  1373 => 889,  1370 => 888,  1364 => 887,  1361 => 886,  1353 => 883,  1348 => 882,  1344 => 880,  1341 => 879,  1338 => 878,  1334 => 877,  1331 => 876,  1323 => 871,  1320 => 870,  1318 => 869,  1313 => 866,  1311 => 865,  1304 => 860,  1291 => 852,  1289 => 851,  1282 => 848,  1272 => 844,  1262 => 840,  1252 => 836,  1249 => 835,  1247 => 834,  1237 => 827,  1232 => 824,  1224 => 819,  1216 => 814,  1212 => 812,  1210 => 811,  1202 => 806,  1186 => 793,  1178 => 788,  1169 => 782,  1165 => 781,  1162 => 780,  1156 => 777,  1152 => 775,  1145 => 772,  1143 => 771,  1138 => 768,  1134 => 766,  1130 => 764,  1128 => 763,  1121 => 759,  1117 => 758,  1112 => 756,  1109 => 755,  1105 => 753,  1103 => 752,  1099 => 751,  1095 => 749,  1089 => 747,  1087 => 746,  1083 => 745,  1078 => 743,  1074 => 742,  1068 => 741,  1063 => 740,  1060 => 739,  1055 => 738,  1030 => 716,  1004 => 693,  1000 => 692,  991 => 686,  987 => 685,  983 => 684,  972 => 676,  965 => 672,  958 => 668,  951 => 664,  945 => 661,  939 => 657,  926 => 655,  922 => 654,  914 => 648,  904 => 645,  898 => 643,  896 => 642,  889 => 641,  885 => 640,  877 => 634,  864 => 632,  860 => 631,  852 => 625,  839 => 623,  835 => 622,  826 => 616,  809 => 602,  792 => 589,  790 => 588,  778 => 580,  775 => 579,  772 => 578,  770 => 577,  759 => 569,  742 => 555,  728 => 544,  714 => 533,  700 => 522,  680 => 504,  671 => 498,  663 => 492,  661 => 491,  647 => 480,  629 => 465,  611 => 450,  593 => 435,  575 => 420,  557 => 405,  539 => 390,  521 => 375,  503 => 360,  485 => 345,  467 => 330,  449 => 315,  423 => 292,  413 => 285,  404 => 279,  396 => 274,  368 => 249,  359 => 242,  346 => 241,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  2014 => 1498,  1989 => 1476,  1545 => 1035,  1532 => 1034,  1455 => 966,  1449 => 962,  1441 => 957,  1438 => 956,  1436 => 955,  1433 => 954,  1427 => 953,  1424 => 952,  1416 => 949,  1411 => 948,  1407 => 946,  1404 => 945,  1401 => 944,  1397 => 943,  1394 => 942,  1386 => 937,  1383 => 936,  1381 => 935,  1376 => 932,  1374 => 931,  1367 => 926,  1355 => 920,  1348 => 915,  1346 => 914,  1339 => 911,  1329 => 907,  1319 => 903,  1309 => 899,  1306 => 898,  1304 => 897,  1294 => 890,  1289 => 887,  1281 => 882,  1273 => 877,  1269 => 875,  1267 => 874,  1259 => 869,  1244 => 857,  1236 => 852,  1227 => 846,  1223 => 845,  1220 => 844,  1214 => 841,  1211 => 840,  1204 => 837,  1202 => 836,  1197 => 833,  1193 => 831,  1189 => 829,  1187 => 828,  1180 => 824,  1176 => 823,  1171 => 821,  1168 => 820,  1164 => 818,  1162 => 817,  1158 => 816,  1154 => 814,  1148 => 812,  1146 => 811,  1142 => 810,  1137 => 808,  1133 => 807,  1127 => 806,  1122 => 805,  1119 => 804,  1114 => 803,  1089 => 781,  1063 => 758,  1059 => 757,  1050 => 751,  1046 => 750,  1042 => 749,  1031 => 741,  1024 => 737,  1017 => 733,  1010 => 729,  1004 => 726,  998 => 722,  985 => 720,  981 => 719,  973 => 713,  964 => 710,  957 => 709,  953 => 708,  945 => 702,  932 => 700,  928 => 699,  920 => 693,  907 => 691,  903 => 690,  894 => 684,  877 => 670,  852 => 648,  839 => 639,  837 => 638,  825 => 630,  822 => 629,  819 => 628,  817 => 627,  806 => 619,  789 => 605,  775 => 594,  761 => 583,  747 => 572,  727 => 554,  718 => 548,  710 => 542,  708 => 541,  692 => 528,  672 => 511,  652 => 494,  632 => 477,  612 => 460,  592 => 443,  572 => 426,  552 => 409,  532 => 392,  512 => 375,  492 => 358,  472 => 341,  455 => 327,  446 => 321,  438 => 316,  410 => 291,  401 => 284,  388 => 283,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -2010,78 +2077,109 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     .stats-card {
-        background: #ffffff !important;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
         border: 1px solid #e5e7eb !important;
-        border-radius: 16px !important;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: 20px !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         overflow: hidden;
         cursor: pointer;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        position: relative;
+    }
+    
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--primary-color);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .stats-card:hover::before {
+        opacity: 1;
     }
     
     .stats-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-6px);
+        box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.15) !important;
     }
     
     .stats-card .card-body {
-        padding: 1rem;
-        background: #ffffff !important;
+        padding: 1.25rem;
+        background: transparent !important;
     }
     
     .stats-card h3 {
-        font-size: 1.5rem;
-        font-weight: 700;
+        font-size: 1.75rem;
+        font-weight: 800;
         margin-bottom: 0.25rem;
         line-height: 1.2;
     }
     
     .stats-card h6 {
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: 0.7rem;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.8;
     }
     
     .stats-card i {
-        opacity: 0.8;
-        transition: opacity 0.2s;
+        opacity: 0.7;
+        transition: opacity 0.3s, transform 0.3s;
     }
     
     .stats-card:hover i {
         opacity: 1;
+        transform: scale(1.05);
     }
     
-    .stats-card .text-primary { color: var(--primary-color) !important; }
-    .stats-card .text-success { color: var(--success-color) !important; }
-    .stats-card .text-info { color: var(--info-color) !important; }
-    .stats-card .text-warning { color: var(--warning-color) !important; }
-    .stats-card .text-danger { color: var(--danger-color) !important; }
-    .stats-card .text-secondary { color: #6c757d !important; }
-    .stats-card .text-dark { color: #1f2937 !important; }
-    .stats-card .text-cyan { color: #06b6d4 !important; }
-    .stats-card .text-emerald { color: #10b981 !important; }
-    .stats-card .text-gray { color: #6b7280 !important; }
-    .stats-card .text-purple { color: #8b5cf6 !important; }
-    .stats-card .text-rose { color: #f43f5e !important; }
+    /* Cartes avec couleurs spécifiques */
+    .stats-card.primary-bg { background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%) !important; color: white; }
+    .stats-card.success-bg { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; color: white; }
+    .stats-card.info-bg { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; color: white; }
+    .stats-card.warning-bg { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; color: white; }
+    .stats-card.danger-bg { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; color: white; }
+    .stats-card.secondary-bg { background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important; color: white; }
+    .stats-card.cyan-bg { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important; color: white; }
+    .stats-card.purple-bg { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; color: white; }
+    .stats-card.rose-bg { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important; color: white; }
+    .stats-card.emerald-bg { background: linear-gradient(135deg, #059669 0%, #047857 100%) !important; color: white; }
+    
+    .stats-card.primary-bg .stat-icon,
+    .stats-card.success-bg .stat-icon,
+    .stats-card.info-bg .stat-icon,
+    .stats-card.warning-bg .stat-icon,
+    .stats-card.danger-bg .stat-icon,
+    .stats-card.secondary-bg .stat-icon,
+    .stats-card.cyan-bg .stat-icon,
+    .stats-card.purple-bg .stat-icon,
+    .stats-card.rose-bg .stat-icon,
+    .stats-card.emerald-bg .stat-icon {
+        background: rgba(255,255,255,0.2);
+    }
     
     .filter-section {
         background: white;
-        border-radius: 16px;
-        padding: 1.25rem;
+        border-radius: 20px;
+        padding: 1.5rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         border: 1px solid #e5e7eb;
     }
     
     .table-order-row {
         cursor: pointer;
-        transition: background-color 0.2s ease;
+        transition: background-color 0.2s ease, transform 0.1s;
     }
     
     .table-order-row:hover {
-        background-color: #f8f9fa !important;
+        background-color: #f8fafc !important;
     }
     
     .badge-payment-paid { 
@@ -2113,64 +2211,58 @@ document.addEventListener('DOMContentLoaded', function() {
         background: #e0f2fe !important;
         border-left: 4px solid #0284c7 !important;
         padding: 0.75rem 1rem !important;
-        border-radius: 8px !important;
+        border-radius: 12px !important;
         margin-bottom: 1rem !important;
         color: #0c4a6e !important;
     }
     
-    .filter-info .btn-outline-secondary {
-        border-color: #0284c7;
-        color: #0284c7;
-    }
-    
-    .filter-info .btn-outline-secondary:hover {
-        background: #0284c7;
-        color: white;
-    }
-    
     .contact-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 16px;
-        padding: 1rem;
+        border-radius: 20px;
+        padding: 1.25rem;
         margin-bottom: 1.5rem;
         color: white;
-        transition: transform 0.2s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     
     .contact-card:hover {
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
     }
     
-    .table-header-actions {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-    
-    .returns-section {
-        margin-top: 2rem;
-        margin-bottom: 1.5rem;
-    }
     .returns-card {
         background: white;
-        border-radius: 16px;
+        border-radius: 20px;
         border: 1px solid #e5e7eb;
         overflow: hidden;
+        transition: box-shadow 0.3s ease;
     }
+    
+    .returns-card:hover {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
     .returns-card .card-header {
-        background: #f8fafc;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         border-bottom: 1px solid #e5e7eb;
         padding: 1rem 1.25rem;
     }
+    
     .return-stat-box {
         text-align: center;
-        padding: 1rem;
+        padding: 1.25rem;
         border-right: 1px solid #e5e7eb;
+        transition: background 0.3s ease;
     }
+    
+    .return-stat-box:hover {
+        background: #f8fafc;
+    }
+    
     .return-stat-box:last-child {
         border-right: none;
     }
+    
     .return-stat-label {
         font-size: 0.7rem;
         text-transform: uppercase;
@@ -2178,16 +2270,13 @@ document.addEventListener('DOMContentLoaded', function() {
         letter-spacing: 0.5px;
         margin-bottom: 0.5rem;
     }
+    
     .return-stat-value {
-        font-size: 1.5rem;
-        font-weight: 700;
+        font-size: 1.75rem;
+        font-weight: 800;
         margin-bottom: 0;
     }
-    .return-stat-unit {
-        font-size: 0.7rem;
-        color: #64748b;
-        margin-left: 0.25rem;
-    }
+    
     .return-stat-sub {
         font-size: 0.7rem;
         margin-top: 0.25rem;
@@ -2199,34 +2288,54 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .stats-card h3 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
         
         .stats-card h6 {
-            font-size: 0.7rem;
-        }
-        
-        .table-header-actions {
-            margin-top: 0.5rem;
-        }
-        
-        .stats-card .card-body {
-            padding: 0.75rem;
+            font-size: 0.65rem;
         }
         
         .return-stat-box {
             border-right: none;
             border-bottom: 1px solid #e5e7eb;
         }
+        
         .return-stat-box:last-child {
             border-bottom: none;
+        }
+        
+        .return-stat-value {
+            font-size: 1.3rem;
         }
     }
     
     @media (max-width: 992px) and (min-width: 769px) {
         .stats-card h3 {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
         }
+    }
+    
+    .btn-group .btn {
+        transition: all 0.2s ease;
+    }
+    
+    .btn-group .btn:hover {
+        transform: translateY(-1px);
+    }
+    
+    .user-avatar-sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    
+    .initial-avatar {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--primary-color), #0350c4);
+        color: white;
+        font-weight: bold;
     }
 </style>
 {% endblock %}
@@ -2248,7 +2357,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </li>
                 </ol>
             </nav>
-            <h1 class=\"h3 mb-0\">
+            <h1 class=\"h3 mb-0 fw-bold\">
                 <i class=\"fas fa-shopping-cart me-2 text-primary\"></i>
                 Historique des ventes
             </h1>
@@ -2281,199 +2390,207 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 
-    <!-- Message contact Super Admin -->
-    <a href=\"{{ path('app_orders_contact_super_admin') }}\" class=\"text-decoration-none\">
-        <div class=\"contact-card\">
-            <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3\">
-                <div>
-                    <i class=\"fas fa-chart-line fa-2x me-3 float-start\"></i>
-                    <h5 class=\"mb-1\">Analyse approfondie des données</h5>
-                    <p class=\"mb-0 opacity-75\">Pour une analyse détaillée de vos ventes, contactez notre équipe Super Admin</p>
-                </div>
-                <div class=\"btn btn-light\">
-                    <i class=\"fab fa-whatsapp me-2 text-success\"></i> Contacter le support
-                </div>
-            </div>
-        </div>
-    </a>
-
-    <!-- 12 Cartes statistiques -->
+    <!-- 12 Cartes statistiques avec fonds colorés -->
     <div class=\"row g-3 mb-4\">
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card primary-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"text-primary mb-1\" style=\"font-weight: 600;\">Chiffre d'affaires</h6>
-                            <h3 class=\"mb-0 text-primary\" style=\"font-weight: 700;\">{{ stats.total_sales|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class=\"text-muted\">FCFA</small>
+                            <h6 class=\"mb-1\">Chiffre d'affaires</h6>
+                            <h3 class=\"mb-0\">{{ stats.total_sales|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class=\"opacity-75\">FCFA</small>
                         </div>
-                        <i class=\"fas fa-chart-line fa-2x\" style=\"color: #0463f1; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-chart-line fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card success-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"text-success mb-1\" style=\"font-weight: 600;\">Nombre de ventes</h6>
-                            <h3 class=\"mb-0 text-success\" style=\"font-weight: 700;\">{{ stats.total_orders|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class=\"text-muted\">commandes</small>
+                            <h6 class=\"mb-1\">Nombre de ventes</h6>
+                            <h3 class=\"mb-0\">{{ stats.total_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class=\"opacity-75\">commandes</small>
                         </div>
-                        <i class=\"fas fa-receipt fa-2x\" style=\"color: #10b981; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-receipt fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card info-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"text-info mb-1\" style=\"font-weight: 600;\">Panier moyen</h6>
-                            <h3 class=\"mb-0 text-info\" style=\"font-weight: 700;\">{{ stats.average_basket|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class=\"text-muted\">FCFA/vente</small>
+                            <h6 class=\"mb-1\">Panier moyen</h6>
+                            <h3 class=\"mb-0\">{{ stats.average_basket|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class=\"opacity-75\">FCFA/vente</small>
                         </div>
-                        <i class=\"fas fa-shopping-basket fa-2x\" style=\"color: #3b82f6; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-shopping-basket fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card warning-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"text-warning mb-1\" style=\"font-weight: 600;\">Clients uniques</h6>
-                            <h3 class=\"mb-0 text-warning\" style=\"font-weight: 700;\">{{ stats.unique_customers|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class=\"text-muted\">personnes</small>
+                            <h6 class=\"mb-1\">Clients uniques</h6>
+                            <h3 class=\"mb-0\">{{ stats.unique_customers|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class=\"opacity-75\">personnes</small>
                         </div>
-                        <i class=\"fas fa-users fa-2x\" style=\"color: #f59e0b; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-users fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card danger-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"text-danger mb-1\" style=\"font-weight: 600;\">Ticket moyen</h6>
-                            <h3 class=\"mb-0 text-danger\" style=\"font-weight: 700;\">{{ stats.average_ticket|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class=\"text-muted\">FCFA/client</small>
+                            <h6 class=\"mb-1\">Ticket moyen</h6>
+                            <h3 class=\"mb-0\">{{ stats.average_ticket|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class=\"opacity-75\">FCFA/client</small>
                         </div>
-                        <i class=\"fas fa-ticket-alt fa-2x\" style=\"color: #ef4444; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-ticket-alt fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card secondary-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"text-secondary mb-1\" style=\"font-weight: 600;\">Vente max</h6>
-                            <h3 class=\"mb-0 text-secondary\" style=\"font-weight: 700;\">{{ stats.max_sale|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class=\"text-muted\">FCFA</small>
+                            <h6 class=\"mb-1\">Vente max</h6>
+                            <h3 class=\"mb-0\">{{ stats.max_sale|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class=\"opacity-75\">FCFA</small>
                         </div>
-                        <i class=\"fas fa-arrow-up fa-2x\" style=\"color: #6b7280; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-arrow-up fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card\" style=\"background: linear-gradient(135deg, #374151 0%, #1f2937 100%) !important; color: white;\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #374151;\">Vente min</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #374151;\">{{ stats.min_sale|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class=\"text-muted\">FCFA</small>
+                            <h6 class=\"mb-1\">Vente min</h6>
+                            <h3 class=\"mb-0\">{{ stats.min_sale|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class=\"opacity-75\">FCFA</small>
                         </div>
-                        <i class=\"fas fa-arrow-down fa-2x\" style=\"color: #6b7280; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2 bg-white bg-opacity-25\">
+                            <i class=\"fas fa-arrow-down fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card cyan-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #0d9488;\">Articles vendus</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #0d9488;\">{{ stats.total_items|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class=\"text-muted\">unités</small>
+                            <h6 class=\"mb-1\">Articles vendus</h6>
+                            <h3 class=\"mb-0\">{{ stats.total_items|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class=\"opacity-75\">unités</small>
                         </div>
-                        <i class=\"fas fa-boxes fa-2x\" style=\"color: #0d9488; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-boxes fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card emerald-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #10b981;\">Ventes actives</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #10b981;\">{{ stats.active_orders|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class=\"text-muted\">commandes</small>
+                            <h6 class=\"mb-1\">Ventes actives</h6>
+                            <h3 class=\"mb-0\">{{ stats.active_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class=\"opacity-75\">commandes</small>
                         </div>
-                        <i class=\"fas fa-check-circle fa-2x\" style=\"color: #10b981; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-check-circle fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card secondary-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #6b7280;\">Ventes désactivées</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #6b7280;\">{{ stats.disabled_orders|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class=\"text-muted\">commandes</small>
+                            <h6 class=\"mb-1\">Ventes désactivées</h6>
+                            <h3 class=\"mb-0\">{{ stats.disabled_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class=\"opacity-75\">commandes</small>
                         </div>
-                        <i class=\"fas fa-ban fa-2x\" style=\"color: #6b7280; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-ban fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card purple-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #8b5cf6;\">Taux désactivation</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #8b5cf6;\">{{ stats.disabled_percentage|default(0)|number_format(1, ',', ' ') }}%</h3>
-                            <small class=\"text-muted\">des ventes</small>
+                            <h6 class=\"mb-1\">Taux désactivation</h6>
+                            <h3 class=\"mb-0\">{{ stats.disabled_percentage|default(0)|number_format(1, ',', ' ') }}%</h3>
+                            <small class=\"opacity-75\">des ventes</small>
                         </div>
-                        <i class=\"fas fa-chart-pie fa-2x\" style=\"color: #8b5cf6; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-chart-pie fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class=\"col-md-3 col-sm-6\">
-            <div class=\"stats-card\">
-                <div class=\"card-body p-3\">
-                    <div class=\"d-flex justify-content-between align-items-start\">
+            <div class=\"stats-card rose-bg shadow-sm\">
+                <div class=\"card-body\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
                         <div>
-                            <h6 class=\"mb-1\" style=\"font-weight: 600; color: #f43f5e;\">Ventes annulées</h6>
-                            <h3 class=\"mb-0\" style=\"font-weight: 700; color: #f43f5e;\">{{ stats.cancelled_orders|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class=\"text-muted\">commandes</small>
+                            <h6 class=\"mb-1\">Ventes annulées</h6>
+                            <h3 class=\"mb-0\">{{ stats.cancelled_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class=\"opacity-75\">commandes</small>
                         </div>
-                        <i class=\"fas fa-times-circle fa-2x\" style=\"color: #f43f5e; opacity: 0.8;\"></i>
+                        <div class=\"stat-icon rounded-circle p-2\">
+                            <i class=\"fas fa-times-circle fa-2x\"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2496,10 +2613,10 @@ document.addEventListener('DOMContentLoaded', function() {
     {% endif %}
 
     <!-- Section Retours & Avoirs -->
-    <div class=\"returns-section\">
+    <div class=\"mb-4\">
         <div class=\"returns-card\">
             <div class=\"card-header\">
-                <h5 class=\"mb-0\">
+                <h5 class=\"mb-0 fw-semibold\">
                     <i class=\"fas fa-undo-alt me-2 text-warning\"></i>
                     Retours & Avoirs
                 </h5>
@@ -2587,10 +2704,28 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 
+    <!-- Contact Super Admin -->
+    <a href=\"{{ path('app_orders_contact_super_admin') }}\" class=\"text-decoration-none d-block mb-4\">
+        <div class=\"contact-card\">
+            <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3\">
+                <div class=\"d-flex align-items-center gap-3\">
+                    <i class=\"fas fa-chart-line fa-3x\"></i>
+                    <div>
+                        <h5 class=\"mb-1\">Analyse approfondie des données</h5>
+                        <p class=\"mb-0 opacity-75\">Pour une analyse détaillée de vos ventes, contactez notre équipe Super Admin</p>
+                    </div>
+                </div>
+                <div class=\"btn btn-light\">
+                    <i class=\"fab fa-whatsapp me-2 text-success\"></i> Contacter le support
+                </div>
+            </div>
+        </div>
+    </a>
+
     <!-- Filtres -->
     <div class=\"filter-section\">
-        <div class=\"d-flex justify-content-between align-items-center mb-3\">
-            <h5 class=\"mb-0\"><i class=\"fas fa-filter me-2 text-primary\"></i> Filtres</h5>
+        <div class=\"d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2\">
+            <h5 class=\"mb-0 fw-semibold\"><i class=\"fas fa-filter me-2 text-primary\"></i> Filtres</h5>
             <div class=\"d-flex gap-2\">
                 <a href=\"{{ path('app_orders_index') }}\" class=\"btn btn-outline-secondary btn-sm\">
                     <i class=\"fas fa-undo me-1\"></i> Effacer
@@ -2604,12 +2739,12 @@ document.addEventListener('DOMContentLoaded', function() {
         <form method=\"get\" id=\"filter-form\">
             <div class=\"row g-3\">
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Recherche</label>
+                    <label class=\"form-label fw-bold small\">Recherche</label>
                     <input type=\"text\" name=\"search\" class=\"form-control\" 
                            placeholder=\"N° commande, client...\" value=\"{{ filters.search|default('') }}\">
                 </div>
                 <div class=\"col-md-2\">
-                    <label class=\"form-label fw-bold\">Statut</label>
+                    <label class=\"form-label fw-bold small\">Statut</label>
                     <select name=\"status\" class=\"form-select select2-status\">
                         <option value=\"\">Tous</option>
                         {% for status in statuses %}
@@ -2618,7 +2753,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </select>
                 </div>
                 <div class=\"col-md-2\">
-                    <label class=\"form-label fw-bold\">Mode de paiement</label>
+                    <label class=\"form-label fw-bold small\">Mode de paiement</label>
                     <select name=\"payment_method\" class=\"form-select select2-payment\">
                         <option value=\"\">Tous</option>
                         {% for method in payment_methods %}
@@ -2627,21 +2762,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     </select>
                 </div>
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Caissier</label>
+                    <label class=\"form-label fw-bold small\">Caissier</label>
                     <select name=\"user_id\" id=\"user-select\" class=\"form-select select2-user\">
                         <option value=\"\">Tous les caissiers</option>
                         {% for user in users %}
                             <option value=\"{{ user.id }}\" {{ filters.user_id == user.id ? 'selected' }}>
-                                {% if user.photo %}
-                                    <img src=\"{{ asset('uploads/users/' ~ user.photo) }}\" class=\"rounded-circle me-2\" style=\"width: 20px; height: 20px; object-fit: cover;\">
-                                {% endif %}
                                 {{ user.fullName|default(user.email) }}
                             </option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class=\"col-md-2\">
-                    <label class=\"form-label fw-bold\">Période</label>
+                    <label class=\"form-label fw-bold small\">Période</label>
                     <select name=\"date_preset\" id=\"date-preset\" class=\"form-select select2-preset\">
                         <option value=\"\">Personnalisée</option>
                         {% for key, label in date_presets %}
@@ -2653,26 +2785,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
             <div class=\"row g-3 mt-2\" id=\"custom-dates\" style=\"display: {{ filters.date_preset ? 'none' : 'flex' }};\">
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Date du</label>
+                    <label class=\"form-label fw-bold small\">Date du</label>
                     <input type=\"date\" name=\"date_from\" class=\"form-control\" value=\"{{ filters.date_from|default('') }}\">
                 </div>
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Date au</label>
+                    <label class=\"form-label fw-bold small\">Date au</label>
                     <input type=\"date\" name=\"date_to\" class=\"form-control\" value=\"{{ filters.date_to|default('') }}\">
                 </div>
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Montant min (FCFA)</label>
+                    <label class=\"form-label fw-bold small\">Montant min (FCFA)</label>
                     <input type=\"number\" name=\"min_amount\" class=\"form-control\" placeholder=\"Min\" value=\"{{ filters.min_amount|default('') }}\">
                 </div>
                 <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold\">Montant max (FCFA)</label>
+                    <label class=\"form-label fw-bold small\">Montant max (FCFA)</label>
                     <input type=\"number\" name=\"max_amount\" class=\"form-control\" placeholder=\"Max\" value=\"{{ filters.max_amount|default('') }}\">
                 </div>
             </div>
 
             <div class=\"row g-3 mt-2\">
                 <div class=\"col-md-6\">
-                    <label class=\"form-label fw-bold\">Trier par</label>
+                    <label class=\"form-label fw-bold small\">Trier par</label>
                     <select name=\"sort\" class=\"form-select\">
                         <option value=\"created_at\" {{ filters.sort == 'created_at' ? 'selected' }}>Date de vente</option>
                         <option value=\"total_amount\" {{ filters.sort == 'total_amount' ? 'selected' }}>Montant</option>
@@ -2680,7 +2812,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </select>
                 </div>
                 <div class=\"col-md-6\">
-                    <label class=\"form-label fw-bold\">Ordre</label>
+                    <label class=\"form-label fw-bold small\">Ordre</label>
                     <select name=\"direction\" class=\"form-select\">
                         <option value=\"desc\" {{ filters.direction == 'desc' ? 'selected' }}>Plus récent d'abord</option>
                         <option value=\"asc\" {{ filters.direction == 'asc' ? 'selected' }}>Plus ancien d'abord</option>
@@ -2694,8 +2826,8 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class=\"card border-0 shadow-sm\">
         <div class=\"card-header bg-white py-3\">
             <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3\">
-                <h5 class=\"mb-0\"><i class=\"fas fa-list me-2\"></i> Liste des ventes</h5>
-                <div class=\"table-header-actions\">
+                <h5 class=\"mb-0 fw-semibold\"><i class=\"fas fa-list me-2\"></i> Liste des ventes</h5>
+                <div class=\"table-header-actions d-flex gap-2 align-items-center flex-wrap\">
                     <div class=\"form-check\">
                         <input type=\"checkbox\" class=\"form-check-input\" id=\"selectAllCheckbox\">
                         <label class=\"form-check-label small\" for=\"selectAllCheckbox\">Tout cocher</label>
@@ -2731,51 +2863,50 @@ document.addEventListener('DOMContentLoaded', function() {
                         {% for order in orders %}
                             {% set itemCount = order.orderItems|length %}
                             <tr class=\"table-order-row\" data-href=\"{{ path('app_orders_show', {'id': order.id}) }}\">
-                                <td><input type=\"checkbox\" class=\"form-check-input row-checkbox\" data-order-id=\"{{ order.id }}\" data-order-number=\"{{ order.orderNumber }}\"></td>
-                                <td><strong>{{ order.orderNumber }}</strong></td>
-                                <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                                <td><input type=\"checkbox\" class=\"form-check-input row-checkbox\" data-order-id=\"{{ order.id }}\" data-order-number=\"{{ order.orderNumber }}\"></div>
+                                <td><strong>{{ order.orderNumber }}</strong></div>
+                                <td>{{ order.createdAt|date('d/m/Y H:i') }}</div>
                                 <td>
-                                    <div>{{ order.customerName }}</div>
+                                    <div class=\"fw-semibold\">{{ order.customerName }}</div>
                                     {% if order.customerPhone %}
                                         <small class=\"text-muted\"><i class=\"fas fa-phone me-1\"></i>{{ order.customerPhone }}</small>
                                     {% endif %}
-                                  </td>
+                                 </div>
                                 <td>
                                     <span class=\"badge bg-secondary\">{{ itemCount }} article(s)</span>
                                     {% if isRestaurant %}
                                         <br><small class=\"text-muted\">Plats</small>
                                     {% endif %}
-                                  </td>
-                                <td><strong class=\"text-primary\">{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</strong></td>
+                                 </div>
+                                <td><strong class=\"text-primary\">{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</strong></div>
                                 <td>
                                     <span class=\"badge bg-{{ order.paymentMethod == 'cash' ? 'success' : 'info' }}\">
                                         {{ order.paymentMethod|replace({'_': ' '})|capitalize }}
                                     </span>
-                                  </td>
+                                 </div>
                                 <td>
                                     {% if order.isActive %}
                                         <span class=\"badge badge-status-completed\">Active</span>
                                     {% else %}
                                         <span class=\"badge badge-status-disabled\">Désactivée</span>
                                     {% endif %}
-                                  </td>
+                                 </div>
                                 <td>
-                                    <div class=\"d-flex align-items-center\">
+                                    <div class=\"d-flex align-items-center gap-2\">
                                         {% if order.user.photo %}
                                             <img src=\"{{ asset('uploads/users/' ~ order.user.photo) }}\" 
-                                                 class=\"rounded-circle me-2\" style=\"width: 30px; height: 30px; object-fit: cover;\">
+                                                 class=\"rounded-circle user-avatar-sm\" style=\"width: 32px; height: 32px; object-fit: cover;\">
                                         {% else %}
-                                            <div class=\"rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2\" 
-                                                 style=\"width: 30px; height: 30px; font-size: 12px;\">
+                                            <div class=\"rounded-circle initial-avatar d-flex align-items-center justify-content-center\" style=\"width: 32px; height: 32px;\">
                                                 {{ order.user.fullName|first|upper }}
                                             </div>
                                         {% endif %}
                                         <div>
-                                            <div>{{ order.user.fullName|default(order.user.email) }}</div>
-                                            <small class=\"text-muted\">{{ order.user.roles|first|replace({'ROLE_': ''}) }}</small>
+                                            <div class=\"small fw-semibold\">{{ order.user.fullName|default(order.user.email) }}</div>
+                                            <small class=\"text-muted\">{{ order.user.roleLabel }}</small>
                                         </div>
                                     </div>
-                                  </td>
+                                 </div>
                                 <td class=\"text-center\">
                                     <div class=\"btn-group\" role=\"group\">
                                         <a href=\"{{ path('app_orders_show', {'id': order.id}) }}\" class=\"btn btn-sm btn-outline-primary\" title=\"Voir\">
@@ -2787,7 +2918,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 data-print-type=\"customer\" 
                                                 title=\"Impression rapide\">
                                             <i class=\"fas fa-print\"></i>
-                                            <i class=\"fas fa-bolt fa-xs\"></i>
                                         </button>
                                         
                                         <div class=\"btn-group\" role=\"group\">
@@ -2839,16 +2969,19 @@ document.addEventListener('DOMContentLoaded', function() {
                                             </button>
                                         {% endif %}
                                     </div>
-                                </td>
+                                 </div>
                             </tr>
                         {% else %}
                             <tr>
                                 <td colspan=\"10\" class=\"text-center py-5\">
-                                    <i class=\"fas fa-shopping-cart fa-3x text-muted mb-3\"></i>
+                                    <i class=\"fas fa-shopping-cart fa-3x text-muted mb-3 opacity-50\"></i>
                                     <p class=\"text-muted mb-0\">Aucune vente trouvée</p>
                                     <p class=\"text-muted small\">Modifiez vos filtres pour voir plus de résultats</p>
-                                </td>
-                            </tr>
+                                    <a href=\"{{ isRestaurant ? path('restaurant_sale_index') : path('retail_sale_index') }}\" class=\"btn btn-primary btn-sm mt-2\">
+                                        <i class=\"fas fa-plus me-1\"></i> Créer une vente
+                                    </a>
+                                 </div>
+                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -3208,19 +3341,21 @@ class PrintManager {
 // ==================== INITIALISATION PRINCIPALE ====================
 document.addEventListener('DOMContentLoaded', function() {
     // Initialisation Select2
-    \$('.select2-status, .select2-payment, .select2-user, .select2-preset').select2({
-        theme: 'bootstrap-5',
-        language: 'fr',
-        width: '100%'
-    });
+    if (typeof \$ !== 'undefined' && \$.fn.select2) {
+        \$('.select2-status, .select2-payment, .select2-user, .select2-preset').select2({
+            theme: 'bootstrap-5',
+            language: 'fr',
+            width: '100%'
+        });
 
-    \$('#user-select').select2({
-        theme: 'bootstrap-5',
-        language: 'fr',
-        placeholder: 'Tous les caissiers',
-        allowClear: true,
-        width: '100%'
-    });
+        \$('#user-select').select2({
+            theme: 'bootstrap-5',
+            language: 'fr',
+            placeholder: 'Tous les caissiers',
+            allowClear: true,
+            width: '100%'
+        });
+    }
 
     // Gestion des dates personnalisées
     const datePreset = document.getElementById('date-preset');
@@ -3343,37 +3478,39 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('printReceiptBtn')?.addEventListener('click', function() {
         const printContent = receiptContent.innerHTML;
         const printWindow = window.open('', '_blank', 'width=400,height=600');
-        printWindow.document.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Reçu de vente</title>
-                <meta charset=\"UTF-8\">
-                <style>
-                    body { font-family: monospace; margin: 0; padding: 20px; width: 350px; margin: 0 auto; }
-                    .receipt { text-align: center; }
-                    .receipt-header { margin-bottom: 15px; }
-                    .receipt-header h2 { margin: 0; font-size: 18px; }
-                    .receipt-header p { margin: 5px 0; font-size: 12px; }
-                    .receipt-line { border-top: 1px dashed #000; margin: 10px 0; }
-                    .receipt-items { width: 100%; margin: 10px 0; font-size: 12px; }
-                    .receipt-items th, .receipt-items td { text-align: left; padding: 3px 0; }
-                    .receipt-items td:last-child { text-align: right; }
-                    .receipt-total { font-weight: bold; margin-top: 10px; }
-                    .receipt-footer { margin-top: 15px; font-size: 10px; text-align: center; }
-                    @media print { body { margin: 0; padding: 10px; } .no-print { display: none; } }
-                </style>
-            </head>
-            <body>
-                \${printContent}
-                <div class=\"receipt-footer no-print\">
-                    <button onclick=\"window.print()\" style=\"margin-top: 20px; padding: 8px 16px;\">Imprimer</button>
-                </div>
-                <script>window.print();<\\/script>
-            </body>
-            </html>
-        `);
-        printWindow.document.close();
+        if (printWindow) {
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Reçu de vente</title>
+                    <meta charset=\"UTF-8\">
+                    <style>
+                        body { font-family: monospace; margin: 0; padding: 20px; width: 350px; margin: 0 auto; }
+                        .receipt { text-align: center; }
+                        .receipt-header { margin-bottom: 15px; }
+                        .receipt-header h2 { margin: 0; font-size: 18px; }
+                        .receipt-header p { margin: 5px 0; font-size: 12px; }
+                        .receipt-line { border-top: 1px dashed #000; margin: 10px 0; }
+                        .receipt-items { width: 100%; margin: 10px 0; font-size: 12px; }
+                        .receipt-items th, .receipt-items td { text-align: left; padding: 3px 0; }
+                        .receipt-items td:last-child { text-align: right; }
+                        .receipt-total { font-weight: bold; margin-top: 10px; }
+                        .receipt-footer { margin-top: 15px; font-size: 10px; text-align: center; }
+                        @media print { body { margin: 0; padding: 10px; } .no-print { display: none; } }
+                    </style>
+                </head>
+                <body>
+                    \${printContent}
+                    <div class=\"receipt-footer no-print\">
+                        <button onclick=\"window.print()\" style=\"margin-top: 20px; padding: 8px 16px;\">Imprimer</button>
+                    </div>
+                    <script>window.print();<\\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
     });
 
     // Toggle (désactiver/activer) une vente
@@ -3396,7 +3533,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 : `Êtes-vous sûr de vouloir réactiver la vente \"\${orderNumber}\" ?`;
             
             toggleOrderForm.action = '/orders/' + orderId + '/toggle';
-            toggleOrderToken.value = '{{ csrf_token(\"toggle_order\") }}'.replace('ID_PLACEHOLDER', orderId);
+            toggleOrderToken.value = '{{ csrf_token(\"toggle_order\") }}';
             toggleOrderBtn.className = isDisable ? 'btn btn-warning' : 'btn btn-success';
             toggleOrderBtn.textContent = isDisable ? 'Désactiver' : 'Activer';
             
@@ -3418,7 +3555,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             deleteOrderNumber.textContent = orderNumber;
             deleteOrderForm.action = '/orders/' + orderId + '/delete';
-            deleteOrderToken.value = '{{ csrf_token(\"delete_order\") }}'.replace('ID_PLACEHOLDER', orderId);
+            deleteOrderToken.value = '{{ csrf_token(\"delete_order\") }}';
             
             deleteModal.show();
         });

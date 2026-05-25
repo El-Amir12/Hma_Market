@@ -196,7 +196,6 @@ class PurchaseFlowService
             throw new \Exception('Le panier est vide');
         }
         
-        // 🔥 VÉRIFICATION SUPPLÉMENTAIRE
         if (!$supplier->isActive()) {
             throw new \Exception('Le fournisseur n\'est pas actif');
         }
@@ -205,7 +204,6 @@ class PurchaseFlowService
             throw new \Exception('L\'abonnement du fournisseur n\'est pas actif');
         }
         
-        // 🔥 VÉRIFIER QUE LE FOURNISSEUR APPARTIENT À L'ENTREPRISE
         if ($supplier->getHmaService()->getId() !== $purchase->getHmaService()->getId()) {
             throw new \Exception('Fournisseur non autorisé pour cette entreprise');
         }
@@ -237,7 +235,6 @@ class PurchaseFlowService
         $purchase->calculateTotalAmount();
         $this->entityManager->flush();
         
-        // Génération du bon de commande (PDF)
         $bonCommandePath = $this->pdfGenerator->generatePurchaseOrder($purchase);
         if ($bonCommandePath) {
             $purchase->setBonCommande($bonCommandePath);
@@ -281,7 +278,6 @@ class PurchaseFlowService
 
     /**
      * Réceptionne une commande et crée les lots
-     * @param array $batchData Tableau associatif [itemId => ['batch_number', 'manufacturing_date', 'expiry_date', 'received_quantity', 'received_price', 'remove']]
      */
     public function receivePurchase(Purchase $purchase, array $batchData): void
     {
@@ -296,14 +292,12 @@ class PurchaseFlowService
                 $product = $item->getProduct();
                 $data = $batchData[$item->getId()] ?? [];
 
-                // Vérifier si l'utilisateur a coché "supprimer"
                 if (!empty($data['remove']) && $data['remove'] == 1) {
                     $purchase->removePurchaseItem($item);
                     $this->entityManager->remove($item);
                     continue;
                 }
 
-                // Quantité reçue
                 $receivedQuantity = isset($data['received_quantity']) && is_numeric($data['received_quantity']) 
                     ? (int)$data['received_quantity'] 
                     : $item->getQuantity();
@@ -314,23 +308,19 @@ class PurchaseFlowService
                     continue;
                 }
 
-                // Prix unitaire reçu
                 $receivedPrice = isset($data['received_price']) && is_numeric($data['received_price']) 
                     ? (float)$data['received_price'] 
                     : (float)$item->getUnitPrice();
 
-                // Mettre à jour les champs du PurchaseItem
                 $item->setQuantity($receivedQuantity);
                 $item->setUnitPrice((string)$receivedPrice);
                 $item->setTotalPrice(bcmul((string)$receivedPrice, (string)$receivedQuantity, 2));
                 
-                // Récupérer l'emplacement
                 $location = null;
                 if (!empty($data['location_id'])) {
                     $location = $this->entityManager->getRepository(Location::class)->find($data['location_id']);
                 }
                 
-                // Si le produit a une date d'expiration
                 if ($product->hasExpiryDate()) {
                     if (empty($data['batch_number']) || empty($data['manufacturing_date']) || empty($data['expiry_date'])) {
                         throw new \Exception(sprintf('Données de lot manquantes pour le produit "%s"', $product->getName()));
@@ -341,7 +331,6 @@ class PurchaseFlowService
 
                 $this->entityManager->persist($item);
 
-                // Génération du lot
                 $batchNumber = $data['batch_number'] ?? $item->getBatchNumber();
                 if (empty($batchNumber)) {
                     $batchNumber = $this->generateBatchNumber($product);
@@ -358,10 +347,9 @@ class PurchaseFlowService
                 $stockBatch->setIsActive(true);
                 $stockBatch->setCreatedAt(new \DateTime());
                 
-                // Enregistrer l'emplacement
                 if ($location) {
                     $stockBatch->setLocationEntity($location);
-                    $stockBatch->setLocation($location->getDisplayName()); // Pour compatibilité
+                    $stockBatch->setLocation($location->getDisplayName());
                 }
 
                 if ($product->hasExpiryDate()) {
@@ -371,9 +359,9 @@ class PurchaseFlowService
 
                 $this->entityManager->persist($stockBatch);
 
-                // Mouvement de stock
+                // ✅ CORRECTION: Utiliser 'purchase_in' au lieu de 'PURCHASE'
                 $movement = new StockMovement();
-                $movement->setMovementType('PURCHASE');
+                $movement->setMovementType('purchase_in');
                 $movement->setQuantity($receivedQuantity);
                 $movement->setUnitPrice((string)$receivedPrice);
                 $movement->setProduct($product);
@@ -387,12 +375,10 @@ class PurchaseFlowService
 
                 $this->entityManager->persist($movement);
 
-                // Mise à jour du stock produit
                 $product->setStockQuantity($product->getStockQuantity() + $receivedQuantity);
                 $this->entityManager->persist($product);
             }
 
-            // Recalculer le total de la commande
             $purchase->calculateTotalAmount();
             $purchase->setStatus(Purchase::STATUS_RECEIVED);
             $purchase->setReceivedAt(new \DateTimeImmutable());
@@ -400,7 +386,6 @@ class PurchaseFlowService
             $this->entityManager->flush();
             $this->entityManager->commit();
 
-            // Générer le reçu
             $recuPath = $this->pdfGenerator->generatePurchaseReceipt($purchase);
             if ($recuPath) {
                 $purchase->setRecuAchat($recuPath);
@@ -422,6 +407,7 @@ class PurchaseFlowService
             throw $e;
         }
     }
+
     /**
      * Génère un numéro de commande unique
      */
@@ -466,6 +452,9 @@ class PurchaseFlowService
         $this->session->set('purchase_cart', $this->cart);
     }
 
+    /**
+     * Met à jour un article dans le panier
+     */
     public function updateCartItem(int $productId, int $quantity, float $unitPrice): bool
     {
         if (isset($this->cart[$productId])) {

@@ -620,6 +620,14 @@
         <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\StockBatchController"/>
       </call>
     </service>
+    <service id="App\Controller\Admin\StockMovementController" class="App\Controller\Admin\StockMovementController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Admin\StockMovementController"/>
+      </call>
+    </service>
     <service id="App\Controller\Admin\SupplierController" class="App\Controller\Admin\SupplierController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -806,6 +814,33 @@
         <argument type="service" id=".service_locator.siKanuc.App\Controller\SecurityController"/>
       </call>
     </service>
+    <service id="App\Controller\Stock\InventoryController" class="App\Controller\Stock\InventoryController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Stock\StockInventoryService"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Stock\InventoryController"/>
+      </call>
+    </service>
+    <service id="App\Controller\Stock\StockAdjustmentController" class="App\Controller\Stock\StockAdjustmentController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Stock\StockAdjustmentService"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Stock\StockAdjustmentController"/>
+      </call>
+    </service>
+    <service id="App\Controller\Stock\StockTransferController" class="App\Controller\Stock\StockTransferController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Stock\StockTransferService"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Stock\StockTransferController"/>
+      </call>
+    </service>
     <service id="App\Controller\SubscriptionController" class="App\Controller\SubscriptionController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -989,6 +1024,18 @@
     <service id="App\Form\StockBatchType" class="App\Form\StockBatchType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
+    <service id="App\Form\Stock\InventoryAddProductsType" class="App\Form\Stock\InventoryAddProductsType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\Stock\InventoryType" class="App\Form\Stock\InventoryType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\Stock\StockAdjustmentType" class="App\Form\Stock\StockAdjustmentType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\Stock\StockTransferType" class="App\Form\Stock\StockTransferType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
     <service id="App\Form\SubscriptionPlanType" class="App\Form\SubscriptionPlanType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
@@ -1024,6 +1071,14 @@
       <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Repository\HmaServiceRepository" class="App\Repository\HmaServiceRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\InventoryItemRepository" class="App\Repository\InventoryItemRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\InventoryRepository" class="App\Repository\InventoryRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -1099,11 +1154,19 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="App\Repository\StockAdjustmentRepository" class="App\Repository\StockAdjustmentRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
     <service id="App\Repository\StockBatchRepository" class="App\Repository\StockBatchRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Repository\StockMovementRepository" class="App\Repository\StockMovementRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\StockTransferRepository" class="App\Repository\StockTransferRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -1206,8 +1269,9 @@
       <argument type="service" id="twig"/>
       <argument type="service" id="monolog.logger"/>
       <argument>%env(MAILER_FROM_EMAIL)%</argument>
-      <argument>true</argument>
       <argument>%env(APP_URL)%</argument>
+      <argument>true</argument>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
     <service id="App\Service\PrintService" class="App\Service\PrintService" autowire="true" autoconfigure="true">
       <argument type="service" id="twig"/>
@@ -1276,6 +1340,10 @@
     <service id="App\Service\SearchService" class="App\Service\SearchService" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
+    <service id="App\Service\StockMovementService" class="App\Service\StockMovementService" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="monolog.logger"/>
+    </service>
     <service id="App\Service\StockService" class="App\Service\StockService" public="true" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="monolog.logger"/>
@@ -1284,6 +1352,31 @@
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="App\Repository\StockBatchRepository"/>
       <argument type="service" id="monolog.logger"/>
+    </service>
+    <service id="App\Service\Stock\StockAdjustmentService" class="App\Service\Stock\StockAdjustmentService" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\StockMovementService"/>
+      <argument type="service" id="App\Service\NotificationService"/>
+      <argument type="service" id="App\Service\FileUploader"/>
+      <argument type="service" id="App\Repository\StockAdjustmentRepository"/>
+    </service>
+    <service id="App\Service\Stock\StockInventoryService" class="App\Service\Stock\StockInventoryService" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\StockMovementService"/>
+      <argument type="service" id="App\Service\NotificationService"/>
+      <argument type="service" id="monolog.logger"/>
+      <argument type="service" id="App\Repository\StockBatchRepository"/>
+      <argument type="service" id="App\Repository\ProductRepository"/>
+      <argument type="service" id="App\Repository\InventoryRepository"/>
+    </service>
+    <service id="App\Service\Stock\StockTransferService" class="App\Service\Stock\StockTransferService" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\StockMovementService"/>
+      <argument type="service" id="App\Service\NotificationService"/>
+      <argument type="service" id="monolog.logger"/>
+      <argument type="service" id="App\Repository\StockBatchRepository"/>
+      <argument type="service" id="App\Repository\LocationRepository"/>
+      <argument type="service" id="App\Repository\StockTransferRepository"/>
     </service>
     <service id="App\Service\SubscriptionNumberGenerator" class="App\Service\SubscriptionNumberGenerator" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
@@ -1353,7 +1446,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.EUpGKiX"/>
+      <argument type="service" id=".service_locator.Qc8X6f_"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -2289,6 +2382,7 @@
       <argument type="collection">
         <argument>Symfony\Component\Form\Extension\Core\Type</argument>
         <argument>App\Form</argument>
+        <argument>App\Form\Stock</argument>
         <argument>Symfony\Bridge\Doctrine\Form\Type</argument>
       </argument>
       <argument type="collection">
@@ -2322,6 +2416,10 @@
         <argument>App\Form\ResetPasswordRequestFormType</argument>
         <argument>App\Form\StockBatchEditType</argument>
         <argument>App\Form\StockBatchType</argument>
+        <argument>App\Form\Stock\InventoryAddProductsType</argument>
+        <argument>App\Form\Stock\InventoryType</argument>
+        <argument>App\Form\Stock\StockAdjustmentType</argument>
+        <argument>App\Form\Stock\StockTransferType</argument>
         <argument>App\Form\SubscriptionPlanType</argument>
         <argument>App\Form\SubscriptionType</argument>
         <argument>App\Form\SupplierCreditNoteType</argument>
@@ -4509,7 +4607,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.EUpGKiX"/>
+      <argument type="service" id=".service_locator.Qc8X6f_"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -4998,7 +5096,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.ZSKHsYn"/>
+      <argument type="service" id=".service_locator.66r3ccA"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -6251,7 +6349,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.qyqSuK8"/>
+      <argument type="service" id=".service_locator.WtY99p_"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -7830,6 +7928,41 @@
         <argument>null</argument>
       </call>
       <call method="add">
+        <argument type="service" id=".security.request_matcher.1wFw1zQ"/>
+        <argument type="collection">
+          <argument>ROLE_ADMIN</argument>
+          <argument>ROLE_MANAGER</argument>
+          <argument>ROLE_STOCK_MANAGER</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.DyW9.8w"/>
+        <argument type="collection">
+          <argument>ROLE_ADMIN</argument>
+          <argument>ROLE_MANAGER</argument>
+          <argument>ROLE_STOCK_MANAGER</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.obe4TUn"/>
+        <argument type="collection">
+          <argument>ROLE_ADMIN</argument>
+          <argument>ROLE_MANAGER</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.8M.4Bu."/>
+        <argument type="collection">
+          <argument>ROLE_ADMIN</argument>
+          <argument>ROLE_MANAGER</argument>
+          <argument>ROLE_STOCK_MANAGER</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
         <argument type="service" id=".security.request_matcher.HQyLEM0"/>
         <argument type="collection">
           <argument>ROLE_MANAGER</argument>
@@ -8697,6 +8830,38 @@
         <argument type="service" id=".security.request_matcher.8VQu6pe"/>
       </argument>
     </service>
+    <service id=".security.request_matcher.xdMx8ud" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/stock/adjustment</argument>
+    </service>
+    <service id=".security.request_matcher.1wFw1zQ" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.xdMx8ud"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.Au3zwGI" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/stock/inventory</argument>
+    </service>
+    <service id=".security.request_matcher.DyW9.8w" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.Au3zwGI"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.Bwkdj7h" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/stock/transfer</argument>
+    </service>
+    <service id=".security.request_matcher.obe4TUn" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.Bwkdj7h"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.d9e183z" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/stock/</argument>
+    </service>
+    <service id=".security.request_matcher.8M.4Bu." class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.d9e183z"/>
+      </argument>
+    </service>
     <service id=".security.request_matcher.9PqzsCy" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
       <argument>^/manager/</argument>
     </service>
@@ -9177,6 +9342,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Admin\StockBatchController" class="App\Controller\Admin\StockBatchController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Admin\StockBatchController" class="App\Controller\Admin\StockBatchController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Admin\StockBatchController" class="App\Controller\Admin\StockBatchController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Admin\StockMovementController" class="App\Controller\Admin\StockMovementController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Admin\StockMovementController" class="App\Controller\Admin\StockMovementController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Admin\StockMovementController" class="App\Controller\Admin\StockMovementController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Admin\SupplierController" class="App\Controller\Admin\SupplierController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Admin\SupplierController" class="App\Controller\Admin\SupplierController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Admin\SupplierController" class="App\Controller\Admin\SupplierController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -9237,6 +9405,15 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Stock\InventoryController" class="App\Controller\Stock\InventoryController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Stock\InventoryController" class="App\Controller\Stock\InventoryController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Stock\InventoryController" class="App\Controller\Stock\InventoryController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Stock\StockAdjustmentController" class="App\Controller\Stock\StockAdjustmentController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Stock\StockAdjustmentController" class="App\Controller\Stock\StockAdjustmentController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Stock\StockAdjustmentController" class="App\Controller\Stock\StockAdjustmentController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Stock\StockTransferController" class="App\Controller\Stock\StockTransferController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Stock\StockTransferController" class="App\Controller\Stock\StockTransferController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Stock\StockTransferController" class="App\Controller\Stock\StockTransferController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SubscriptionController" class="App\Controller\SubscriptionController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SubscriptionController" class="App\Controller\SubscriptionController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SubscriptionController" class="App\Controller\SubscriptionController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -9326,6 +9503,14 @@
     <service id=".abstract.instanceof.App\Form\StockBatchEditType" class="App\Form\StockBatchEditType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\StockBatchType" class="App\Form\StockBatchType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\StockBatchType" class="App\Form\StockBatchType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\Stock\InventoryAddProductsType" class="App\Form\Stock\InventoryAddProductsType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\Stock\InventoryAddProductsType" class="App\Form\Stock\InventoryAddProductsType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\Stock\InventoryType" class="App\Form\Stock\InventoryType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\Stock\InventoryType" class="App\Form\Stock\InventoryType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\Stock\StockAdjustmentType" class="App\Form\Stock\StockAdjustmentType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\Stock\StockAdjustmentType" class="App\Form\Stock\StockAdjustmentType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\Stock\StockTransferType" class="App\Form\Stock\StockTransferType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\Stock\StockTransferType" class="App\Form\Stock\StockTransferType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\SubscriptionPlanType" class="App\Form\SubscriptionPlanType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\SubscriptionPlanType" class="App\Form\SubscriptionPlanType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\SubscriptionType" class="App\Form\SubscriptionType" autowire="true" abstract="true"/>
@@ -9348,6 +9533,10 @@
     <service id=".abstract.instanceof.App\Repository\EmployeeRoleCountRepository" class="App\Repository\EmployeeRoleCountRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\HmaServiceRepository" class="App\Repository\HmaServiceRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\HmaServiceRepository" class="App\Repository\HmaServiceRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\InventoryItemRepository" class="App\Repository\InventoryItemRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\InventoryItemRepository" class="App\Repository\InventoryItemRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\InventoryRepository" class="App\Repository\InventoryRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\InventoryRepository" class="App\Repository\InventoryRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\InvoiceRepository" class="App\Repository\InvoiceRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\InvoiceRepository" class="App\Repository\InvoiceRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\LocationRepository" class="App\Repository\LocationRepository" autowire="true" abstract="true"/>
@@ -9384,10 +9573,14 @@
     <service id=".abstract.instanceof.App\Repository\ReturnItemRepository" class="App\Repository\ReturnItemRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ReturnOrderRepository" class="App\Repository\ReturnOrderRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\ReturnOrderRepository" class="App\Repository\ReturnOrderRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\StockAdjustmentRepository" class="App\Repository\StockAdjustmentRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\StockAdjustmentRepository" class="App\Repository\StockAdjustmentRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\StockBatchRepository" class="App\Repository\StockBatchRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\StockBatchRepository" class="App\Repository\StockBatchRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\StockMovementRepository" class="App\Repository\StockMovementRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\StockMovementRepository" class="App\Repository\StockMovementRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\StockTransferRepository" class="App\Repository\StockTransferRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\StockTransferRepository" class="App\Repository\StockTransferRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SubscriptionPlanRepository" class="App\Repository\SubscriptionPlanRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\SubscriptionPlanRepository" class="App\Repository\SubscriptionPlanRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SubscriptionRepository" class="App\Repository\SubscriptionRepository" autowire="true" abstract="true"/>
@@ -10096,6 +10289,26 @@
         <argument key="batchRepository" type="service_closure" id="App\Repository\StockBatchRepository"/>
       </argument>
     </service>
+    <service id=".service_locator.Pft97aq" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="movementRepository" type="service_closure" id="App\Repository\StockMovementRepository"/>
+        <argument key="productRepository" type="service_closure" id="App\Repository\ProductRepository"/>
+        <argument key="userRepository" type="service_closure" id="App\Repository\UserRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.yK6r2jG" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="stockMovement" type="service_closure" id=".errored..service_locator.yK6r2jG.App\Entity\StockMovement"/>
+      </argument>
+    </service>
+    <service id=".service_locator.jO9s1qw" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="movementRepository" type="service_closure" id="App\Repository\StockMovementRepository"/>
+      </argument>
+    </service>
     <service id=".service_locator.3VaP2SM" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -10298,6 +10511,42 @@
         <argument key="orderRepository" type="service_closure" id="App\Repository\OrderRepository"/>
       </argument>
     </service>
+    <service id=".service_locator.PpHMfds" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="repository" type="service_closure" id="App\Repository\InventoryRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.Sy9ktqY" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="inventory" type="service_closure" id=".errored..service_locator.Sy9ktqY.App\Entity\Inventory"/>
+      </argument>
+    </service>
+    <service id=".service_locator.1lR5OUa" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="repository" type="service_closure" id="App\Repository\StockAdjustmentRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.eDr0rba" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="adjustment" type="service_closure" id=".errored..service_locator.eDr0rba.App\Entity\StockAdjustment"/>
+      </argument>
+    </service>
+    <service id=".service_locator._dn2Otw" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="repository" type="service_closure" id="App\Repository\StockTransferRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.msg5RWp" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="transfer" type="service_closure" id=".errored..service_locator.msg5RWp.App\Entity\StockTransfer"/>
+      </argument>
+    </service>
     <service id=".service_locator.Qe.FMtv" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -10365,7 +10614,7 @@
         <argument key="tokenRepository" type="service_closure" id="App\Repository\SupplierCreditNoteTokenRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.EUpGKiX" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Qc8X6f_" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Admin\CartController::receiveCart" type="service_closure" id=".service_locator.nnTODkK"/>
@@ -10461,6 +10710,11 @@
         <argument key="App\Controller\Admin\StockBatchController::printMultiple" type="service_closure" id=".service_locator.o.HdHhU"/>
         <argument key="App\Controller\Admin\StockBatchController::show" type="service_closure" id=".service_locator.lIYMlB2"/>
         <argument key="App\Controller\Admin\StockBatchController::toggle" type="service_closure" id=".service_locator.lIYMlB2"/>
+        <argument key="App\Controller\Admin\StockMovementController::exportExcel" type="service_closure" id=".service_locator.jO9s1qw"/>
+        <argument key="App\Controller\Admin\StockMovementController::exportPdf" type="service_closure" id=".service_locator.jO9s1qw"/>
+        <argument key="App\Controller\Admin\StockMovementController::index" type="service_closure" id=".service_locator.Pft97aq"/>
+        <argument key="App\Controller\Admin\StockMovementController::printMultiple" type="service_closure" id=".service_locator.jO9s1qw"/>
+        <argument key="App\Controller\Admin\StockMovementController::show" type="service_closure" id=".service_locator.yK6r2jG"/>
         <argument key="App\Controller\Admin\SupplierController::delete" type="service_closure" id=".service_locator.dvS6U1."/>
         <argument key="App\Controller\Admin\SupplierController::edit" type="service_closure" id=".service_locator.dvS6U1."/>
         <argument key="App\Controller\Admin\SupplierController::index" type="service_closure" id=".service_locator.3VaP2SM"/>
@@ -10524,6 +10778,19 @@
         <argument key="App\Controller\Sale\RestaurantSaleController::receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\Sale\RetailSaleController::receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\SecurityController::login" type="service_closure" id=".service_locator.rSTd.nA"/>
+        <argument key="App\Controller\Stock\InventoryController::addProducts" type="service_closure" id=".service_locator.Sy9ktqY"/>
+        <argument key="App\Controller\Stock\InventoryController::cancel" type="service_closure" id=".service_locator.Sy9ktqY"/>
+        <argument key="App\Controller\Stock\InventoryController::count" type="service_closure" id=".service_locator.Sy9ktqY"/>
+        <argument key="App\Controller\Stock\InventoryController::index" type="service_closure" id=".service_locator.PpHMfds"/>
+        <argument key="App\Controller\Stock\InventoryController::show" type="service_closure" id=".service_locator.Sy9ktqY"/>
+        <argument key="App\Controller\Stock\InventoryController::validate" type="service_closure" id=".service_locator.Sy9ktqY"/>
+        <argument key="App\Controller\Stock\StockAdjustmentController::index" type="service_closure" id=".service_locator.1lR5OUa"/>
+        <argument key="App\Controller\Stock\StockAdjustmentController::show" type="service_closure" id=".service_locator.eDr0rba"/>
+        <argument key="App\Controller\Stock\StockTransferController::cancel" type="service_closure" id=".service_locator.msg5RWp"/>
+        <argument key="App\Controller\Stock\StockTransferController::index" type="service_closure" id=".service_locator._dn2Otw"/>
+        <argument key="App\Controller\Stock\StockTransferController::receive" type="service_closure" id=".service_locator.msg5RWp"/>
+        <argument key="App\Controller\Stock\StockTransferController::show" type="service_closure" id=".service_locator.msg5RWp"/>
+        <argument key="App\Controller\Stock\StockTransferController::start" type="service_closure" id=".service_locator.msg5RWp"/>
         <argument key="App\Controller\SubscriptionController::callback" type="service_closure" id=".service_locator.pZ9vOm3"/>
         <argument key="App\Controller\SubscriptionController::checkout" type="service_closure" id=".service_locator.7876JS0"/>
         <argument key="App\Controller\SubscriptionController::plans" type="service_closure" id=".service_locator.Qe.FMtv"/>
@@ -10641,6 +10908,11 @@
         <argument key="App\Controller\Admin\StockBatchController:printMultiple" type="service_closure" id=".service_locator.o.HdHhU"/>
         <argument key="App\Controller\Admin\StockBatchController:show" type="service_closure" id=".service_locator.lIYMlB2"/>
         <argument key="App\Controller\Admin\StockBatchController:toggle" type="service_closure" id=".service_locator.lIYMlB2"/>
+        <argument key="App\Controller\Admin\StockMovementController:exportExcel" type="service_closure" id=".service_locator.jO9s1qw"/>
+        <argument key="App\Controller\Admin\StockMovementController:exportPdf" type="service_closure" id=".service_locator.jO9s1qw"/>
+        <argument key="App\Controller\Admin\StockMovementController:index" type="service_closure" id=".service_locator.Pft97aq"/>
+        <argument key="App\Controller\Admin\StockMovementController:printMultiple" type="service_closure" id=".service_locator.jO9s1qw"/>
+        <argument key="App\Controller\Admin\StockMovementController:show" type="service_closure" id=".service_locator.yK6r2jG"/>
         <argument key="App\Controller\Admin\SupplierController:delete" type="service_closure" id=".service_locator.dvS6U1."/>
         <argument key="App\Controller\Admin\SupplierController:edit" type="service_closure" id=".service_locator.dvS6U1."/>
         <argument key="App\Controller\Admin\SupplierController:index" type="service_closure" id=".service_locator.3VaP2SM"/>
@@ -10704,6 +10976,19 @@
         <argument key="App\Controller\Sale\RestaurantSaleController:receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\Sale\RetailSaleController:receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\SecurityController:login" type="service_closure" id=".service_locator.rSTd.nA"/>
+        <argument key="App\Controller\Stock\InventoryController:addProducts" type="service_closure" id=".service_locator.Sy9ktqY"/>
+        <argument key="App\Controller\Stock\InventoryController:cancel" type="service_closure" id=".service_locator.Sy9ktqY"/>
+        <argument key="App\Controller\Stock\InventoryController:count" type="service_closure" id=".service_locator.Sy9ktqY"/>
+        <argument key="App\Controller\Stock\InventoryController:index" type="service_closure" id=".service_locator.PpHMfds"/>
+        <argument key="App\Controller\Stock\InventoryController:show" type="service_closure" id=".service_locator.Sy9ktqY"/>
+        <argument key="App\Controller\Stock\InventoryController:validate" type="service_closure" id=".service_locator.Sy9ktqY"/>
+        <argument key="App\Controller\Stock\StockAdjustmentController:index" type="service_closure" id=".service_locator.1lR5OUa"/>
+        <argument key="App\Controller\Stock\StockAdjustmentController:show" type="service_closure" id=".service_locator.eDr0rba"/>
+        <argument key="App\Controller\Stock\StockTransferController:cancel" type="service_closure" id=".service_locator.msg5RWp"/>
+        <argument key="App\Controller\Stock\StockTransferController:index" type="service_closure" id=".service_locator._dn2Otw"/>
+        <argument key="App\Controller\Stock\StockTransferController:receive" type="service_closure" id=".service_locator.msg5RWp"/>
+        <argument key="App\Controller\Stock\StockTransferController:show" type="service_closure" id=".service_locator.msg5RWp"/>
+        <argument key="App\Controller\Stock\StockTransferController:start" type="service_closure" id=".service_locator.msg5RWp"/>
         <argument key="App\Controller\SubscriptionController:callback" type="service_closure" id=".service_locator.pZ9vOm3"/>
         <argument key="App\Controller\SubscriptionController:checkout" type="service_closure" id=".service_locator.7876JS0"/>
         <argument key="App\Controller\SubscriptionController:plans" type="service_closure" id=".service_locator.Qe.FMtv"/>
@@ -10885,7 +11170,7 @@
       <argument type="service" id="argument_resolver.query_parameter_value_resolver"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.ZSKHsYn" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.66r3ccA" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Form\CartItemType" type="service_closure" id="App\Form\CartItemType"/>
@@ -10918,6 +11203,10 @@
         <argument key="App\Form\ResetPasswordRequestFormType" type="service_closure" id="App\Form\ResetPasswordRequestFormType"/>
         <argument key="App\Form\StockBatchEditType" type="service_closure" id="App\Form\StockBatchEditType"/>
         <argument key="App\Form\StockBatchType" type="service_closure" id="App\Form\StockBatchType"/>
+        <argument key="App\Form\Stock\InventoryAddProductsType" type="service_closure" id="App\Form\Stock\InventoryAddProductsType"/>
+        <argument key="App\Form\Stock\InventoryType" type="service_closure" id="App\Form\Stock\InventoryType"/>
+        <argument key="App\Form\Stock\StockAdjustmentType" type="service_closure" id="App\Form\Stock\StockAdjustmentType"/>
+        <argument key="App\Form\Stock\StockTransferType" type="service_closure" id="App\Form\Stock\StockTransferType"/>
         <argument key="App\Form\SubscriptionPlanType" type="service_closure" id="App\Form\SubscriptionPlanType"/>
         <argument key="App\Form\SubscriptionType" type="service_closure" id="App\Form\SubscriptionType"/>
         <argument key="App\Form\SupplierCreditNoteType" type="service_closure" id="App\Form\SupplierCreditNoteType"/>
@@ -11049,7 +11338,7 @@
         <argument key="turbo.doctrine.event_listener" type="service_closure" id="turbo.doctrine.event_listener"/>
       </argument>
     </service>
-    <service id=".service_locator.qyqSuK8" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.WtY99p_" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\CategoryRecipeRepository" type="service_closure" id="App\Repository\CategoryRecipeRepository"/>
@@ -11057,6 +11346,8 @@
         <argument key="App\Repository\DailyUsageRepository" type="service_closure" id="App\Repository\DailyUsageRepository"/>
         <argument key="App\Repository\EmployeeRoleCountRepository" type="service_closure" id="App\Repository\EmployeeRoleCountRepository"/>
         <argument key="App\Repository\HmaServiceRepository" type="service_closure" id="App\Repository\HmaServiceRepository"/>
+        <argument key="App\Repository\InventoryItemRepository" type="service_closure" id="App\Repository\InventoryItemRepository"/>
+        <argument key="App\Repository\InventoryRepository" type="service_closure" id="App\Repository\InventoryRepository"/>
         <argument key="App\Repository\InvoiceRepository" type="service_closure" id="App\Repository\InvoiceRepository"/>
         <argument key="App\Repository\LocationRepository" type="service_closure" id="App\Repository\LocationRepository"/>
         <argument key="App\Repository\OrderItemRepository" type="service_closure" id="App\Repository\OrderItemRepository"/>
@@ -11075,8 +11366,10 @@
         <argument key="App\Repository\ResetPasswordRequestRepository" type="service_closure" id="App\Repository\ResetPasswordRequestRepository"/>
         <argument key="App\Repository\ReturnItemRepository" type="service_closure" id="App\Repository\ReturnItemRepository"/>
         <argument key="App\Repository\ReturnOrderRepository" type="service_closure" id="App\Repository\ReturnOrderRepository"/>
+        <argument key="App\Repository\StockAdjustmentRepository" type="service_closure" id="App\Repository\StockAdjustmentRepository"/>
         <argument key="App\Repository\StockBatchRepository" type="service_closure" id="App\Repository\StockBatchRepository"/>
         <argument key="App\Repository\StockMovementRepository" type="service_closure" id="App\Repository\StockMovementRepository"/>
+        <argument key="App\Repository\StockTransferRepository" type="service_closure" id="App\Repository\StockTransferRepository"/>
         <argument key="App\Repository\SubscriptionPlanRepository" type="service_closure" id="App\Repository\SubscriptionPlanRepository"/>
         <argument key="App\Repository\SubscriptionRepository" type="service_closure" id="App\Repository\SubscriptionRepository"/>
         <argument key="App\Repository\SupplierCreditNoteHistoryRepository" type="service_closure" id="App\Repository\SupplierCreditNoteHistoryRepository"/>
@@ -11558,6 +11851,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
+    <service id=".service_locator.siKanuc.App\Controller\Admin\StockMovementController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Admin\StockMovementController"/>
+      <argument>App\Controller\Admin\StockMovementController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
     <service id=".service_locator.siKanuc.App\Controller\Admin\SupplierController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Admin\SupplierController"/>
       <argument>App\Controller\Admin\SupplierController</argument>
@@ -11675,6 +11974,24 @@
     <service id=".service_locator.siKanuc.App\Controller\SecurityController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SecurityController"/>
       <argument>App\Controller\SecurityController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\Stock\InventoryController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Stock\InventoryController"/>
+      <argument>App\Controller\Stock\InventoryController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\Stock\StockAdjustmentController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Stock\StockAdjustmentController"/>
+      <argument>App\Controller\Stock\StockAdjustmentController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\Stock\StockTransferController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Stock\StockTransferController"/>
+      <argument>App\Controller\Stock\StockTransferController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
@@ -11910,6 +12227,7 @@
           <argument>App\Controller\Admin\RecipeController</argument>
           <argument>App\Controller\Admin\RestaurantPromotionController</argument>
           <argument>App\Controller\Admin\StockBatchController</argument>
+          <argument>App\Controller\Admin\StockMovementController</argument>
           <argument>App\Controller\Admin\SupplierController</argument>
           <argument>App\Controller\Admin\SupplierCreditNoteController</argument>
           <argument>App\Controller\Admin\TypePromotionController</argument>
@@ -11930,6 +12248,9 @@
           <argument>App\Controller\Sale\RestaurantSaleController</argument>
           <argument>App\Controller\Sale\RetailSaleController</argument>
           <argument>App\Controller\SecurityController</argument>
+          <argument>App\Controller\Stock\InventoryController</argument>
+          <argument>App\Controller\Stock\StockAdjustmentController</argument>
+          <argument>App\Controller\Stock\StockTransferController</argument>
           <argument>App\Controller\SubscriptionController</argument>
           <argument>App\Controller\SuperAdmin\HmaServiceController</argument>
           <argument>App\Controller\SuperAdmin\SubscriptionController</argument>
@@ -12213,6 +12534,9 @@
     <service id=".errored..service_locator.lIYMlB2.App\Entity\StockBatch" class="App\Entity\StockBatch">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.lIYMlB2&quot;: it needs an instance of &quot;App\Entity\StockBatch&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
+    <service id=".errored..service_locator.yK6r2jG.App\Entity\StockMovement" class="App\Entity\StockMovement">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.yK6r2jG&quot;: it needs an instance of &quot;App\Entity\StockMovement&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
     <service id=".errored..service_locator.FM.zRi8.App\Entity\Supplier" class="App\Entity\Supplier">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.FM.zRi8&quot;: it needs an instance of &quot;App\Entity\Supplier&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
@@ -12254,6 +12578,15 @@
     </service>
     <service id=".errored..service_locator.TI3ct.P.App\Entity\Order" class="App\Entity\Order">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.TI3ct.P&quot;: it needs an instance of &quot;App\Entity\Order&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.Sy9ktqY.App\Entity\Inventory" class="App\Entity\Inventory">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.Sy9ktqY&quot;: it needs an instance of &quot;App\Entity\Inventory&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.eDr0rba.App\Entity\StockAdjustment" class="App\Entity\StockAdjustment">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.eDr0rba&quot;: it needs an instance of &quot;App\Entity\StockAdjustment&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.msg5RWp.App\Entity\StockTransfer" class="App\Entity\StockTransfer">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.msg5RWp&quot;: it needs an instance of &quot;App\Entity\StockTransfer&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.NEOlKDh.App\Entity\Subscription" class="App\Entity\Subscription">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.NEOlKDh&quot;: it needs an instance of &quot;App\Entity\Subscription&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
@@ -13551,7 +13884,7 @@
     <service id="Knp\Bundle\TimeBundle\DateTimeFormatter" alias="time.datetime_formatter"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.EUpGKiX"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.Qc8X6f_"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -13621,9 +13954,9 @@
     <service id=".service_locator.w64.HFj" alias=".service_locator.pZ9vOm3"/>
     <service id=".service_locator.blXgkPv" alias=".service_locator.aQv.1uC"/>
     <service id=".service_locator.zgOrgxD" alias=".service_locator.t.B26rY"/>
-    <service id=".service_locator.hCUaame" alias=".service_locator.EUpGKiX"/>
+    <service id=".service_locator.LWNOtyA" alias=".service_locator.Qc8X6f_"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
-    <service id=".service_locator.sIl6GAw" alias=".service_locator.ZSKHsYn"/>
+    <service id=".service_locator.5jS3vPd" alias=".service_locator.66r3ccA"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>
     <service id=".service_locator.O24_MAy" alias=".service_locator.yY.p4P7"/>
     <service id=".service_locator.N8tb5Jh" alias=".service_locator.siKanuc"/>
@@ -13685,6 +14018,9 @@
     <service id=".service_locator.G1WMlmi" alias=".service_locator.zrfOspp"/>
     <service id=".service_locator.Lk4pMVQ" alias=".service_locator.lIYMlB2"/>
     <service id=".service_locator.fA6DRb8" alias=".service_locator.o.HdHhU"/>
+    <service id=".service_locator.2m6fC08" alias=".service_locator.Pft97aq"/>
+    <service id=".service_locator.1V2wKAL" alias=".service_locator.yK6r2jG"/>
+    <service id=".service_locator.7dehY0N" alias=".service_locator.jO9s1qw"/>
     <service id=".service_locator.Kv4bFX6" alias=".service_locator.3VaP2SM"/>
     <service id=".service_locator.euQWjYy" alias=".service_locator.FM.zRi8"/>
     <service id=".service_locator..ObGyYY" alias=".service_locator.dvS6U1."/>
@@ -13715,6 +14051,12 @@
     <service id=".service_locator.gtgK4ct" alias=".service_locator.WlzNspm"/>
     <service id=".service_locator.P897ZZy" alias=".service_locator.TI3ct.P"/>
     <service id=".service_locator.BvvBT9K" alias=".service_locator.4n4ylFv"/>
+    <service id=".service_locator.6lDFlAY" alias=".service_locator.PpHMfds"/>
+    <service id=".service_locator.xKSXQLV" alias=".service_locator.Sy9ktqY"/>
+    <service id=".service_locator.Ju50Upb" alias=".service_locator.1lR5OUa"/>
+    <service id=".service_locator.B2aBMhg" alias=".service_locator.eDr0rba"/>
+    <service id=".service_locator.gh13SBO" alias=".service_locator._dn2Otw"/>
+    <service id=".service_locator._jzbQub" alias=".service_locator.msg5RWp"/>
     <service id=".service_locator.Mtz1awR" alias=".service_locator.Qe.FMtv"/>
     <service id=".service_locator.DNo38ky" alias=".service_locator.7876JS0"/>
     <service id=".service_locator.4qBqTbv" alias=".service_locator.pZ9vOm3"/>

@@ -1,0 +1,419 @@
+{# templates/stock/transfer/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Transferts de stock - HMA Market{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .stat-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 1rem;
+        background: white !important;
+        border: none;
+    }
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .stat-card .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0;
+    }
+    .stat-card .stat-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    .stat-card .stat-sub {
+        font-size: 0.7rem;
+        margin-top: 0.25rem;
+        opacity: 0.8;
+    }
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 1rem;
+    }
+    .card-bg-primary {
+        background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%) !important;
+        color: white;
+    }
+    .card-bg-warning {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        color: white;
+    }
+    .card-bg-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        color: white;
+    }
+    .card-bg-danger {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+        color: white;
+    }
+    .card-bg-info {
+        background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+        color: white;
+    }
+    .card-bg-primary .stat-icon,
+    .card-bg-warning .stat-icon,
+    .card-bg-success .stat-icon,
+    .card-bg-danger .stat-icon,
+    .card-bg-info .stat-icon {
+        background: rgba(255,255,255,0.2);
+    }
+    .card-bg-primary .stat-value,
+    .card-bg-warning .stat-value,
+    .card-bg-success .stat-value,
+    .card-bg-danger .stat-value,
+    .card-bg-info .stat-value {
+        color: white;
+    }
+    .card-bg-primary .text-muted,
+    .card-bg-warning .text-muted,
+    .card-bg-success .text-muted,
+    .card-bg-danger .text-muted,
+    .card-bg-info .text-muted {
+        color: rgba(255,255,255,0.8) !important;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
+                            <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-exchange-alt me-1"></i> Transferts
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0 fw-bold">
+                <i class="fas fa-exchange-alt text-primary me-2"></i>
+                Transferts de stock
+            </h1>
+            <p class="text-muted mt-2">
+                <i class="fas fa-info-circle me-1"></i>
+                Gérez les transferts de stock entre emplacements
+            </p>
+        </div>
+        <div>
+            <a href="{{ path('app_stock_transfer_new') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i> Nouveau transfert
+            </a>
+        </div>
+    </div>
+
+    <!-- Cartes statistiques -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card card-bg-primary shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">Total transferts</div>
+                            <div class="stat-value">{{ stats.total|default(0)|number_format(0, ',', ' ') }}</div>
+                            <div class="stat-sub">transferts créés</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-exchange-alt fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card card-bg-warning shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">En attente</div>
+                            <div class="stat-value">{{ stats.pending|default(0)|number_format(0, ',', ' ') }}</div>
+                            <div class="stat-sub">transfert(s) en attente</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card card-bg-info shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">En transit</div>
+                            <div class="stat-value">{{ stats.in_transit|default(0)|number_format(0, ',', ' ') }}</div>
+                            <div class="stat-sub">transfert(s) en transit</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-truck fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card card-bg-success shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">Terminés</div>
+                            <div class="stat-value">{{ stats.completed|default(0)|number_format(0, ',', ' ') }}</div>
+                            <div class="stat-sub">transfert(s) terminés</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-semibold">
+                <i class="fas fa-filter me-2 text-primary"></i> Filtres
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold small">Statut</label>
+                    <select name="status" class="form-select">
+                        <option value="">Tous</option>
+                        <option value="pending" {{ filters.status == 'pending' ? 'selected' }}>En attente</option>
+                        <option value="in_transit" {{ filters.status == 'in_transit' ? 'selected' }}>En transit</option>
+                        <option value="completed" {{ filters.status == 'completed' ? 'selected' }}>Terminé</option>
+                        <option value="cancelled" {{ filters.status == 'cancelled' ? 'selected' }}>Annulé</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold small">Date du</label>
+                    <input type="date" name="date_from" class="form-control" value="{{ filters.date_from }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold small">Date au</label>
+                    <input type="date" name="date_to" class="form-control" value="{{ filters.date_to }}">
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-1"></i> Filtrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tableau des transferts -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-semibold">
+                <i class="fas fa-list me-2 text-primary"></i>
+                Liste des transferts
+            </h5>
+            <span class="badge bg-secondary">{{ transfers|length }} résultat(s)</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>N° transfert</th>
+                            <th>Date</th>
+                            <th>Produit</th>
+                            <th>N° lot</th>
+                            <th class="text-end">Quantité</th>
+                            <th>De → Vers</th>
+                            <th>Statut</th>
+                            <th>Créé par</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transfer in transfers %}
+                            <tr>
+                                <td class="align-middle">
+                                    <div class="fw-bold">{{ transfer.transferNumber }}</div>
+                                    <small class="text-muted">créé le {{ transfer.createdAt|date('d/m/Y H:i') }}</small>
+                                </div>
+                                <td class="align-middle">{{ transfer.createdAt|date('d/m/Y H:i') }}</div>
+                                <td class="align-middle">
+                                    <div class="fw-bold">{{ transfer.stockBatch.product.name|u.truncate(35) }}</div>
+                                    <small class="text-muted">{{ transfer.stockBatch.product.barcode }}</small>
+                                </div>
+                                <td class="align-middle"><code class="small">{{ transfer.stockBatch.batchNumber }}</code></div>
+                                <td class="align-middle text-end fw-bold">{{ transfer.quantity|number_format(0, ',', ' ') }}</div>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-center gap-1">
+                                        <span class="badge bg-success bg-opacity-10 text-success">
+                                            <i class="fas fa-map-marker-alt"></i> {{ transfer.sourceLocation.displayName }}
+                                        </span>
+                                        <i class="fas fa-arrow-right text-muted"></i>
+                                        <span class="badge bg-primary bg-opacity-10 text-primary">
+                                            <i class="fas fa-map-marker-alt"></i> {{ transfer.destinationLocation.displayName }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <td class="align-middle">
+                                    <span class="badge {{ transfer.statusBadgeClass }}">
+                                        <i class="fas {{ transfer.statusIcon }} me-1"></i>
+                                        {{ transfer.statusLabel }}
+                                    </span>
+                                </div>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="fas fa-user-circle text-muted"></i>
+                                        <small>{{ transfer.createdBy.fullName ?: transfer.createdBy.email }}</small>
+                                    </div>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ path('app_stock_transfer_show', {'id': transfer.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir le détail">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if transfer.status == 'pending' %}
+                                            <button type="button" class="btn btn-sm btn-outline-success start-transfer-btn" data-id="{{ transfer.id }}" data-number="{{ transfer.transferNumber }}" title="Expédier">
+                                                <i class="fas fa-truck"></i>
+                                            </button>
+                                        {% elseif transfer.status == 'in_transit' %}
+                                            <a href="{{ path('app_stock_transfer_receive', {'id': transfer.id}) }}" class="btn btn-sm btn-outline-info" title="Réceptionner">
+                                                <i class="fas fa-check-circle"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if transfer.status in ['pending', 'in_transit'] %}
+                                            <button type="button" class="btn btn-sm btn-outline-danger cancel-transfer-btn" data-id="{{ transfer.id }}" data-number="{{ transfer.transferNumber }}" title="Annuler">
+                                                <i class="fas fa-ban"></i>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="9" class="text-center py-5">
+                                    <i class="fas fa-exchange-alt fa-3x text-muted mb-3 opacity-50"></i>
+                                    <p class="text-muted mb-0">Aucun transfert trouvé</p>
+                                    <p class="text-muted small mb-3">Modifiez vos filtres ou créez un nouveau transfert</p>
+                                    <a href="{{ path('app_stock_transfer_new') }}" class="btn btn-primary">
+                                        <i class="fas fa-plus me-1"></i> Créer un transfert
+                                    </a>
+                                </div>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modale confirmation départ -->
+<div class="modal fade" id="startTransferModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="fas fa-truck me-2"></i> Confirmer le départ</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir expédier le transfert <strong id="startTransferNumber"></strong> ?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Le stock sera déduit de l'emplacement source.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form id="startTransferForm" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token('start-transfer') }}">
+                    <button type="submit" class="btn btn-success">Confirmer le départ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modale confirmation annulation -->
+<div class="modal fade" id="cancelTransferModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="fas fa-ban me-2"></i> Annuler le transfert</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" id="cancelTransferForm">
+                <div class="modal-body">
+                    <p>Annuler le transfert <strong id="cancelTransferNumber"></strong> ?</p>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Raison de l'annulation</label>
+                        <textarea name="reason" class="form-control" rows="3" required placeholder="Expliquez pourquoi vous annulez ce transfert..."></textarea>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Cette action est irréversible.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="_token" value="{{ csrf_token('cancel-transfer') }}">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Retour</button>
+                    <button type="submit" class="btn btn-danger">Confirmer l'annulation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Départ transfert
+    const startModal = new bootstrap.Modal(document.getElementById('startTransferModal'));
+    const startTransferNumber = document.getElementById('startTransferNumber');
+    const startTransferForm = document.getElementById('startTransferForm');
+    
+    document.querySelectorAll('.start-transfer-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const number = this.dataset.number;
+            startTransferNumber.textContent = number;
+            startTransferForm.action = '/stock/transfer/' + id + '/start';
+            startModal.show();
+        });
+    });
+    
+    // Annulation transfert
+    const cancelModal = new bootstrap.Modal(document.getElementById('cancelTransferModal'));
+    const cancelTransferNumber = document.getElementById('cancelTransferNumber');
+    const cancelTransferForm = document.getElementById('cancelTransferForm');
+    
+    document.querySelectorAll('.cancel-transfer-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const number = this.dataset.number;
+            cancelTransferNumber.textContent = number;
+            cancelTransferForm.action = '/stock/transfer/' + id + '/cancel';
+            cancelModal.show();
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -186,4 +186,50 @@ class StockMovement
 
         return $this;
     }
+
+    public static function getMovementTypes(): array
+    {
+        return [
+            'purchase_in' => 'Achat',
+            'sale_out' => 'Vente',
+            'adjustment_in' => 'Ajustement (+)',
+            'adjustment_out' => 'Ajustement (-)',
+            'return_in' => 'Retour client',
+            'return_out' => 'Retour fournisseur',
+            'transfer_in' => 'Transfert entrant',
+            'transfer_out' => 'Transfert sortant',
+        ];
+    }
+
+    public function getMovementTypeLabel(): string
+    {
+        $types = self::getMovementTypes();
+        return $types[$this->movement_type] ?? $this->movement_type ?? 'Inconnu';
+    }
+
+    public function getMovementTypeIcon(): string
+    {
+        return match($this->movement_type) {
+            'purchase_in' => 'bi-arrow-down-circle text-success',
+            'sale_out' => 'bi-arrow-up-circle text-danger',
+            'adjustment_in' => 'bi-plus-circle text-info',
+            'adjustment_out' => 'bi-dash-circle text-warning',
+            'return_in' => 'bi-arrow-return-left text-primary',
+            'return_out' => 'bi-arrow-return-right text-secondary',
+            default => 'bi-question-circle',
+        };
+    }
+
+    public function getMovementTypeBadgeClass(): string
+    {
+        return match($this->movement_type) {
+            'purchase_in' => 'bg-success',
+            'sale_out' => 'bg-danger',
+            'adjustment_in' => 'bg-info',
+            'adjustment_out' => 'bg-warning text-dark',
+            'return_in' => 'bg-primary',
+            'return_out' => 'bg-secondary',
+            default => 'bg-secondary',
+        };
+    }
 }

@@ -833,4 +833,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * Récupère les utilisateurs qui ont des mouvements de stock
+     */
+    public function findUsersWithStockMovements(int $hmaServiceId): array
+    {
+        return $this->createQueryBuilder('u')
+            ->innerJoin('u.stockMovements', 'sm')
+            ->innerJoin('sm.hma_service', 'h')
+            ->andWhere('h.id = :hmaServiceId')
+            ->setParameter('hmaServiceId', $hmaServiceId)
+            ->groupBy('u.id')
+            ->orderBy('u.full_name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

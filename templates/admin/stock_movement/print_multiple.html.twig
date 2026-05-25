@@ -1,0 +1,44 @@
+{# templates/admin/stock_movement/print_multiple.html.twig #}
+{% extends 'base_print.html.twig' %}
+
+{% block title %}Mouvements de stock - Sélection{% endblock %}
+
+{% block body %}
+<div class="container py-3">
+    <div class="text-center mb-4">
+        <h2>Mouvements de stock</h2>
+        <p>Liste des mouvements sélectionnés - {{ "now"|date('d/m/Y H:i:s') }}</p>
+        <hr>
+    </div>
+
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Produit</th>
+                <th>N° lot</th>
+                <th class="text-end">Quantité</th>
+                <th>Utilisateur</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movement in movements %}
+                {% set isIn = movement.movementType in ['in', 'purchase_in', 'adjustment_in', 'return_in'] %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ movement.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>{{ movement.movementTypeLabel }}</td>
+                    <td>{{ movement.stockBatch.product.name }}</td>
+                    <td>{{ movement.stockBatch.batchNumber }}</td>
+                    <td class="text-end {{ isIn ? 'text-success' : 'text-danger' }}">
+                        {{ isIn ? '+' : '-' }}{{ movement.quantity|number_format(0, ',', ' ') }}
+                    </td>
+                    <td>{{ movement.user.fullName ?: movement.user.email }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

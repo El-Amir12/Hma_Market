@@ -472,128 +472,134 @@ class __TwigTemplate_0be855dc1304bcf1b9dc853fcc2f6423 extends Template
     </div>
 
     <!-- Section recherche et filtres -->
-    <div class=\"filter-section\">
-        <div class=\"row g-3 align-items-end\">
-            <div class=\"col-md-4\">
-                <label class=\"form-label fw-bold\">🔍 Recherche</label>
-                <input type=\"text\" id=\"searchInput\" class=\"form-control\" placeholder=\"N° retour, n° commande, client...\" value=\"";
-        // line 344
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 344, $this->source); })()), "search", [], "any", false, false, false, 344), "html", null, true);
+<!-- Section recherche et filtres avec ligne pointillée -->
+<div class=\"filter-section\">
+    <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 pb-2\" style=\"border-bottom: 2px dotted #e5e7eb;\">
+        <div>
+            <i class=\"fas fa-filter me-2 text-primary\"></i>
+            <span class=\"fw-semibold\">Filtres</span>
+        </div>
+        <div class=\"d-flex gap-2\">
+            <button type=\"button\" id=\"resetFiltersBtn\" class=\"btn btn-outline-secondary btn-sm\">
+                <i class=\"fas fa-undo me-1\"></i> Réinitialiser
+            </button>
+            <button type=\"button\" id=\"applyFiltersBtn\" class=\"btn btn-primary btn-sm\">
+                <i class=\"fas fa-search me-1\"></i> Appliquer les filtres
+            </button>
+        </div>
+    </div>
+    
+    <div class=\"row g-3 align-items-end\">
+        <div class=\"col-md-4\">
+            <label class=\"form-label fw-bold small\">🔍 Recherche</label>
+            <input type=\"text\" id=\"searchInput\" class=\"form-control\" placeholder=\"N° retour, n° commande, client...\" value=\"";
+        // line 360
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 360, $this->source); })()), "search", [], "any", false, false, false, 360), "html", null, true);
         yield "\">
-            </div>
-            <div class=\"col-md-2\">
-                <label class=\"form-label fw-bold\">📊 Statut</label>
-                <select id=\"statusSelect\" class=\"form-select\">
-                    <option value=\"all\" ";
-        // line 349
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 349, $this->source); })()), "status", [], "any", false, false, false, 349) == "all")) {
+        </div>
+        <div class=\"col-md-2\">
+            <label class=\"form-label fw-bold small\">📊 Statut</label>
+            <select id=\"statusSelect\" class=\"form-select\">
+                <option value=\"all\" ";
+        // line 365
+        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 365, $this->source); })()), "status", [], "any", false, false, false, 365) == "all")) {
             yield "selected";
         }
         yield ">Tous les statuts</option>
-                    <option value=\"pending\" ";
-        // line 350
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 350, $this->source); })()), "status", [], "any", false, false, false, 350) == "pending")) {
+                <option value=\"pending\" ";
+        // line 366
+        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 366, $this->source); })()), "status", [], "any", false, false, false, 366) == "pending")) {
             yield "selected";
         }
         yield ">⏳ En attente</option>
-                    <option value=\"approved\" ";
-        // line 351
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 351, $this->source); })()), "status", [], "any", false, false, false, 351) == "approved")) {
+                <option value=\"approved\" ";
+        // line 367
+        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 367, $this->source); })()), "status", [], "any", false, false, false, 367) == "approved")) {
             yield "selected";
         }
         yield ">✓ Approuvés</option>
-                    <option value=\"completed\" ";
-        // line 352
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 352, $this->source); })()), "status", [], "any", false, false, false, 352) == "completed")) {
+                <option value=\"completed\" ";
+        // line 368
+        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 368, $this->source); })()), "status", [], "any", false, false, false, 368) == "completed")) {
             yield "selected";
         }
         yield ">✅ Remboursés</option>
-                    <option value=\"rejected\" ";
-        // line 353
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 353, $this->source); })()), "status", [], "any", false, false, false, 353) == "rejected")) {
+                <option value=\"rejected\" ";
+        // line 369
+        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 369, $this->source); })()), "status", [], "any", false, false, false, 369) == "rejected")) {
             yield "selected";
         }
         yield ">❌ Rejetés</option>
-                </select>
-            </div>
-            <div class=\"col-md-2\">
-                <label class=\"form-label fw-bold\">👤 Enregistré par</label>
-                <select id=\"userSelect\" class=\"form-select select2\">
-                    <option value=\"\">Tous les utilisateurs</option>
-                    ";
-        // line 360
+            </select>
+        </div>
+        <div class=\"col-md-2\">
+            <label class=\"form-label fw-bold small\">👤 Enregistré par</label>
+            <select id=\"userSelect\" class=\"form-select select2\">
+                <option value=\"\">Tous les utilisateurs</option>
+                ";
+        // line 376
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["users"]) || array_key_exists("users", $context) ? $context["users"] : (function () { throw new RuntimeError('Variable "users" does not exist.', 360, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["users"]) || array_key_exists("users", $context) ? $context["users"] : (function () { throw new RuntimeError('Variable "users" does not exist.', 376, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["user"]) {
-            // line 361
-            yield "                        <option value=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["user"], "id", [], "any", false, false, false, 361), "html", null, true);
+            // line 377
+            yield "                    <option value=\"";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["user"], "id", [], "any", false, false, false, 377), "html", null, true);
             yield "\" ";
-            if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 361, $this->source); })()), "user_id", [], "any", false, false, false, 361) == CoreExtension::getAttribute($this->env, $this->source, $context["user"], "id", [], "any", false, false, false, 361))) {
+            if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 377, $this->source); })()), "user_id", [], "any", false, false, false, 377) == CoreExtension::getAttribute($this->env, $this->source, $context["user"], "id", [], "any", false, false, false, 377))) {
                 yield "selected";
             }
             yield ">
-                            ";
-            // line 362
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["user"], "photo", [], "any", false, false, false, 362)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 363
-                yield "                                <img src=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, $context["user"], "photo", [], "any", false, false, false, 363))), "html", null, true);
+                        ";
+            // line 378
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["user"], "photo", [], "any", false, false, false, 378)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 379
+                yield "                            <img src=\"";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, $context["user"], "photo", [], "any", false, false, false, 379))), "html", null, true);
                 yield "\" class=\"rounded-circle me-2\" width=\"20\" height=\"20\">
-                            ";
+                        ";
             } else {
-                // line 365
-                yield "                                <i class=\"fas fa-user-circle me-1\"></i>
-                            ";
+                // line 381
+                yield "                            <i class=\"fas fa-user-circle me-1\"></i>
+                        ";
             }
-            // line 367
-            yield "                            ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["user"], "fullName", [], "any", false, false, false, 367), "html", null, true);
+            // line 383
+            yield "                        ";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["user"], "fullName", [], "any", false, false, false, 383), "html", null, true);
             yield " (";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["user"], "email", [], "any", false, false, false, 367), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["user"], "email", [], "any", false, false, false, 383), "html", null, true);
             yield ")
-                        </option>
-                    ";
+                    </option>
+                ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['user'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 370
-        yield "                </select>
-            </div>
-            <div class=\"col-md-2\">
-                <label class=\"form-label fw-bold\">📅 Date début</label>
-                <input type=\"date\" id=\"dateFrom\" class=\"form-control\" value=\"";
-        // line 374
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 374, $this->source); })()), "date_from", [], "any", false, false, false, 374), "html", null, true);
-        yield "\">
-            </div>
-            <div class=\"col-md-2\">
-                <label class=\"form-label fw-bold\">📅 Date fin</label>
-                <input type=\"date\" id=\"dateTo\" class=\"form-control\" value=\"";
-        // line 378
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 378, $this->source); })()), "date_to", [], "any", false, false, false, 378), "html", null, true);
-        yield "\">
-            </div>
+        // line 386
+        yield "            </select>
         </div>
-        <div class=\"row mt-3\">
-            <div class=\"col-12\">
-                <button type=\"button\" id=\"applyFiltersBtn\" class=\"btn btn-primary\">
-                    <i class=\"fas fa-filter me-1\"></i> Appliquer les filtres
-                </button>
-                <button type=\"button\" id=\"resetFiltersBtn\" class=\"btn btn-outline-secondary ms-2\">
-                    <i class=\"fas fa-undo me-1\"></i> Réinitialiser
-                </button>
-            </div>
+        <div class=\"col-md-2\">
+            <label class=\"form-label fw-bold small\">📅 Date début</label>
+            <input type=\"date\" id=\"dateFrom\" class=\"form-control\" value=\"";
+        // line 390
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 390, $this->source); })()), "date_from", [], "any", false, false, false, 390), "html", null, true);
+        yield "\">
+        </div>
+        <div class=\"col-md-2\">
+            <label class=\"form-label fw-bold small\">📅 Date fin</label>
+            <input type=\"date\" id=\"dateTo\" class=\"form-control\" value=\"";
+        // line 394
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 394, $this->source); })()), "date_to", [], "any", false, false, false, 394), "html", null, true);
+        yield "\">
         </div>
     </div>
+</div>
 
     <!-- Tableau des retours -->
     <div class=\"card\">
         <div class=\"card-body p-0\">
             <div class=\"table-responsive\">
                 <form id=\"multiplePrintForm\" action=\"";
-        // line 397
+        // line 403
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_print_multiple_receipts");
         yield "\" method=\"POST\" target=\"_blank\">
                     <table class=\"table table-hover mb-0 returns-table\">
@@ -615,186 +621,186 @@ class __TwigTemplate_0be855dc1304bcf1b9dc853fcc2f6423 extends Template
                         </thead>
                         <tbody>
                             ";
-        // line 416
+        // line 422
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["returns"]) || array_key_exists("returns", $context) ? $context["returns"] : (function () { throw new RuntimeError('Variable "returns" does not exist.', 416, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["returns"]) || array_key_exists("returns", $context) ? $context["returns"] : (function () { throw new RuntimeError('Variable "returns" does not exist.', 422, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["return"]) {
-            // line 417
+            // line 423
             yield "                                <tr class=\"return-row\" data-href=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 417)]), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 423)]), "html", null, true);
             yield "\">
                                     <td class=\"text-center\" onclick=\"event.stopPropagation()\">
                                         <input type=\"checkbox\" name=\"return_ids[]\" value=\"";
-            // line 419
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 419), "html", null, true);
+            // line 425
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 425), "html", null, true);
             yield "\" class=\"return-checkbox\">
                                     </td>
                                     <td>
                                         <strong class=\"text-primary\">";
-            // line 422
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnNumber", [], "any", false, false, false, 422), "html", null, true);
+            // line 428
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnNumber", [], "any", false, false, false, 428), "html", null, true);
             yield "</strong>
                                     </td>
                                     <td>
                                         <code>";
-            // line 425
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "orderNumber", [], "any", false, false, false, 425), "html", null, true);
+            // line 431
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "orderNumber", [], "any", false, false, false, 431), "html", null, true);
             yield "</code>
                                     </td>
                                     <td>
                                         <div class=\"customer-info\">
                                             <div class=\"customer-name\">";
-            // line 429
-            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["return"], "customerName", [], "any", false, false, false, 429)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "customerName", [], "any", false, false, false, 429), "html", null, true)) : ("Non renseigné"));
+            // line 435
+            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["return"], "customerName", [], "any", false, false, false, 435)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "customerName", [], "any", false, false, false, 435), "html", null, true)) : ("Non renseigné"));
             yield "</div>
                                             <div class=\"customer-phone\">
                                                 <i class=\"fas fa-phone me-1\"></i>";
-            // line 431
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "customerPhone", [], "any", false, false, false, 431), "html", null, true);
+            // line 437
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "customerPhone", [], "any", false, false, false, 437), "html", null, true);
             yield "
                                             </div>
                                         </div>
                                     </td>
                                     <td>
                                         ";
-            // line 436
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "createdAt", [], "any", false, false, false, 436), "d/m/Y"), "html", null, true);
+            // line 442
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "createdAt", [], "any", false, false, false, 442), "d/m/Y"), "html", null, true);
             yield "
                                         <br>
                                         <small class=\"text-muted\">";
-            // line 438
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "createdAt", [], "any", false, false, false, 438), "H:i"), "html", null, true);
+            // line 444
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "createdAt", [], "any", false, false, false, 444), "H:i"), "html", null, true);
             yield "</small>
                                     </td>
                                     <td class=\"text-end\">
                                         <strong>";
-            // line 441
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "totalRefundAmount", [], "any", false, false, false, 441), 0, ",", " "), "html", null, true);
+            // line 447
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "totalRefundAmount", [], "any", false, false, false, 447), 0, ",", " "), "html", null, true);
             yield " FCFA</strong>
                                     </td>
                                     <td>
                                         <span class=\"reason-badge\">
                                             ";
-            // line 445
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["reasons"] ?? null), CoreExtension::getAttribute($this->env, $this->source, $context["return"], "reason", [], "any", false, false, false, 445), [], "array", true, true, false, 445)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["reasons"]) || array_key_exists("reasons", $context) ? $context["reasons"] : (function () { throw new RuntimeError('Variable "reasons" does not exist.', 445, $this->source); })()), CoreExtension::getAttribute($this->env, $this->source, $context["return"], "reason", [], "any", false, false, false, 445), [], "array", false, false, false, 445), CoreExtension::getAttribute($this->env, $this->source, $context["return"], "reason", [], "any", false, false, false, 445))) : (CoreExtension::getAttribute($this->env, $this->source, $context["return"], "reason", [], "any", false, false, false, 445))), "html", null, true);
+            // line 451
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["reasons"] ?? null), CoreExtension::getAttribute($this->env, $this->source, $context["return"], "reason", [], "any", false, false, false, 451), [], "array", true, true, false, 451)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["reasons"]) || array_key_exists("reasons", $context) ? $context["reasons"] : (function () { throw new RuntimeError('Variable "reasons" does not exist.', 451, $this->source); })()), CoreExtension::getAttribute($this->env, $this->source, $context["return"], "reason", [], "any", false, false, false, 451), [], "array", false, false, false, 451), CoreExtension::getAttribute($this->env, $this->source, $context["return"], "reason", [], "any", false, false, false, 451))) : (CoreExtension::getAttribute($this->env, $this->source, $context["return"], "reason", [], "any", false, false, false, 451))), "html", null, true);
             yield "
                                         </span>
                                     </td>
                                     <td>
                                         <div class=\"d-flex align-items-center\">
                                             ";
-            // line 450
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnedBy", [], "any", false, false, false, 450), "photo", [], "any", false, false, false, 450)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 451
+            // line 456
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnedBy", [], "any", false, false, false, 456), "photo", [], "any", false, false, false, 456)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 457
                 yield "                                                <img src=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnedBy", [], "any", false, false, false, 451), "photo", [], "any", false, false, false, 451))), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnedBy", [], "any", false, false, false, 457), "photo", [], "any", false, false, false, 457))), "html", null, true);
                 yield "\" class=\"rounded-circle me-2\" width=\"30\" height=\"30\">
                                             ";
             } else {
-                // line 453
+                // line 459
                 yield "                                                <div class=\"bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2\" style=\"width: 30px; height: 30px;\">
                                                     <i class=\"fas fa-user text-secondary\"></i>
                                                 </div>
                                             ";
             }
-            // line 457
+            // line 463
             yield "                                            <div>
                                                 <small>";
-            // line 458
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnedBy", [], "any", false, false, false, 458), "fullName", [], "any", false, false, false, 458), "html", null, true);
+            // line 464
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnedBy", [], "any", false, false, false, 464), "fullName", [], "any", false, false, false, 464), "html", null, true);
             yield "</small>
                                             </div>
                                         </div>
                                     </td>
                                     <td class=\"text-center\">
                                         ";
-            // line 463
-            if ((CoreExtension::getAttribute($this->env, $this->source, $context["return"], "status", [], "any", false, false, false, 463) == "pending")) {
-                // line 464
+            // line 469
+            if ((CoreExtension::getAttribute($this->env, $this->source, $context["return"], "status", [], "any", false, false, false, 469) == "pending")) {
+                // line 470
                 yield "                                            <span class=\"status-badge status-pending\">En attente</span>
                                         ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 465
-$context["return"], "status", [], "any", false, false, false, 465) == "approved")) {
-                // line 466
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 471
+$context["return"], "status", [], "any", false, false, false, 471) == "approved")) {
+                // line 472
                 yield "                                            <span class=\"status-badge status-approved\">Approuvé</span>
                                         ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 467
-$context["return"], "status", [], "any", false, false, false, 467) == "completed")) {
-                // line 468
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 473
+$context["return"], "status", [], "any", false, false, false, 473) == "completed")) {
+                // line 474
                 yield "                                            <span class=\"status-badge status-completed\">Remboursé</span>
                                         ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 469
-$context["return"], "status", [], "any", false, false, false, 469) == "rejected")) {
-                // line 470
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 475
+$context["return"], "status", [], "any", false, false, false, 475) == "rejected")) {
+                // line 476
                 yield "                                            <span class=\"status-badge status-rejected\">Rejeté</span>
                                         ";
             }
-            // line 472
+            // line 478
             yield "                                    </td>
                                     <td class=\"text-center\" onclick=\"event.stopPropagation()\">
                                         <div class=\"btn-group\" role=\"group\">
                                             <a href=\"";
-            // line 475
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 475)]), "html", null, true);
+            // line 481
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 481)]), "html", null, true);
             yield "\" class=\"btn btn-sm btn-outline-primary\" title=\"Voir\">
                                                 <i class=\"fas fa-eye\"></i>
                                             </a>
                                             <a href=\"";
-            // line 478
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_print_receipt", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 478)]), "html", null, true);
+            // line 484
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_print_receipt", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 484)]), "html", null, true);
             yield "\" class=\"btn btn-sm btn-outline-info\" title=\"Imprimer le reçu\" target=\"_blank\">
                                                 <i class=\"fas fa-print\"></i>
                                             </a>
                                             ";
-            // line 481
-            if (((CoreExtension::getAttribute($this->env, $this->source, $context["return"], "status", [], "any", false, false, false, 481) == "pending") && ($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") || $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_MANAGER")))) {
-                // line 482
+            // line 487
+            if (((CoreExtension::getAttribute($this->env, $this->source, $context["return"], "status", [], "any", false, false, false, 487) == "pending") && ($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") || $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_MANAGER")))) {
+                // line 488
                 yield "                                                <button type=\"button\" class=\"btn btn-sm btn-outline-success approve-return\" 
                                                         data-id=\"";
-                // line 483
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 483), "html", null, true);
+                // line 489
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 489), "html", null, true);
                 yield "\" data-number=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnNumber", [], "any", false, false, false, 483), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnNumber", [], "any", false, false, false, 489), "html", null, true);
                 yield "\" title=\"Approuver\">
                                                     <i class=\"fas fa-check\"></i>
                                                 </button>
                                                 <button type=\"button\" class=\"btn btn-sm btn-outline-danger reject-return\" 
                                                         data-id=\"";
-                // line 487
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 487), "html", null, true);
+                // line 493
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 493), "html", null, true);
                 yield "\" data-number=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnNumber", [], "any", false, false, false, 487), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnNumber", [], "any", false, false, false, 493), "html", null, true);
                 yield "\" title=\"Rejeter\">
                                                     <i class=\"fas fa-times\"></i>
                                                 </button>
                                             ";
             }
-            // line 491
+            // line 497
             yield "                                            ";
-            if (((CoreExtension::getAttribute($this->env, $this->source, $context["return"], "status", [], "any", false, false, false, 491) == "approved") && ($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") || $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_MANAGER")))) {
-                // line 492
+            if (((CoreExtension::getAttribute($this->env, $this->source, $context["return"], "status", [], "any", false, false, false, 497) == "approved") && ($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") || $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_MANAGER")))) {
+                // line 498
                 yield "                                                <button type=\"button\" class=\"btn btn-sm btn-outline-success complete-return\" 
                                                         data-id=\"";
-                // line 493
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 493), "html", null, true);
+                // line 499
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "id", [], "any", false, false, false, 499), "html", null, true);
                 yield "\" data-number=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnNumber", [], "any", false, false, false, 493), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["return"], "returnNumber", [], "any", false, false, false, 499), "html", null, true);
                 yield "\" title=\"Confirmer remboursement\">
                                                     <i class=\"fas fa-money-bill-wave\"></i>
                                                 </button>
                                             ";
             }
-            // line 497
+            // line 503
             yield "                                        </div>
                                     </td>
                                 </tr>
                             ";
             $context['_iterated'] = true;
         }
-        // line 500
+        // line 506
         if (!$context['_iterated']) {
-            // line 501
+            // line 507
             yield "                                <tr>
                                     <td colspan=\"10\" class=\"text-center py-5\">
                                         <i class=\"fas fa-inbox fa-3x text-muted mb-3\"></i>
@@ -806,32 +812,32 @@ $context["return"], "status", [], "any", false, false, false, 469) == "rejected"
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['return'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 508
+        // line 514
         yield "                        </tbody>
                     </table>
                 </form>
             </div>
         </div>
         ";
-        // line 513
-        if (((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 513, $this->source); })()) > 1)) {
-            // line 514
+        // line 519
+        if (((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 519, $this->source); })()) > 1)) {
+            // line 520
             yield "        <div class=\"card-footer bg-white\">
             <nav aria-label=\"Pagination\">
                 <ul class=\"pagination justify-content-center mb-0\">
                     ";
-            // line 517
+            // line 523
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable(range(1, (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 517, $this->source); })())));
+            $context['_seq'] = CoreExtension::ensureTraversable(range(1, (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 523, $this->source); })())));
             foreach ($context['_seq'] as $context["_key"] => $context["i"]) {
-                // line 518
+                // line 524
                 yield "                        <li class=\"page-item ";
-                if (($context["i"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 518, $this->source); })()))) {
+                if (($context["i"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 524, $this->source); })()))) {
                     yield "active";
                 }
                 yield "\">
                             <a class=\"page-link\" href=\"#\" data-page=\"";
-                // line 519
+                // line 525
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["i"], "html", null, true);
                 yield "\">";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["i"], "html", null, true);
@@ -842,13 +848,13 @@ $context["return"], "status", [], "any", false, false, false, 469) == "rejected"
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['i'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 522
+            // line 528
             yield "                </ul>
             </nav>
         </div>
         ";
         }
-        // line 526
+        // line 532
         yield "    </div>
 </div>
 
@@ -929,7 +935,7 @@ $context["return"], "status", [], "any", false, false, false, 469) == "rejected"
         yield from [];
     }
 
-    // line 598
+    // line 604
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -942,7 +948,7 @@ $context["return"], "status", [], "any", false, false, false, 469) == "rejected"
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 599
+        // line 605
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
@@ -989,7 +995,7 @@ $context["return"], "status", [], "any", false, false, false, 469) == "rejected"
     // === RECHERCHE DE COMMANDE ===
     let searchTimeout;
     let newReturnBaseUrl = \"";
-        // line 643
+        // line 649
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_new", ["orderId" => "ID_PLACEHOLDER"]);
         yield "\".replace('ID_PLACEHOLDER', '');
 
@@ -1021,7 +1027,7 @@ $context["return"], "status", [], "any", false, false, false, 469) == "rejected"
         
         \$.ajax({
             url: '";
-        // line 672
+        // line 678
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_search_orders");
         yield "?q=' + encodeURIComponent(search),
             method: 'GET',
@@ -1151,7 +1157,7 @@ $context["return"], "status", [], "any", false, false, false, 469) == "rejected"
         if (dateTo) params.append('date_to', dateTo);
         
         window.location.href = '";
-        // line 799
+        // line 805
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_index");
         yield "?' + params.toString();
     }
@@ -1159,7 +1165,7 @@ $context["return"], "status", [], "any", false, false, false, 469) == "rejected"
     \$('#applyFiltersBtn').click(applyFilters);
     \$('#resetFiltersBtn').click(function() {
         window.location.href = '";
-        // line 804
+        // line 810
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_index");
         yield "';
     });
@@ -1171,7 +1177,7 @@ $context["return"], "status", [], "any", false, false, false, 469) == "rejected"
         let params = new URLSearchParams(window.location.search);
         params.set('page', page);
         window.location.href = '";
-        // line 813
+        // line 819
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("returns_index");
         yield "?' + params.toString();
     });
@@ -1319,7 +1325,7 @@ $context["return"], "status", [], "any", false, false, false, 469) == "rejected"
      */
     public function getDebugInfo(): array
     {
-        return array (  1175 => 813,  1163 => 804,  1155 => 799,  1025 => 672,  993 => 643,  946 => 599,  933 => 598,  852 => 526,  846 => 522,  835 => 519,  828 => 518,  824 => 517,  819 => 514,  817 => 513,  810 => 508,  798 => 501,  796 => 500,  789 => 497,  780 => 493,  777 => 492,  774 => 491,  765 => 487,  756 => 483,  753 => 482,  751 => 481,  745 => 478,  739 => 475,  734 => 472,  730 => 470,  728 => 469,  725 => 468,  723 => 467,  720 => 466,  718 => 465,  715 => 464,  713 => 463,  705 => 458,  702 => 457,  696 => 453,  690 => 451,  688 => 450,  680 => 445,  673 => 441,  667 => 438,  662 => 436,  654 => 431,  649 => 429,  642 => 425,  636 => 422,  630 => 419,  624 => 417,  619 => 416,  597 => 397,  575 => 378,  568 => 374,  562 => 370,  550 => 367,  546 => 365,  540 => 363,  538 => 362,  529 => 361,  525 => 360,  513 => 353,  507 => 352,  501 => 351,  495 => 350,  489 => 349,  481 => 344,  463 => 329,  445 => 314,  429 => 301,  413 => 288,  397 => 275,  379 => 260,  357 => 240,  344 => 239,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  1181 => 819,  1169 => 810,  1161 => 805,  1031 => 678,  999 => 649,  952 => 605,  939 => 604,  858 => 532,  852 => 528,  841 => 525,  834 => 524,  830 => 523,  825 => 520,  823 => 519,  816 => 514,  804 => 507,  802 => 506,  795 => 503,  786 => 499,  783 => 498,  780 => 497,  771 => 493,  762 => 489,  759 => 488,  757 => 487,  751 => 484,  745 => 481,  740 => 478,  736 => 476,  734 => 475,  731 => 474,  729 => 473,  726 => 472,  724 => 471,  721 => 470,  719 => 469,  711 => 464,  708 => 463,  702 => 459,  696 => 457,  694 => 456,  686 => 451,  679 => 447,  673 => 444,  668 => 442,  660 => 437,  655 => 435,  648 => 431,  642 => 428,  636 => 425,  630 => 423,  625 => 422,  603 => 403,  591 => 394,  584 => 390,  578 => 386,  566 => 383,  562 => 381,  556 => 379,  554 => 378,  545 => 377,  541 => 376,  529 => 369,  523 => 368,  517 => 367,  511 => 366,  505 => 365,  497 => 360,  463 => 329,  445 => 314,  429 => 301,  413 => 288,  397 => 275,  379 => 260,  357 => 240,  344 => 239,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1663,58 +1669,64 @@ $context["return"], "status", [], "any", false, false, false, 469) == "rejected"
     </div>
 
     <!-- Section recherche et filtres -->
-    <div class=\"filter-section\">
-        <div class=\"row g-3 align-items-end\">
-            <div class=\"col-md-4\">
-                <label class=\"form-label fw-bold\">🔍 Recherche</label>
-                <input type=\"text\" id=\"searchInput\" class=\"form-control\" placeholder=\"N° retour, n° commande, client...\" value=\"{{ filters.search }}\">
-            </div>
-            <div class=\"col-md-2\">
-                <label class=\"form-label fw-bold\">📊 Statut</label>
-                <select id=\"statusSelect\" class=\"form-select\">
-                    <option value=\"all\" {% if filters.status == 'all' %}selected{% endif %}>Tous les statuts</option>
-                    <option value=\"pending\" {% if filters.status == 'pending' %}selected{% endif %}>⏳ En attente</option>
-                    <option value=\"approved\" {% if filters.status == 'approved' %}selected{% endif %}>✓ Approuvés</option>
-                    <option value=\"completed\" {% if filters.status == 'completed' %}selected{% endif %}>✅ Remboursés</option>
-                    <option value=\"rejected\" {% if filters.status == 'rejected' %}selected{% endif %}>❌ Rejetés</option>
-                </select>
-            </div>
-            <div class=\"col-md-2\">
-                <label class=\"form-label fw-bold\">👤 Enregistré par</label>
-                <select id=\"userSelect\" class=\"form-select select2\">
-                    <option value=\"\">Tous les utilisateurs</option>
-                    {% for user in users %}
-                        <option value=\"{{ user.id }}\" {% if filters.user_id == user.id %}selected{% endif %}>
-                            {% if user.photo %}
-                                <img src=\"{{ asset('uploads/users/' ~ user.photo) }}\" class=\"rounded-circle me-2\" width=\"20\" height=\"20\">
-                            {% else %}
-                                <i class=\"fas fa-user-circle me-1\"></i>
-                            {% endif %}
-                            {{ user.fullName }} ({{ user.email }})
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class=\"col-md-2\">
-                <label class=\"form-label fw-bold\">📅 Date début</label>
-                <input type=\"date\" id=\"dateFrom\" class=\"form-control\" value=\"{{ filters.date_from }}\">
-            </div>
-            <div class=\"col-md-2\">
-                <label class=\"form-label fw-bold\">📅 Date fin</label>
-                <input type=\"date\" id=\"dateTo\" class=\"form-control\" value=\"{{ filters.date_to }}\">
-            </div>
+<!-- Section recherche et filtres avec ligne pointillée -->
+<div class=\"filter-section\">
+    <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 pb-2\" style=\"border-bottom: 2px dotted #e5e7eb;\">
+        <div>
+            <i class=\"fas fa-filter me-2 text-primary\"></i>
+            <span class=\"fw-semibold\">Filtres</span>
         </div>
-        <div class=\"row mt-3\">
-            <div class=\"col-12\">
-                <button type=\"button\" id=\"applyFiltersBtn\" class=\"btn btn-primary\">
-                    <i class=\"fas fa-filter me-1\"></i> Appliquer les filtres
-                </button>
-                <button type=\"button\" id=\"resetFiltersBtn\" class=\"btn btn-outline-secondary ms-2\">
-                    <i class=\"fas fa-undo me-1\"></i> Réinitialiser
-                </button>
-            </div>
+        <div class=\"d-flex gap-2\">
+            <button type=\"button\" id=\"resetFiltersBtn\" class=\"btn btn-outline-secondary btn-sm\">
+                <i class=\"fas fa-undo me-1\"></i> Réinitialiser
+            </button>
+            <button type=\"button\" id=\"applyFiltersBtn\" class=\"btn btn-primary btn-sm\">
+                <i class=\"fas fa-search me-1\"></i> Appliquer les filtres
+            </button>
         </div>
     </div>
+    
+    <div class=\"row g-3 align-items-end\">
+        <div class=\"col-md-4\">
+            <label class=\"form-label fw-bold small\">🔍 Recherche</label>
+            <input type=\"text\" id=\"searchInput\" class=\"form-control\" placeholder=\"N° retour, n° commande, client...\" value=\"{{ filters.search }}\">
+        </div>
+        <div class=\"col-md-2\">
+            <label class=\"form-label fw-bold small\">📊 Statut</label>
+            <select id=\"statusSelect\" class=\"form-select\">
+                <option value=\"all\" {% if filters.status == 'all' %}selected{% endif %}>Tous les statuts</option>
+                <option value=\"pending\" {% if filters.status == 'pending' %}selected{% endif %}>⏳ En attente</option>
+                <option value=\"approved\" {% if filters.status == 'approved' %}selected{% endif %}>✓ Approuvés</option>
+                <option value=\"completed\" {% if filters.status == 'completed' %}selected{% endif %}>✅ Remboursés</option>
+                <option value=\"rejected\" {% if filters.status == 'rejected' %}selected{% endif %}>❌ Rejetés</option>
+            </select>
+        </div>
+        <div class=\"col-md-2\">
+            <label class=\"form-label fw-bold small\">👤 Enregistré par</label>
+            <select id=\"userSelect\" class=\"form-select select2\">
+                <option value=\"\">Tous les utilisateurs</option>
+                {% for user in users %}
+                    <option value=\"{{ user.id }}\" {% if filters.user_id == user.id %}selected{% endif %}>
+                        {% if user.photo %}
+                            <img src=\"{{ asset('uploads/users/' ~ user.photo) }}\" class=\"rounded-circle me-2\" width=\"20\" height=\"20\">
+                        {% else %}
+                            <i class=\"fas fa-user-circle me-1\"></i>
+                        {% endif %}
+                        {{ user.fullName }} ({{ user.email }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class=\"col-md-2\">
+            <label class=\"form-label fw-bold small\">📅 Date début</label>
+            <input type=\"date\" id=\"dateFrom\" class=\"form-control\" value=\"{{ filters.date_from }}\">
+        </div>
+        <div class=\"col-md-2\">
+            <label class=\"form-label fw-bold small\">📅 Date fin</label>
+            <input type=\"date\" id=\"dateTo\" class=\"form-control\" value=\"{{ filters.date_to }}\">
+        </div>
+    </div>
+</div>
 
     <!-- Tableau des retours -->
     <div class=\"card\">

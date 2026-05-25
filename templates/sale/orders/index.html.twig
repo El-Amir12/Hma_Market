@@ -17,78 +17,109 @@
     }
     
     .stats-card {
-        background: #ffffff !important;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
         border: 1px solid #e5e7eb !important;
-        border-radius: 16px !important;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: 20px !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         overflow: hidden;
         cursor: pointer;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        position: relative;
+    }
+    
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--primary-color);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .stats-card:hover::before {
+        opacity: 1;
     }
     
     .stats-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-6px);
+        box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.15) !important;
     }
     
     .stats-card .card-body {
-        padding: 1rem;
-        background: #ffffff !important;
+        padding: 1.25rem;
+        background: transparent !important;
     }
     
     .stats-card h3 {
-        font-size: 1.5rem;
-        font-weight: 700;
+        font-size: 1.75rem;
+        font-weight: 800;
         margin-bottom: 0.25rem;
         line-height: 1.2;
     }
     
     .stats-card h6 {
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: 0.7rem;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.8;
     }
     
     .stats-card i {
-        opacity: 0.8;
-        transition: opacity 0.2s;
+        opacity: 0.7;
+        transition: opacity 0.3s, transform 0.3s;
     }
     
     .stats-card:hover i {
         opacity: 1;
+        transform: scale(1.05);
     }
     
-    .stats-card .text-primary { color: var(--primary-color) !important; }
-    .stats-card .text-success { color: var(--success-color) !important; }
-    .stats-card .text-info { color: var(--info-color) !important; }
-    .stats-card .text-warning { color: var(--warning-color) !important; }
-    .stats-card .text-danger { color: var(--danger-color) !important; }
-    .stats-card .text-secondary { color: #6c757d !important; }
-    .stats-card .text-dark { color: #1f2937 !important; }
-    .stats-card .text-cyan { color: #06b6d4 !important; }
-    .stats-card .text-emerald { color: #10b981 !important; }
-    .stats-card .text-gray { color: #6b7280 !important; }
-    .stats-card .text-purple { color: #8b5cf6 !important; }
-    .stats-card .text-rose { color: #f43f5e !important; }
+    /* Cartes avec couleurs spécifiques */
+    .stats-card.primary-bg { background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%) !important; color: white; }
+    .stats-card.success-bg { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; color: white; }
+    .stats-card.info-bg { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; color: white; }
+    .stats-card.warning-bg { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; color: white; }
+    .stats-card.danger-bg { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; color: white; }
+    .stats-card.secondary-bg { background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important; color: white; }
+    .stats-card.cyan-bg { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important; color: white; }
+    .stats-card.purple-bg { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; color: white; }
+    .stats-card.rose-bg { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important; color: white; }
+    .stats-card.emerald-bg { background: linear-gradient(135deg, #059669 0%, #047857 100%) !important; color: white; }
+    
+    .stats-card.primary-bg .stat-icon,
+    .stats-card.success-bg .stat-icon,
+    .stats-card.info-bg .stat-icon,
+    .stats-card.warning-bg .stat-icon,
+    .stats-card.danger-bg .stat-icon,
+    .stats-card.secondary-bg .stat-icon,
+    .stats-card.cyan-bg .stat-icon,
+    .stats-card.purple-bg .stat-icon,
+    .stats-card.rose-bg .stat-icon,
+    .stats-card.emerald-bg .stat-icon {
+        background: rgba(255,255,255,0.2);
+    }
     
     .filter-section {
         background: white;
-        border-radius: 16px;
-        padding: 1.25rem;
+        border-radius: 20px;
+        padding: 1.5rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         border: 1px solid #e5e7eb;
     }
     
     .table-order-row {
         cursor: pointer;
-        transition: background-color 0.2s ease;
+        transition: background-color 0.2s ease, transform 0.1s;
     }
     
     .table-order-row:hover {
-        background-color: #f8f9fa !important;
+        background-color: #f8fafc !important;
     }
     
     .badge-payment-paid { 
@@ -120,64 +151,58 @@
         background: #e0f2fe !important;
         border-left: 4px solid #0284c7 !important;
         padding: 0.75rem 1rem !important;
-        border-radius: 8px !important;
+        border-radius: 12px !important;
         margin-bottom: 1rem !important;
         color: #0c4a6e !important;
     }
     
-    .filter-info .btn-outline-secondary {
-        border-color: #0284c7;
-        color: #0284c7;
-    }
-    
-    .filter-info .btn-outline-secondary:hover {
-        background: #0284c7;
-        color: white;
-    }
-    
     .contact-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 16px;
-        padding: 1rem;
+        border-radius: 20px;
+        padding: 1.25rem;
         margin-bottom: 1.5rem;
         color: white;
-        transition: transform 0.2s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     
     .contact-card:hover {
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
     }
     
-    .table-header-actions {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-    
-    .returns-section {
-        margin-top: 2rem;
-        margin-bottom: 1.5rem;
-    }
     .returns-card {
         background: white;
-        border-radius: 16px;
+        border-radius: 20px;
         border: 1px solid #e5e7eb;
         overflow: hidden;
+        transition: box-shadow 0.3s ease;
     }
+    
+    .returns-card:hover {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
     .returns-card .card-header {
-        background: #f8fafc;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         border-bottom: 1px solid #e5e7eb;
         padding: 1rem 1.25rem;
     }
+    
     .return-stat-box {
         text-align: center;
-        padding: 1rem;
+        padding: 1.25rem;
         border-right: 1px solid #e5e7eb;
+        transition: background 0.3s ease;
     }
+    
+    .return-stat-box:hover {
+        background: #f8fafc;
+    }
+    
     .return-stat-box:last-child {
         border-right: none;
     }
+    
     .return-stat-label {
         font-size: 0.7rem;
         text-transform: uppercase;
@@ -185,16 +210,13 @@
         letter-spacing: 0.5px;
         margin-bottom: 0.5rem;
     }
+    
     .return-stat-value {
-        font-size: 1.5rem;
-        font-weight: 700;
+        font-size: 1.75rem;
+        font-weight: 800;
         margin-bottom: 0;
     }
-    .return-stat-unit {
-        font-size: 0.7rem;
-        color: #64748b;
-        margin-left: 0.25rem;
-    }
+    
     .return-stat-sub {
         font-size: 0.7rem;
         margin-top: 0.25rem;
@@ -206,34 +228,54 @@
         }
         
         .stats-card h3 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
         
         .stats-card h6 {
-            font-size: 0.7rem;
-        }
-        
-        .table-header-actions {
-            margin-top: 0.5rem;
-        }
-        
-        .stats-card .card-body {
-            padding: 0.75rem;
+            font-size: 0.65rem;
         }
         
         .return-stat-box {
             border-right: none;
             border-bottom: 1px solid #e5e7eb;
         }
+        
         .return-stat-box:last-child {
             border-bottom: none;
+        }
+        
+        .return-stat-value {
+            font-size: 1.3rem;
         }
     }
     
     @media (max-width: 992px) and (min-width: 769px) {
         .stats-card h3 {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
         }
+    }
+    
+    .btn-group .btn {
+        transition: all 0.2s ease;
+    }
+    
+    .btn-group .btn:hover {
+        transform: translateY(-1px);
+    }
+    
+    .user-avatar-sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    
+    .initial-avatar {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--primary-color), #0350c4);
+        color: white;
+        font-weight: bold;
     }
 </style>
 {% endblock %}
@@ -255,7 +297,7 @@
                     </li>
                 </ol>
             </nav>
-            <h1 class="h3 mb-0">
+            <h1 class="h3 mb-0 fw-bold">
                 <i class="fas fa-shopping-cart me-2 text-primary"></i>
                 Historique des ventes
             </h1>
@@ -288,199 +330,207 @@
         </div>
     </div>
 
-    <!-- Message contact Super Admin -->
-    <a href="{{ path('app_orders_contact_super_admin') }}" class="text-decoration-none">
-        <div class="contact-card">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
-                    <i class="fas fa-chart-line fa-2x me-3 float-start"></i>
-                    <h5 class="mb-1">Analyse approfondie des données</h5>
-                    <p class="mb-0 opacity-75">Pour une analyse détaillée de vos ventes, contactez notre équipe Super Admin</p>
-                </div>
-                <div class="btn btn-light">
-                    <i class="fab fa-whatsapp me-2 text-success"></i> Contacter le support
-                </div>
-            </div>
-        </div>
-    </a>
-
-    <!-- 12 Cartes statistiques -->
+    <!-- 12 Cartes statistiques avec fonds colorés -->
     <div class="row g-3 mb-4">
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card primary-bg shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-primary mb-1" style="font-weight: 600;">Chiffre d'affaires</h6>
-                            <h3 class="mb-0 text-primary" style="font-weight: 700;">{{ stats.total_sales|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class="text-muted">FCFA</small>
+                            <h6 class="mb-1">Chiffre d'affaires</h6>
+                            <h3 class="mb-0">{{ stats.total_sales|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="opacity-75">FCFA</small>
                         </div>
-                        <i class="fas fa-chart-line fa-2x" style="color: #0463f1; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card success-bg shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-success mb-1" style="font-weight: 600;">Nombre de ventes</h6>
-                            <h3 class="mb-0 text-success" style="font-weight: 700;">{{ stats.total_orders|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class="text-muted">commandes</small>
+                            <h6 class="mb-1">Nombre de ventes</h6>
+                            <h3 class="mb-0">{{ stats.total_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="opacity-75">commandes</small>
                         </div>
-                        <i class="fas fa-receipt fa-2x" style="color: #10b981; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2">
+                            <i class="fas fa-receipt fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card info-bg shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-info mb-1" style="font-weight: 600;">Panier moyen</h6>
-                            <h3 class="mb-0 text-info" style="font-weight: 700;">{{ stats.average_basket|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class="text-muted">FCFA/vente</small>
+                            <h6 class="mb-1">Panier moyen</h6>
+                            <h3 class="mb-0">{{ stats.average_basket|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="opacity-75">FCFA/vente</small>
                         </div>
-                        <i class="fas fa-shopping-basket fa-2x" style="color: #3b82f6; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2">
+                            <i class="fas fa-shopping-basket fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card warning-bg shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-warning mb-1" style="font-weight: 600;">Clients uniques</h6>
-                            <h3 class="mb-0 text-warning" style="font-weight: 700;">{{ stats.unique_customers|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class="text-muted">personnes</small>
+                            <h6 class="mb-1">Clients uniques</h6>
+                            <h3 class="mb-0">{{ stats.unique_customers|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="opacity-75">personnes</small>
                         </div>
-                        <i class="fas fa-users fa-2x" style="color: #f59e0b; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card danger-bg shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-danger mb-1" style="font-weight: 600;">Ticket moyen</h6>
-                            <h3 class="mb-0 text-danger" style="font-weight: 700;">{{ stats.average_ticket|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class="text-muted">FCFA/client</small>
+                            <h6 class="mb-1">Ticket moyen</h6>
+                            <h3 class="mb-0">{{ stats.average_ticket|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="opacity-75">FCFA/client</small>
                         </div>
-                        <i class="fas fa-ticket-alt fa-2x" style="color: #ef4444; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2">
+                            <i class="fas fa-ticket-alt fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card secondary-bg shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-secondary mb-1" style="font-weight: 600;">Vente max</h6>
-                            <h3 class="mb-0 text-secondary" style="font-weight: 700;">{{ stats.max_sale|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class="text-muted">FCFA</small>
+                            <h6 class="mb-1">Vente max</h6>
+                            <h3 class="mb-0">{{ stats.max_sale|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="opacity-75">FCFA</small>
                         </div>
-                        <i class="fas fa-arrow-up fa-2x" style="color: #6b7280; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2">
+                            <i class="fas fa-arrow-up fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card" style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%) !important; color: white;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="mb-1" style="font-weight: 600; color: #374151;">Vente min</h6>
-                            <h3 class="mb-0" style="font-weight: 700; color: #374151;">{{ stats.min_sale|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class="text-muted">FCFA</small>
+                            <h6 class="mb-1">Vente min</h6>
+                            <h3 class="mb-0">{{ stats.min_sale|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="opacity-75">FCFA</small>
                         </div>
-                        <i class="fas fa-arrow-down fa-2x" style="color: #6b7280; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2 bg-white bg-opacity-25">
+                            <i class="fas fa-arrow-down fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card cyan-bg shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="mb-1" style="font-weight: 600; color: #0d9488;">Articles vendus</h6>
-                            <h3 class="mb-0" style="font-weight: 700; color: #0d9488;">{{ stats.total_items|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class="text-muted">unités</small>
+                            <h6 class="mb-1">Articles vendus</h6>
+                            <h3 class="mb-0">{{ stats.total_items|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="opacity-75">unités</small>
                         </div>
-                        <i class="fas fa-boxes fa-2x" style="color: #0d9488; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2">
+                            <i class="fas fa-boxes fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card emerald-bg shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="mb-1" style="font-weight: 600; color: #10b981;">Ventes actives</h6>
-                            <h3 class="mb-0" style="font-weight: 700; color: #10b981;">{{ stats.active_orders|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class="text-muted">commandes</small>
+                            <h6 class="mb-1">Ventes actives</h6>
+                            <h3 class="mb-0">{{ stats.active_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="opacity-75">commandes</small>
                         </div>
-                        <i class="fas fa-check-circle fa-2x" style="color: #10b981; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card secondary-bg shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="mb-1" style="font-weight: 600; color: #6b7280;">Ventes désactivées</h6>
-                            <h3 class="mb-0" style="font-weight: 700; color: #6b7280;">{{ stats.disabled_orders|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class="text-muted">commandes</small>
+                            <h6 class="mb-1">Ventes désactivées</h6>
+                            <h3 class="mb-0">{{ stats.disabled_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="opacity-75">commandes</small>
                         </div>
-                        <i class="fas fa-ban fa-2x" style="color: #6b7280; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2">
+                            <i class="fas fa-ban fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card purple-bg shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="mb-1" style="font-weight: 600; color: #8b5cf6;">Taux désactivation</h6>
-                            <h3 class="mb-0" style="font-weight: 700; color: #8b5cf6;">{{ stats.disabled_percentage|default(0)|number_format(1, ',', ' ') }}%</h3>
-                            <small class="text-muted">des ventes</small>
+                            <h6 class="mb-1">Taux désactivation</h6>
+                            <h3 class="mb-0">{{ stats.disabled_percentage|default(0)|number_format(1, ',', ' ') }}%</h3>
+                            <small class="opacity-75">des ventes</small>
                         </div>
-                        <i class="fas fa-chart-pie fa-2x" style="color: #8b5cf6; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2">
+                            <i class="fas fa-chart-pie fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="col-md-3 col-sm-6">
-            <div class="stats-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-start">
+            <div class="stats-card rose-bg shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="mb-1" style="font-weight: 600; color: #f43f5e;">Ventes annulées</h6>
-                            <h3 class="mb-0" style="font-weight: 700; color: #f43f5e;">{{ stats.cancelled_orders|default(0)|number_format(0, ',', ' ') }}</h3>
-                            <small class="text-muted">commandes</small>
+                            <h6 class="mb-1">Ventes annulées</h6>
+                            <h3 class="mb-0">{{ stats.cancelled_orders|default(0)|number_format(0, ',', ' ') }}</h3>
+                            <small class="opacity-75">commandes</small>
                         </div>
-                        <i class="fas fa-times-circle fa-2x" style="color: #f43f5e; opacity: 0.8;"></i>
+                        <div class="stat-icon rounded-circle p-2">
+                            <i class="fas fa-times-circle fa-2x"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -503,10 +553,10 @@
     {% endif %}
 
     <!-- Section Retours & Avoirs -->
-    <div class="returns-section">
+    <div class="mb-4">
         <div class="returns-card">
             <div class="card-header">
-                <h5 class="mb-0">
+                <h5 class="mb-0 fw-semibold">
                     <i class="fas fa-undo-alt me-2 text-warning"></i>
                     Retours & Avoirs
                 </h5>
@@ -594,10 +644,28 @@
         </div>
     </div>
 
+    <!-- Contact Super Admin -->
+    <a href="{{ path('app_orders_contact_super_admin') }}" class="text-decoration-none d-block mb-4">
+        <div class="contact-card">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="fas fa-chart-line fa-3x"></i>
+                    <div>
+                        <h5 class="mb-1">Analyse approfondie des données</h5>
+                        <p class="mb-0 opacity-75">Pour une analyse détaillée de vos ventes, contactez notre équipe Super Admin</p>
+                    </div>
+                </div>
+                <div class="btn btn-light">
+                    <i class="fab fa-whatsapp me-2 text-success"></i> Contacter le support
+                </div>
+            </div>
+        </div>
+    </a>
+
     <!-- Filtres -->
     <div class="filter-section">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0"><i class="fas fa-filter me-2 text-primary"></i> Filtres</h5>
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h5 class="mb-0 fw-semibold"><i class="fas fa-filter me-2 text-primary"></i> Filtres</h5>
             <div class="d-flex gap-2">
                 <a href="{{ path('app_orders_index') }}" class="btn btn-outline-secondary btn-sm">
                     <i class="fas fa-undo me-1"></i> Effacer
@@ -611,12 +679,12 @@
         <form method="get" id="filter-form">
             <div class="row g-3">
                 <div class="col-md-3">
-                    <label class="form-label fw-bold">Recherche</label>
+                    <label class="form-label fw-bold small">Recherche</label>
                     <input type="text" name="search" class="form-control" 
                            placeholder="N° commande, client..." value="{{ filters.search|default('') }}">
                 </div>
                 <div class="col-md-2">
-                    <label class="form-label fw-bold">Statut</label>
+                    <label class="form-label fw-bold small">Statut</label>
                     <select name="status" class="form-select select2-status">
                         <option value="">Tous</option>
                         {% for status in statuses %}
@@ -625,7 +693,7 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label class="form-label fw-bold">Mode de paiement</label>
+                    <label class="form-label fw-bold small">Mode de paiement</label>
                     <select name="payment_method" class="form-select select2-payment">
                         <option value="">Tous</option>
                         {% for method in payment_methods %}
@@ -634,21 +702,18 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fw-bold">Caissier</label>
+                    <label class="form-label fw-bold small">Caissier</label>
                     <select name="user_id" id="user-select" class="form-select select2-user">
                         <option value="">Tous les caissiers</option>
                         {% for user in users %}
                             <option value="{{ user.id }}" {{ filters.user_id == user.id ? 'selected' }}>
-                                {% if user.photo %}
-                                    <img src="{{ asset('uploads/users/' ~ user.photo) }}" class="rounded-circle me-2" style="width: 20px; height: 20px; object-fit: cover;">
-                                {% endif %}
                                 {{ user.fullName|default(user.email) }}
                             </option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label class="form-label fw-bold">Période</label>
+                    <label class="form-label fw-bold small">Période</label>
                     <select name="date_preset" id="date-preset" class="form-select select2-preset">
                         <option value="">Personnalisée</option>
                         {% for key, label in date_presets %}
@@ -660,26 +725,26 @@
 
             <div class="row g-3 mt-2" id="custom-dates" style="display: {{ filters.date_preset ? 'none' : 'flex' }};">
                 <div class="col-md-3">
-                    <label class="form-label fw-bold">Date du</label>
+                    <label class="form-label fw-bold small">Date du</label>
                     <input type="date" name="date_from" class="form-control" value="{{ filters.date_from|default('') }}">
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fw-bold">Date au</label>
+                    <label class="form-label fw-bold small">Date au</label>
                     <input type="date" name="date_to" class="form-control" value="{{ filters.date_to|default('') }}">
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fw-bold">Montant min (FCFA)</label>
+                    <label class="form-label fw-bold small">Montant min (FCFA)</label>
                     <input type="number" name="min_amount" class="form-control" placeholder="Min" value="{{ filters.min_amount|default('') }}">
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fw-bold">Montant max (FCFA)</label>
+                    <label class="form-label fw-bold small">Montant max (FCFA)</label>
                     <input type="number" name="max_amount" class="form-control" placeholder="Max" value="{{ filters.max_amount|default('') }}">
                 </div>
             </div>
 
             <div class="row g-3 mt-2">
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Trier par</label>
+                    <label class="form-label fw-bold small">Trier par</label>
                     <select name="sort" class="form-select">
                         <option value="created_at" {{ filters.sort == 'created_at' ? 'selected' }}>Date de vente</option>
                         <option value="total_amount" {{ filters.sort == 'total_amount' ? 'selected' }}>Montant</option>
@@ -687,7 +752,7 @@
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Ordre</label>
+                    <label class="form-label fw-bold small">Ordre</label>
                     <select name="direction" class="form-select">
                         <option value="desc" {{ filters.direction == 'desc' ? 'selected' }}>Plus récent d'abord</option>
                         <option value="asc" {{ filters.direction == 'asc' ? 'selected' }}>Plus ancien d'abord</option>
@@ -701,8 +766,8 @@
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-white py-3">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <h5 class="mb-0"><i class="fas fa-list me-2"></i> Liste des ventes</h5>
-                <div class="table-header-actions">
+                <h5 class="mb-0 fw-semibold"><i class="fas fa-list me-2"></i> Liste des ventes</h5>
+                <div class="table-header-actions d-flex gap-2 align-items-center flex-wrap">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="selectAllCheckbox">
                         <label class="form-check-label small" for="selectAllCheckbox">Tout cocher</label>
@@ -738,51 +803,50 @@
                         {% for order in orders %}
                             {% set itemCount = order.orderItems|length %}
                             <tr class="table-order-row" data-href="{{ path('app_orders_show', {'id': order.id}) }}">
-                                <td><input type="checkbox" class="form-check-input row-checkbox" data-order-id="{{ order.id }}" data-order-number="{{ order.orderNumber }}"></td>
-                                <td><strong>{{ order.orderNumber }}</strong></td>
-                                <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                                <td><input type="checkbox" class="form-check-input row-checkbox" data-order-id="{{ order.id }}" data-order-number="{{ order.orderNumber }}"></div>
+                                <td><strong>{{ order.orderNumber }}</strong></div>
+                                <td>{{ order.createdAt|date('d/m/Y H:i') }}</div>
                                 <td>
-                                    <div>{{ order.customerName }}</div>
+                                    <div class="fw-semibold">{{ order.customerName }}</div>
                                     {% if order.customerPhone %}
                                         <small class="text-muted"><i class="fas fa-phone me-1"></i>{{ order.customerPhone }}</small>
                                     {% endif %}
-                                  </td>
+                                 </div>
                                 <td>
                                     <span class="badge bg-secondary">{{ itemCount }} article(s)</span>
                                     {% if isRestaurant %}
                                         <br><small class="text-muted">Plats</small>
                                     {% endif %}
-                                  </td>
-                                <td><strong class="text-primary">{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</strong></td>
+                                 </div>
+                                <td><strong class="text-primary">{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</strong></div>
                                 <td>
                                     <span class="badge bg-{{ order.paymentMethod == 'cash' ? 'success' : 'info' }}">
                                         {{ order.paymentMethod|replace({'_': ' '})|capitalize }}
                                     </span>
-                                  </td>
+                                 </div>
                                 <td>
                                     {% if order.isActive %}
                                         <span class="badge badge-status-completed">Active</span>
                                     {% else %}
                                         <span class="badge badge-status-disabled">Désactivée</span>
                                     {% endif %}
-                                  </td>
+                                 </div>
                                 <td>
-                                    <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center gap-2">
                                         {% if order.user.photo %}
                                             <img src="{{ asset('uploads/users/' ~ order.user.photo) }}" 
-                                                 class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                                 class="rounded-circle user-avatar-sm" style="width: 32px; height: 32px; object-fit: cover;">
                                         {% else %}
-                                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" 
-                                                 style="width: 30px; height: 30px; font-size: 12px;">
+                                            <div class="rounded-circle initial-avatar d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
                                                 {{ order.user.fullName|first|upper }}
                                             </div>
                                         {% endif %}
                                         <div>
-                                            <div>{{ order.user.fullName|default(order.user.email) }}</div>
-                                            <small class="text-muted">{{ order.user.roles|first|replace({'ROLE_': ''}) }}</small>
+                                            <div class="small fw-semibold">{{ order.user.fullName|default(order.user.email) }}</div>
+                                            <small class="text-muted">{{ order.user.roleLabel }}</small>
                                         </div>
                                     </div>
-                                  </td>
+                                 </div>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
                                         <a href="{{ path('app_orders_show', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
@@ -794,7 +858,6 @@
                                                 data-print-type="customer" 
                                                 title="Impression rapide">
                                             <i class="fas fa-print"></i>
-                                            <i class="fas fa-bolt fa-xs"></i>
                                         </button>
                                         
                                         <div class="btn-group" role="group">
@@ -846,16 +909,19 @@
                                             </button>
                                         {% endif %}
                                     </div>
-                                </td>
+                                 </div>
                             </tr>
                         {% else %}
                             <tr>
                                 <td colspan="10" class="text-center py-5">
-                                    <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                                    <i class="fas fa-shopping-cart fa-3x text-muted mb-3 opacity-50"></i>
                                     <p class="text-muted mb-0">Aucune vente trouvée</p>
                                     <p class="text-muted small">Modifiez vos filtres pour voir plus de résultats</p>
-                                </td>
-                            </tr>
+                                    <a href="{{ isRestaurant ? path('restaurant_sale_index') : path('retail_sale_index') }}" class="btn btn-primary btn-sm mt-2">
+                                        <i class="fas fa-plus me-1"></i> Créer une vente
+                                    </a>
+                                 </div>
+                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -1215,19 +1281,21 @@ class PrintManager {
 // ==================== INITIALISATION PRINCIPALE ====================
 document.addEventListener('DOMContentLoaded', function() {
     // Initialisation Select2
-    $('.select2-status, .select2-payment, .select2-user, .select2-preset').select2({
-        theme: 'bootstrap-5',
-        language: 'fr',
-        width: '100%'
-    });
+    if (typeof $ !== 'undefined' && $.fn.select2) {
+        $('.select2-status, .select2-payment, .select2-user, .select2-preset').select2({
+            theme: 'bootstrap-5',
+            language: 'fr',
+            width: '100%'
+        });
 
-    $('#user-select').select2({
-        theme: 'bootstrap-5',
-        language: 'fr',
-        placeholder: 'Tous les caissiers',
-        allowClear: true,
-        width: '100%'
-    });
+        $('#user-select').select2({
+            theme: 'bootstrap-5',
+            language: 'fr',
+            placeholder: 'Tous les caissiers',
+            allowClear: true,
+            width: '100%'
+        });
+    }
 
     // Gestion des dates personnalisées
     const datePreset = document.getElementById('date-preset');
@@ -1350,37 +1418,39 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('printReceiptBtn')?.addEventListener('click', function() {
         const printContent = receiptContent.innerHTML;
         const printWindow = window.open('', '_blank', 'width=400,height=600');
-        printWindow.document.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Reçu de vente</title>
-                <meta charset="UTF-8">
-                <style>
-                    body { font-family: monospace; margin: 0; padding: 20px; width: 350px; margin: 0 auto; }
-                    .receipt { text-align: center; }
-                    .receipt-header { margin-bottom: 15px; }
-                    .receipt-header h2 { margin: 0; font-size: 18px; }
-                    .receipt-header p { margin: 5px 0; font-size: 12px; }
-                    .receipt-line { border-top: 1px dashed #000; margin: 10px 0; }
-                    .receipt-items { width: 100%; margin: 10px 0; font-size: 12px; }
-                    .receipt-items th, .receipt-items td { text-align: left; padding: 3px 0; }
-                    .receipt-items td:last-child { text-align: right; }
-                    .receipt-total { font-weight: bold; margin-top: 10px; }
-                    .receipt-footer { margin-top: 15px; font-size: 10px; text-align: center; }
-                    @media print { body { margin: 0; padding: 10px; } .no-print { display: none; } }
-                </style>
-            </head>
-            <body>
-                ${printContent}
-                <div class="receipt-footer no-print">
-                    <button onclick="window.print()" style="margin-top: 20px; padding: 8px 16px;">Imprimer</button>
-                </div>
-                <script>window.print();<\/script>
-            </body>
-            </html>
-        `);
-        printWindow.document.close();
+        if (printWindow) {
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Reçu de vente</title>
+                    <meta charset="UTF-8">
+                    <style>
+                        body { font-family: monospace; margin: 0; padding: 20px; width: 350px; margin: 0 auto; }
+                        .receipt { text-align: center; }
+                        .receipt-header { margin-bottom: 15px; }
+                        .receipt-header h2 { margin: 0; font-size: 18px; }
+                        .receipt-header p { margin: 5px 0; font-size: 12px; }
+                        .receipt-line { border-top: 1px dashed #000; margin: 10px 0; }
+                        .receipt-items { width: 100%; margin: 10px 0; font-size: 12px; }
+                        .receipt-items th, .receipt-items td { text-align: left; padding: 3px 0; }
+                        .receipt-items td:last-child { text-align: right; }
+                        .receipt-total { font-weight: bold; margin-top: 10px; }
+                        .receipt-footer { margin-top: 15px; font-size: 10px; text-align: center; }
+                        @media print { body { margin: 0; padding: 10px; } .no-print { display: none; } }
+                    </style>
+                </head>
+                <body>
+                    ${printContent}
+                    <div class="receipt-footer no-print">
+                        <button onclick="window.print()" style="margin-top: 20px; padding: 8px 16px;">Imprimer</button>
+                    </div>
+                    <script>window.print();<\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
     });
 
     // Toggle (désactiver/activer) une vente
@@ -1403,7 +1473,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 : `Êtes-vous sûr de vouloir réactiver la vente "${orderNumber}" ?`;
             
             toggleOrderForm.action = '/orders/' + orderId + '/toggle';
-            toggleOrderToken.value = '{{ csrf_token("toggle_order") }}'.replace('ID_PLACEHOLDER', orderId);
+            toggleOrderToken.value = '{{ csrf_token("toggle_order") }}';
             toggleOrderBtn.className = isDisable ? 'btn btn-warning' : 'btn btn-success';
             toggleOrderBtn.textContent = isDisable ? 'Désactiver' : 'Activer';
             
@@ -1425,7 +1495,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             deleteOrderNumber.textContent = orderNumber;
             deleteOrderForm.action = '/orders/' + orderId + '/delete';
-            deleteOrderToken.value = '{{ csrf_token("delete_order") }}'.replace('ID_PLACEHOLDER', orderId);
+            deleteOrderToken.value = '{{ csrf_token("delete_order") }}';
             
             deleteModal.show();
         });

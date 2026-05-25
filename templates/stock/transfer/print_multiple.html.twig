@@ -1,0 +1,75 @@
+{# templates/stock/transfer/print_multiple.html.twig #}
+{% extends 'base_print.html.twig' %}
+
+{% block title %}Transferts sélectionnés - HMA Market{% endblock %}
+
+{% block body %}
+<div class="container py-3">
+    <div class="text-center mb-4">
+        <h2>Transferts de stock</h2>
+        <p>Liste des transferts sélectionnés - {{ "now"|date('d/m/Y H:i:s') }}</p>
+        <hr>
+    </div>
+
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>N° transfert</th>
+                <th>Date</th>
+                <th>Produit</th>
+                <th>N° lot</th>
+                <th class="text-end">Quantité</th>
+                <th>Source → Destination</th>
+                <th>Statut</th>
+                <th>Créé par</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transfer in transfers %}
+            <tr>
+                <td class="text-center">{{ loop.index }}</td>
+                <td><strong>{{ transfer.transferNumber }}</strong></td>
+                <td>{{ transfer.createdAt|date('d/m/Y H:i') }}</td>
+                <td>{{ transfer.stockBatch.product.name }}</td>
+                <td><code>{{ transfer.stockBatch.batchNumber }}</code></td>
+                <td class="text-end">{{ transfer.quantity|number_format(0, ',', ' ') }}</td>
+                <td>
+                    {{ transfer.sourceLocation.displayName }}
+                    <i class="fas fa-arrow-right"></i>
+                    {{ transfer.destinationLocation.displayName }}
+                </td>
+                <td>
+                    <span class="badge {{ transfer.statusBadgeClass }}">
+                        {{ transfer.statusLabel }}
+                    </span>
+                </td>
+                <td>{{ transfer.createdBy.fullName ?: transfer.createdBy.email }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="mt-4 text-center">
+        <small class="text-muted">Document généré par HMA Market</small>
+    </div>
+</div>
+
+<style media="print">
+    @page {
+        size: landscape;
+        margin: 1cm;
+    }
+    body {
+        font-size: 10px;
+    }
+    .badge {
+        border: 1px solid #ddd;
+        background: none;
+        color: #333;
+    }
+    .table td, .table th {
+        padding: 4px;
+    }
+</style>
+{% endblock %}

@@ -9,8 +9,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FileUploader
 {
-    private $targetDirectory;
-    private $slugger;
+    private string $targetDirectory;
+    private SluggerInterface $slugger;
 
     public function __construct(string $targetDirectory, SluggerInterface $slugger)
     {
@@ -18,32 +18,68 @@ class FileUploader
         $this->slugger = $slugger;
     }
 
-    public function upload(UploadedFile $file): string
+    /**
+     * Upload d'un fichier
+     * 
+     * @param UploadedFile $file Le fichier à uploader
+     * @param string $subDirectory Sous-dossier optionnel (ex: 'stock_adjustments/123')
+     * @return string Le chemin relatif du fichier uploadé
+     */
+    public function upload(UploadedFile $file, string $subDirectory = ''): string
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
-        $fileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+        $fileName = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
 
-        try {
-            $file->move($this->getTargetDirectory(), $fileName);
-        } catch (FileException $e) {
-            throw new \Exception('Erreur lors de l\'upload du fichier: '.$e->getMessage());
+        // Déterminer le dossier de destination
+        $targetPath = $this->targetDirectory;
+        if (!empty($subDirectory)) {
+            $targetPath .= '/' . ltrim($subDirectory, '/');
         }
 
-        return $fileName;
+        // Créer le dossier s'il n'existe pas
+        if (!is_dir($targetPath)) {
+            mkdir($targetPath, 0777, true);
+        }
+
+        try {
+            $file->move($targetPath, $fileName);
+        } catch (FileException $e) {
+            throw new \Exception('Erreur lors de l\'upload du fichier: ' . $e->getMessage());
+        }
+
+        // Retourner le chemin relatif
+        return empty($subDirectory) ? $fileName : $subDirectory . '/' . $fileName;
     }
 
-    public function remove(string $fileName): bool
+    /**
+     * Supprime un fichier
+     * 
+     * @param string $filePath Chemin relatif du fichier
+     * @return bool
+     */
+    public function remove(string $filePath): bool
     {
-        $filePath = $this->getTargetDirectory().'/'.$fileName;
-        if (file_exists($filePath) && is_file($filePath)) {
-            return unlink($filePath);
+        $fullPath = $this->targetDirectory . '/' . ltrim($filePath, '/');
+        if (file_exists($fullPath) && is_file($fullPath)) {
+            return unlink($fullPath);
         }
         return false;
     }
 
+    /**
+     * Récupère le chemin absolu du dossier cible
+     */
     public function getTargetDirectory(): string
     {
         return $this->targetDirectory;
+    }
+
+    /**
+     * Récupère le chemin absolu pour un sous-dossier
+     */
+    public function getTargetSubDirectory(string $subDirectory): string
+    {
+        return $this->targetDirectory . '/' . ltrim($subDirectory, '/');
     }
 }

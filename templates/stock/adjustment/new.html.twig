@@ -1,0 +1,284 @@
+{# templates/stock/adjustment/new.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel ajustement - HMA Market{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .type-card {
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 2px solid #e9ecef;
+        border-radius: 1rem;
+    }
+    .type-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .type-card.selected {
+        border-color: #0d6efd;
+        background-color: rgba(13, 110, 253, 0.05);
+    }
+    .type-card .card-body {
+        padding: 1rem;
+    }
+    .form-section {
+        background: #f8f9fa;
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+    .form-section-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4 py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
+                            <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_stock_adjustment_index') }}" class="text-decoration-none">
+                            <i class="fas fa-calculator me-1"></i> Ajustements
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">Nouvel ajustement</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0 fw-bold">
+                <i class="fas fa-plus-circle text-primary me-2"></i>
+                Nouvel ajustement de stock
+            </h1>
+            <p class="text-muted mt-2">
+                <i class="fas fa-info-circle me-1"></i>
+                ⚠️ Cette action est irréversible. Un ajustement modifie directement votre stock.
+            </p>
+        </div>
+        <div>
+            <a href="{{ path('app_stock_adjustment_index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Retour
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="fas fa-calculator me-2 text-primary"></i>
+                        Formulaire d'ajustement
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'adjustmentForm'}}) }}
+                    
+                    <!-- ÉTAPE 1 : Type d'ajustement -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-tag me-1"></i> 1. Type d'ajustement
+                        </div>
+                        <div class="mb-3">
+                            <div id="type-buttons" class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="card type-card" data-type="in">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-plus-circle fa-3x text-success mb-2"></i>
+                                            <h5 class="mb-1 fw-bold text-success">Entrée (+) </h5>
+                                            <small class="text-muted">Surplus, don, réception sans commande</small>
+                                            <div class="mt-2">
+                                                <span class="badge bg-success bg-opacity-10 text-success">Augmente le stock</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card type-card" data-type="out">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-minus-circle fa-3x text-danger mb-2"></i>
+                                            <h5 class="mb-1 fw-bold text-danger">Sortie (-)</h5>
+                                            <small class="text-muted">Casse, perte, vol, échantillon</small>
+                                            <div class="mt-2">
+                                                <span class="badge bg-danger bg-opacity-10 text-danger">Diminue le stock</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="type-error text-danger small mt-2" style="display: none;">
+                                <i class="fas fa-exclamation-circle me-1"></i> Veuillez sélectionner un type d'ajustement.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ÉTAPE 2 : Lot concerné -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-boxes me-1"></i> 2. Lot concerné
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.stock_batch, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.stock_batch) }}
+                            {{ form_errors(form.stock_batch) }}
+                            <small class="text-muted">Le stock actuel du lot sera modifié</small>
+                        </div>
+                    </div>
+
+                    <!-- ÉTAPE 3 : Quantité (pleine largeur) -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-hashtag me-1"></i> 3. Quantité
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                {{ form_label(form.quantity, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                {{ form_widget(form.quantity) }}
+                                {{ form_errors(form.quantity) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ÉTAPE 4 : Raison -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-pen me-1"></i> 4. Raison de l'ajustement
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.reason, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.reason) }}
+                            {{ form_errors(form.reason) }}
+                            <small class="text-muted text-danger">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                Cette raison sera conservée dans l'historique et ne pourra pas être modifiée.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- ÉTAPE 5 : Justificatif -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-paperclip me-1"></i> 5. Justificatif (optionnel)
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.justification_file, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.justification_file) }}
+                            {{ form_errors(form.justification_file) }}
+                            <small class="text-muted">Formats acceptés : JPG, PNG, GIF, PDF (max 5Mo)</small>
+                        </div>
+                    </div>
+
+                    <!-- ALERTE IMPORTANTE -->
+                    <div class="alert alert-warning border-0 shadow-sm mt-3">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                            </div>
+                            <div>
+                                <strong class="d-block">⚠️ Action irréversible</strong>
+                                <small>Une fois l'ajustement effectué, il ne pourra pas être modifié ni supprimé. 
+                                Seul un administrateur pourra créer un ajustement inverse si nécessaire.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                        <a href="{{ path('app_stock_adjustment_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-1"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                            <i class="fas fa-save me-1"></i> Effectuer l'ajustement
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Select2 pour le lot
+    $('.select2-batch').select2({
+        theme: 'bootstrap-5',
+        language: 'fr',
+        placeholder: '-- Sélectionner un lot --',
+        allowClear: true,
+        width: '100%'
+    });
+
+    // Gestion du type d'ajustement
+    let selectedType = null;
+    const typeInput = document.createElement('input');
+    typeInput.type = 'hidden';
+    typeInput.name = 'stock_adjustment[type]';
+    document.getElementById('adjustmentForm').appendChild(typeInput);
+
+    const typeCards = document.querySelectorAll('.type-card');
+    const submitBtn = document.getElementById('submitBtn');
+    const typeError = document.querySelector('.type-error');
+
+    typeCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Retirer la sélection de toutes les cartes
+            typeCards.forEach(c => c.classList.remove('selected'));
+            
+            // Sélectionner la carte cliquée
+            this.classList.add('selected');
+            selectedType = this.dataset.type;
+            typeInput.value = selectedType;
+            
+            // Cacher l'erreur
+            typeError.style.display = 'none';
+            
+            // Activer le bouton
+            submitBtn.disabled = false;
+        });
+    });
+
+    // Validation avant soumission
+    document.getElementById('adjustmentForm').addEventListener('submit', function(e) {
+        if (!selectedType) {
+            e.preventDefault();
+            typeError.style.display = 'block';
+            typeError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return false;
+        }
+        
+        // Confirmation supplémentaire
+        const typeLabel = selectedType === 'in' ? 'ENTRÉE (+) ' : 'SORTIE (-)';
+        const message = `⚠️ Attention : Vous allez effectuer un ajustement de type ${typeLabel}.\n\n` +
+                       `Cette action est IRREVERSIBLE et modifie directement votre stock.\n\n` +
+                       `Confirmez-vous cet ajustement ?`;
+        
+        if (!confirm(message)) {
+            e.preventDefault();
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

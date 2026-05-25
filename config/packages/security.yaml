@@ -103,6 +103,21 @@ security:
         # ============================================
         - { path: ^/admin/stock-batch, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER, ROLE_CASHIER] }
 
+        # ============================================
+        # 3.3.GESTION DES STOCKS
+        # ============================================
+        # Ajustements de stock
+        - { path: ^/stock/adjustment, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER] }
+        
+        # Inventaires
+        - { path: ^/stock/inventory, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER] }
+        
+        # Transferts
+        - { path: ^/stock/transfer, roles: [ROLE_ADMIN, ROLE_MANAGER] }
+        
+        # API Stock
+        - { path: ^/api/stock/, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER] }
+
 
         # ============================================
         # 4. ROUTES PAR RÔLE SPÉCIFIQUE

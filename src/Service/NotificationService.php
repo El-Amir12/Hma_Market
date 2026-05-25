@@ -5,6 +5,8 @@ namespace App\Service;
 
 use App\Entity\Purchase;
 use App\Entity\Supplier;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -17,16 +19,15 @@ class NotificationService
         private Environment $twig,
         private LoggerInterface $logger,
         private string $appEmail,
+        private string $appUrl,
         private bool $isLocal,
-        private string $appUrl
+        private EntityManagerInterface $entityManager  // ✅ AJOUT DE L'ENTITY MANAGER
     ) {
     }
 
     /**
      * Envoie la confirmation de commande au fournisseur
      */
-    // src/Service/NotificationService.php
-
     public function sendPurchaseConfirmation(Purchase $purchase, array $options = []): void
     {
         $supplier = $purchase->getSupplier();
@@ -61,9 +62,6 @@ class NotificationService
 
     /**
      * Envoie la confirmation de réception
-     * 
-     * @param Purchase $purchase
-     * @param array $supplierCreditNotes Liste des avoirs créés (optionnel)
      */
     public function sendPurchaseReceivedConfirmation(Purchase $purchase, array $supplierCreditNotes = []): void
     {
@@ -75,14 +73,12 @@ class NotificationService
             return;
         }
         
-        // Calcul du montant total déduit
         $totalDeducted = 0;
         foreach ($supplierCreditNotes as $creditNote) {
             $totalDeducted += (float)$creditNote->getDeclaredAmount();
         }
         $netAmount = (float)$purchase->getTotalAmount() - $totalDeducted;
         
-        // Construction du message WhatsApp
         $message = sprintf(
             "✅ CONFIRMATION DE RÉCEPTION\n\n" .
             "Bonjour %s,\n\n" .
@@ -93,7 +89,6 @@ class NotificationService
             number_format((float) $purchase->getTotalAmount(), 0, ',', ' ')
         );
         
-        // Ajouter les informations sur les problèmes
         if (count($supplierCreditNotes) > 0) {
             $message .= "\n⚠️ PROBLÈMES SIGNALÉS :\n";
             foreach ($supplierCreditNotes as $creditNote) {
@@ -122,7 +117,6 @@ class NotificationService
         
         $this->sendWhatsappMessage($supplier->getPhone(), $message);
         
-        // Envoi de l'email avec le template
         if ($supplier->getEmail()) {
             $this->sendEmail(
                 $supplier->getEmail(),
@@ -159,7 +153,7 @@ class NotificationService
             "Motif : %s\n\n" .
             "Nous vous prions de nous excuser pour ce désagrément.\n\n" .
             "Cordialement,\n%s",
-            $supplier->getName(), // ✅ Utilisation de getName()
+            $supplier->getName(),
             $purchase->getPurchaseNumber(),
             $reason,
             $this->getCompanyName($purchase)
@@ -202,7 +196,6 @@ class NotificationService
     {
         $message = $this->buildWhatsappMessage($purchase, $supplier, $customMessage);
         
-        // En local, on simule l'envoi avec un message dans les logs
         if ($this->isLocal) {
             $this->logger->info('[LOCAL - WHATSAPP] Message à envoyer', [
                 'phone' => $supplier->getPhone(),
@@ -210,11 +203,9 @@ class NotificationService
                 'send_image' => $sendImage
             ]);
         } else {
-            // Production : appeler l'API WhatsApp
             $this->sendWhatsappMessage($supplier->getPhone(), $message);
             
             if ($sendImage) {
-                // Envoyer l'image du produit principal
                 $firstItem = $purchase->getPurchaseItems()->first();
                 if ($firstItem && $firstItem->getProduct()->getImage()) {
                     $this->sendWhatsappImage($supplier->getPhone(), $firstItem->getProduct()->getImage());
@@ -251,7 +242,7 @@ class NotificationService
             "Date : %s\n\n" .
             "🛒 Produits commandés :\n%s\n" .
             "💰 Total : %s FCFA\n\n",
-            $supplier->getName(), // ✅ Utilisation de getName()
+            $supplier->getName(),
             $this->getCompanyName($purchase),
             $purchase->getPurchaseNumber(),
             $dateFormatted,
@@ -328,11 +319,30 @@ class NotificationService
     }
 
     /**
-     * Simule l'envoi WhatsApp (à remplacer par l'API réelle)
+     * Envoie un message simple (non template) par email
+     */
+    public function sendSimpleEmail(string $to, string $subject, string $message): void
+    {
+        try {
+            $email = (new Email())
+                ->from($this->appEmail)
+                ->to($to)
+                ->subject($subject)
+                ->text($message);
+            
+            $this->mailer->send($email);
+            
+            $this->logger->info('Email simple envoyé', ['to' => $to, 'subject' => $subject]);
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur envoi email simple', ['error' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Simule l'envoi WhatsApp
      */
     private function sendWhatsappMessage(string $phone, string $message): void
     {
-        // TODO: Intégrer l'API WhatsApp Business
         $this->logger->info('[WHATSAPP] Message envoyé', [
             'phone' => $phone,
             'message' => $message
@@ -348,5 +358,42 @@ class NotificationService
             'phone' => $phone,
             'image_url' => $imageUrl
         ]);
+    }
+
+    /**
+     * Notifie tous les administrateurs et managers
+     */
+    public function notifyAdminsAndManagers(string $subject, string $message): void
+    {
+        $users = $this->entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->where('u.is_active = true')
+            ->andWhere('u.roles LIKE :adminRole OR u.roles LIKE :managerRole')
+            ->setParameter('adminRole', '%ROLE_ADMIN%')
+            ->setParameter('managerRole', '%ROLE_MANAGER%')
+            ->getQuery()
+            ->getResult();
+        
+        foreach ($users as $user) {
+            $this->sendSimpleEmail($user->getEmail(), $subject, $message);
+        }
+    }
+
+    /**
+     * Notifie uniquement les managers
+     */
+    public function notifyManagers(string $subject, string $message): void
+    {
+        $users = $this->entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->where('u.is_active = true')
+            ->andWhere('u.roles LIKE :managerRole')
+            ->setParameter('managerRole', '%ROLE_MANAGER%')
+            ->getQuery()
+            ->getResult();
+        
+        foreach ($users as $user) {
+            $this->sendSimpleEmail($user->getEmail(), $subject, $message);
+        }
     }
 }

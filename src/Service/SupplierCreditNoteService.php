@@ -7,6 +7,7 @@ use App\Entity\HmaService;
 use App\Entity\Product;
 use App\Entity\Purchase;
 use App\Entity\StockBatch;
+use App\Entity\StockMovement;
 use App\Entity\Supplier;
 use App\Entity\SupplierCreditNote;
 use App\Entity\SupplierCreditNoteHistory;
@@ -57,7 +58,6 @@ class SupplierCreditNoteService
         $year = $date->format('Y');
         $month = $date->format('m');
         
-        // Correction : Utiliser une requête avec BETWEEN au lieu de YEAR()
         $startDate = new \DateTime($year . '-01-01 00:00:00');
         $endDate = new \DateTime($year . '-12-31 23:59:59');
         
@@ -76,6 +76,10 @@ class SupplierCreditNoteService
         
         return sprintf('AVR-%s%s-%s', $year, $month, $sequence);
     }
+
+    /**
+     * Crée un avoir fournisseur
+     */
     public function createCreditNote(
         StockBatch $stockBatch,
         Purchase $purchase,
@@ -90,7 +94,6 @@ class SupplierCreditNoteService
         ?int $affectedQuantity = null,
         ?string $stockAction = null
     ): SupplierCreditNote {
-        // 🔥 IMPORTANT: Récupérer une instance gérée par Doctrine
         $managedUser = $this->entityManager->getRepository(User::class)->find($reportedBy->getId());
         if (!$managedUser) {
             throw new \Exception('Utilisateur non trouvé');
@@ -107,7 +110,7 @@ class SupplierCreditNoteService
         $creditNote->setPriority($priority);
         $creditNote->setStatus(SupplierCreditNote::STATUS_PENDING);
         $creditNote->setAttachments($attachments);
-        $creditNote->setReportedBy($managedUser); // Utiliser l'instance gérée
+        $creditNote->setReportedBy($managedUser);
         $creditNote->setReportedAt(new \DateTimeImmutable());
         $creditNote->setHmaService($hmaService);
         $creditNote->setAffectedQuantity($affectedQuantity);
@@ -253,7 +256,6 @@ class SupplierCreditNoteService
             case 'accept_full':
                 $creditNote->setStatus(SupplierCreditNote::STATUS_RECOVERED);
                 $creditNote->setRecoveredAmount($creditNote->getDeclaredAmount());
-                // 🔥 CORRECTION: Appliquer l'action sur le stock uniquement si recommandée
                 if ($creditNote->getStockAction() !== self::STOCK_ACTION_NONE) {
                     $stockActionResult = $this->applyStockAction($creditNote, null);
                 }
@@ -265,7 +267,6 @@ class SupplierCreditNoteService
                     $lost = (float)$creditNote->getDeclaredAmount() - $proposedAmount;
                     $creditNote->setLostAmount((string)$lost);
                     
-                    // 🔥 Pour une acceptation partielle, recalculer la quantité concernée
                     if ($creditNote->getStockAction() !== self::STOCK_ACTION_NONE && $creditNote->getAffectedQuantity()) {
                         $originalAmount = (float)$creditNote->getDeclaredAmount();
                         $originalQuantity = $creditNote->getAffectedQuantity();
@@ -277,8 +278,6 @@ class SupplierCreditNoteService
                 break;
             case 'refuse':
                 $creditNote->setStatus(SupplierCreditNote::STATUS_REFUSED);
-                // 🔥 CORRECTION: Refusé → ON NE CHANGE PAS LE STOCK
-                // L'entreprise garde les produits mais perd l'argent
                 $this->logger->info('Avoir refusé par le fournisseur, stock inchangé', [
                     'credit_note_id' => $creditNote->getId()
                 ]);
@@ -364,7 +363,6 @@ class SupplierCreditNoteService
      */
     public function applyStockAction(SupplierCreditNote $creditNote, ?User $performedBy): ?string
     {
-        // Si déjà appliquée, ne rien faire
         if ($creditNote->getStockActionApplied()) {
             return "ℹ️ Action déjà appliquée précédemment.";
         }
@@ -391,17 +389,15 @@ class SupplierCreditNoteService
         switch ($stockAction) {
             case self::STOCK_ACTION_REDUCE:
                 if ($affectedQuantity && $affectedQuantity > 0) {
-                    // 🔥 CORRECTION: Ne pas réduire plus que ce qui existe
                     $quantityToReduce = min($affectedQuantity, $currentQuantity);
                     $newQuantity = $currentQuantity - $quantityToReduce;
                     
                     $stockBatch->setCurrentQuantity($newQuantity);
                     
-                    // Mettre à jour le stock produit
                     $currentProductStock = $product->getStockQuantity() ?? 0;
                     $product->setStockQuantity($currentProductStock - $quantityToReduce);
                     
-                    $this->createStockMovement($creditNote, $performedBy, $quantityToReduce, $currentQuantity, $newQuantity);
+                    $this->createStockMovement($creditNote, $performedBy, $quantityToReduce, $currentQuantity, $newQuantity, false);
                     $creditNote->setStockActionApplied(true);
                     
                     $this->logger->info('Stock réduit avec succès', [
@@ -421,7 +417,7 @@ class SupplierCreditNoteService
                     $product->setStockQuantity(max(0, ($product->getStockQuantity() ?? 0) - $currentQuantity));
                     $stockBatch->setIsActive(false);
                     
-                    $this->createStockMovement($creditNote, $performedBy, $currentQuantity, $currentQuantity, 0);
+                    $this->createStockMovement($creditNote, $performedBy, $currentQuantity, $currentQuantity, 0, false);
                     $creditNote->setStockActionApplied(true);
                     
                     $this->logger->info('Stock mis à zéro', [
@@ -466,28 +462,32 @@ class SupplierCreditNoteService
         int $newQuantity,
         bool $isReturn = false
     ): void {
-        $movement = new \App\Entity\StockMovement();
-        $movement->setMovementType($isReturn ? 'SUPPLIER_RETURN' : 'ADJUSTMENT');
+        $movement = new StockMovement();
+        
+        // ✅ CORRECTION : Utiliser les bonnes valeurs pour movement_type
+        if ($isReturn) {
+            $movement->setMovementType('return_out');
+        } else {
+            $movement->setMovementType('adjustment_out');
+        }
+        
         $movement->setQuantity($quantity);
         $movement->setUnitPrice($creditNote->getStockBatch()->getUnitPrice());
         $movement->setProduct($creditNote->getStockBatch()->getProduct());
         $movement->setStockBatch($creditNote->getStockBatch());
         
-        // 🔥 CORRECTION : Si performedBy est null, on utilise l'utilisateur qui a signalé
+        // Gestion de l'utilisateur
         if ($performedBy) {
             $managedUser = $this->entityManager->getRepository(User::class)->find($performedBy->getId());
             $movement->setUser($managedUser);
         } else {
-            // Utiliser l'utilisateur qui a signalé le problème (reported_by)
             $reportedBy = $creditNote->getReportedBy();
             if ($reportedBy) {
                 $managedUser = $this->entityManager->getRepository(User::class)->find($reportedBy->getId());
                 $movement->setUser($managedUser);
             } else {
-                // Fallback: chercher un utilisateur système
                 $systemUser = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'system@hma-market.com']);
                 if (!$systemUser) {
-                    // Récupérer le premier admin
                     $systemUser = $this->entityManager->getRepository(User::class)->findOneBy(['roles' => '["ROLE_ADMIN"]']);
                 }
                 $movement->setUser($systemUser);
@@ -532,9 +532,7 @@ class SupplierCreditNoteService
                 $history->setPerformedByName($managedUser->getFullName() ?: $managedUser->getUserIdentifier());
             }
         } else {
-            // Pour les réponses fournisseur, on ne met pas d'utilisateur
             $history->setPerformedBy(null);
-            // Optionnel: mettre le nom du fournisseur
             $history->setPerformedByName($creditNote->getSupplier()->getName() . ' (Fournisseur)');
         }
         
@@ -544,6 +542,7 @@ class SupplierCreditNoteService
         $this->entityManager->persist($history);
         $this->entityManager->flush();
     }
+    
     /**
      * Récupère les statistiques des avoirs
      */

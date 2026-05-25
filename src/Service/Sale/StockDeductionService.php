@@ -29,7 +29,6 @@ class StockDeductionService
     {
         $needsUpdate = false;
         
-        // Vérifier si la quantité est à 0
         if ($batch->getCurrentQuantity() <= 0) {
             $batch->setIsActive(false);
             $needsUpdate = true;
@@ -39,7 +38,6 @@ class StockDeductionService
             ]);
         }
         
-        // Vérifier si la date d'expiration est dépassée
         if ($batch->getExpiryDate() && $batch->getExpiryDate() < new \DateTime()) {
             $batch->setIsActive(false);
             $needsUpdate = true;
@@ -93,24 +91,28 @@ class StockDeductionService
 
     /**
      * Déduit la quantité d'un produit du stock (méthode FIFO)
-     * Si aucun lot n'est disponible, déduit directement du stock du produit
      * 
      * @return array Les lots utilisés avec les quantités déduites
      */
-    public function deductProductStock(Product $product, float $quantity, Order $order, User $user): array
-    {
+    public function deductProductStock(
+        Product $product,
+        float $quantity,
+        Order $order,
+        User $user,
+        ?int $referenceId = null
+    ): array {
         $this->logger->info('=== DÉBUT DÉDUCTION STOCK ===', [
             'product_id' => $product->getId(),
             'product_name' => $product->getName(),
             'product_stock' => $product->getStockQuantity(),
             'product_unit' => $product->getUnit(),
-            'quantity_requested' => $quantity
+            'quantity_requested' => $quantity,
+            'order_id' => $order->getId(),
+            'reference_id' => $referenceId
         ]);
 
-        // Désactiver d'abord les lots expirés
         $this->deactivateExpiredBatches($product);
         
-        // Récupérer les lots disponibles triés par FIFO
         $availableBatches = $this->getAvailableBatches($product);
         
         $this->logger->info('Lots disponibles', [
@@ -121,6 +123,7 @@ class StockDeductionService
         $remainingQuantity = $quantity;
         $usedBatches = [];
         $totalDeductedFromBatches = 0;
+        $finalReferenceId = $referenceId ?? $order->getId();
         
         // 1. D'abord, essayer de déduire des lots existants
         foreach ($availableBatches as $batch) {
@@ -139,13 +142,12 @@ class StockDeductionService
             $newQuantity = $availableQty - $quantityToTake;
             $batch->setCurrentQuantity($newQuantity);
             
-            // Vérifier si le lot doit être désactivé
             $this->updateBatchStatus($batch);
             
             $batch->setUpdatedAt(new \DateTimeImmutable());
             $this->entityManager->persist($batch);
             
-            // Enregistrer le mouvement de stock avec lot
+            // ✅ CORRECTION : Utilisation de 'sale_out' au lieu de 'SALE'
             $movement = $this->createStockMovement(
                 $product,
                 $batch,
@@ -153,7 +155,8 @@ class StockDeductionService
                 $batch->getUnitPrice(),
                 $order,
                 $user,
-                'SALE'
+                'sale_out',
+                $finalReferenceId
             );
             $this->entityManager->persist($movement);
             
@@ -161,7 +164,8 @@ class StockDeductionService
                 'batch' => $batch,
                 'quantity' => $quantityToTake,
                 'unit_price' => $batch->getUnitPrice(),
-                'total_price' => $quantityToTake * (float) $batch->getUnitPrice()
+                'total_price' => $quantityToTake * (float) $batch->getUnitPrice(),
+                'movement' => $movement
             ];
             
             $remainingQuantity -= $quantityToTake;
@@ -171,12 +175,12 @@ class StockDeductionService
                 'batch_id' => $batch->getId(),
                 'batch_number' => $batch->getBatchNumber(),
                 'taken' => $quantityToTake,
-                'remaining' => $remainingQuantity
+                'remaining' => $remainingQuantity,
+                'movement_id' => $movement->getId()
             ]);
         }
         
-        // 2. Si la quantité n'est pas entièrement satisfaite par les lots,
-        //    déduire directement du stock du produit (fallback)
+        // 2. Fallback : déduction directe du stock produit
         if ($remainingQuantity > 0) {
             $productStock = $product->getStockQuantity();
             
@@ -186,7 +190,6 @@ class StockDeductionService
                 'already_deducted_from_batches' => $totalDeductedFromBatches
             ]);
             
-            // Vérifier que le stock du produit est suffisant
             if ($productStock < $remainingQuantity) {
                 $this->logger->error('Stock total insuffisant', [
                     'product_id' => $product->getId(),
@@ -208,14 +211,15 @@ class StockDeductionService
                 ));
             }
             
-            // Créer un mouvement de stock sans lot (fallback)
+            // ✅ CORRECTION : Utilisation de 'sale_out' au lieu de 'SALE'
             $movement = $this->createStockMovementWithoutBatch(
                 $product,
                 (int) $remainingQuantity,
                 $product->getPurchasePrice(),
                 $order,
                 $user,
-                'SALE'
+                'sale_out',
+                $finalReferenceId
             );
             $this->entityManager->persist($movement);
             
@@ -224,13 +228,15 @@ class StockDeductionService
                 'quantity' => $remainingQuantity,
                 'unit_price' => $product->getPurchasePrice(),
                 'total_price' => $remainingQuantity * (float) $product->getPurchasePrice(),
-                'note' => 'Déduction directe du stock (aucun lot disponible ou stock lot insuffisant)'
+                'movement' => $movement,
+                'note' => 'Déduction directe du stock (aucun lot disponible)'
             ];
             
             $this->logger->warning('Déduction directe du stock produit (fallback)', [
                 'product_id' => $product->getId(),
                 'quantity_deducted' => $remainingQuantity,
-                'unit_price' => $product->getPurchasePrice()
+                'unit_price' => $product->getPurchasePrice(),
+                'movement_id' => $movement->getId()
             ]);
         }
         
@@ -248,7 +254,8 @@ class StockDeductionService
             'from_batches' => $totalDeductedFromBatches,
             'from_direct' => $quantity - $totalDeductedFromBatches,
             'new_product_stock' => $newProductStock,
-            'batches_used' => count($usedBatches)
+            'batches_used' => count($usedBatches),
+            'reference_id' => $finalReferenceId
         ]);
         
         return $usedBatches;
@@ -256,8 +263,6 @@ class StockDeductionService
     
     /**
      * Récupère les lots disponibles triés par FIFO
-     * - Pour les produits périssables : tri par date d'expiration (plus proche d'abord)
-     * - Pour les produits non périssables : tri par date de création (plus ancien d'abord)
      */
     private function getAvailableBatches(Product $product): array
     {
@@ -274,7 +279,6 @@ class StockDeductionService
             ->getResult();
         
         if ($product->hasExpiryDate()) {
-            // Pour périssables : tri par date d'expiration (plus proche d'abord)
             usort($batches, function($a, $b) {
                 $dateA = $a->getExpiryDate();
                 $dateB = $b->getExpiryDate();
@@ -286,7 +290,6 @@ class StockDeductionService
                 return $dateA <=> $dateB;
             });
         } else {
-            // Pour non périssables : tri par date de création (plus ancien d'abord)
             usort($batches, fn($a, $b) => $a->getCreatedAt() <=> $b->getCreatedAt());
         }
         
@@ -303,7 +306,8 @@ class StockDeductionService
         string $unitPrice,
         Order $order,
         User $user,
-        string $type
+        string $type,
+        int $referenceId
     ): StockMovement {
         $movement = new StockMovement();
         $movement->setMovementType($type);
@@ -314,14 +318,14 @@ class StockDeductionService
         $movement->setUser($user);
         $movement->setHmaService($product->getHmaService());
         $movement->setCreatedAt(new \DateTime());
-        $movement->setReferenceId($order->getId());
-        $movement->setNotes(sprintf('Vente #%s', $order->getOrderNumber()));
+        $movement->setReferenceId($referenceId);
+        $movement->setNotes(sprintf('Vente #%s (lot: %s)', $order->getOrderNumber(), $batch->getBatchNumber()));
         
         return $movement;
     }
     
     /**
-     * Crée un mouvement de stock sans lot (fallback quand aucun lot n'est disponible)
+     * Crée un mouvement de stock sans lot (fallback)
      */
     private function createStockMovementWithoutBatch(
         Product $product,
@@ -329,26 +333,26 @@ class StockDeductionService
         string $unitPrice,
         Order $order,
         User $user,
-        string $type
+        string $type,
+        int $referenceId
     ): StockMovement {
         $movement = new StockMovement();
         $movement->setMovementType($type);
         $movement->setQuantity($quantity);
         $movement->setUnitPrice($unitPrice);
         $movement->setProduct($product);
-        $movement->setStockBatch(null); // Pas de lot associé
+        $movement->setStockBatch(null);
         $movement->setUser($user);
         $movement->setHmaService($product->getHmaService());
         $movement->setCreatedAt(new \DateTime());
-        $movement->setReferenceId($order->getId());
-        $movement->setNotes(sprintf('Vente #%s (déduction directe - aucun lot disponible)', $order->getOrderNumber()));
+        $movement->setReferenceId($referenceId);
+        $movement->setNotes(sprintf('Vente #%s (déduction directe)', $order->getOrderNumber()));
         
         return $movement;
     }
     
     /**
-     * Commande exécutée périodiquement pour désactiver tous les lots expirés
-     * (À appeler via une commande Cron par exemple)
+     * Désactive tous les lots expirés (commande CRON)
      */
     public function deactivateAllExpiredBatches(): int
     {

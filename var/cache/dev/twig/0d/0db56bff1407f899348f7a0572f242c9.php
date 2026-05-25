@@ -728,11 +728,13 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
             $context['_seq'] = CoreExtension::ensureTraversable((isset($context["suppliers"]) || array_key_exists("suppliers", $context) ? $context["suppliers"] : (function () { throw new RuntimeError('Variable "suppliers" does not exist.', 518, $this->source); })()));
             foreach ($context['_seq'] as $context["_key"] => $context["supplier"]) {
                 // line 519
-                yield "                                        <option value=\"";
+                yield "                                       <option value=\"";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "id", [], "any", false, false, false, 519), "html", null, true);
                 yield "\">";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "name", [], "any", false, false, false, 519), "html", null, true);
-                yield "</option>
+                yield " (";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "email", [], "any", false, false, false, 519), "html", null, true);
+                yield ")</option>
                                     ";
             }
             $_parent = $context['_parent'];
@@ -1407,7 +1409,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  858 => 591,  854 => 590,  850 => 589,  846 => 588,  842 => 587,  838 => 586,  831 => 582,  818 => 581,  803 => 575,  796 => 570,  794 => 569,  789 => 566,  742 => 521,  731 => 519,  727 => 518,  719 => 512,  711 => 506,  709 => 505,  587 => 386,  582 => 383,  578 => 381,  565 => 374,  559 => 371,  555 => 370,  551 => 369,  547 => 368,  541 => 365,  537 => 364,  531 => 361,  526 => 358,  522 => 356,  519 => 355,  513 => 353,  511 => 352,  507 => 351,  502 => 349,  495 => 346,  487 => 344,  485 => 343,  479 => 341,  475 => 340,  472 => 339,  462 => 331,  460 => 330,  454 => 327,  415 => 293,  409 => 290,  400 => 283,  387 => 282,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  860 => 591,  856 => 590,  852 => 589,  848 => 588,  844 => 587,  840 => 586,  833 => 582,  820 => 581,  805 => 575,  798 => 570,  796 => 569,  791 => 566,  744 => 521,  731 => 519,  727 => 518,  719 => 512,  711 => 506,  709 => 505,  587 => 386,  582 => 383,  578 => 381,  565 => 374,  559 => 371,  555 => 370,  551 => 369,  547 => 368,  541 => 365,  537 => 364,  531 => 361,  526 => 358,  522 => 356,  519 => 355,  513 => 353,  511 => 352,  507 => 351,  502 => 349,  495 => 346,  487 => 344,  485 => 343,  479 => 341,  475 => 340,  472 => 339,  462 => 331,  460 => 330,  454 => 327,  415 => 293,  409 => 290,  400 => 283,  387 => 282,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1930,7 +1932,7 @@ class __TwigTemplate_3b0ff0d2f74aeddcd27f6b69e715f8c6 extends Template
                                 <select name=\"supplier_id\" id=\"supplierSelect\" class=\"form-select\" required>
                                     <option value=\"\">Sélectionner un fournisseur</option>
                                     {% for supplier in suppliers %}
-                                        <option value=\"{{ supplier.id }}\">{{ supplier.name }}</option>
+                                       <option value=\"{{ supplier.id }}\">{{ supplier.name }} ({{ supplier.email }})</option>
                                     {% endfor %}
                                 </select>
                             </div>

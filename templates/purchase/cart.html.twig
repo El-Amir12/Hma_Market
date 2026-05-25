@@ -516,7 +516,7 @@
                                 <select name="supplier_id" id="supplierSelect" class="form-select" required>
                                     <option value="">Sélectionner un fournisseur</option>
                                     {% for supplier in suppliers %}
-                                        <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                                       <option value="{{ supplier.id }}">{{ supplier.name }} ({{ supplier.email }})</option>
                                     {% endfor %}
                                 </select>
                             </div>

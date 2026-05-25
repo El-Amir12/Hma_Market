@@ -99,7 +99,7 @@ class MenuBuilder
     }
 
     /**
-     * ✅ NOUVEAU : Menu VENTES dropdown avec sous-menus
+     * Menu VENTES dropdown avec sous-menus
      */
     private function getSalesMenu(): array
     {
@@ -132,6 +132,64 @@ class MenuBuilder
             'label' => 'Ventes',
             'icon' => 'fas fa-shopping-cart',
             'children' => $salesChildren
+        ];
+    }
+
+    /**
+     * ✅ NOUVEAU MENU : Gestion des stocks (Ajustements, Transferts, Inventaires)
+     */
+    private function getStockManagementMenu(): array
+    {
+        $children = [
+            [
+                'type' => 'link',
+                'route' => 'app_stock_adjustment_index',
+                'label' => 'Ajustements de stock',
+                'icon' => 'fas fa-calculator'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_stock_transfer_index',
+                'label' => 'Transferts de stock',
+                'icon' => 'fas fa-exchange-alt'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_stock_inventory_index',
+                'label' => 'Inventaires',
+                'icon' => 'fas fa-clipboard-list'
+            ],
+            [
+                'type' => 'divider'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_stock_batch_all',
+                'label' => 'Gestion des lots',
+                'icon' => 'fas fa-cubes'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_stock_movement_index',
+                'label' => 'Mouvements de stock',
+                'icon' => 'fas fa-history'
+            ],
+            [
+                'type' => 'divider'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_stock_adjustment_index',
+                'label' => '📊 Statistiques stock',
+                'icon' => 'fas fa-chart-pie'
+            ]
+        ];
+        
+        return [
+            'type' => 'dropdown',
+            'label' => 'Gestion des stocks',
+            'icon' => 'fas fa-boxes',
+            'children' => $children
         ];
     }
 
@@ -321,7 +379,7 @@ class MenuBuilder
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_admin_supplier_new', 
+                        'route' => 'app_admin_stock_movement_index', 
                         'label' => 'Mouvement du stock',
                         'icon' => 'fas fa-exchange-alt',
                         'coming_soon' => false
@@ -350,6 +408,9 @@ class MenuBuilder
             'label' => 'VENTES'
         ];
         $menu[] = $this->getSalesMenu();
+
+        // ✅ NOUVEAU MENU GESTION DES STOCKS
+        $menu[] = $this->getStockManagementMenu();
 
         // Section Catalogue (produits)
         $catalogueChildren = [
@@ -485,6 +546,9 @@ class MenuBuilder
         ];
         $menu[] = $this->getSalesMenu();
 
+        // ✅ NOUVEAU MENU GESTION DES STOCKS
+        $menu[] = $this->getStockManagementMenu();
+
         $produitsChildren = [
             [
                 'type' => 'link',
@@ -516,7 +580,7 @@ class MenuBuilder
             ],
             [
                 'type' => 'link',
-                'route' => 'app_admin_supplier_new', 
+                'route' => 'app_admin_stock_movement_index', 
                 'label' => 'Mouvement du stock',
                 'icon' => 'fas fa-exchange-alt',
                 'coming_soon' => false
@@ -638,27 +702,8 @@ class MenuBuilder
                 'icon' => 'fas fa-chart-pie',
                 'coming_soon' => false
             ],
-            [
-                'type' => 'dropdown',
-                'label' => 'Gestion stock',
-                'icon' => 'fas fa-boxes',
-                'children' => [
-                    [
-                        'type' => 'link',
-                        'route' => 'app_user_index',
-                        'label' => 'Inventaire',
-                        'icon' => 'fas fa-list-check',
-                        'coming_soon' => true
-                    ],
-                    [
-                        'type' => 'link',
-                        'route' => 'app_user_index',
-                        'label' => 'Alertes stock',
-                        'icon' => 'fas fa-exclamation-triangle',
-                        'coming_soon' => true
-                    ]
-                ]
-            ],
+            // ✅ NOUVEAU MENU GESTION DES STOCKS
+            $this->getStockManagementMenu(),
             [
                 'type' => 'dropdown',
                 'label' => 'Approvisionnement',
@@ -673,7 +718,7 @@ class MenuBuilder
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_admin_supplier_new',
+                        'route' => 'app_admin_stock_movement_index',
                         'label' => 'Mouvement du stock',
                         'icon' => 'fas fa-exchange-alt',
                         'coming_soon' => false

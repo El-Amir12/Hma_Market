@@ -1,0 +1,188 @@
+{# templates/admin/stock_movement/export_pdf.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport des mouvements de stock</title>
+    <style>
+        body {
+            font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif;
+            font-size: 10px;
+            line-height: 1.4;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2E86C1;
+            padding-bottom: 10px;
+        }
+        .header h1 {
+            color: #2E86C1;
+            margin: 0;
+            font-size: 18px;
+        }
+        .header .company {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            background-color: #E8F4FD;
+            padding: 8px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid #2E86C1;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .info-item {
+            border-bottom: 1px solid #eee;
+            padding: 4px 0;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 9px;
+            text-transform: uppercase;
+        }
+        .info-value {
+            font-size: 11px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px 4px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #2E86C1;
+            color: white;
+            font-weight: bold;
+            font-size: 9px;
+        }
+        .badge-in {
+            background-color: #28a745;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 8px;
+            display: inline-block;
+        }
+        .badge-out {
+            background-color: #dc3545;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 8px;
+            display: inline-block;
+        }
+        .text-success { color: #28a745; }
+        .text-danger { color: #dc3545; }
+        .text-end { text-align: right; }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 8px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>RAPPORT DES MOUVEMENTS DE STOCK</h1>
+        <div class="company">{{ hmaService.companyName }}</div>
+        <div>Généré le {{ exportDate|date('d/m/Y H:i:s') }}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">INFORMATIONS GÉNÉRALES</div>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Exporté par</div>
+                <div class="info-value">{{ userName }} ({{ userEmail }})</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Période</div>
+                <div class="info-value">
+                    Du {{ filters.date_from ?: 'Début' }} au {{ filters.date_to ?: 'Aujourd\'hui' }}
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Type de mouvement</div>
+                <div class="info-value">{{ filters.movement_type ? movementTypes[filters.movement_type] : 'Tous' }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Statistiques</div>
+                <div class="info-value">
+                    Total: {{ movements|length }} mouvements |
+                    Entrées: {{ totalIn }} |
+                    Sorties: {{ totalOut }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">LISTE DES MOUVEMENTS</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Produit</th>
+                    <th>N° lot</th>
+                    <th class="text-end">Qté</th>
+                    <th>Anc. stock</th>
+                    <th>Nouv. stock</th>
+                    <th>Utilisateur</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movement in movements %}
+                    {% set isIn = movement.movementType in ['in', 'purchase_in', 'adjustment_in', 'return_in'] %}
+                    <tr>
+                        <td>{{ movement.createdAt|date('d/m/Y H:i') }}</td>
+                        <td>
+                            <span class="{{ isIn ? 'badge-in' : 'badge-out' }}">
+                                {{ movement.movementTypeLabel }}
+                            </span>
+                        </td>
+                        <td>{{ movement.stockBatch.product.name|u.truncate(35) }}</td>
+                        <td>{{ movement.stockBatch.batchNumber }}</td>
+                        <td class="text-end {{ isIn ? 'text-success' : 'text-danger' }}">
+                            {{ isIn ? '+' : '-' }}{{ movement.quantity|number_format(0, ',', ' ') }}
+                        </td>
+                        <td>{{ movement.oldQuantity|number_format(0, ',', ' ') }}</td>
+                        <td>{{ movement.newQuantity|number_format(0, ',', ' ') }}</td>
+                        <td>{{ movement.user.fullName ?: movement.user.email }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" style="text-align: center;">Aucun mouvement trouvé</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        Document généré par HMA Market - {{ exportDate|date('d/m/Y H:i:s') }}
+    </div>
+</body>
+</html>
