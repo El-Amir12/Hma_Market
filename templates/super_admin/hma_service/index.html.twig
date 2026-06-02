@@ -6,45 +6,94 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    /* Variables */
     :root {
-        --primary: #667eea;
+        --primary: #0463f1;
+        --primary-dark: #0350c4;
         --secondary: #764ba2;
-        --success: #28a745;
-        --danger: #dc3545;
-        --warning: #ffc107;
-        --info: #17a2b8;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --info: #0ea5e9;
     }
 
-    /* Styles pour les cartes de statistiques */
+    /* Cartes statistiques */
     .stat-card {
-        transition: transform 0.2s;
-        cursor: pointer;
-        border-left: 4px solid transparent;
-        border-radius: 12px;
+        transition: all 0.3s ease;
+        border-radius: 1rem;
         overflow: hidden;
+        cursor: pointer;
+        color: white;
     }
     .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
     }
-    .stat-card.total { border-left-color: var(--primary); }
-    .stat-card.active { border-left-color: var(--success); }
-    .stat-card.inactive { border-left-color: var(--danger); }
-    .stat-card.trial { border-left-color: var(--warning); }
-    
-    /* Styles pour les logos */
+    .stat-card .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+    .stat-card .stat-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.8;
+    }
+    .stat-card .stat-icon {
+        opacity: 0.2;
+        transition: opacity 0.3s;
+    }
+    .stat-card:hover .stat-icon {
+        opacity: 0.3;
+    }
+    .stat-card.bg-primary { background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%); }
+    .stat-card.bg-success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .stat-card.bg-danger { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+    .stat-card.bg-warning { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+
+    /* Table scrollable */
+    .table-responsive-scroll {
+        max-height: 60vh;
+        overflow-y: auto;
+        border-radius: 0.75rem;
+        scrollbar-width: thin;
+    }
+    .table-responsive-scroll::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    .table-responsive-scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    .table-responsive-scroll::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 10px;
+    }
+    .table-responsive-scroll::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+    .table thead th {
+        position: sticky;
+        top: 0;
+        background: #f8fafc;
+        z-index: 10;
+        border-bottom: 2px solid #e2e8f0;
+        white-space: nowrap;
+    }
+
+    /* Company logo */
     .company-logo {
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
         object-fit: cover;
-        border-radius: 8px;
+        border-radius: 10px;
     }
     .company-initials {
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        width: 45px;
+        height: 45px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
         color: white;
         display: flex;
         align-items: center;
@@ -52,160 +101,88 @@
         font-weight: bold;
         font-size: 1.2rem;
     }
-    
-    /* Badges de filtre */
+
+    /* Badges */
+    .plan-badge {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 2rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .plan-trial { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+    .plan-freemium { background: linear-gradient(135deg, #6c757d, #5a6268); color: white; }
+    .plan-basic { background: linear-gradient(135deg, #0463f1, #0350c4); color: white; }
+    .plan-premium { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
+
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 2rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .status-active { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+    .status-inactive { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+    .status-trial { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+
+    .role-badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
+    .role-admin { background: #dc2626; color: white; }
+    .role-manager { background: #0463f1; color: white; }
+    .role-stock { background: #f59e0b; color: #1e293b; }
+    .role-cashier { background: #10b981; color: white; }
+
+    /* Boutons filtre */
+    .filter-card {
+        background: #f8fafc;
+        border-radius: 1rem;
+        transition: all 0.2s ease;
+    }
     .filter-badge {
         cursor: pointer;
         transition: all 0.2s;
+        background: #e2e8f0;
+        color: #1e293b;
+        padding: 0.3rem 0.7rem;
+        border-radius: 2rem;
+        font-size: 0.7rem;
     }
     .filter-badge:hover {
-        opacity: 0.8;
+        background: #cbd5e1;
         transform: scale(1.05);
     }
-    
-    /* SCROLLABLE TABLEAU */
-    .table-responsive {
-        max-height: 600px;
-        overflow-y: auto;
-        border-radius: 8px;
-        scrollbar-width: thin;
-        scrollbar-color: #c0c0c0 #f8f9fa;
+
+    /* Progress bar */
+    .custom-progress {
+        height: 5px;
+        background: #e2e8f0;
+        border-radius: 5px;
+        overflow: hidden;
     }
-    
-    .table-responsive::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+    .custom-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        border-radius: 5px;
+        transition: width 0.3s ease;
     }
-    
-    .table-responsive::-webkit-scrollbar-track {
-        background: #f8f9fa;
-        border-radius: 4px;
-    }
-    
-    .table-responsive::-webkit-scrollbar-thumb {
-        background: #c0c0c0;
-        border-radius: 4px;
-    }
-    
-    .table-responsive::-webkit-scrollbar-thumb:hover {
-        background: #a0a0a0;
-    }
-    
-    .table thead th {
-        position: sticky;
-        top: 0;
-        background-color: #f8f9fa;
-        z-index: 10;
-        border-bottom: 2px solid #dee2e6;
-        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Icônes circulaires pour modals */
-    .icon-circle {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    /* Style pour les rôles */
-    .role-badge {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.4rem;
-        margin-right: 2px;
-        display: inline-block;
-        font-weight: 500;
-        border-radius: 4px;
-    }
-    
-    .role-badge.role-admin {
-        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-        color: white;
-    }
-    .role-badge.role-manager {
-        background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
-        color: white;
-    }
-    .role-badge.role-stock {
-        background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
-        color: #212529;
-    }
-    .role-badge.role-cashier {
-        background: linear-gradient(135deg, #198754 0%, #157347 100%);
-        color: white;
-    }
-    .role-badge.role-user {
-        background: linear-gradient(135deg, #6c757d 0%, #5c636a 100%);
-        color: white;
-    }
-    
-    /* Style pour les plans */
-    .plan-badge {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        font-weight: 500;
-        border-radius: 50px;
-    }
-    
-    .plan-trial {
-        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-        color: white;
-    }
-    .plan-freemium {
-        background: linear-gradient(135deg, #6c757d 0%, #5c636a 100%);
-        color: white;
-    }
-    .plan-basic {
-        background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
-        color: white;
-    }
-    .plan-premium {
-        background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
-        color: white;
-    }
-    
-    /* Style pour le statut */
-    .status-badge {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        font-weight: 500;
-        border-radius: 50px;
-    }
-    
-    .status-active {
-        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
-        color: white;
-    }
-    
-    .status-inactive {
-        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-        color: white;
-    }
-    
-    .status-trial {
-        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
-        color: #212529;
-    }
-    
-    /* Style pour la colonne des rôles */
-    .roles-column {
-        max-width: 150px;
-        min-width: 120px;
-    }
-    
-    /* Espacement pour les actions */
-    .btn-group .btn {
-        padding: 0.25rem 0.5rem;
-    }
-    
-    /* Tooltip personnalisé */
+
+    /* Tooltip */
     .custom-tooltip {
         position: relative;
         cursor: help;
     }
-    
     .custom-tooltip:hover:after {
         content: attr(data-tooltip);
         position: absolute;
@@ -215,550 +192,349 @@
         background: rgba(0,0,0,0.8);
         color: white;
         padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
+        border-radius: 6px;
+        font-size: 11px;
         white-space: nowrap;
         z-index: 1000;
-        pointer-events: none;
-    }
-    
-    /* Style pour les compteurs d'utilisation */
-    .usage-counter {
-        font-size: 0.75rem;
-        color: #495057;
-    }
-    
-    .usage-icon {
-        color: #6c757d;
-        margin-right: 2px;
-    }
-    
-    .text-dark-strong {
-        color: #212529 !important;
-        font-weight: 500;
-    }
-    
-    .table td {
-        vertical-align: middle;
-        color: #212529;
-    }
-
-    /* ✅ NOTIFICATIONS */
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 1rem 1.5rem;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        z-index: 9999;
-        transform: translateX(400px);
-        transition: transform 0.3s ease;
-        border-left: 4px solid;
-        min-width: 300px;
-    }
-
-    .notification.show {
-        transform: translateX(0);
-    }
-
-    .notification-success {
-        border-left-color: #28a745;
-    }
-
-    .notification-success i {
-        color: #28a745;
-    }
-
-    .notification-error {
-        border-left-color: #dc3545;
-    }
-
-    .notification-error i {
-        color: #dc3545;
     }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <!-- En-tête -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 text-dark">
-            <i class="bi bi-building me-2 text-primary"></i>
-            Gestion des entreprises
-        </h1>
+<div class="container-fluid px-4">
+    <!-- En-tête avec boutons -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
-            <a href="{{ path('app_super_admin_hma_service_new') }}" class="btn btn-primary me-2">
-                <i class="bi bi-plus-circle me-1"></i>
-                Nouvelle entreprise
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
+                            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-building me-1"></i> Entreprises
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0 fw-bold">
+                <i class="fas fa-building me-2 text-primary"></i>
+                Gestion des entreprises
+            </h1>
+            <p class="text-muted mt-2">
+                <i class="fas fa-info-circle me-1"></i>
+                Gérez toutes les entreprises inscrites sur la plateforme
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_super_admin_hma_service_export', {format: 'excel'}) }}" class="btn btn-outline-success">
+                <i class="fas fa-file-excel me-1"></i> Excel
             </a>
-            <div class="btn-group">
-                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="bi bi-download me-1"></i>
-                    Exporter
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a class="dropdown-item" href="{{ path('app_super_admin_hma_service_export', {format: 'excel'}) }}?ids={{ app.request.get('ids') }}">
-                            <i class="bi bi-file-excel me-2 text-success"></i>
-                            Excel
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="{{ path('app_super_admin_hma_service_export', {format: 'csv'}) }}?ids={{ app.request.get('ids') }}">
-                            <i class="bi bi-filetype-csv me-2 text-info"></i>
-                            CSV
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <a href="{{ path('app_super_admin_hma_service_export', {format: 'csv'}) }}" class="btn btn-outline-info">
+                <i class="fas fa-file-csv me-1"></i> CSV
+            </a>
+            <a href="{{ path('app_super_admin_hma_service_new') }}" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-1"></i> Nouvelle entreprise
+            </a>
         </div>
     </div>
 
-    <!-- Statistiques -->
+    <!-- Cartes statistiques -->
     <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="card stat-card total" onclick="filterByStatus('all')">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted mb-1">Total</h6>
-                            <h3 class="mb-0 text-dark">{{ stats.total }}</h3>
-                        </div>
-                        <div class="bg-primary bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-building fs-3 text-primary"></i>
-                        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card bg-primary p-3" onclick="filterByStatus('all')">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-label">Total entreprises</div>
+                        <div class="stat-value">{{ stats.total }}</div>
                     </div>
+                    <i class="stat-icon fas fa-building fa-3x"></i>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card stat-card active" onclick="filterByStatus('active')">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted mb-1">Actives</h6>
-                            <h3 class="mb-0 text-success">{{ stats.active }}</h3>
-                        </div>
-                        <div class="bg-success bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-check-circle fs-3 text-success"></i>
-                        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card bg-success p-3" onclick="filterByStatus('active')">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-label">Entreprises actives</div>
+                        <div class="stat-value">{{ stats.active }}</div>
                     </div>
+                    <i class="stat-icon fas fa-check-circle fa-3x"></i>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card stat-card inactive" onclick="filterByStatus('inactive')">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted mb-1">Inactives</h6>
-                            <h3 class="mb-0 text-danger">{{ stats.inactive }}</h3>
-                        </div>
-                        <div class="bg-danger bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-x-circle fs-3 text-danger"></i>
-                        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card bg-danger p-3" onclick="filterByStatus('inactive')">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-label">Entreprises inactives</div>
+                        <div class="stat-value">{{ stats.inactive }}</div>
                     </div>
+                    <i class="stat-icon fas fa-ban fa-3x"></i>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card stat-card trial" onclick="filterByStatus('trial')">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted mb-1">Période d'essai</h6>
-                            <h3 class="mb-0 text-warning">{{ stats.trial }}</h3>
-                        </div>
-                        <div class="bg-warning bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-hourglass-split fs-3 text-warning"></i>
-                        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card bg-warning p-3" onclick="filterByStatus('trial')">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-label">Période d'essai</div>
+                        <div class="stat-value">{{ stats.trial }}</div>
                     </div>
+                    <i class="stat-icon fas fa-hourglass-half fa-3x"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Filtres rapides -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Rechercher (nom, email, n° abonnement)..." value="{{ filters.search }}">
-                </div>
-                <div class="col-md-2">
-                    <select id="planFilter" class="form-select">
-                        <option value="">Tous les plans</option>
-                        <option value="trial" {{ filters.plan == 'trial' ? 'selected' : '' }}>Essai gratuit</option>
-                        <option value="freemium" {{ filters.plan == 'freemium' ? 'selected' : '' }}>Freemium</option>
-                        <option value="basic" {{ filters.plan == 'basic' ? 'selected' : '' }}>Basic</option>
-                        <option value="premium" {{ filters.plan == 'premium' ? 'selected' : '' }}>Premium</option>
-                    </select>
-                </div>
-                <!-- Nouveau filtre type d'entreprise -->
-                <div class="col-md-2">
+    <!-- Filtres -->
+    <div class="filter-card p-3 mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-semibold small mb-1">
+                    <i class="fas fa-search me-1"></i> Recherche
+                </label>
+                <input type="text" id="searchInput" class="form-control" placeholder="Nom, email, n° abonnement..." value="{{ filters.search }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold small mb-1">
+                    <i class="fas fa-chart-line me-1"></i> Plan
+                </label>
+                <select id="planFilter" class="form-select">
+                    <option value="">Tous</option>
+                    <option value="trial" {{ filters.plan == 'trial' ? 'selected' : '' }}>Essai gratuit</option>
+                    <option value="freemium" {{ filters.plan == 'freemium' ? 'selected' : '' }}>Freemium</option>
+                    <option value="basic" {{ filters.plan == 'basic' ? 'selected' : '' }}>Basic</option>
+                    <option value="premium" {{ filters.plan == 'premium' ? 'selected' : '' }}>Premium</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold small mb-1">
+                    <i class="fas fa-store me-1"></i> Type
+                </label>
                 <select id="companyTypeFilter" class="form-select">
-                    <option value="">Tous les types</option>
+                    <option value="">Tous</option>
                     {% for type in companyTypes %}
-                        <option value="{{ type }}" {{ filters.company_type == type ? 'selected' : '' }}>
-                            {{ type|replace({'-': ' '})|title }} {# affiche "Supermarket", "Grocery Store", etc. #}
-                        </option>
+                        <option value="{{ type }}" {{ filters.company_type == type ? 'selected' : '' }}>{{ type|replace({'-': ' '})|title }}</option>
                     {% endfor %}
                 </select>
             </div>
-                <div class="col-md-2">
-                    <input type="date" id="dateFrom" class="form-control" value="{{ filters.date_from }}" placeholder="Date début">
-                </div>
-                <div class="col-md-2">
-                    <input type="date" id="dateTo" class="form-control" value="{{ filters.date_to }}" placeholder="Date fin">
-                </div>
-                <div class="col-md-2 d-flex gap-2">
-                    <button class="btn btn-primary w-50" onclick="applyFilters()">
-                        <i class="bi bi-funnel me-1"></i>
-                        Filtrer
-                    </button>
-                    <button class="btn btn-outline-secondary w-50" onclick="clearFilters()">
-                        <i class="bi bi-eraser me-1"></i>
-                        Effacer
-                    </button>
-                </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold small mb-1">
+                    <i class="fas fa-calendar me-1"></i> Date du
+                </label>
+                <input type="date" id="dateFrom" class="form-control" value="{{ filters.date_from }}">
             </div>
-
-            <!-- Badges de filtres actifs -->
-            <div class="mt-3 d-flex gap-2 flex-wrap">
-                {% if filters.search %}
-                    <span class="badge bg-primary filter-badge" onclick="removeFilter('search')">
-                        <i class="bi bi-search me-1"></i>
-                        {{ filters.search }}
-                        <i class="bi bi-x ms-1"></i>
-                    </span>
-                {% endif %}
-                {% if filters.company_type %}
-                    <span class="badge bg-primary filter-badge" onclick="removeFilter('company_type')">
-                        Type: {{ filters.company_type|upper }}
-                        <i class="bi bi-x ms-1"></i>
-                    </span>
-                {% endif %}
-                {% if filters.status %}
-                    <span class="badge bg-primary filter-badge" onclick="removeFilter('status')">
-                        Statut: {{ filters.status == 'active' ? 'Actives' : (filters.status == 'inactive' ? 'Inactives' : 'Essai') }}
-                        <i class="bi bi-x ms-1"></i>
-                    </span>
-                {% endif %}
-                {% if filters.plan %}
-                    <span class="badge bg-primary filter-badge" onclick="removeFilter('plan')">
-                        Plan: {{ filters.plan }}
-                        <i class="bi bi-x ms-1"></i>
-                    </span>
-                {% endif %}
-                {% if filters.date_from or filters.date_to %}
-                    <span class="badge bg-primary filter-badge" onclick="removeFilter('date_from'); removeFilter('date_to')">
-                        Période: {{ filters.date_from ?: '...' }} → {{ filters.date_to ?: '...' }}
-                        <i class="bi bi-x ms-1"></i>
-                    </span>
-                {% endif %}
+            <div class="col-md-2">
+                <label class="form-label fw-semibold small mb-1">
+                    <i class="fas fa-calendar me-1"></i> Date au
+                </label>
+                <input type="date" id="dateTo" class="form-control" value="{{ filters.date_to }}">
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-primary w-100" onclick="applyFilters()">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
         </div>
     </div>
-    <!-- Tableau des entreprises avec scroll -->
-    <div class="card">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-            <h5 class="mb-0 text-dark">
-                <i class="bi bi-building me-2 text-primary"></i>
-                Liste des entreprises ({{ pagination.getTotalItemCount }})
-            </h5>
-            <div class="text-muted small">
-                <i class="bi bi-arrow-up-down me-1"></i>
-                Utilisez le scroll pour voir plus de lignes
-            </div>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light">
-                        <tr>
-                            <th width="40">
-                                <input type="checkbox" id="selectAll" class="form-check-input">
-                            </th>
-                            <th>Entreprise</th>
-                            <th>Contact</th>
-                            <th>Plan</th>
-                            <th>Statut</th>
-                            <th class="roles-column">Rôles</th>
-                            <th>Utilisation</th>
-                            <th>Création</th>
-                            <th style="min-width: 120px;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for company in pagination %}
-                            <tr id="company-row-{{ company.id }}">
-                                <td>
-                                    <input type="checkbox" class="row-checkbox form-check-input" value="{{ company.id }}">
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        {% if company.logo %}
-                                            <img src="{{ asset('uploads/logos/' ~ company.logo) }}" 
-                                                 alt="{{ company.companyName }}" 
-                                                 class="company-logo me-2">
-                                        {% else %}
-                                            <div class="company-initials me-2">
-                                                {{ company.companyName|first|upper }}
-                                            </div>
-                                        {% endif %}
-                                        <div>
-                                            <strong class="text-dark">{{ company.companyName }}</strong><br>
-                                            <small class="text-muted">#{{ company.subscriptionNumber }}</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        <i class="bi bi-envelope me-1 text-muted" title="Email"></i>
-                                        <a href="mailto:{{ company.email }}" class="text-decoration-none text-dark">{{ company.email }}</a>
-                                        <br>
-                                        <small>
-                                            <i class="bi bi-telephone me-1 text-muted" title="Téléphone"></i>
-                                            {% if company.phone %}
-                                                <a href="tel:{{ company.phone }}" class="text-decoration-none text-dark">{{ company.phone }}</a>
-                                            {% else %}
-                                                <span class="text-muted">Non renseigné</span>
-                                            {% endif %}
-                                        </small>
-                                    </div>
-                                </td>
-                                <td>
-                                    {# Badge du plan avec couleur #}
-                                    {% if company.currentPlan == 'trial' %}
-                                        <span class="badge plan-trial plan-badge" title="Plan: {{ company.currentPlanLabel }}">
-                                            <i class="bi bi-hourglass-split me-1"></i>
-                                            {{ company.currentPlanLabel }}
-                                        </span>
-                                    {% elseif company.currentPlan == 'freemium' %}
-                                        <span class="badge plan-freemium plan-badge" title="Plan: {{ company.currentPlanLabel }}">
-                                            <i class="bi bi-gift me-1"></i>
-                                            {{ company.currentPlanLabel }}
-                                        </span>
-                                    {% elseif company.currentPlan == 'basic' %}
-                                        <span class="badge plan-basic plan-badge" title="Plan: {{ company.currentPlanLabel }}">
-                                            <i class="bi bi-rocket me-1"></i>
-                                            {{ company.currentPlanLabel }}
-                                        </span>
-                                    {% elseif company.currentPlan == 'premium' %}
-                                        <span class="badge plan-premium plan-badge" title="Plan: {{ company.currentPlanLabel }}">
-                                            <i class="bi bi-stars me-1"></i>
-                                            {{ company.currentPlanLabel }}
-                                        </span>
-                                    {% else %}
-                                        <span class="badge bg-secondary plan-badge">{{ company.currentPlanLabel }}</span>
-                                    {% endif %}
-                                    
-                                    {% if company.subscriptionEndsAt %}
-                                        <br>
-                                        <small class="text-muted custom-tooltip" 
-                                               data-tooltip="Fin d'abonnement">
-                                            <i class="bi bi-calendar me-1"></i>
-                                            {{ company.subscriptionEndsAt|date('d/m/Y') }}
-                                        </small>
-                                    {% endif %}
-                                </td>
-                                <td class="status-cell">
-                                    {# Badge du statut avec couleur #}
-                                    {% if company.hmaActive %}
-                                        <span class="badge status-active status-badge">
-                                            <i class="bi bi-check-circle me-1"></i>
-                                            Active
-                                        </span>
-                                    {% else %}
-                                        <span class="badge status-inactive status-badge">
-                                            <i class="bi bi-x-circle me-1"></i>
-                                            Désactivée
-                                        </span>
-                                    {% endif %}
-                                    
-                                    {% if company.isInTrialPeriod and company.trialEndsAt %}
-                                        <br>
-                                        <span class="badge status-trial status-badge mt-1">
-                                            <i class="bi bi-hourglass-split me-1"></i>
-                                            Essai: {{ company.trialEndsAt|time_diff }}
-                                        </span>
-                                    {% endif %}
-                                </td>
-                                <td class="roles-column">
-                                    {% set roles = [] %}
-                                    {% set active_users = 0 %}
-                                    {% set inactive_users = 0 %}
-                                    
-                                    {% for user in company.users %}
-                                        {% if user.isActive and user.subscriptionActive %}
-                                            {% set active_users = active_users + 1 %}
-                                        {% else %}
-                                            {% set inactive_users = inactive_users + 1 %}
-                                        {% endif %}
-                                        
-                                        {% for role in user.roles %}
-                                            {% if role != 'ROLE_USER' and role not in roles %}
-                                                {% set roles = roles|merge([role]) %}
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% endfor %}
-                                    
-                                    <div class="d-flex flex-wrap gap-1 mb-1">
-                                        {% for role in roles|slice(0, 3) %}
-                                            {% if role == 'ROLE_ADMIN' %}
-                                                <span class="badge role-badge role-admin" title="Administrateur">
-                                                    <i class="bi bi-shield-check me-1"></i>Admin
-                                                </span>
-                                            {% elseif role == 'ROLE_MANAGER' %}
-                                                <span class="badge role-badge role-manager" title="Gestionnaire">
-                                                    <i class="bi bi-graph-up me-1"></i>Manager
-                                                </span>
-                                            {% elseif role == 'ROLE_STOCK_MANAGER' %}
-                                                <span class="badge role-badge role-stock" title="Responsable Stock">
-                                                    <i class="bi bi-box-seam me-1"></i>Stock
-                                                </span>
-                                            {% elseif role == 'ROLE_CASHIER' %}
-                                                <span class="badge role-badge role-cashier" title="Caissier">
-                                                    <i class="bi bi-cash-coin me-1"></i>Caissier
-                                                </span>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                    
-                                    {# Indicateurs de statut des utilisateurs #}
-                                    <div class="d-flex align-items-center gap-2 mt-1">
-                                        {% if active_users > 0 %}
-                                            <small class="text-success" title="Utilisateurs actifs">
-                                                <i class="bi bi-person-check-fill"></i>
-                                                {{ active_users }}
-                                            </small>
-                                        {% endif %}
-                                        
-                                        {% if inactive_users > 0 %}
-                                            <small class="text-warning" title="Utilisateurs inactifs">
-                                                <i class="bi bi-person-exclamation"></i>
-                                                {{ inactive_users }}
-                                            </small>
-                                        {% endif %}
-                                        
-                                        <small class="text-muted">
-                                            <i class="bi bi-people"></i>
-                                            {{ company.users|length }} total
-                                        </small>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="progress mb-2" style="height: 5px; background-color: #e9ecef;" 
-                                        title="Produits: {{ company.products|length }}/{{ company.currentLimits.max_products == constant('PHP_INT_MAX') ? 'Illimité' : company.currentLimits.max_products }}">
-                                        <div class="progress-bar bg-primary" 
-                                            style="width: {{ (company.products|length / company.currentLimits.max_products * 100)|round }}%; background: linear-gradient(90deg, #0d6efd, #0a58ca);">
-                                        </div>
-                                    </div>
-                                    <div class="d-flex justify-content-between small usage-counter">
-                                        <span class="custom-tooltip" data-tooltip="Produits">
-                                            <i class="bi bi-box usage-icon"></i>
-                                            <span class="text-dark">{{ company.products|length }}</span>
-                                        </span>
-                                        <span class="custom-tooltip" data-tooltip="Commandes">
-                                            <i class="bi bi-cart usage-icon"></i>
-                                            <span class="text-dark">{{ company.orders|length }}</span>
-                                        </span>
-                                        <span class="custom-tooltip" data-tooltip="Catégories">
-                                            <i class="bi bi-tags usage-icon"></i>
-                                            <span class="text-dark">{{ company.categories|length }}</span>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="custom-tooltip text-dark" 
-                                          data-tooltip="Créé le {{ company.createdAt|date('d/m/Y à H:i') }}">
-                                        <i class="bi bi-calendar me-1 text-muted"></i>
-                                        {{ company.createdAt|date('d/m/Y') }}
-                                    </span>
-                                    <br>
-                                    <small class="text-muted">
-                                        <i class="bi bi-clock me-1"></i>
-                                        {{ company.createdAt|time_diff }}
-                                    </small>
-                                </td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <a href="{{ path('app_super_admin_hma_service_show', {'id': company.id}) }}" 
-                                           class="btn btn-sm btn-outline-info" 
-                                           title="Voir détails">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="{{ path('app_super_admin_hma_service_edit', {'id': company.id}) }}" 
-                                           class="btn btn-sm btn-outline-warning"
-                                           title="Modifier">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        
-                                        {# ✅ CHAMPS CACHÉS POUR LES TOKENS CSRF #}
-                                        <input type="hidden" id="toggle_token_{{ company.id }}" value="{{ csrf_token('toggle') }}">
-                                        <input type="hidden" id="delete_token_{{ company.id }}" value="{{ csrf_token('delete') }}">
-                                        
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-{{ company.hmaActive ? 'danger' : 'success' }} toggle-status-btn"
-                                                data-id="{{ company.id }}"
-                                                data-name="{{ company.companyName }}"
-                                                data-active="{{ company.hmaActive ? 'true' : 'false' }}"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#toggleStatusModal"
-                                                title="{{ company.hmaActive ? 'Désactiver' : 'Activer' }}">
-                                            <i class="bi bi-{{ company.hmaActive ? 'toggle-off' : 'toggle-on' }}"></i>
-                                        </button>
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-danger delete-company-btn"
-                                                data-id="{{ company.id }}"
-                                                data-name="{{ company.companyName }}"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#deleteModal"
-                                                title="Supprimer">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="9" class="text-center py-5">
-                                    <i class="bi bi-building fs-1 text-muted d-block mb-3"></i>
-                                    <h5 class="text-muted">Aucune entreprise trouvée</h5>
-                                    <p class="text-muted mb-3">Aucune entreprise ne correspond à vos critères de recherche.</p>
-                                    <button class="btn btn-outline-primary" onclick="clearFilters()">
-                                        <i class="bi bi-eraser me-1"></i>
-                                        Effacer les filtres
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
-        <!-- Pagination -->
+    <!-- Badges de filtres actifs -->
+    {% if filters.search or filters.company_type or filters.status or filters.plan or filters.date_from or filters.date_to %}
+    <div class="d-flex gap-2 flex-wrap mb-3">
+        {% if filters.search %}
+            <span class="filter-badge" onclick="removeFilter('search')">
+                <i class="fas fa-search me-1"></i> {{ filters.search }}
+                <i class="fas fa-times ms-1"></i>
+            </span>
+        {% endif %}
+        {% if filters.company_type %}
+            <span class="filter-badge" onclick="removeFilter('company_type')">
+                <i class="fas fa-store me-1"></i> {{ filters.company_type|replace({'-': ' '})|title }}
+                <i class="fas fa-times ms-1"></i>
+            </span>
+        {% endif %}
+        {% if filters.status %}
+            <span class="filter-badge" onclick="removeFilter('status')">
+                <i class="fas fa-filter me-1"></i> {{ filters.status == 'active' ? 'Actives' : (filters.status == 'inactive' ? 'Inactives' : 'Essai') }}
+                <i class="fas fa-times ms-1"></i>
+            </span>
+        {% endif %}
+        {% if filters.plan %}
+            <span class="filter-badge" onclick="removeFilter('plan')">
+                <i class="fas fa-chart-line me-1"></i> {{ filters.plan|capitalize }}
+                <i class="fas fa-times ms-1"></i>
+            </span>
+        {% endif %}
+        {% if filters.date_from or filters.date_to %}
+            <span class="filter-badge" onclick="removeFilter('date_from'); removeFilter('date_to')">
+                <i class="fas fa-calendar me-1"></i> {{ filters.date_from ?: '...' }} → {{ filters.date_to ?: '...' }}
+                <i class="fas fa-times ms-1"></i>
+            </span>
+        {% endif %}
+        <button class="btn btn-sm btn-outline-secondary" onclick="clearFilters()">
+            <i class="fas fa-eraser me-1"></i> Effacer tout
+        </button>
+    </div>
+    {% endif %}
+
+    <!-- Tableau des entreprises -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-semibold">
+                <i class="fas fa-list me-2 text-primary"></i>
+                Liste des entreprises
+                <span class="badge bg-secondary ms-2">{{ pagination.getTotalItemCount }} entreprise(s)</span>
+            </h5>
+        </div>
+        <div class="table-responsive-scroll">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th width="40"><input type="checkbox" id="selectAll" class="form-check-input"></th>
+                        <th>Entreprise</th>
+                        <th>Contact</th>
+                        <th>Plan</th>
+                        <th>Statut</th>
+                        <th>Rôles</th>
+                        <th>Utilisation</th>
+                        <th>Création</th>
+                        <th style="min-width: 120px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for company in pagination %}
+                        <tr id="company-row-{{ company.id }}">
+                            <td><input type="checkbox" class="row-checkbox form-check-input" value="{{ company.id }}"></td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    {% if company.logo %}
+                                        <img src="{{ asset('uploads/logos/' ~ company.logo) }}" alt="{{ company.companyName }}" class="company-logo">
+                                    {% else %}
+                                        <div class="company-initials">{{ company.companyName|first|upper }}</div>
+                                    {% endif %}
+                                    <div>
+                                        <div class="fw-semibold">{{ company.companyName }}</div>
+                                        <small class="text-muted">#{{ company.subscriptionNumber }}</small>
+                                    </div>
+                                </div>
+                             </div>
+                            <td>
+                                <div><i class="fas fa-envelope text-muted me-1 fa-xs"></i> {{ company.email }}</div>
+                                <small><i class="fas fa-phone text-muted me-1 fa-xs"></i> {{ company.phone|default('Non renseigné') }}</small>
+                            </td>
+                            <td>
+                                {% if company.currentPlan == 'trial' %}
+                                    <span class="plan-badge plan-trial"><i class="fas fa-hourglass-half me-1"></i> Essai</span>
+                                {% elseif company.currentPlan == 'freemium' %}
+                                    <span class="plan-badge plan-freemium"><i class="fas fa-gift me-1"></i> Freemium</span>
+                                {% elseif company.currentPlan == 'basic' %}
+                                    <span class="plan-badge plan-basic"><i class="fas fa-rocket me-1"></i> Basic</span>
+                                {% elseif company.currentPlan == 'premium' %}
+                                    <span class="plan-badge plan-premium"><i class="fas fa-crown me-1"></i> Premium</span>
+                                {% endif %}
+                                {% if company.subscriptionEndsAt %}
+                                    <br><small class="text-muted">{{ company.subscriptionEndsAt|date('d/m/Y') }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if company.hmaActive %}
+                                    <span class="status-badge status-active"><i class="fas fa-check-circle me-1"></i> Active</span>
+                                {% else %}
+                                    <span class="status-badge status-inactive"><i class="fas fa-ban me-1"></i> Désactivée</span>
+                                {% endif %}
+                                {% if company.isInTrialPeriod and company.trialEndsAt %}
+                                    <br><span class="status-badge status-trial mt-1"><i class="fas fa-hourglass-half me-1"></i> {{ company.trialEndsAt|time_diff }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% set roles = [] %}
+                                {% for user in company.users %}
+                                    {% for role in user.roles %}
+                                        {% if role != 'ROLE_USER' and role not in roles %}
+                                            {% set roles = roles|merge([role]) %}
+                                            {% if role == 'ROLE_ADMIN' %}
+                                                <span class="role-badge role-admin"><i class="fas fa-shield-alt me-1"></i>Admin</span>
+                                            {% elseif role == 'ROLE_MANAGER' %}
+                                                <span class="role-badge role-manager"><i class="fas fa-chart-line me-1"></i>Manager</span>
+                                            {% elseif role == 'ROLE_STOCK_MANAGER' %}
+                                                <span class="role-badge role-stock"><i class="fas fa-boxes me-1"></i>Stock</span>
+                                            {% elseif role == 'ROLE_CASHIER' %}
+                                                <span class="role-badge role-cashier"><i class="fas fa-cash-register me-1"></i>Caissier</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                                <div class="mt-1">
+                                    <small><i class="fas fa-users text-muted me-1"></i> {{ company.users|length }} utilisateurs</small>
+                                </div>
+                            </td>
+                            <td style="min-width: 120px;">
+                                <div class="custom-progress mb-1">
+                                    <div class="custom-progress-bar" style="width: {{ (company.products|length / company.currentLimits.max_products * 100)|round }}%"></div>
+                                </div>
+                                <div class="d-flex justify-content-between small">
+                                    <span class="custom-tooltip" data-tooltip="Produits"><i class="fas fa-box text-muted me-1"></i> {{ company.products|length }}</span>
+                                    <span class="custom-tooltip" data-tooltip="Commandes"><i class="fas fa-shopping-cart text-muted me-1"></i> {{ company.orders|length }}</span>
+                                    <span class="custom-tooltip" data-tooltip="Catégories"><i class="fas fa-tags text-muted me-1"></i> {{ company.categories|length }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="custom-tooltip" data-tooltip="Créé le {{ company.createdAt|date('d/m/Y à H:i') }}">
+                                    <i class="fas fa-calendar text-muted me-1"></i> {{ company.createdAt|date('d/m/Y') }}
+                                </span>
+                                <br><small class="text-muted">{{ company.createdAt|time_diff }}</small>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{{ path('app_super_admin_hma_service_show', {'id': company.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_super_admin_hma_service_edit', {'id': company.id}) }}" class="btn btn-sm btn-outline-warning" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <input type="hidden" id="toggle_token_{{ company.id }}" value="{{ csrf_token('toggle') }}">
+                                    <input type="hidden" id="delete_token_{{ company.id }}" value="{{ csrf_token('delete') }}">
+                                    <button type="button" class="btn btn-sm btn-outline-{{ company.hmaActive ? 'danger' : 'success' }} toggle-status-btn"
+                                            data-id="{{ company.id }}" data-name="{{ company.companyName }}" data-active="{{ company.hmaActive ? 'true' : 'false' }}"
+                                            data-bs-toggle="modal" data-bs-target="#toggleStatusModal" title="{{ company.hmaActive ? 'Désactiver' : 'Activer' }}">
+                                        <i class="fas fa-{{ company.hmaActive ? 'toggle-off' : 'toggle-on' }}"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger delete-company-btn"
+                                            data-id="{{ company.id }}" data-name="{{ company.companyName }}"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="text-center py-5">
+                                <i class="fas fa-building fa-3x text-muted mb-3 opacity-50"></i>
+                                <h5 class="text-muted">Aucune entreprise trouvée</h5>
+                                <p class="text-muted small">Modifiez vos filtres ou créez une nouvelle entreprise</p>
+                                <a href="{{ path('app_super_admin_hma_service_new') }}" class="btn btn-primary btn-sm mt-2">
+                                    <i class="fas fa-plus me-1"></i> Créer une entreprise
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% if pagination|length > 0 %}
-            <div class="card-footer bg-white py-3">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                    <div class="text-muted small">
-                        Affichage de {{ pagination.getPaginationData.firstItemNumber }} 
-                        à {{ pagination.getPaginationData.lastItemNumber }} 
-                        sur {{ pagination.getTotalItemCount }} entreprises
-                    </div>
-                    <div class="pagination-wrapper">
-                        {{ knp_pagination_render(pagination) }}
-                    </div>
-                    <div class="text-muted small">
-                        <i class="bi bi-arrow-up-down me-1"></i>
-                        {{ pagination.getPaginationData.totalCount }} ligne(s) au total
-                    </div>
-                </div>
+        <div class="card-footer bg-white border-0 py-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <small class="text-muted">
+                    Affichage de {{ pagination.getPaginationData.firstItemNumber }} à {{ pagination.getPaginationData.lastItemNumber }} sur {{ pagination.getTotalItemCount }} entreprises
+                </small>
+                {{ knp_pagination_render(pagination) }}
+                <small class="text-muted">
+                    <i class="fas fa-arrow-up-down me-1"></i> {{ pagination.getPaginationData.totalCount }} ligne(s)
+                </small>
             </div>
+        </div>
         {% endif %}
     </div>
 </div>

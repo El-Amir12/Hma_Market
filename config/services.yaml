@@ -304,3 +304,99 @@ services:
             $slugger: '@Symfony\Component\String\Slugger\SluggerInterface'
             $supportEmail: '%support_email%'
         public: true
+
+
+    # ==================== SERVICES SUPER ADMIN ====================
+    App\Service\SuperAdmin\CompanyAnalysisExportService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $orderRepository: '@App\Repository\OrderRepository'
+            $purchaseRepository: '@App\Repository\PurchaseRepository'
+            $stockBatchRepository: '@App\Repository\StockBatchRepository'
+            $stockMovementRepository: '@App\Repository\StockMovementRepository'
+            $productRepository: '@App\Repository\ProductRepository'
+            $userRepository: '@App\Repository\UserRepository'
+            $supplierRepository: '@App\Repository\SupplierRepository'
+            $categoryRepository: '@App\Repository\CategoryRepository'
+            $recipeRepository: '@App\Repository\RecipeRepository'
+            $returnOrderRepository: '@App\Repository\ReturnOrderRepository'
+            $supplierCreditNoteRepository: '@App\Repository\SupplierCreditNoteRepository'
+            $notificationService: '@App\Service\NotificationService'
+            $logger: '@monolog.logger'
+            $exportsDirectory: '%exports_directory%'
+        public: true
+
+    # ==================== SERVICES DE PAIEMENT POUR ANALYSES ====================
+    App\Service\Payment\SubscriptionPaymentService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $fedaPayService: '@App\Service\FedaPayService'
+            $notificationService: '@App\Service\NotificationService'
+            $logger: '@monolog.logger'
+        public: true
+
+    # ==================== REPOSITORIES ====================
+    App\Repository\AnalysisPriceRepository:
+        arguments:
+            $registry: '@doctrine'
+        public: true
+
+    App\Repository\AnalysisRequestRepository:
+        arguments:
+            $registry: '@doctrine'
+        public: true
+
+    App\Repository\AnalysisPaymentRepository:
+        arguments:
+            $registry: '@doctrine'
+        public: true
+
+    # ==================== COMMANDES CRON ====================
+    App\Command\CreateMonthlySubscriptionsCommand:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $analysisRepository: '@App\Repository\AnalysisRequestRepository'
+        tags:
+            - { name: console.command }
+
+    App\Command\SendSubscriptionRemindersCommand:
+        arguments:
+            $analysisRepository: '@App\Repository\AnalysisRequestRepository'
+            $notificationService: '@App\Service\NotificationService'
+            $entityManager: '@doctrine.orm.entity_manager'
+        tags:
+            - { name: console.command }
+
+    App\Command\CleanExpiredAnalysisCommand:
+        arguments:
+            $repository: '@App\Repository\AnalysisRequestRepository'
+            $entityManager: '@doctrine.orm.entity_manager'
+        tags:
+            - { name: console.command }
+
+    # ==================== FORMULAIRES ====================
+    App\Form\AnalysisRequestType:
+        arguments:
+            $priceRepository: '@App\Repository\AnalysisPriceRepository'
+        tags:
+            - { name: form.type }
+
+    App\Form\AnalysisPriceType:
+        tags:
+            - { name: form.type }
+
+    # ==================== CONTROLEURS ENTREPRISE (ANALYSES) ====================
+    App\Controller\Company\CompanyAnalysisController:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $logger: '@monolog.logger'
+        tags:
+            - { name: controller.service_arguments }
+
+    # ==================== CONTROLEURS SUPER ADMIN (ANALYSES) ====================
+    App\Controller\SuperAdmin\CompanyAnalysisController:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $logger: '@monolog.logger'
+        tags:
+            - { name: controller.service_arguments }

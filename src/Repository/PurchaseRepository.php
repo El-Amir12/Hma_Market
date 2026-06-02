@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Purchase;
+use App\Entity\HmaService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -328,4 +329,18 @@ class PurchaseRepository extends ServiceEntityRepository
             'limit' => $limit,
         ];
     }
+
+    public function findByCompanyAndPeriod(HmaService $company, \DateTime $start, \DateTime $end): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.hma_service = :company')
+            ->andWhere('p.created_at BETWEEN :start AND :end')
+            ->setParameter('company', $company)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
+

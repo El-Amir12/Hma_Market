@@ -1,0 +1,208 @@
+{# templates/company/analysis/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Analyse {{ analysis.requestNumber }} - HMA Market{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4 py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
+                            <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('company_analysis_index') }}" class="text-decoration-none">
+                            <i class="fas fa-chart-line me-1"></i> Analyses
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">{{ analysis.requestNumber }}</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0 fw-bold">
+                <i class="fas fa-chart-line me-2 text-primary"></i>
+                Détail de l'analyse
+            </h1>
+        </div>
+        <div>
+            <a href="{{ path('company_analysis_index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Retour
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="fas fa-info-circle me-2 text-primary"></i>
+                        Informations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="border-bottom pb-2">
+                                <small class="text-muted">N° Demande</small>
+                                <div class="fw-bold">{{ analysis.requestNumber }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border-bottom pb-2">
+                                <small class="text-muted">Date de création</small>
+                                <div class="fw-bold">{{ analysis.createdAt|date('d/m/Y H:i:s') }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border-bottom pb-2">
+                                <small class="text-muted">Type d'analyse</small>
+                                <div class="fw-bold">{{ analysis.typeLabel }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border-bottom pb-2">
+                                <small class="text-muted">Montant</small>
+                                <div class="fw-bold text-primary">{{ analysis.amountFormatted }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border-bottom pb-2">
+                                <small class="text-muted">Statut</small>
+                                <div>
+                                    <span class="badge {{ analysis.statusBadgeClass }}">
+                                        <i class="fas {{ analysis.status == 'completed' ? 'fa-check-circle' : (analysis.status == 'pending' ? 'fa-clock' : (analysis.status == 'processing' ? 'fa-spinner fa-pulse' : 'fa-times-circle')) }} me-1"></i>
+                                        {{ analysis.statusLabel }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border-bottom pb-2">
+                                <small class="text-muted">Période analysée</small>
+                                <div class="fw-bold">{{ analysis.periodStart|date('d/m/Y') }} au {{ analysis.periodEnd|date('d/m/Y') }}</div>
+                            </div>
+                        </div>
+                        {% if analysis.notes %}
+                        <div class="col-12">
+                            <div class="border-bottom pb-2">
+                                <small class="text-muted">Notes</small>
+                                <div class="fw-bold">{{ analysis.notes|nl2br }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="fas fa-download me-2 text-primary"></i>
+                        Téléchargement
+                    </h5>
+                </div>
+                <div class="card-body text-center">
+                    
+                    {# === RAPPORT FINAL DISPONIBLE (COMPLETED) === #}
+                    {% if analysis.status == 'completed' and analysis.finalReportPath %}
+                        <div class="mb-3">
+                            <i class="fas fa-file-alt fa-4x text-success mb-2"></i>
+                            <p><strong>Votre rapport est prêt !</strong></p>
+                            <small class="text-muted">
+                                Type: {{ analysis.finalReportType|upper }}<br>
+                                Disponible depuis le {{ analysis.finalReportUploadedAt|date('d/m/Y') }}
+                            </small>
+                        </div>
+                        
+                        <a href="{{ path('company_analysis_download_final', {'id': analysis.id}) }}" class="btn btn-success w-100 mb-2">
+                            <i class="fas fa-download me-1"></i> Télécharger le rapport
+                        </a>
+                        
+                        {% if analysis.rawExportPath %}
+                            <hr>
+                            <small class="text-muted d-block mb-2">📁 Données brutes (optionnel)</small>
+                            <a href="{{ path('company_analysis_download_raw', {'id': analysis.id}) }}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-database me-1"></i> Télécharger les données brutes
+                            </a>
+                        {% endif %}
+                    
+                    {# === DONNÉES BRUTES DISPONIBLES (PROCESSING) === #}
+                    {% elseif analysis.status == 'processing' and analysis.rawExportPath %}
+                        <div class="mb-3">
+                            <i class="fas fa-database fa-4x text-info mb-2"></i>
+                            <p><strong>Données brutes disponibles</strong></p>
+                            <small class="text-muted">Notre expert analyse vos données pour préparer votre rapport personnalisé.</small>
+                        </div>
+                        
+                        <a href="{{ path('company_analysis_download_raw', {'id': analysis.id}) }}" class="btn btn-primary w-100 mb-2">
+                            <i class="fas fa-database me-1"></i> Télécharger les données brutes
+                        </a>
+                        
+                        <div class="alert alert-info small mt-3">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Le rapport final sera disponible prochainement. Vous serez notifié par email.
+                        </div>
+                    
+                    {# === GÉNÉRATION DES DONNÉES BRUTES EN COURS === #}
+                    {% elseif analysis.status == 'processing' and not analysis.rawExportPath %}
+                        <div class="mb-3">
+                            <i class="fas fa-spinner fa-pulse fa-4x text-primary mb-2"></i>
+                            <p>Préparation des données en cours...</p>
+                            <small class="text-muted">Cette page se rafraîchira automatiquement</small>
+                        </div>
+                        <div class="progress mb-3">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+                        </div>
+                    
+                    {# === EN ATTENTE DE PAIEMENT === #}
+                    {% elseif analysis.status == 'pending' %}
+                        <div class="mb-3">
+                            <i class="fas fa-clock fa-4x text-warning mb-2"></i>
+                            <p>En attente de validation.</p>
+                            <small class="text-muted">Notre équipe vous contactera pour finaliser la commande.</small>
+                        </div>
+                    
+                    {# === PAYÉ EN ATTENTE DE TRAITEMENT === #}
+                    {% elseif analysis.status == 'paid' %}
+                        <div class="mb-3">
+                            <i class="fas fa-credit-card fa-4x text-info mb-2"></i>
+                            <p>Paiement confirmé.</p>
+                            <small class="text-muted">L'analyse va commencer prochainement.</small>
+                        </div>
+                    
+                    {# === ÉCHEC === #}
+                    {% elseif analysis.status == 'failed' %}
+                        <div class="mb-3">
+                            <i class="fas fa-exclamation-triangle fa-4x text-danger mb-2"></i>
+                            <p>Une erreur est survenue.</p>
+                            <small class="text-muted">Veuillez contacter le support.</small>
+                        </div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Rafraîchissement automatique UNIQUEMENT si pas de données brutes
+    {% if analysis.status == 'processing' and not analysis.rawExportPath %}
+        console.log('⏳ Génération en cours, rechargement dans 10s...');
+        setTimeout(() => {
+            window.location.reload();
+        }, 10000);
+    {% endif %}
+});
+</script>
+{% endblock %}

@@ -287,4 +287,18 @@ class StockMovementRepository extends ServiceEntityRepository
             ->setMaxResults($limit);
         return $paginator;
     }
+
+    public function findByCompanyAndPeriod(HmaService $company, \DateTime $start, \DateTime $end): array
+    {
+        return $this->createQueryBuilder('sm')
+            ->leftJoin('sm.product', 'p')
+            ->where('p.hma_service = :company')
+            ->andWhere('sm.created_at BETWEEN :start AND :end')
+            ->setParameter('company', $company)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->orderBy('sm.created_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -420,6 +420,18 @@
         <argument>app:check-expired-subscriptions</argument>
       </call>
     </service>
+    <service id="App\Command\CleanExpiredAnalysisCommand" class="App\Command\CleanExpiredAnalysisCommand" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="App\Repository\AnalysisRequestRepository"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setName">
+        <argument>app:clean-expired-analysis</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Nettoie les demandes d'analyse expirées</argument>
+      </call>
+    </service>
     <service id="App\Command\CleanIncompleteRegistrationsCommand" class="App\Command\CleanIncompleteRegistrationsCommand" autowire="true" autoconfigure="true">
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
@@ -441,6 +453,18 @@
       </call>
       <call method="setDescription">
         <argument>Create an admin user</argument>
+      </call>
+    </service>
+    <service id="App\Command\CreateMonthlySubscriptionsCommand" class="App\Command\CreateMonthlySubscriptionsCommand" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\AnalysisRequestRepository"/>
+      <call method="setName">
+        <argument>app:create-monthly-subscriptions</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Crée automatiquement les demandes d'analyse pour les abonnements mensuels actifs</argument>
       </call>
     </service>
     <service id="App\Command\EnforceQuotasCommand" class="App\Command\EnforceQuotasCommand" autowire="true" autoconfigure="true">
@@ -483,6 +507,19 @@
       <argument type="service" id="App\Service\EmailService"/>
       <call method="setName">
         <argument>app:send-expiration-reminders</argument>
+      </call>
+    </service>
+    <service id="App\Command\SendSubscriptionRemindersCommand" class="App\Command\SendSubscriptionRemindersCommand" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="App\Repository\AnalysisRequestRepository"/>
+      <argument type="service" id="App\Service\NotificationService"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setName">
+        <argument>app:send-subscription-reminders</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Envoie des rappels pour les abonnements sur le point d'expirer</argument>
       </call>
     </service>
     <service id="App\Command\StockMaintenanceCommand" class="App\Command\StockMaintenanceCommand" autowire="true" autoconfigure="true">
@@ -674,6 +711,15 @@
         <argument type="service" id=".service_locator.siKanuc.App\Controller\Api\ProductSearchController"/>
       </call>
     </service>
+    <service id="App\Controller\Company\CompanyAnalysisController" class="App\Controller\Company\CompanyAnalysisController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="monolog.logger"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\Company\CompanyAnalysisController"/>
+      </call>
+    </service>
     <service id="App\Controller\DashboardController" class="App\Controller\DashboardController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -711,6 +757,13 @@
       <argument type="service" id="monolog.logger"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.siKanuc.App\Controller\Manager\TeamController"/>
+      </call>
+    </service>
+    <service id="App\Controller\PaymentController" class="App\Controller\PaymentController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\PaymentController"/>
       </call>
     </service>
     <service id="App\Controller\PrintController" class="App\Controller\PrintController" public="true" autowire="true" autoconfigure="true">
@@ -851,6 +904,22 @@
         <argument type="service" id=".service_locator.siKanuc.App\Controller\SubscriptionController"/>
       </call>
     </service>
+    <service id="App\Controller\SuperAdmin\AnalysisPriceController" class="App\Controller\SuperAdmin\AnalysisPriceController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\SuperAdmin\AnalysisPriceController"/>
+      </call>
+    </service>
+    <service id="App\Controller\SuperAdmin\CompanyAnalysisController" class="App\Controller\SuperAdmin\CompanyAnalysisController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="monolog.logger"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\SuperAdmin\CompanyAnalysisController"/>
+      </call>
+    </service>
     <service id="App\Controller\SuperAdmin\HmaServiceController" class="App\Controller\SuperAdmin\HmaServiceController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -930,6 +999,13 @@
       <argument type="service" id="request_stack"/>
       <argument type="service" id="router.default"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
+    <service id="App\Form\AnalysisPriceType" class="App\Form\AnalysisPriceType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\AnalysisRequestType" class="App\Form\AnalysisRequestType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+      <argument type="service" id="App\Repository\AnalysisPriceRepository"/>
     </service>
     <service id="App\Form\CartItemType" class="App\Form\CartItemType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
@@ -1053,6 +1129,18 @@
     </service>
     <service id="App\Form\UserType" class="App\Form\UserType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
+    </service>
+    <service id="App\Repository\AnalysisPaymentRepository" class="App\Repository\AnalysisPaymentRepository" public="true" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\AnalysisPriceRepository" class="App\Repository\AnalysisPriceRepository" public="true" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\AnalysisRequestRepository" class="App\Repository\AnalysisRequestRepository" public="true" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Repository\CategoryRecipeRepository" class="App\Repository\CategoryRecipeRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
@@ -1273,6 +1361,12 @@
       <argument>true</argument>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
+    <service id="App\Service\Payment\SubscriptionPaymentService" class="App\Service\Payment\SubscriptionPaymentService" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\FedaPayService"/>
+      <argument type="service" id="App\Service\NotificationService"/>
+      <argument type="service" id="monolog.logger"/>
+    </service>
     <service id="App\Service\PrintService" class="App\Service\PrintService" autowire="true" autoconfigure="true">
       <argument type="service" id="twig"/>
       <argument type="service" id="monolog.logger"/>
@@ -1382,6 +1476,23 @@
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="monolog.logger"/>
     </service>
+    <service id="App\Service\SuperAdmin\CompanyAnalysisExportService" class="App\Service\SuperAdmin\CompanyAnalysisExportService" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\OrderRepository"/>
+      <argument type="service" id="App\Repository\PurchaseRepository"/>
+      <argument type="service" id="App\Repository\StockBatchRepository"/>
+      <argument type="service" id="App\Repository\StockMovementRepository"/>
+      <argument type="service" id="App\Repository\ProductRepository"/>
+      <argument type="service" id="App\Repository\UserRepository"/>
+      <argument type="service" id="App\Repository\SupplierRepository"/>
+      <argument type="service" id="App\Repository\CategoryRepository"/>
+      <argument type="service" id="App\Repository\RecipeRepository"/>
+      <argument type="service" id="App\Repository\ReturnOrderRepository"/>
+      <argument type="service" id="App\Repository\SupplierCreditNoteRepository"/>
+      <argument type="service" id="App\Service\NotificationService"/>
+      <argument type="service" id="monolog.logger"/>
+      <argument>C:\wamp64\www\Mes projets en Symfony\hma_market/public/uploads/exports</argument>
+    </service>
     <service id="App\Service\SupplierCreditNoteService" class="App\Service\SupplierCreditNoteService" public="true" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="monolog.logger"/>
@@ -1446,7 +1557,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.Qc8X6f_"/>
+      <argument type="service" id=".service_locator.5YehyGD"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -2386,6 +2497,8 @@
         <argument>Symfony\Bridge\Doctrine\Form\Type</argument>
       </argument>
       <argument type="collection">
+        <argument>App\Form\AnalysisPriceType</argument>
+        <argument>App\Form\AnalysisRequestType</argument>
         <argument>App\Form\CartItemType</argument>
         <argument>App\Form\CategoryRecipeType</argument>
         <argument>App\Form\CategoryType</argument>
@@ -4607,7 +4720,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.Qc8X6f_"/>
+      <argument type="service" id=".service_locator.5YehyGD"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -5096,7 +5209,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.66r3ccA"/>
+      <argument type="service" id=".service_locator.875GwPz"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -6349,7 +6462,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.WtY99p_"/>
+      <argument type="service" id=".service_locator.1NACIMK"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -7792,6 +7905,34 @@
         <argument>null</argument>
       </call>
       <call method="add">
+        <argument type="service" id=".security.request_matcher.wu0__ui"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.OQqYlyL"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.4Y6cXlq"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.8H7xyLb"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
         <argument type="service" id=".security.request_matcher.BrFfR3a"/>
         <argument type="collection">
           <argument>PUBLIC_ACCESS</argument>
@@ -7870,6 +8011,13 @@
       </call>
       <call method="add">
         <argument type="service" id=".security.request_matcher.dyci6L5"/>
+        <argument type="collection">
+          <argument>ROLE_SUPER_ADMIN</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher._w9S7Zo"/>
         <argument type="collection">
           <argument>ROLE_SUPER_ADMIN</argument>
         </argument>
@@ -8686,6 +8834,38 @@
         <argument type="service" id=".security.request_matcher.1f3H6o2"/>
       </argument>
     </service>
+    <service id=".security.request_matcher.Eka3wix" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/payment/callback</argument>
+    </service>
+    <service id=".security.request_matcher.wu0__ui" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.Eka3wix"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.K12LJd6" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/payment/success</argument>
+    </service>
+    <service id=".security.request_matcher.OQqYlyL" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.K12LJd6"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.g2tGUp9" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/payment/error</argument>
+    </service>
+    <service id=".security.request_matcher.4Y6cXlq" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.g2tGUp9"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.RSUY2_d" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/payment/already-processed</argument>
+    </service>
+    <service id=".security.request_matcher.8H7xyLb" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.RSUY2_d"/>
+      </argument>
+    </service>
     <service id=".security.request_matcher.QiBF6kJ" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
       <argument>^/$</argument>
     </service>
@@ -8780,6 +8960,14 @@
     <service id=".security.request_matcher.dyci6L5" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
       <argument type="collection">
         <argument type="service" id=".security.request_matcher.deOhx8v"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.cQGWhPj" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/super-admin/analysis</argument>
+    </service>
+    <service id=".security.request_matcher._w9S7Zo" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.cQGWhPj"/>
       </argument>
     </service>
     <service id=".security.request_matcher.fBuDp4a" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
@@ -9290,10 +9478,14 @@
     </service>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\CheckExpiredSubscriptionsCommand" class="App\Command\CheckExpiredSubscriptionsCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\CheckExpiredSubscriptionsCommand" class="App\Command\CheckExpiredSubscriptionsCommand" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\CleanExpiredAnalysisCommand" class="App\Command\CleanExpiredAnalysisCommand" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\CleanExpiredAnalysisCommand" class="App\Command\CleanExpiredAnalysisCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\CleanIncompleteRegistrationsCommand" class="App\Command\CleanIncompleteRegistrationsCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\CleanIncompleteRegistrationsCommand" class="App\Command\CleanIncompleteRegistrationsCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\CreateAdminCommand" class="App\Command\CreateAdminCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\CreateAdminCommand" class="App\Command\CreateAdminCommand" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\CreateMonthlySubscriptionsCommand" class="App\Command\CreateMonthlySubscriptionsCommand" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\CreateMonthlySubscriptionsCommand" class="App\Command\CreateMonthlySubscriptionsCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\EnforceQuotasCommand" class="App\Command\EnforceQuotasCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\EnforceQuotasCommand" class="App\Command\EnforceQuotasCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\EnforceUserQuotasCommand" class="App\Command\EnforceUserQuotasCommand" autowire="true" abstract="true"/>
@@ -9302,6 +9494,8 @@
     <service id=".abstract.instanceof.App\Command\GenerateSalesReportCommand" class="App\Command\GenerateSalesReportCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\SendExpirationRemindersCommand" class="App\Command\SendExpirationRemindersCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\SendExpirationRemindersCommand" class="App\Command\SendExpirationRemindersCommand" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\SendSubscriptionRemindersCommand" class="App\Command\SendSubscriptionRemindersCommand" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\SendSubscriptionRemindersCommand" class="App\Command\SendSubscriptionRemindersCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\StockMaintenanceCommand" class="App\Command\StockMaintenanceCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\StockMaintenanceCommand" class="App\Command\StockMaintenanceCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\TestEmailCommand" class="App\Command\TestEmailCommand" autowire="true" abstract="true"/>
@@ -9360,6 +9554,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Api\ProductSearchController" class="App\Controller\Api\ProductSearchController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\ProductSearchController" class="App\Controller\Api\ProductSearchController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Api\ProductSearchController" class="App\Controller\Api\ProductSearchController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Company\CompanyAnalysisController" class="App\Controller\Company\CompanyAnalysisController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Company\CompanyAnalysisController" class="App\Controller\Company\CompanyAnalysisController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Company\CompanyAnalysisController" class="App\Controller\Company\CompanyAnalysisController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -9375,6 +9572,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Manager\TeamController" class="App\Controller\Manager\TeamController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Manager\TeamController" class="App\Controller\Manager\TeamController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Manager\TeamController" class="App\Controller\Manager\TeamController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PaymentController" class="App\Controller\PaymentController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PaymentController" class="App\Controller\PaymentController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\PaymentController" class="App\Controller\PaymentController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PrintController" class="App\Controller\PrintController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PrintController" class="App\Controller\PrintController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\PrintController" class="App\Controller\PrintController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -9417,6 +9617,12 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SubscriptionController" class="App\Controller\SubscriptionController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SubscriptionController" class="App\Controller\SubscriptionController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SubscriptionController" class="App\Controller\SubscriptionController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SuperAdmin\AnalysisPriceController" class="App\Controller\SuperAdmin\AnalysisPriceController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SuperAdmin\AnalysisPriceController" class="App\Controller\SuperAdmin\AnalysisPriceController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\SuperAdmin\AnalysisPriceController" class="App\Controller\SuperAdmin\AnalysisPriceController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SuperAdmin\CompanyAnalysisController" class="App\Controller\SuperAdmin\CompanyAnalysisController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SuperAdmin\CompanyAnalysisController" class="App\Controller\SuperAdmin\CompanyAnalysisController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\SuperAdmin\CompanyAnalysisController" class="App\Controller\SuperAdmin\CompanyAnalysisController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SuperAdmin\HmaServiceController" class="App\Controller\SuperAdmin\HmaServiceController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SuperAdmin\HmaServiceController" class="App\Controller\SuperAdmin\HmaServiceController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SuperAdmin\HmaServiceController" class="App\Controller\SuperAdmin\HmaServiceController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -9443,6 +9649,10 @@
     <service id=".abstract.instanceof.App\EventListener\LogoutListener" class="App\EventListener\LogoutListener" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventSubscriber\UserDisabledSubscriber" class="App\EventSubscriber\UserDisabledSubscriber" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\EventSubscriber\UserDisabledSubscriber" class="App\EventSubscriber\UserDisabledSubscriber" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\AnalysisPriceType" class="App\Form\AnalysisPriceType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\AnalysisPriceType" class="App\Form\AnalysisPriceType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\AnalysisRequestType" class="App\Form\AnalysisRequestType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\AnalysisRequestType" class="App\Form\AnalysisRequestType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\CartItemType" class="App\Form\CartItemType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\CartItemType" class="App\Form\CartItemType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\CategoryRecipeType" class="App\Form\CategoryRecipeType" autowire="true" abstract="true"/>
@@ -9523,6 +9733,12 @@
     <service id=".abstract.instanceof.App\Form\TypePromotionType" class="App\Form\TypePromotionType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\UserType" class="App\Form\UserType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\UserType" class="App\Form\UserType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\AnalysisPaymentRepository" class="App\Repository\AnalysisPaymentRepository" public="true" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\AnalysisPaymentRepository" class="App\Repository\AnalysisPaymentRepository" public="true" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\AnalysisPriceRepository" class="App\Repository\AnalysisPriceRepository" public="true" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\AnalysisPriceRepository" class="App\Repository\AnalysisPriceRepository" public="true" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\AnalysisRequestRepository" class="App\Repository\AnalysisRequestRepository" public="true" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\AnalysisRequestRepository" class="App\Repository\AnalysisRequestRepository" public="true" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\CategoryRecipeRepository" class="App\Repository\CategoryRecipeRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\CategoryRecipeRepository" class="App\Repository\CategoryRecipeRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\CategoryRepository" class="App\Repository\CategoryRepository" autowire="true" abstract="true"/>
@@ -10401,11 +10617,40 @@
         <argument key="user" type="service_closure" id=".errored..service_locator.Hz5btge.App\Entity\User"/>
       </argument>
     </service>
+    <service id=".service_locator.X6B4nAg" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="priceRepository" type="service_closure" id="App\Repository\AnalysisPriceRepository"/>
+        <argument key="repository" type="service_closure" id="App\Repository\AnalysisRequestRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.3fvOxJk" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="notificationService" type="service_closure" id="App\Service\NotificationService"/>
+        <argument key="priceRepository" type="service_closure" id="App\Repository\AnalysisPriceRepository"/>
+        <argument key="repository" type="service_closure" id="App\Repository\AnalysisRequestRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.dAoTLoj" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="analysisRequest" type="service_closure" id=".errored..service_locator.dAoTLoj.App\Entity\AnalysisRequest"/>
+      </argument>
+    </service>
     <service id=".service_locator.fNvIwJr" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="fileUploader" type="service_closure" id="App\Service\FileUploader"/>
+      </argument>
+    </service>
+    <service id=".service_locator.t9ibSgq" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="fedaPayService" type="service_closure" id="App\Service\FedaPayService"/>
+        <argument key="logger" type="service_closure" id="monolog.logger"/>
       </argument>
     </service>
     <service id=".service_locator.ruxHxcA" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -10474,6 +10719,12 @@
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="returnOrder" type="service_closure" id=".errored..service_locator.UMxr_M5.App\Entity\ReturnOrder"/>
+      </argument>
+    </service>
+    <service id=".service_locator.4EzcLZv" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="priceRepository" type="service_closure" id="App\Repository\AnalysisPriceRepository"/>
       </argument>
     </service>
     <service id=".service_locator.gQbEjC7" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -10575,6 +10826,67 @@
         <argument key="subscription" type="service_closure" id=".errored..service_locator.NEOlKDh.App\Entity\Subscription"/>
       </argument>
     </service>
+    <service id=".service_locator.VCbJBCz" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="price" type="service_closure" id=".errored..service_locator.VCbJBCz.App\Entity\AnalysisPrice"/>
+      </argument>
+    </service>
+    <service id=".service_locator.i8zDIA5" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="price" type="service_closure" id=".errored..service_locator.i8zDIA5.App\Entity\AnalysisPrice"/>
+      </argument>
+    </service>
+    <service id=".service_locator.dLUFWe6" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="repository" type="service_closure" id="App\Repository\AnalysisRequestRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.XytvGTJ" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="repository" type="service_closure" id="App\Repository\HmaServiceRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.NeEnakr" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="company" type="service_closure" id=".errored..service_locator.NeEnakr.App\Entity\HmaService"/>
+        <argument key="repository" type="service_closure" id="App\Repository\AnalysisRequestRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.NW1L6Ab" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="companyRepository" type="service_closure" id="App\Repository\HmaServiceRepository"/>
+        <argument key="priceRepository" type="service_closure" id="App\Repository\AnalysisPriceRepository"/>
+        <argument key="requestRepository" type="service_closure" id="App\Repository\AnalysisRequestRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.Xld5WjM" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="analysisRequest" type="service_closure" id=".errored..service_locator.Xld5WjM.App\Entity\AnalysisRequest"/>
+        <argument key="exportService" type="service_closure" id="App\Service\SuperAdmin\CompanyAnalysisExportService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.wP3Z_Jt" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="analysisRequest" type="service_closure" id=".errored..service_locator.wP3Z_Jt.App\Entity\AnalysisRequest"/>
+        <argument key="fedaPayService" type="service_closure" id="App\Service\FedaPayService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.lEubkBD" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="analysisRequest" type="service_closure" id=".errored..service_locator.lEubkBD.App\Entity\AnalysisRequest"/>
+        <argument key="notificationService" type="service_closure" id="App\Service\NotificationService"/>
+      </argument>
+    </service>
     <service id=".service_locator.EFV3GZa" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -10614,7 +10926,7 @@
         <argument key="tokenRepository" type="service_closure" id="App\Repository\SupplierCreditNoteTokenRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.Qc8X6f_" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.5YehyGD" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Admin\CartController::receiveCart" type="service_closure" id=".service_locator.nnTODkK"/>
@@ -10740,6 +11052,12 @@
         <argument key="App\Controller\Admin\UserController::edit" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Admin\UserController::index" type="service_closure" id=".service_locator.V8HB.cV"/>
         <argument key="App\Controller\Admin\UserController::show" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController::download" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController::downloadFinal" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController::downloadRaw" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController::index" type="service_closure" id=".service_locator.X6B4nAg"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController::new" type="service_closure" id=".service_locator.3fvOxJk"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController::show" type="service_closure" id=".service_locator.dAoTLoj"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController::activateCompany" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController::deactivateCompany" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController::deleteLogo" type="service_closure" id=".service_locator.fNvIwJr"/>
@@ -10747,6 +11065,9 @@
         <argument key="App\Controller\Dashboard\HmaServiceProfileController::showDetails" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Manager\TeamController::edit" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Manager\TeamController::show" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\PaymentController::alreadyProcessed" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\PaymentController::callback" type="service_closure" id=".service_locator.t9ibSgq"/>
+        <argument key="App\Controller\PaymentController::successWithId" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\PrintController::printTicket" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\PurchaseController::cancel" type="service_closure" id=".service_locator.dC4Tbs0"/>
         <argument key="App\Controller\PurchaseController::print" type="service_closure" id=".service_locator.GBRGGXk"/>
@@ -10764,6 +11085,7 @@
         <argument key="App\Controller\Return\ReturnController::printReceipt" type="service_closure" id=".service_locator.UMxr_M5"/>
         <argument key="App\Controller\Return\ReturnController::reject" type="service_closure" id=".service_locator.UMxr_M5"/>
         <argument key="App\Controller\Return\ReturnController::show" type="service_closure" id=".service_locator.UMxr_M5"/>
+        <argument key="App\Controller\Sale\OrderController::contactSuperAdmin" type="service_closure" id=".service_locator.4EzcLZv"/>
         <argument key="App\Controller\Sale\OrderController::delete" type="service_closure" id=".service_locator.WlzNspm"/>
         <argument key="App\Controller\Sale\OrderController::downloadPdf" type="service_closure" id=".service_locator.4n4ylFv"/>
         <argument key="App\Controller\Sale\OrderController::exportExcel" type="service_closure" id=".service_locator.gQbEjC7"/>
@@ -10795,6 +11117,27 @@
         <argument key="App\Controller\SubscriptionController::checkout" type="service_closure" id=".service_locator.7876JS0"/>
         <argument key="App\Controller\SubscriptionController::plans" type="service_closure" id=".service_locator.Qe.FMtv"/>
         <argument key="App\Controller\SubscriptionController::success" type="service_closure" id=".service_locator.NEOlKDh"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController::delete" type="service_closure" id=".service_locator.i8zDIA5"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController::edit" type="service_closure" id=".service_locator.i8zDIA5"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController::index" type="service_closure" id=".service_locator.9kKwU2t"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController::new" type="service_closure" id=".service_locator.9kKwU2t"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController::show" type="service_closure" id=".service_locator.VCbJBCz"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController::toggle" type="service_closure" id=".service_locator.i8zDIA5"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::cancel" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::companyStats" type="service_closure" id=".service_locator.NeEnakr"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::downloadFinalReport" type="service_closure" id=".service_locator.Xld5WjM"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::downloadRawData" type="service_closure" id=".service_locator.Xld5WjM"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::forceToPaid" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::generateRawData" type="service_closure" id=".service_locator.Xld5WjM"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::getPaymentLink" type="service_closure" id=".service_locator.wP3Z_Jt"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::index" type="service_closure" id=".service_locator.dLUFWe6"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::new" type="service_closure" id=".service_locator.NW1L6Ab"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::replaceFinalReport" type="service_closure" id=".service_locator.Xld5WjM"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::retry" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::searchCompany" type="service_closure" id=".service_locator.XytvGTJ"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::sendPaymentLink" type="service_closure" id=".service_locator.lEubkBD"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::show" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::uploadFinalReport" type="service_closure" id=".service_locator.Xld5WjM"/>
         <argument key="App\Controller\SuperAdmin\HmaServiceController::delete" type="service_closure" id=".service_locator.EFV3GZa"/>
         <argument key="App\Controller\SuperAdmin\HmaServiceController::edit" type="service_closure" id=".service_locator.EFV3GZa"/>
         <argument key="App\Controller\SuperAdmin\HmaServiceController::show" type="service_closure" id=".service_locator.EFV3GZa"/>
@@ -10938,6 +11281,12 @@
         <argument key="App\Controller\Admin\UserController:edit" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Admin\UserController:index" type="service_closure" id=".service_locator.V8HB.cV"/>
         <argument key="App\Controller\Admin\UserController:show" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController:download" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController:downloadFinal" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController:downloadRaw" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController:index" type="service_closure" id=".service_locator.X6B4nAg"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController:new" type="service_closure" id=".service_locator.3fvOxJk"/>
+        <argument key="App\Controller\Company\CompanyAnalysisController:show" type="service_closure" id=".service_locator.dAoTLoj"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController:activateCompany" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController:deactivateCompany" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Dashboard\HmaServiceProfileController:deleteLogo" type="service_closure" id=".service_locator.fNvIwJr"/>
@@ -10945,6 +11294,9 @@
         <argument key="App\Controller\Dashboard\HmaServiceProfileController:showDetails" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Manager\TeamController:edit" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Manager\TeamController:show" type="service_closure" id=".service_locator.Hz5btge"/>
+        <argument key="App\Controller\PaymentController:alreadyProcessed" type="service_closure" id=".service_locator.CsMkqUa"/>
+        <argument key="App\Controller\PaymentController:callback" type="service_closure" id=".service_locator.t9ibSgq"/>
+        <argument key="App\Controller\PaymentController:successWithId" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\PrintController:printTicket" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\PurchaseController:cancel" type="service_closure" id=".service_locator.dC4Tbs0"/>
         <argument key="App\Controller\PurchaseController:print" type="service_closure" id=".service_locator.GBRGGXk"/>
@@ -10962,6 +11314,7 @@
         <argument key="App\Controller\Return\ReturnController:printReceipt" type="service_closure" id=".service_locator.UMxr_M5"/>
         <argument key="App\Controller\Return\ReturnController:reject" type="service_closure" id=".service_locator.UMxr_M5"/>
         <argument key="App\Controller\Return\ReturnController:show" type="service_closure" id=".service_locator.UMxr_M5"/>
+        <argument key="App\Controller\Sale\OrderController:contactSuperAdmin" type="service_closure" id=".service_locator.4EzcLZv"/>
         <argument key="App\Controller\Sale\OrderController:delete" type="service_closure" id=".service_locator.WlzNspm"/>
         <argument key="App\Controller\Sale\OrderController:downloadPdf" type="service_closure" id=".service_locator.4n4ylFv"/>
         <argument key="App\Controller\Sale\OrderController:exportExcel" type="service_closure" id=".service_locator.gQbEjC7"/>
@@ -10993,6 +11346,27 @@
         <argument key="App\Controller\SubscriptionController:checkout" type="service_closure" id=".service_locator.7876JS0"/>
         <argument key="App\Controller\SubscriptionController:plans" type="service_closure" id=".service_locator.Qe.FMtv"/>
         <argument key="App\Controller\SubscriptionController:success" type="service_closure" id=".service_locator.NEOlKDh"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController:delete" type="service_closure" id=".service_locator.i8zDIA5"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController:edit" type="service_closure" id=".service_locator.i8zDIA5"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController:index" type="service_closure" id=".service_locator.9kKwU2t"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController:new" type="service_closure" id=".service_locator.9kKwU2t"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController:show" type="service_closure" id=".service_locator.VCbJBCz"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisPriceController:toggle" type="service_closure" id=".service_locator.i8zDIA5"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:cancel" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:companyStats" type="service_closure" id=".service_locator.NeEnakr"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:downloadFinalReport" type="service_closure" id=".service_locator.Xld5WjM"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:downloadRawData" type="service_closure" id=".service_locator.Xld5WjM"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:forceToPaid" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:generateRawData" type="service_closure" id=".service_locator.Xld5WjM"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:getPaymentLink" type="service_closure" id=".service_locator.wP3Z_Jt"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:index" type="service_closure" id=".service_locator.dLUFWe6"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:new" type="service_closure" id=".service_locator.NW1L6Ab"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:replaceFinalReport" type="service_closure" id=".service_locator.Xld5WjM"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:retry" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:searchCompany" type="service_closure" id=".service_locator.XytvGTJ"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:sendPaymentLink" type="service_closure" id=".service_locator.lEubkBD"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:show" type="service_closure" id=".service_locator.dAoTLoj"/>
+        <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:uploadFinalReport" type="service_closure" id=".service_locator.Xld5WjM"/>
         <argument key="App\Controller\SuperAdmin\HmaServiceController:delete" type="service_closure" id=".service_locator.EFV3GZa"/>
         <argument key="App\Controller\SuperAdmin\HmaServiceController:edit" type="service_closure" id=".service_locator.EFV3GZa"/>
         <argument key="App\Controller\SuperAdmin\HmaServiceController:show" type="service_closure" id=".service_locator.EFV3GZa"/>
@@ -11170,9 +11544,11 @@
       <argument type="service" id="argument_resolver.query_parameter_value_resolver"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.66r3ccA" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.875GwPz" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\Form\AnalysisPriceType" type="service_closure" id="App\Form\AnalysisPriceType"/>
+        <argument key="App\Form\AnalysisRequestType" type="service_closure" id="App\Form\AnalysisRequestType"/>
         <argument key="App\Form\CartItemType" type="service_closure" id="App\Form\CartItemType"/>
         <argument key="App\Form\CategoryRecipeType" type="service_closure" id="App\Form\CategoryRecipeType"/>
         <argument key="App\Form\CategoryType" type="service_closure" id="App\Form\CategoryType"/>
@@ -11338,9 +11714,12 @@
         <argument key="turbo.doctrine.event_listener" type="service_closure" id="turbo.doctrine.event_listener"/>
       </argument>
     </service>
-    <service id=".service_locator.WtY99p_" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.1NACIMK" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\Repository\AnalysisPaymentRepository" type="service_closure" id="App\Repository\AnalysisPaymentRepository"/>
+        <argument key="App\Repository\AnalysisPriceRepository" type="service_closure" id="App\Repository\AnalysisPriceRepository"/>
+        <argument key="App\Repository\AnalysisRequestRepository" type="service_closure" id="App\Repository\AnalysisRequestRepository"/>
         <argument key="App\Repository\CategoryRecipeRepository" type="service_closure" id="App\Repository\CategoryRecipeRepository"/>
         <argument key="App\Repository\CategoryRepository" type="service_closure" id="App\Repository\CategoryRepository"/>
         <argument key="App\Repository\DailyUsageRepository" type="service_closure" id="App\Repository\DailyUsageRepository"/>
@@ -11887,6 +12266,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
+    <service id=".service_locator.siKanuc.App\Controller\Company\CompanyAnalysisController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Company\CompanyAnalysisController"/>
+      <argument>App\Controller\Company\CompanyAnalysisController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
     <service id=".service_locator.siKanuc.App\Controller\DashboardController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\DashboardController"/>
       <argument>App\Controller\DashboardController</argument>
@@ -11914,6 +12299,12 @@
     <service id=".service_locator.siKanuc.App\Controller\Manager\TeamController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Manager\TeamController"/>
       <argument>App\Controller\Manager\TeamController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\PaymentController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\PaymentController"/>
+      <argument>App\Controller\PaymentController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
@@ -11998,6 +12389,18 @@
     <service id=".service_locator.siKanuc.App\Controller\SubscriptionController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SubscriptionController"/>
       <argument>App\Controller\SubscriptionController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\SuperAdmin\AnalysisPriceController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\SuperAdmin\AnalysisPriceController"/>
+      <argument>App\Controller\SuperAdmin\AnalysisPriceController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\SuperAdmin\CompanyAnalysisController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\SuperAdmin\CompanyAnalysisController"/>
+      <argument>App\Controller\SuperAdmin\CompanyAnalysisController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
@@ -12233,11 +12636,13 @@
           <argument>App\Controller\Admin\TypePromotionController</argument>
           <argument>App\Controller\Admin\UserController</argument>
           <argument>App\Controller\Api\ProductSearchController</argument>
+          <argument>App\Controller\Company\CompanyAnalysisController</argument>
           <argument>App\Controller\DashboardController</argument>
           <argument>App\Controller\Dashboard\HmaServiceProfileController</argument>
           <argument>App\Controller\FirstLoginController</argument>
           <argument>App\Controller\HomeController</argument>
           <argument>App\Controller\Manager\TeamController</argument>
+          <argument>App\Controller\PaymentController</argument>
           <argument>App\Controller\PrintController</argument>
           <argument>App\Controller\ProfileController</argument>
           <argument>App\Controller\PurchaseController</argument>
@@ -12252,6 +12657,8 @@
           <argument>App\Controller\Stock\StockAdjustmentController</argument>
           <argument>App\Controller\Stock\StockTransferController</argument>
           <argument>App\Controller\SubscriptionController</argument>
+          <argument>App\Controller\SuperAdmin\AnalysisPriceController</argument>
+          <argument>App\Controller\SuperAdmin\CompanyAnalysisController</argument>
           <argument>App\Controller\SuperAdmin\HmaServiceController</argument>
           <argument>App\Controller\SuperAdmin\SubscriptionController</argument>
           <argument>App\Controller\SuperAdmin\SubscriptionPlanController</argument>
@@ -12558,6 +12965,9 @@
     <service id=".errored..service_locator.Hz5btge.App\Entity\User" class="App\Entity\User">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.Hz5btge&quot;: it needs an instance of &quot;App\Entity\User&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
+    <service id=".errored..service_locator.dAoTLoj.App\Entity\AnalysisRequest" class="App\Entity\AnalysisRequest">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.dAoTLoj&quot;: it needs an instance of &quot;App\Entity\AnalysisRequest&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
     <service id=".errored..service_locator.ruxHxcA.App\Entity\Order" class="App\Entity\Order">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ruxHxcA&quot;: it needs an instance of &quot;App\Entity\Order&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
@@ -12591,6 +13001,24 @@
     <service id=".errored..service_locator.NEOlKDh.App\Entity\Subscription" class="App\Entity\Subscription">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.NEOlKDh&quot;: it needs an instance of &quot;App\Entity\Subscription&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
+    <service id=".errored..service_locator.VCbJBCz.App\Entity\AnalysisPrice" class="App\Entity\AnalysisPrice">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.VCbJBCz&quot;: it needs an instance of &quot;App\Entity\AnalysisPrice&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.i8zDIA5.App\Entity\AnalysisPrice" class="App\Entity\AnalysisPrice">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.i8zDIA5&quot;: it needs an instance of &quot;App\Entity\AnalysisPrice&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.NeEnakr.App\Entity\HmaService" class="App\Entity\HmaService">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.NeEnakr&quot;: it needs an instance of &quot;App\Entity\HmaService&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.Xld5WjM.App\Entity\AnalysisRequest" class="App\Entity\AnalysisRequest">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.Xld5WjM&quot;: it needs an instance of &quot;App\Entity\AnalysisRequest&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.wP3Z_Jt.App\Entity\AnalysisRequest" class="App\Entity\AnalysisRequest">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.wP3Z_Jt&quot;: it needs an instance of &quot;App\Entity\AnalysisRequest&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.lEubkBD.App\Entity\AnalysisRequest" class="App\Entity\AnalysisRequest">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.lEubkBD&quot;: it needs an instance of &quot;App\Entity\AnalysisRequest&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
     <service id=".errored..service_locator.EFV3GZa.App\Entity\HmaService" class="App\Entity\HmaService">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.EFV3GZa&quot;: it needs an instance of &quot;App\Entity\HmaService&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
@@ -12599,6 +13027,13 @@
     </service>
     <service id=".errored..service_locator.sSPFBVg.App\Entity\SubscriptionPlan" class="App\Entity\SubscriptionPlan">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.sSPFBVg&quot;: it needs an instance of &quot;App\Entity\SubscriptionPlan&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".App\Command\CleanExpiredAnalysisCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>app:clean-expired-analysis</argument>
+      <argument type="collection"/>
+      <argument>Nettoie les demandes d'analyse expirées</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="App\Command\CleanExpiredAnalysisCommand"/>
     </service>
     <service id=".App\Command\CleanIncompleteRegistrationsCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>app:clean-incomplete-registrations</argument>
@@ -12613,6 +13048,13 @@
       <argument>Create an admin user</argument>
       <argument>false</argument>
       <argument type="service_closure" id="App\Command\CreateAdminCommand"/>
+    </service>
+    <service id=".App\Command\CreateMonthlySubscriptionsCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>app:create-monthly-subscriptions</argument>
+      <argument type="collection"/>
+      <argument>Crée automatiquement les demandes d'analyse pour les abonnements mensuels actifs</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="App\Command\CreateMonthlySubscriptionsCommand"/>
     </service>
     <service id=".App\Command\EnforceQuotasCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>app:enforce-quotas</argument>
@@ -12634,6 +13076,13 @@
       <argument>Génère un rapport de ventes Excel (à implémenter)</argument>
       <argument>false</argument>
       <argument type="service_closure" id="App\Command\GenerateSalesReportCommand"/>
+    </service>
+    <service id=".App\Command\SendSubscriptionRemindersCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>app:send-subscription-reminders</argument>
+      <argument type="collection"/>
+      <argument>Envoie des rappels pour les abonnements sur le point d'expirer</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="App\Command\SendSubscriptionRemindersCommand"/>
     </service>
     <service id=".App\Command\TestSubscriptionEmailCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>app:test-subscription-email</argument>
@@ -13335,15 +13784,18 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.5cMQAbH"/>
+      <argument type="service" id=".service_locator.skUGAEn"/>
       <argument type="collection">
         <argument key="app:check-expired-subscriptions">App\Command\CheckExpiredSubscriptionsCommand</argument>
+        <argument key="app:clean-expired-analysis">App\Command\CleanExpiredAnalysisCommand</argument>
         <argument key="app:clean-incomplete-registrations">App\Command\CleanIncompleteRegistrationsCommand</argument>
         <argument key="create-admin">App\Command\CreateAdminCommand</argument>
+        <argument key="app:create-monthly-subscriptions">App\Command\CreateMonthlySubscriptionsCommand</argument>
         <argument key="app:enforce-quotas">App\Command\EnforceQuotasCommand</argument>
         <argument key="app:enforce-user-quotas">App\Command\EnforceUserQuotasCommand</argument>
         <argument key="app:generate-sales-report">App\Command\GenerateSalesReportCommand</argument>
         <argument key="app:send-expiration-reminders">App\Command\SendExpirationRemindersCommand</argument>
+        <argument key="app:send-subscription-reminders">App\Command\SendSubscriptionRemindersCommand</argument>
         <argument key="app:stock:maintenance">App\Command\StockMaintenanceCommand</argument>
         <argument key="app:test-email">App\Command\TestEmailCommand</argument>
         <argument key="app:test-subscription-email">App\Command\TestSubscriptionEmailCommand</argument>
@@ -13468,16 +13920,19 @@
         <argument key="make:webhook">maker.auto_command.make_webhook</argument>
       </argument>
     </service>
-    <service id=".service_locator.5cMQAbH" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.skUGAEn" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Command\CheckExpiredSubscriptionsCommand" type="service_closure" id="App\Command\CheckExpiredSubscriptionsCommand"/>
+        <argument key="App\Command\CleanExpiredAnalysisCommand" type="service_closure" id=".App\Command\CleanExpiredAnalysisCommand.lazy"/>
         <argument key="App\Command\CleanIncompleteRegistrationsCommand" type="service_closure" id=".App\Command\CleanIncompleteRegistrationsCommand.lazy"/>
         <argument key="App\Command\CreateAdminCommand" type="service_closure" id=".App\Command\CreateAdminCommand.lazy"/>
+        <argument key="App\Command\CreateMonthlySubscriptionsCommand" type="service_closure" id=".App\Command\CreateMonthlySubscriptionsCommand.lazy"/>
         <argument key="App\Command\EnforceQuotasCommand" type="service_closure" id=".App\Command\EnforceQuotasCommand.lazy"/>
         <argument key="App\Command\EnforceUserQuotasCommand" type="service_closure" id=".App\Command\EnforceUserQuotasCommand.lazy"/>
         <argument key="App\Command\GenerateSalesReportCommand" type="service_closure" id=".App\Command\GenerateSalesReportCommand.lazy"/>
         <argument key="App\Command\SendExpirationRemindersCommand" type="service_closure" id="App\Command\SendExpirationRemindersCommand"/>
+        <argument key="App\Command\SendSubscriptionRemindersCommand" type="service_closure" id=".App\Command\SendSubscriptionRemindersCommand.lazy"/>
         <argument key="App\Command\StockMaintenanceCommand" type="service_closure" id="App\Command\StockMaintenanceCommand"/>
         <argument key="App\Command\TestEmailCommand" type="service_closure" id="App\Command\TestEmailCommand"/>
         <argument key="App\Command\TestSubscriptionEmailCommand" type="service_closure" id=".App\Command\TestSubscriptionEmailCommand.lazy"/>
@@ -13884,7 +14339,7 @@
     <service id="Knp\Bundle\TimeBundle\DateTimeFormatter" alias="time.datetime_formatter"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.Qc8X6f_"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.5YehyGD"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -13944,6 +14399,9 @@
     <service id=".service_locator.CSv_4nk" alias=".service_locator.GPEfe1W"/>
     <service id=".service_locator.fHkT.Bu" alias=".service_locator.c3hO.Dc"/>
     <service id=".service_locator.AA8lBq2" alias=".service_locator.EsReoji"/>
+    <service id=".service_locator.pAJqyge" alias=".service_locator.X6B4nAg"/>
+    <service id=".service_locator.6ctAMOZ" alias=".service_locator.3fvOxJk"/>
+    <service id=".service_locator.EYumDST" alias=".service_locator.t9ibSgq"/>
     <service id=".service_locator.Dw2Fmdi" alias=".service_locator.XTjzo4w"/>
     <service id=".service_locator.Tsb.wpJ" alias=".service_locator.dC4Tbs0"/>
     <service id=".service_locator.KnFk7IB" alias=".service_locator.6LV_x97"/>
@@ -13952,11 +14410,13 @@
     <service id=".service_locator.FOXgEKi" alias=".service_locator.WlzNspm"/>
     <service id=".service_locator.VDGhXYh" alias=".service_locator.7876JS0"/>
     <service id=".service_locator.w64.HFj" alias=".service_locator.pZ9vOm3"/>
+    <service id=".service_locator.ArEfX0p" alias=".service_locator.i8zDIA5"/>
+    <service id=".service_locator._ioSe5r" alias=".service_locator.NW1L6Ab"/>
     <service id=".service_locator.blXgkPv" alias=".service_locator.aQv.1uC"/>
     <service id=".service_locator.zgOrgxD" alias=".service_locator.t.B26rY"/>
-    <service id=".service_locator.LWNOtyA" alias=".service_locator.Qc8X6f_"/>
+    <service id=".service_locator.JQ5SDU_" alias=".service_locator.5YehyGD"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
-    <service id=".service_locator.5jS3vPd" alias=".service_locator.66r3ccA"/>
+    <service id=".service_locator.2vHZfcQ" alias=".service_locator.875GwPz"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>
     <service id=".service_locator.O24_MAy" alias=".service_locator.yY.p4P7"/>
     <service id=".service_locator.N8tb5Jh" alias=".service_locator.siKanuc"/>
@@ -14035,7 +14495,11 @@
     <service id=".service_locator.zTaZM5D" alias=".service_locator.zIb6dGh"/>
     <service id=".service_locator.cCPevwB" alias=".service_locator.V8HB.cV"/>
     <service id=".service_locator.EmZ4cZI" alias=".service_locator.Hz5btge"/>
+    <service id=".service_locator.0bm7sPO" alias=".service_locator.X6B4nAg"/>
+    <service id=".service_locator.ImMG5_R" alias=".service_locator.3fvOxJk"/>
+    <service id=".service_locator.D18YX0R" alias=".service_locator.dAoTLoj"/>
     <service id=".service_locator.J4v_dgx" alias=".service_locator.fNvIwJr"/>
+    <service id=".service_locator.U3zF2sy" alias=".service_locator.t9ibSgq"/>
     <service id=".service_locator.qDoK7Nx" alias=".service_locator.ruxHxcA"/>
     <service id=".service_locator.1XLa57O" alias=".service_locator.XTjzo4w"/>
     <service id=".service_locator.qcDUZnU" alias=".service_locator.dC4Tbs0"/>
@@ -14046,6 +14510,7 @@
     <service id=".service_locator.uPguXMt" alias=".service_locator.Z9ydiC1"/>
     <service id=".service_locator.W47vLMj" alias=".service_locator.Mhqdd2r"/>
     <service id=".service_locator.qV9.XYI" alias=".service_locator.UMxr_M5"/>
+    <service id=".service_locator.LKfBSHO" alias=".service_locator.4EzcLZv"/>
     <service id=".service_locator.kXBjOS8" alias=".service_locator.gQbEjC7"/>
     <service id=".service_locator.1.9tujA" alias=".service_locator.TFDMK8M"/>
     <service id=".service_locator.gtgK4ct" alias=".service_locator.WlzNspm"/>
@@ -14061,6 +14526,15 @@
     <service id=".service_locator.DNo38ky" alias=".service_locator.7876JS0"/>
     <service id=".service_locator.4qBqTbv" alias=".service_locator.pZ9vOm3"/>
     <service id=".service_locator.DCAuWCd" alias=".service_locator.NEOlKDh"/>
+    <service id=".service_locator.qdnt1f4" alias=".service_locator.VCbJBCz"/>
+    <service id=".service_locator.LHW5rW7" alias=".service_locator.i8zDIA5"/>
+    <service id=".service_locator._WlTror" alias=".service_locator.dLUFWe6"/>
+    <service id=".service_locator.TDWw_vn" alias=".service_locator.XytvGTJ"/>
+    <service id=".service_locator.31_hBm3" alias=".service_locator.NeEnakr"/>
+    <service id=".service_locator.CX4NOnF" alias=".service_locator.NW1L6Ab"/>
+    <service id=".service_locator.NQRHRPh" alias=".service_locator.Xld5WjM"/>
+    <service id=".service_locator.0erWa08" alias=".service_locator.wP3Z_Jt"/>
+    <service id=".service_locator.tZTlaCt" alias=".service_locator.lEubkBD"/>
     <service id=".service_locator.iPTsvSG" alias=".service_locator.EFV3GZa"/>
     <service id=".service_locator.g0lh9uU" alias=".service_locator.alaKmB6"/>
     <service id=".service_locator.UjavzA5" alias=".service_locator.aQv.1uC"/>

@@ -75,7 +75,7 @@ class __TwigTemplate_876a7bd8fdde0f05e5faa1bcfcbf68db extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
 
-        yield "Contacter le support - HMA Market";
+        yield "Analyse approfondie des données - HMA Market";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
 
@@ -102,7 +102,7 @@ class __TwigTemplate_876a7bd8fdde0f05e5faa1bcfcbf68db extends Template
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
 <style>
-    :root { --primary-color: #0463f1; --success-color: #25D366; }
+    :root { --primary-color: #0463f1; }
     
     .contact-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -116,10 +116,11 @@ class __TwigTemplate_876a7bd8fdde0f05e5faa1bcfcbf68db extends Template
     .contact-card {
         background: white;
         border-radius: 20px;
-        padding: 2rem;
+        padding: 1.75rem;
         margin-bottom: 1.5rem;
         box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         transition: transform 0.3s, box-shadow 0.3s;
+        border: 1px solid #e9ecef;
     }
     
     .contact-card:hover {
@@ -127,86 +128,49 @@ class __TwigTemplate_876a7bd8fdde0f05e5faa1bcfcbf68db extends Template
         box-shadow: 0 12px 30px rgba(0,0,0,0.12);
     }
     
-    .admin-avatar {
-        width: 120px;
-        height: 120px;
-        border-radius: 60px;
-        object-fit: cover;
-        border: 4px solid white;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-        margin-top: -80px;
+    .price-tag {
+        display: inline-block;
+        padding: 0.25rem 1rem;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    
+    .process-step {
+        position: relative;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 12px;
         margin-bottom: 1rem;
     }
-    
-    .whatsapp-btn {
-        background: #25D366;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s;
-    }
-    
-    .whatsapp-btn:hover {
-        background: #128C7E;
-        transform: scale(1.05);
-    }
-    
-    .email-btn {
-        background: #ea4335;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s;
-    }
-    
-    .email-btn:hover {
-        background: #c5221f;
-        transform: scale(1.05);
-    }
-    
-    .info-box {
-        background: #f0fdf4;
-        border-left: 4px solid #22c55e;
-        padding: 1rem;
-        border-radius: 12px;
-        margin-top: 1.5rem;
-    }
-    
-    .feature-list {
-        list-style: none;
-        padding: 0;
-    }
-    
-    .feature-list li {
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #e5e7eb;
-        display: flex;
-        align-items: center;
-    }
-    
-    .feature-list li:last-child {
-        border-bottom: none;
-    }
-    
-    .feature-list li i {
-        width: 30px;
-        color: #667eea;
+    .process-step:not(:last-child)::after {
+        content: '↓';
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #0463f1;
         font-size: 1.2rem;
+    }
+    
+    .offer-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .offer-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
     }
     
     @media (max-width: 768px) {
         .contact-header {
             padding: 1.5rem;
         }
-        .admin-avatar {
-            width: 80px;
-            height: 80px;
-            margin-top: -50px;
-        }
         .contact-card {
-            padding: 1.5rem;
+            padding: 1.25rem;
+        }
+        .process-step:not(:last-child)::after {
+            display: none;
         }
     }
 </style>
@@ -220,7 +184,7 @@ class __TwigTemplate_876a7bd8fdde0f05e5faa1bcfcbf68db extends Template
         yield from [];
     }
 
-    // line 119
+    // line 83
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -233,193 +197,239 @@ class __TwigTemplate_876a7bd8fdde0f05e5faa1bcfcbf68db extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 120
+        // line 84
         yield "<div class=\"container py-4\">
     <!-- En-tête -->
     <div class=\"contact-header\">
         <h1 class=\"display-5 fw-bold mb-3\">
-            <i class=\"fas fa-headset me-3\"></i>
-            Support & Analyse Avancée
+            <i class=\"fas fa-chart-line me-3\"></i>
+            Analyse approfondie des données
         </h1>
         <p class=\"lead mb-0\">
-            Bénéficiez d'une analyse approfondie de vos données de vente
+            Transformez vos données en décisions stratégiques
         </p>
     </div>
 
     <div class=\"row\">
-        <div class=\"col-lg-8 mx-auto\">
-            <!-- Carte Contact Administrateur -->
-            <div class=\"contact-card text-center\">
-                ";
-        // line 136
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["superAdmin"]) || array_key_exists("superAdmin", $context) ? $context["superAdmin"] : (function () { throw new RuntimeError('Variable "superAdmin" does not exist.', 136, $this->source); })()), "photo", [], "any", false, false, false, 136)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 137
-            yield "                    <img src=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["superAdmin"]) || array_key_exists("superAdmin", $context) ? $context["superAdmin"] : (function () { throw new RuntimeError('Variable "superAdmin" does not exist.', 137, $this->source); })()), "photo", [], "any", false, false, false, 137))), "html", null, true);
-            yield "\" 
-                         alt=\"";
-            // line 138
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["superAdmin"]) || array_key_exists("superAdmin", $context) ? $context["superAdmin"] : (function () { throw new RuntimeError('Variable "superAdmin" does not exist.', 138, $this->source); })()), "fullName", [], "any", false, false, false, 138), "html", null, true);
-            yield "\" 
-                         class=\"admin-avatar\">
-                ";
-        } else {
-            // line 141
-            yield "                    <div class=\"admin-avatar bg-primary d-flex align-items-center justify-content-center mx-auto\">
-                        <i class=\"fas fa-user-tie fa-3x text-white\"></i>
-                    </div>
-                ";
-        }
-        // line 145
-        yield "                
-                <h2 class=\"h3 mb-2\">";
-        // line 146
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["superAdmin"] ?? null), "fullName", [], "any", true, true, false, 146)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["superAdmin"]) || array_key_exists("superAdmin", $context) ? $context["superAdmin"] : (function () { throw new RuntimeError('Variable "superAdmin" does not exist.', 146, $this->source); })()), "fullName", [], "any", false, false, false, 146), CoreExtension::getAttribute($this->env, $this->source, (isset($context["superAdmin"]) || array_key_exists("superAdmin", $context) ? $context["superAdmin"] : (function () { throw new RuntimeError('Variable "superAdmin" does not exist.', 146, $this->source); })()), "email", [], "any", false, false, false, 146))) : (CoreExtension::getAttribute($this->env, $this->source, (isset($context["superAdmin"]) || array_key_exists("superAdmin", $context) ? $context["superAdmin"] : (function () { throw new RuntimeError('Variable "superAdmin" does not exist.', 146, $this->source); })()), "email", [], "any", false, false, false, 146))), "html", null, true);
-        yield "</h2>
-                <p class=\"text-muted mb-3\">
-                    <i class=\"fas fa-shield-alt me-1\"></i> 
-                    Super Administrateur
-                </p>
-                <p class=\"mb-4\">
-                    <i class=\"fas fa-envelope me-2 text-muted\"></i> ";
-        // line 152
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["superAdmin"]) || array_key_exists("superAdmin", $context) ? $context["superAdmin"] : (function () { throw new RuntimeError('Variable "superAdmin" does not exist.', 152, $this->source); })()), "email", [], "any", false, false, false, 152), "html", null, true);
-        yield "
-                    ";
-        // line 153
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["superAdmin"]) || array_key_exists("superAdmin", $context) ? $context["superAdmin"] : (function () { throw new RuntimeError('Variable "superAdmin" does not exist.', 153, $this->source); })()), "phone", [], "any", false, false, false, 153)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 154
-            yield "                        <br>
-                        <i class=\"fas fa-phone me-2 text-muted\"></i> ";
-            // line 155
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["superAdmin"]) || array_key_exists("superAdmin", $context) ? $context["superAdmin"] : (function () { throw new RuntimeError('Variable "superAdmin" does not exist.', 155, $this->source); })()), "phone", [], "any", false, false, false, 155), "html", null, true);
-            yield "
-                    ";
-        }
-        // line 157
-        yield "                </p>
-                
-                <div class=\"d-flex gap-3 justify-content-center flex-wrap\">
-                    ";
-        // line 160
-        if ((($tmp = (isset($context["whatsappUrl"]) || array_key_exists("whatsappUrl", $context) ? $context["whatsappUrl"] : (function () { throw new RuntimeError('Variable "whatsappUrl" does not exist.', 160, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 161
-            yield "                        <a href=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["whatsappUrl"]) || array_key_exists("whatsappUrl", $context) ? $context["whatsappUrl"] : (function () { throw new RuntimeError('Variable "whatsappUrl" does not exist.', 161, $this->source); })()), "html", null, true);
-            yield "\" target=\"_blank\" class=\"btn whatsapp-btn text-white\">
-                            <i class=\"fab fa-whatsapp me-2 fa-lg\"></i>
-                            WhatsApp
-                        </a>
-                    ";
-        }
-        // line 166
-        yield "                    <a href=\"mailto:";
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["superAdmin"]) || array_key_exists("superAdmin", $context) ? $context["superAdmin"] : (function () { throw new RuntimeError('Variable "superAdmin" does not exist.', 166, $this->source); })()), "email", [], "any", false, false, false, 166), "html", null, true);
-        yield "\" class=\"btn email-btn text-white\">
-                        <i class=\"fas fa-envelope me-2\"></i>
-                        Email
-                    </a>
-                </div>
-                
-                <div class=\"info-box\">
-                    <i class=\"fas fa-clock me-2 text-success\"></i>
-                    <strong>Disponibilité :</strong> Réponse sous 24h ouvrées
-                </div>
-            </div>
-
-            <!-- Carte Services d'analyse -->
+        <div class=\"col-lg-10 mx-auto\">
+            
+            <!-- EXPLICATION DU PROCESSUS -->
             <div class=\"contact-card\">
-                <h3 class=\"h4 mb-4\">
-                    <i class=\"fas fa-chart-line text-primary me-2\"></i>
-                    Services d'analyse de données
+                <h3 class=\"h4 mb-4 text-center\">
+                    <i class=\"fas fa-cogs text-primary me-2\"></i>
+                    Comment ça fonctionne ?
                 </h3>
                 
-                <ul class=\"feature-list\">
-                    <li>
-                        <i class=\"fas fa-chart-pie\"></i>
-                        <span><strong>Tableaux de bord personnalisés</strong> - Visualisez vos KPIs en temps réel</span>
-                    </li>
-                    <li>
-                        <i class=\"fas fa-trend-up\"></i>
-                        <span><strong>Analyse des tendances</strong> - Identifiez les pics de vente et saisonnalités</span>
-                    </li>
-                    <li>
-                        <i class=\"fas fa-boxes\"></i>
-                        <span><strong>Analyse du stock</strong> - Optimisez vos réapprovisionnements</span>
-                    </li>
-                    <li>
-                        <i class=\"fas fa-users\"></i>
-                        <span><strong>Comportement client</strong> - Analysez la fidélité et le panier moyen</span>
-                    </li>
-                    <li>
-                        <i class=\"fas fa-file-excel\"></i>
-                        <span><strong>Rapports sur mesure</strong> - Exports Excel/PDF personnalisés</span>
-                    </li>
-                    <li>
-                        <i class=\"fas fa-robot\"></i>
-                        <span><strong>Prédictions de vente</strong> - Anticipez vos ventes futures</span>
-                    </li>
-                </ul>
-                
-                <div class=\"alert alert-primary mt-3\">
-                    <i class=\"fas fa-info-circle me-2\"></i>
-                    <strong>Comment ça marche ?</strong><br>
-                    Contactez notre Super Admin, partagez vos besoins d'analyse, 
-                    et recevez un rapport personnalisé avec des insights exploitables pour votre entreprise.
+                <div class=\"row\">
+                    <div class=\"col-md-4\">
+                        <div class=\"process-step text-center\">
+                            <div class=\"rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3\" style=\"width: 60px; height: 60px;\">
+                                <i class=\"fas fa-clipboard-list fa-2x text-white\"></i>
+                            </div>
+                            <h5 class=\"fw-bold\">1. Vous faites une demande</h5>
+                            <p class=\"small text-muted mb-0\">Choisissez le type d'analyse, la période à analyser et validez votre demande</p>
+                        </div>
+                    </div>
+                    <div class=\"col-md-4\">
+                        <div class=\"process-step text-center\">
+                            <div class=\"rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3\" style=\"width: 60px; height: 60px;\">
+                                <i class=\"fas fa-chart-simple fa-2x text-white\"></i>
+                            </div>
+                            <h5 class=\"fw-bold\">2. Notre équipe analyse</h5>
+                            <p class=\"small text-muted mb-0\">Extraction, nettoyage et analyse approfondie de vos données</p>
+                        </div>
+                    </div>
+                    <div class=\"col-md-4\">
+                        <div class=\"process-step text-center\">
+                            <div class=\"rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3\" style=\"width: 60px; height: 60px;\">
+                                <i class=\"fas fa-file-download fa-2x text-white\"></i>
+                            </div>
+                            <h5 class=\"fw-bold\">3. Vous recevez le rapport</h5>
+                            <p class=\"small text-muted mb-0\">Téléchargez votre analyse au format Excel ou Power BI</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Carte Ce que vous obtenez -->
+            <!-- TYPES D'ANALYSE (prix dynamiques depuis AnalysisPrice) -->
             <div class=\"contact-card\">
-                <h3 class=\"h4 mb-4\">
+                <h3 class=\"h4 mb-4 text-center\">
+                    <i class=\"fas fa-tag text-primary me-2\"></i>
+                    Nos offres d'analyse
+                </h3>
+                
+                <div class=\"row g-3\">
+                    ";
+        // line 145
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["analysisPrices"]) || array_key_exists("analysisPrices", $context) ? $context["analysisPrices"] : (function () { throw new RuntimeError('Variable "analysisPrices" does not exist.', 145, $this->source); })()));
+        $context['_iterated'] = false;
+        foreach ($context['_seq'] as $context["_key"] => $context["price"]) {
+            // line 146
+            yield "                        <div class=\"col-md-";
+            yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["analysisPrices"]) || array_key_exists("analysisPrices", $context) ? $context["analysisPrices"] : (function () { throw new RuntimeError('Variable "analysisPrices" does not exist.', 146, $this->source); })())) == 4)) ? ("3") : ("4"));
+            yield "\">
+                            <div class=\"border rounded-3 p-3 text-center h-100 offer-card\" 
+                                 onclick=\"window.location='";
+            // line 148
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("company_analysis_new", ["type" => CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 148)]), "html", null, true);
+            yield "'\">
+                                <div class=\"mb-3\">
+                                    ";
+            // line 150
+            if ((CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 150) == "standard")) {
+                // line 151
+                yield "                                        <i class=\"fas fa-file-excel fa-3x text-success\"></i>
+                                    ";
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 152
+$context["price"], "type", [], "any", false, false, false, 152) == "powerbi")) {
+                // line 153
+                yield "                                        <i class=\"fas fa-chart-line fa-3x text-info\"></i>
+                                    ";
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 154
+$context["price"], "type", [], "any", false, false, false, 154) == "custom")) {
+                // line 155
+                yield "                                        <i class=\"fas fa-crown fa-3x text-warning\"></i>
+                                    ";
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 156
+$context["price"], "type", [], "any", false, false, false, 156) == "subscription")) {
+                // line 157
+                yield "                                        <i class=\"fas fa-calendar-alt fa-3x text-primary\"></i>
+                                    ";
+            } else {
+                // line 159
+                yield "                                        <i class=\"fas fa-chart-simple fa-3x text-primary\"></i>
+                                    ";
+            }
+            // line 161
+            yield "                                </div>
+                                <h5 class=\"fw-bold\">";
+            // line 162
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "label", [], "any", false, false, false, 162), "html", null, true);
+            yield "</h5>
+                                <p class=\"small text-muted\">";
+            // line 163
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "description", [], "any", false, false, false, 163)), "truncate", [60], "method", false, false, false, 163), "html", null, true);
+            yield "</p>
+                                <div class=\"mt-2\">
+                                    <span class=\"price-tag bg-primary text-white\">
+                                        ";
+            // line 166
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "priceFormatted", [], "any", false, false, false, 166), "html", null, true);
+            yield "
+                                        ";
+            // line 167
+            if ((CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 167) == "subscription")) {
+                yield "<small>/mois</small>";
+            }
+            // line 168
+            yield "                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    ";
+            $context['_iterated'] = true;
+        }
+        // line 172
+        if (!$context['_iterated']) {
+            // line 173
+            yield "                        <div class=\"col-12 text-center\">
+                            <p class=\"text-muted\">Aucune offre disponible pour le moment. Veuillez réessayer plus tard.</p>
+                        </div>
+                    ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['price'], $context['_parent'], $context['_iterated']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 177
+        yield "                </div>
+            </div>
+
+            <!-- CE QUE VOUS OBTENEZ -->
+            <div class=\"contact-card\">
+                <h3 class=\"h4 mb-4 text-center\">
                     <i class=\"fas fa-gift text-primary me-2\"></i>
                     Ce que vous obtenez
                 </h3>
                 
                 <div class=\"row g-3\">
                     <div class=\"col-md-6\">
-                        <div class=\"d-flex align-items-start\">
-                            <i class=\"fas fa-file-pdf text-danger me-3 mt-1 fs-4\"></i>
+                        <div class=\"d-flex align-items-start p-2\">
+                            <i class=\"fas fa-chart-pie text-primary me-3 mt-1 fs-4\"></i>
                             <div>
-                                <strong>Rapport PDF/Excel</strong>
-                                <small class=\"text-muted d-block\">Analyse complète de vos données</small>
+                                <strong>Insights exploitables</strong>
+                                <small class=\"text-muted d-block\">Comprenez les tendances et opportunités</small>
                             </div>
                         </div>
                     </div>
                     <div class=\"col-md-6\">
-                        <div class=\"d-flex align-items-start\">
-                            <i class=\"fas fa-chart-simple text-info me-3 mt-1 fs-4\"></i>
-                            <div>
-                                <strong>Tableaux de bord Power BI</strong>
-                                <small class=\"text-muted d-block\">Visualisations interactives</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class=\"col-md-6\">
-                        <div class=\"d-flex align-items-start\">
+                        <div class=\"d-flex align-items-start p-2\">
                             <i class=\"fas fa-lightbulb text-warning me-3 mt-1 fs-4\"></i>
                             <div>
-                                <strong>Recommandations</strong>
+                                <strong>Recommandations stratégiques</strong>
                                 <small class=\"text-muted d-block\">Actions concrètes pour améliorer vos ventes</small>
                             </div>
                         </div>
                     </div>
                     <div class=\"col-md-6\">
-                        <div class=\"d-flex align-items-start\">
-                            <i class=\"fas fa-clock text-success me-3 mt-1 fs-4\"></i>
+                        <div class=\"d-flex align-items-start p-2\">
+                            <i class=\"fas fa-file-excel text-success me-3 mt-1 fs-4\"></i>
                             <div>
-                                <strong>Support prioritaire</strong>
-                                <small class=\"text-muted d-block\">Réponse rapide et accompagnement</small>
+                                <strong>Rapport complet</strong>
+                                <small class=\"text-muted d-block\">Format Excel ou Power BI personnalisé</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=\"col-md-6\">
+                        <div class=\"d-flex align-items-start p-2\">
+                            <i class=\"fas fa-headset text-info me-3 mt-1 fs-4\"></i>
+                            <div>
+                                <strong>Support dédié</strong>
+                                <small class=\"text-muted d-block\">Accompagnement personnalisé</small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- BOUTONS D'ACTION -->
+            <div class=\"contact-card text-center\">
+                <h3 class=\"h4 mb-4\">
+                    <i class=\"fas fa-rocket text-primary me-2\"></i>
+                    Prêt à booster vos performances ?
+                </h3>
+                
+                <div class=\"row g-3\">
+                    <div class=\"col-md-6\">
+                        <a href=\"";
+        // line 236
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("company_analysis_new");
+        yield "\" class=\"btn btn-primary w-100 py-3\">
+                            <i class=\"fas fa-plus-circle me-2\"></i>
+                            Faire une demande ponctuelle
+                        </a>
+                    </div>
+                    <div class=\"col-md-6\">
+                        <a href=\"";
+        // line 242
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("company_analysis_new", ["type" => "subscription"]);
+        yield "\" class=\"btn btn-success w-100 py-3\">
+                            <i class=\"fas fa-calendar-alt me-2\"></i>
+                            S'abonner mensuellement
+                        </a>
+                    </div>
+                </div>
+                
+                <p class=\"text-muted small mt-3 mb-0\">
+                    <i class=\"fas fa-clock me-1\"></i>
+                    Délai de livraison : 5 à 7 jours ouvrés après validation du paiement
+                </p>
+            </div>
+
             <!-- Bouton retour -->
-            <div class=\"text-center mt-4\">
+            <div class=\"text-center mt-3\">
                 <a href=\"";
-        // line 269
+        // line 257
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_index");
         yield "\" class=\"btn btn-outline-secondary\">
                     <i class=\"fas fa-arrow-left me-2\"></i>
@@ -439,7 +449,7 @@ class __TwigTemplate_876a7bd8fdde0f05e5faa1bcfcbf68db extends Template
         yield from [];
     }
 
-    // line 279
+    // line 267
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -452,7 +462,7 @@ class __TwigTemplate_876a7bd8fdde0f05e5faa1bcfcbf68db extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 280
+        // line 268
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
@@ -512,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  456 => 280,  443 => 279,  423 => 269,  316 => 166,  307 => 161,  305 => 160,  300 => 157,  295 => 155,  292 => 154,  290 => 153,  286 => 152,  277 => 146,  274 => 145,  268 => 141,  262 => 138,  257 => 137,  255 => 136,  237 => 120,  224 => 119,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  466 => 268,  453 => 267,  433 => 257,  415 => 242,  406 => 236,  345 => 177,  336 => 173,  334 => 172,  326 => 168,  322 => 167,  318 => 166,  312 => 163,  308 => 162,  305 => 161,  301 => 159,  297 => 157,  295 => 156,  292 => 155,  290 => 154,  287 => 153,  285 => 152,  282 => 151,  280 => 150,  275 => 148,  269 => 146,  264 => 145,  201 => 84,  188 => 83,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -520,12 +530,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return new Source("{# templates/sale/orders/contact.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Contacter le support - HMA Market{% endblock %}
+{% block title %}Analyse approfondie des données - HMA Market{% endblock %}
 
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    :root { --primary-color: #0463f1; --success-color: #25D366; }
+    :root { --primary-color: #0463f1; }
     
     .contact-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -539,10 +549,11 @@ document.addEventListener('DOMContentLoaded', function() {
     .contact-card {
         background: white;
         border-radius: 20px;
-        padding: 2rem;
+        padding: 1.75rem;
         margin-bottom: 1.5rem;
         box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         transition: transform 0.3s, box-shadow 0.3s;
+        border: 1px solid #e9ecef;
     }
     
     .contact-card:hover {
@@ -550,86 +561,49 @@ document.addEventListener('DOMContentLoaded', function() {
         box-shadow: 0 12px 30px rgba(0,0,0,0.12);
     }
     
-    .admin-avatar {
-        width: 120px;
-        height: 120px;
-        border-radius: 60px;
-        object-fit: cover;
-        border: 4px solid white;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-        margin-top: -80px;
+    .price-tag {
+        display: inline-block;
+        padding: 0.25rem 1rem;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    
+    .process-step {
+        position: relative;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 12px;
         margin-bottom: 1rem;
     }
-    
-    .whatsapp-btn {
-        background: #25D366;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s;
-    }
-    
-    .whatsapp-btn:hover {
-        background: #128C7E;
-        transform: scale(1.05);
-    }
-    
-    .email-btn {
-        background: #ea4335;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s;
-    }
-    
-    .email-btn:hover {
-        background: #c5221f;
-        transform: scale(1.05);
-    }
-    
-    .info-box {
-        background: #f0fdf4;
-        border-left: 4px solid #22c55e;
-        padding: 1rem;
-        border-radius: 12px;
-        margin-top: 1.5rem;
-    }
-    
-    .feature-list {
-        list-style: none;
-        padding: 0;
-    }
-    
-    .feature-list li {
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #e5e7eb;
-        display: flex;
-        align-items: center;
-    }
-    
-    .feature-list li:last-child {
-        border-bottom: none;
-    }
-    
-    .feature-list li i {
-        width: 30px;
-        color: #667eea;
+    .process-step:not(:last-child)::after {
+        content: '↓';
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #0463f1;
         font-size: 1.2rem;
+    }
+    
+    .offer-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .offer-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
     }
     
     @media (max-width: 768px) {
         .contact-header {
             padding: 1.5rem;
         }
-        .admin-avatar {
-            width: 80px;
-            height: 80px;
-            margin-top: -50px;
-        }
         .contact-card {
-            padding: 1.5rem;
+            padding: 1.25rem;
+        }
+        .process-step:not(:last-child)::after {
+            display: none;
         }
     }
 </style>
@@ -640,151 +614,175 @@ document.addEventListener('DOMContentLoaded', function() {
     <!-- En-tête -->
     <div class=\"contact-header\">
         <h1 class=\"display-5 fw-bold mb-3\">
-            <i class=\"fas fa-headset me-3\"></i>
-            Support & Analyse Avancée
+            <i class=\"fas fa-chart-line me-3\"></i>
+            Analyse approfondie des données
         </h1>
         <p class=\"lead mb-0\">
-            Bénéficiez d'une analyse approfondie de vos données de vente
+            Transformez vos données en décisions stratégiques
         </p>
     </div>
 
     <div class=\"row\">
-        <div class=\"col-lg-8 mx-auto\">
-            <!-- Carte Contact Administrateur -->
-            <div class=\"contact-card text-center\">
-                {% if superAdmin.photo %}
-                    <img src=\"{{ asset('uploads/users/' ~ superAdmin.photo) }}\" 
-                         alt=\"{{ superAdmin.fullName }}\" 
-                         class=\"admin-avatar\">
-                {% else %}
-                    <div class=\"admin-avatar bg-primary d-flex align-items-center justify-content-center mx-auto\">
-                        <i class=\"fas fa-user-tie fa-3x text-white\"></i>
-                    </div>
-                {% endif %}
-                
-                <h2 class=\"h3 mb-2\">{{ superAdmin.fullName|default(superAdmin.email) }}</h2>
-                <p class=\"text-muted mb-3\">
-                    <i class=\"fas fa-shield-alt me-1\"></i> 
-                    Super Administrateur
-                </p>
-                <p class=\"mb-4\">
-                    <i class=\"fas fa-envelope me-2 text-muted\"></i> {{ superAdmin.email }}
-                    {% if superAdmin.phone %}
-                        <br>
-                        <i class=\"fas fa-phone me-2 text-muted\"></i> {{ superAdmin.phone }}
-                    {% endif %}
-                </p>
-                
-                <div class=\"d-flex gap-3 justify-content-center flex-wrap\">
-                    {% if whatsappUrl %}
-                        <a href=\"{{ whatsappUrl }}\" target=\"_blank\" class=\"btn whatsapp-btn text-white\">
-                            <i class=\"fab fa-whatsapp me-2 fa-lg\"></i>
-                            WhatsApp
-                        </a>
-                    {% endif %}
-                    <a href=\"mailto:{{ superAdmin.email }}\" class=\"btn email-btn text-white\">
-                        <i class=\"fas fa-envelope me-2\"></i>
-                        Email
-                    </a>
-                </div>
-                
-                <div class=\"info-box\">
-                    <i class=\"fas fa-clock me-2 text-success\"></i>
-                    <strong>Disponibilité :</strong> Réponse sous 24h ouvrées
-                </div>
-            </div>
-
-            <!-- Carte Services d'analyse -->
+        <div class=\"col-lg-10 mx-auto\">
+            
+            <!-- EXPLICATION DU PROCESSUS -->
             <div class=\"contact-card\">
-                <h3 class=\"h4 mb-4\">
-                    <i class=\"fas fa-chart-line text-primary me-2\"></i>
-                    Services d'analyse de données
+                <h3 class=\"h4 mb-4 text-center\">
+                    <i class=\"fas fa-cogs text-primary me-2\"></i>
+                    Comment ça fonctionne ?
                 </h3>
                 
-                <ul class=\"feature-list\">
-                    <li>
-                        <i class=\"fas fa-chart-pie\"></i>
-                        <span><strong>Tableaux de bord personnalisés</strong> - Visualisez vos KPIs en temps réel</span>
-                    </li>
-                    <li>
-                        <i class=\"fas fa-trend-up\"></i>
-                        <span><strong>Analyse des tendances</strong> - Identifiez les pics de vente et saisonnalités</span>
-                    </li>
-                    <li>
-                        <i class=\"fas fa-boxes\"></i>
-                        <span><strong>Analyse du stock</strong> - Optimisez vos réapprovisionnements</span>
-                    </li>
-                    <li>
-                        <i class=\"fas fa-users\"></i>
-                        <span><strong>Comportement client</strong> - Analysez la fidélité et le panier moyen</span>
-                    </li>
-                    <li>
-                        <i class=\"fas fa-file-excel\"></i>
-                        <span><strong>Rapports sur mesure</strong> - Exports Excel/PDF personnalisés</span>
-                    </li>
-                    <li>
-                        <i class=\"fas fa-robot\"></i>
-                        <span><strong>Prédictions de vente</strong> - Anticipez vos ventes futures</span>
-                    </li>
-                </ul>
-                
-                <div class=\"alert alert-primary mt-3\">
-                    <i class=\"fas fa-info-circle me-2\"></i>
-                    <strong>Comment ça marche ?</strong><br>
-                    Contactez notre Super Admin, partagez vos besoins d'analyse, 
-                    et recevez un rapport personnalisé avec des insights exploitables pour votre entreprise.
+                <div class=\"row\">
+                    <div class=\"col-md-4\">
+                        <div class=\"process-step text-center\">
+                            <div class=\"rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3\" style=\"width: 60px; height: 60px;\">
+                                <i class=\"fas fa-clipboard-list fa-2x text-white\"></i>
+                            </div>
+                            <h5 class=\"fw-bold\">1. Vous faites une demande</h5>
+                            <p class=\"small text-muted mb-0\">Choisissez le type d'analyse, la période à analyser et validez votre demande</p>
+                        </div>
+                    </div>
+                    <div class=\"col-md-4\">
+                        <div class=\"process-step text-center\">
+                            <div class=\"rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3\" style=\"width: 60px; height: 60px;\">
+                                <i class=\"fas fa-chart-simple fa-2x text-white\"></i>
+                            </div>
+                            <h5 class=\"fw-bold\">2. Notre équipe analyse</h5>
+                            <p class=\"small text-muted mb-0\">Extraction, nettoyage et analyse approfondie de vos données</p>
+                        </div>
+                    </div>
+                    <div class=\"col-md-4\">
+                        <div class=\"process-step text-center\">
+                            <div class=\"rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3\" style=\"width: 60px; height: 60px;\">
+                                <i class=\"fas fa-file-download fa-2x text-white\"></i>
+                            </div>
+                            <h5 class=\"fw-bold\">3. Vous recevez le rapport</h5>
+                            <p class=\"small text-muted mb-0\">Téléchargez votre analyse au format Excel ou Power BI</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Carte Ce que vous obtenez -->
+            <!-- TYPES D'ANALYSE (prix dynamiques depuis AnalysisPrice) -->
             <div class=\"contact-card\">
-                <h3 class=\"h4 mb-4\">
+                <h3 class=\"h4 mb-4 text-center\">
+                    <i class=\"fas fa-tag text-primary me-2\"></i>
+                    Nos offres d'analyse
+                </h3>
+                
+                <div class=\"row g-3\">
+                    {% for price in analysisPrices %}
+                        <div class=\"col-md-{{ analysisPrices|length == 4 ? '3' : '4' }}\">
+                            <div class=\"border rounded-3 p-3 text-center h-100 offer-card\" 
+                                 onclick=\"window.location='{{ path('company_analysis_new', {'type': price.type}) }}'\">
+                                <div class=\"mb-3\">
+                                    {% if price.type == 'standard' %}
+                                        <i class=\"fas fa-file-excel fa-3x text-success\"></i>
+                                    {% elseif price.type == 'powerbi' %}
+                                        <i class=\"fas fa-chart-line fa-3x text-info\"></i>
+                                    {% elseif price.type == 'custom' %}
+                                        <i class=\"fas fa-crown fa-3x text-warning\"></i>
+                                    {% elseif price.type == 'subscription' %}
+                                        <i class=\"fas fa-calendar-alt fa-3x text-primary\"></i>
+                                    {% else %}
+                                        <i class=\"fas fa-chart-simple fa-3x text-primary\"></i>
+                                    {% endif %}
+                                </div>
+                                <h5 class=\"fw-bold\">{{ price.label }}</h5>
+                                <p class=\"small text-muted\">{{ price.description|u.truncate(60) }}</p>
+                                <div class=\"mt-2\">
+                                    <span class=\"price-tag bg-primary text-white\">
+                                        {{ price.priceFormatted }}
+                                        {% if price.type == 'subscription' %}<small>/mois</small>{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class=\"col-12 text-center\">
+                            <p class=\"text-muted\">Aucune offre disponible pour le moment. Veuillez réessayer plus tard.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- CE QUE VOUS OBTENEZ -->
+            <div class=\"contact-card\">
+                <h3 class=\"h4 mb-4 text-center\">
                     <i class=\"fas fa-gift text-primary me-2\"></i>
                     Ce que vous obtenez
                 </h3>
                 
                 <div class=\"row g-3\">
                     <div class=\"col-md-6\">
-                        <div class=\"d-flex align-items-start\">
-                            <i class=\"fas fa-file-pdf text-danger me-3 mt-1 fs-4\"></i>
+                        <div class=\"d-flex align-items-start p-2\">
+                            <i class=\"fas fa-chart-pie text-primary me-3 mt-1 fs-4\"></i>
                             <div>
-                                <strong>Rapport PDF/Excel</strong>
-                                <small class=\"text-muted d-block\">Analyse complète de vos données</small>
+                                <strong>Insights exploitables</strong>
+                                <small class=\"text-muted d-block\">Comprenez les tendances et opportunités</small>
                             </div>
                         </div>
                     </div>
                     <div class=\"col-md-6\">
-                        <div class=\"d-flex align-items-start\">
-                            <i class=\"fas fa-chart-simple text-info me-3 mt-1 fs-4\"></i>
-                            <div>
-                                <strong>Tableaux de bord Power BI</strong>
-                                <small class=\"text-muted d-block\">Visualisations interactives</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class=\"col-md-6\">
-                        <div class=\"d-flex align-items-start\">
+                        <div class=\"d-flex align-items-start p-2\">
                             <i class=\"fas fa-lightbulb text-warning me-3 mt-1 fs-4\"></i>
                             <div>
-                                <strong>Recommandations</strong>
+                                <strong>Recommandations stratégiques</strong>
                                 <small class=\"text-muted d-block\">Actions concrètes pour améliorer vos ventes</small>
                             </div>
                         </div>
                     </div>
                     <div class=\"col-md-6\">
-                        <div class=\"d-flex align-items-start\">
-                            <i class=\"fas fa-clock text-success me-3 mt-1 fs-4\"></i>
+                        <div class=\"d-flex align-items-start p-2\">
+                            <i class=\"fas fa-file-excel text-success me-3 mt-1 fs-4\"></i>
                             <div>
-                                <strong>Support prioritaire</strong>
-                                <small class=\"text-muted d-block\">Réponse rapide et accompagnement</small>
+                                <strong>Rapport complet</strong>
+                                <small class=\"text-muted d-block\">Format Excel ou Power BI personnalisé</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=\"col-md-6\">
+                        <div class=\"d-flex align-items-start p-2\">
+                            <i class=\"fas fa-headset text-info me-3 mt-1 fs-4\"></i>
+                            <div>
+                                <strong>Support dédié</strong>
+                                <small class=\"text-muted d-block\">Accompagnement personnalisé</small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- BOUTONS D'ACTION -->
+            <div class=\"contact-card text-center\">
+                <h3 class=\"h4 mb-4\">
+                    <i class=\"fas fa-rocket text-primary me-2\"></i>
+                    Prêt à booster vos performances ?
+                </h3>
+                
+                <div class=\"row g-3\">
+                    <div class=\"col-md-6\">
+                        <a href=\"{{ path('company_analysis_new') }}\" class=\"btn btn-primary w-100 py-3\">
+                            <i class=\"fas fa-plus-circle me-2\"></i>
+                            Faire une demande ponctuelle
+                        </a>
+                    </div>
+                    <div class=\"col-md-6\">
+                        <a href=\"{{ path('company_analysis_new', {'type': 'subscription'}) }}\" class=\"btn btn-success w-100 py-3\">
+                            <i class=\"fas fa-calendar-alt me-2\"></i>
+                            S'abonner mensuellement
+                        </a>
+                    </div>
+                </div>
+                
+                <p class=\"text-muted small mt-3 mb-0\">
+                    <i class=\"fas fa-clock me-1\"></i>
+                    Délai de livraison : 5 à 7 jours ouvrés après validation du paiement
+                </p>
+            </div>
+
             <!-- Bouton retour -->
-            <div class=\"text-center mt-4\">
+            <div class=\"text-center mt-3\">
                 <a href=\"{{ path('app_orders_index') }}\" class=\"btn btn-outline-secondary\">
                     <i class=\"fas fa-arrow-left me-2\"></i>
                     Retour à l'historique des ventes

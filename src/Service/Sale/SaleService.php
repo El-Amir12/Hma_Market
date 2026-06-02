@@ -654,7 +654,7 @@ class SaleService
     
     /**
      * Traite un article de type produit
-     * ✅ CORRECTION : Ajout de l'ID de la commande comme référence
+     * ✅ CORRECTION : Ajout de la promotion appliquée
      */
     private function processProductItem(Order $order, array $item, User $user): OrderItem
     {
@@ -693,7 +693,14 @@ class SaleService
             $orderItem->setStockBatchId($usedBatches[0]['batch']->getId());
         }
         
-        if (!empty($item['has_promotion']) && !empty($item['promotion'])) {
+        // ✅ NOUVEAU : Ajout de la promotion appliquée (relation directe)
+        if (!empty($item['has_promotion']) && !empty($item['promotion']) && isset($item['promotion']['id'])) {
+            $promotion = $this->entityManager->getRepository(\App\Entity\Promotion::class)->find($item['promotion']['id']);
+            if ($promotion) {
+                $orderItem->setAppliedPromotion($promotion);
+            }
+            
+            // Dénormalisation pour compatibilité
             $orderItem->setPromotionId($item['promotion']['id']);
             $orderItem->setPromotionName($item['promotion']['name']);
             $orderItem->setPromotionDiscountAmount((string) ($item['promotion']['discount_amount'] ?? 0));
@@ -706,7 +713,7 @@ class SaleService
     
     /**
      * Traite un article de type recette
-     * ✅ CORRECTION : Ajout de l'ID de la commande comme référence
+     * ✅ CORRECTION : Ajout de la promotion appliquée
      */
     private function processRecipeItem(Order $order, array $item, User $user): OrderItem
     {
@@ -751,7 +758,14 @@ class SaleService
         $orderItem->setRecipe($recipe);
         $orderItem->setVente($order);
         
-        if (!empty($item['has_promotion']) && !empty($item['promotion'])) {
+        // ✅ NOUVEAU : Ajout de la promotion appliquée (relation directe)
+        if (!empty($item['has_promotion']) && !empty($item['promotion']) && isset($item['promotion']['id'])) {
+            $promotion = $this->entityManager->getRepository(\App\Entity\Promotion::class)->find($item['promotion']['id']);
+            if ($promotion) {
+                $orderItem->setAppliedPromotion($promotion);
+            }
+            
+            // Dénormalisation pour compatibilité
             $orderItem->setPromotionId($item['promotion']['id']);
             $orderItem->setPromotionName($item['promotion']['name']);
             $orderItem->setPromotionDiscountAmount((string) ($item['promotion']['discount_amount'] ?? 0));

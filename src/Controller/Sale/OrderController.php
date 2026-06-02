@@ -6,6 +6,7 @@ namespace App\Controller\Sale;
 use App\Entity\HmaService;
 use App\Entity\Order;
 use App\Entity\User;
+use App\Repository\AnalysisPriceRepository;
 use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
 use App\Repository\ReturnOrderRepository;
@@ -55,13 +56,19 @@ class OrderController extends AbstractController
     // ==================== ROUTES STATIQUES ====================
 
     #[Route('/contact-super-admin', name: 'app_orders_contact_super_admin', methods: ['GET'])]
-    public function contactSuperAdmin(): Response
+    public function contactSuperAdmin(AnalysisPriceRepository $priceRepository): Response
     {
         $this->checkAccess();
         $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw new AccessDeniedException('Aucun service associé');
         }
+        
+        // Récupérer les prix actifs pour les analyses
+        $analysisPrices = $priceRepository->findBy(
+            ['is_active' => true], 
+            ['display_order' => 'ASC']
+        );
         
         // Récupérer le Super Admin (is_hma_owner = true)
         $superAdmin = $this->entityManager->getRepository(User::class)
@@ -74,17 +81,24 @@ class OrderController extends AbstractController
             ->getQuery()
             ->getOneOrNullResult();
         
+        // Si pas de Super Admin spécifique, prendre un Super Admin global
         if (!$superAdmin) {
-            $this->addFlash('warning', 'Aucun administrateur disponible pour le moment.');
-            return $this->redirectToRoute('app_orders_index');
+            $superAdmin = $this->entityManager->getRepository(User::class)
+                ->createQueryBuilder('u')
+                ->where('u.roles LIKE :role')
+                ->setParameter('role', '%ROLE_SUPER_ADMIN%')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
         }
         
-        $phone = $superAdmin->getPhone();
+        $phone = $superAdmin ? $superAdmin->getPhone() : null;
         $whatsappUrl = $phone ? 'https://wa.me/' . preg_replace('/[^0-9]/', '', $phone) : null;
         
         return $this->render('sale/orders/contact.html.twig', [
             'superAdmin' => $superAdmin,
-            'whatsappUrl' => $whatsappUrl
+            'whatsappUrl' => $whatsappUrl,
+            'analysisPrices' => $analysisPrices,  // ← AJOUT DES PRIX DYNAMIQUES
         ]);
     }
 

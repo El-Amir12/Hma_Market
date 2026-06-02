@@ -123,5 +123,21 @@ class OrderRepository extends ServiceEntityRepository
             'cancelled_orders' => (int)($result['cancelled_orders'] ?? 0),
         ];
     }
+
+    /**
+     * Récupère les commandes d'une entreprise sur une période donnée
+     */
+    public function findByCompanyAndPeriod(HmaService $company, \DateTimeInterface $startDate, \DateTimeInterface $endDate): array
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.hma_service = :company')
+            ->andWhere('o.created_at BETWEEN :startDate AND :endDate')
+            ->setParameter('company', $company)
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->orderBy('o.created_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
     
 }

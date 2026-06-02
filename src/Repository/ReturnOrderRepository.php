@@ -244,4 +244,17 @@ class ReturnOrderRepository extends ServiceEntityRepository
             'total_refund_amount' => (float) ($result['total_refund_amount'] ?? 0),
         ];
     }
+
+    public function findByCompanyAndPeriod(HmaService $company, \DateTime $start, \DateTime $end): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.hma_service = :company')
+            ->andWhere('r.return_date BETWEEN :start AND :end')
+            ->setParameter('company', $company)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->orderBy('r.return_date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

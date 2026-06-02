@@ -301,4 +301,53 @@ class Order
         $this->subscription_active = $subscription_active;
         return $this;
     }
+
+    /**
+     * Calcule le sous-total HT de la commande (sans les remises)
+     */
+    public function getSubtotal(): float
+    {
+        $subtotal = 0;
+        foreach ($this->orderItems as $item) {
+            $subtotal += (float)$item->getTotalPrice();
+        }
+        return $subtotal;
+    }
+
+    /**
+     * Calcule le montant total des remises
+     */
+    public function getDiscountTotal(): float
+    {
+        $discount = 0;
+        foreach ($this->orderItems as $item) {
+    
+            $discount += (float)($item->getDiscountAmountValue() ?? 0);
+        }
+        return $discount;
+    }
+
+    /**
+     * Calcule le total après remise (équivalent à total_amount)
+     */
+    public function getGrandTotal(): float
+    {
+        return $this->getSubtotal() - $this->getDiscountTotal();
+    }
+
+    /**
+     * Formate le sous-total
+     */
+    public function getSubtotalFormatted(): string
+    {
+        return number_format($this->getSubtotal(), 0, ',', ' ') . ' FCFA';
+    }
+
+    /**
+     * Formate le total des remises
+     */
+    public function getDiscountTotalFormatted(): string
+    {
+        return number_format($this->getDiscountTotal(), 0, ',', ' ') . ' FCFA';
+    }
 }

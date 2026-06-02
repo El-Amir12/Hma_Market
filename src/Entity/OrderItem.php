@@ -1,4 +1,5 @@
 <?php
+// src/Entity/OrderItem.php
 
 namespace App\Entity;
 
@@ -42,6 +43,12 @@ class OrderItem
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
     private ?Recipe $recipe = null;
 
+    // ✅ NOUVELLE RELATION : Lien direct avec Promotion
+    #[ORM\ManyToOne(targetEntity: Promotion::class)]
+    #[ORM\JoinColumn(name: 'applied_promotion_id', referencedColumnName: 'id', nullable: true)]
+    private ?Promotion $appliedPromotion = null;
+
+    // Garder ces champs pour la compatibilité (dénormalisation)
     #[ORM\Column(nullable: true)]
     private ?int $promotionId = null;
 
@@ -63,6 +70,8 @@ class OrderItem
     #[ORM\Column(nullable: true)]
     private ?int $product_id = null;
 
+    // ==================== GETTERS & SETTERS ====================
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,7 +85,6 @@ class OrderItem
     public function setProductName(string $product_name): static
     {
         $this->product_name = $product_name;
-
         return $this;
     }
 
@@ -88,7 +96,6 @@ class OrderItem
     public function setUnitPrice(string $unit_price): static
     {
         $this->unit_price = $unit_price;
-
         return $this;
     }
 
@@ -100,7 +107,6 @@ class OrderItem
     public function setBatchPurchasePrice(string $batch_purchase_price): static
     {
         $this->batch_purchase_price = $batch_purchase_price;
-
         return $this;
     }
 
@@ -112,7 +118,6 @@ class OrderItem
     public function setQuantity(int $quantity): static
     {
         $this->quantity = $quantity;
-
         return $this;
     }
 
@@ -135,7 +140,6 @@ class OrderItem
     public function setTotalPrice(string $total_price): static
     {
         $this->total_price = $total_price;
-
         return $this;
     }
 
@@ -147,7 +151,6 @@ class OrderItem
     public function setCreatedAt(\DateTime $created_at): static
     {
         $this->created_at = $created_at;
-
         return $this;
     }
 
@@ -159,7 +162,6 @@ class OrderItem
     public function setVente(?Order $vente): static
     {
         $this->vente = $vente;
-
         return $this;
     }
 
@@ -171,6 +173,28 @@ class OrderItem
     public function setRecipe(?Recipe $recipe): static
     {
         $this->recipe = $recipe;
+        return $this;
+    }
+
+    // ✅ GETTER/SETTER pour la relation Promotion
+
+    public function getAppliedPromotion(): ?Promotion
+    {
+        return $this->appliedPromotion;
+    }
+
+    public function setAppliedPromotion(?Promotion $appliedPromotion): static
+    {
+        $this->appliedPromotion = $appliedPromotion;
+
+        // Dénormalisation automatique
+        if ($appliedPromotion) {
+            $this->promotionId = $appliedPromotion->getId();
+            $this->promotionName = $appliedPromotion->getName();
+        } else {
+            $this->promotionId = null;
+            $this->promotionName = null;
+        }
 
         return $this;
     }
@@ -259,7 +283,7 @@ class OrderItem
      */
     public function hasPromotion(): bool
     {
-        return $this->promotionId !== null && $this->promotionDiscountAmount !== null;
+        return $this->appliedPromotion !== null || $this->promotionId !== null;
     }
 
     /**

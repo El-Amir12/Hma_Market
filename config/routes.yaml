@@ -38,5 +38,10 @@ app_dashboard:
     controller: App\Controller\DashboardController::index
     methods: [GET]
 
+payment_callback:
+    path: /payment/callback
+    controller: App\Controller\SuperAdmin\CompanyAnalysisController::paymentCallback
+    methods: [GET, POST]
+
 # Route pour le profil de l'entreprise (gérée par annotations)
 # app_dashboard_hmaservice_profile est automatiquement détecté via annotations

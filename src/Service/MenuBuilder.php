@@ -213,6 +213,12 @@ class MenuBuilder
                     ],
                     [
                         'type' => 'link',
+                        'route' => 'super_admin_analysis_price_index',
+                        'label' => '💰 Prix des analyses',
+                        'icon' => 'fas fa-tags'
+                    ],
+                    [
+                        'type' => 'link',
                         'route' => 'app_super_admin_hma_service_index',
                         'label' => 'Toutes les entreprises',
                         'icon' => 'fas fa-building',
@@ -261,29 +267,28 @@ class MenuBuilder
                 ]
             ],
             [
+                'type' => 'section',
+                'label' => 'ANALYSES'
+            ],
+            [
                 'type' => 'dropdown',
-                'label' => 'Exports & Analyses',
-                'icon' => 'fas fa-chart-line',
+                'label' => 'Analyses approfondies',
+                'icon' => 'fas fa-chart-pie',
                 'children' => [
                     [
                         'type' => 'link',
-                        'route' => 'super_admin_export_index',
-                        'label' => 'Export des ventes',
-                        'icon' => 'fas fa-file-excel'
+                        'route' => 'super_admin_analysis_index',
+                        'label' => 'Toutes les demandes',
+                        'icon' => 'fas fa-list'
+                    ],
+                    [
+                        'type' => 'divider'
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'super_admin_export_index',
-                        'label' => 'Export des stocks',
-                        'icon' => 'fas fa-boxes',
-                        'coming_soon' => true
-                    ],
-                    [
-                        'type' => 'link',
-                        'route' => 'super_admin_export_index',
-                        'label' => 'Export des produits',
-                        'icon' => 'fas fa-box',
-                        'coming_soon' => true
+                        'route' => 'super_admin_analysis_index',
+                        'label' => 'Statistiques des analyses',
+                        'icon' => 'fas fa-chart-bar'
                     ]
                 ]
             ]
@@ -521,6 +526,24 @@ class MenuBuilder
             ];
         }
 
+        // ✅ SECTION ANALYSES (AJOUTÉE)
+        $menu[] = [
+            'type' => 'section',
+            'label' => 'ANALYSES'
+        ];
+        $menu[] = [
+            'type' => 'link',
+            'route' => 'company_analysis_index',
+            'label' => 'Mes analyses',
+            'icon' => 'fas fa-chart-line'
+        ];
+        $menu[] = [
+            'type' => 'link',
+            'route' => 'company_analysis_new',
+            'label' => 'Nouvelle analyse',
+            'icon' => 'fas fa-plus-circle'
+        ];
+
         return $menu;
     }
 
@@ -684,6 +707,24 @@ class MenuBuilder
                 'children' => $menuChildren
             ];
         }
+
+        // ✅ SECTION ANALYSES (AJOUTÉE)
+        $menu[] = [
+            'type' => 'section',
+            'label' => 'ANALYSES'
+        ];
+        $menu[] = [
+            'type' => 'link',
+            'route' => 'company_analysis_index',
+            'label' => 'Mes analyses',
+            'icon' => 'fas fa-chart-line'
+        ];
+        $menu[] = [
+            'type' => 'link',
+            'route' => 'company_analysis_new',
+            'label' => 'Nouvelle analyse',
+            'icon' => 'fas fa-plus-circle'
+        ];
 
         return $menu;
     }

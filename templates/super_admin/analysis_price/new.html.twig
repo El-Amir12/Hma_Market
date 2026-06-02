@@ -1,0 +1,123 @@
+{# templates/super_admin/analysis_price/new.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau prix - Super Admin{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .form-card {
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+    .form-header {
+        background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%);
+    }
+    .form-group-custom {
+        margin-bottom: 1.5rem;
+    }
+    .form-group-custom label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #1e293b;
+    }
+    .form-group-custom .form-control,
+    .form-group-custom .form-select {
+        border-radius: 0.75rem;
+        border: 1px solid #e2e8f0;
+        padding: 0.75rem 1rem;
+        transition: all 0.2s ease;
+    }
+    .form-group-custom .form-control:focus,
+    .form-group-custom .form-select:focus {
+        border-color: #0463f1;
+        box-shadow: 0 0 0 3px rgba(4, 99, 241, 0.1);
+    }
+    .form-group-custom textarea {
+        border-radius: 0.75rem;
+    }
+    .price-preview {
+        background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+        border-radius: 1rem;
+        padding: 1rem;
+        margin-top: 1rem;
+        text-align: center;
+    }
+    .price-preview-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #0463f1;
+    }
+    .price-hint {
+        font-size: 0.7rem;
+        color: #64748b;
+    }
+    .btn-custom {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+    .btn-custom-primary {
+        background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%);
+        border: none;
+        color: white;
+    }
+    .btn-custom-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(4, 99, 241, 0.3);
+    }
+    .btn-custom-secondary {
+        background: #f1f5f9;
+        border: none;
+        color: #475569;
+    }
+    .btn-custom-secondary:hover {
+        background: #e2e8f0;
+        transform: translateY(-1px);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="form-card shadow-sm">
+                <div class="form-header p-4 text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-plus-circle fa-2x mb-2"></i>
+                            <h2 class="h4 mb-0 fw-bold">Nouveau prix d'analyse</h2>
+                            <p class="mb-0 opacity-75 mt-1">Ajoutez une nouvelle offre d'analyse</p>
+                        </div>
+                        <a href="{{ path('super_admin_analysis_price_index') }}" class="btn btn-light btn-sm">
+                            <i class="fas fa-arrow-left me-1"></i> Retour
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true, 'id': 'priceForm'}}) }}
+                    
+                    {% include 'super_admin/analysis_price/_form.html.twig' %}
+                    
+                    <hr class="my-4">
+                    
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ path('super_admin_analysis_price_index') }}" class="btn btn-custom btn-custom-secondary">
+                            <i class="fas fa-times me-1"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-custom btn-custom-primary" id="submitBtn">
+                            <i class="fas fa-save me-1"></i> Enregistrer
+                        </button>
+                    </div>
+                    
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

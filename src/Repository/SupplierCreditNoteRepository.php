@@ -270,4 +270,18 @@ class SupplierCreditNoteRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findByCompanyAndPeriod(HmaService $company, \DateTime $start, \DateTime $end): array
+    {
+        return $this->createQueryBuilder('scn')
+            ->leftJoin('scn.supplier', 's')
+            ->where('s.hma_service = :company')
+            ->andWhere('scn.reported_at BETWEEN :start AND :end')
+            ->setParameter('company', $company)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->orderBy('scn.reported_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

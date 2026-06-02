@@ -63,6 +63,10 @@ security:
         - { path: ^/forgot-password, roles: PUBLIC_ACCESS }
         - { path: ^/check-email, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/payment/callback, roles: PUBLIC_ACCESS }
+        - { path: ^/payment/success, roles: PUBLIC_ACCESS }
+        - { path: ^/payment/error, roles: PUBLIC_ACCESS }
+        - { path: ^/payment/already-processed, roles: PUBLIC_ACCESS }
         
         # Pages marketing
         - { path: ^/$, roles: PUBLIC_ACCESS }
@@ -84,6 +88,11 @@ security:
         #    ⚠️ DOIT VENIR AVANT /admin/ !
         # ============================================
         - { path: ^/super-admin/, roles: ROLE_SUPER_ADMIN }
+
+        # ============================================
+        # 2.1. ROUTES SUPER ADMIN - ANALYSES (NOUVEAU)
+        # ============================================
+        - { path: ^/super-admin/analysis, roles: ROLE_SUPER_ADMIN }
 
         # ============================================
         # 3. ROUTES ADMIN ENTREPRISE (DOSSIER Admin)

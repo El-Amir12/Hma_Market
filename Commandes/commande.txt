@@ -107,16 +107,237 @@ php bin/console doctrine:fixtures:load --append
 
 
 
-Dis moi, j'avais pas du tout penser à ce coté 
-Comment gérer le retour chez les fournisseurs on a juste penser à celui des clients 
-L'idée qui m'est venue, lors de la réception des lots c'est à dire des achats, l'utilisateur peut cliquer sur signaler un problème il remplit le formulaire on peut avoir de nouvelles tables qui enregistres les problèmes le montant total 
-Le véritable problème c'est comment les photos seront prises avec le pc je crois que le gestionnaire de stock, le manger ou l'admin peuvent prendre de photos ou vidéos on il doit avoir ce champs et les photos ou vidéos seront stockés dans le dossier public/uploads/avoirs_fournisseurs ou tu peux proposer un truc plus professionnel
-Maintenant je crois que dans la liste des lots qu'on a eu a fait on aura un filtre qui pourra filtrer par lots avec avoirs et lots sans avoirs et là il pourra filtrer 
-Dans le détail d'un lot on affichera éventuellement si ce lot a de problème les prolèmes le montant total avec le statut 
-Lorsque l'utilisateur signale un problème et soumet le fournisseur, le fournisseur doit le recevoir par mail et mettant l'accent sur le numéro de lot et possiblement le numéro d'achat 
-Et là le gestionnaire de stock suit le statut du fournisseur 
-Si ce dernier le réponds avec le numéro de lot avec sa décision , il met à jour le statut et les montants seront calculés en fonction du statut je crois que dans la table stockBatch on aura les colonnes montant_probleme, montant_recupere, montant_perdu
-je crois qu'on pourra améliorer après la carte sur la liste des lots pour mettre en avant ces informations . 
-je crois que si le gestionnaire de stock change le statut d'un problème signaler , le manager ou l'admin peuvent le confirmer mais on doit garder les traces de celui qui a confirmer et afficher les informations dans les détails du problèmes mais uniquement les admin et les manger peuvent le voir . 
-Dit moi d'abord si c'est une excellent idée . 
-Discutons en d'abord et améliorons si possibles le flux avant de penser à la mise en place de celui ci 
+ok merci 
+
+MAintenant l'idée que j'ai eu 
+Je suis le super admin qui a crée le SaaS et les admin sont les responsables des entreprises 
+MAintenant ce que je souhaite faire pour gagner de l'argent, hormis l'abonnement mensuel auquel ils souscrivent, je veux les assister en leur aidant à analyser leurs données plus en profondeur 
+
+C'est à dire par exemple une entreprise me contacte par WhatsApp en me disant qu'ils veulent une analyse en profondeur de leurs entreprises 
+Par exemple l'analyse de leur approvisionnement 'achats, retours au fournisseur avoirs &retours, ect', les ventes, les mouvements de stock, ect 
+Moi sur mon dashboard des entreprises je crois que je peux avoir une page dédié , tu peux m'expliquer comment ça pourrait se présenter 
+moi je recherche l'entreprise via le numéro abonnement ou nom par exemple et je fais exporter les données 
+j'esporte un dossier au nom de l'entreprise avec son numéro abonnement 
+Et à l'intérieur on aura les fichiers excel 
+par exemple un fichier excel pour purchase, mouvement stock , vente 
+Et dans chaque fichier excel on aura les feuilles qui sépare déjà les données et une feuille vente par exemple pour favoiriser l'analyse avec Power Bi 
+L'idée est géniale j'espère allons plus en profondeur tu m'expliques comment je peux mettre en place le flux au complet 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EXPORT_ABC1234567_COMPANY_NAME_20250115/
+│
+├── 00_README.txt                          # Documentation du contenu
+├── 01_ENTREPRISE_INFO.xlsx                # Informations générales
+│
+├── 02_ACHATS_APPROVISIONNEMENT/
+│   ├── purchase_orders.xlsx               # Commandes d'achat
+│   ├── purchase_items.xlsx                # Détail des articles achetés
+│   ├── suppliers.xlsx                     # Fournisseurs
+│   └── supplier_credit_notes.xlsx         # Avoirs fournisseurs
+│
+├── 03_VENTES/
+│   ├── orders.xlsx                        # Commandes clients
+│   ├── order_items.xlsx                   # Détail des articles vendus
+│   ├── customers.xlsx                     # Clients (anonymisés)
+│   └── returns.xlsx                       # Retours clients
+│
+├── 04_STOCK/
+│   ├── stock_batches.xlsx                 # Lots de stock (FIFO)
+│   ├── stock_movements.xlsx               # Mouvements de stock
+│   ├── current_stock.xlsx                 # Stock actuel
+│   └── inventory_adjustments.xlsx         # Ajustements / Inventaires
+│
+├── 05_PRODUITS_CATALOGUE/
+│   ├── products.xlsx                      # Produits
+│   ├── categories.xlsx                    # Catégories
+│   ├── recipes.xlsx                       # Recettes (restaurants)
+│   ├── recipe_items.xlsx                  # Ingrédients des recettes
+│   └── promotions.xlsx                    # Promotions
+│
+├── 06_UTILISATEURS/
+│   ├── users.xlsx                         # Utilisateurs de l'entreprise
+│   ├── user_roles.xlsx                    # Rôles et permissions
+│   └── user_activity.xlsx                 # Activité des utilisateurs
+│
+├── 07_FINANCES/
+│   ├── payments.xlsx                      # Paiements
+│   ├── invoices.xlsx                      # Factures
+│   └── refunds.xlsx                       # Remboursements
+│
+└── 08_DASHBOARD_POWERBI/
+    ├── sales_analysis.xlsx                # Tableau croisé ventes
+    ├── stock_analysis.xlsx                # Tableau croisé stock
+    ├── purchase_analysis.xlsx             # Tableau croisé achats
+    └── data_dictionary.xlsx               # Dictionnaire des données
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    src/
+├── Entity/
+│   ├── AnalysisRequest.php
+│   └── AnalysisPayment.php
+├── Repository/
+│   ├── AnalysisRequestRepository.php
+│   └── AnalysisPaymentRepository.php
+├── Service/
+│   └── SuperAdmin/
+│       └── CompanyAnalysisExportService.php
+├── Controller/
+│   └── SuperAdmin/
+│       └── CompanyAnalysisController.php
+└── Command/
+    └── CleanExpiredAnalysisCommand.php
+
+templates/
+└── super_admin/
+    └── analysis/
+        ├── index.html.twig
+        ├── search_results.html.twig
+        ├── new_request.html.twig
+        ├── show.html.twig
+        └── history.html.twig
+
+public/uploads/exports/analyses/
+└── (dossier pour stocker les exports)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Dans MenuBuilder.php - getSuperAdminMenu()
+// Ajouter après 'Exports & Analyses'
+
+[
+    'type' => 'dropdown',
+    'label' => '📊 Analyses',
+    'icon' => 'fas fa-chart-pie',
+    'children' => [
+        [
+            'type' => 'link',
+            'route' => 'super_admin_analysis_index',
+            'label' => 'Demandes d\'analyse',
+            'icon' => 'fas fa-list'
+        ],
+        [
+            'type' => 'link',
+            'route' => 'super_admin_analysis_index',
+            'label' => 'Nouvelle analyse',
+            'icon' => 'fas fa-plus-circle',
+            'coming_soon' => false
+        ],
+        [
+            'type' => 'divider'
+        ],
+        [
+            'type' => 'link',
+            'route' => 'super_admin_analysis_index',
+            'label' => 'Statistiques',
+            'icon' => 'fas fa-chart-bar'
+        ]
+    ]
+],
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Dans MenuBuilder.php - Ajouter dans les menus appropriés
+
+// Pour ADMIN et MANAGER, ajouter dans getAdminMenu() et getManagerMenu()
+[
+    'type' => 'section',
+    'label' => 'ANALYSES'
+],
+[
+    'type' => 'link',
+    'route' => 'company_analysis_index',
+    'label' => 'Mes analyses',
+    'icon' => 'fas fa-chart-line'
+],
+[
+    'type' => 'link',
+    'route' => 'company_analysis_new',
+    'label' => 'Nouvelle analyse',
+    'icon' => 'fas fa-plus-circle'
+],

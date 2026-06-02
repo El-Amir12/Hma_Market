@@ -1,0 +1,812 @@
+{# templates/super_admin/analysis/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Analyse {{ analysis.requestNumber }} - {{ analysis.company.companyName }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .info-card {
+        background: #f8fafc;
+        border-radius: 1rem;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+    }
+    .status-badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+    }
+    .timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 0.5rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e5e7eb;
+    }
+    .timeline-item {
+        position: relative;
+        padding-bottom: 1.5rem;
+    }
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -1.5rem;
+        top: 0.25rem;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: #0463f1;
+        border: 2px solid white;
+        box-shadow: 0 0 0 2px #e5e7eb;
+    }
+    .timeline-item.completed::before {
+        background: #10b981;
+    }
+    .timeline-item.pending::before {
+        background: #f59e0b;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    .payment-link {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 0.75rem;
+        padding: 1rem;
+    }
+    .payment-link input {
+        font-size: 0.8rem;
+        font-family: monospace;
+    }
+    .payment-details {
+        background: #f8fafc;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    .payment-details pre {
+        background: #1e293b;
+        color: #e2e8f0;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.7rem;
+        overflow-x: auto;
+        max-height: 200px;
+    }
+    .company-logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: white;
+        padding: 5px;
+    }
+    .company-initials {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        color: #0463f1;
+    }
+    .modal-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+    .btn-loading {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+    .report-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 1rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        color: white;
+    }
+    .report-card .btn {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+    }
+    .report-card .btn:hover {
+        background: rgba(255,255,255,0.3);
+    }
+    .upload-form {
+        background: #f8fafc;
+        border-radius: 1rem;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('super_admin_analysis_index') }}" class="text-decoration-none">
+                            <i class="fas fa-chart-line me-1"></i> Analyses
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">{{ analysis.requestNumber }}</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0 fw-bold">
+                <i class="fas fa-chart-line me-2 text-primary"></i>
+                Analyse #{{ analysis.requestNumber }}
+            </h1>
+        </div>
+        <div class="action-buttons">
+            <a href="{{ path('super_admin_analysis_index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Retour
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Colonne gauche -->
+        <div class="col-xl-7">
+            <!-- Informations générales -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="fas fa-info-circle me-2 text-primary"></i>
+                        Informations générales
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-card">
+                                <small class="text-muted">N° Demande</small>
+                                <div class="fw-bold fs-5">{{ analysis.requestNumber }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-card">
+                                <small class="text-muted">Date de création</small>
+                                <div class="fw-bold">{{ analysis.createdAt|date('d/m/Y H:i:s') }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-card">
+                                <small class="text-muted">Type d'analyse</small>
+                                <div class="fw-bold">{{ analysis.typeLabel }}</div>
+                                <small class="text-muted">{{ analysis.amountFormatted }}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-card">
+                                <small class="text-muted">Statut</small>
+                                <div>
+                                    <span class="badge {{ analysis.statusBadgeClass }} status-badge">
+                                        <i class="fas {{ analysis.status == 'completed' ? 'fa-check-circle' : (analysis.status == 'pending' ? 'fa-clock' : (analysis.status == 'processing' ? 'fa-spinner fa-pulse' : 'fa-times-circle')) }} me-1"></i>
+                                        {{ analysis.statusLabel }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="info-card">
+                                <small class="text-muted">Période analysée</small>
+                                <div class="fw-bold">{{ analysis.periodStart|date('d/m/Y') }} au {{ analysis.periodEnd|date('d/m/Y') }}</div>
+                                {% set daysCount = analysis.periodStart.diff(analysis.periodEnd).days %}
+                                <small class="text-muted">{{ daysCount }} jours de données</small>
+                            </div>
+                        </div>
+                        {% if analysis.notes %}
+                        <div class="col-12">
+                            <div class="info-card">
+                                <small class="text-muted">Notes / Instructions</small>
+                                <div class="mt-1">{{ analysis.notes|nl2br }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chronologie -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="fas fa-history me-2 text-primary"></i>
+                        Chronologie
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item completed">
+                            <div class="fw-bold">Demande créée</div>
+                            <small class="text-muted">{{ analysis.createdAt|date('d/m/Y H:i:s') }}</small>
+                            <div class="text-muted small">Demande enregistrée avec succès</div>
+                        </div>
+                        
+                        {% if analysis.paidAt %}
+                        <div class="timeline-item completed">
+                            <div class="fw-bold">Paiement reçu</div>
+                            <small class="text-muted">{{ analysis.paidAt|date('d/m/Y H:i:s') }}</small>
+                            <div class="text-muted small">Transaction #{{ analysis.paymentTransactionId }}</div>
+                        </div>
+                        {% else %}
+                        <div class="timeline-item pending">
+                            <div class="fw-bold">En attente de paiement</div>
+                            <small class="text-muted">Expire le {{ analysis.expiresAt|date('d/m/Y') }}</small>
+                            <div class="text-muted small">Générer le lien de paiement ci-dessous</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if analysis.rawExportedAt %}
+                        <div class="timeline-item completed">
+                            <div class="fw-bold">Données brutes exportées</div>
+                            <small class="text-muted">{{ analysis.rawExportedAt|date('d/m/Y H:i:s') }}</small>
+                            <div class="text-muted small">Fichier ZIP disponible</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if analysis.finalReportUploadedAt %}
+                        <div class="timeline-item completed">
+                            <div class="fw-bold">Rapport final uploadé</div>
+                            <small class="text-muted">{{ analysis.finalReportUploadedAt|date('d/m/Y H:i:s') }}</small>
+                            <div class="text-muted small">Type: {{ analysis.finalReportType|upper }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne droite -->
+        <div class="col-xl-5">
+            <!-- Entreprise -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="fas fa-building me-2 text-primary"></i>
+                        Entreprise
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        {% set logoPath = analysis.company.logo %}
+                        {% if logoPath and logoPath is not empty %}
+                            {% if logoPath starts with 'uploads/' %}
+                                {% set logoFullPath = logoPath %}
+                            {% elseif logoPath starts with '/' %}
+                                {% set logoFullPath = logoPath %}
+                            {% else %}
+                                {% set logoFullPath = 'uploads/logos/' ~ logoPath %}
+                            {% endif %}
+                            
+                            {% if logoFullPath starts with '/' %}
+                                {% set logoUrl = logoFullPath %}
+                            {% else %}
+                                {% set logoUrl = asset(logoFullPath) %}
+                            {% endif %}
+                            
+                            <img src="{{ logoUrl }}" alt="{{ analysis.company.companyName }}" class="company-logo" 
+                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'company-initials\'>{{ analysis.company.companyName|slice(0,2)|upper }}</div>';">
+                        {% else %}
+                            <div class="company-initials">
+                                {{ analysis.company.companyName|slice(0,2)|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="text-center mb-3">
+                        <h5 class="mb-0">{{ analysis.company.companyName }}</h5>
+                        <small class="text-muted">{{ analysis.company.subscriptionNumber }}</small>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Type</span>
+                                <span>{{ analysis.company.type == 'restaurant' ? '🍽️ Restaurant' : '🛒 Commerce' }}</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Email</span>
+                                <span>{{ analysis.company.email }}</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Téléphone</span>
+                                <span>{{ analysis.company.phone|default('—') }}</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Date création</span>
+                                <span>{{ analysis.company.createdAt|date('d/m/Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ path('app_super_admin_hma_service_show', {'id': analysis.company.id}) }}" class="btn btn-sm btn-outline-primary w-100">
+                            <i class="fas fa-eye me-1"></i> Voir les détails
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions principales -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="fas fa-cog me-2 text-primary"></i>
+                        Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {# Cas 1: En attente de paiement #}
+                    {% if analysis.status == 'pending' %}
+                        <div class="payment-link mb-3">
+                            <div class="fw-bold mb-2">🔗 Lien de paiement</div>
+                            <div class="input-group mb-2">
+                                <input type="text" id="paymentLinkInput" class="form-control form-control-sm" readonly>
+                                <button class="btn btn-sm btn-primary" id="copyPaymentLinkBtn" title="Copier le lien">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-success w-100" id="generatePaymentLinkBtn">
+                                    <i class="fas fa-credit-card me-1"></i> Générer le lien
+                                </button>
+                                <button class="btn btn-sm btn-info w-100" id="sendEmailLinkBtn" style="display: none;">
+                                    <i class="fas fa-envelope me-1"></i> Envoyer par email
+                                </button>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning small">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            Ce lien expirera le {{ analysis.expiresAt|date('d/m/Y') }}.
+                        </div>
+                    {% endif %}
+                    
+                    {# Cas 2: Payé - Générer l'export brut #}
+                    {% if analysis.status == 'paid' %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Le paiement a été confirmé. Vous pouvez maintenant exporter les données brutes.
+                        </div>
+                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#confirmGenerateRawModal">
+                            <i class="fas fa-database me-1"></i> Exporter les données brutes (ZIP)
+                        </button>
+                    {% endif %}
+                    
+                    {# Cas 3: En traitement (données brutes générées, en attente upload rapport) #}
+                    {% if analysis.status == 'processing' and analysis.rawExportPath %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            Les données brutes sont prêtes.
+                        </div>
+                        
+                        <!-- Télécharger données brutes -->
+                        <a href="{{ path('super_admin_analysis_download_raw', {'id': analysis.id}) }}" class="btn btn-outline-primary w-100 mb-3">
+                            <i class="fas fa-download me-1"></i> Télécharger les données brutes (ZIP)
+                        </a>
+                        
+                        <hr>
+                        
+                        <div class="fw-bold mb-3">📤 Uploader le rapport final</div>
+                        
+                        <!-- Formulaire d'upload simple -->
+                        <form method="post" action="{{ path('super_admin_analysis_upload_report', {'id': analysis.id}) }}" enctype="multipart/form-data" class="upload-form">
+                            <div class="mb-3">
+                                <label class="form-label">Sélectionner le fichier</label>
+                                <input type="file" name="report" class="form-control" accept=".xlsx,.xls,.pbix,.pdf,.zip" required>
+                                <small class="text-muted d-block mt-1">Formats acceptés: Excel (.xlsx), Power BI (.pbix), PDF, ZIP</small>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="fas fa-cloud-upload-alt me-1"></i> Uploader le rapport final
+                            </button>
+                        </form>
+                    {% endif %}
+                    
+                    {# Cas 4: Complété (rapport final uploadé) #}
+                    {% if analysis.status == 'completed' %}
+                        <div class="report-card">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-file-alt fa-2x me-2"></i>
+                                    <strong>Rapport final</strong>
+                                    <div class="small">{{ analysis.finalReportFilename }}</div>
+                                    <div class="small opacity-75">Uploadé le {{ analysis.finalReportUploadedAt|date('d/m/Y H:i') }}</div>
+                                </div>
+                                <div class="btn-group-vertical">
+                                    <a href="{{ path('super_admin_analysis_download_final', {'id': analysis.id}) }}" class="btn btn-sm mb-1">
+                                        <i class="fas fa-download"></i> Télécharger
+                                    </a>
+                                    <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#confirmReplaceModal">
+                                        <i class="fas fa-sync-alt"></i> Remplacer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            L'entreprise peut maintenant télécharger son rapport.
+                        </div>
+                        
+                        <!-- Option pour retélécharger les données brutes -->
+                        <a href="{{ path('super_admin_analysis_download_raw', {'id': analysis.id}) }}" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-database me-1"></i> Télécharger les données brutes
+                        </a>
+                        
+                        <!-- Formulaire pour remplacer le rapport -->
+                        <form method="post" action="{{ path('super_admin_analysis_replace_report', {'id': analysis.id}) }}" enctype="multipart/form-data" class="upload-form mt-3">
+                            <div class="mb-2">
+                                <label class="form-label">Remplacer le rapport</label>
+                                <input type="file" name="report" class="form-control form-control-sm" accept=".xlsx,.xls,.pbix,.pdf,.zip" required>
+                            </div>
+                            <button type="submit" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-sync-alt me-1"></i> Remplacer le rapport
+                            </button>
+                        </form>
+                    {% endif %}
+                    
+                    {# Cas 5: En traitement sans données brutes #}
+                    {% if analysis.status == 'processing' and not analysis.rawExportPath %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-spinner fa-pulse me-1"></i>
+                            Génération des données brutes en cours...
+                        </div>
+                        <div class="progress mb-3">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%">Génération...</div>
+                        </div>
+                        <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#confirmCancelModal">
+                            <i class="fas fa-ban me-1"></i> Annuler
+                        </button>
+                    {% endif %}
+                    
+                    {# Cas 6: Échec #}
+                    {% if analysis.status == 'failed' %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            Une erreur est survenue.
+                        </div>
+                        <button type="button" class="btn btn-warning w-100 mb-2" data-bs-toggle="modal" data-bs-target="#confirmRetryModal">
+                            <i class="fas fa-sync me-1"></i> Réessayer
+                        </button>
+                        <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#confirmForcePaidModal">
+                            <i class="fas fa-exclamation-triangle me-1"></i> Forcer le statut à "Payé"
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Détails du paiement -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="fas fa-credit-card me-2 text-primary"></i>
+                        Détails du paiement
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% set payment = payments|first %}
+                    
+                    {% if payment %}
+                    <div class="row g-2">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">ID Transaction</span>
+                                <span class="fw-bold">{{ payment.transactionId }}</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Date de paiement</span>
+                                <span>{{ payment.paidAt ? payment.paidAt|date('d/m/Y H:i:s') : analysis.paidAt|date('d/m/Y H:i:s') }}</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Montant payé</span>
+                                <span class="fw-bold text-success">{{ analysis.amountFormatted }}</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Statut</span>
+                                <span><span class="badge bg-success">{{ payment.statusLabel }}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Aucun paiement enregistré.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ==================== MODALES ==================== #}
+
+{# Modal Générer l'export brut #}
+<div class="modal fade" id="confirmGenerateRawModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-database me-2"></i>
+                    Export des données brutes
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="modal-icon bg-primary bg-opacity-10">
+                    <i class="fas fa-chart-line fa-3x text-primary"></i>
+                </div>
+                <p class="mb-3">
+                    <strong>Confirmez-vous l'export des données brutes ?</strong>
+                </p>
+                <div class="alert alert-info text-start small">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Cette opération peut prendre plusieurs minutes. Vous recevrez un fichier ZIP contenant toutes les données au format Excel.
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="confirmGenerateRawBtn">
+                    <i class="fas fa-check me-2"></i> Confirmer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Modal Remplacer le rapport #}
+<div class="modal fade" id="confirmReplaceModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">
+                    <i class="fas fa-sync-alt me-2"></i>
+                    Remplacer le rapport
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Voulez-vous remplacer le rapport actuel ?</p>
+                <div class="alert alert-warning small">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    L'ancien fichier sera supprimé définitivement.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-warning" id="confirmReplaceBtn">Confirmer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Modal Réessayer #}
+<div class="modal fade" id="confirmRetryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">Réessayer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Voulez-vous réessayer de générer l'analyse ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-warning" id="confirmRetryBtn">Réessayer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Modal Forcer le statut #}
+<div class="modal fade" id="confirmForcePaidModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Forcer le statut à "Payé"</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Attention ! Cette action est irréversible.</p>
+                <div class="alert alert-danger small">Assurez-vous que le paiement a bien été effectué.</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" id="confirmForcePaidBtn">Confirmer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Modal Annuler #}
+<div class="modal fade" id="confirmCancelModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Annuler la génération</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Voulez-vous vraiment annuler la génération ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                <button type="button" class="btn btn-danger" id="confirmCancelBtn">Oui, annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const analysisId = {{ analysis.id }};
+    
+    // ==================== GÉNÉRATION EXPORT BRUT ====================
+    const generateRawBtn = document.getElementById('confirmGenerateRawBtn');
+    if (generateRawBtn) {
+        generateRawBtn.addEventListener('click', function() {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ path('super_admin_analysis_generate_raw', {'id': analysis.id}) }}';
+            document.body.appendChild(form);
+            generateRawBtn.disabled = true;
+            generateRawBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Génération...';
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmGenerateRawModal'));
+            modal.hide();
+            form.submit();
+        });
+    }
+    
+    // ==================== REPLACER LE RAPPORT ====================
+    const replaceBtn = document.getElementById('confirmReplaceBtn');
+    if (replaceBtn) {
+        replaceBtn.addEventListener('click', function() {
+            // Le formulaire de remplacement est déjà dans la page
+            const form = document.querySelector('#confirmReplaceModal').closest('form');
+            if (form) {
+                form.submit();
+            }
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmReplaceModal'));
+            modal.hide();
+        });
+    }
+    
+    // ==================== AUTRES ACTIONS ====================
+    const retryBtn = document.getElementById('confirmRetryBtn');
+    if (retryBtn) {
+        retryBtn.addEventListener('click', () => {
+            window.location.href = '{{ path('super_admin_analysis_retry', {'id': analysis.id}) }}';
+        });
+    }
+    
+    const forcePaidBtn = document.getElementById('confirmForcePaidBtn');
+    if (forcePaidBtn) {
+        forcePaidBtn.addEventListener('click', () => {
+            window.location.href = '{{ path('super_admin_analysis_force_to_paid', {'id': analysis.id}) }}';
+        });
+    }
+    
+    const cancelBtn = document.getElementById('confirmCancelBtn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ path('super_admin_analysis_cancel', {'id': analysis.id}) }}';
+            document.body.appendChild(form);
+            form.submit();
+        });
+    }
+    
+    // ==================== LIEN DE PAIEMENT ====================
+    const generateLinkBtn = document.getElementById('generatePaymentLinkBtn');
+    const sendEmailBtn = document.getElementById('sendEmailLinkBtn');
+    const paymentLinkInput = document.getElementById('paymentLinkInput');
+    const copyBtn = document.getElementById('copyPaymentLinkBtn');
+    
+    if (generateLinkBtn && {{ analysis.status == 'pending' ? 'true' : 'false' }}) {
+        generateLinkBtn.addEventListener('click', async () => {
+            generateLinkBtn.disabled = true;
+            generateLinkBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Génération...';
+            
+            const response = await fetch('{{ path('super_admin_analysis_payment_link', {'id': analysis.id}) }}');
+            const data = await response.json();
+            
+            if (data.payment_url && data.payment_url !== '#') {
+                paymentLinkInput.value = data.payment_url;
+                generateLinkBtn.innerHTML = '<i class="fas fa-check me-1"></i> Lien généré';
+                sendEmailBtn.style.display = 'block';
+                showToast('success', 'Lien généré avec succès');
+            } else {
+                generateLinkBtn.innerHTML = '<i class="fas fa-credit-card me-1"></i> Générer le lien';
+                showToast('error', 'Erreur lors de la génération');
+            }
+            generateLinkBtn.disabled = false;
+        });
+    }
+    
+    if (sendEmailBtn) {
+        sendEmailBtn.addEventListener('click', async () => {
+            const paymentLink = paymentLinkInput.value;
+            if (!paymentLink) {
+                showToast('error', 'Générez d\'abord le lien');
+                return;
+            }
+            
+            sendEmailBtn.disabled = true;
+            sendEmailBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Envoi...';
+            
+            const response = await fetch('{{ path('super_admin_analysis_send_payment_link', {'id': analysis.id}) }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ payment_link: paymentLink })
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                showToast('success', 'Email envoyé avec succès');
+                sendEmailBtn.innerHTML = '<i class="fas fa-check me-1"></i> Email envoyé';
+            } else {
+                showToast('error', data.error || 'Erreur');
+                sendEmailBtn.innerHTML = '<i class="fas fa-envelope me-1"></i> Envoyer par email';
+                sendEmailBtn.disabled = false;
+            }
+        });
+    }
+    
+    if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            paymentLinkInput.select();
+            document.execCommand('copy');
+            showToast('success', 'Lien copié');
+        });
+    }
+    
+    function showToast(type, message) {
+        const toast = document.createElement('div');
+        toast.className = `position-fixed bottom-0 end-0 p-3 m-3 bg-${type === 'success' ? 'success' : 'danger'} text-white rounded shadow`;
+        toast.style.zIndex = '9999';
+        toast.style.cursor = 'pointer';
+        toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+});
+</script>
+{% endblock %}

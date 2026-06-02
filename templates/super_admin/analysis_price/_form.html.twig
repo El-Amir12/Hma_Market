@@ -1,0 +1,46 @@
+{# templates/super_admin/analysis_price/_form.html.twig #}
+<div class="form-group-custom">
+    {{ form_label(form.type, 'Identifiant technique', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.type, {'attr': {'class': 'form-control', 'placeholder': 'ex: standard, premium, enterprise'}}) }}
+    <small class="text-muted">Utilisé en interne, doit être unique (ex: standard, powerbi, custom, subscription)</small>
+    {{ form_errors(form.type) }}
+</div>
+
+<div class="form-group-custom">
+    {{ form_label(form.label, 'Libellé affiché', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.label, {'attr': {'class': 'form-control', 'placeholder': 'ex: Analyse Standard'}}) }}
+    {{ form_errors(form.label) }}
+</div>
+
+<div class="form-group-custom">
+    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Décrivez ce que comprend cette offre...'}}) }}
+    {{ form_errors(form.description) }}
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group-custom">
+            {{ form_label(form.price, 'Prix (FCFA)', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.price, {'attr': {'class': 'form-control', 'placeholder': '0', 'min': '0', 'step': '1'}}) }}
+            <small class="text-muted">Le prix doit être un nombre positif ou nul</small>
+            {{ form_errors(form.price) }}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group-custom">
+            {{ form_label(form.display_order, "Ordre d'affichage", {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.display_order, {'attr': {'class': 'form-control', 'placeholder': '0, 1, 2, 3...', 'min': '0', 'step': '1'}}) }}
+            <small class="text-muted">0 = premier, plus le chiffre est grand, plus l'ordre est bas</small>
+            {{ form_errors(form.display_order) }}
+        </div>
+    </div>
+</div>
+
+<div class="form-group-custom mt-3">
+    <div class="form-check form-switch">
+        {{ form_widget(form.is_active, {'attr': {'class': 'form-check-input', 'role': 'switch', 'id': 'isActiveSwitch'}}) }}
+        {{ form_label(form.is_active, 'Offre active', {'label_attr': {'class': 'form-check-label'}}) }}
+    </div>
+    <small class="text-muted">Les offres inactives ne seront pas visibles par les utilisateurs</small>
+</div>

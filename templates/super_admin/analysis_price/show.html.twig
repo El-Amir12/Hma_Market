@@ -1,0 +1,311 @@
+{# templates/super_admin/analysis_price/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ price.label }} - Super Admin{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .show-card {
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+    .show-header {
+        background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%);
+    }
+    .info-row {
+        display: flex;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .info-row:last-child {
+        border-bottom: none;
+    }
+    .info-label {
+        width: 180px;
+        font-weight: 600;
+        color: #475569;
+    }
+    .info-value {
+        flex: 1;
+        color: #1e293b;
+    }
+    .price-badge {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #0463f1;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+    .status-badge {
+        padding: 0.35rem 0.85rem;
+        border-radius: 2rem;
+        font-weight: 500;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .status-active {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    .status-inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    .action-footer {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="show-card shadow-sm">
+                <div class="show-header p-4 text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-tag fa-2x mb-2"></i>
+                            <h2 class="h4 mb-0 fw-bold">{{ price.label }}</h2>
+                            <p class="mb-0 opacity-75 mt-1">Détail de l'offre d'analyse</p>
+                        </div>
+                        <div class="action-buttons">
+                            <a href="{{ path('super_admin_analysis_price_edit', {'id': price.id}) }}" class="btn btn-light btn-sm">
+                                <i class="fas fa-edit me-1"></i> Modifier
+                            </a>
+                            <a href="{{ path('super_admin_analysis_price_index') }}" class="btn btn-outline-light btn-sm">
+                                <i class="fas fa-arrow-left me-1"></i> Retour
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <!-- Statut -->
+                    <div class="text-center mb-4">
+                        <div class="status-badge {{ price.isActive ? 'status-active' : 'status-inactive' }}">
+                            <i class="fas {{ price.isActive ? 'fa-check-circle' : 'fa-ban' }} me-1"></i>
+                            {{ price.isActive ? 'Offre active' : 'Offre inactive' }}
+                        </div>
+                    </div>
+                    
+                    <!-- Informations -->
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-code me-2 text-primary"></i> Type technique
+                        </div>
+                        <div class="info-value">
+                            <code class="type-badge" style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 0.5rem;">{{ price.type }}</code>
+                        </div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-tag me-2 text-primary"></i> Libellé
+                        </div>
+                        <div class="info-value fw-semibold">{{ price.label }}</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-align-left me-2 text-primary"></i> Description
+                        </div>
+                        <div class="info-value">
+                            {{ price.description|default('Aucune description')|nl2br }}
+                        </div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-money-bill-wave me-2 text-primary"></i> Prix
+                        </div>
+                        <div class="info-value">
+                            <span class="price-badge">{{ price.priceFormatted }}</span>
+                            {% if price.type == 'subscription' %}
+                                <small class="text-muted">/mois</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-sort-numeric-down me-2 text-primary"></i> Ordre d'affichage
+                        </div>
+                        <div class="info-value">
+                            <span class="badge bg-secondary">{{ price.displayOrder|default('Non défini') }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-calendar-plus me-2 text-primary"></i> Date de création
+                        </div>
+                        <div class="info-value">
+                            {{ price.createdAt|date('d/m/Y à H:i:s') }}
+                        </div>
+                    </div>
+                    
+                    {% if price.updatedAt %}
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-calendar-edit me-2 text-primary"></i> Dernière modification
+                        </div>
+                        <div class="info-value">
+                            {{ price.updatedAt|date('d/m/Y à H:i:s') }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Actions avec modal pour activation/désactivation -->
+                    <div class="action-footer">
+                        <div>
+                            <button type="button" 
+                                    class="btn {{ price.isActive ? 'btn-warning' : 'btn-success' }} toggle-price-btn"
+                                    data-id="{{ price.id }}"
+                                    data-label="{{ price.label }}"
+                                    data-active="{{ price.isActive ? 'true' : 'false' }}"
+                                    data-token="{{ csrf_token('toggle' ~ price.id) }}">
+                                <i class="fas {{ price.isActive ? 'fa-ban' : 'fa-check-circle' }} me-1"></i>
+                                {{ price.isActive ? 'Désactiver' : 'Activer' }}
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" 
+                                    class="btn btn-danger delete-price-btn"
+                                    data-id="{{ price.id }}"
+                                    data-label="{{ price.label }}"
+                                    data-token="{{ csrf_token('delete' ~ price.id) }}">
+                                <i class="fas fa-trash me-1"></i> Supprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal confirmation activation/désactivation -->
+<div class="modal fade" id="toggleModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">
+                    <i class="fas fa-exchange-alt me-2"></i>
+                    Changer le statut
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="toggleMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form id="toggleForm" method="post">
+                    <input type="hidden" name="_token" id="toggleToken">
+                    <button type="submit" class="btn" id="toggleBtn"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal confirmation suppression -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Confirmer la suppression
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer l'offre <strong id="deleteLabel"></strong> ?</p>
+                <div class="alert alert-warning mt-2">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Cette action est irréversible.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form id="deleteForm" method="post">
+                    <input type="hidden" name="_token" id="deleteToken">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i> Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ========== MODALE SUPPRESSION ==========
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    const deleteForm = document.getElementById('deleteForm');
+    const deleteLabel = document.getElementById('deleteLabel');
+    const deleteToken = document.getElementById('deleteToken');
+    
+    document.querySelectorAll('.delete-price-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const id = this.dataset.id;
+            const label = this.dataset.label;
+            const token = this.dataset.token;
+            
+            deleteLabel.textContent = label;
+            deleteToken.value = token;
+            deleteForm.action = '/super-admin/analysis-prices/' + id + '/delete';
+            
+            deleteModal.show();
+        });
+    });
+    
+    // ========== MODALE ACTIVATION/DÉSACTIVATION ==========
+    const toggleModal = new bootstrap.Modal(document.getElementById('toggleModal'));
+    const toggleForm = document.getElementById('toggleForm');
+    const toggleToken = document.getElementById('toggleToken');
+    const toggleMessage = document.getElementById('toggleMessage');
+    const toggleBtn = document.getElementById('toggleBtn');
+    
+    document.querySelectorAll('.toggle-price-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const id = this.dataset.id;
+            const label = this.dataset.label;
+            const isActive = this.dataset.active === 'true';
+            const token = this.dataset.token;
+            const newStatus = isActive ? 'désactiver' : 'activer';
+            
+            toggleMessage.innerHTML = `Êtes-vous sûr de vouloir <strong>${newStatus}</strong> l'offre "<strong>${label}</strong>" ?`;
+            
+            toggleBtn.className = isActive ? 'btn btn-danger' : 'btn btn-success';
+            toggleBtn.textContent = isActive ? 'Désactiver' : 'Activer';
+            
+            toggleToken.value = token;
+            toggleForm.action = `/super-admin/analysis-prices/${id}/toggle`;
+            
+            toggleModal.show();
+        });
+    });
+});
+</script>
+{% endblock %}

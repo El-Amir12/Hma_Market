@@ -396,4 +396,26 @@ class NotificationService
             $this->sendSimpleEmail($user->getEmail(), $subject, $message);
         }
     }
+
+    /**
+     * Envoie un email avec template Twig (méthode publique)
+     */
+    public function sendTemplateEmail(string $to, string $subject, string $template, array $context): void
+    {
+        try {
+            $html = $this->twig->render($template, $context);
+            
+            $email = (new Email())
+                ->from($this->appEmail)
+                ->to($to)
+                ->subject($subject)
+                ->html($html);
+            
+            $this->mailer->send($email);
+            
+            $this->logger->info('Email template envoyé', ['to' => $to, 'subject' => $subject]);
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur envoi email template', ['error' => $e->getMessage()]);
+        }
+    }
 }

@@ -552,91 +552,93 @@
     </div>
     {% endif %}
 
-    <!-- Section Retours & Avoirs -->
+    <!-- Section Retours & Avoirs - Version épurée et lisible -->
     <div class="mb-4">
-        <div class="returns-card">
-            <div class="card-header">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white border-0 pt-4 pb-0">
                 <h5 class="mb-0 fw-semibold">
                     <i class="fas fa-undo-alt me-2 text-warning"></i>
                     Retours & Avoirs
                 </h5>
             </div>
-            <div class="card-body p-0">
-                <div class="row g-0">
-                    <div class="col-md-3 col-sm-6">
-                        <div class="return-stat-box">
-                            <div class="return-stat-label">
-                                <i class="fas fa-chart-line me-1"></i> Total retours
+            <div class="card-body pt-3">
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center">
+                            <div class="mb-2">
+                                <span class="badge bg-primary px-3 py-2">
+                                    <i class="fas fa-chart-line me-1 text-white"></i> Total
+                                </span>
                             </div>
-                            <div class="return-stat-value text-primary">
-                                {{ returnStats.total_returns|default(0)|number_format(0, ',', ' ') }}
-                            </div>
-                            <div class="return-stat-sub text-muted">demandes</div>
+                            <div class="h1 fw-bold text-primary">{{ returnStats.total_returns|default(0)|number_format(0, ',', ' ') }}</div>
+                            <small class="text-muted">demandes de retour</small>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="return-stat-box">
-                            <div class="return-stat-label">
-                                <i class="fas fa-clock me-1"></i> En attente
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center">
+                            <div class="mb-2">
+                                <span class="badge bg-warning px-3 py-2">
+                                    <i class="fas fa-clock me-1 text-white"></i> En attente
+                                </span>
                             </div>
-                            <div class="return-stat-value text-warning">
-                                {{ returnStats.pending|default(0)|number_format(0, ',', ' ') }}
-                            </div>
-                            <div class="return-stat-sub text-muted">à valider</div>
+                            <div class="h1 fw-bold text-warning">{{ returnStats.pending|default(0)|number_format(0, ',', ' ') }}</div>
+                            <small class="text-muted">à valider</small>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="return-stat-box">
-                            <div class="return-stat-label">
-                                <i class="fas fa-check-circle me-1"></i> Approuvés
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center">
+                            <div class="mb-2">
+                                <span class="badge bg-info px-3 py-2">
+                                    <i class="fas fa-check-circle me-1 text-white"></i> Approuvés
+                                </span>
                             </div>
-                            <div class="return-stat-value text-info">
-                                {{ returnStats.approved|default(0)|number_format(0, ',', ' ') }}
-                            </div>
-                            <div class="return-stat-sub text-muted">en attente remb.</div>
+                            <div class="h1 fw-bold text-info">{{ returnStats.approved|default(0)|number_format(0, ',', ' ') }}</div>
+                            <small class="text-muted">en attente remb.</small>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="return-stat-box">
-                            <div class="return-stat-label">
-                                <i class="fas fa-money-bill-wave me-1"></i> Remboursés
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center">
+                            <div class="mb-2">
+                                <span class="badge bg-success px-3 py-2">
+                                    <i class="fas fa-money-bill-wave me-1 text-white"></i> Remboursés
+                                </span>
                             </div>
-                            <div class="return-stat-value text-success">
-                                {{ returnStats.completed|default(0)|number_format(0, ',', ' ') }}
-                            </div>
-                            <div class="return-stat-sub text-muted">terminés</div>
+                            <div class="h1 fw-bold text-success">{{ returnStats.completed|default(0)|number_format(0, ',', ' ') }}</div>
+                            <small class="text-muted">terminés</small>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-footer bg-white">
-                <div class="row">
+
+                <div class="row g-3 mt-3 pt-2 border-top">
                     <div class="col-md-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted">
-                                <i class="fas fa-hand-holding-usd me-1 text-danger"></i> Montant remboursé :
-                            </span>
-                            <strong class="text-danger">{{ returnStats.total_refund_amount|default(0)|number_format(0, ',', ' ') }} FCFA</strong>
+                        <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3">
+                            <div>
+                                <i class="fas fa-hand-holding-usd text-danger me-2"></i>
+                                <span class="text-dark">Montant remboursé</span>
+                            </div>
+                            <strong class="text-danger ms-3">{{ returnStats.total_refund_amount|default(0)|number_format(0, ',', ' ') }} FCFA</strong>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted">
-                                <i class="fas fa-chart-line me-1 text-success"></i> Taux d'approbation :
-                            </span>
+                        <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3">
+                            <div>
+                                <i class="fas fa-chart-line text-success me-2"></i>
+                                <span class="text-dark">Taux d'approbation</span>
+                            </div>
                             {% set totalReturns = returnStats.total_returns|default(0) %}
                             {% set approvedCompleted = (returnStats.approved|default(0)) + (returnStats.completed|default(0)) %}
                             {% set approvalRate = (totalReturns > 0) ? (approvedCompleted / totalReturns * 100) : 0 %}
-                            <strong class="text-success">{{ approvalRate|number_format(1, ',', ' ') }}%</strong>
+                            <strong class="text-success ms-3">{{ approvalRate|number_format(1, ',', ' ') }}%</strong>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted">
-                                <i class="fas fa-chart-pie me-1 text-danger"></i> Taux de rejet :
-                            </span>
+                        <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3">
+                            <div>
+                                <i class="fas fa-chart-pie text-danger me-2"></i>
+                                <span class="text-dark">Taux de rejet</span>
+                            </div>
                             {% set rejectionRate = (totalReturns > 0) ? ((returnStats.rejected|default(0)) / totalReturns * 100) : 0 %}
-                            <strong class="text-danger">{{ rejectionRate|number_format(1, ',', ' ') }}%</strong>
+                            <strong class="text-danger ms-3">{{ rejectionRate|number_format(1, ',', ' ') }}%</strong>
                         </div>
                     </div>
                 </div>
@@ -644,19 +646,21 @@
         </div>
     </div>
 
-    <!-- Contact Super Admin -->
+    <!-- Analyse approfondie des données -->
     <a href="{{ path('app_orders_contact_super_admin') }}" class="text-decoration-none d-block mb-4">
         <div class="contact-card">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-4">
                 <div class="d-flex align-items-center gap-3">
-                    <i class="fas fa-chart-line fa-3x"></i>
+                    <div class="rounded-circle bg-white bg-opacity-25 p-3">
+                        <i class="fas fa-chart-line fa-2x"></i>
+                    </div>
                     <div>
-                        <h5 class="mb-1">Analyse approfondie des données</h5>
-                        <p class="mb-0 opacity-75">Pour une analyse détaillée de vos ventes, contactez notre équipe Super Admin</p>
+                        <h4 class="mb-1 fw-bold">📊 Analyse approfondie des données</h4>
+                        <p class="mb-0 opacity-75">Cliquez pour découvrir nos offres d'analyse</p>
                     </div>
                 </div>
                 <div class="btn btn-light">
-                    <i class="fab fa-whatsapp me-2 text-success"></i> Contacter le support
+                    <i class="fas fa-arrow-right me-2"></i> En savoir plus
                 </div>
             </div>
         </div>
