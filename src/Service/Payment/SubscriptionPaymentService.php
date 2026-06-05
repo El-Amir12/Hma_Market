@@ -24,47 +24,34 @@ class SubscriptionPaymentService
     /**
      * Crée un lien de paiement pour l'abonnement
      */
-    public function createPaymentLink(AnalysisRequest $subscription, string $callbackUrl): string
+    public function createMonthlyPaymentLink(AnalysisRequest $subscription): ?string
     {
         $company = $subscription->getCompany();
         $amount = (float) $subscription->getAmount();
         
-        $this->logger->info('Création paiement abonnement', [
-            'company_id' => $company->getId(),
-            'company_name' => $company->getCompanyName(),
-            'amount' => $amount,
-            'request_number' => $subscription->getRequestNumber(),
-        ]);
-
         try {
-            $paymentUrl = $this->fedaPayService->createPayment([
+            $monthlyReference = sprintf(
+                '%s_%s',
+                $subscription->getRequestNumber(),
+                date('Ym')
+            );
+            
+            return $this->fedaPayService->createPayment([
                 'amount' => (int) $amount,
                 'description' => sprintf(
                     'Abonnement mensuel - %s - %s',
                     $company->getCompanyName(),
-                    $subscription->getPeriodFormatted()
+                    (new \DateTime())->modify('last day of previous month')->format('F Y')
                 ),
                 'currency' => 'XOF',
-                'callback_url' => $callbackUrl,
+                'callback_url' => $this->getAutoPaymentCallbackUrl(),
                 'customer_email' => $company->getEmail(),
                 'customer_name' => $company->getCompanyName(),
-                'reference' => $subscription->getRequestNumber(),
+                'reference' => $monthlyReference,
             ]);
-
-            $transactionId = $this->fedaPayService->getLastTransactionId();
-            if ($transactionId) {
-                $subscription->setPaymentTransactionId($transactionId);
-                $this->entityManager->flush();
-            }
-
-            return $paymentUrl;
-
         } catch (\Exception $e) {
-            $this->logger->error('Erreur création paiement abonnement', [
-                'error' => $e->getMessage(),
-                'subscription_id' => $subscription->getId(),
-            ]);
-            throw new \Exception('Impossible de créer le lien de paiement: ' . $e->getMessage());
+            $this->logger->error('Erreur création paiement mensuel', ['error' => $e->getMessage()]);
+            return null;
         }
     }
 

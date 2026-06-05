@@ -114,22 +114,20 @@
     .badge.bg-completed { background: #d1fae5; color: #065f46; }
     .badge.bg-failed { background: #fee2e2; color: #991b1b; }
 
-    /* Bannière abonnement */
-    .subscription-banner {
-        background: linear-gradient(135deg, #1e3a5f, #3b82f6);
+    /* Bannière d'information */
+    .info-banner {
+        background: linear-gradient(135deg, #0463f1, #0350c4);
         border-radius: 1rem;
         position: relative;
         overflow: hidden;
     }
-    .subscription-banner::before {
-        content: '★';
+    .info-banner::before {
+        content: '📊';
         position: absolute;
-        font-size: 12rem;
+        font-size: 10rem;
         right: -2rem;
-        bottom: -4rem;
-        opacity: 0.08;
-        font-family: monospace;
-        color: white;
+        bottom: -3rem;
+        opacity: 0.1;
     }
     .btn-light-custom {
         background: rgba(255,255,255,0.2);
@@ -139,7 +137,7 @@
     }
     .btn-light-custom:hover {
         background: white;
-        color: #1e3a5f;
+        color: #0463f1;
         transform: translateY(-2px);
     }
 
@@ -238,64 +236,39 @@
         </div>
     </div>
 
-    <!-- Bannière d'abonnement -->
-    {% if not hasActiveSubscription %}
-        <div class="subscription-banner text-white mb-4 p-4">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="rounded-circle bg-white bg-opacity-20 p-3">
-                            <i class="fas fa-calendar-alt fa-2x"></i>
-                        </div>
-                        <div>
-                            <h4 class="mb-1 fw-bold">
-                                {% if subscriptionPrice and subscriptionPrice.label %}
-                                    {{ subscriptionPrice.label }}
-                                {% else %}
-                                    Abonnement mensuel
-                                {% endif %}
-                            </h4>
-                            <p class="mb-0 opacity-75">
-                                {% if subscriptionPrice and subscriptionPrice.description %}
-                                    {{ subscriptionPrice.description }}
-                                {% else %}
-                                    Recevez automatiquement vos analyses chaque mois, sans aucune intervention
-                                {% endif %}
-                            </p>
-                        </div>
+    <!-- Bannière d'information générale -->
+    <div class="info-banner text-white mb-4 p-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-white bg-opacity-20 p-3">
+                        <i class="fas fa-chart-line fa-2x"></i>
                     </div>
-                </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <span class="display-6 fw-bold me-2">
-                        {% if subscriptionPrice and subscriptionPrice.price %}
-                            {{ (subscriptionPrice.price / 1000)|round }}K
-                        {% else %}
-                            100K
-                        {% endif %}
-                    </span>
-                    <span class="opacity-75">
-                        {% if subscriptionPrice and subscriptionPrice.price %}
-                            {{ subscriptionPrice.priceFormatted }}/mois
-                        {% else %}
-                            100 000 FCFA/mois
-                        {% endif %}
-                    </span>
-                    <div class="mt-2">
-                        <a href="{{ path('company_analysis_new', {'type': 'subscription'}) }}" class="btn btn-light-custom">
-                            <i class="fas fa-rocket me-2"></i> S'abonner
-                        </a>
+                    <div>
+                        <h4 class="mb-1 fw-bold">Analysez vos performances</h4>
+                        <p class="mb-0 opacity-75">
+                            Obtenez une analyse détaillée de vos ventes, stocks et performances sur la période de votre choix.
+                            Nos experts vous fournissent un rapport personnalisé avec des recommandations actionnables.
+                        </p>
                     </div>
                 </div>
             </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <div class="mt-2">
+                    <a href="{{ path('company_analysis_new') }}" class="btn btn-light-custom">
+                        <i class="fas fa-rocket me-2"></i> Commander une analyse
+                    </a>
+                </div>
+            </div>
         </div>
-    {% endif %}
+    </div>
 
     <!-- Badges de filtres actifs -->
     {% if filters.type or filters.status or filters.date_from or filters.date_to %}
     <div class="d-flex gap-2 flex-wrap mb-3">
         {% if filters.type %}
             <span class="filter-badge" onclick="removeFilter('type')">
-                <i class="fas fa-tag me-1"></i> {{ filters.type }}
+                <i class="fas fa-tag me-1"></i> {{ filters.type|capitalize }}
                 <i class="fas fa-times ms-1"></i>
             </span>
         {% endif %}
@@ -383,7 +356,7 @@
                         <div class="flex-grow-1">
                             <div class="stat-label">Montant total</div>
                             <div class="stat-value">{{ stats.total_amount|default(0)|number_format(0, ',', ' ') }}</div>
-                            <div class="stat-sub">chiffre d'affaires généré</div>
+                            <div class="stat-sub">investi en analyses</div>
                         </div>
                         <div class="stat-icon">
                             <i class="fas fa-money-bill-wave fa-2x"></i>
@@ -522,7 +495,6 @@
                             <option value="standard" {% if filters.type == 'standard' %}selected{% endif %}>📊 Analyse Standard</option>
                             <option value="powerbi" {% if filters.type == 'powerbi' %}selected{% endif %}>📈 Analyse Power BI</option>
                             <option value="custom" {% if filters.type == 'custom' %}selected{% endif %}>🎯 Analyse sur mesure</option>
-                            <option value="subscription" {% if filters.type == 'subscription' %}selected{% endif %}>🔄 Abonnement mensuel</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -567,7 +539,6 @@
 {{ parent() }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ========== GESTION DES FILTRES ==========
     const filterModal = new bootstrap.Modal(document.getElementById('filterModal'));
     const applyFiltersBtn = document.getElementById('applyFiltersBtn');
     
@@ -589,7 +560,6 @@ document.addEventListener('DOMContentLoaded', function() {
         applyFiltersBtn.addEventListener('click', applyFilters);
     }
     
-    // Soumettre avec Entrée
     const filterForm = document.getElementById('filterForm');
     if (filterForm) {
         filterForm.addEventListener('keypress', function(e) {
@@ -601,7 +571,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// ========== FONCTIONS GLOBALES ==========
 function removeFilter(filter) {
     let url = new URL(window.location.href);
     url.searchParams.delete(filter);

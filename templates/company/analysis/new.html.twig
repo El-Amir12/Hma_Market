@@ -101,7 +101,6 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    {# ✅ Formulaire Symfony standard #}
                     {{ form_start(form, {'attr': {'id': 'analysisForm'}}) }}
                     {{ form_errors(form) }}
                     
@@ -112,6 +111,7 @@
                         <label class="form-label fw-bold">📊 Type d'analyse</label>
                         <div class="row g-3" id="typeCards">
                             {% for price in prices %}
+                                {% if price.type != 'subscription' %}
                                 <div class="col-md-6">
                                     <div class="price-card text-center p-3" 
                                          data-type="{{ price.type }}" 
@@ -123,19 +123,18 @@
                                             <i class="fas fa-chart-line fa-3x text-info mb-2"></i>
                                         {% elseif price.type == 'custom' %}
                                             <i class="fas fa-crown fa-3x text-warning mb-2"></i>
-                                        {% elseif price.type == 'subscription' %}
-                                            <i class="fas fa-calendar-alt fa-3x text-primary mb-2"></i>
                                         {% else %}
                                             <i class="fas fa-chart-simple fa-3x text-secondary mb-2"></i>
                                         {% endif %}
                                         <h6 class="mb-1">{{ price.label }}</h6>
                                         <div class="price">
                                             {{ price.price|number_format(0, ',', ' ') }} 
-                                            <small>FCFA{% if price.type == 'subscription' %}/mois{% endif %}</small>
+                                            <small>FCFA</small>
                                         </div>
                                         <small class="text-muted">{{ price.description|u.truncate(50) }}</small>
                                     </div>
                                 </div>
+                                {% endif %}
                             {% endfor %}
                         </div>
                         <div class="type-error text-danger small mt-2" style="display: none;">
@@ -288,14 +287,14 @@ document.addEventListener('DOMContentLoaded', function() {
             typeError.style.display = 'none';
             submitBtn.disabled = false;
             
-            recapType.innerHTML = `<strong>${selectedLabel}</strong> - ${selectedPrice.toLocaleString()} FCFA${selectedType === 'subscription' ? '/mois' : ''}`;
+            recapType.innerHTML = `<strong>${selectedLabel}</strong> - ${selectedPrice.toLocaleString()} FCFA`;
             updateTotalAmount();
         });
     });
     
     function updateTotalAmount() {
         if (selectedPrice > 0) {
-            totalAmountSpan.textContent = selectedPrice.toLocaleString() + ' FCFA' + (selectedType === 'subscription' ? '/mois' : '');
+            totalAmountSpan.textContent = selectedPrice.toLocaleString() + ' FCFA';
         } else {
             totalAmountSpan.textContent = '0 FCFA';
         }
@@ -367,10 +366,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             periodMessage.style.display = 'none';
             recapPeriod.innerHTML = 'Période non définie';
+            return false;
         }
-        
-        updateTotalAmount();
-        return true;
     }
     
     if (periodStart) periodStart.addEventListener('change', validatePeriod);
@@ -436,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div>
                     <i class="fas fa-money-bill-wave text-primary me-2"></i>
-                    <strong>Montant :</strong> ${selectedPrice.toLocaleString()} FCFA${selectedType === 'subscription' ? '/mois' : ''}
+                    <strong>Montant :</strong> ${selectedPrice.toLocaleString()} FCFA
                 </div>
             </div>
         `;

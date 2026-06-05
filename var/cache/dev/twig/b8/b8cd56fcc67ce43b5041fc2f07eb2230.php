@@ -84,11 +84,11 @@ class __TwigTemplate_a14e292345de61ee89950526dabc63fc extends Template
         // line 7
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "address", [], "any", true, true, false, 7)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 7, $this->source); })()), "address", [], "any", false, false, false, 7), "")) : ("")), "html", null, true);
         yield "</p>
-    <p>📞 ";
+    <p> ";
         // line 8
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "phone", [], "any", true, true, false, 8)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 8, $this->source); })()), "phone", [], "any", false, false, false, 8), "")) : ("")), "html", null, true);
         yield "</p>
-    <p>📧 ";
+    <p> ";
         // line 9
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "email", [], "any", true, true, false, 9)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 9, $this->source); })()), "email", [], "any", false, false, false, 9), "")) : ("")), "html", null, true);
         yield "</p>
@@ -166,7 +166,7 @@ class __TwigTemplate_a14e292345de61ee89950526dabc63fc extends Template
     <span>Qté</span>
     <span>Prix</span>
 </div>
-<div class=\"divider\"></div>
+<div class=\"dotted-divider\"></div>
 
 ";
         // line 45
@@ -241,7 +241,7 @@ class __TwigTemplate_a14e292345de61ee89950526dabc63fc extends Template
         if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 77, $this->source); })()), "notes", [], "any", false, false, false, 77)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
             // line 78
             yield "<div class=\"notes\">
-    <strong>📝 Notes:</strong><br>
+    <strong> Notes:</strong><br>
     ";
             // line 80
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["order"]) || array_key_exists("order", $context) ? $context["order"] : (function () { throw new RuntimeError('Variable "order" does not exist.', 80, $this->source); })()), "notes", [], "any", false, false, false, 80), "html", null, true);
@@ -273,9 +273,9 @@ class __TwigTemplate_a14e292345de61ee89950526dabc63fc extends Template
 
         // line 86
         yield "<div class=\"footer\">
-    <p>⭐ Merci de votre visite ! ⭐</p>
+    <p> Merci de votre visite ! </p>
     <p>Retrouvez-nous sur :</p>
-    <p>📱 ";
+    <p> ";
         // line 89
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "website", [], "any", true, true, false, 89)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 89, $this->source); })()), "website", [], "any", false, false, false, 89), "www.votre-site.com")) : ("www.votre-site.com")), "html", null, true);
         yield "</p>
@@ -327,8 +327,8 @@ class __TwigTemplate_a14e292345de61ee89950526dabc63fc extends Template
 <div class=\"header\">
     <h1>{{ company.companyName }}</h1>
     <p>{{ company.address|default('') }}</p>
-    <p>📞 {{ company.phone|default('') }}</p>
-    <p>📧 {{ company.email|default('') }}</p>
+    <p> {{ company.phone|default('') }}</p>
+    <p> {{ company.email|default('') }}</p>
     <div class=\"divider\"></div>
     <div class=\"info-row\">
         <span class=\"info-label\">Facture N°</span>
@@ -362,7 +362,7 @@ class __TwigTemplate_a14e292345de61ee89950526dabc63fc extends Template
     <span>Qté</span>
     <span>Prix</span>
 </div>
-<div class=\"divider\"></div>
+<div class=\"dotted-divider\"></div>
 
 {% for item in items %}
 <div class=\"info-row\">
@@ -398,7 +398,7 @@ class __TwigTemplate_a14e292345de61ee89950526dabc63fc extends Template
 
 {% if order.notes %}
 <div class=\"notes\">
-    <strong>📝 Notes:</strong><br>
+    <strong> Notes:</strong><br>
     {{ order.notes }}
 </div>
 {% endif %}
@@ -406,9 +406,9 @@ class __TwigTemplate_a14e292345de61ee89950526dabc63fc extends Template
 
 {% block footer %}
 <div class=\"footer\">
-    <p>⭐ Merci de votre visite ! ⭐</p>
+    <p> Merci de votre visite ! </p>
     <p>Retrouvez-nous sur :</p>
-    <p>📱 {{ company.website|default('www.votre-site.com') }}</p>
+    <p> {{ company.website|default('www.votre-site.com') }}</p>
     <p>{{ print_date|date('d/m/Y H:i:s') }}</p>
 </div>
 {% endblock %}", "print/customer_ticket.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\print\\customer_ticket.html.twig");

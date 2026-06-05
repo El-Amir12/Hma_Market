@@ -1,9 +1,9 @@
 <?php
-// src/Controller/Company/CompanyAnalysisController.php
 
 namespace App\Controller\Company;
 
 use App\Entity\AnalysisPrice;
+use App\Entity\AnalysisPayment;
 use App\Entity\AnalysisRequest;
 use App\Entity\HmaService;
 use App\Entity\User;
@@ -51,7 +51,6 @@ class CompanyAnalysisController extends AbstractController
         
         $roles = $user->getRoles();
         if (!in_array('ROLE_ADMIN', $roles) && !in_array('ROLE_MANAGER', $roles)) {
-            // Message plus clair pour les caissiers
             throw new AccessDeniedException('Cette section est réservée aux administrateurs et managers. Veuillez contacter votre responsable.');
         }
         
@@ -186,8 +185,53 @@ class CompanyAnalysisController extends AbstractController
             throw new AccessDeniedException('Cette analyse ne vous appartient pas.');
         }
         
+        $payments = $this->entityManager->getRepository(AnalysisPayment::class)
+            ->findBy(['analysis_request' => $analysisRequest], ['created_at' => 'DESC']);
+        
+        $paymentMethod = null;
+        $taxAmount = 0;
+        $taxRate = 0;
+        $subtotal = 0;
+        
+        if (!empty($payments)) {
+            $payment = $payments[0];
+            $paymentData = $payment->getPaymentData();
+            
+            if ($paymentData && is_array($paymentData)) {
+                if (isset($paymentData['mode'])) {
+                    $mode = $paymentData['mode'];
+                    
+                    if (str_contains($mode, 'momo')) {
+                        $paymentMethod = 'Mobile Money';
+                    } elseif (str_contains($mode, 'card')) {
+                        $paymentMethod = 'Carte bancaire';
+                    } elseif (str_contains($mode, 'wave')) {
+                        $paymentMethod = 'Wave';
+                    } else {
+                        $paymentMethod = ucfirst(str_replace('_test', '', $mode));
+                    }
+                }
+                
+                if (isset($paymentData['fees'])) {
+                    $taxAmount = (float) $paymentData['fees'];
+                }
+            }
+        }
+
+        $total = (float) $analysisRequest->getAmount();
+        $subtotal = $total - $taxAmount;
+        
+        if ($subtotal > 0 && $taxAmount > 0) {
+            $taxRate = round(($taxAmount / $subtotal) * 100, 2);
+        }
+        
         return $this->render('company/analysis/show.html.twig', [
             'analysis' => $analysisRequest,
+            'payments' => $payments,
+            'payment_method' => $paymentMethod,
+            'tax_amount' => $taxAmount,
+            'tax_rate' => $taxRate,
+            'subtotal' => $subtotal,
         ]);
     }
 
@@ -216,8 +260,47 @@ class CompanyAnalysisController extends AbstractController
         }
         
         $filename = $analysisRequest->getFinalReportFilename() ?? basename($filePath);
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         
-        return $this->file($filePath, $filename);
+        // ✅ Vérifier l'intégrité du fichier avant envoi
+        if ($extension === 'pdf') {
+            $handle = fopen($filePath, 'rb');
+            $header = fread($handle, 5);
+            fclose($handle);
+            
+            if (!str_starts_with($header, '%PDF')) {
+                $this->logger->error('❌ Fichier PDF corrompu avant téléchargement (entreprise)', [
+                    'path' => $filePath,
+                    'header' => bin2hex($header),
+                    'analysis_id' => $analysisRequest->getId()
+                ]);
+                $this->addFlash('error', 'Le fichier PDF est corrompu. Veuillez contacter le support.');
+                return $this->redirectToRoute('company_analysis_show', ['id' => $analysisRequest->getId()]);
+            }
+            $this->logger->info('✅ PDF valide détecté pour téléchargement (entreprise)', [
+                'analysis_id' => $analysisRequest->getId(),
+                'header' => bin2hex($header)
+            ]);
+        }
+        
+        // ✅ Forcer les bons headers
+        $response = $this->file($filePath, $filename);
+        
+        if ($extension === 'pbix') {
+            $response->headers->set('Content-Type', 'application/octet-stream');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $filename));
+        } elseif ($extension === 'pdf') {
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $filename));
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Accept-Ranges', 'bytes');
+        } elseif (in_array($extension, ['xlsx', 'xls'])) {
+            $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        } elseif ($extension === 'zip') {
+            $response->headers->set('Content-Type', 'application/zip');
+        }
+        
+        return $response;
     }
 
     /**
@@ -233,15 +316,15 @@ class CompanyAnalysisController extends AbstractController
             throw new AccessDeniedException('Cette analyse ne vous appartient pas.');
         }
         
-        // Vérifier que les données brutes existent
         if (!$analysisRequest->getRawExportPath() || !file_exists($analysisRequest->getRawExportPath())) {
             $this->addFlash('error', 'Données brutes non disponibles.');
             return $this->redirectToRoute('company_analysis_show', ['id' => $analysisRequest->getId()]);
         }
         
         $filePath = $analysisRequest->getRawExportPath();
+        $filename = basename($filePath);
         
-        return $this->file($filePath, basename($filePath));
+        return $this->file($filePath, $filename);
     }
 
     /**
@@ -257,12 +340,10 @@ class CompanyAnalysisController extends AbstractController
             throw new AccessDeniedException('Cette analyse ne vous appartient pas.');
         }
         
-        // Priorité au rapport final si disponible
         if ($analysisRequest->getStatus() === AnalysisRequest::STATUS_COMPLETED && $analysisRequest->getFinalReportPath()) {
             return $this->downloadFinal($analysisRequest);
         }
         
-        // Sinon, les données brutes
         if ($analysisRequest->getRawExportPath() && file_exists($analysisRequest->getRawExportPath())) {
             return $this->downloadRaw($analysisRequest);
         }
@@ -325,5 +406,32 @@ class CompanyAnalysisController extends AbstractController
                 'analysis_id' => $analysis->getId()
             ]);
         }
+    }
+
+    private function getMimeType(string $filename): string
+    {
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        
+        $mimeTypes = [
+            'pdf' => 'application/pdf',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'xls' => 'application/vnd.ms-excel',
+            'pbix' => 'application/octet-stream',
+            'zip' => 'application/zip',
+            'csv' => 'text/csv',
+            'png' => 'image/png',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+        ];
+        
+        return $mimeTypes[$extension] ?? 'application/octet-stream';
+    }
+    
+    /**
+     * Helper function for str_starts_with (PHP < 8.0 compatibility)
+     */
+    private function str_starts_with(string $haystack, string $needle): bool
+    {
+        return substr($haystack, 0, strlen($needle)) === $needle;
     }
 }

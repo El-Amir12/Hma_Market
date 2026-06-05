@@ -228,98 +228,93 @@ class __TwigTemplate_405c5394bedeabfc2ee43da5e1548dda extends Template
                 </div>
                 <div class=\"card-body\">
                     ";
-        // line 105
-        yield "                    ";
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 105, $this->source); })()), 'form_start', ["attr" => ["id" => "analysisForm"]]);
+        // line 104
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 104, $this->source); })()), 'form_start', ["attr" => ["id" => "analysisForm"]]);
         yield "
                     ";
-        // line 106
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 106, $this->source); })()), 'errors');
+        // line 105
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 105, $this->source); })()), 'errors');
         yield "
                     
                     <!-- Type d'analyse - Caché car on utilise des cartes -->
                     ";
-        // line 109
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 109, $this->source); })()), "type", [], "any", false, false, false, 109), 'widget', ["attr" => ["style" => "display: none;", "id" => "typeInput"]]);
+        // line 108
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 108, $this->source); })()), "type", [], "any", false, false, false, 108), 'widget', ["attr" => ["style" => "display: none;", "id" => "typeInput"]]);
         yield "
                     
                     <div class=\"mb-4\">
                         <label class=\"form-label fw-bold\">📊 Type d'analyse</label>
                         <div class=\"row g-3\" id=\"typeCards\">
                             ";
-        // line 114
+        // line 113
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["prices"]) || array_key_exists("prices", $context) ? $context["prices"] : (function () { throw new RuntimeError('Variable "prices" does not exist.', 114, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["prices"]) || array_key_exists("prices", $context) ? $context["prices"] : (function () { throw new RuntimeError('Variable "prices" does not exist.', 113, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["price"]) {
-            // line 115
-            yield "                                <div class=\"col-md-6\">
+            // line 114
+            yield "                                ";
+            if ((CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 114) != "subscription")) {
+                // line 115
+                yield "                                <div class=\"col-md-6\">
                                     <div class=\"price-card text-center p-3\" 
                                          data-type=\"";
-            // line 117
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 117), "html", null, true);
-            yield "\" 
+                // line 117
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 117), "html", null, true);
+                yield "\" 
                                          data-price=\"";
-            // line 118
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "price", [], "any", false, false, false, 118), "html", null, true);
-            yield "\"
+                // line 118
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "price", [], "any", false, false, false, 118), "html", null, true);
+                yield "\"
                                          data-label=\"";
-            // line 119
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "label", [], "any", false, false, false, 119), "html", null, true);
-            yield "\">
+                // line 119
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "label", [], "any", false, false, false, 119), "html", null, true);
+                yield "\">
                                         ";
-            // line 120
-            if ((CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 120) == "standard")) {
-                // line 121
-                yield "                                            <i class=\"fas fa-file-excel fa-3x text-success mb-2\"></i>
+                // line 120
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 120) == "standard")) {
+                    // line 121
+                    yield "                                            <i class=\"fas fa-file-excel fa-3x text-success mb-2\"></i>
                                         ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 122
+                } elseif ((CoreExtension::getAttribute($this->env, $this->source,                 // line 122
 $context["price"], "type", [], "any", false, false, false, 122) == "powerbi")) {
-                // line 123
-                yield "                                            <i class=\"fas fa-chart-line fa-3x text-info mb-2\"></i>
+                    // line 123
+                    yield "                                            <i class=\"fas fa-chart-line fa-3x text-info mb-2\"></i>
                                         ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 124
+                } elseif ((CoreExtension::getAttribute($this->env, $this->source,                 // line 124
 $context["price"], "type", [], "any", false, false, false, 124) == "custom")) {
-                // line 125
-                yield "                                            <i class=\"fas fa-crown fa-3x text-warning mb-2\"></i>
+                    // line 125
+                    yield "                                            <i class=\"fas fa-crown fa-3x text-warning mb-2\"></i>
                                         ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 126
-$context["price"], "type", [], "any", false, false, false, 126) == "subscription")) {
-                // line 127
-                yield "                                            <i class=\"fas fa-calendar-alt fa-3x text-primary mb-2\"></i>
+                } else {
+                    // line 127
+                    yield "                                            <i class=\"fas fa-chart-simple fa-3x text-secondary mb-2\"></i>
                                         ";
-            } else {
+                }
                 // line 129
-                yield "                                            <i class=\"fas fa-chart-simple fa-3x text-secondary mb-2\"></i>
-                                        ";
-            }
-            // line 131
-            yield "                                        <h6 class=\"mb-1\">";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "label", [], "any", false, false, false, 131), "html", null, true);
-            yield "</h6>
+                yield "                                        <h6 class=\"mb-1\">";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "label", [], "any", false, false, false, 129), "html", null, true);
+                yield "</h6>
                                         <div class=\"price\">
                                             ";
-            // line 133
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "price", [], "any", false, false, false, 133), 0, ",", " "), "html", null, true);
-            yield " 
-                                            <small>FCFA";
-            // line 134
-            if ((CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 134) == "subscription")) {
-                yield "/mois";
-            }
-            yield "</small>
+                // line 131
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "price", [], "any", false, false, false, 131), 0, ",", " "), "html", null, true);
+                yield " 
+                                            <small>FCFA</small>
                                         </div>
                                         <small class=\"text-muted\">";
-            // line 136
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "description", [], "any", false, false, false, 136)), "truncate", [50], "method", false, false, false, 136), "html", null, true);
-            yield "</small>
+                // line 134
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "description", [], "any", false, false, false, 134)), "truncate", [50], "method", false, false, false, 134), "html", null, true);
+                yield "</small>
                                     </div>
                                 </div>
-                            ";
+                                ";
+            }
+            // line 138
+            yield "                            ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['price'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 140
+        // line 139
         yield "                        </div>
                         <div class=\"type-error text-danger small mt-2\" style=\"display: none;\">
                             <i class=\"fas fa-exclamation-circle me-1\"></i> Veuillez sélectionner un type d'analyse.
@@ -330,31 +325,31 @@ $context["price"], "type", [], "any", false, false, false, 126) == "subscription
                     <div class=\"row g-3 mb-4\">
                         <div class=\"col-md-6\">
                             ";
-        // line 149
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 149, $this->source); })()), "period_start", [], "any", false, false, false, 149), 'label', ["label_attr" => ["class" => "form-label fw-bold"], "label" => "📅 Date de début"]);
+        // line 148
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 148, $this->source); })()), "period_start", [], "any", false, false, false, 148), 'label', ["label_attr" => ["class" => "form-label fw-bold"], "label" => "📅 Date de début"]);
         yield "
                             ";
-        // line 150
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 150, $this->source); })()), "period_start", [], "any", false, false, false, 150), 'widget', ["attr" => ["class" => "form-control", "id" => "periodStart"]]);
+        // line 149
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 149, $this->source); })()), "period_start", [], "any", false, false, false, 149), 'widget', ["attr" => ["class" => "form-control", "id" => "periodStart"]]);
         yield "
                             <small class=\"text-muted\">Maximum 365 jours (1 an)</small>
                             ";
-        // line 152
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 152, $this->source); })()), "period_start", [], "any", false, false, false, 152), 'errors');
+        // line 151
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 151, $this->source); })()), "period_start", [], "any", false, false, false, 151), 'errors');
         yield "
                         </div>
                         <div class=\"col-md-6\">
                             ";
+        // line 154
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 154, $this->source); })()), "period_end", [], "any", false, false, false, 154), 'label', ["label_attr" => ["class" => "form-label fw-bold"], "label" => "📅 Date de fin"]);
+        yield "
+                            ";
         // line 155
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 155, $this->source); })()), "period_end", [], "any", false, false, false, 155), 'label', ["label_attr" => ["class" => "form-label fw-bold"], "label" => "📅 Date de fin"]);
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 155, $this->source); })()), "period_end", [], "any", false, false, false, 155), 'widget', ["attr" => ["class" => "form-control", "id" => "periodEnd"]]);
         yield "
                             ";
         // line 156
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 156, $this->source); })()), "period_end", [], "any", false, false, false, 156), 'widget', ["attr" => ["class" => "form-control", "id" => "periodEnd"]]);
-        yield "
-                            ";
-        // line 157
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 157, $this->source); })()), "period_end", [], "any", false, false, false, 157), 'errors');
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 156, $this->source); })()), "period_end", [], "any", false, false, false, 156), 'errors');
         yield "
                         </div>
                     </div>
@@ -365,17 +360,17 @@ $context["price"], "type", [], "any", false, false, false, 126) == "subscription
                     <!-- Notes -->
                     <div class=\"mb-4\">
                         ";
-        // line 166
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 166, $this->source); })()), "notes", [], "any", false, false, false, 166), 'label', ["label_attr" => ["class" => "form-label fw-bold"], "label" => "📝 Notes / Instructions"]);
+        // line 165
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 165, $this->source); })()), "notes", [], "any", false, false, false, 165), 'label', ["label_attr" => ["class" => "form-label fw-bold"], "label" => "📝 Notes / Instructions"]);
         yield "
                         ";
-        // line 167
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 167, $this->source); })()), "notes", [], "any", false, false, false, 167), 'widget', ["attr" => ["class" => "form-control", "rows" => 4, "placeholder" => "Informations complémentaires pour l'analyse..."]]);
+        // line 166
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 166, $this->source); })()), "notes", [], "any", false, false, false, 166), 'widget', ["attr" => ["class" => "form-control", "rows" => 4, "placeholder" => "Informations complémentaires pour l'analyse..."]]);
         yield "
                         <small class=\"text-muted\">Ces notes seront transmises à l'équipe d'analyse</small>
                         ";
-        // line 169
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 169, $this->source); })()), "notes", [], "any", false, false, false, 169), 'errors');
+        // line 168
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 168, $this->source); })()), "notes", [], "any", false, false, false, 168), 'errors');
         yield "
                     </div>
 
@@ -411,7 +406,7 @@ $context["price"], "type", [], "any", false, false, false, 126) == "subscription
 
                     <div class=\"d-flex justify-content-end gap-2 mt-4\">
                         <a href=\"";
-        // line 203
+        // line 202
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("company_analysis_index");
         yield "\" class=\"btn btn-outline-secondary\">
                             <i class=\"fas fa-times me-1\"></i> Annuler
@@ -422,8 +417,8 @@ $context["price"], "type", [], "any", false, false, false, 126) == "subscription
                     </div>
                     
                     ";
-        // line 211
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 211, $this->source); })()), 'form_end');
+        // line 210
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 210, $this->source); })()), 'form_end');
         yield "
                 </div>
             </div>
@@ -471,7 +466,7 @@ $context["price"], "type", [], "any", false, false, false, 126) == "subscription
         yield from [];
     }
 
-    // line 250
+    // line 249
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -484,7 +479,7 @@ $context["price"], "type", [], "any", false, false, false, 126) == "subscription
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 251
+        // line 250
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
@@ -526,14 +521,14 @@ document.addEventListener('DOMContentLoaded', function() {
             typeError.style.display = 'none';
             submitBtn.disabled = false;
             
-            recapType.innerHTML = `<strong>\${selectedLabel}</strong> - \${selectedPrice.toLocaleString()} FCFA\${selectedType === 'subscription' ? '/mois' : ''}`;
+            recapType.innerHTML = `<strong>\${selectedLabel}</strong> - \${selectedPrice.toLocaleString()} FCFA`;
             updateTotalAmount();
         });
     });
     
     function updateTotalAmount() {
         if (selectedPrice > 0) {
-            totalAmountSpan.textContent = selectedPrice.toLocaleString() + ' FCFA' + (selectedType === 'subscription' ? '/mois' : '');
+            totalAmountSpan.textContent = selectedPrice.toLocaleString() + ' FCFA';
         } else {
             totalAmountSpan.textContent = '0 FCFA';
         }
@@ -605,10 +600,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             periodMessage.style.display = 'none';
             recapPeriod.innerHTML = 'Période non définie';
+            return false;
         }
-        
-        updateTotalAmount();
-        return true;
     }
     
     if (periodStart) periodStart.addEventListener('change', validatePeriod);
@@ -674,7 +667,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div>
                     <i class=\"fas fa-money-bill-wave text-primary me-2\"></i>
-                    <strong>Montant :</strong> \${selectedPrice.toLocaleString()} FCFA\${selectedType === 'subscription' ? '/mois' : ''}
+                    <strong>Montant :</strong> \${selectedPrice.toLocaleString()} FCFA
                 </div>
             </div>
         `;
@@ -721,7 +714,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  488 => 251,  475 => 250,  426 => 211,  415 => 203,  378 => 169,  373 => 167,  369 => 166,  357 => 157,  353 => 156,  349 => 155,  343 => 152,  338 => 150,  334 => 149,  323 => 140,  313 => 136,  306 => 134,  302 => 133,  296 => 131,  292 => 129,  288 => 127,  286 => 126,  283 => 125,  281 => 124,  278 => 123,  276 => 122,  273 => 121,  271 => 120,  267 => 119,  263 => 118,  259 => 117,  255 => 115,  251 => 114,  243 => 109,  237 => 106,  232 => 105,  213 => 88,  193 => 71,  185 => 66,  177 => 60,  164 => 59,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  483 => 250,  470 => 249,  421 => 210,  410 => 202,  373 => 168,  368 => 166,  364 => 165,  352 => 156,  348 => 155,  344 => 154,  338 => 151,  333 => 149,  329 => 148,  318 => 139,  312 => 138,  305 => 134,  299 => 131,  293 => 129,  289 => 127,  285 => 125,  283 => 124,  280 => 123,  278 => 122,  275 => 121,  273 => 120,  269 => 119,  265 => 118,  261 => 117,  257 => 115,  254 => 114,  250 => 113,  242 => 108,  236 => 105,  232 => 104,  213 => 88,  193 => 71,  185 => 66,  177 => 60,  164 => 59,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -829,7 +822,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     </h5>
                 </div>
                 <div class=\"card-body\">
-                    {# ✅ Formulaire Symfony standard #}
                     {{ form_start(form, {'attr': {'id': 'analysisForm'}}) }}
                     {{ form_errors(form) }}
                     
@@ -840,6 +832,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <label class=\"form-label fw-bold\">📊 Type d'analyse</label>
                         <div class=\"row g-3\" id=\"typeCards\">
                             {% for price in prices %}
+                                {% if price.type != 'subscription' %}
                                 <div class=\"col-md-6\">
                                     <div class=\"price-card text-center p-3\" 
                                          data-type=\"{{ price.type }}\" 
@@ -851,19 +844,18 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <i class=\"fas fa-chart-line fa-3x text-info mb-2\"></i>
                                         {% elseif price.type == 'custom' %}
                                             <i class=\"fas fa-crown fa-3x text-warning mb-2\"></i>
-                                        {% elseif price.type == 'subscription' %}
-                                            <i class=\"fas fa-calendar-alt fa-3x text-primary mb-2\"></i>
                                         {% else %}
                                             <i class=\"fas fa-chart-simple fa-3x text-secondary mb-2\"></i>
                                         {% endif %}
                                         <h6 class=\"mb-1\">{{ price.label }}</h6>
                                         <div class=\"price\">
                                             {{ price.price|number_format(0, ',', ' ') }} 
-                                            <small>FCFA{% if price.type == 'subscription' %}/mois{% endif %}</small>
+                                            <small>FCFA</small>
                                         </div>
                                         <small class=\"text-muted\">{{ price.description|u.truncate(50) }}</small>
                                     </div>
                                 </div>
+                                {% endif %}
                             {% endfor %}
                         </div>
                         <div class=\"type-error text-danger small mt-2\" style=\"display: none;\">
@@ -1016,14 +1008,14 @@ document.addEventListener('DOMContentLoaded', function() {
             typeError.style.display = 'none';
             submitBtn.disabled = false;
             
-            recapType.innerHTML = `<strong>\${selectedLabel}</strong> - \${selectedPrice.toLocaleString()} FCFA\${selectedType === 'subscription' ? '/mois' : ''}`;
+            recapType.innerHTML = `<strong>\${selectedLabel}</strong> - \${selectedPrice.toLocaleString()} FCFA`;
             updateTotalAmount();
         });
     });
     
     function updateTotalAmount() {
         if (selectedPrice > 0) {
-            totalAmountSpan.textContent = selectedPrice.toLocaleString() + ' FCFA' + (selectedType === 'subscription' ? '/mois' : '');
+            totalAmountSpan.textContent = selectedPrice.toLocaleString() + ' FCFA';
         } else {
             totalAmountSpan.textContent = '0 FCFA';
         }
@@ -1095,10 +1087,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             periodMessage.style.display = 'none';
             recapPeriod.innerHTML = 'Période non définie';
+            return false;
         }
-        
-        updateTotalAmount();
-        return true;
     }
     
     if (periodStart) periodStart.addEventListener('change', validatePeriod);
@@ -1164,7 +1154,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div>
                     <i class=\"fas fa-money-bill-wave text-primary me-2\"></i>
-                    <strong>Montant :</strong> \${selectedPrice.toLocaleString()} FCFA\${selectedType === 'subscription' ? '/mois' : ''}
+                    <strong>Montant :</strong> \${selectedPrice.toLocaleString()} FCFA
                 </div>
             </div>
         `;

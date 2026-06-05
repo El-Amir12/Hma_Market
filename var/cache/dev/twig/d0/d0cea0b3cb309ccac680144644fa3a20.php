@@ -31,8 +31,8 @@ class __TwigTemplate_1da90f738855b447730a3e84152cd450 extends Template
 
         $this->blocks = [
             'title' => [$this, 'block_title'],
-            'stylesheets' => [$this, 'block_stylesheets'],
             'body' => [$this, 'block_body'],
+            'stylesheets' => [$this, 'block_stylesheets'],
             'javascripts' => [$this, 'block_javascripts'],
         ];
     }
@@ -75,7 +75,9 @@ class __TwigTemplate_1da90f738855b447730a3e84152cd450 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
 
-        yield "Vente - Plats et Menus";
+        yield "Menu ";
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["companyName"]) || array_key_exists("companyName", $context) ? $context["companyName"] : (function () { throw new RuntimeError('Variable "companyName" does not exist.', 4, $this->source); })()), "html", null, true);
+        yield " - HMA Market";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
 
@@ -89,6 +91,804 @@ class __TwigTemplate_1da90f738855b447730a3e84152cd450 extends Template
     /**
      * @return iterable<null|scalar|\Stringable>
      */
+    public function block_body(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        // line 7
+        yield "<div class=\"container-fluid px-4\">
+    <!-- En-tête avec quota et bouton d'ajout -->
+    <div class=\"d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3\">
+        <div>
+            <h1 class=\"h3 mb-0 text-gray-800 fw-bold\">
+                <i class=\"fas fa-utensils me-2\"></i>Menu ";
+        // line 12
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["companyName"]) || array_key_exists("companyName", $context) ? $context["companyName"] : (function () { throw new RuntimeError('Variable "companyName" does not exist.', 12, $this->source); })()), "html", null, true);
+        yield "
+            </h1>
+            <p class=\"text-muted mt-1\">Gérez vos plats et recettes</p>
+        </div>
+        
+        <div class=\"d-flex align-items-center gap-3 flex-wrap\">
+            <!-- Indicateur de quota -->
+            <div class=\"card bg-light border-0 shadow-sm p-2\">
+                <div class=\"d-flex align-items-center\">
+                    <div class=\"me-2\">
+                        <span class=\"badge bg-primary p-2 rounded-circle\">
+                            <i class=\"fas fa-chart-line fa-fw\"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <small class=\"text-muted d-block\">Plats dans quota</small>
+                        <h6 class=\"mb-0 ";
+        // line 28
+        yield (((($tmp = (isset($context["quotaReached"]) || array_key_exists("quotaReached", $context) ? $context["quotaReached"] : (function () { throw new RuntimeError('Variable "quotaReached" does not exist.', 28, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("text-danger") : ("text-success"));
+        yield " fw-bold\">
+                            ";
+        // line 29
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["activeCount"]) || array_key_exists("activeCount", $context) ? $context["activeCount"] : (function () { throw new RuntimeError('Variable "activeCount" does not exist.', 29, $this->source); })()), "html", null, true);
+        yield " / ";
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["quota"]) || array_key_exists("quota", $context) ? $context["quota"] : (function () { throw new RuntimeError('Variable "quota" does not exist.', 29, $this->source); })()), "html", null, true);
+        yield "
+                            ";
+        // line 30
+        if (((isset($context["quota"]) || array_key_exists("quota", $context) ? $context["quota"] : (function () { throw new RuntimeError('Variable "quota" does not exist.', 30, $this->source); })()) == "Illimité")) {
+            // line 31
+            yield "                                <i class=\"fas fa-infinity text-info ms-1 small\"></i>
+                            ";
+        }
+        // line 33
+        yield "                        </h6>
+                    </div>
+                </div>
+            </div>
+
+            ";
+        // line 39
+        yield "            ";
+        if (((isset($context["subscriptionInactiveFiltered"]) || array_key_exists("subscriptionInactiveFiltered", $context) ? $context["subscriptionInactiveFiltered"] : (function () { throw new RuntimeError('Variable "subscriptionInactiveFiltered" does not exist.', 39, $this->source); })()) > 0)) {
+            // line 40
+            yield "            <div class=\"card bg-light border-0 shadow-sm p-2\">
+                <div class=\"d-flex align-items-center\">
+                    <div class=\"me-2\">
+                        <span class=\"badge bg-warning p-2 rounded-circle\">
+                            <i class=\"fas fa-clock fa-fw\"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <small class=\"text-muted d-block\">En attente</small>
+                        <h6 class=\"mb-0 fw-bold\">";
+            // line 49
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["subscriptionInactiveFiltered"]) || array_key_exists("subscriptionInactiveFiltered", $context) ? $context["subscriptionInactiveFiltered"] : (function () { throw new RuntimeError('Variable "subscriptionInactiveFiltered" does not exist.', 49, $this->source); })()), "html", null, true);
+            yield "</h6>
+                    </div>
+                </div>
+            </div>
+            ";
+        }
+        // line 54
+        yield "
+            <a href=\"#\" id=\"newRecipeBtn\" class=\"btn btn-primary shadow-sm\">
+                <i class=\"fas fa-plus-circle me-2\"></i> Nouveau Plat
+            </a>
+        </div>
+    </div>
+
+    ";
+        // line 62
+        yield "    ";
+        if ((($tmp = (isset($context["quotaReached"]) || array_key_exists("quotaReached", $context) ? $context["quotaReached"] : (function () { throw new RuntimeError('Variable "quotaReached" does not exist.', 62, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 63
+            yield "    <div class=\"alert alert-warning alert-dismissible fade show shadow-sm\" role=\"alert\">
+        <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-2\">
+            <div>
+                <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                <strong>Quota atteint !</strong> Vous avez utilisé vos ";
+            // line 67
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["quota"]) || array_key_exists("quota", $context) ? $context["quota"] : (function () { throw new RuntimeError('Variable "quota" does not exist.', 67, $this->source); })()), "html", null, true);
+            yield " plats actifs.
+            </div>
+            <a href=\"";
+            // line 69
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_subscription_plans");
+            yield "\" class=\"btn btn-warning btn-sm\">
+                <i class=\"fas fa-arrow-up me-1\"></i> Voir les offres
+            </a>
+        </div>
+        <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
+    </div>
+    ";
+        }
+        // line 76
+        yield "
+    ";
+        // line 78
+        yield "    ";
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 78, $this->source); })()), "flashes", ["success"], "method", false, false, false, 78));
+        foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
+            // line 79
+            yield "        <div class=\"alert alert-success alert-dismissible fade show shadow-sm\" role=\"alert\">
+            <i class=\"fas fa-check-circle me-2\"></i> ";
+            // line 80
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["message"], "html", null, true);
+            yield "
+            <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
+        </div>
+    ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 84
+        yield "    
+    ";
+        // line 85
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 85, $this->source); })()), "flashes", ["error"], "method", false, false, false, 85));
+        foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
+            // line 86
+            yield "        <div class=\"alert alert-danger alert-dismissible fade show shadow-sm\" role=\"alert\">
+            <i class=\"fas fa-exclamation-circle me-2\"></i> ";
+            // line 87
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["message"], "html", null, true);
+            yield "
+            <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
+        </div>
+    ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 91
+        yield "
+    <!-- Statistiques filtrées -->
+    <div class=\"card shadow-sm border-0 mb-4\">
+        <div class=\"card-header bg-white py-3\">
+            <h5 class=\"mb-0 fw-semibold\">
+                <i class=\"fas fa-chart-pie text-primary me-2\"></i>Statistiques selon les filtres
+            </h5>
+        </div>
+        <div class=\"card-body\">
+            <div class=\"row g-3 row-cols-2 row-cols-md-4 row-cols-lg-5\">
+                <div class=\"col\">
+                    <div class=\"stat-item p-3 bg-light rounded-3 h-100\">
+                        <div class=\"d-flex justify-content-between align-items-center\">
+                            <div>
+                                <span class=\"text-muted text-uppercase small fw-bold\">Filtrés</span>
+                                <h3 class=\"mb-0 fw-bold\">";
+        // line 106
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["totalFiltered"]) || array_key_exists("totalFiltered", $context) ? $context["totalFiltered"] : (function () { throw new RuntimeError('Variable "totalFiltered" does not exist.', 106, $this->source); })()), "html", null, true);
+        yield "</h3>
+                            </div>
+                            <div class=\"bg-primary p-2 rounded-3\">
+                                <i class=\"fas fa-utensils text-white fs-3\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=\"col\">
+                    <div class=\"stat-item p-3 bg-light rounded-3 h-100\">
+                        <div class=\"d-flex justify-content-between align-items-center\">
+                            <div>
+                                <span class=\"text-muted text-uppercase small fw-bold\">Actifs</span>
+                                <h3 class=\"mb-0 fw-bold text-success\">";
+        // line 119
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["activeFiltered"]) || array_key_exists("activeFiltered", $context) ? $context["activeFiltered"] : (function () { throw new RuntimeError('Variable "activeFiltered" does not exist.', 119, $this->source); })()), "html", null, true);
+        yield "</h3>
+                            </div>
+                            <div class=\"bg-success p-2 rounded-3\">
+                                <i class=\"fas fa-check-circle text-white fs-3\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=\"col\">
+                    <div class=\"stat-item p-3 bg-light rounded-3 h-100\">
+                        <div class=\"d-flex justify-content-between align-items-center\">
+                            <div>
+                                <span class=\"text-muted text-uppercase small fw-bold\">Inactifs</span>
+                                <h3 class=\"mb-0 fw-bold text-danger\">";
+        // line 132
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["inactiveFiltered"]) || array_key_exists("inactiveFiltered", $context) ? $context["inactiveFiltered"] : (function () { throw new RuntimeError('Variable "inactiveFiltered" does not exist.', 132, $this->source); })()), "html", null, true);
+        yield "</h3>
+                            </div>
+                            <div class=\"bg-danger p-2 rounded-3\">
+                                <i class=\"fas fa-pause-circle text-white fs-3\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=\"col\">
+                    <div class=\"stat-item p-3 bg-light rounded-3 h-100\">
+                        <div class=\"d-flex justify-content-between align-items-center\">
+                            <div>
+                                <span class=\"text-muted text-uppercase small fw-bold\">Abonnement actif</span>
+                                <h3 class=\"mb-0 fw-bold text-info\">";
+        // line 145
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["subscriptionActiveFiltered"]) || array_key_exists("subscriptionActiveFiltered", $context) ? $context["subscriptionActiveFiltered"] : (function () { throw new RuntimeError('Variable "subscriptionActiveFiltered" does not exist.', 145, $this->source); })()), "html", null, true);
+        yield "</h3>
+                            </div>
+                            <div class=\"bg-info p-2 rounded-3\">
+                                <i class=\"fas fa-database text-white fs-3\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=\"col\">
+                    <div class=\"stat-item p-3 bg-light rounded-3 h-100\">
+                        <div class=\"d-flex justify-content-between align-items-center\">
+                            <div>
+                                <span class=\"text-muted text-uppercase small fw-bold\">Abonnement inactif</span>
+                                <h3 class=\"mb-0 fw-bold text-secondary\">";
+        // line 158
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["subscriptionInactiveFiltered"]) || array_key_exists("subscriptionInactiveFiltered", $context) ? $context["subscriptionInactiveFiltered"] : (function () { throw new RuntimeError('Variable "subscriptionInactiveFiltered" does not exist.', 158, $this->source); })()), "html", null, true);
+        yield "</h3>
+                            </div>
+                            <div class=\"bg-secondary p-2 rounded-3\">
+                                <i class=\"fas fa-clock text-white fs-3\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire de filtres -->
+    <div class=\"card shadow-sm border-0 mb-4\">
+        <div class=\"card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-3\">
+            <h5 class=\"mb-0 fw-semibold\">
+                <i class=\"fas fa-filter text-primary me-2\"></i>Filtres
+            </h5>
+            <div class=\"d-flex gap-2\">
+                <button type=\"submit\" form=\"filter-form\" class=\"btn btn-primary\">
+                    <i class=\"fas fa-filter me-2\"></i>Filtrer
+                </button>
+                <a href=\"";
+        // line 180
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index");
+        yield "\" class=\"btn btn-outline-secondary\">
+                    <i class=\"fas fa-undo me-2\"></i>Effacer
+                </a>
+            </div>
+        </div>
+        <div class=\"card-body\">
+            <form method=\"get\" id=\"filter-form\" class=\"row g-3\">
+                <div class=\"col-lg-4 col-md-6\">
+                    <label for=\"search\" class=\"form-label fw-semibold\">
+                        <i class=\"fas fa-search text-primary me-1\"></i>Rechercher
+                    </label>
+                    <div class=\"input-group\">
+                        <span class=\"input-group-text bg-light border-0\">
+                            <i class=\"fas fa-search text-muted\"></i>
+                        </span>
+                        <input type=\"text\" name=\"search\" id=\"search\" value=\"";
+        // line 195
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["search"]) || array_key_exists("search", $context) ? $context["search"] : (function () { throw new RuntimeError('Variable "search" does not exist.', 195, $this->source); })()), "html", null, true);
+        yield "\" 
+                               class=\"form-control bg-light border-0\" placeholder=\"Nom du plat...\">
+                    </div>
+                </div>
+                <div class=\"col-lg-3 col-md-6\">
+                    <label for=\"category\" class=\"form-label fw-semibold\">
+                        <i class=\"fas fa-tags text-info me-1\"></i>Catégorie
+                    </label>
+                    <select name=\"category\" id=\"category\" class=\"form-select bg-light border-0\">
+                        <option value=\"0\">Toutes</option>
+                        ";
+        // line 205
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["categories"]) || array_key_exists("categories", $context) ? $context["categories"] : (function () { throw new RuntimeError('Variable "categories" does not exist.', 205, $this->source); })()));
+        foreach ($context['_seq'] as $context["_key"] => $context["category"]) {
+            // line 206
+            yield "                            <option value=\"";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["category"], "id", [], "any", false, false, false, 206), "html", null, true);
+            yield "\" ";
+            yield ((((isset($context["selectedCategory"]) || array_key_exists("selectedCategory", $context) ? $context["selectedCategory"] : (function () { throw new RuntimeError('Variable "selectedCategory" does not exist.', 206, $this->source); })()) == CoreExtension::getAttribute($this->env, $this->source, $context["category"], "id", [], "any", false, false, false, 206))) ? ("selected") : (""));
+            yield ">
+                                ";
+            // line 207
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable(range(0, CoreExtension::getAttribute($this->env, $this->source, $context["category"], "level", [], "any", false, false, false, 207)));
+            foreach ($context['_seq'] as $context["_key"] => $context["i"]) {
+                yield "&nbsp;&nbsp;";
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_key'], $context['i'], $context['_parent']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 208
+            yield "                                ";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["category"], "name", [], "any", false, false, false, 208), "html", null, true);
+            yield " (";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["category"], "recipeCount", [], "any", false, false, false, 208), "html", null, true);
+            yield ")
+                            </option>
+                        ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['category'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 211
+        yield "                    </select>
+                </div>
+                <div class=\"col-lg-3 col-md-6\">
+                    <label for=\"type\" class=\"form-label fw-semibold\">
+                        <i class=\"fas fa-tag text-primary me-1\"></i>Type de plat
+                    </label>
+                    <select name=\"type\" id=\"type\" class=\"form-select bg-light border-0\">
+                        <option value=\"\">Tous les types</option>
+                        <option value=\"food\" ";
+        // line 219
+        yield ((((isset($context["selectedType"]) || array_key_exists("selectedType", $context) ? $context["selectedType"] : (function () { throw new RuntimeError('Variable "selectedType" does not exist.', 219, $this->source); })()) == "food")) ? ("selected") : (""));
+        yield ">🍽️ Plat principal</option>
+                        <option value=\"starter\" ";
+        // line 220
+        yield ((((isset($context["selectedType"]) || array_key_exists("selectedType", $context) ? $context["selectedType"] : (function () { throw new RuntimeError('Variable "selectedType" does not exist.', 220, $this->source); })()) == "starter")) ? ("selected") : (""));
+        yield ">🥗 Entrée</option>
+                        <option value=\"dessert\" ";
+        // line 221
+        yield ((((isset($context["selectedType"]) || array_key_exists("selectedType", $context) ? $context["selectedType"] : (function () { throw new RuntimeError('Variable "selectedType" does not exist.', 221, $this->source); })()) == "dessert")) ? ("selected") : (""));
+        yield ">🍰 Dessert</option>
+                        <option value=\"drink\" ";
+        // line 222
+        yield ((((isset($context["selectedType"]) || array_key_exists("selectedType", $context) ? $context["selectedType"] : (function () { throw new RuntimeError('Variable "selectedType" does not exist.', 222, $this->source); })()) == "drink")) ? ("selected") : (""));
+        yield ">🥤 Boisson</option>
+                        <option value=\"side\" ";
+        // line 223
+        yield ((((isset($context["selectedType"]) || array_key_exists("selectedType", $context) ? $context["selectedType"] : (function () { throw new RuntimeError('Variable "selectedType" does not exist.', 223, $this->source); })()) == "side")) ? ("selected") : (""));
+        yield ">🍟 Accompagnement</option>
+                    </select>
+                </div>
+                <div class=\"col-lg-2 col-md-6\">
+                    <label for=\"status\" class=\"form-label fw-semibold\">
+                        <i class=\"fas fa-toggle-on text-success me-1\"></i>Statut
+                    </label>
+                    <select name=\"status\" id=\"status\" class=\"form-select bg-light border-0\">
+                        <option value=\"\">Tous</option>
+                        <option value=\"active\" ";
+        // line 232
+        yield ((((isset($context["selectedStatus"]) || array_key_exists("selectedStatus", $context) ? $context["selectedStatus"] : (function () { throw new RuntimeError('Variable "selectedStatus" does not exist.', 232, $this->source); })()) == "active")) ? ("selected") : (""));
+        yield ">Actifs</option>
+                        <option value=\"inactive\" ";
+        // line 233
+        yield ((((isset($context["selectedStatus"]) || array_key_exists("selectedStatus", $context) ? $context["selectedStatus"] : (function () { throw new RuntimeError('Variable "selectedStatus" does not exist.', 233, $this->source); })()) == "inactive")) ? ("selected") : (""));
+        yield ">Inactifs</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Grille de plats -->
+    <div class=\"row g-4\">
+        ";
+        // line 242
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["recipes"]) || array_key_exists("recipes", $context) ? $context["recipes"] : (function () { throw new RuntimeError('Variable "recipes" does not exist.', 242, $this->source); })()));
+        $context['_iterated'] = false;
+        foreach ($context['_seq'] as $context["_key"] => $context["recipe"]) {
+            // line 243
+            yield "        <div class=\"col-xl-3 col-lg-4 col-md-6\">
+            <div class=\"card h-100 border-0 shadow-sm hover-card\">
+                <div class=\"recipe-image-container position-relative\">
+                    ";
+            // line 246
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "image", [], "any", false, false, false, 246)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 247
+                yield "                        <img src=\"";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/images_plats/" . CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "image", [], "any", false, false, false, 247))), "html", null, true);
+                yield "\" 
+                             alt=\"";
+                // line 248
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "name", [], "any", false, false, false, 248), "html", null, true);
+                yield "\" 
+                             class=\"card-img-top recipe-image\">
+                    ";
+            } else {
+                // line 251
+                yield "                        <div class=\"recipe-image-placeholder\">
+                            <i class=\"fas fa-utensils fa-4x text-muted\"></i>
+                        </div>
+                    ";
+            }
+            // line 255
+            yield "
+                    <!-- Badges de statut superposés (en haut à gauche) -->
+                    <div class=\"position-absolute top-0 start-0 p-2\">
+                        <div class=\"d-flex flex-column gap-1\">
+                            ";
+            // line 259
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "isActive", [], "any", false, false, false, 259)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 260
+                yield "                                <span class=\"badge bg-success\"><i class=\"fas fa-check-circle me-1\"></i> Actif</span>
+                            ";
+            } else {
+                // line 262
+                yield "                                <span class=\"badge bg-danger\"><i class=\"fas fa-pause-circle me-1\"></i> Inactif</span>
+                            ";
+            }
+            // line 264
+            yield "                            ";
+            if ((($tmp =  !CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "subscriptionActive", [], "any", false, false, false, 264)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 265
+                yield "                                <span class=\"badge bg-warning text-dark\"><i class=\"fas fa-clock me-1\"></i> Hors quota</span>
+                            ";
+            }
+            // line 267
+            yield "                        </div>
+                    </div>
+                    
+                    <!-- Badge type de plat (en haut à droite) -->
+                    <div class=\"position-absolute top-0 end-0 p-2\">
+                        <span class=\"badge bg-primary\">
+                            ";
+            // line 273
+            if ((CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "type", [], "any", false, false, false, 273) == "food")) {
+                // line 274
+                yield "                                🍽️ Plat
+                            ";
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 275
+$context["recipe"], "type", [], "any", false, false, false, 275) == "starter")) {
+                // line 276
+                yield "                                🥗 Entrée
+                            ";
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 277
+$context["recipe"], "type", [], "any", false, false, false, 277) == "dessert")) {
+                // line 278
+                yield "                                🍰 Dessert
+                            ";
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 279
+$context["recipe"], "type", [], "any", false, false, false, 279) == "drink")) {
+                // line 280
+                yield "                                🥤 Boisson
+                            ";
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 281
+$context["recipe"], "type", [], "any", false, false, false, 281) == "side")) {
+                // line 282
+                yield "                                🍟 Accompagnement
+                            ";
+            } else {
+                // line 284
+                yield "                                📋 Plat
+                            ";
+            }
+            // line 286
+            yield "                        </span>
+                    </div>
+                </div>
+                <div class=\"card-body d-flex flex-column\">
+                    <!-- Titre avec bouton burger à droite -->
+                    <div class=\"d-flex justify-content-between align-items-start\">
+                        <div>
+                            <h5 class=\"card-title fw-bold text-truncate mb-1\">";
+            // line 293
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "name", [], "any", false, false, false, 293), "html", null, true);
+            yield "</h5>
+                            <p class=\"text-muted small mb-2\">
+                                <i class=\"fas fa-tag me-1\"></i>";
+            // line 295
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "category", [], "any", false, false, false, 295)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "category", [], "any", false, false, false, 295), "name", [], "any", false, false, false, 295), "html", null, true)) : ("Non catégorisé"));
+            yield "
+                            </p>
+                        </div>
+                        <div class=\"dropdown ms-2\">
+                            <button class=\"btn btn-sm btn-light\" type=\"button\" data-bs-toggle=\"dropdown\">
+                                <i class=\"fas fa-bars\"></i>
+                            </button>
+                            <ul class=\"dropdown-menu dropdown-menu-end\">
+                                <li>
+                                    <a class=\"dropdown-item\" href=\"";
+            // line 304
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 304)]), "html", null, true);
+            yield "\">
+                                        <i class=\"fas fa-eye me-2\"></i> Voir
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class=\"dropdown-item\" href=\"";
+            // line 309
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 309)]), "html", null, true);
+            yield "\">
+                                        <i class=\"fas fa-edit me-2\"></i> Modifier
+                                    </a>
+                                </li>
+                                <li>
+                                    ";
+            // line 314
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "subscriptionActive", [], "any", false, false, false, 314)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 315
+                yield "                                        <button type=\"button\" 
+                                                class=\"dropdown-item toggle-recipe-btn\"
+                                                data-recipe-id=\"";
+                // line 317
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 317), "html", null, true);
+                yield "\"
+                                                data-recipe-name=\"";
+                // line 318
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "name", [], "any", false, false, false, 318), "html", null, true);
+                yield "\"
+                                                data-current-status=\"";
+                // line 319
+                yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "isActive", [], "any", false, false, false, 319)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("active") : ("inactive"));
+                yield "\"
+                                                data-token=\"";
+                // line 320
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("toggle-status" . CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 320))), "html", null, true);
+                yield "\">
+                                            <i class=\"fas ";
+                // line 321
+                yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "isActive", [], "any", false, false, false, 321)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("fa-toggle-on") : ("fa-toggle-off"));
+                yield " me-2\"></i>
+                                            ";
+                // line 322
+                yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "isActive", [], "any", false, false, false, 322)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Désactiver") : ("Activer"));
+                yield "
+                                        </button>
+                                    ";
+            } else {
+                // line 325
+                yield "                                        <span class=\"dropdown-item text-muted disabled\">
+                                            <i class=\"fas fa-ban me-2\"></i> Non disponible
+                                        </span>
+                                    ";
+            }
+            // line 329
+            yield "                                </li>
+                                <li><hr class=\"dropdown-divider\"></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class=\"d-flex justify-content-between align-items-center mb-3\">
+                        <span class=\"fw-bold text-success\">";
+            // line 336
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['App\Twig\AppExtension']->formatPriceWithCurrency(CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "sellingPrice", [], "any", false, false, false, 336), CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "hmaService", [], "any", false, false, false, 336)), "html", null, true);
+            yield "</span>
+                        <span class=\"badge bg-info\">";
+            // line 337
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "recipeItems", [], "any", false, false, false, 337)), "html", null, true);
+            yield " ingrédients</span>
+                    </div>
+
+                    <!-- Boutons secondaires alignés sur une ligne -->
+                    <div class=\"d-flex gap-1 mt-auto\">
+                        <a href=\"#\" class=\"btn btn-sm btn-outline-info flex-fill\" title=\"Ingrédients\">
+                            <i class=\"fas fa-list\"></i> 
+                        </a>
+                        <a href=\"#\" class=\"btn btn-sm btn-outline-primary flex-fill\" title=\"Mouvements stock\">
+                            <i class=\"fas fa-exchange-alt\"></i> 
+                        </a>
+                        <a href=\"#\" class=\"btn btn-sm btn-outline-success flex-fill\" title=\"Commandes liées\">
+                            <i class=\"fas fa-shopping-cart\"></i>
+                        </a>
+                        ";
+            // line 351
+            if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 351, $this->source); })()) == "restaurant")) {
+                // line 352
+                yield "                            <a href=\"";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_restaurant_recipe_promotions", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 352)]), "html", null, true);
+                yield "\" 
+                            class=\"btn btn-sm btn-outline-warning\" title=\"Promotions du plat\">
+                                <i class=\"fas fa-percent\"></i> 
+                            </a>
+                        ";
+            }
+            // line 357
+            yield "                        ";
+            // line 358
+            yield "                        ";
+            if (($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") && (Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "orderItems", [], "any", false, false, false, 358)) == 0))) {
+                // line 359
+                yield "                            <button type=\"button\" 
+                                    class=\"btn btn-sm btn-outline-danger flex-fill delete-recipe-btn\"
+                                    data-recipe-id=\"";
+                // line 361
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 361), "html", null, true);
+                yield "\"
+                                    data-recipe-name=\"";
+                // line 362
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "name", [], "any", false, false, false, 362), "html", null, true);
+                yield "\"
+                                    data-token=\"";
+                // line 363
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, $context["recipe"], "id", [], "any", false, false, false, 363))), "html", null, true);
+                yield "\"
+                                    title=\"Supprimer\">
+                                <i class=\"fas fa-trash\"></i>
+                            </button>
+                        ";
+            }
+            // line 368
+            yield "                    </div>
+                </div>
+            </div>
+        </div>
+        ";
+            $context['_iterated'] = true;
+        }
+        // line 372
+        if (!$context['_iterated']) {
+            // line 373
+            yield "        <div class=\"col-12\">
+            <div class=\"card border-0 shadow-sm\">
+                <div class=\"card-body text-center py-5\">
+                    <i class=\"fas fa-utensils fa-4x text-muted mb-3\"></i>
+                    <h4 class=\"text-muted fw-light\">Aucun plat trouvé</h4>
+                    <p class=\"text-muted mb-4\">Modifiez vos filtres ou créez un nouveau plat.</p>
+                    <a href=\"";
+            // line 379
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index");
+            yield "\" class=\"btn btn-outline-primary px-4\">
+                        <i class=\"fas fa-undo me-2\"></i> Réinitialiser les filtres
+                    </a>
+                </div>
+            </div>
+        </div>
+        ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['recipe'], $context['_parent'], $context['_iterated']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 386
+        yield "    </div>
+
+    <!-- Pagination -->
+    ";
+        // line 389
+        if (((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 389, $this->source); })()) > 1)) {
+            // line 390
+            yield "    <div class=\"d-flex justify-content-between align-items-center mt-4\">
+        <div class=\"text-muted small\">
+            Page ";
+            // line 392
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 392, $this->source); })()), "html", null, true);
+            yield " sur ";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 392, $this->source); })()), "html", null, true);
+            yield " (";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["totalItems"]) || array_key_exists("totalItems", $context) ? $context["totalItems"] : (function () { throw new RuntimeError('Variable "totalItems" does not exist.', 392, $this->source); })()), "html", null, true);
+            yield " résultats)
+        </div>
+        <nav aria-label=\"Pagination\">
+            <ul class=\"pagination pagination-sm mb-0\">
+                <li class=\"page-item ";
+            // line 396
+            yield ((((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 396, $this->source); })()) <= 1)) ? ("disabled") : (""));
+            yield "\">
+                    <a class=\"page-link\" href=\"";
+            // line 397
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 397, $this->source); })()), "request", [], "any", false, false, false, 397), "query", [], "any", false, false, false, 397), "all", [], "any", false, false, false, 397), ["page" => ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 397, $this->source); })()) - 1)])), "html", null, true);
+            yield "\"><i class=\"fas fa-chevron-left\"></i></a>
+                </li>
+                ";
+            // line 399
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable(range(1, (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 399, $this->source); })())));
+            foreach ($context['_seq'] as $context["_key"] => $context["i"]) {
+                // line 400
+                yield "                    <li class=\"page-item ";
+                yield ((($context["i"] == (isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 400, $this->source); })()))) ? ("active") : (""));
+                yield "\">
+                        <a class=\"page-link\" href=\"";
+                // line 401
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 401, $this->source); })()), "request", [], "any", false, false, false, 401), "query", [], "any", false, false, false, 401), "all", [], "any", false, false, false, 401), ["page" => $context["i"]])), "html", null, true);
+                yield "\">";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["i"], "html", null, true);
+                yield "</a>
+                    </li>
+                ";
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_key'], $context['i'], $context['_parent']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 404
+            yield "                <li class=\"page-item ";
+            yield ((((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 404, $this->source); })()) >= (isset($context["totalPages"]) || array_key_exists("totalPages", $context) ? $context["totalPages"] : (function () { throw new RuntimeError('Variable "totalPages" does not exist.', 404, $this->source); })()))) ? ("disabled") : (""));
+            yield "\">
+                    <a class=\"page-link\" href=\"";
+            // line 405
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_index", Twig\Extension\CoreExtension::merge(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 405, $this->source); })()), "request", [], "any", false, false, false, 405), "query", [], "any", false, false, false, 405), "all", [], "any", false, false, false, 405), ["page" => ((isset($context["currentPage"]) || array_key_exists("currentPage", $context) ? $context["currentPage"] : (function () { throw new RuntimeError('Variable "currentPage" does not exist.', 405, $this->source); })()) + 1)])), "html", null, true);
+            yield "\"><i class=\"fas fa-chevron-right\"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    ";
+        }
+        // line 411
+        yield "</div>
+
+<!-- Modals -->
+<div class=\"modal fade\" id=\"quotaReachedModal\" tabindex=\"-1\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content border-0 shadow\">
+            <div class=\"modal-header bg-warning text-white border-0\">
+                <h5 class=\"modal-title\"><i class=\"fas fa-exclamation-triangle me-2\"></i> Quota atteint</h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body text-center py-4\">
+                <i class=\"fas fa-ban fa-4x text-warning mb-3\"></i>
+                <h5>Vous avez atteint votre limite de ";
+        // line 423
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["quota"]) || array_key_exists("quota", $context) ? $context["quota"] : (function () { throw new RuntimeError('Variable "quota" does not exist.', 423, $this->source); })()), "html", null, true);
+        yield " plats actifs.</h5>
+                <p class=\"text-muted\">Pour ajouter de nouveaux plats, passez à un plan supérieur.</p>
+            </div>
+            <div class=\"modal-footer border-0 justify-content-center\">
+                <a href=\"";
+        // line 427
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_subscription_plans");
+        yield "\" class=\"btn btn-warning btn-lg px-4\">
+                    <i class=\"fas fa-arrow-up me-2\"></i> Voir les offres
+                </a>
+                <button type=\"button\" class=\"btn btn-outline-secondary btn-lg px-4\" data-bs-dismiss=\"modal\">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class=\"modal fade\" id=\"toggleRecipeModal\" tabindex=\"-1\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content border-0 shadow\">
+            <div class=\"modal-header bg-warning text-white border-0\">
+                <h5 class=\"modal-title\">Confirmation</h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body text-center py-4\">
+                <i class=\"fas fa-question-circle fa-4x text-primary mb-3\"></i>
+                <p id=\"toggleRecipeMessage\" class=\"mb-0\"></p>
+            </div>
+            <div class=\"modal-footer border-0 justify-content-center\">
+                <button type=\"button\" class=\"btn btn-outline-secondary px-4\" data-bs-dismiss=\"modal\">Annuler</button>
+                <form id=\"toggleRecipeForm\" method=\"post\" class=\"d-inline\">
+                    <input type=\"hidden\" name=\"_token\" id=\"toggleRecipeToken\">
+                    <button type=\"submit\" class=\"btn btn-warning px-4\">Confirmer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class=\"modal fade\" id=\"deleteRecipeModal\" tabindex=\"-1\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content border-0 shadow\">
+            <div class=\"modal-header bg-danger text-white border-0\">
+                <h5 class=\"modal-title\"><i class=\"fas fa-exclamation-triangle me-2\"></i> Confirmation</h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body text-center py-4\">
+                <i class=\"fas fa-trash-alt fa-4x text-danger mb-3\"></i>
+                <p id=\"deleteRecipeMessage\" class=\"mb-0\"></p>
+            </div>
+            <div class=\"modal-footer border-0 justify-content-center\">
+                <button type=\"button\" class=\"btn btn-outline-secondary px-4\" data-bs-dismiss=\"modal\">Annuler</button>
+                <form id=\"deleteRecipeForm\" method=\"post\" class=\"d-inline\">
+                    <input type=\"hidden\" name=\"_token\" id=\"deleteRecipeToken\">
+                    <button type=\"submit\" class=\"btn btn-danger px-4\">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 481
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
     public function block_stylesheets(array $context, array $blocks = []): iterable
     {
         $macros = $this->macros;
@@ -98,423 +898,63 @@ class __TwigTemplate_1da90f738855b447730a3e84152cd450 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 7
+        // line 482
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
-<link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
-<link href=\"https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css\" rel=\"stylesheet\" />
 <style>
-    :root { --primary-color: #0463f1; --success-color: #10b981; --danger-color: #ef4444; --warning-color: #f59e0b; --info-color: #3b82f6; }
-
-    .sale-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-    
-    .header-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+.hover-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+}
+.stat-item {
+    transition: background-color 0.2s;
+}
+.stat-item:hover {
+    background-color: #e9ecef !important;
+}
+.recipe-image-container {
+    position: relative;
+    height: 160px;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.recipe-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.recipe-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.badge {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+@media (max-width: 768px) {
+    .pagination {
         flex-wrap: wrap;
-        gap: 1rem;
-    }
-    
-    .stat-badge {
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .stat-badge:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
-    }
-    
-    .search-section {
-        width: 100%;
-    }
-    
-    .search-bar {
-        width: 100%;
-        max-width: 100%;
-    }
-    
-    .search-input-group {
-        border-radius: 50px;
-        overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        width: 100%;
-    }
-    
-    .search-input-group .form-control {
-        border: 1px solid #e2e8f0;
-        border-right: none;
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-        flex: 1;
-    }
-    
-    .search-input-group .btn {
-        padding: 0.75rem 1.5rem;
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-left: none;
-        color: var(--primary-color);
-        white-space: nowrap;
-    }
-    
-    .two-columns {
-        display: flex;
-        gap: 1.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .products-panel, .cart-panel {
-        flex: 1;
-        min-width: 350px;
-        background: white;
-        border-radius: 24px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh - 200px);
-        min-height: 500px;
-    }
-    
-    .panel-header {
-        background: #f8fafc;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid #e2e8f0;
-        font-weight: 600;
-        flex-shrink: 0;
-    }
-    
-    .panel-content {
-        flex: 1;
-        overflow-y: auto;
-        padding: 0;
-    }
-    
-    .product-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-    
-    .product-list-item {
-        display: flex;
-        align-items: center;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid #edf2f7;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    
-    .product-list-item:hover {
-        background: #f8fafc;
-    }
-    
-    .product-list-img {
-        width: 60px;
-        height: 60px;
-        border-radius: 12px;
-        background: #f1f5f9;
-        display: flex;
-        align-items: center;
         justify-content: center;
-        margin-right: 1rem;
-        flex-shrink: 0;
     }
-    
-    .product-list-img img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 12px;
-    }
-    
-    .product-list-img .fallback-icon {
-        font-size: 2rem;
-        color: #94a3b8;
-    }
-    
-    .product-list-info {
-        flex: 1;
-    }
-    
-    .product-list-title {
-        font-weight: 600;
-    }
-    
-    .product-list-desc {
-        font-size: 0.75rem;
-        color: #64748b;
-    }
-    
-    .product-list-price {
-        font-weight: 700;
-        color: var(--primary-color);
-        text-align: right;
-        min-width: 100px;
-    }
-    
-    .product-list-price .old-price {
-        font-size: 0.7rem;
-        color: #94a3b8;
-        text-decoration: line-through;
-        display: block;
-    }
-    
-    .product-list-price .promo-badge {
-        font-size: 0.7rem;
-        color: #0463f1;
-        display: block;
-    }
-    
-    /* Panier */
-    .cart-items {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-    
-    .cart-item {
-        display: flex;
-        align-items: center;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid #edf2f7;
-        transition: all 0.3s ease;
-    }
-    
-    .cart-item:hover {
-        background: #f8fafc;
-    }
-    
-    .cart-item-info {
-        flex: 1;
-    }
-    
-    .cart-item-title {
-        font-weight: 600;
-    }
-    
-    .cart-item-actions {
-        display: flex;
-        gap: 0.5rem;
-        margin-top: 0.25rem;
-    }
-    
-    .cart-item-actions button {
-        background: none;
-        border: none;
-        font-size: 0.7rem;
-        padding: 0;
-    }
-    
-    .cart-item-actions .edit-item {
-        color: #f59e0b;
-    }
-    
-    .cart-item-actions .edit-item:hover {
-        text-decoration: underline;
-    }
-    
-    .cart-item-actions .remove-item {
-        color: #ef4444;
-    }
-    
-    .cart-item-actions .remove-item:hover {
-        text-decoration: underline;
-    }
-    
-    .cart-item-quantity {
-        margin: 0 1rem;
-        min-width: 100px;
-        text-align: center;
-    }
-    
-    .cart-item-quantity .badge {
-        font-size: 1.1rem;
-        padding: 0.5rem 0.75rem;
-        cursor: pointer;
-    }
-    
-    .cart-item-quantity .badge:hover {
-        background-color: var(--primary-color);
-    }
-    
-    .cart-item-price {
-        text-align: right;
-        min-width: 140px;
-    }
-    
-    .cart-item-price .total {
-        font-weight: 700;
-        color: var(--primary-color);
-        font-size: 1.1rem;
-    }
-    
-    .cart-footer {
-        background: #f8fafc;
-        padding: 1rem 1.5rem;
-        border-top: 1px solid #e2e8f0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .d-flex.gap-1 {
         flex-wrap: wrap;
-        gap: 1rem;
-        flex-shrink: 0;
     }
-    
-    .empty-cart {
-        text-align: center;
-        padding: 3rem;
-        color: #94a3b8;
+}
+@media (min-width: 992px) {
+    .row-cols-lg-5 > .col {
+        flex: 0 0 20%;
+        max-width: 20%;
     }
-    
-    .empty-cart i {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-    }
-    
-    .filter-section {
-        padding: 1rem;
-        border-bottom: 1px solid #e2e8f0;
-    }
-    
-    /* Select2 */
-    .select2-container--bootstrap-5 .select2-selection {
-        border-radius: 8px;
-        min-height: 38px;
-    }
-    
-    /* Animation */
-    @keyframes success-pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
-    
-    .success-pulse {
-        animation: success-pulse 0.5s ease;
-    }
-    
-    .btn-loading {
-        position: relative;
-        pointer-events: none;
-        opacity: 0.7;
-    }
-    
-    .btn-loading .btn-text {
-        visibility: hidden;
-    }
-    
-    .btn-loading::after {
-        content: '';
-        position: absolute;
-        width: 1rem;
-        height: 1rem;
-        top: calc(50% - 0.5rem);
-        left: calc(50% - 0.5rem);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        border-top-color: white;
-        animation: spin 0.6s linear infinite;
-    }
-    
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-    
-    .btn-text {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    @media (max-width: 768px) {
-        .two-columns { flex-direction: column; }
-        .products-panel, .cart-panel { height: auto; max-height: 500px; }
-        .cart-item { flex-wrap: wrap; }
-        .cart-item-quantity { margin: 0.5rem 0; width: 100%; text-align: center; }
-        .cart-item-price { width: 100%; text-align: center; margin-top: 0.5rem; }
-    }
-    
-    #confirmCheckoutBtn {
-        position: relative;
-        transition: all 0.3s ease;
-        min-width: 180px;
-    }
-
-    #confirmCheckoutBtn:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
-
-    #amountPaid.is-valid {
-        border-color: #28a745;
-        background-color: #f0fff4;
-    }
-
-    #amountPaid.is-invalid {
-        border-color: #dc3545;
-        background-color: #fff5f5;
-    }
-
-    #changeAmount {
-        transition: all 0.3s ease;
-    }
-    
-    .btn-loading {
-        cursor: wait !important;
-    }
-
-    /* Styles pour les promotions en bleu */
-    .text-primary {
-        color: #0463f1 !important;
-    }
-    
-    .bg-primary.bg-opacity-10 {
-        background-color: rgba(4, 99, 241, 0.1) !important;
-    }
-    
-    .badge.bg-primary.bg-opacity-10 {
-        background-color: rgba(4, 99, 241, 0.1) !important;
-        color: #0463f1 !important;
-    }
-    
-    .cart-item-price .total.text-primary {
-        color: #0463f1 !important;
-    }
-    
-    .cart-item-price .text-primary {
-        color: #0463f1 !important;
-    }
-    
-    .text-decoration-line-through {
-        text-decoration: line-through;
-    }
-
-    /* Styles pour les notes dans le panier */
-    .cart-item-notes {
-        font-size: 0.75rem;
-        color: #000000 !important;
-        margin-top: 0.25rem;
-        padding: 0.5rem 0.75rem;
-        background: #fce4ec !important; /* Fond rose clair */
-        border-radius: 6px;
-        border-left: 4px solid #e91e63; /* Bordure rose foncé */
-    }
-    .cart-item-notes i {
-        margin-right: 6px;
-        color: #e91e63; /* Icône rose */
-    }
-    .cart-item-notes .notes-text {
-        font-style: normal;
-        color: #000000 !important; /* Texte en noir */
-    }
+}
 </style>
 ";
         
@@ -526,666 +966,7 @@ class __TwigTemplate_1da90f738855b447730a3e84152cd450 extends Template
         yield from [];
     }
 
-    // line 425
-    /**
-     * @return iterable<null|scalar|\Stringable>
-     */
-    public function block_body(array $context, array $blocks = []): iterable
-    {
-        $macros = $this->macros;
-        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
-        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
-
-        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
-
-        // line 426
-        yield "<div class=\"sale-container\">
-    <!-- En-tête avec stats simplifiées -->
-    <div class=\"header-bar\">
-        <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3 w-100\">
-            <h1 class=\"h2 mb-0\">
-                <i class=\"fas fa-utensils text-primary\"></i>
-                Vente - Plats & Menus
-            </h1>
-
-            <div class=\"d-flex align-items-center gap-3\">
-                ";
-        // line 436
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 436, $this->source); })()), "limit", [], "any", false, false, false, 436) == "∞")) {
-            // line 437
-            yield "                    <div class=\"stat-badge d-flex align-items-center bg-success rounded-3 p-2 px-3\">
-                        <div class=\"me-2\">
-                            <span class=\"badge bg-white text-success p-2 rounded-circle\">
-                                <i class=\"fas fa-infinity fa-sm\"></i>
-                            </span>
-                        </div>
-                        <div>
-                            <small class=\"text-white-50 d-block lh-1\">Ventes aujourd'hui</small>
-                            <strong class=\"text-white fs-5\">";
-            // line 445
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 445, $this->source); })()), "used", [], "any", false, false, false, 445), "html", null, true);
-            yield " / ∞</strong>
-                        </div>
-                    </div>
-                ";
-        } else {
-            // line 449
-            yield "                    <div class=\"stat-badge d-flex align-items-center ";
-            if ((($tmp =  !CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 449, $this->source); })()), "can_sell", [], "any", false, false, false, 449)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                yield "bg-danger";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 449, $this->source); })()), "used", [], "any", false, false, false, 449) > (CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 449, $this->source); })()), "limit", [], "any", false, false, false, 449) * 0.8))) {
-                yield "bg-warning";
-            } else {
-                yield "bg-primary";
-            }
-            yield " rounded-3 p-2 px-3\">
-                        <div class=\"me-2\">
-                            <span class=\"badge bg-white text-";
-            // line 451
-            if ((($tmp =  !CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 451, $this->source); })()), "can_sell", [], "any", false, false, false, 451)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                yield "danger";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 451, $this->source); })()), "used", [], "any", false, false, false, 451) > (CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 451, $this->source); })()), "limit", [], "any", false, false, false, 451) * 0.8))) {
-                yield "warning";
-            } else {
-                yield "primary";
-            }
-            yield " p-2 rounded-circle\">
-                                <i class=\"fas fa-chart-line fa-sm\"></i>
-                            </span>
-                        </div>
-                        <div>
-                            <small class=\"text-white-50 d-block lh-1\">Ventes aujourd'hui</small>
-                            <strong class=\"text-white fs-5\">";
-            // line 457
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 457, $this->source); })()), "used", [], "any", false, false, false, 457), "html", null, true);
-            yield " / ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 457, $this->source); })()), "limit", [], "any", false, false, false, 457), "html", null, true);
-            yield "</strong>
-                            ";
-            // line 458
-            if ((($tmp =  !CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 458, $this->source); })()), "can_sell", [], "any", false, false, false, 458)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 459
-                yield "                                <small class=\"text-white-50 d-block\">Limite atteinte</small>
-                            ";
-            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 460
-(isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 460, $this->source); })()), "used", [], "any", false, false, false, 460) > (CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 460, $this->source); })()), "limit", [], "any", false, false, false, 460) * 0.8))) {
-                // line 461
-                yield "                                <small class=\"text-white-50 d-block\">";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 461, $this->source); })()), "limit", [], "any", false, false, false, 461) - CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 461, $this->source); })()), "used", [], "any", false, false, false, 461)), "html", null, true);
-                yield " restante(s)</small>
-                            ";
-            }
-            // line 463
-            yield "                        </div>
-                    </div>
-                ";
-        }
-        // line 466
-        yield "
-                <div class=\"d-flex gap-2\">
-                    <button type=\"button\" class=\"btn btn-primary\" id=\"checkoutBtn\" ";
-        // line 468
-        if (Twig\Extension\CoreExtension::testEmpty((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 468, $this->source); })()))) {
-            yield "disabled";
-        }
-        yield ">
-                        <i class=\"fas fa-credit-card\"></i> Encaisser
-                    </button>
-                    <button type=\"button\" class=\"btn btn-outline-danger\" id=\"clearCartBtn\" ";
-        // line 471
-        if (Twig\Extension\CoreExtension::testEmpty((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 471, $this->source); })()))) {
-            yield "disabled";
-        }
-        yield ">
-                        <i class=\"fas fa-trash\"></i> Vider
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    ";
-        // line 479
-        if (( !CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 479, $this->source); })()), "can_sell", [], "any", false, false, false, 479) && (CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 479, $this->source); })()), "limit", [], "any", false, false, false, 479) != "∞"))) {
-            // line 480
-            yield "    <div class=\"filter-info mt-3\" id=\"limitWarningAlert\">
-        <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-2\">
-            <div class=\"flex-grow-1\">
-                <i class=\"fas fa-info-circle me-2 text-primary\"></i>
-                <strong>Limite de ventes atteinte :</strong> 
-                Vous avez utilisé ";
-            // line 485
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 485, $this->source); })()), "used", [], "any", false, false, false, 485), "html", null, true);
-            yield "/";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 485, $this->source); })()), "limit", [], "any", false, false, false, 485), "html", null, true);
-            yield " ventes aujourd'hui.
-                Contactez l'administrateur pour augmenter votre quota.
-            </div>
-            <div class=\"d-flex gap-2 align-items-center\">
-                <a href=\"";
-            // line 489
-            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_contact_admin");
-            yield "\" class=\"btn btn-sm btn-outline-primary\">
-                    <i class=\"fas fa-headset me-1\"></i> Contacter
-                </a>
-                <button type=\"button\" class=\"btn btn-sm btn-link text-secondary p-0\" onclick=\"document.getElementById('limitWarningAlert').style.display='none'\" style=\"width: 30px; height: 30px;\">
-                    <i class=\"fas fa-times\"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    ";
-        }
-        // line 499
-        yield "
-    ";
-        // line 500
-        if (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 500, $this->source); })()), "can_sell", [], "any", false, false, false, 500) && (CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 500, $this->source); })()), "limit", [], "any", false, false, false, 500) != "∞")) && (CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 500, $this->source); })()), "used", [], "any", false, false, false, 500) > (CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 500, $this->source); })()), "limit", [], "any", false, false, false, 500) * 0.8)))) {
-            // line 501
-            yield "    <div class=\"filter-info mt-3\">
-        <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-2\">
-            <div>
-                <i class=\"fas fa-chart-line me-2 text-warning\"></i>
-                <strong>Attention :</strong> 
-                Vous avez utilisé ";
-            // line 506
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 506, $this->source); })()), "used", [], "any", false, false, false, 506), "html", null, true);
-            yield "/";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 506, $this->source); })()), "limit", [], "any", false, false, false, 506), "html", null, true);
-            yield " ventes.
-                Plus que ";
-            // line 507
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 507, $this->source); })()), "limit", [], "any", false, false, false, 507) - CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 507, $this->source); })()), "used", [], "any", false, false, false, 507)), "html", null, true);
-            yield " vente(s) restante(s) aujourd'hui.
-            </div>
-        </div>
-    </div>
-    ";
-        }
-        // line 512
-        yield "
-    <div class=\"search-section\">
-        <div class=\"search-bar\">
-            <div class=\"input-group search-input-group\">
-                <input type=\"text\" class=\"form-control\" id=\"productSearch\" 
-                       placeholder=\"Rechercher un plat...\" autocomplete=\"off\">
-                <button class=\"btn\" type=\"button\" id=\"searchBtn\">
-                    <i class=\"fas fa-search\"></i> Rechercher
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div class=\"two-columns\">
-        <div class=\"products-panel\">
-            <div class=\"panel-header\">
-                <i class=\"fas fa-utensils me-2\"></i> Nos Plats
-                <span class=\"badge bg-secondary ms-2\" id=\"resultCount\">0</span>
-            </div>
-            <div class=\"panel-content\">
-                <div class=\"filter-section\">
-                    <label class=\"form-label fw-bold\">Filtrer par catégorie</label>
-                    <select id=\"categorySelect\" class=\"form-select\" style=\"width: 100%;\">
-                        <option value=\"\">-- Toutes les catégories --</option>
-                        ";
-        // line 536
-        $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["categories"]) || array_key_exists("categories", $context) ? $context["categories"] : (function () { throw new RuntimeError('Variable "categories" does not exist.', 536, $this->source); })()));
-        foreach ($context['_seq'] as $context["_key"] => $context["category"]) {
-            // line 537
-            yield "                            ";
-            if (Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["category"], "parent", [], "any", false, false, false, 537))) {
-                // line 538
-                yield "                                <option value=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["category"], "id", [], "any", false, false, false, 538), "html", null, true);
-                yield "\" class=\"fw-bold\">";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["category"], "name", [], "any", false, false, false, 538), "html", null, true);
-                yield "</option>
-                            ";
-            } else {
-                // line 540
-                yield "                                <option value=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["category"], "id", [], "any", false, false, false, 540), "html", null, true);
-                yield "\" class=\"text-muted\"> &nbsp;&nbsp;&nbsp; ├─ ";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["category"], "name", [], "any", false, false, false, 540), "html", null, true);
-                yield "</option>
-                            ";
-            }
-            // line 542
-            yield "                        ";
-        }
-        $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_key'], $context['category'], $context['_parent']);
-        $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 543
-        yield "                    </select>
-                </div>
-                <div id=\"productResultsContainer\">
-                    <div class=\"text-center text-muted py-5\">
-                        <i class=\"fas fa-search fs-1\"></i>
-                        <p class=\"mt-2\">Recherchez un plat pour commencer</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class=\"cart-panel\">
-            <div class=\"panel-header\">
-                <i class=\"fas fa-shopping-cart me-2\"></i> Panier
-                <span class=\"badge bg-primary rounded-pill ms-2\" id=\"cartCount\">";
-        // line 557
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 557, $this->source); })())), "html", null, true);
-        yield "</span>
-            </div>
-            <div class=\"panel-content\" id=\"cartContainer\">
-                ";
-        // line 560
-        if (Twig\Extension\CoreExtension::testEmpty((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 560, $this->source); })()))) {
-            // line 561
-            yield "                    <div class=\"empty-cart\">
-                        <i class=\"fas fa-shopping-cart\"></i>
-                        <p>Votre panier est vide</p>
-                        <button class=\"btn btn-primary btn-sm\" onclick=\"document.getElementById('productSearch').focus()\">
-                            <i class=\"fas fa-plus-circle\"></i> Ajouter des plats
-                        </button>
-                    </div>
-                ";
-        } else {
-            // line 569
-            yield "                    <ul class=\"cart-items\" id=\"cartItemsList\">
-                        ";
-            // line 570
-            $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 570, $this->source); })()));
-            foreach ($context['_seq'] as $context["_key"] => $context["item"]) {
-                // line 571
-                yield "                            <li class=\"cart-item\" data-id=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "id", [], "any", false, false, false, 571), "html", null, true);
-                yield "\" data-type=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "type", [], "any", false, false, false, 571), "html", null, true);
-                yield "\" data-price=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 571), "html", null, true);
-                yield "\" data-notes=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "notes", [], "any", true, true, false, 571)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "notes", [], "any", false, false, false, 571), "")) : ("")), "html", null, true);
-                yield "\">
-                                <div class=\"cart-item-info\">
-                                    <div class=\"cart-item-title\">";
-                // line 573
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "name", [], "any", false, false, false, 573), "html", null, true);
-                yield "</div>
-                                    ";
-                // line 574
-                if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "has_promotion", [], "any", false, false, false, 574) && CoreExtension::getAttribute($this->env, $this->source, $context["item"], "promotion", [], "any", false, false, false, 574))) {
-                    // line 575
-                    yield "                                        <div class=\"small text-primary\">
-                                            <i class=\"fas fa-tag text-primary me-1\"></i>
-                                            <span class=\"text-primary\">";
-                    // line 577
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["item"], "promotion", [], "any", false, false, false, 577), "message", [], "any", false, false, false, 577), "html", null, true);
-                    yield "</span>
-                                        </div>
-                                    ";
-                }
-                // line 580
-                yield "                                    ";
-                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["item"], "notes", [], "any", false, false, false, 580)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 581
-                    yield "                                    <div class=\"cart-item-notes\">
-                                        <i class=\"fas fa-sticky-note\"></i>
-                                        <span class=\"notes-text\">";
-                    // line 583
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "notes", [], "any", false, false, false, 583), "html", null, true);
-                    yield "</span>
-                                    </div>
-                                    ";
-                }
-                // line 586
-                yield "                                    <div class=\"cart-item-actions\">
-                                        <button class=\"edit-item\"><i class=\"fas fa-edit\"></i> Modifier</button>
-                                        <button class=\"remove-item\"><i class=\"fas fa-trash-alt\"></i> Supprimer</button>
-                                    </div>
-                                </div>
-                                <div class=\"cart-item-quantity\">
-                                    <span class=\"badge bg-secondary quantity-badge\">";
-                // line 592
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 592), "html", null, true);
-                yield "</span>
-                                </div>
-                                <div class=\"cart-item-price\">
-                                    ";
-                // line 595
-                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["item"], "has_promotion", [], "any", false, false, false, 595)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 596
-                    yield "                                        <div class=\"total text-primary fw-bold\">
-                                            ";
-                    // line 597
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "total_price", [], "any", false, false, false, 597), 0, ",", " "), "html", null, true);
-                    yield " FCFA
-                                            <span class=\"badge ms-2\" style=\"background-color: #0463f1 !important; color: white !important;\">
-                                                -";
-                    // line 599
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["item"], "promotion", [], "any", false, false, false, 599), "discount_percentage", [], "any", false, false, false, 599), "html", null, true);
-                    yield "%
-                                            </span>
-                                        </div>
-                                        <div class=\"mt-1\">
-                                            <small class=\"text-muted text-decoration-line-through\">
-                                                ";
-                    // line 604
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "original_unit_price", [], "any", false, false, false, 604) * CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 604)), 0, ",", " "), "html", null, true);
-                    yield " FCFA
-                                            </small>
-                                            <small class=\"text-primary ms-2\">
-                                                <i class=\"fas fa-chart-line\"></i> Économie: ";
-                    // line 607
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["item"], "promotion", [], "any", false, false, false, 607), "discount_amount", [], "any", false, false, false, 607), 0, ",", " "), "html", null, true);
-                    yield " FCFA
-                                            </small>
-                                        </div>
-                                    ";
-                } else {
-                    // line 611
-                    yield "                                        <div class=\"total\">";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "total_price", [], "any", false, false, false, 611), 0, ",", " "), "html", null, true);
-                    yield " FCFA</div>
-                                        <small class=\"text-muted\">";
-                    // line 612
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 612), 0, ",", " "), "html", null, true);
-                    yield " FCFA</small>
-                                    ";
-                }
-                // line 614
-                yield "                                </div>
-                            </li>
-                        ";
-            }
-            $_parent = $context['_parent'];
-            unset($context['_seq'], $context['_key'], $context['item'], $context['_parent']);
-            $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 617
-            yield "                    </ul>
-                ";
-        }
-        // line 619
-        yield "            </div>
-            <div class=\"cart-footer\">
-                <strong>Total TTC :</strong>
-                <h4 class=\"mb-0 text-primary\" id=\"cartTotal\">";
-        // line 622
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["cart_total"]) || array_key_exists("cart_total", $context) ? $context["cart_total"] : (function () { throw new RuntimeError('Variable "cart_total" does not exist.', 622, $this->source); })()), 0, ",", " "), "html", null, true);
-        yield " FCFA</h4>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL D'AJOUT (avec champ notes) -->
-<div class=\"modal fade\" id=\"addProductModal\" tabindex=\"-1\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-primary text-white\">
-                <h5 class=\"modal-title\"><i class=\"fas fa-plus-circle me-2\"></i> Ajouter au panier</h5>
-                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <div class=\"text-center mb-3\" id=\"modalProductImage\">
-                    <i class=\"fas fa-utensils fa-3x text-muted\"></i>
-                </div>
-                <h5 class=\"text-center\" id=\"modalProductName\"></h5>
-                <p class=\"text-center text-muted\" id=\"modalProductPrice\"></p>
-                
-                <!-- Champ Quantité -->
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Quantité</label>
-                    <div class=\"input-group\">
-                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"decrementQty\">-</button>
-                        <input type=\"number\" id=\"productQuantity\" class=\"form-control text-center\" value=\"1\" min=\"1\">
-                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"incrementQty\">+</button>
-                    </div>
-                </div>
-                
-                <!-- Champ Notes - Instructions spéciales -->
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">
-                        <i class=\"fas fa-sticky-note me-1\"></i> Instructions spéciales
-                    </label>
-                    <textarea id=\"productNotes\" class=\"form-control\" rows=\"3\" 
-                              placeholder=\"Ex: Sans oignons, Très cuit, Sauce à part, Allergie...\"></textarea>
-                    <small class=\"text-muted mt-1 d-block\">
-                        <i class=\"fas fa-info-circle me-1\"></i>
-                        Ces instructions apparaîtront sur le ticket cuisine.
-                    </small>
-                </div>
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmAddBtn\">
-                    <span class=\"btn-text\"><i class=\"fas fa-cart-plus me-2\"></i> Ajouter</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL DE MODIFICATION (avec champ notes) -->
-<div class=\"modal fade\" id=\"editItemModal\" tabindex=\"-1\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-warning text-white\">
-                <h5 class=\"modal-title\"><i class=\"fas fa-edit me-2\"></i> Modifier l'article</h5>
-                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <input type=\"hidden\" id=\"editItemId\">
-                <input type=\"hidden\" id=\"editItemType\">
-                <div class=\"text-center mb-3\">
-                    <h5 id=\"editItemName\"></h5>
-                    <p class=\"text-muted\" id=\"editItemPrice\"></p>
-                </div>
-                
-                <!-- Champ Quantité -->
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Nouvelle quantité</label>
-                    <div class=\"input-group\">
-                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"editDecrementQty\">-</button>
-                        <input type=\"number\" id=\"editQuantity\" class=\"form-control text-center\" value=\"1\" min=\"1\">
-                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"editIncrementQty\">+</button>
-                    </div>
-                </div>
-                
-                <!-- Champ Notes - Instructions spéciales -->
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">
-                        <i class=\"fas fa-sticky-note me-1\"></i> Instructions spéciales
-                    </label>
-                    <textarea id=\"editNotes\" class=\"form-control\" rows=\"3\" 
-                              placeholder=\"Ex: Sans oignons, Très cuit, Sauce à part...\"></textarea>
-                    <small class=\"text-muted mt-1 d-block\">
-                        <i class=\"fas fa-info-circle me-1\"></i>
-                        Ces instructions apparaîtront sur le ticket cuisine.
-                    </small>
-                </div>
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmEditBtn\">
-                    <span class=\"btn-text\"><i class=\"fas fa-save me-2\"></i> Enregistrer</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Autres modals -->
-<div class=\"modal fade\" id=\"confirmRemoveModal\" tabindex=\"-1\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-danger text-white\">
-                <h5 class=\"modal-title\">
-                    <i class=\"fas fa-exclamation-triangle me-2\"></i> Confirmer la suppression
-                </h5>
-                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <p id=\"confirmRemoveMessage\"></p>
-                <p class=\"text-danger mb-0\"><small>⚠️ Cette action est irréversible.</small></p>
-                <input type=\"hidden\" id=\"removeItemId\">
-                <input type=\"hidden\" id=\"removeItemType\">
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-danger\" id=\"confirmRemoveBtn\">
-                    <span class=\"btn-text\"><i class=\"fas fa-trash-alt me-2\"></i> Supprimer</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class=\"modal fade\" id=\"confirmClearCartModal\" tabindex=\"-1\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-warning text-white\">
-                <h5 class=\"modal-title\">
-                    <i class=\"fas fa-exclamation-triangle me-2\"></i> Vider le panier
-                </h5>
-                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <p>Êtes-vous sûr de vouloir vider tout le panier ?</p>
-                <p class=\"text-danger mb-0\"><small>⚠️ Cette action est irréversible.</small></p>
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-danger\" id=\"confirmClearCartBtn\">
-                    <span class=\"btn-text\"><i class=\"fas fa-trash-alt me-2\"></i> Vider le panier</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class=\"modal fade\" id=\"checkoutModal\" tabindex=\"-1\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-success text-white\">
-                <h5 class=\"modal-title\"><i class=\"fas fa-credit-card me-2\"></i> Encaissement</h5>
-                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <form id=\"checkoutForm\">
-                    <div class=\"mb-3\">
-                        <label class=\"form-label\">Téléphone client *</label>
-                        <div class=\"input-group\">
-                            <input type=\"tel\" name=\"customer_phone\" id=\"customerPhone\" class=\"form-control\" required placeholder=\"Ex: 691234567\">
-                            <button type=\"button\" class=\"btn btn-outline-info\" id=\"checkCustomerBtn\">
-                                <i class=\"fas fa-search\"></i> Vérifier
-                            </button>
-                        </div>
-                        <small class=\"text-muted\">Le numéro de téléphone est obligatoire</small>
-                    </div>
-                    <div class=\"mb-3\" id=\"customerNameGroup\">
-                        <label class=\"form-label\">Nom du client</label>
-                        <input type=\"text\" name=\"customer_name\" id=\"customerName\" class=\"form-control\" placeholder=\"Saisissez le nom du client\">
-                        <small class=\"text-muted\" id=\"nameHint\">Optionnel</small>
-                    </div>
-                    <div class=\"mb-3\">
-                        <label class=\"form-label\">Mode de paiement *</label>
-                        <select name=\"payment_method\" id=\"paymentMethod\" class=\"form-select\" required>
-                            <option value=\"cash\">💰 Espèces</option>
-                            <option value=\"card\">💳 Carte bancaire</option>
-                            <option value=\"mobile_money\">📱 Mobile Money</option>
-                        </select>
-                    </div>
-                    <div class=\"mb-3\">
-                        <label class=\"form-label\">Montant payé (FCFA) *</label>
-                        <input type=\"number\" name=\"amount_paid\" id=\"amountPaid\" class=\"form-control\" required placeholder=\"Montant donné par le client\" value=\"0\" step=\"100\">
-                        <small class=\"text-muted\">Total à payer: <strong id=\"totalToPay\">";
-        // line 809
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["cart_total"]) || array_key_exists("cart_total", $context) ? $context["cart_total"] : (function () { throw new RuntimeError('Variable "cart_total" does not exist.', 809, $this->source); })()), 0, ",", " "), "html", null, true);
-        yield "</strong> FCFA</small>
-                    </div>
-                    
-                    <div class=\"mt-3 mb-3\" id=\"changeContainer\">
-                        <div class=\"card border-0 bg-light\">
-                            <div class=\"card-body text-center\">
-                                <i class=\"fas fa-calculator fa-2x text-info mb-2\"></i>
-                                <h6 class=\"card-subtitle mb-2 text-muted\">Monnaie à rendre</h6>
-                                <h2 class=\"card-title text-success\" id=\"changeAmount\">0 FCFA</h2>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class=\"mb-3\">
-                        <div class=\"form-check\">
-                            <input type=\"checkbox\" class=\"form-check-input\" id=\"autoPrintReceipt\" checked>
-                            <label class=\"form-check-label\" for=\"autoPrintReceipt\">
-                                <i class=\"fas fa-print me-1 text-primary\"></i>
-                                Imprimer le reçu automatiquement
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class=\"mb-3\">
-                        <label class=\"form-label\">Notes</label>
-                        <textarea name=\"notes\" class=\"form-control\" rows=\"2\" placeholder=\"Instructions spéciales...\"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-success\" id=\"confirmCheckoutBtn\">
-                    <span class=\"btn-text\"><i class=\"fas fa-check-circle me-2\"></i> Valider la vente</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class=\"modal fade\" id=\"quotaReachedModal\" tabindex=\"-1\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-warning\">
-                <h5 class=\"modal-title text-dark\">
-                    <i class=\"fas fa-exclamation-triangle me-2\"></i> Quota atteint
-                </h5>
-                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body text-center py-4\">
-                <i class=\"fas fa-ban fa-4x text-warning mb-3\"></i>
-                <h5>Limite de ventes quotidienne atteinte</h5>
-                <p class=\"text-muted\">Vous avez déjà effectué ";
-        // line 860
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 860, $this->source); })()), "used", [], "any", false, false, false, 860), "html", null, true);
-        yield " ventes sur ";
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 860, $this->source); })()), "limit", [], "any", false, false, false, 860), "html", null, true);
-        yield " aujourd'hui.</p>
-                <p class=\"text-muted small\">Pour augmenter votre limite, contactez l'administrateur de l'entreprise.</p>
-            </div>
-            <div class=\"modal-footer justify-content-center\">
-                <a href=\"";
-        // line 864
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_orders_contact_admin");
-        yield "\" class=\"btn btn-warning px-4\">
-                    <i class=\"fas fa-headset me-2\"></i> Contacter l'administrateur
-                </a>
-                <button type=\"button\" class=\"btn btn-outline-secondary\" data-bs-dismiss=\"modal\">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
-";
-        
-        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
-
-        
-        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
-
-        yield from [];
-    }
-
-    // line 874
+    // line 540
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -1198,903 +979,78 @@ class __TwigTemplate_1da90f738855b447730a3e84152cd450 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 875
+        // line 541
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
-<script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
-<script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js\"></script>
 <script>
-// ==================== CONSTANTES ====================
-const URLs = {
-    search: \"";
-        // line 881
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("restaurant_sale_search");
-        yield "\",
-    addToCart: \"";
-        // line 882
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("sale_add_product", ["id" => "ID_PLACEHOLDER"]);
-        yield "\",
-    cartData: \"";
-        // line 883
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("sale_cart_data");
-        yield "\",
-    checkout: \"";
-        // line 884
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("sale_checkout");
-        yield "\",
-    updateQuantity: \"";
-        // line 885
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("sale_update_quantity", ["type" => "recipe", "id" => "ID_PLACEHOLDER"]), "html", null, true);
-        yield "\",
-    removeItem: \"";
-        // line 886
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("sale_remove_item", ["type" => "recipe", "id" => "ID_PLACEHOLDER"]), "html", null, true);
-        yield "\",
-    clearCart: \"";
-        // line 887
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("sale_clear_cart");
-        yield "\",
-    searchCustomer: \"";
-        // line 888
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("api_search_customer");
-        yield "\",
-    updateNotes: \"";
-        // line 889
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("sale_update_notes", ["type" => "TYPE_PLACEHOLDER", "id" => "ID_PLACEHOLDER"]), "html", null, true);
-        yield "\"
-};
-
-let state = {
-    searchTimeout: null,
-    currentCartTotal: ";
-        // line 894
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["cart_total"]) || array_key_exists("cart_total", $context) ? $context["cart_total"] : (function () { throw new RuntimeError('Variable "cart_total" does not exist.', 894, $this->source); })()), "html", null, true);
-        yield ",
-    currentCategory: '',
-    currentProduct: null,
-    currentEditItemId: null,
-    currentEditItemType: null,
-    pendingRemoveId: null,
-    pendingRemoveType: null,
-    isProcessing: false,
-    audioContext: null
-};
-
-// ==================== GESTION DU SON ====================
-const AudioManager = {
-    init() {
-        if (!state.audioContext && window.AudioContext) {
-            state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        return state.audioContext;
-    },
-
-    playSaleSuccess() {
-        try {
-            const ctx = this.init();
-            if (!ctx) return;
-            if (ctx.state === 'suspended') ctx.resume();
-            
-            const now = ctx.currentTime;
-            const masterGain = ctx.createGain();
-            masterGain.connect(ctx.destination);
-            masterGain.gain.setValueAtTime(1.5, now);
-            
-            const osc1 = ctx.createOscillator();
-            osc1.type = 'sine';
-            osc1.frequency.setValueAtTime(1200, now);
-            osc1.frequency.exponentialRampToValueAtTime(800, now + 0.1);
-            osc1.connect(masterGain);
-            osc1.start();
-            osc1.stop(now + 0.15);
-            
-            const osc2 = ctx.createOscillator();
-            osc2.type = 'triangle';
-            osc2.frequency.setValueAtTime(600, now + 0.1);
-            osc2.frequency.exponentialRampToValueAtTime(400, now + 0.25);
-            osc2.connect(masterGain);
-            osc2.start(now + 0.1);
-            osc2.stop(now + 0.35);
-            
-            const noise = ctx.createBufferSource();
-            const bufferSize = ctx.sampleRate * 0.1;
-            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-            noise.buffer = buffer;
-            noise.connect(masterGain);
-            noise.start(now + 0.2);
-            noise.stop(now + 0.35);
-            
-            masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
-        } catch (e) { console.error('Erreur audio:', e); }
-    },
-
-    playAddToCart() {
-        try {
-            const ctx = this.init();
-            if (!ctx) return;
-            if (ctx.state === 'suspended') ctx.resume();
-            
-            const now = ctx.currentTime;
-            const masterGain = ctx.createGain();
-            masterGain.connect(ctx.destination);
-            masterGain.gain.setValueAtTime(1.2, now);
-            
-            const osc = ctx.createOscillator();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, now);
-            osc.frequency.exponentialRampToValueAtTime(660, now + 0.1);
-            osc.connect(masterGain);
-            osc.start();
-            osc.stop(now + 0.15);
-            
-            masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-        } catch (e) { console.error('Erreur audio:', e); }
-    },
-    
-    playBarcodeBeep() {
-        try {
-            const ctx = this.init();
-            if (!ctx) return;
-            if (ctx.state === 'suspended') ctx.resume();
-            
-            const now = ctx.currentTime;
-            const osc = ctx.createOscillator();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(1000, now);
-            osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
-            osc.connect(ctx.destination);
-            osc.start();
-            osc.stop(now + 0.1);
-        } catch (e) { console.error('Erreur audio:', e); }
-    }
-};
-
-document.body.addEventListener('click', function initAudio() {
-    AudioManager.init();
-    document.body.removeEventListener('click', initAudio);
-}, { once: true });
-
-// ==================== RÉFÉRENCES DOM ====================
-const DOM = {
-    searchInput: document.getElementById('productSearch'),
-    resultsContainer: document.getElementById('productResultsContainer'),
-    cartContainer: document.getElementById('cartContainer'),
-    cartCountSpan: document.getElementById('cartCount'),
-    cartTotalSpan: document.getElementById('cartTotal'),
-    checkoutBtn: document.getElementById('checkoutBtn'),
-    clearCartBtn: document.getElementById('clearCartBtn'),
-    searchBtn: document.getElementById('searchBtn'),
-    categorySelect: document.getElementById('categorySelect'),
-    customerPhone: document.getElementById('customerPhone'),
-    customerName: document.getElementById('customerName'),
-    nameHint: document.getElementById('nameHint'),
-    amountPaidInput: document.getElementById('amountPaid'),
-    changeContainer: document.getElementById('changeContainer'),
-    changeAmountSpan: document.getElementById('changeAmount'),
-    totalToPaySpan: document.getElementById('totalToPay'),
-    confirmCheckoutBtn: document.getElementById('confirmCheckoutBtn'),
-    checkCustomerBtn: document.getElementById('checkCustomerBtn'),
-    confirmClearCartBtn: document.getElementById('confirmClearCartBtn')
-};
-
-// ==================== UTILITAIRES ====================
-function setButtonLoading(button, isLoading) {
-    if (!button) return;
-    if (isLoading) {
-        button.dataset.originalText = button.innerHTML;
-        button.disabled = true;
-        button.classList.add('btn-loading');
-        const btnText = button.querySelector('.btn-text');
-        if (btnText) btnText.style.visibility = 'hidden';
-    } else {
-        button.disabled = false;
-        button.classList.remove('btn-loading');
-        const btnText = button.querySelector('.btn-text');
-        if (btnText) btnText.style.visibility = '';
-        if (button.dataset.originalText) {
-            button.innerHTML = button.dataset.originalText;
-            delete button.dataset.originalText;
-        }
-    }
-}
-
-function setSimpleButtonLoading(button, isLoading) {
-    if (!button) return;
-    if (isLoading) {
-        button.dataset.originalText = button.innerHTML;
-        button.disabled = true;
-        button.classList.add('btn-loading');
-        button.innerHTML = '<span class=\"spinner-border spinner-border-sm me-2\"></span> Chargement...';
-    } else {
-        button.disabled = false;
-        button.classList.remove('btn-loading');
-        if (button.dataset.originalText) {
-            button.innerHTML = button.dataset.originalText;
-            delete button.dataset.originalText;
-        }
-    }
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-function showToast(type, message) {
-    const toastHtml = `<div class=\"position-fixed bottom-0 end-0 p-3\" style=\"z-index: 9999\"><div class=\"toast align-items-center text-white bg-\${type === 'success' ? 'success' : 'danger'} border-0\" role=\"alert\" data-bs-autohide=\"true\" data-bs-delay=\"3000\"><div class=\"d-flex\"><div class=\"toast-body\"><i class=\"fas fa-\${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2\"></i> \${message}</div><button type=\"button\" class=\"btn-close btn-close-white me-2 m-auto\" data-bs-dismiss=\"toast\"></button></div></div></div>`;
-    const container = document.createElement('div');
-    container.innerHTML = toastHtml;
-    document.body.appendChild(container);
-    const toastElement = container.querySelector('.toast');
-    if (toastElement) {
-        const toast = new bootstrap.Toast(toastElement);
-        toast.show();
-        setTimeout(() => container.remove(), 3500);
-    }
-}
-
-// ==================== GESTION DU PANIER ====================
-async function refreshCart() {
-    try {
-        const response = await fetch(URLs.cartData);
-        const data = await response.json();
-        updateCartDisplay(data);
-        state.currentCartTotal = data.total;
-        if (DOM.totalToPaySpan) DOM.totalToPaySpan.innerHTML = state.currentCartTotal.toLocaleString('fr-FR');
-        updateChangeAmount();
-    } catch (error) { console.error('Erreur refreshCart:', error); }
-}
-
-function updateCartDisplay(cartData) {
-    if (!cartData.items || cartData.items.length === 0) {
-        if (DOM.cartContainer) {
-            DOM.cartContainer.innerHTML = `<div class=\"empty-cart\"><i class=\"fas fa-shopping-cart\"></i><p>Votre panier est vide</p><button class=\"btn btn-primary btn-sm\" onclick=\"document.getElementById('productSearch').focus()\"><i class=\"fas fa-plus-circle\"></i> Ajouter des plats</button></div>`;
-        }
-        if (DOM.cartTotalSpan) DOM.cartTotalSpan.innerHTML = '0 FCFA';
-        if (DOM.cartCountSpan) DOM.cartCountSpan.innerHTML = '0';
-        if (DOM.checkoutBtn) DOM.checkoutBtn.disabled = true;
-        if (DOM.clearCartBtn) DOM.clearCartBtn.disabled = true;
-        return;
-    }
-
-    let itemsHtml = '<ul class=\"cart-items\">';
-    cartData.items.forEach(item => {
-        const hasPromo = item.has_promotion;
-        const promoMessage = hasPromo && item.promotion ? `<div class=\"small text-primary\"><i class=\"fas fa-tag text-primary me-1\"></i><span class=\"text-primary\">\${escapeHtml(item.promotion.message)}</span></div>` : '';
-        
-        const notesHtml = item.notes ? `
-            <div class=\"cart-item-notes\">
-                <i class=\"fas fa-sticky-note\"></i>
-                <span class=\"notes-text\">\${escapeHtml(item.notes)}</span>
-            </div>
-        ` : '';
-        
-        itemsHtml += `
-            <li class=\"cart-item\" data-id=\"\${item.id}\" data-type=\"\${item.type}\" data-price=\"\${item.unit_price}\" data-notes=\"\${escapeHtml(item.notes || '')}\">
-                <div class=\"cart-item-info\">
-                    <div class=\"cart-item-title\">\${escapeHtml(item.name)}</div>
-                    \${promoMessage}
-                    \${notesHtml}
-                    <div class=\"cart-item-actions\">
-                        <button class=\"edit-item\"><i class=\"fas fa-edit\"></i> Modifier</button>
-                        <button class=\"remove-item\" data-id=\"\${item.id}\" data-type=\"\${item.type}\" data-name=\"\${escapeHtml(item.name)}\"><i class=\"fas fa-trash-alt\"></i> Supprimer</button>
-                    </div>
-                </div>
-                <div class=\"cart-item-quantity\">
-                    <span class=\"badge bg-secondary quantity-badge\">\${item.quantity}</span>
-                </div>
-                <div class=\"cart-item-price\">
-                    \${hasPromo ? `
-                        <div class=\"total text-primary fw-bold\">
-                            \${item.total_price.toLocaleString('fr-FR')} FCFA
-                            <span class=\"badge bg-primary bg-opacity-10 text-primary ms-2\">-\${item.promotion.discount_percentage}%</span>
-                        </div>
-                        <div class=\"mt-1\">
-                            <small class=\"text-muted text-decoration-line-through\">\${(item.original_unit_price * item.quantity).toLocaleString('fr-FR')} FCFA</small>
-                            <small class=\"text-primary ms-2\"><i class=\"fas fa-chart-line\"></i> Économie: \${item.promotion.discount_amount.toLocaleString('fr-FR')} FCFA</small>
-                        </div>
-                    ` : `
-                        <div class=\"total\">\${item.total_price.toLocaleString('fr-FR')} FCFA</div>
-                        <small class=\"text-muted\">\${item.unit_price.toLocaleString('fr-FR')} FCFA</small>
-                    `}
-                </div>
-            </li>
-        `;
-    });
-    itemsHtml += '</ul>';
-    if (DOM.cartContainer) DOM.cartContainer.innerHTML = itemsHtml;
-    if (DOM.cartTotalSpan) DOM.cartTotalSpan.innerHTML = `\${cartData.total.toLocaleString('fr-FR')} FCFA`;
-    if (DOM.cartCountSpan) DOM.cartCountSpan.innerHTML = cartData.items.length;
-    if (DOM.checkoutBtn) DOM.checkoutBtn.disabled = false;
-    if (DOM.clearCartBtn) DOM.clearCartBtn.disabled = false;
-    
-    attachCartEvents();
-}
-
-function updateChangeAmount() {
-    if (!DOM.amountPaidInput) return;
-    const amountPaid = parseFloat(DOM.amountPaidInput.value) || 0;
-    const totalToPay = state.currentCartTotal;
-    const change = amountPaid - totalToPay;
-    if (!DOM.changeAmountSpan) return;
-    
-    if (amountPaid >= totalToPay && totalToPay > 0) {
-        DOM.changeAmountSpan.innerHTML = change.toLocaleString('fr-FR') + ' FCFA';
-        DOM.changeAmountSpan.className = 'card-title text-success';
-        DOM.amountPaidInput.classList.remove('is-invalid');
-        DOM.amountPaidInput.classList.add('is-valid');
-    } else if (amountPaid > 0 && amountPaid < totalToPay) {
-        const missing = totalToPay - amountPaid;
-        DOM.changeAmountSpan.innerHTML = missing.toLocaleString('fr-FR') + ' FCFA';
-        DOM.changeAmountSpan.className = 'card-title text-danger';
-        DOM.amountPaidInput.classList.add('is-invalid');
-        DOM.amountPaidInput.classList.remove('is-valid');
-    } else {
-        DOM.changeAmountSpan.innerHTML = totalToPay.toLocaleString('fr-FR') + ' FCFA';
-        DOM.changeAmountSpan.className = 'card-title text-warning';
-        DOM.amountPaidInput.classList.remove('is-invalid');
-        DOM.amountPaidInput.classList.remove('is-valid');
-    }
-}
-
-if (DOM.amountPaidInput) {
-    DOM.amountPaidInput.addEventListener('input', updateChangeAmount);
-    setTimeout(updateChangeAmount, 100);
-}
-
-// ==================== RECHERCHE PRODUITS ====================
-function performSearch(query) {
-    let url = `\${URLs.search}?q=\${encodeURIComponent(query)}`;
-    if (state.currentCategory) url += `&category=\${encodeURIComponent(state.currentCategory)}`;
-    
-    if (DOM.resultsContainer) {
-        DOM.resultsContainer.innerHTML = '<div class=\"text-center py-5\"><div class=\"spinner-border text-primary\"></div><p class=\"mt-2\">Recherche...</p></div>';
-    }
-    
-    fetch(url)
-        .then(response => response.json())
-        .then(recipes => {
-            if (!recipes.length) {
-                DOM.resultsContainer.innerHTML = '<div class=\"text-center text-muted py-5\"><i class=\"fas fa-search fs-1\"></i><p class=\"mt-2\">Aucun plat trouvé</p></div>';
-                document.getElementById('resultCount').textContent = '0';
-                return;
-            }
-            displayRecipes(recipes);
-            document.getElementById('resultCount').textContent = recipes.length;
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            DOM.resultsContainer.innerHTML = '<div class=\"text-center py-5 text-danger\">Erreur de connexion</div>';
-        });
-}
-
-let hiddenRecipeIds = new Set();
-
-function displayRecipes(recipes) {
-    let html = '<ul class=\"product-list\">';
-    recipes.forEach(recipe => {
-        const hasPromo = recipe.has_promotion;
-        const displayPrice = hasPromo ? recipe.final_price : recipe.selling_price;
-        const oldPriceHtml = hasPromo ? `<span class=\"old-price\">\${recipe.selling_price.toLocaleString('fr-FR')} FCFA</span>` : '';
-        const promoBadge = hasPromo ? `<span class=\"promo-badge text-primary\"><i class=\"fas fa-tag text-primary\"></i> \${recipe.promotion_message || 'Promo!'}</span>` : '';
-        
-        html += `
-            <li class=\"product-list-item\" data-recipe-id=\"\${recipe.id}\" data-recipe='\${JSON.stringify(recipe).replace(/'/g, \"&#39;\")}'>
-                <div class=\"product-list-img\">
-                    \${recipe.image ? `<img src=\"/uploads/images_plats/\${recipe.image}\" alt=\"\${escapeHtml(recipe.name)}\">` : `<i class=\"fas fa-utensils fallback-icon\"></i>`}
-                </div>
-                <div class=\"product-list-info\">
-                    <div class=\"product-list-title\">\${escapeHtml(recipe.name)}</div>
-                    \${recipe.description ? `<div class=\"product-list-desc\">\${escapeHtml(recipe.description)}</div>` : ''}
-                </div>
-                <div class=\"product-list-price\">
-                    \${displayPrice.toLocaleString('fr-FR')} FCFA
-                    \${oldPriceHtml}
-                    \${promoBadge}
-                </div>
-                <div class=\"product-list-actions ms-2\">
-                    <button type=\"button\" class=\"btn btn-sm btn-link text-danger hide-recipe-btn\" data-recipe-id=\"\${recipe.id}\" title=\"Masquer ce plat\">
-                        <i class=\"fas fa-times-circle fa-lg\"></i>
-                    </button>
-                </div>
-            </li>
-        `;
-    });
-    html += '</ul>';
-    DOM.resultsContainer.innerHTML = html;
-    
-    document.querySelectorAll('.product-list-item').forEach(item => {
-        const recipeBtn = item.querySelector('.hide-recipe-btn');
-        if (recipeBtn) {
-            recipeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const recipeId = parseInt(recipeBtn.dataset.recipeId);
-                hideRecipeItem(recipeId, item);
-            });
-        }
-        
-        item.addEventListener('click', (e) => {
-            if (!e.target.closest('.hide-recipe-btn')) {
-                const recipeData = JSON.parse(item.dataset.recipe);
-                openAddModal(recipeData);
-            }
-        });
-    });
-}
-
-function hideRecipeItem(recipeId, itemElement) {
-    itemElement.style.transition = 'all 0.3s ease';
-    itemElement.style.opacity = '0';
-    itemElement.style.transform = 'translateX(20px)';
-    
-    setTimeout(() => {
-        itemElement.remove();
-        
-        const remainingItems = document.querySelectorAll('.product-list-item').length;
-        const resultCount = document.getElementById('resultCount');
-        if (resultCount) {
-            resultCount.textContent = remainingItems;
-        }
-        
-        if (remainingItems === 0) {
-            DOM.resultsContainer.innerHTML = '<div class=\"text-center text-muted py-5\"><i class=\"fas fa-search fs-1\"></i><p class=\"mt-2\">Aucun plat trouvé</p></div>';
-        }
-        
-        showToast('info', 'Plat masqué de la liste');
-    }, 200);
-}
-
-function openAddModal(recipe) {
-    state.currentProduct = recipe;
-    document.getElementById('modalProductName').textContent = recipe.name;
-    const displayPrice = recipe.has_promotion ? recipe.final_price : recipe.selling_price;
-    document.getElementById('modalProductPrice').innerHTML = `\${displayPrice.toLocaleString('fr-FR')} FCFA`;
-    
-    const productImageDiv = document.getElementById('modalProductImage');
-    if (recipe.image) {
-        productImageDiv.innerHTML = `<img src=\"/uploads/images_plats/\${recipe.image}\" alt=\"\${escapeHtml(recipe.name)}\" style=\"width: 80px; height: 80px; object-fit: cover; border-radius: 8px;\">`;
-    } else {
-        productImageDiv.innerHTML = `<i class=\"fas fa-utensils fa-3x text-muted\"></i>`;
-    }
-    document.getElementById('productQuantity').value = 1;
-    document.getElementById('productNotes').value = '';
-    
-    new bootstrap.Modal(document.getElementById('addProductModal')).show();
-}
-
-function openEditModal(itemId, itemType, itemName, itemPrice, itemQuantity, itemNotes) {
-    state.currentEditItemId = itemId;
-    state.currentEditItemType = itemType;
-    
-    document.getElementById('editItemId').value = itemId;
-    document.getElementById('editItemType').value = itemType;
-    document.getElementById('editItemName').textContent = itemName;
-    document.getElementById('editItemPrice').innerHTML = `\${itemPrice.toLocaleString('fr-FR')} FCFA`;
-    document.getElementById('editQuantity').value = itemQuantity;
-    document.getElementById('editNotes').value = itemNotes || '';
-    
-    new bootstrap.Modal(document.getElementById('editItemModal')).show();
-}
-
-// ==================== AJOUT AU PANIER ====================
-document.getElementById('confirmAddBtn')?.addEventListener('click', async () => {
-    if (!state.currentProduct) return;
-    setButtonLoading(document.getElementById('confirmAddBtn'), true);
-    
-    const quantity = parseInt(document.getElementById('productQuantity').value) || 1;
-    const notes = document.getElementById('productNotes').value;
-    
-    const formData = new FormData();
-    formData.append('quantity', quantity);
-    if (notes) {
-        formData.append('notes', notes);
-    }
-    const url = URLs.addToCart.replace('ID_PLACEHOLDER', state.currentProduct.id);
-    
-    try {
-        const response = await fetch(url, { method: 'POST', body: formData });
-        const data = await response.json();
-        if (data.success) {
-            bootstrap.Modal.getInstance(document.getElementById('addProductModal'))?.hide();
-            await refreshCart();
-            AudioManager.playAddToCart();
-            if (DOM.searchInput) DOM.searchInput.value = '';
-            if (DOM.categorySelect && typeof \$ !== 'undefined') \$(DOM.categorySelect).val(null).trigger('change');
-            state.currentCategory = '';
-            DOM.resultsContainer.innerHTML = '<div class=\"text-center text-muted py-5\"><i class=\"fas fa-search fs-1\"></i><p class=\"mt-2\">Recherchez un plat pour commencer</p></div>';
-            document.getElementById('resultCount').textContent = '0';
-            showToast('success', `\${state.currentProduct.name} (x\${quantity}) ajouté`);
-            if (notes) {
-                showToast('info', 'Instructions spéciales enregistrées');
-            }
+document.addEventListener('DOMContentLoaded', function() {
+    // Nouveau plat
+    const newBtn = document.getElementById('newRecipeBtn');
+    if (newBtn) {
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            ";
+        // line 549
+        if ((($tmp = (isset($context["quotaReached"]) || array_key_exists("quotaReached", $context) ? $context["quotaReached"] : (function () { throw new RuntimeError('Variable "quotaReached" does not exist.', 549, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 550
+            yield "                new bootstrap.Modal(document.getElementById('quotaReachedModal')).show();
+            ";
         } else {
-            showToast('error', data.error);
+            // line 552
+            yield "                window.location.href = \"";
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_recipe_new");
+            yield "\";
+            ";
         }
-    } catch (error) {
-        showToast('error', 'Erreur lors de l\\'ajout');
-    } finally {
-        setButtonLoading(document.getElementById('confirmAddBtn'), false);
+        // line 554
+        yield "        });
     }
-});
 
-// ==================== ÉVÉNEMENTS PANIER ====================
-function attachCartEvents() {
-    document.querySelectorAll('.edit-item').forEach(btn => {
-        btn.removeEventListener('click', handleEditClick);
-        btn.addEventListener('click', handleEditClick);
-    });
-    document.querySelectorAll('.quantity-badge').forEach(badge => {
-        badge.removeEventListener('click', handleBadgeClick);
-        badge.addEventListener('click', handleBadgeClick);
-    });
-    document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.removeEventListener('click', function(e) {
-            e.stopPropagation();
-            state.pendingRemoveId = parseInt(this.dataset.id);
-            state.pendingRemoveType = this.dataset.type;
-            document.getElementById('confirmRemoveMessage').innerHTML = `Êtes-vous sûr de vouloir supprimer \"<strong>\${this.dataset.name}</strong>\" du panier ?`;
-            new bootstrap.Modal(document.getElementById('confirmRemoveModal')).show();
-        });
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            state.pendingRemoveId = parseInt(this.dataset.id);
-            state.pendingRemoveType = this.dataset.type;
-            document.getElementById('confirmRemoveMessage').innerHTML = `Êtes-vous sûr de vouloir supprimer \"<strong>\${this.dataset.name}</strong>\" du panier ?`;
-            new bootstrap.Modal(document.getElementById('confirmRemoveModal')).show();
+    // PAS d'auto-submit ! Seul le bouton \"Filtrer\" soumet le formulaire
+    // Les selects ne déclenchent pas automatiquement la soumission
+
+    // Toggle status modal
+    const toggleModal = new bootstrap.Modal(document.getElementById('toggleRecipeModal'));
+    const toggleForm = document.getElementById('toggleRecipeForm');
+    const toggleToken = document.getElementById('toggleRecipeToken');
+    const toggleMessage = document.getElementById('toggleRecipeMessage');
+
+    document.querySelectorAll('.toggle-recipe-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.recipeId;
+            const name = this.dataset.recipeName;
+            const current = this.dataset.currentStatus;
+            const action = current === 'active' ? 'désactiver' : 'activer';
+            toggleMessage.innerText = `Êtes-vous sûr de vouloir \${action} le plat \"\${name}\" ?`;
+            toggleForm.action = `/admin/recipe/\${id}/toggle-status`;
+            toggleToken.value = this.dataset.token;
+            toggleModal.show();
         });
     });
-}
 
-function handleEditClick(e) {
-    const item = e.currentTarget.closest('.cart-item');
-    const itemId = parseInt(item.dataset.id);
-    const itemType = item.dataset.type;
-    const itemName = item.querySelector('.cart-item-title').textContent;
-    const itemPrice = parseFloat(item.dataset.price);
-    const itemQuantity = parseInt(item.querySelector('.quantity-badge').textContent);
-    const notesElement = item.querySelector('.cart-item-notes .notes-text');
-    const itemNotes = notesElement ? notesElement.textContent : '';
-    
-    openEditModal(itemId, itemType, itemName, itemPrice, itemQuantity, itemNotes);
-}
+    // Delete modal
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteRecipeModal'));
+    const deleteForm = document.getElementById('deleteRecipeForm');
+    const deleteToken = document.getElementById('deleteRecipeToken');
+    const deleteMessage = document.getElementById('deleteRecipeMessage');
 
-function handleBadgeClick(e) {
-    const item = e.currentTarget.closest('.cart-item');
-    const itemId = parseInt(item.dataset.id);
-    const itemType = item.dataset.type;
-    const itemName = item.querySelector('.cart-item-title').textContent;
-    const itemPrice = parseFloat(item.dataset.price);
-    const itemQuantity = parseInt(e.currentTarget.textContent);
-    const notesElement = item.querySelector('.cart-item-notes .notes-text');
-    const itemNotes = notesElement ? notesElement.textContent : '';
-    
-    openEditModal(itemId, itemType, itemName, itemPrice, itemQuantity, itemNotes);
-}
-
-// ==================== MODIFICATION ====================
-document.getElementById('confirmEditBtn')?.addEventListener('click', async () => {
-    let newQuantity = parseInt(document.getElementById('editQuantity').value);
-    const id = parseInt(document.getElementById('editItemId').value);
-    const type = document.getElementById('editItemType').value;
-    const notes = document.getElementById('editNotes').value;
-    
-    if (isNaN(newQuantity) || newQuantity < 1) {
-        showToast('error', 'Quantité invalide');
-        return;
-    }
-    
-    setButtonLoading(document.getElementById('confirmEditBtn'), true);
-    
-    const urlQuantity = URLs.updateQuantity.replace('ID_PLACEHOLDER', id);
-    const formData = new URLSearchParams();
-    formData.append('quantity', newQuantity);
-    
-    try {
-        const response = await fetch(urlQuantity, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
-            body: formData.toString()
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-            const urlNotes = URLs.updateNotes.replace('TYPE_PLACEHOLDER', type).replace('ID_PLACEHOLDER', id);
-            const notesResponse = await fetch(urlNotes, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ notes: notes })
-            });
-            const notesData = await notesResponse.json();
-            
-            if (notesData.success) {
-                bootstrap.Modal.getInstance(document.getElementById('editItemModal'))?.hide();
-                await refreshCart();
-                showToast('success', 'Article modifié');
-            } else {
-                showToast('error', notesData.error || 'Erreur lors de la modification des notes');
-            }
-        } else {
-            showToast('error', data.error);
-        }
-    } catch (error) {
-        console.error('Erreur modification:', error);
-        showToast('error', 'Erreur lors de la modification');
-    } finally {
-        setButtonLoading(document.getElementById('confirmEditBtn'), false);
-    }
-});
-
-// ==================== SUPPRESSION ====================
-document.getElementById('confirmRemoveBtn')?.addEventListener('click', async () => {
-    if (state.pendingRemoveId !== null) {
-        setButtonLoading(document.getElementById('confirmRemoveBtn'), true);
-        const url = URLs.removeItem.replace('ID_PLACEHOLDER', state.pendingRemoveId);
-        try {
-            const response = await fetch(url, { method: 'DELETE' });
-            const data = await response.json();
-            if (data.success) {
-                bootstrap.Modal.getInstance(document.getElementById('confirmRemoveModal'))?.hide();
-                await refreshCart();
-                showToast('success', 'Article supprimé');
-                state.pendingRemoveId = null;
-            } else {
-                showToast('error', data.error);
-            }
-        } catch (error) {
-            showToast('error', 'Erreur lors de la suppression');
-        } finally {
-            setButtonLoading(document.getElementById('confirmRemoveBtn'), false);
-        }
-    }
-});
-
-// ==================== VIDER PANIER ====================
-if (DOM.clearCartBtn) {
-    DOM.clearCartBtn.addEventListener('click', () => {
-        new bootstrap.Modal(document.getElementById('confirmClearCartModal')).show();
-    });
-}
-if (DOM.confirmClearCartBtn) {
-    DOM.confirmClearCartBtn.addEventListener('click', async () => {
-        setButtonLoading(DOM.confirmClearCartBtn, true);
-        await fetch(URLs.clearCart, { method: 'POST' });
-        await refreshCart();
-        bootstrap.Modal.getInstance(document.getElementById('confirmClearCartModal'))?.hide();
-        showToast('success', 'Panier vidé');
-        setButtonLoading(DOM.confirmClearCartBtn, false);
-    });
-}
-
-// ==================== RECHERCHE CLIENT ====================
-if (DOM.customerPhone && DOM.checkCustomerBtn) {
-    async function searchCustomer() {
-        const phone = DOM.customerPhone.value.trim();
-        if (!phone || phone.length < 6) {
-            DOM.nameHint.innerHTML = '<i class=\"fas fa-exclamation-triangle text-warning\"></i> Numéro invalide (6 chiffres minimum)';
-            DOM.customerName.value = '';
-            return;
-        }
-        setSimpleButtonLoading(DOM.checkCustomerBtn, true);
-        DOM.nameHint.innerHTML = '<i class=\"fas fa-spinner fa-spin text-info\"></i> Recherche...';
-        try {
-            const response = await fetch(`\${URLs.searchCustomer}?phone=\${encodeURIComponent(phone)}`);
-            const data = await response.json();
-            if (data.found && data.customer_name) {
-                DOM.customerName.value = data.customer_name;
-                DOM.nameHint.innerHTML = '<i class=\"fas fa-check-circle text-success\"></i> Client trouvé !';
-            } else {
-                DOM.customerName.value = '';
-                DOM.nameHint.innerHTML = '<i class=\"fas fa-user-plus text-info\"></i> Nouveau client';
-                DOM.customerName.focus();
-            }
-        } catch (error) {
-            DOM.nameHint.innerHTML = '<i class=\"fas fa-exclamation-triangle text-danger\"></i> Erreur de connexion';
-        } finally {
-            setSimpleButtonLoading(DOM.checkCustomerBtn, false);
-        }
-    }
-    DOM.checkCustomerBtn.addEventListener('click', searchCustomer);
-    DOM.customerPhone.addEventListener('keypress', (e) => { if (e.key === 'Enter') searchCustomer(); });
-}
-
-// ==================== SÉLECTION CATÉGORIES ====================
-if (DOM.categorySelect && typeof \$ !== 'undefined') {
-    \$(DOM.categorySelect).select2({
-        theme: 'bootstrap-5',
-        language: 'fr',
-        placeholder: '-- Toutes les catégories --',
-        allowClear: true,
-        width: '100%'
-    }).on('change', function() {
-        state.currentCategory = \$(this).val() || '';
-        const query = DOM.searchInput ? DOM.searchInput.value.trim() : '';
-        if (query.length >= 2 || state.currentCategory) performSearch(query);
-        else if (!query && state.currentCategory) performSearch('');
-    });
-}
-
-if (DOM.searchBtn) {
-    DOM.searchBtn.addEventListener('click', () => performSearch(DOM.searchInput.value.trim()));
-}
-if (DOM.searchInput) {
-    DOM.searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') performSearch(DOM.searchInput.value.trim());
-    });
-}
-
-// ==================== OUVERTURE MODALE ENCAISSEMENT ====================
-function openCheckoutModal() {
-    if (DOM.customerPhone) DOM.customerPhone.value = '';
-    if (DOM.customerName) DOM.customerName.value = '';
-    if (DOM.amountPaidInput) DOM.amountPaidInput.value = '0';
-    if (DOM.totalToPaySpan) DOM.totalToPaySpan.innerHTML = state.currentCartTotal.toLocaleString('fr-FR');
-    setTimeout(() => {
-        if (DOM.amountPaidInput) {
-            DOM.amountPaidInput.dispatchEvent(new Event('input', { bubbles: true }));
-            updateChangeAmount();
-        }
-    }, 50);
-    new bootstrap.Modal(document.getElementById('checkoutModal')).show();
-}
-
-if (DOM.checkoutBtn) {
-    DOM.checkoutBtn.addEventListener('click', () => {
-        const dailyStats = ";
-        // line 1589
-        yield json_encode((isset($context["dailyStats"]) || array_key_exists("dailyStats", $context) ? $context["dailyStats"] : (function () { throw new RuntimeError('Variable "dailyStats" does not exist.', 1589, $this->source); })()));
-        yield ";
-        if (!dailyStats.can_sell && dailyStats.limit !== '∞') {
-            new bootstrap.Modal(document.getElementById('quotaReachedModal')).show();
-        } else {
-            openCheckoutModal();
-        }
-    });
-}
-
-// ==================== IMPRESSION ====================
-function downloadPdfReceipt(orderId) {
-    window.open(`/orders/\${orderId}/download-pdf`, '_blank');
-    showToast('info', 'Téléchargement du PDF lancé');
-}
-
-function printReceiptWithCheck(orderId) {
-    const printWindow = window.open(`/orders/\${orderId}/print`, '_blank', 'width=450,height=650');
-    if (printWindow) {
-        printWindow.onload = function() {
-            setTimeout(() => {
-                try {
-                    printWindow.print();
-                    printWindow.onafterprint = function() {
-                        printWindow.close();
-                    };
-                } catch(e) {
-                    printWindow.close();
-                    showPdfDownloadModal(orderId);
-                }
-            }, 500);
-        };
-    } else {
-        showPdfDownloadModal(orderId);
-    }
-}
-
-function showPdfDownloadModal(orderId) {
-    const existingModal = document.getElementById('pdfDownloadModal');
-    if (existingModal) existingModal.remove();
-    
-    const modalHtml = `
-        <div class=\"modal fade\" id=\"pdfDownloadModal\" tabindex=\"-1\" data-bs-backdrop=\"static\">
-            <div class=\"modal-dialog modal-dialog-centered\">
-                <div class=\"modal-content\">
-                    <div class=\"modal-header bg-warning text-dark\">
-                        <h5 class=\"modal-title\"><i class=\"fas fa-exclamation-triangle me-2\"></i> Impression impossible</h5>
-                        <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
-                    </div>
-                    <div class=\"modal-body text-center py-4\">
-                        <i class=\"fas fa-ban fa-3x text-warning mb-3\"></i>
-                        <p>La fenêtre d'impression a été bloquée par votre navigateur.</p>
-                        <p class=\"text-muted\">Vous pouvez télécharger le reçu en PDF :</p>
-                    </div>
-                    <div class=\"modal-footer justify-content-center\">
-                        <button type=\"button\" class=\"btn btn-primary\" onclick=\"downloadPdfReceipt('\${orderId}'); bootstrap.Modal.getInstance(document.getElementById('pdfDownloadModal')).hide();\">
-                            <i class=\"fas fa-file-pdf me-2\"></i> Télécharger PDF
-                        </button>
-                        <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Fermer</button>
-                    </div>
+    document.querySelectorAll('.delete-recipe-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.recipeId;
+            const name = this.dataset.recipeName;
+            const token = this.dataset.token;
+            deleteMessage.innerHTML = `
+                <div class=\"alert alert-warning mb-2 p-2\">
+                    <i class=\"fas fa-exclamation-triangle me-2\"></i>Cette action est irréversible.
                 </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    new bootstrap.Modal(document.getElementById('pdfDownloadModal')).show();
-}
-
-function handleReceiptPrinting(orderId) {
-    const autoPrint = document.getElementById('autoPrintReceipt')?.checked;
-    if (autoPrint) {
-        printReceiptWithCheck(orderId);
-    }
-}
-
-// ==================== VALIDATION VENTE ====================
-if (DOM.confirmCheckoutBtn) {
-    DOM.confirmCheckoutBtn.addEventListener('click', async () => {
-        if (state.isProcessing) return;
-        
-        const phone = DOM.customerPhone?.value.trim();
-        if (!phone || phone.length < 6) {
-            showToast('error', 'Le numéro de téléphone est obligatoire');
-            DOM.customerPhone?.classList.add('is-invalid');
-            return;
-        }
-        DOM.customerPhone?.classList.remove('is-invalid');
-        
-        const amountPaid = parseFloat(DOM.amountPaidInput?.value) || 0;
-        if (amountPaid < state.currentCartTotal) {
-            showToast('error', `Montant insuffisant. Total: \${state.currentCartTotal.toLocaleString('fr-FR')} FCFA`);
-            DOM.amountPaidInput?.classList.add('is-invalid');
-            return;
-        }
-        DOM.amountPaidInput?.classList.remove('is-invalid');
-        
-        state.isProcessing = true;
-        setButtonLoading(DOM.confirmCheckoutBtn, true);
-        
-        const formData = new FormData(document.getElementById('checkoutForm'));
-        
-        try {
-            const response = await fetch(URLs.checkout, { method: 'POST', body: formData });
-            const data = await response.json();
-            
-            if (data.success) {
-                bootstrap.Modal.getInstance(document.getElementById('checkoutModal'))?.hide();
-                AudioManager.playSaleSuccess();
-                showToast('success', data.message);
-                await refreshCart();
-                
-                if (data.order_id) {
-                    handleReceiptPrinting(data.order_id);
-                }
-                
-                if (data.redirect_url) {
-                    setTimeout(() => window.open(data.redirect_url, '_blank'), 1500);
-                }
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                showToast('error', data.error);
-            }
-        } catch (error) {
-            showToast('error', 'Erreur lors de l\\'enregistrement');
-        } finally {
-            state.isProcessing = false;
-            setButtonLoading(DOM.confirmCheckoutBtn, false);
-        }
+                <p class=\"mb-0\">Supprimer le plat <strong>\"\${name}\"</strong> ?</p>
+            `;
+            deleteForm.action = `/admin/recipe/\${id}`;
+            deleteToken.value = token;
+            deleteModal.show();
+        });
     });
-}
-
-// ==================== INITIALISATION ====================
-function setupQuantityControls() {
-    const inc = document.getElementById('incrementQty');
-    const dec = document.getElementById('decrementQty');
-    const qty = document.getElementById('productQuantity');
-    if (inc && qty) inc.addEventListener('click', () => qty.value = parseInt(qty.value) + 1);
-    if (dec && qty) dec.addEventListener('click', () => { if (parseInt(qty.value) > 1) qty.value = parseInt(qty.value) - 1; });
-    
-    const editInc = document.getElementById('editIncrementQty');
-    const editDec = document.getElementById('editDecrementQty');
-    const editQty = document.getElementById('editQuantity');
-    if (editInc && editQty) editInc.addEventListener('click', () => editQty.value = parseInt(editQty.value) + 1);
-    if (editDec && editQty) editDec.addEventListener('click', () => { if (parseInt(editQty.value) > 1) editQty.value = parseInt(editQty.value) - 1; });
-}
-
-setupQuantityControls();
-refreshCart();
+});
 </script>
 ";
         
@@ -2127,1747 +1083,612 @@ refreshCart();
      */
     public function getDebugInfo(): array
     {
-        return array (  1949 => 1589,  1251 => 894,  1243 => 889,  1239 => 888,  1235 => 887,  1231 => 886,  1227 => 885,  1223 => 884,  1219 => 883,  1215 => 882,  1211 => 881,  1202 => 875,  1189 => 874,  1169 => 864,  1160 => 860,  1106 => 809,  916 => 622,  911 => 619,  907 => 617,  899 => 614,  894 => 612,  889 => 611,  882 => 607,  876 => 604,  868 => 599,  863 => 597,  860 => 596,  858 => 595,  852 => 592,  844 => 586,  838 => 583,  834 => 581,  831 => 580,  825 => 577,  821 => 575,  819 => 574,  815 => 573,  803 => 571,  799 => 570,  796 => 569,  786 => 561,  784 => 560,  778 => 557,  762 => 543,  756 => 542,  748 => 540,  740 => 538,  737 => 537,  733 => 536,  707 => 512,  699 => 507,  693 => 506,  686 => 501,  684 => 500,  681 => 499,  668 => 489,  659 => 485,  652 => 480,  650 => 479,  637 => 471,  629 => 468,  625 => 466,  620 => 463,  614 => 461,  612 => 460,  609 => 459,  607 => 458,  601 => 457,  586 => 451,  574 => 449,  567 => 445,  557 => 437,  555 => 436,  543 => 426,  530 => 425,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  1006 => 554,  1000 => 552,  996 => 550,  994 => 549,  983 => 541,  970 => 540,  902 => 482,  889 => 481,  825 => 427,  818 => 423,  804 => 411,  795 => 405,  790 => 404,  779 => 401,  774 => 400,  770 => 399,  765 => 397,  761 => 396,  750 => 392,  746 => 390,  744 => 389,  739 => 386,  726 => 379,  718 => 373,  716 => 372,  708 => 368,  700 => 363,  696 => 362,  692 => 361,  688 => 359,  685 => 358,  683 => 357,  674 => 352,  672 => 351,  655 => 337,  651 => 336,  642 => 329,  636 => 325,  630 => 322,  626 => 321,  622 => 320,  618 => 319,  614 => 318,  610 => 317,  606 => 315,  604 => 314,  596 => 309,  588 => 304,  576 => 295,  571 => 293,  562 => 286,  558 => 284,  554 => 282,  552 => 281,  549 => 280,  547 => 279,  544 => 278,  542 => 277,  539 => 276,  537 => 275,  534 => 274,  532 => 273,  524 => 267,  520 => 265,  517 => 264,  513 => 262,  509 => 260,  507 => 259,  501 => 255,  495 => 251,  489 => 248,  484 => 247,  482 => 246,  477 => 243,  472 => 242,  460 => 233,  456 => 232,  444 => 223,  440 => 222,  436 => 221,  432 => 220,  428 => 219,  418 => 211,  406 => 208,  397 => 207,  390 => 206,  386 => 205,  373 => 195,  355 => 180,  330 => 158,  314 => 145,  298 => 132,  282 => 119,  266 => 106,  249 => 91,  239 => 87,  236 => 86,  232 => 85,  229 => 84,  219 => 80,  216 => 79,  211 => 78,  208 => 76,  198 => 69,  193 => 67,  187 => 63,  184 => 62,  175 => 54,  167 => 49,  156 => 40,  153 => 39,  146 => 33,  142 => 31,  140 => 30,  134 => 29,  130 => 28,  111 => 12,  104 => 7,  91 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
     {
-        return new Source("{# templates/sale/restaurant/index.html.twig #}
+        return new Source("{# templates/admin/recipe/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Vente - Plats et Menus{% endblock %}
-
-{% block stylesheets %}
-{{ parent() }}
-<link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
-<link href=\"https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css\" rel=\"stylesheet\" />
-<style>
-    :root { --primary-color: #0463f1; --success-color: #10b981; --danger-color: #ef4444; --warning-color: #f59e0b; --info-color: #3b82f6; }
-
-    .sale-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-    
-    .header-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-    
-    .stat-badge {
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .stat-badge:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
-    }
-    
-    .search-section {
-        width: 100%;
-    }
-    
-    .search-bar {
-        width: 100%;
-        max-width: 100%;
-    }
-    
-    .search-input-group {
-        border-radius: 50px;
-        overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        width: 100%;
-    }
-    
-    .search-input-group .form-control {
-        border: 1px solid #e2e8f0;
-        border-right: none;
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-        flex: 1;
-    }
-    
-    .search-input-group .btn {
-        padding: 0.75rem 1.5rem;
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-left: none;
-        color: var(--primary-color);
-        white-space: nowrap;
-    }
-    
-    .two-columns {
-        display: flex;
-        gap: 1.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .products-panel, .cart-panel {
-        flex: 1;
-        min-width: 350px;
-        background: white;
-        border-radius: 24px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh - 200px);
-        min-height: 500px;
-    }
-    
-    .panel-header {
-        background: #f8fafc;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid #e2e8f0;
-        font-weight: 600;
-        flex-shrink: 0;
-    }
-    
-    .panel-content {
-        flex: 1;
-        overflow-y: auto;
-        padding: 0;
-    }
-    
-    .product-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-    
-    .product-list-item {
-        display: flex;
-        align-items: center;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid #edf2f7;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    
-    .product-list-item:hover {
-        background: #f8fafc;
-    }
-    
-    .product-list-img {
-        width: 60px;
-        height: 60px;
-        border-radius: 12px;
-        background: #f1f5f9;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 1rem;
-        flex-shrink: 0;
-    }
-    
-    .product-list-img img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 12px;
-    }
-    
-    .product-list-img .fallback-icon {
-        font-size: 2rem;
-        color: #94a3b8;
-    }
-    
-    .product-list-info {
-        flex: 1;
-    }
-    
-    .product-list-title {
-        font-weight: 600;
-    }
-    
-    .product-list-desc {
-        font-size: 0.75rem;
-        color: #64748b;
-    }
-    
-    .product-list-price {
-        font-weight: 700;
-        color: var(--primary-color);
-        text-align: right;
-        min-width: 100px;
-    }
-    
-    .product-list-price .old-price {
-        font-size: 0.7rem;
-        color: #94a3b8;
-        text-decoration: line-through;
-        display: block;
-    }
-    
-    .product-list-price .promo-badge {
-        font-size: 0.7rem;
-        color: #0463f1;
-        display: block;
-    }
-    
-    /* Panier */
-    .cart-items {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-    
-    .cart-item {
-        display: flex;
-        align-items: center;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid #edf2f7;
-        transition: all 0.3s ease;
-    }
-    
-    .cart-item:hover {
-        background: #f8fafc;
-    }
-    
-    .cart-item-info {
-        flex: 1;
-    }
-    
-    .cart-item-title {
-        font-weight: 600;
-    }
-    
-    .cart-item-actions {
-        display: flex;
-        gap: 0.5rem;
-        margin-top: 0.25rem;
-    }
-    
-    .cart-item-actions button {
-        background: none;
-        border: none;
-        font-size: 0.7rem;
-        padding: 0;
-    }
-    
-    .cart-item-actions .edit-item {
-        color: #f59e0b;
-    }
-    
-    .cart-item-actions .edit-item:hover {
-        text-decoration: underline;
-    }
-    
-    .cart-item-actions .remove-item {
-        color: #ef4444;
-    }
-    
-    .cart-item-actions .remove-item:hover {
-        text-decoration: underline;
-    }
-    
-    .cart-item-quantity {
-        margin: 0 1rem;
-        min-width: 100px;
-        text-align: center;
-    }
-    
-    .cart-item-quantity .badge {
-        font-size: 1.1rem;
-        padding: 0.5rem 0.75rem;
-        cursor: pointer;
-    }
-    
-    .cart-item-quantity .badge:hover {
-        background-color: var(--primary-color);
-    }
-    
-    .cart-item-price {
-        text-align: right;
-        min-width: 140px;
-    }
-    
-    .cart-item-price .total {
-        font-weight: 700;
-        color: var(--primary-color);
-        font-size: 1.1rem;
-    }
-    
-    .cart-footer {
-        background: #f8fafc;
-        padding: 1rem 1.5rem;
-        border-top: 1px solid #e2e8f0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-        flex-shrink: 0;
-    }
-    
-    .empty-cart {
-        text-align: center;
-        padding: 3rem;
-        color: #94a3b8;
-    }
-    
-    .empty-cart i {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-    }
-    
-    .filter-section {
-        padding: 1rem;
-        border-bottom: 1px solid #e2e8f0;
-    }
-    
-    /* Select2 */
-    .select2-container--bootstrap-5 .select2-selection {
-        border-radius: 8px;
-        min-height: 38px;
-    }
-    
-    /* Animation */
-    @keyframes success-pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
-    
-    .success-pulse {
-        animation: success-pulse 0.5s ease;
-    }
-    
-    .btn-loading {
-        position: relative;
-        pointer-events: none;
-        opacity: 0.7;
-    }
-    
-    .btn-loading .btn-text {
-        visibility: hidden;
-    }
-    
-    .btn-loading::after {
-        content: '';
-        position: absolute;
-        width: 1rem;
-        height: 1rem;
-        top: calc(50% - 0.5rem);
-        left: calc(50% - 0.5rem);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        border-top-color: white;
-        animation: spin 0.6s linear infinite;
-    }
-    
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-    
-    .btn-text {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    @media (max-width: 768px) {
-        .two-columns { flex-direction: column; }
-        .products-panel, .cart-panel { height: auto; max-height: 500px; }
-        .cart-item { flex-wrap: wrap; }
-        .cart-item-quantity { margin: 0.5rem 0; width: 100%; text-align: center; }
-        .cart-item-price { width: 100%; text-align: center; margin-top: 0.5rem; }
-    }
-    
-    #confirmCheckoutBtn {
-        position: relative;
-        transition: all 0.3s ease;
-        min-width: 180px;
-    }
-
-    #confirmCheckoutBtn:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
-
-    #amountPaid.is-valid {
-        border-color: #28a745;
-        background-color: #f0fff4;
-    }
-
-    #amountPaid.is-invalid {
-        border-color: #dc3545;
-        background-color: #fff5f5;
-    }
-
-    #changeAmount {
-        transition: all 0.3s ease;
-    }
-    
-    .btn-loading {
-        cursor: wait !important;
-    }
-
-    /* Styles pour les promotions en bleu */
-    .text-primary {
-        color: #0463f1 !important;
-    }
-    
-    .bg-primary.bg-opacity-10 {
-        background-color: rgba(4, 99, 241, 0.1) !important;
-    }
-    
-    .badge.bg-primary.bg-opacity-10 {
-        background-color: rgba(4, 99, 241, 0.1) !important;
-        color: #0463f1 !important;
-    }
-    
-    .cart-item-price .total.text-primary {
-        color: #0463f1 !important;
-    }
-    
-    .cart-item-price .text-primary {
-        color: #0463f1 !important;
-    }
-    
-    .text-decoration-line-through {
-        text-decoration: line-through;
-    }
-
-    /* Styles pour les notes dans le panier */
-    .cart-item-notes {
-        font-size: 0.75rem;
-        color: #000000 !important;
-        margin-top: 0.25rem;
-        padding: 0.5rem 0.75rem;
-        background: #fce4ec !important; /* Fond rose clair */
-        border-radius: 6px;
-        border-left: 4px solid #e91e63; /* Bordure rose foncé */
-    }
-    .cart-item-notes i {
-        margin-right: 6px;
-        color: #e91e63; /* Icône rose */
-    }
-    .cart-item-notes .notes-text {
-        font-style: normal;
-        color: #000000 !important; /* Texte en noir */
-    }
-</style>
-{% endblock %}
+{% block title %}Menu {{ companyName }} - HMA Market{% endblock %}
 
 {% block body %}
-<div class=\"sale-container\">
-    <!-- En-tête avec stats simplifiées -->
-    <div class=\"header-bar\">
-        <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3 w-100\">
-            <h1 class=\"h2 mb-0\">
-                <i class=\"fas fa-utensils text-primary\"></i>
-                Vente - Plats & Menus
+<div class=\"container-fluid px-4\">
+    <!-- En-tête avec quota et bouton d'ajout -->
+    <div class=\"d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3\">
+        <div>
+            <h1 class=\"h3 mb-0 text-gray-800 fw-bold\">
+                <i class=\"fas fa-utensils me-2\"></i>Menu {{ companyName }}
             </h1>
-
-            <div class=\"d-flex align-items-center gap-3\">
-                {% if dailyStats.limit == '∞' %}
-                    <div class=\"stat-badge d-flex align-items-center bg-success rounded-3 p-2 px-3\">
-                        <div class=\"me-2\">
-                            <span class=\"badge bg-white text-success p-2 rounded-circle\">
-                                <i class=\"fas fa-infinity fa-sm\"></i>
-                            </span>
-                        </div>
-                        <div>
-                            <small class=\"text-white-50 d-block lh-1\">Ventes aujourd'hui</small>
-                            <strong class=\"text-white fs-5\">{{ dailyStats.used }} / ∞</strong>
-                        </div>
+            <p class=\"text-muted mt-1\">Gérez vos plats et recettes</p>
+        </div>
+        
+        <div class=\"d-flex align-items-center gap-3 flex-wrap\">
+            <!-- Indicateur de quota -->
+            <div class=\"card bg-light border-0 shadow-sm p-2\">
+                <div class=\"d-flex align-items-center\">
+                    <div class=\"me-2\">
+                        <span class=\"badge bg-primary p-2 rounded-circle\">
+                            <i class=\"fas fa-chart-line fa-fw\"></i>
+                        </span>
                     </div>
-                {% else %}
-                    <div class=\"stat-badge d-flex align-items-center {% if not dailyStats.can_sell %}bg-danger{% elseif dailyStats.used > (dailyStats.limit * 0.8) %}bg-warning{% else %}bg-primary{% endif %} rounded-3 p-2 px-3\">
-                        <div class=\"me-2\">
-                            <span class=\"badge bg-white text-{% if not dailyStats.can_sell %}danger{% elseif dailyStats.used > (dailyStats.limit * 0.8) %}warning{% else %}primary{% endif %} p-2 rounded-circle\">
-                                <i class=\"fas fa-chart-line fa-sm\"></i>
-                            </span>
-                        </div>
-                        <div>
-                            <small class=\"text-white-50 d-block lh-1\">Ventes aujourd'hui</small>
-                            <strong class=\"text-white fs-5\">{{ dailyStats.used }} / {{ dailyStats.limit }}</strong>
-                            {% if not dailyStats.can_sell %}
-                                <small class=\"text-white-50 d-block\">Limite atteinte</small>
-                            {% elseif dailyStats.used > (dailyStats.limit * 0.8) %}
-                                <small class=\"text-white-50 d-block\">{{ dailyStats.limit - dailyStats.used }} restante(s)</small>
+                    <div>
+                        <small class=\"text-muted d-block\">Plats dans quota</small>
+                        <h6 class=\"mb-0 {{ quotaReached ? 'text-danger' : 'text-success' }} fw-bold\">
+                            {{ activeCount }} / {{ quota }}
+                            {% if quota == 'Illimité' %}
+                                <i class=\"fas fa-infinity text-info ms-1 small\"></i>
                             {% endif %}
-                        </div>
+                        </h6>
                     </div>
-                {% endif %}
-
-                <div class=\"d-flex gap-2\">
-                    <button type=\"button\" class=\"btn btn-primary\" id=\"checkoutBtn\" {% if cart is empty %}disabled{% endif %}>
-                        <i class=\"fas fa-credit-card\"></i> Encaisser
-                    </button>
-                    <button type=\"button\" class=\"btn btn-outline-danger\" id=\"clearCartBtn\" {% if cart is empty %}disabled{% endif %}>
-                        <i class=\"fas fa-trash\"></i> Vider
-                    </button>
                 </div>
             </div>
+
+            {# Affichage du nombre de plats en attente (désactivés par quota) #}
+            {% if subscriptionInactiveFiltered > 0 %}
+            <div class=\"card bg-light border-0 shadow-sm p-2\">
+                <div class=\"d-flex align-items-center\">
+                    <div class=\"me-2\">
+                        <span class=\"badge bg-warning p-2 rounded-circle\">
+                            <i class=\"fas fa-clock fa-fw\"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <small class=\"text-muted d-block\">En attente</small>
+                        <h6 class=\"mb-0 fw-bold\">{{ subscriptionInactiveFiltered }}</h6>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <a href=\"#\" id=\"newRecipeBtn\" class=\"btn btn-primary shadow-sm\">
+                <i class=\"fas fa-plus-circle me-2\"></i> Nouveau Plat
+            </a>
         </div>
     </div>
 
-    {% if not dailyStats.can_sell and dailyStats.limit != '∞' %}
-    <div class=\"filter-info mt-3\" id=\"limitWarningAlert\">
-        <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-2\">
-            <div class=\"flex-grow-1\">
-                <i class=\"fas fa-info-circle me-2 text-primary\"></i>
-                <strong>Limite de ventes atteinte :</strong> 
-                Vous avez utilisé {{ dailyStats.used }}/{{ dailyStats.limit }} ventes aujourd'hui.
-                Contactez l'administrateur pour augmenter votre quota.
-            </div>
-            <div class=\"d-flex gap-2 align-items-center\">
-                <a href=\"{{ path('app_orders_contact_admin') }}\" class=\"btn btn-sm btn-outline-primary\">
-                    <i class=\"fas fa-headset me-1\"></i> Contacter
-                </a>
-                <button type=\"button\" class=\"btn btn-sm btn-link text-secondary p-0\" onclick=\"document.getElementById('limitWarningAlert').style.display='none'\" style=\"width: 30px; height: 30px;\">
-                    <i class=\"fas fa-times\"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    {% if dailyStats.can_sell and dailyStats.limit != '∞' and dailyStats.used > (dailyStats.limit * 0.8) %}
-    <div class=\"filter-info mt-3\">
+    {# Message si quota atteint #}
+    {% if quotaReached %}
+    <div class=\"alert alert-warning alert-dismissible fade show shadow-sm\" role=\"alert\">
         <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-2\">
             <div>
-                <i class=\"fas fa-chart-line me-2 text-warning\"></i>
-                <strong>Attention :</strong> 
-                Vous avez utilisé {{ dailyStats.used }}/{{ dailyStats.limit }} ventes.
-                Plus que {{ dailyStats.limit - dailyStats.used }} vente(s) restante(s) aujourd'hui.
+                <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                <strong>Quota atteint !</strong> Vous avez utilisé vos {{ quota }} plats actifs.
             </div>
+            <a href=\"{{ path('app_subscription_plans') }}\" class=\"btn btn-warning btn-sm\">
+                <i class=\"fas fa-arrow-up me-1\"></i> Voir les offres
+            </a>
         </div>
+        <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
     </div>
     {% endif %}
 
-    <div class=\"search-section\">
-        <div class=\"search-bar\">
-            <div class=\"input-group search-input-group\">
-                <input type=\"text\" class=\"form-control\" id=\"productSearch\" 
-                       placeholder=\"Rechercher un plat...\" autocomplete=\"off\">
-                <button class=\"btn\" type=\"button\" id=\"searchBtn\">
-                    <i class=\"fas fa-search\"></i> Rechercher
-                </button>
-            </div>
+    {# Flash messages #}
+    {% for message in app.flashes('success') %}
+        <div class=\"alert alert-success alert-dismissible fade show shadow-sm\" role=\"alert\">
+            <i class=\"fas fa-check-circle me-2\"></i> {{ message }}
+            <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
         </div>
-    </div>
-
-    <div class=\"two-columns\">
-        <div class=\"products-panel\">
-            <div class=\"panel-header\">
-                <i class=\"fas fa-utensils me-2\"></i> Nos Plats
-                <span class=\"badge bg-secondary ms-2\" id=\"resultCount\">0</span>
-            </div>
-            <div class=\"panel-content\">
-                <div class=\"filter-section\">
-                    <label class=\"form-label fw-bold\">Filtrer par catégorie</label>
-                    <select id=\"categorySelect\" class=\"form-select\" style=\"width: 100%;\">
-                        <option value=\"\">-- Toutes les catégories --</option>
-                        {% for category in categories %}
-                            {% if category.parent is empty %}
-                                <option value=\"{{ category.id }}\" class=\"fw-bold\">{{ category.name }}</option>
-                            {% else %}
-                                <option value=\"{{ category.id }}\" class=\"text-muted\"> &nbsp;&nbsp;&nbsp; ├─ {{ category.name }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-                <div id=\"productResultsContainer\">
-                    <div class=\"text-center text-muted py-5\">
-                        <i class=\"fas fa-search fs-1\"></i>
-                        <p class=\"mt-2\">Recherchez un plat pour commencer</p>
-                    </div>
-                </div>
-            </div>
+    {% endfor %}
+    
+    {% for message in app.flashes('error') %}
+        <div class=\"alert alert-danger alert-dismissible fade show shadow-sm\" role=\"alert\">
+            <i class=\"fas fa-exclamation-circle me-2\"></i> {{ message }}
+            <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
         </div>
+    {% endfor %}
 
-        <div class=\"cart-panel\">
-            <div class=\"panel-header\">
-                <i class=\"fas fa-shopping-cart me-2\"></i> Panier
-                <span class=\"badge bg-primary rounded-pill ms-2\" id=\"cartCount\">{{ cart|length }}</span>
-            </div>
-            <div class=\"panel-content\" id=\"cartContainer\">
-                {% if cart is empty %}
-                    <div class=\"empty-cart\">
-                        <i class=\"fas fa-shopping-cart\"></i>
-                        <p>Votre panier est vide</p>
-                        <button class=\"btn btn-primary btn-sm\" onclick=\"document.getElementById('productSearch').focus()\">
-                            <i class=\"fas fa-plus-circle\"></i> Ajouter des plats
-                        </button>
-                    </div>
-                {% else %}
-                    <ul class=\"cart-items\" id=\"cartItemsList\">
-                        {% for item in cart %}
-                            <li class=\"cart-item\" data-id=\"{{ item.id }}\" data-type=\"{{ item.type }}\" data-price=\"{{ item.unit_price }}\" data-notes=\"{{ item.notes|default('') }}\">
-                                <div class=\"cart-item-info\">
-                                    <div class=\"cart-item-title\">{{ item.name }}</div>
-                                    {% if item.has_promotion and item.promotion %}
-                                        <div class=\"small text-primary\">
-                                            <i class=\"fas fa-tag text-primary me-1\"></i>
-                                            <span class=\"text-primary\">{{ item.promotion.message }}</span>
-                                        </div>
-                                    {% endif %}
-                                    {% if item.notes %}
-                                    <div class=\"cart-item-notes\">
-                                        <i class=\"fas fa-sticky-note\"></i>
-                                        <span class=\"notes-text\">{{ item.notes }}</span>
-                                    </div>
-                                    {% endif %}
-                                    <div class=\"cart-item-actions\">
-                                        <button class=\"edit-item\"><i class=\"fas fa-edit\"></i> Modifier</button>
-                                        <button class=\"remove-item\"><i class=\"fas fa-trash-alt\"></i> Supprimer</button>
-                                    </div>
-                                </div>
-                                <div class=\"cart-item-quantity\">
-                                    <span class=\"badge bg-secondary quantity-badge\">{{ item.quantity }}</span>
-                                </div>
-                                <div class=\"cart-item-price\">
-                                    {% if item.has_promotion %}
-                                        <div class=\"total text-primary fw-bold\">
-                                            {{ item.total_price|number_format(0, ',', ' ') }} FCFA
-                                            <span class=\"badge ms-2\" style=\"background-color: #0463f1 !important; color: white !important;\">
-                                                -{{ item.promotion.discount_percentage }}%
-                                            </span>
-                                        </div>
-                                        <div class=\"mt-1\">
-                                            <small class=\"text-muted text-decoration-line-through\">
-                                                {{ (item.original_unit_price * item.quantity)|number_format(0, ',', ' ') }} FCFA
-                                            </small>
-                                            <small class=\"text-primary ms-2\">
-                                                <i class=\"fas fa-chart-line\"></i> Économie: {{ item.promotion.discount_amount|number_format(0, ',', ' ') }} FCFA
-                                            </small>
-                                        </div>
-                                    {% else %}
-                                        <div class=\"total\">{{ item.total_price|number_format(0, ',', ' ') }} FCFA</div>
-                                        <small class=\"text-muted\">{{ item.unit_price|number_format(0, ',', ' ') }} FCFA</small>
-                                    {% endif %}
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
-            <div class=\"cart-footer\">
-                <strong>Total TTC :</strong>
-                <h4 class=\"mb-0 text-primary\" id=\"cartTotal\">{{ cart_total|number_format(0, ',', ' ') }} FCFA</h4>
-            </div>
+    <!-- Statistiques filtrées -->
+    <div class=\"card shadow-sm border-0 mb-4\">
+        <div class=\"card-header bg-white py-3\">
+            <h5 class=\"mb-0 fw-semibold\">
+                <i class=\"fas fa-chart-pie text-primary me-2\"></i>Statistiques selon les filtres
+            </h5>
         </div>
-    </div>
-</div>
-
-<!-- MODAL D'AJOUT (avec champ notes) -->
-<div class=\"modal fade\" id=\"addProductModal\" tabindex=\"-1\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-primary text-white\">
-                <h5 class=\"modal-title\"><i class=\"fas fa-plus-circle me-2\"></i> Ajouter au panier</h5>
-                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <div class=\"text-center mb-3\" id=\"modalProductImage\">
-                    <i class=\"fas fa-utensils fa-3x text-muted\"></i>
-                </div>
-                <h5 class=\"text-center\" id=\"modalProductName\"></h5>
-                <p class=\"text-center text-muted\" id=\"modalProductPrice\"></p>
-                
-                <!-- Champ Quantité -->
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Quantité</label>
-                    <div class=\"input-group\">
-                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"decrementQty\">-</button>
-                        <input type=\"number\" id=\"productQuantity\" class=\"form-control text-center\" value=\"1\" min=\"1\">
-                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"incrementQty\">+</button>
-                    </div>
-                </div>
-                
-                <!-- Champ Notes - Instructions spéciales -->
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">
-                        <i class=\"fas fa-sticky-note me-1\"></i> Instructions spéciales
-                    </label>
-                    <textarea id=\"productNotes\" class=\"form-control\" rows=\"3\" 
-                              placeholder=\"Ex: Sans oignons, Très cuit, Sauce à part, Allergie...\"></textarea>
-                    <small class=\"text-muted mt-1 d-block\">
-                        <i class=\"fas fa-info-circle me-1\"></i>
-                        Ces instructions apparaîtront sur le ticket cuisine.
-                    </small>
-                </div>
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmAddBtn\">
-                    <span class=\"btn-text\"><i class=\"fas fa-cart-plus me-2\"></i> Ajouter</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL DE MODIFICATION (avec champ notes) -->
-<div class=\"modal fade\" id=\"editItemModal\" tabindex=\"-1\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-warning text-white\">
-                <h5 class=\"modal-title\"><i class=\"fas fa-edit me-2\"></i> Modifier l'article</h5>
-                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <input type=\"hidden\" id=\"editItemId\">
-                <input type=\"hidden\" id=\"editItemType\">
-                <div class=\"text-center mb-3\">
-                    <h5 id=\"editItemName\"></h5>
-                    <p class=\"text-muted\" id=\"editItemPrice\"></p>
-                </div>
-                
-                <!-- Champ Quantité -->
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Nouvelle quantité</label>
-                    <div class=\"input-group\">
-                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"editDecrementQty\">-</button>
-                        <input type=\"number\" id=\"editQuantity\" class=\"form-control text-center\" value=\"1\" min=\"1\">
-                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"editIncrementQty\">+</button>
-                    </div>
-                </div>
-                
-                <!-- Champ Notes - Instructions spéciales -->
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">
-                        <i class=\"fas fa-sticky-note me-1\"></i> Instructions spéciales
-                    </label>
-                    <textarea id=\"editNotes\" class=\"form-control\" rows=\"3\" 
-                              placeholder=\"Ex: Sans oignons, Très cuit, Sauce à part...\"></textarea>
-                    <small class=\"text-muted mt-1 d-block\">
-                        <i class=\"fas fa-info-circle me-1\"></i>
-                        Ces instructions apparaîtront sur le ticket cuisine.
-                    </small>
-                </div>
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmEditBtn\">
-                    <span class=\"btn-text\"><i class=\"fas fa-save me-2\"></i> Enregistrer</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Autres modals -->
-<div class=\"modal fade\" id=\"confirmRemoveModal\" tabindex=\"-1\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-danger text-white\">
-                <h5 class=\"modal-title\">
-                    <i class=\"fas fa-exclamation-triangle me-2\"></i> Confirmer la suppression
-                </h5>
-                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <p id=\"confirmRemoveMessage\"></p>
-                <p class=\"text-danger mb-0\"><small>⚠️ Cette action est irréversible.</small></p>
-                <input type=\"hidden\" id=\"removeItemId\">
-                <input type=\"hidden\" id=\"removeItemType\">
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-danger\" id=\"confirmRemoveBtn\">
-                    <span class=\"btn-text\"><i class=\"fas fa-trash-alt me-2\"></i> Supprimer</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class=\"modal fade\" id=\"confirmClearCartModal\" tabindex=\"-1\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-warning text-white\">
-                <h5 class=\"modal-title\">
-                    <i class=\"fas fa-exclamation-triangle me-2\"></i> Vider le panier
-                </h5>
-                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <p>Êtes-vous sûr de vouloir vider tout le panier ?</p>
-                <p class=\"text-danger mb-0\"><small>⚠️ Cette action est irréversible.</small></p>
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-danger\" id=\"confirmClearCartBtn\">
-                    <span class=\"btn-text\"><i class=\"fas fa-trash-alt me-2\"></i> Vider le panier</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class=\"modal fade\" id=\"checkoutModal\" tabindex=\"-1\">
-    <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-success text-white\">
-                <h5 class=\"modal-title\"><i class=\"fas fa-credit-card me-2\"></i> Encaissement</h5>
-                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <form id=\"checkoutForm\">
-                    <div class=\"mb-3\">
-                        <label class=\"form-label\">Téléphone client *</label>
-                        <div class=\"input-group\">
-                            <input type=\"tel\" name=\"customer_phone\" id=\"customerPhone\" class=\"form-control\" required placeholder=\"Ex: 691234567\">
-                            <button type=\"button\" class=\"btn btn-outline-info\" id=\"checkCustomerBtn\">
-                                <i class=\"fas fa-search\"></i> Vérifier
-                            </button>
-                        </div>
-                        <small class=\"text-muted\">Le numéro de téléphone est obligatoire</small>
-                    </div>
-                    <div class=\"mb-3\" id=\"customerNameGroup\">
-                        <label class=\"form-label\">Nom du client</label>
-                        <input type=\"text\" name=\"customer_name\" id=\"customerName\" class=\"form-control\" placeholder=\"Saisissez le nom du client\">
-                        <small class=\"text-muted\" id=\"nameHint\">Optionnel</small>
-                    </div>
-                    <div class=\"mb-3\">
-                        <label class=\"form-label\">Mode de paiement *</label>
-                        <select name=\"payment_method\" id=\"paymentMethod\" class=\"form-select\" required>
-                            <option value=\"cash\">💰 Espèces</option>
-                            <option value=\"card\">💳 Carte bancaire</option>
-                            <option value=\"mobile_money\">📱 Mobile Money</option>
-                        </select>
-                    </div>
-                    <div class=\"mb-3\">
-                        <label class=\"form-label\">Montant payé (FCFA) *</label>
-                        <input type=\"number\" name=\"amount_paid\" id=\"amountPaid\" class=\"form-control\" required placeholder=\"Montant donné par le client\" value=\"0\" step=\"100\">
-                        <small class=\"text-muted\">Total à payer: <strong id=\"totalToPay\">{{ cart_total|number_format(0, ',', ' ') }}</strong> FCFA</small>
-                    </div>
-                    
-                    <div class=\"mt-3 mb-3\" id=\"changeContainer\">
-                        <div class=\"card border-0 bg-light\">
-                            <div class=\"card-body text-center\">
-                                <i class=\"fas fa-calculator fa-2x text-info mb-2\"></i>
-                                <h6 class=\"card-subtitle mb-2 text-muted\">Monnaie à rendre</h6>
-                                <h2 class=\"card-title text-success\" id=\"changeAmount\">0 FCFA</h2>
+        <div class=\"card-body\">
+            <div class=\"row g-3 row-cols-2 row-cols-md-4 row-cols-lg-5\">
+                <div class=\"col\">
+                    <div class=\"stat-item p-3 bg-light rounded-3 h-100\">
+                        <div class=\"d-flex justify-content-between align-items-center\">
+                            <div>
+                                <span class=\"text-muted text-uppercase small fw-bold\">Filtrés</span>
+                                <h3 class=\"mb-0 fw-bold\">{{ totalFiltered }}</h3>
+                            </div>
+                            <div class=\"bg-primary p-2 rounded-3\">
+                                <i class=\"fas fa-utensils text-white fs-3\"></i>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class=\"mb-3\">
-                        <div class=\"form-check\">
-                            <input type=\"checkbox\" class=\"form-check-input\" id=\"autoPrintReceipt\" checked>
-                            <label class=\"form-check-label\" for=\"autoPrintReceipt\">
-                                <i class=\"fas fa-print me-1 text-primary\"></i>
-                                Imprimer le reçu automatiquement
-                            </label>
+                </div>
+                <div class=\"col\">
+                    <div class=\"stat-item p-3 bg-light rounded-3 h-100\">
+                        <div class=\"d-flex justify-content-between align-items-center\">
+                            <div>
+                                <span class=\"text-muted text-uppercase small fw-bold\">Actifs</span>
+                                <h3 class=\"mb-0 fw-bold text-success\">{{ activeFiltered }}</h3>
+                            </div>
+                            <div class=\"bg-success p-2 rounded-3\">
+                                <i class=\"fas fa-check-circle text-white fs-3\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=\"col\">
+                    <div class=\"stat-item p-3 bg-light rounded-3 h-100\">
+                        <div class=\"d-flex justify-content-between align-items-center\">
+                            <div>
+                                <span class=\"text-muted text-uppercase small fw-bold\">Inactifs</span>
+                                <h3 class=\"mb-0 fw-bold text-danger\">{{ inactiveFiltered }}</h3>
+                            </div>
+                            <div class=\"bg-danger p-2 rounded-3\">
+                                <i class=\"fas fa-pause-circle text-white fs-3\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=\"col\">
+                    <div class=\"stat-item p-3 bg-light rounded-3 h-100\">
+                        <div class=\"d-flex justify-content-between align-items-center\">
+                            <div>
+                                <span class=\"text-muted text-uppercase small fw-bold\">Abonnement actif</span>
+                                <h3 class=\"mb-0 fw-bold text-info\">{{ subscriptionActiveFiltered }}</h3>
+                            </div>
+                            <div class=\"bg-info p-2 rounded-3\">
+                                <i class=\"fas fa-database text-white fs-3\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=\"col\">
+                    <div class=\"stat-item p-3 bg-light rounded-3 h-100\">
+                        <div class=\"d-flex justify-content-between align-items-center\">
+                            <div>
+                                <span class=\"text-muted text-uppercase small fw-bold\">Abonnement inactif</span>
+                                <h3 class=\"mb-0 fw-bold text-secondary\">{{ subscriptionInactiveFiltered }}</h3>
+                            </div>
+                            <div class=\"bg-secondary p-2 rounded-3\">
+                                <i class=\"fas fa-clock text-white fs-3\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire de filtres -->
+    <div class=\"card shadow-sm border-0 mb-4\">
+        <div class=\"card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-3\">
+            <h5 class=\"mb-0 fw-semibold\">
+                <i class=\"fas fa-filter text-primary me-2\"></i>Filtres
+            </h5>
+            <div class=\"d-flex gap-2\">
+                <button type=\"submit\" form=\"filter-form\" class=\"btn btn-primary\">
+                    <i class=\"fas fa-filter me-2\"></i>Filtrer
+                </button>
+                <a href=\"{{ path('app_admin_recipe_index') }}\" class=\"btn btn-outline-secondary\">
+                    <i class=\"fas fa-undo me-2\"></i>Effacer
+                </a>
+            </div>
+        </div>
+        <div class=\"card-body\">
+            <form method=\"get\" id=\"filter-form\" class=\"row g-3\">
+                <div class=\"col-lg-4 col-md-6\">
+                    <label for=\"search\" class=\"form-label fw-semibold\">
+                        <i class=\"fas fa-search text-primary me-1\"></i>Rechercher
+                    </label>
+                    <div class=\"input-group\">
+                        <span class=\"input-group-text bg-light border-0\">
+                            <i class=\"fas fa-search text-muted\"></i>
+                        </span>
+                        <input type=\"text\" name=\"search\" id=\"search\" value=\"{{ search }}\" 
+                               class=\"form-control bg-light border-0\" placeholder=\"Nom du plat...\">
+                    </div>
+                </div>
+                <div class=\"col-lg-3 col-md-6\">
+                    <label for=\"category\" class=\"form-label fw-semibold\">
+                        <i class=\"fas fa-tags text-info me-1\"></i>Catégorie
+                    </label>
+                    <select name=\"category\" id=\"category\" class=\"form-select bg-light border-0\">
+                        <option value=\"0\">Toutes</option>
+                        {% for category in categories %}
+                            <option value=\"{{ category.id }}\" {{ selectedCategory == category.id ? 'selected' : '' }}>
+                                {% for i in 0..category.level %}&nbsp;&nbsp;{% endfor %}
+                                {{ category.name }} ({{ category.recipeCount }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class=\"col-lg-3 col-md-6\">
+                    <label for=\"type\" class=\"form-label fw-semibold\">
+                        <i class=\"fas fa-tag text-primary me-1\"></i>Type de plat
+                    </label>
+                    <select name=\"type\" id=\"type\" class=\"form-select bg-light border-0\">
+                        <option value=\"\">Tous les types</option>
+                        <option value=\"food\" {{ selectedType == 'food' ? 'selected' : '' }}>🍽️ Plat principal</option>
+                        <option value=\"starter\" {{ selectedType == 'starter' ? 'selected' : '' }}>🥗 Entrée</option>
+                        <option value=\"dessert\" {{ selectedType == 'dessert' ? 'selected' : '' }}>🍰 Dessert</option>
+                        <option value=\"drink\" {{ selectedType == 'drink' ? 'selected' : '' }}>🥤 Boisson</option>
+                        <option value=\"side\" {{ selectedType == 'side' ? 'selected' : '' }}>🍟 Accompagnement</option>
+                    </select>
+                </div>
+                <div class=\"col-lg-2 col-md-6\">
+                    <label for=\"status\" class=\"form-label fw-semibold\">
+                        <i class=\"fas fa-toggle-on text-success me-1\"></i>Statut
+                    </label>
+                    <select name=\"status\" id=\"status\" class=\"form-select bg-light border-0\">
+                        <option value=\"\">Tous</option>
+                        <option value=\"active\" {{ selectedStatus == 'active' ? 'selected' : '' }}>Actifs</option>
+                        <option value=\"inactive\" {{ selectedStatus == 'inactive' ? 'selected' : '' }}>Inactifs</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Grille de plats -->
+    <div class=\"row g-4\">
+        {% for recipe in recipes %}
+        <div class=\"col-xl-3 col-lg-4 col-md-6\">
+            <div class=\"card h-100 border-0 shadow-sm hover-card\">
+                <div class=\"recipe-image-container position-relative\">
+                    {% if recipe.image %}
+                        <img src=\"{{ asset('uploads/images_plats/' ~ recipe.image) }}\" 
+                             alt=\"{{ recipe.name }}\" 
+                             class=\"card-img-top recipe-image\">
+                    {% else %}
+                        <div class=\"recipe-image-placeholder\">
+                            <i class=\"fas fa-utensils fa-4x text-muted\"></i>
+                        </div>
+                    {% endif %}
+
+                    <!-- Badges de statut superposés (en haut à gauche) -->
+                    <div class=\"position-absolute top-0 start-0 p-2\">
+                        <div class=\"d-flex flex-column gap-1\">
+                            {% if recipe.isActive %}
+                                <span class=\"badge bg-success\"><i class=\"fas fa-check-circle me-1\"></i> Actif</span>
+                            {% else %}
+                                <span class=\"badge bg-danger\"><i class=\"fas fa-pause-circle me-1\"></i> Inactif</span>
+                            {% endif %}
+                            {% if not recipe.subscriptionActive %}
+                                <span class=\"badge bg-warning text-dark\"><i class=\"fas fa-clock me-1\"></i> Hors quota</span>
+                            {% endif %}
                         </div>
                     </div>
                     
-                    <div class=\"mb-3\">
-                        <label class=\"form-label\">Notes</label>
-                        <textarea name=\"notes\" class=\"form-control\" rows=\"2\" placeholder=\"Instructions spéciales...\"></textarea>
+                    <!-- Badge type de plat (en haut à droite) -->
+                    <div class=\"position-absolute top-0 end-0 p-2\">
+                        <span class=\"badge bg-primary\">
+                            {% if recipe.type == 'food' %}
+                                🍽️ Plat
+                            {% elseif recipe.type == 'starter' %}
+                                🥗 Entrée
+                            {% elseif recipe.type == 'dessert' %}
+                                🍰 Dessert
+                            {% elseif recipe.type == 'drink' %}
+                                🥤 Boisson
+                            {% elseif recipe.type == 'side' %}
+                                🍟 Accompagnement
+                            {% else %}
+                                📋 Plat
+                            {% endif %}
+                        </span>
                     </div>
-                </form>
+                </div>
+                <div class=\"card-body d-flex flex-column\">
+                    <!-- Titre avec bouton burger à droite -->
+                    <div class=\"d-flex justify-content-between align-items-start\">
+                        <div>
+                            <h5 class=\"card-title fw-bold text-truncate mb-1\">{{ recipe.name }}</h5>
+                            <p class=\"text-muted small mb-2\">
+                                <i class=\"fas fa-tag me-1\"></i>{{ recipe.category ? recipe.category.name : 'Non catégorisé' }}
+                            </p>
+                        </div>
+                        <div class=\"dropdown ms-2\">
+                            <button class=\"btn btn-sm btn-light\" type=\"button\" data-bs-toggle=\"dropdown\">
+                                <i class=\"fas fa-bars\"></i>
+                            </button>
+                            <ul class=\"dropdown-menu dropdown-menu-end\">
+                                <li>
+                                    <a class=\"dropdown-item\" href=\"{{ path('app_admin_recipe_show', {'id': recipe.id}) }}\">
+                                        <i class=\"fas fa-eye me-2\"></i> Voir
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class=\"dropdown-item\" href=\"{{ path('app_admin_recipe_edit', {'id': recipe.id}) }}\">
+                                        <i class=\"fas fa-edit me-2\"></i> Modifier
+                                    </a>
+                                </li>
+                                <li>
+                                    {% if recipe.subscriptionActive %}
+                                        <button type=\"button\" 
+                                                class=\"dropdown-item toggle-recipe-btn\"
+                                                data-recipe-id=\"{{ recipe.id }}\"
+                                                data-recipe-name=\"{{ recipe.name }}\"
+                                                data-current-status=\"{{ recipe.isActive ? 'active' : 'inactive' }}\"
+                                                data-token=\"{{ csrf_token('toggle-status' ~ recipe.id) }}\">
+                                            <i class=\"fas {{ recipe.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }} me-2\"></i>
+                                            {{ recipe.isActive ? 'Désactiver' : 'Activer' }}
+                                        </button>
+                                    {% else %}
+                                        <span class=\"dropdown-item text-muted disabled\">
+                                            <i class=\"fas fa-ban me-2\"></i> Non disponible
+                                        </span>
+                                    {% endif %}
+                                </li>
+                                <li><hr class=\"dropdown-divider\"></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class=\"d-flex justify-content-between align-items-center mb-3\">
+                        <span class=\"fw-bold text-success\">{{ recipe.sellingPrice|price_with_currency(recipe.hmaService) }}</span>
+                        <span class=\"badge bg-info\">{{ recipe.recipeItems|length }} ingrédients</span>
+                    </div>
+
+                    <!-- Boutons secondaires alignés sur une ligne -->
+                    <div class=\"d-flex gap-1 mt-auto\">
+                        <a href=\"#\" class=\"btn btn-sm btn-outline-info flex-fill\" title=\"Ingrédients\">
+                            <i class=\"fas fa-list\"></i> 
+                        </a>
+                        <a href=\"#\" class=\"btn btn-sm btn-outline-primary flex-fill\" title=\"Mouvements stock\">
+                            <i class=\"fas fa-exchange-alt\"></i> 
+                        </a>
+                        <a href=\"#\" class=\"btn btn-sm btn-outline-success flex-fill\" title=\"Commandes liées\">
+                            <i class=\"fas fa-shopping-cart\"></i>
+                        </a>
+                        {% if companyType == 'restaurant' %}
+                            <a href=\"{{ path('app_restaurant_recipe_promotions', {'id': recipe.id}) }}\" 
+                            class=\"btn btn-sm btn-outline-warning\" title=\"Promotions du plat\">
+                                <i class=\"fas fa-percent\"></i> 
+                            </a>
+                        {% endif %}
+                        {# Bouton Supprimer #}
+                        {% if is_granted('ROLE_ADMIN') and recipe.orderItems|length == 0 %}
+                            <button type=\"button\" 
+                                    class=\"btn btn-sm btn-outline-danger flex-fill delete-recipe-btn\"
+                                    data-recipe-id=\"{{ recipe.id }}\"
+                                    data-recipe-name=\"{{ recipe.name }}\"
+                                    data-token=\"{{ csrf_token('delete' ~ recipe.id) }}\"
+                                    title=\"Supprimer\">
+                                <i class=\"fas fa-trash\"></i>
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-success\" id=\"confirmCheckoutBtn\">
-                    <span class=\"btn-text\"><i class=\"fas fa-check-circle me-2\"></i> Valider la vente</span>
-                </button>
+        </div>
+        {% else %}
+        <div class=\"col-12\">
+            <div class=\"card border-0 shadow-sm\">
+                <div class=\"card-body text-center py-5\">
+                    <i class=\"fas fa-utensils fa-4x text-muted mb-3\"></i>
+                    <h4 class=\"text-muted fw-light\">Aucun plat trouvé</h4>
+                    <p class=\"text-muted mb-4\">Modifiez vos filtres ou créez un nouveau plat.</p>
+                    <a href=\"{{ path('app_admin_recipe_index') }}\" class=\"btn btn-outline-primary px-4\">
+                        <i class=\"fas fa-undo me-2\"></i> Réinitialiser les filtres
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if totalPages > 1 %}
+    <div class=\"d-flex justify-content-between align-items-center mt-4\">
+        <div class=\"text-muted small\">
+            Page {{ currentPage }} sur {{ totalPages }} ({{ totalItems }} résultats)
+        </div>
+        <nav aria-label=\"Pagination\">
+            <ul class=\"pagination pagination-sm mb-0\">
+                <li class=\"page-item {{ currentPage <= 1 ? 'disabled' }}\">
+                    <a class=\"page-link\" href=\"{{ path('app_admin_recipe_index', app.request.query.all|merge({'page': currentPage - 1})) }}\"><i class=\"fas fa-chevron-left\"></i></a>
+                </li>
+                {% for i in 1..totalPages %}
+                    <li class=\"page-item {{ i == currentPage ? 'active' }}\">
+                        <a class=\"page-link\" href=\"{{ path('app_admin_recipe_index', app.request.query.all|merge({'page': i})) }}\">{{ i }}</a>
+                    </li>
+                {% endfor %}
+                <li class=\"page-item {{ currentPage >= totalPages ? 'disabled' }}\">
+                    <a class=\"page-link\" href=\"{{ path('app_admin_recipe_index', app.request.query.all|merge({'page': currentPage + 1})) }}\"><i class=\"fas fa-chevron-right\"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modals -->
+<div class=\"modal fade\" id=\"quotaReachedModal\" tabindex=\"-1\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content border-0 shadow\">
+            <div class=\"modal-header bg-warning text-white border-0\">
+                <h5 class=\"modal-title\"><i class=\"fas fa-exclamation-triangle me-2\"></i> Quota atteint</h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body text-center py-4\">
+                <i class=\"fas fa-ban fa-4x text-warning mb-3\"></i>
+                <h5>Vous avez atteint votre limite de {{ quota }} plats actifs.</h5>
+                <p class=\"text-muted\">Pour ajouter de nouveaux plats, passez à un plan supérieur.</p>
+            </div>
+            <div class=\"modal-footer border-0 justify-content-center\">
+                <a href=\"{{ path('app_subscription_plans') }}\" class=\"btn btn-warning btn-lg px-4\">
+                    <i class=\"fas fa-arrow-up me-2\"></i> Voir les offres
+                </a>
+                <button type=\"button\" class=\"btn btn-outline-secondary btn-lg px-4\" data-bs-dismiss=\"modal\">Annuler</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class=\"modal fade\" id=\"quotaReachedModal\" tabindex=\"-1\">
+<div class=\"modal fade\" id=\"toggleRecipeModal\" tabindex=\"-1\">
     <div class=\"modal-dialog modal-dialog-centered\">
-        <div class=\"modal-content\">
-            <div class=\"modal-header bg-warning\">
-                <h5 class=\"modal-title text-dark\">
-                    <i class=\"fas fa-exclamation-triangle me-2\"></i> Quota atteint
-                </h5>
-                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
+        <div class=\"modal-content border-0 shadow\">
+            <div class=\"modal-header bg-warning text-white border-0\">
+                <h5 class=\"modal-title\">Confirmation</h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
             </div>
             <div class=\"modal-body text-center py-4\">
-                <i class=\"fas fa-ban fa-4x text-warning mb-3\"></i>
-                <h5>Limite de ventes quotidienne atteinte</h5>
-                <p class=\"text-muted\">Vous avez déjà effectué {{ dailyStats.used }} ventes sur {{ dailyStats.limit }} aujourd'hui.</p>
-                <p class=\"text-muted small\">Pour augmenter votre limite, contactez l'administrateur de l'entreprise.</p>
+                <i class=\"fas fa-question-circle fa-4x text-primary mb-3\"></i>
+                <p id=\"toggleRecipeMessage\" class=\"mb-0\"></p>
             </div>
-            <div class=\"modal-footer justify-content-center\">
-                <a href=\"{{ path('app_orders_contact_admin') }}\" class=\"btn btn-warning px-4\">
-                    <i class=\"fas fa-headset me-2\"></i> Contacter l'administrateur
-                </a>
-                <button type=\"button\" class=\"btn btn-outline-secondary\" data-bs-dismiss=\"modal\">Fermer</button>
+            <div class=\"modal-footer border-0 justify-content-center\">
+                <button type=\"button\" class=\"btn btn-outline-secondary px-4\" data-bs-dismiss=\"modal\">Annuler</button>
+                <form id=\"toggleRecipeForm\" method=\"post\" class=\"d-inline\">
+                    <input type=\"hidden\" name=\"_token\" id=\"toggleRecipeToken\">
+                    <button type=\"submit\" class=\"btn btn-warning px-4\">Confirmer</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<div class=\"modal fade\" id=\"deleteRecipeModal\" tabindex=\"-1\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content border-0 shadow\">
+            <div class=\"modal-header bg-danger text-white border-0\">
+                <h5 class=\"modal-title\"><i class=\"fas fa-exclamation-triangle me-2\"></i> Confirmation</h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body text-center py-4\">
+                <i class=\"fas fa-trash-alt fa-4x text-danger mb-3\"></i>
+                <p id=\"deleteRecipeMessage\" class=\"mb-0\"></p>
+            </div>
+            <div class=\"modal-footer border-0 justify-content-center\">
+                <button type=\"button\" class=\"btn btn-outline-secondary px-4\" data-bs-dismiss=\"modal\">Annuler</button>
+                <form id=\"deleteRecipeForm\" method=\"post\" class=\"d-inline\">
+                    <input type=\"hidden\" name=\"_token\" id=\"deleteRecipeToken\">
+                    <button type=\"submit\" class=\"btn btn-danger px-4\">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+.hover-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+}
+.stat-item {
+    transition: background-color 0.2s;
+}
+.stat-item:hover {
+    background-color: #e9ecef !important;
+}
+.recipe-image-container {
+    position: relative;
+    height: 160px;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.recipe-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.recipe-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.badge {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+@media (max-width: 768px) {
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .d-flex.gap-1 {
+        flex-wrap: wrap;
+    }
+}
+@media (min-width: 992px) {
+    .row-cols-lg-5 > .col {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+</style>
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
-<script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
-<script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js\"></script>
 <script>
-// ==================== CONSTANTES ====================
-const URLs = {
-    search: \"{{ path('restaurant_sale_search') }}\",
-    addToCart: \"{{ path('sale_add_product', {'id': 'ID_PLACEHOLDER'}) }}\",
-    cartData: \"{{ path('sale_cart_data') }}\",
-    checkout: \"{{ path('sale_checkout') }}\",
-    updateQuantity: \"{{ path('sale_update_quantity', {'type': 'recipe', 'id': 'ID_PLACEHOLDER'}) }}\",
-    removeItem: \"{{ path('sale_remove_item', {'type': 'recipe', 'id': 'ID_PLACEHOLDER'}) }}\",
-    clearCart: \"{{ path('sale_clear_cart') }}\",
-    searchCustomer: \"{{ path('api_search_customer') }}\",
-    updateNotes: \"{{ path('sale_update_notes', {'type': 'TYPE_PLACEHOLDER', 'id': 'ID_PLACEHOLDER'}) }}\"
-};
-
-let state = {
-    searchTimeout: null,
-    currentCartTotal: {{ cart_total }},
-    currentCategory: '',
-    currentProduct: null,
-    currentEditItemId: null,
-    currentEditItemType: null,
-    pendingRemoveId: null,
-    pendingRemoveType: null,
-    isProcessing: false,
-    audioContext: null
-};
-
-// ==================== GESTION DU SON ====================
-const AudioManager = {
-    init() {
-        if (!state.audioContext && window.AudioContext) {
-            state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        return state.audioContext;
-    },
-
-    playSaleSuccess() {
-        try {
-            const ctx = this.init();
-            if (!ctx) return;
-            if (ctx.state === 'suspended') ctx.resume();
-            
-            const now = ctx.currentTime;
-            const masterGain = ctx.createGain();
-            masterGain.connect(ctx.destination);
-            masterGain.gain.setValueAtTime(1.5, now);
-            
-            const osc1 = ctx.createOscillator();
-            osc1.type = 'sine';
-            osc1.frequency.setValueAtTime(1200, now);
-            osc1.frequency.exponentialRampToValueAtTime(800, now + 0.1);
-            osc1.connect(masterGain);
-            osc1.start();
-            osc1.stop(now + 0.15);
-            
-            const osc2 = ctx.createOscillator();
-            osc2.type = 'triangle';
-            osc2.frequency.setValueAtTime(600, now + 0.1);
-            osc2.frequency.exponentialRampToValueAtTime(400, now + 0.25);
-            osc2.connect(masterGain);
-            osc2.start(now + 0.1);
-            osc2.stop(now + 0.35);
-            
-            const noise = ctx.createBufferSource();
-            const bufferSize = ctx.sampleRate * 0.1;
-            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-            noise.buffer = buffer;
-            noise.connect(masterGain);
-            noise.start(now + 0.2);
-            noise.stop(now + 0.35);
-            
-            masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
-        } catch (e) { console.error('Erreur audio:', e); }
-    },
-
-    playAddToCart() {
-        try {
-            const ctx = this.init();
-            if (!ctx) return;
-            if (ctx.state === 'suspended') ctx.resume();
-            
-            const now = ctx.currentTime;
-            const masterGain = ctx.createGain();
-            masterGain.connect(ctx.destination);
-            masterGain.gain.setValueAtTime(1.2, now);
-            
-            const osc = ctx.createOscillator();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, now);
-            osc.frequency.exponentialRampToValueAtTime(660, now + 0.1);
-            osc.connect(masterGain);
-            osc.start();
-            osc.stop(now + 0.15);
-            
-            masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-        } catch (e) { console.error('Erreur audio:', e); }
-    },
-    
-    playBarcodeBeep() {
-        try {
-            const ctx = this.init();
-            if (!ctx) return;
-            if (ctx.state === 'suspended') ctx.resume();
-            
-            const now = ctx.currentTime;
-            const osc = ctx.createOscillator();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(1000, now);
-            osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
-            osc.connect(ctx.destination);
-            osc.start();
-            osc.stop(now + 0.1);
-        } catch (e) { console.error('Erreur audio:', e); }
-    }
-};
-
-document.body.addEventListener('click', function initAudio() {
-    AudioManager.init();
-    document.body.removeEventListener('click', initAudio);
-}, { once: true });
-
-// ==================== RÉFÉRENCES DOM ====================
-const DOM = {
-    searchInput: document.getElementById('productSearch'),
-    resultsContainer: document.getElementById('productResultsContainer'),
-    cartContainer: document.getElementById('cartContainer'),
-    cartCountSpan: document.getElementById('cartCount'),
-    cartTotalSpan: document.getElementById('cartTotal'),
-    checkoutBtn: document.getElementById('checkoutBtn'),
-    clearCartBtn: document.getElementById('clearCartBtn'),
-    searchBtn: document.getElementById('searchBtn'),
-    categorySelect: document.getElementById('categorySelect'),
-    customerPhone: document.getElementById('customerPhone'),
-    customerName: document.getElementById('customerName'),
-    nameHint: document.getElementById('nameHint'),
-    amountPaidInput: document.getElementById('amountPaid'),
-    changeContainer: document.getElementById('changeContainer'),
-    changeAmountSpan: document.getElementById('changeAmount'),
-    totalToPaySpan: document.getElementById('totalToPay'),
-    confirmCheckoutBtn: document.getElementById('confirmCheckoutBtn'),
-    checkCustomerBtn: document.getElementById('checkCustomerBtn'),
-    confirmClearCartBtn: document.getElementById('confirmClearCartBtn')
-};
-
-// ==================== UTILITAIRES ====================
-function setButtonLoading(button, isLoading) {
-    if (!button) return;
-    if (isLoading) {
-        button.dataset.originalText = button.innerHTML;
-        button.disabled = true;
-        button.classList.add('btn-loading');
-        const btnText = button.querySelector('.btn-text');
-        if (btnText) btnText.style.visibility = 'hidden';
-    } else {
-        button.disabled = false;
-        button.classList.remove('btn-loading');
-        const btnText = button.querySelector('.btn-text');
-        if (btnText) btnText.style.visibility = '';
-        if (button.dataset.originalText) {
-            button.innerHTML = button.dataset.originalText;
-            delete button.dataset.originalText;
-        }
-    }
-}
-
-function setSimpleButtonLoading(button, isLoading) {
-    if (!button) return;
-    if (isLoading) {
-        button.dataset.originalText = button.innerHTML;
-        button.disabled = true;
-        button.classList.add('btn-loading');
-        button.innerHTML = '<span class=\"spinner-border spinner-border-sm me-2\"></span> Chargement...';
-    } else {
-        button.disabled = false;
-        button.classList.remove('btn-loading');
-        if (button.dataset.originalText) {
-            button.innerHTML = button.dataset.originalText;
-            delete button.dataset.originalText;
-        }
-    }
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-function showToast(type, message) {
-    const toastHtml = `<div class=\"position-fixed bottom-0 end-0 p-3\" style=\"z-index: 9999\"><div class=\"toast align-items-center text-white bg-\${type === 'success' ? 'success' : 'danger'} border-0\" role=\"alert\" data-bs-autohide=\"true\" data-bs-delay=\"3000\"><div class=\"d-flex\"><div class=\"toast-body\"><i class=\"fas fa-\${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2\"></i> \${message}</div><button type=\"button\" class=\"btn-close btn-close-white me-2 m-auto\" data-bs-dismiss=\"toast\"></button></div></div></div>`;
-    const container = document.createElement('div');
-    container.innerHTML = toastHtml;
-    document.body.appendChild(container);
-    const toastElement = container.querySelector('.toast');
-    if (toastElement) {
-        const toast = new bootstrap.Toast(toastElement);
-        toast.show();
-        setTimeout(() => container.remove(), 3500);
-    }
-}
-
-// ==================== GESTION DU PANIER ====================
-async function refreshCart() {
-    try {
-        const response = await fetch(URLs.cartData);
-        const data = await response.json();
-        updateCartDisplay(data);
-        state.currentCartTotal = data.total;
-        if (DOM.totalToPaySpan) DOM.totalToPaySpan.innerHTML = state.currentCartTotal.toLocaleString('fr-FR');
-        updateChangeAmount();
-    } catch (error) { console.error('Erreur refreshCart:', error); }
-}
-
-function updateCartDisplay(cartData) {
-    if (!cartData.items || cartData.items.length === 0) {
-        if (DOM.cartContainer) {
-            DOM.cartContainer.innerHTML = `<div class=\"empty-cart\"><i class=\"fas fa-shopping-cart\"></i><p>Votre panier est vide</p><button class=\"btn btn-primary btn-sm\" onclick=\"document.getElementById('productSearch').focus()\"><i class=\"fas fa-plus-circle\"></i> Ajouter des plats</button></div>`;
-        }
-        if (DOM.cartTotalSpan) DOM.cartTotalSpan.innerHTML = '0 FCFA';
-        if (DOM.cartCountSpan) DOM.cartCountSpan.innerHTML = '0';
-        if (DOM.checkoutBtn) DOM.checkoutBtn.disabled = true;
-        if (DOM.clearCartBtn) DOM.clearCartBtn.disabled = true;
-        return;
-    }
-
-    let itemsHtml = '<ul class=\"cart-items\">';
-    cartData.items.forEach(item => {
-        const hasPromo = item.has_promotion;
-        const promoMessage = hasPromo && item.promotion ? `<div class=\"small text-primary\"><i class=\"fas fa-tag text-primary me-1\"></i><span class=\"text-primary\">\${escapeHtml(item.promotion.message)}</span></div>` : '';
-        
-        const notesHtml = item.notes ? `
-            <div class=\"cart-item-notes\">
-                <i class=\"fas fa-sticky-note\"></i>
-                <span class=\"notes-text\">\${escapeHtml(item.notes)}</span>
-            </div>
-        ` : '';
-        
-        itemsHtml += `
-            <li class=\"cart-item\" data-id=\"\${item.id}\" data-type=\"\${item.type}\" data-price=\"\${item.unit_price}\" data-notes=\"\${escapeHtml(item.notes || '')}\">
-                <div class=\"cart-item-info\">
-                    <div class=\"cart-item-title\">\${escapeHtml(item.name)}</div>
-                    \${promoMessage}
-                    \${notesHtml}
-                    <div class=\"cart-item-actions\">
-                        <button class=\"edit-item\"><i class=\"fas fa-edit\"></i> Modifier</button>
-                        <button class=\"remove-item\" data-id=\"\${item.id}\" data-type=\"\${item.type}\" data-name=\"\${escapeHtml(item.name)}\"><i class=\"fas fa-trash-alt\"></i> Supprimer</button>
-                    </div>
-                </div>
-                <div class=\"cart-item-quantity\">
-                    <span class=\"badge bg-secondary quantity-badge\">\${item.quantity}</span>
-                </div>
-                <div class=\"cart-item-price\">
-                    \${hasPromo ? `
-                        <div class=\"total text-primary fw-bold\">
-                            \${item.total_price.toLocaleString('fr-FR')} FCFA
-                            <span class=\"badge bg-primary bg-opacity-10 text-primary ms-2\">-\${item.promotion.discount_percentage}%</span>
-                        </div>
-                        <div class=\"mt-1\">
-                            <small class=\"text-muted text-decoration-line-through\">\${(item.original_unit_price * item.quantity).toLocaleString('fr-FR')} FCFA</small>
-                            <small class=\"text-primary ms-2\"><i class=\"fas fa-chart-line\"></i> Économie: \${item.promotion.discount_amount.toLocaleString('fr-FR')} FCFA</small>
-                        </div>
-                    ` : `
-                        <div class=\"total\">\${item.total_price.toLocaleString('fr-FR')} FCFA</div>
-                        <small class=\"text-muted\">\${item.unit_price.toLocaleString('fr-FR')} FCFA</small>
-                    `}
-                </div>
-            </li>
-        `;
-    });
-    itemsHtml += '</ul>';
-    if (DOM.cartContainer) DOM.cartContainer.innerHTML = itemsHtml;
-    if (DOM.cartTotalSpan) DOM.cartTotalSpan.innerHTML = `\${cartData.total.toLocaleString('fr-FR')} FCFA`;
-    if (DOM.cartCountSpan) DOM.cartCountSpan.innerHTML = cartData.items.length;
-    if (DOM.checkoutBtn) DOM.checkoutBtn.disabled = false;
-    if (DOM.clearCartBtn) DOM.clearCartBtn.disabled = false;
-    
-    attachCartEvents();
-}
-
-function updateChangeAmount() {
-    if (!DOM.amountPaidInput) return;
-    const amountPaid = parseFloat(DOM.amountPaidInput.value) || 0;
-    const totalToPay = state.currentCartTotal;
-    const change = amountPaid - totalToPay;
-    if (!DOM.changeAmountSpan) return;
-    
-    if (amountPaid >= totalToPay && totalToPay > 0) {
-        DOM.changeAmountSpan.innerHTML = change.toLocaleString('fr-FR') + ' FCFA';
-        DOM.changeAmountSpan.className = 'card-title text-success';
-        DOM.amountPaidInput.classList.remove('is-invalid');
-        DOM.amountPaidInput.classList.add('is-valid');
-    } else if (amountPaid > 0 && amountPaid < totalToPay) {
-        const missing = totalToPay - amountPaid;
-        DOM.changeAmountSpan.innerHTML = missing.toLocaleString('fr-FR') + ' FCFA';
-        DOM.changeAmountSpan.className = 'card-title text-danger';
-        DOM.amountPaidInput.classList.add('is-invalid');
-        DOM.amountPaidInput.classList.remove('is-valid');
-    } else {
-        DOM.changeAmountSpan.innerHTML = totalToPay.toLocaleString('fr-FR') + ' FCFA';
-        DOM.changeAmountSpan.className = 'card-title text-warning';
-        DOM.amountPaidInput.classList.remove('is-invalid');
-        DOM.amountPaidInput.classList.remove('is-valid');
-    }
-}
-
-if (DOM.amountPaidInput) {
-    DOM.amountPaidInput.addEventListener('input', updateChangeAmount);
-    setTimeout(updateChangeAmount, 100);
-}
-
-// ==================== RECHERCHE PRODUITS ====================
-function performSearch(query) {
-    let url = `\${URLs.search}?q=\${encodeURIComponent(query)}`;
-    if (state.currentCategory) url += `&category=\${encodeURIComponent(state.currentCategory)}`;
-    
-    if (DOM.resultsContainer) {
-        DOM.resultsContainer.innerHTML = '<div class=\"text-center py-5\"><div class=\"spinner-border text-primary\"></div><p class=\"mt-2\">Recherche...</p></div>';
-    }
-    
-    fetch(url)
-        .then(response => response.json())
-        .then(recipes => {
-            if (!recipes.length) {
-                DOM.resultsContainer.innerHTML = '<div class=\"text-center text-muted py-5\"><i class=\"fas fa-search fs-1\"></i><p class=\"mt-2\">Aucun plat trouvé</p></div>';
-                document.getElementById('resultCount').textContent = '0';
-                return;
-            }
-            displayRecipes(recipes);
-            document.getElementById('resultCount').textContent = recipes.length;
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            DOM.resultsContainer.innerHTML = '<div class=\"text-center py-5 text-danger\">Erreur de connexion</div>';
+document.addEventListener('DOMContentLoaded', function() {
+    // Nouveau plat
+    const newBtn = document.getElementById('newRecipeBtn');
+    if (newBtn) {
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            {% if quotaReached %}
+                new bootstrap.Modal(document.getElementById('quotaReachedModal')).show();
+            {% else %}
+                window.location.href = \"{{ path('app_admin_recipe_new') }}\";
+            {% endif %}
         });
-}
+    }
 
-let hiddenRecipeIds = new Set();
+    // PAS d'auto-submit ! Seul le bouton \"Filtrer\" soumet le formulaire
+    // Les selects ne déclenchent pas automatiquement la soumission
 
-function displayRecipes(recipes) {
-    let html = '<ul class=\"product-list\">';
-    recipes.forEach(recipe => {
-        const hasPromo = recipe.has_promotion;
-        const displayPrice = hasPromo ? recipe.final_price : recipe.selling_price;
-        const oldPriceHtml = hasPromo ? `<span class=\"old-price\">\${recipe.selling_price.toLocaleString('fr-FR')} FCFA</span>` : '';
-        const promoBadge = hasPromo ? `<span class=\"promo-badge text-primary\"><i class=\"fas fa-tag text-primary\"></i> \${recipe.promotion_message || 'Promo!'}</span>` : '';
-        
-        html += `
-            <li class=\"product-list-item\" data-recipe-id=\"\${recipe.id}\" data-recipe='\${JSON.stringify(recipe).replace(/'/g, \"&#39;\")}'>
-                <div class=\"product-list-img\">
-                    \${recipe.image ? `<img src=\"/uploads/images_plats/\${recipe.image}\" alt=\"\${escapeHtml(recipe.name)}\">` : `<i class=\"fas fa-utensils fallback-icon\"></i>`}
-                </div>
-                <div class=\"product-list-info\">
-                    <div class=\"product-list-title\">\${escapeHtml(recipe.name)}</div>
-                    \${recipe.description ? `<div class=\"product-list-desc\">\${escapeHtml(recipe.description)}</div>` : ''}
-                </div>
-                <div class=\"product-list-price\">
-                    \${displayPrice.toLocaleString('fr-FR')} FCFA
-                    \${oldPriceHtml}
-                    \${promoBadge}
-                </div>
-                <div class=\"product-list-actions ms-2\">
-                    <button type=\"button\" class=\"btn btn-sm btn-link text-danger hide-recipe-btn\" data-recipe-id=\"\${recipe.id}\" title=\"Masquer ce plat\">
-                        <i class=\"fas fa-times-circle fa-lg\"></i>
-                    </button>
-                </div>
-            </li>
-        `;
-    });
-    html += '</ul>';
-    DOM.resultsContainer.innerHTML = html;
-    
-    document.querySelectorAll('.product-list-item').forEach(item => {
-        const recipeBtn = item.querySelector('.hide-recipe-btn');
-        if (recipeBtn) {
-            recipeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const recipeId = parseInt(recipeBtn.dataset.recipeId);
-                hideRecipeItem(recipeId, item);
-            });
-        }
-        
-        item.addEventListener('click', (e) => {
-            if (!e.target.closest('.hide-recipe-btn')) {
-                const recipeData = JSON.parse(item.dataset.recipe);
-                openAddModal(recipeData);
-            }
+    // Toggle status modal
+    const toggleModal = new bootstrap.Modal(document.getElementById('toggleRecipeModal'));
+    const toggleForm = document.getElementById('toggleRecipeForm');
+    const toggleToken = document.getElementById('toggleRecipeToken');
+    const toggleMessage = document.getElementById('toggleRecipeMessage');
+
+    document.querySelectorAll('.toggle-recipe-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.recipeId;
+            const name = this.dataset.recipeName;
+            const current = this.dataset.currentStatus;
+            const action = current === 'active' ? 'désactiver' : 'activer';
+            toggleMessage.innerText = `Êtes-vous sûr de vouloir \${action} le plat \"\${name}\" ?`;
+            toggleForm.action = `/admin/recipe/\${id}/toggle-status`;
+            toggleToken.value = this.dataset.token;
+            toggleModal.show();
         });
     });
-}
 
-function hideRecipeItem(recipeId, itemElement) {
-    itemElement.style.transition = 'all 0.3s ease';
-    itemElement.style.opacity = '0';
-    itemElement.style.transform = 'translateX(20px)';
-    
-    setTimeout(() => {
-        itemElement.remove();
-        
-        const remainingItems = document.querySelectorAll('.product-list-item').length;
-        const resultCount = document.getElementById('resultCount');
-        if (resultCount) {
-            resultCount.textContent = remainingItems;
-        }
-        
-        if (remainingItems === 0) {
-            DOM.resultsContainer.innerHTML = '<div class=\"text-center text-muted py-5\"><i class=\"fas fa-search fs-1\"></i><p class=\"mt-2\">Aucun plat trouvé</p></div>';
-        }
-        
-        showToast('info', 'Plat masqué de la liste');
-    }, 200);
-}
+    // Delete modal
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteRecipeModal'));
+    const deleteForm = document.getElementById('deleteRecipeForm');
+    const deleteToken = document.getElementById('deleteRecipeToken');
+    const deleteMessage = document.getElementById('deleteRecipeMessage');
 
-function openAddModal(recipe) {
-    state.currentProduct = recipe;
-    document.getElementById('modalProductName').textContent = recipe.name;
-    const displayPrice = recipe.has_promotion ? recipe.final_price : recipe.selling_price;
-    document.getElementById('modalProductPrice').innerHTML = `\${displayPrice.toLocaleString('fr-FR')} FCFA`;
-    
-    const productImageDiv = document.getElementById('modalProductImage');
-    if (recipe.image) {
-        productImageDiv.innerHTML = `<img src=\"/uploads/images_plats/\${recipe.image}\" alt=\"\${escapeHtml(recipe.name)}\" style=\"width: 80px; height: 80px; object-fit: cover; border-radius: 8px;\">`;
-    } else {
-        productImageDiv.innerHTML = `<i class=\"fas fa-utensils fa-3x text-muted\"></i>`;
-    }
-    document.getElementById('productQuantity').value = 1;
-    document.getElementById('productNotes').value = '';
-    
-    new bootstrap.Modal(document.getElementById('addProductModal')).show();
-}
-
-function openEditModal(itemId, itemType, itemName, itemPrice, itemQuantity, itemNotes) {
-    state.currentEditItemId = itemId;
-    state.currentEditItemType = itemType;
-    
-    document.getElementById('editItemId').value = itemId;
-    document.getElementById('editItemType').value = itemType;
-    document.getElementById('editItemName').textContent = itemName;
-    document.getElementById('editItemPrice').innerHTML = `\${itemPrice.toLocaleString('fr-FR')} FCFA`;
-    document.getElementById('editQuantity').value = itemQuantity;
-    document.getElementById('editNotes').value = itemNotes || '';
-    
-    new bootstrap.Modal(document.getElementById('editItemModal')).show();
-}
-
-// ==================== AJOUT AU PANIER ====================
-document.getElementById('confirmAddBtn')?.addEventListener('click', async () => {
-    if (!state.currentProduct) return;
-    setButtonLoading(document.getElementById('confirmAddBtn'), true);
-    
-    const quantity = parseInt(document.getElementById('productQuantity').value) || 1;
-    const notes = document.getElementById('productNotes').value;
-    
-    const formData = new FormData();
-    formData.append('quantity', quantity);
-    if (notes) {
-        formData.append('notes', notes);
-    }
-    const url = URLs.addToCart.replace('ID_PLACEHOLDER', state.currentProduct.id);
-    
-    try {
-        const response = await fetch(url, { method: 'POST', body: formData });
-        const data = await response.json();
-        if (data.success) {
-            bootstrap.Modal.getInstance(document.getElementById('addProductModal'))?.hide();
-            await refreshCart();
-            AudioManager.playAddToCart();
-            if (DOM.searchInput) DOM.searchInput.value = '';
-            if (DOM.categorySelect && typeof \$ !== 'undefined') \$(DOM.categorySelect).val(null).trigger('change');
-            state.currentCategory = '';
-            DOM.resultsContainer.innerHTML = '<div class=\"text-center text-muted py-5\"><i class=\"fas fa-search fs-1\"></i><p class=\"mt-2\">Recherchez un plat pour commencer</p></div>';
-            document.getElementById('resultCount').textContent = '0';
-            showToast('success', `\${state.currentProduct.name} (x\${quantity}) ajouté`);
-            if (notes) {
-                showToast('info', 'Instructions spéciales enregistrées');
-            }
-        } else {
-            showToast('error', data.error);
-        }
-    } catch (error) {
-        showToast('error', 'Erreur lors de l\\'ajout');
-    } finally {
-        setButtonLoading(document.getElementById('confirmAddBtn'), false);
-    }
+    document.querySelectorAll('.delete-recipe-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.recipeId;
+            const name = this.dataset.recipeName;
+            const token = this.dataset.token;
+            deleteMessage.innerHTML = `
+                <div class=\"alert alert-warning mb-2 p-2\">
+                    <i class=\"fas fa-exclamation-triangle me-2\"></i>Cette action est irréversible.
+                </div>
+                <p class=\"mb-0\">Supprimer le plat <strong>\"\${name}\"</strong> ?</p>
+            `;
+            deleteForm.action = `/admin/recipe/\${id}`;
+            deleteToken.value = token;
+            deleteModal.show();
+        });
+    });
 });
-
-// ==================== ÉVÉNEMENTS PANIER ====================
-function attachCartEvents() {
-    document.querySelectorAll('.edit-item').forEach(btn => {
-        btn.removeEventListener('click', handleEditClick);
-        btn.addEventListener('click', handleEditClick);
-    });
-    document.querySelectorAll('.quantity-badge').forEach(badge => {
-        badge.removeEventListener('click', handleBadgeClick);
-        badge.addEventListener('click', handleBadgeClick);
-    });
-    document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.removeEventListener('click', function(e) {
-            e.stopPropagation();
-            state.pendingRemoveId = parseInt(this.dataset.id);
-            state.pendingRemoveType = this.dataset.type;
-            document.getElementById('confirmRemoveMessage').innerHTML = `Êtes-vous sûr de vouloir supprimer \"<strong>\${this.dataset.name}</strong>\" du panier ?`;
-            new bootstrap.Modal(document.getElementById('confirmRemoveModal')).show();
-        });
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            state.pendingRemoveId = parseInt(this.dataset.id);
-            state.pendingRemoveType = this.dataset.type;
-            document.getElementById('confirmRemoveMessage').innerHTML = `Êtes-vous sûr de vouloir supprimer \"<strong>\${this.dataset.name}</strong>\" du panier ?`;
-            new bootstrap.Modal(document.getElementById('confirmRemoveModal')).show();
-        });
-    });
-}
-
-function handleEditClick(e) {
-    const item = e.currentTarget.closest('.cart-item');
-    const itemId = parseInt(item.dataset.id);
-    const itemType = item.dataset.type;
-    const itemName = item.querySelector('.cart-item-title').textContent;
-    const itemPrice = parseFloat(item.dataset.price);
-    const itemQuantity = parseInt(item.querySelector('.quantity-badge').textContent);
-    const notesElement = item.querySelector('.cart-item-notes .notes-text');
-    const itemNotes = notesElement ? notesElement.textContent : '';
-    
-    openEditModal(itemId, itemType, itemName, itemPrice, itemQuantity, itemNotes);
-}
-
-function handleBadgeClick(e) {
-    const item = e.currentTarget.closest('.cart-item');
-    const itemId = parseInt(item.dataset.id);
-    const itemType = item.dataset.type;
-    const itemName = item.querySelector('.cart-item-title').textContent;
-    const itemPrice = parseFloat(item.dataset.price);
-    const itemQuantity = parseInt(e.currentTarget.textContent);
-    const notesElement = item.querySelector('.cart-item-notes .notes-text');
-    const itemNotes = notesElement ? notesElement.textContent : '';
-    
-    openEditModal(itemId, itemType, itemName, itemPrice, itemQuantity, itemNotes);
-}
-
-// ==================== MODIFICATION ====================
-document.getElementById('confirmEditBtn')?.addEventListener('click', async () => {
-    let newQuantity = parseInt(document.getElementById('editQuantity').value);
-    const id = parseInt(document.getElementById('editItemId').value);
-    const type = document.getElementById('editItemType').value;
-    const notes = document.getElementById('editNotes').value;
-    
-    if (isNaN(newQuantity) || newQuantity < 1) {
-        showToast('error', 'Quantité invalide');
-        return;
-    }
-    
-    setButtonLoading(document.getElementById('confirmEditBtn'), true);
-    
-    const urlQuantity = URLs.updateQuantity.replace('ID_PLACEHOLDER', id);
-    const formData = new URLSearchParams();
-    formData.append('quantity', newQuantity);
-    
-    try {
-        const response = await fetch(urlQuantity, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
-            body: formData.toString()
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-            const urlNotes = URLs.updateNotes.replace('TYPE_PLACEHOLDER', type).replace('ID_PLACEHOLDER', id);
-            const notesResponse = await fetch(urlNotes, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ notes: notes })
-            });
-            const notesData = await notesResponse.json();
-            
-            if (notesData.success) {
-                bootstrap.Modal.getInstance(document.getElementById('editItemModal'))?.hide();
-                await refreshCart();
-                showToast('success', 'Article modifié');
-            } else {
-                showToast('error', notesData.error || 'Erreur lors de la modification des notes');
-            }
-        } else {
-            showToast('error', data.error);
-        }
-    } catch (error) {
-        console.error('Erreur modification:', error);
-        showToast('error', 'Erreur lors de la modification');
-    } finally {
-        setButtonLoading(document.getElementById('confirmEditBtn'), false);
-    }
-});
-
-// ==================== SUPPRESSION ====================
-document.getElementById('confirmRemoveBtn')?.addEventListener('click', async () => {
-    if (state.pendingRemoveId !== null) {
-        setButtonLoading(document.getElementById('confirmRemoveBtn'), true);
-        const url = URLs.removeItem.replace('ID_PLACEHOLDER', state.pendingRemoveId);
-        try {
-            const response = await fetch(url, { method: 'DELETE' });
-            const data = await response.json();
-            if (data.success) {
-                bootstrap.Modal.getInstance(document.getElementById('confirmRemoveModal'))?.hide();
-                await refreshCart();
-                showToast('success', 'Article supprimé');
-                state.pendingRemoveId = null;
-            } else {
-                showToast('error', data.error);
-            }
-        } catch (error) {
-            showToast('error', 'Erreur lors de la suppression');
-        } finally {
-            setButtonLoading(document.getElementById('confirmRemoveBtn'), false);
-        }
-    }
-});
-
-// ==================== VIDER PANIER ====================
-if (DOM.clearCartBtn) {
-    DOM.clearCartBtn.addEventListener('click', () => {
-        new bootstrap.Modal(document.getElementById('confirmClearCartModal')).show();
-    });
-}
-if (DOM.confirmClearCartBtn) {
-    DOM.confirmClearCartBtn.addEventListener('click', async () => {
-        setButtonLoading(DOM.confirmClearCartBtn, true);
-        await fetch(URLs.clearCart, { method: 'POST' });
-        await refreshCart();
-        bootstrap.Modal.getInstance(document.getElementById('confirmClearCartModal'))?.hide();
-        showToast('success', 'Panier vidé');
-        setButtonLoading(DOM.confirmClearCartBtn, false);
-    });
-}
-
-// ==================== RECHERCHE CLIENT ====================
-if (DOM.customerPhone && DOM.checkCustomerBtn) {
-    async function searchCustomer() {
-        const phone = DOM.customerPhone.value.trim();
-        if (!phone || phone.length < 6) {
-            DOM.nameHint.innerHTML = '<i class=\"fas fa-exclamation-triangle text-warning\"></i> Numéro invalide (6 chiffres minimum)';
-            DOM.customerName.value = '';
-            return;
-        }
-        setSimpleButtonLoading(DOM.checkCustomerBtn, true);
-        DOM.nameHint.innerHTML = '<i class=\"fas fa-spinner fa-spin text-info\"></i> Recherche...';
-        try {
-            const response = await fetch(`\${URLs.searchCustomer}?phone=\${encodeURIComponent(phone)}`);
-            const data = await response.json();
-            if (data.found && data.customer_name) {
-                DOM.customerName.value = data.customer_name;
-                DOM.nameHint.innerHTML = '<i class=\"fas fa-check-circle text-success\"></i> Client trouvé !';
-            } else {
-                DOM.customerName.value = '';
-                DOM.nameHint.innerHTML = '<i class=\"fas fa-user-plus text-info\"></i> Nouveau client';
-                DOM.customerName.focus();
-            }
-        } catch (error) {
-            DOM.nameHint.innerHTML = '<i class=\"fas fa-exclamation-triangle text-danger\"></i> Erreur de connexion';
-        } finally {
-            setSimpleButtonLoading(DOM.checkCustomerBtn, false);
-        }
-    }
-    DOM.checkCustomerBtn.addEventListener('click', searchCustomer);
-    DOM.customerPhone.addEventListener('keypress', (e) => { if (e.key === 'Enter') searchCustomer(); });
-}
-
-// ==================== SÉLECTION CATÉGORIES ====================
-if (DOM.categorySelect && typeof \$ !== 'undefined') {
-    \$(DOM.categorySelect).select2({
-        theme: 'bootstrap-5',
-        language: 'fr',
-        placeholder: '-- Toutes les catégories --',
-        allowClear: true,
-        width: '100%'
-    }).on('change', function() {
-        state.currentCategory = \$(this).val() || '';
-        const query = DOM.searchInput ? DOM.searchInput.value.trim() : '';
-        if (query.length >= 2 || state.currentCategory) performSearch(query);
-        else if (!query && state.currentCategory) performSearch('');
-    });
-}
-
-if (DOM.searchBtn) {
-    DOM.searchBtn.addEventListener('click', () => performSearch(DOM.searchInput.value.trim()));
-}
-if (DOM.searchInput) {
-    DOM.searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') performSearch(DOM.searchInput.value.trim());
-    });
-}
-
-// ==================== OUVERTURE MODALE ENCAISSEMENT ====================
-function openCheckoutModal() {
-    if (DOM.customerPhone) DOM.customerPhone.value = '';
-    if (DOM.customerName) DOM.customerName.value = '';
-    if (DOM.amountPaidInput) DOM.amountPaidInput.value = '0';
-    if (DOM.totalToPaySpan) DOM.totalToPaySpan.innerHTML = state.currentCartTotal.toLocaleString('fr-FR');
-    setTimeout(() => {
-        if (DOM.amountPaidInput) {
-            DOM.amountPaidInput.dispatchEvent(new Event('input', { bubbles: true }));
-            updateChangeAmount();
-        }
-    }, 50);
-    new bootstrap.Modal(document.getElementById('checkoutModal')).show();
-}
-
-if (DOM.checkoutBtn) {
-    DOM.checkoutBtn.addEventListener('click', () => {
-        const dailyStats = {{ dailyStats|json_encode|raw }};
-        if (!dailyStats.can_sell && dailyStats.limit !== '∞') {
-            new bootstrap.Modal(document.getElementById('quotaReachedModal')).show();
-        } else {
-            openCheckoutModal();
-        }
-    });
-}
-
-// ==================== IMPRESSION ====================
-function downloadPdfReceipt(orderId) {
-    window.open(`/orders/\${orderId}/download-pdf`, '_blank');
-    showToast('info', 'Téléchargement du PDF lancé');
-}
-
-function printReceiptWithCheck(orderId) {
-    const printWindow = window.open(`/orders/\${orderId}/print`, '_blank', 'width=450,height=650');
-    if (printWindow) {
-        printWindow.onload = function() {
-            setTimeout(() => {
-                try {
-                    printWindow.print();
-                    printWindow.onafterprint = function() {
-                        printWindow.close();
-                    };
-                } catch(e) {
-                    printWindow.close();
-                    showPdfDownloadModal(orderId);
-                }
-            }, 500);
-        };
-    } else {
-        showPdfDownloadModal(orderId);
-    }
-}
-
-function showPdfDownloadModal(orderId) {
-    const existingModal = document.getElementById('pdfDownloadModal');
-    if (existingModal) existingModal.remove();
-    
-    const modalHtml = `
-        <div class=\"modal fade\" id=\"pdfDownloadModal\" tabindex=\"-1\" data-bs-backdrop=\"static\">
-            <div class=\"modal-dialog modal-dialog-centered\">
-                <div class=\"modal-content\">
-                    <div class=\"modal-header bg-warning text-dark\">
-                        <h5 class=\"modal-title\"><i class=\"fas fa-exclamation-triangle me-2\"></i> Impression impossible</h5>
-                        <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
-                    </div>
-                    <div class=\"modal-body text-center py-4\">
-                        <i class=\"fas fa-ban fa-3x text-warning mb-3\"></i>
-                        <p>La fenêtre d'impression a été bloquée par votre navigateur.</p>
-                        <p class=\"text-muted\">Vous pouvez télécharger le reçu en PDF :</p>
-                    </div>
-                    <div class=\"modal-footer justify-content-center\">
-                        <button type=\"button\" class=\"btn btn-primary\" onclick=\"downloadPdfReceipt('\${orderId}'); bootstrap.Modal.getInstance(document.getElementById('pdfDownloadModal')).hide();\">
-                            <i class=\"fas fa-file-pdf me-2\"></i> Télécharger PDF
-                        </button>
-                        <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Fermer</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    new bootstrap.Modal(document.getElementById('pdfDownloadModal')).show();
-}
-
-function handleReceiptPrinting(orderId) {
-    const autoPrint = document.getElementById('autoPrintReceipt')?.checked;
-    if (autoPrint) {
-        printReceiptWithCheck(orderId);
-    }
-}
-
-// ==================== VALIDATION VENTE ====================
-if (DOM.confirmCheckoutBtn) {
-    DOM.confirmCheckoutBtn.addEventListener('click', async () => {
-        if (state.isProcessing) return;
-        
-        const phone = DOM.customerPhone?.value.trim();
-        if (!phone || phone.length < 6) {
-            showToast('error', 'Le numéro de téléphone est obligatoire');
-            DOM.customerPhone?.classList.add('is-invalid');
-            return;
-        }
-        DOM.customerPhone?.classList.remove('is-invalid');
-        
-        const amountPaid = parseFloat(DOM.amountPaidInput?.value) || 0;
-        if (amountPaid < state.currentCartTotal) {
-            showToast('error', `Montant insuffisant. Total: \${state.currentCartTotal.toLocaleString('fr-FR')} FCFA`);
-            DOM.amountPaidInput?.classList.add('is-invalid');
-            return;
-        }
-        DOM.amountPaidInput?.classList.remove('is-invalid');
-        
-        state.isProcessing = true;
-        setButtonLoading(DOM.confirmCheckoutBtn, true);
-        
-        const formData = new FormData(document.getElementById('checkoutForm'));
-        
-        try {
-            const response = await fetch(URLs.checkout, { method: 'POST', body: formData });
-            const data = await response.json();
-            
-            if (data.success) {
-                bootstrap.Modal.getInstance(document.getElementById('checkoutModal'))?.hide();
-                AudioManager.playSaleSuccess();
-                showToast('success', data.message);
-                await refreshCart();
-                
-                if (data.order_id) {
-                    handleReceiptPrinting(data.order_id);
-                }
-                
-                if (data.redirect_url) {
-                    setTimeout(() => window.open(data.redirect_url, '_blank'), 1500);
-                }
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                showToast('error', data.error);
-            }
-        } catch (error) {
-            showToast('error', 'Erreur lors de l\\'enregistrement');
-        } finally {
-            state.isProcessing = false;
-            setButtonLoading(DOM.confirmCheckoutBtn, false);
-        }
-    });
-}
-
-// ==================== INITIALISATION ====================
-function setupQuantityControls() {
-    const inc = document.getElementById('incrementQty');
-    const dec = document.getElementById('decrementQty');
-    const qty = document.getElementById('productQuantity');
-    if (inc && qty) inc.addEventListener('click', () => qty.value = parseInt(qty.value) + 1);
-    if (dec && qty) dec.addEventListener('click', () => { if (parseInt(qty.value) > 1) qty.value = parseInt(qty.value) - 1; });
-    
-    const editInc = document.getElementById('editIncrementQty');
-    const editDec = document.getElementById('editDecrementQty');
-    const editQty = document.getElementById('editQuantity');
-    if (editInc && editQty) editInc.addEventListener('click', () => editQty.value = parseInt(editQty.value) + 1);
-    if (editDec && editQty) editDec.addEventListener('click', () => { if (parseInt(editQty.value) > 1) editQty.value = parseInt(editQty.value) - 1; });
-}
-
-setupQuantityControls();
-refreshCart();
 </script>
 {% endblock %}", "sale/restaurant/index.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\sale\\restaurant\\index.html.twig");
     }

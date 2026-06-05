@@ -1,9 +1,7 @@
 <?php
-// src/Form/AnalysisRequestType.php
 
 namespace App\Form;
 
-use App\Entity\AnalysisPrice;
 use App\Entity\AnalysisRequest;
 use App\Repository\AnalysisPriceRepository;
 use Symfony\Component\Form\AbstractType;
@@ -26,10 +24,16 @@ class AnalysisRequestType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // Récupérer les prix actifs
-        $prices = $this->priceRepository->findBy(['is_active' => true], ['display_order' => 'ASC']);
+        // Récupérer uniquement les types actifs (sans subscription)
+        $prices = $this->priceRepository->createQueryBuilder('p')
+            ->where('p.is_active = :active')
+            ->andWhere('p.type != :subscription')
+            ->setParameter('active', true)
+            ->setParameter('subscription', 'subscription')
+            ->orderBy('p.display_order', 'ASC')
+            ->getQuery()
+            ->getResult();
         
-        // Construire les choix dynamiquement
         $choices = [];
         foreach ($prices as $price) {
             $label = sprintf(
@@ -37,9 +41,6 @@ class AnalysisRequestType extends AbstractType
                 $price->getLabel(),
                 $price->getPriceFormatted()
             );
-            if ($price->getType() === 'subscription') {
-                $label .= ' / mois';
-            }
             $choices[$label] = $price->getType();
         }
         
@@ -103,9 +104,6 @@ class AnalysisRequestType extends AbstractType
         ]);
     }
     
-    /**
-     * ✅ Validation personnalisée de la période
-     */
     public function validatePeriod($object, ExecutionContextInterface $context): void
     {
         $periodStart = $object->getPeriodStart();
@@ -118,7 +116,6 @@ class AnalysisRequestType extends AbstractType
         $diff = $periodStart->diff($periodEnd);
         $days = $diff->days;
         
-        // Vérifier que la période ne dépasse pas 365 jours
         if ($days > AnalysisRequest::MAX_PERIOD_DAYS) {
             $context->buildViolation(sprintf(
                 'La période ne peut pas dépasser %d jours (environ %d an%s). Période sélectionnée : %d jours.',

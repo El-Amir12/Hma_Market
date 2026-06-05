@@ -620,7 +620,7 @@ class __TwigTemplate_1cadd6d2f49c89a86b34c50f2da1aef9 extends Template
                         <i class=\"fas fa-users\"></i>
                     </div>
                     <div class=\"benefit-content\">
-                        <h5 class=\"fw-semibold\">Jusqu'à 3 utilisateurs</h5>
+                        <h5 class=\"fw-semibold\">Utilisateurs illimités</h5>
                         <p class=\"text-muted small mb-0\">
                             Invitez vos collaborateurs gratuitement
                         </p>
@@ -1350,7 +1350,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <i class=\"fas fa-users\"></i>
                     </div>
                     <div class=\"benefit-content\">
-                        <h5 class=\"fw-semibold\">Jusqu'à 3 utilisateurs</h5>
+                        <h5 class=\"fw-semibold\">Utilisateurs illimités</h5>
                         <p class=\"text-muted small mb-0\">
                             Invitez vos collaborateurs gratuitement
                         </p>

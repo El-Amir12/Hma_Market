@@ -76,7 +76,7 @@ class __TwigTemplate_8426ec30ebe48516f2f780d71329de63 extends Template
 
         // line 5
         yield "<div class=\"header\">
-    <h1>🍽️ ";
+    <h1> ";
         // line 6
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 6, $this->source); })()), "companyName", [], "any", false, false, false, 6), "html", null, true);
         yield "</h1>
@@ -84,7 +84,7 @@ class __TwigTemplate_8426ec30ebe48516f2f780d71329de63 extends Template
         // line 7
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "address", [], "any", true, true, false, 7)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 7, $this->source); })()), "address", [], "any", false, false, false, 7), "")) : ("")), "html", null, true);
         yield "</p>
-    <p>📞 ";
+    <p> ";
         // line 8
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "phone", [], "any", true, true, false, 8)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 8, $this->source); })()), "phone", [], "any", false, false, false, 8), "")) : ("")), "html", null, true);
         yield "</p>
@@ -151,7 +151,7 @@ class __TwigTemplate_8426ec30ebe48516f2f780d71329de63 extends Template
             // line 32
             yield "    <div class=\"kitchen-item\">
         <div class=\"info-row\">
-            <span class=\"kitchen-item-name\">🍳 ";
+            <span class=\"kitchen-item-name\"> ";
             // line 34
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "productName", [], "any", false, false, false, 34), "html", null, true);
             yield "</span>
@@ -164,7 +164,7 @@ class __TwigTemplate_8426ec30ebe48516f2f780d71329de63 extends Template
             // line 37
             if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["item"], "notes", [], "any", false, false, false, 37)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                 // line 38
-                yield "        <div class=\"notes\">📝 ";
+                yield "        <div class=\"notes\"> ";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "notes", [], "any", false, false, false, 38), "html", null, true);
                 yield "</div>
         ";
@@ -185,7 +185,7 @@ class __TwigTemplate_8426ec30ebe48516f2f780d71329de63 extends Template
             // line 45
             yield "<div class=\"divider\"></div>
 <div class=\"info-row\">
-    <span>🥤 Boissons à part</span>
+    <span> Boissons à part</span>
 </div>
 ";
         }
@@ -213,7 +213,7 @@ class __TwigTemplate_8426ec30ebe48516f2f780d71329de63 extends Template
 
         // line 53
         yield "<div class=\"footer\">
-    <p>👨‍🍳 Bon appétit !</p>
+    <p> Bon appétit !</p>
     <p>";
         // line 55
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["print_date"]) || array_key_exists("print_date", $context) ? $context["print_date"] : (function () { throw new RuntimeError('Variable "print_date" does not exist.', 55, $this->source); })()), "d/m/Y H:i:s"), "html", null, true);
@@ -260,9 +260,9 @@ class __TwigTemplate_8426ec30ebe48516f2f780d71329de63 extends Template
 
 {% block header %}
 <div class=\"header\">
-    <h1>🍽️ {{ company.companyName }}</h1>
+    <h1> {{ company.companyName }}</h1>
     <p>{{ company.address|default('') }}</p>
-    <p>📞 {{ company.phone|default('') }}</p>
+    <p> {{ company.phone|default('') }}</p>
     <div class=\"divider\"></div>
     <div class=\"info-row\">
         <span class=\"info-label\">Commande:</span>
@@ -288,11 +288,11 @@ class __TwigTemplate_8426ec30ebe48516f2f780d71329de63 extends Template
     {% for item in items %}
     <div class=\"kitchen-item\">
         <div class=\"info-row\">
-            <span class=\"kitchen-item-name\">🍳 {{ item.productName }}</span>
+            <span class=\"kitchen-item-name\"> {{ item.productName }}</span>
             <span class=\"kitchen-item-quantity\">×{{ item.quantity }}</span>
         </div>
         {% if item.notes %}
-        <div class=\"notes\">📝 {{ item.notes }}</div>
+        <div class=\"notes\"> {{ item.notes }}</div>
         {% endif %}
     </div>
     {% endfor %}
@@ -301,14 +301,14 @@ class __TwigTemplate_8426ec30ebe48516f2f780d71329de63 extends Template
 {% if options.include_drinks is defined and not options.include_drinks %}
 <div class=\"divider\"></div>
 <div class=\"info-row\">
-    <span>🥤 Boissons à part</span>
+    <span> Boissons à part</span>
 </div>
 {% endif %}
 {% endblock %}
 
 {% block footer %}
 <div class=\"footer\">
-    <p>👨‍🍳 Bon appétit !</p>
+    <p> Bon appétit !</p>
     <p>{{ print_date|date('d/m/Y H:i:s') }}</p>
 </div>
 {% endblock %}", "print/kitchen_ticket.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\print\\kitchen_ticket.html.twig");

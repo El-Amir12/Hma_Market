@@ -356,19 +356,19 @@ class __TwigTemplate_c48879fbbb1f36e583d68d131262c335 extends Template
                             ";
             // line 203
             if ((CoreExtension::getAttribute($this->env, $this->source, $context["return"], "status", [], "any", false, false, false, 203) == "pending")) {
-                yield "[En attente]
+                yield "En attente
                             ";
             } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 204
 $context["return"], "status", [], "any", false, false, false, 204) == "approved")) {
-                yield "[Approuve]
+                yield "Approuvé
                             ";
             } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 205
 $context["return"], "status", [], "any", false, false, false, 205) == "completed")) {
-                yield "[Rembourse]
+                yield "Remboursé
                             ";
             } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 206
 $context["return"], "status", [], "any", false, false, false, 206) == "rejected")) {
-                yield "[Rejete]
+                yield "Rejeté
                             ";
             }
             // line 208
@@ -650,10 +650,10 @@ $context["return"], "status", [], "any", false, false, false, 206) == "rejected"
                     <td>{{ return.returnedBy.fullName }}</td>
                     <td>
                         <span class=\"status-{{ return.status }}\">
-                            {% if return.status == 'pending' %}[En attente]
-                            {% elseif return.status == 'approved' %}[Approuve]
-                            {% elseif return.status == 'completed' %}[Rembourse]
-                            {% elseif return.status == 'rejected' %}[Rejete]
+                            {% if return.status == 'pending' %}En attente
+                            {% elseif return.status == 'approved' %}Approuvé
+                            {% elseif return.status == 'completed' %}Remboursé
+                            {% elseif return.status == 'rejected' %}Rejeté
                             {% endif %}
                         </span>
                     </td>

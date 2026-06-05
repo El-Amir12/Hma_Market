@@ -129,16 +129,258 @@ class CompanyAnalysisExportService
             throw $e;
         }
     }
-    
+
     /**
      * ÉTAPE 2: Super Admin upload son rapport final
      */
     public function uploadFinalReport(AnalysisRequest $analysis, string $uploadedFilePath, string $originalFilename, User $uploadedBy): string
     {
+        // 🔍 LOG 1: Début de la méthode
+        $this->logger->info('📤 [UPLOAD] Début uploadFinalReport', [
+            'analysis_id' => $analysis->getId(),
+            'original_filename' => $originalFilename,
+            'uploaded_file_path' => $uploadedFilePath,
+            'file_exists' => file_exists($uploadedFilePath),
+            'file_size' => file_exists($uploadedFilePath) ? filesize($uploadedFilePath) : 0
+        ]);
+        
         $company = $analysis->getCompany();
         $timestamp = (new \DateTime())->format('Ymd_His');
         
-        $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
+        // 🔍 LOG 2: Récupération de l'extension
+        $extension = $this->getFileExtension($originalFilename, $uploadedFilePath);
+        $this->logger->info('🔍 [UPLOAD] Extension détectée', ['extension' => $extension]);
+        
+        // ✅ Si vide, forcer depuis le nom original
+        if (empty($extension)) {
+            $parts = explode('.', $originalFilename);
+            $extension = strtolower(end($parts));
+            $this->logger->warning('⚠️ [UPLOAD] Extension forcée depuis le nom', [
+                'original_filename' => $originalFilename,
+                'forced_extension' => $extension
+            ]);
+        }
+        
+        // ✅ Dernier recours
+        if (empty($extension)) {
+            $extension = 'bin';
+            $this->logger->error('❌ [UPLOAD] Aucune extension trouvée, utilisation de "bin"', [
+                'original_filename' => $originalFilename
+            ]);
+        }
+        
+        $fileType = $this->getFileTypeFromExtension($extension);
+        
+        // 🔍 LOG 3: Création du dossier
+        $companyReportDir = $this->exportDirectory . '/reports/' . $company->getSubscriptionNumber();
+        if (!is_dir($companyReportDir)) {
+            mkdir($companyReportDir, 0777, true);
+            $this->logger->info('📁 [UPLOAD] Dossier créé', ['directory' => $companyReportDir]);
+        }
+        
+        $newFileName = sprintf(
+            'RAPPORT_ANALYSE_%s_%s.%s',
+            $company->getSubscriptionNumber(),
+            $timestamp,
+            $extension
+        );
+        
+        $finalPath = $companyReportDir . '/' . $newFileName;
+        
+        // 🔍 LOG 4: Copie du fichier
+        $this->logger->info('📝 [UPLOAD] Tentative de copie', [
+            'source' => $uploadedFilePath,
+            'destination' => $finalPath
+        ]);
+        
+        if (!copy($uploadedFilePath, $finalPath)) {
+            $error = error_get_last();
+            $this->logger->error('❌ [UPLOAD] Échec de la copie', [
+                'source' => $uploadedFilePath,
+                'destination' => $finalPath,
+                'error' => $error ? $error['message'] : 'Unknown error'
+            ]);
+            throw new \Exception('Impossible de copier le fichier');
+        }
+        
+        // 🔍 LOG 5: Vérification après copie
+        if (!file_exists($finalPath)) {
+            $this->logger->error('❌ [UPLOAD] Fichier inexistant après copie', ['path' => $finalPath]);
+            throw new \Exception('Le fichier n\'existe pas après copie');
+        }
+        
+        $this->logger->info('✅ [UPLOAD] Fichier copié avec succès', [
+            'final_path' => $finalPath,
+            'size' => filesize($finalPath)
+        ]);
+        
+        // Supprimer l'ancien fichier s'il existe
+        if ($analysis->getFinalReportPath() && file_exists($analysis->getFinalReportPath())) {
+            unlink($analysis->getFinalReportPath());
+            $this->logger->info('🗑️ [UPLOAD] Ancien fichier supprimé', ['old_path' => $analysis->getFinalReportPath()]);
+        }
+        
+        // 🔍 LOG 6: Mise à jour de l'entité
+        $analysis->setFinalReportPath($finalPath);
+        $analysis->setFinalReportFilename($newFileName);
+        $analysis->setFinalReportType($fileType);
+        
+        $user = $this->entityManager->getRepository(User::class)->find($uploadedBy->getId());
+        $analysis->setFinalReportUploadedBy($user);
+        $analysis->setFinalReportUploadedAt(new \DateTime());
+        $analysis->setStatus(AnalysisRequest::STATUS_COMPLETED);
+        
+        $this->logger->info('💾 [UPLOAD] Entité mise à jour', [
+            'path' => $analysis->getFinalReportPath(),
+            'filename' => $analysis->getFinalReportFilename(),
+            'type' => $analysis->getFinalReportType(),
+            'status' => $analysis->getStatus()
+        ]);
+        
+        try {
+            $this->entityManager->flush();
+            $this->logger->info('✅ [UPLOAD] Flush réussi');
+        } catch (\Exception $e) {
+            $this->logger->error('❌ [UPLOAD] Erreur lors du flush', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+        
+        $this->notifyCompanyFinalReportReady($company, $analysis);
+        
+        $this->logger->info('🎉 [UPLOAD] Upload terminé avec succès', [
+            'analysis_id' => $analysis->getId(),
+            'company_id' => $company->getId(),
+            'extension' => $extension,
+            'filename' => $newFileName,
+            'final_path' => $finalPath
+        ]);
+        
+        return $finalPath;
+    }
+
+    private function getFileExtension(string $originalFilename, string $filePath): string
+    {
+        // ✅ Méthode 1: depuis le nom original (priorité absolue)
+        $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION));
+        
+        if (!empty($extension)) {
+            // ✅ Accepter pbix directement
+            if ($extension === 'pbix') {
+                return 'pbix';
+            }
+            return $extension;
+        }
+        
+        // ✅ Méthode 2: depuis le chemin temporaire
+        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        
+        if (!empty($extension)) {
+            if ($extension === 'pbix') {
+                return 'pbix';
+            }
+            return $extension;
+        }
+        
+        // ✅ Méthode 3: détection par le contenu (pour les fichiers sans extension)
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $filePath);
+        finfo_close($finfo);
+        
+        $mimeToExtension = [
+            'application/vnd.ms-excel' => 'xls',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
+            'application/pdf' => 'pdf',
+            'application/zip' => 'zip',
+            'application/octet-stream' => 'pbix',  // ✅ Power BI .pbix
+            'application/x-zip-compressed' => 'zip',
+            'text/csv' => 'csv',
+            'application/vnd.powerbi.pbix' => 'pbix',  // ✅ MIME spécifique Power BI
+        ];
+        
+        if (isset($mimeToExtension[$mimeType])) {
+            return $mimeToExtension[$mimeType];
+        }
+        
+        // ✅ Méthode 4: vérifier si c'est un fichier Power BI par sa signature
+        if ($this->isPowerBiFile($filePath)) {
+            return 'pbix';
+        }
+        
+        // ✅ Si tout échoue, logguer mais ne pas retourner vide
+        $this->logger->warning('Impossible de déterminer l\'extension du fichier', [
+            'original_filename' => $originalFilename,
+            'file_path' => $filePath,
+            'mime_type' => $mimeType
+        ]);
+        
+        // ✅ IMPORTANT: Si on ne trouve pas l'extension, utiliser l'extension du nom original
+        // ou forcer 'pbix' si le fichier ressemble à Power BI
+        if (strpos($originalFilename, '.pbix') !== false) {
+            return 'pbix';
+        }
+        
+        if (strpos($filePath, '.pbix') !== false) {
+            return 'pbix';
+        }
+        
+        // ✅ Dernier recours: extraire du nom ou mettre 'bin'
+        $parts = explode('.', $originalFilename);
+        if (count($parts) > 1) {
+            return strtolower(end($parts));
+        }
+        
+        return 'bin'; // Ne jamais retourner vide !
+    }
+    
+    /**
+     * Super Admin peut modifier le rapport uploadé (remplacer)
+     */
+    public function updateFinalReport(AnalysisRequest $analysis, string $uploadedFilePath, string $originalFilename, User $uploadedBy): string
+    {
+        // 🔍 LOG: Début du remplacement
+        $this->logger->info('🔄 [UPDATE] Début updateFinalReport', [
+            'analysis_id' => $analysis->getId(),
+            'original_filename' => $originalFilename,
+            'uploaded_file_path' => $uploadedFilePath,
+            'file_exists' => file_exists($uploadedFilePath),
+            'file_size' => file_exists($uploadedFilePath) ? filesize($uploadedFilePath) : 0
+        ]);
+        
+        $company = $analysis->getCompany();
+        $timestamp = (new \DateTime())->format('Ymd_His');
+        
+        // ✅ Récupérer l'extension
+        $extension = $this->getFileExtension($originalFilename, $uploadedFilePath);
+        
+        // ✅ Vérification spéciale pour les PDF (vérification du contenu)
+        $isPdf = ($extension === 'pdf' || strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION)) === 'pdf');
+        
+        if ($isPdf) {
+            if (!$this->isValidPdf($uploadedFilePath)) {
+                $this->logger->error('❌ [UPDATE] Fichier PDF invalide');
+                throw new \Exception('Le fichier n\'est pas un PDF valide.');
+            }
+            $this->logger->info('✅ [UPDATE] PDF valide détecté');
+        }
+        
+        // ✅ Pour Power BI : on vérifie UNIQUEMENT l'extension
+        $isPowerBi = ($extension === 'pbix' || strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION)) === 'pbix');
+        
+        if ($isPowerBi) {
+            $this->logger->info('✅ [UPDATE] Fichier Power BI accepté (extension .pbix)', [
+                'extension' => $extension,
+                'filename' => $originalFilename
+            ]);
+            // ✅ Pas de vérification supplémentaire, juste l'extension
+        }
+        
+        if (empty($extension)) {
+            $extension = 'bin';
+        }
+        
         $fileType = $this->getFileTypeFromExtension($extension);
         
         $companyReportDir = $this->exportDirectory . '/reports/' . $company->getSubscriptionNumber();
@@ -155,8 +397,18 @@ class CompanyAnalysisExportService
         
         $finalPath = $companyReportDir . '/' . $newFileName;
         
-        copy($uploadedFilePath, $finalPath);
+        // ✅ Copie en mode binaire
+        $content = file_get_contents($uploadedFilePath);
+        if ($content === false) {
+            throw new \Exception('Impossible de lire le fichier source');
+        }
         
+        $bytesWritten = file_put_contents($finalPath, $content);
+        if ($bytesWritten === false || $bytesWritten !== filesize($uploadedFilePath)) {
+            throw new \Exception('Impossible d\'écrire le fichier destination');
+        }
+        
+        // Supprimer l'ancien fichier
         if ($analysis->getFinalReportPath() && file_exists($analysis->getFinalReportPath())) {
             unlink($analysis->getFinalReportPath());
         }
@@ -165,42 +417,76 @@ class CompanyAnalysisExportService
         $analysis->setFinalReportFilename($newFileName);
         $analysis->setFinalReportType($fileType);
         
-        // ✅ IMPORTANT: Récupérer l'utilisateur depuis Doctrine pour éviter le problème de persistance
         $user = $this->entityManager->getRepository(User::class)->find($uploadedBy->getId());
         $analysis->setFinalReportUploadedBy($user);
-        
         $analysis->setFinalReportUploadedAt(new \DateTime());
-        $analysis->setStatus(AnalysisRequest::STATUS_COMPLETED);
         
         $this->entityManager->flush();
         
-        $this->notifyCompanyFinalReportReady($company, $analysis);
+        $this->notifyCompanyReportUpdated($company, $analysis);
         
-        $this->logger->info('Rapport final uploadé', [
+        $this->logger->info('Rapport final remplacé', [
             'analysis_id' => $analysis->getId(),
-            'company_id' => $company->getId(),
-            'filename' => $newFileName,
-            'type' => $fileType,
-            'uploaded_by' => $uploadedBy->getEmail()
+            'extension' => $extension,
+            'filename' => $newFileName
         ]);
         
         return $finalPath;
     }
 
     /**
-     * Super Admin peut modifier le rapport uploadé (remplacer)
+     * ✅ Vérifie si le fichier est un PDF valide
      */
-    public function updateFinalReport(AnalysisRequest $analysis, string $uploadedFilePath, string $originalFilename, User $uploadedBy): string
+    private function isValidPdf(string $filePath): bool
     {
-        $company = $analysis->getCompany();
-        
-        // Supprimer l'ancien fichier
-        if ($analysis->getFinalReportPath() && file_exists($analysis->getFinalReportPath())) {
-            unlink($analysis->getFinalReportPath());
+        if (!file_exists($filePath)) {
+            return false;
         }
         
-        // Upload le nouveau
-        return $this->uploadFinalReport($analysis, $uploadedFilePath, $originalFilename, $uploadedBy);
+        $handle = fopen($filePath, 'rb');
+        if (!$handle) {
+            return false;
+        }
+        
+        $header = fread($handle, 5);
+        fclose($handle);
+        
+        // Un fichier PDF valide commence par %PDF- (version)
+        // ou au moins %PDF
+        return str_starts_with($header, '%PDF');
+    }
+
+    /**
+     * ✅ Détection spécifique des fichiers Power BI
+     */
+    private function isPowerBiFile(string $filePath): bool
+    {
+        if (!file_exists($filePath)) {
+            return false;
+        }
+        
+        // Lire les premiers octets
+        $handle = fopen($filePath, 'rb');
+        if (!$handle) {
+            return false;
+        }
+        
+        $header = fread($handle, 4);
+        fclose($handle);
+        
+        // Les fichiers .pbix commencent par "PK" (signature ZIP)
+        if ($header === 'PK' . chr(3) . chr(4)) {
+            // Lire un peu plus pour vérifier la structure Power BI
+            $content = file_get_contents($filePath, false, null, 0, 5000);
+            // Recherche des signatures Power BI
+            if (str_contains($content, 'DataModel') || 
+                str_contains($content, 'Report') ||
+                str_contains($content, 'Power BI')) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /**
@@ -302,23 +588,36 @@ class CompanyAnalysisExportService
         
         return $reports;
     }
-    
+
     /**
      * 🔔 NOTIFICATION: Données brutes disponibles
      */
     private function notifyCompanyRawDataReady(HmaService $company, AnalysisRequest $analysis): void
     {
-        // ✅ Ne notifier que les admins et managers (pas les simples employés)
+        // ✅ Ne notifier que les admins et managers actifs ET dont l'abonnement est actif
         $recipients = $this->userRepository->findBy([
             'hma_service_id' => $company,
             'is_active' => true
         ]);
         
         // Filtrer pour ne garder que les admins et managers
-        $recipients = array_filter($recipients, function($user) {
+        $recipients = array_filter($recipients, function($user) use ($company) {
             $roles = $user->getRoles();
-            return in_array('ROLE_ADMIN', $roles) || in_array('ROLE_MANAGER', $roles);
+            $hasValidRole = in_array('ROLE_ADMIN', $roles) || in_array('ROLE_MANAGER', $roles);
+            
+            // Vérifier que l'utilisateur a un abonnement actif ET que l'entreprise est active
+            $hasValidSubscription = $user->isSubscriptionActive() && $company->isActive();
+            
+            return $hasValidRole && $hasValidSubscription;
         });
+        
+        if (empty($recipients)) {
+            $this->logger->warning('Aucun destinataire valide pour la notification des données brutes', [
+                'company_id' => $company->getId(),
+                'analysis_id' => $analysis->getId()
+            ]);
+            return;
+        }
         
         $message = sprintf(
             "Bonjour,\n\n"
@@ -351,17 +650,30 @@ class CompanyAnalysisExportService
      */
     private function notifyCompanyFinalReportReady(HmaService $company, AnalysisRequest $analysis): void
     {
-        // ✅ Ne notifier que les admins et managers (pas les simples employés)
+        // ✅ Ne notifier que les admins et managers actifs ET dont l'abonnement est actif
         $recipients = $this->userRepository->findBy([
             'hma_service_id' => $company,
             'is_active' => true
         ]);
         
         // Filtrer pour ne garder que les admins et managers
-        $recipients = array_filter($recipients, function($user) {
+        $recipients = array_filter($recipients, function($user) use ($company) {
             $roles = $user->getRoles();
-            return in_array('ROLE_ADMIN', $roles) || in_array('ROLE_MANAGER', $roles);
+            $hasValidRole = in_array('ROLE_ADMIN', $roles) || in_array('ROLE_MANAGER', $roles);
+            
+            // Vérifier que l'utilisateur a un abonnement actif ET que l'entreprise est active
+            $hasValidSubscription = $user->isSubscriptionActive() && $company->isActive();
+            
+            return $hasValidRole && $hasValidSubscription;
         });
+        
+        if (empty($recipients)) {
+            $this->logger->warning('Aucun destinataire valide pour la notification du rapport final', [
+                'company_id' => $company->getId(),
+                'analysis_id' => $analysis->getId()
+            ]);
+            return;
+        }
         
         $reportTypeLabel = $this->getReportTypeLabel($analysis->getFinalReportType());
         
@@ -398,20 +710,21 @@ class CompanyAnalysisExportService
      */
     private function notifyCompanyReportUpdated(HmaService $company, AnalysisRequest $analysis): void
     {
-        // ✅ Ne notifier que les admins et managers (pas les simples employés)
         $recipients = $this->userRepository->findBy([
             'hma_service_id' => $company,
             'is_active' => true
         ]);
         
-        // Filtrer pour ne garder que les admins et managers
-        $recipients = array_filter($recipients, function($user) {
+        $recipients = array_filter($recipients, function($user) use ($company) {
             $roles = $user->getRoles();
-            return in_array('ROLE_ADMIN', $roles) || in_array('ROLE_MANAGER', $roles);
+            $hasValidRole = in_array('ROLE_ADMIN', $roles) || in_array('ROLE_MANAGER', $roles);
+            $hasValidSubscription = $user->isSubscriptionActive() && $company->isActive();
+            return $hasValidRole && $hasValidSubscription;
         });
         
         $reportTypeLabel = $this->getReportTypeLabel($analysis->getFinalReportType());
         
+        // ✅ MESSAGE DE MISE À JOUR (différent du message de nouveau rapport)
         $message = sprintf(
             "Bonjour,\n\n"
             . "🔄 Le rapport de votre analyse a été mis à jour par notre équipe.\n\n"
@@ -458,6 +771,7 @@ class CompanyAnalysisExportService
             'powerbi' => 'Power BI (tableaux de bord interactifs)',
             'pdf' => 'PDF (rapport statique)',
             'zip' => 'Archive ZIP (fichiers complets)',
+            'pbix' => 'Power BI Desktop (.pbix)',  // ✅ Ajouté
             default => ucfirst($type)
         };
     }
@@ -1029,4 +1343,5 @@ class CompanyAnalysisExportService
         }
         rmdir($dir);
     }
+    
 }

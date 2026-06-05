@@ -412,8 +412,6 @@
                         <hr>
                         
                         <div class="fw-bold mb-3">📤 Uploader le rapport final</div>
-                        
-                        <!-- Formulaire d'upload simple -->
                         <form method="post" action="{{ path('super_admin_analysis_upload_report', {'id': analysis.id}) }}" enctype="multipart/form-data" class="upload-form">
                             <div class="mb-3">
                                 <label class="form-label">Sélectionner le fichier</label>
@@ -454,21 +452,9 @@
                             L'entreprise peut maintenant télécharger son rapport.
                         </div>
                         
-                        <!-- Option pour retélécharger les données brutes -->
                         <a href="{{ path('super_admin_analysis_download_raw', {'id': analysis.id}) }}" class="btn btn-outline-secondary w-100">
                             <i class="fas fa-database me-1"></i> Télécharger les données brutes
                         </a>
-                        
-                        <!-- Formulaire pour remplacer le rapport -->
-                        <form method="post" action="{{ path('super_admin_analysis_replace_report', {'id': analysis.id}) }}" enctype="multipart/form-data" class="upload-form mt-3">
-                            <div class="mb-2">
-                                <label class="form-label">Remplacer le rapport</label>
-                                <input type="file" name="report" class="form-control form-control-sm" accept=".xlsx,.xls,.pbix,.pdf,.zip" required>
-                            </div>
-                            <button type="submit" class="btn btn-outline-warning w-100">
-                                <i class="fas fa-sync-alt me-1"></i> Remplacer le rapport
-                            </button>
-                        </form>
                     {% endif %}
                     
                     {# Cas 5: En traitement sans données brutes #}
@@ -526,19 +512,87 @@
                                 <span>{{ payment.paidAt ? payment.paidAt|date('d/m/Y H:i:s') : analysis.paidAt|date('d/m/Y H:i:s') }}</span>
                             </div>
                         </div>
+                        
+                        {# ✅ Afficher le sous-total si disponible #}
+                        {% if subtotal > 0 %}
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
-                                <span class="text-muted">Montant payé</span>
+                                <span class="text-muted">Sous-total</span>
+                                <span>{{ subtotal|number_format(0, ',', ' ') }} FCFA</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {# ✅ Afficher les frais/taxes #}
+                        {% if tax_amount > 0 %}
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">
+                                    Frais de transaction
+                                    {% if tax_rate > 0 %}({{ tax_rate }}%){% endif %}
+                                </span>
+                                <span>{{ tax_amount|number_format(0, ',', ' ') }} FCFA</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {# ✅ Afficher le montant total payé #}
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Montant total payé</span>
                                 <span class="fw-bold text-success">{{ analysis.amountFormatted }}</span>
                             </div>
                         </div>
+                        
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
                                 <span class="text-muted">Statut</span>
                                 <span><span class="badge bg-success">{{ payment.statusLabel }}</span></span>
                             </div>
                         </div>
+                        
+                        {# ✅ Afficher le mode de paiement si disponible #}
+                        {% if payment.paymentData and payment.paymentData.mode is defined %}
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Mode de paiement</span>
+                                <span>
+                                    {% set mode = payment.paymentData.mode %}
+                                    {% if mode == 'momo_test' or mode == 'momo' %}
+                                        Mobile Money
+                                    {% elseif mode == 'card_test' or mode == 'card' %}
+                                        Carte bancaire
+                                    {% else %}
+                                        {{ mode|replace({'_test': ''})|capitalize }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
+                    
+                    {# ✅ Afficher les détails complets de la transaction FedaPay (optionnel) #}
+                    {% if payment.paymentData and payment.paymentData.id %}
+                    <div class="mt-3 pt-2 border-top">
+                        <details>
+                            <summary class="text-muted small" style="cursor: pointer;">
+                                <i class="fas fa-info-circle me-1"></i> Détails complets de la transaction
+                            </summary>
+                            <div class="mt-2 p-2 bg-light rounded small">
+                                <strong>ID FedaPay:</strong> {{ payment.paymentData.id }}<br>
+                                {% if payment.paymentData.currency is defined %}
+                                <strong>Devise:</strong> {{ payment.paymentData.currency }}<br>
+                                {% endif %}
+                                {% if payment.paymentData.mode is defined %}
+                                <strong>Mode:</strong> {{ payment.paymentData.mode }}<br>
+                                {% endif %}
+                                <strong>Données brutes:</strong>
+                                <pre class="mt-1 mb-0 small" style="font-size: 0.65rem; overflow-x: auto;">{{ payment.paymentData|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                            </div>
+                        </details>
+                    </div>
+                    {% endif %}
+                    
                     {% else %}
                     <div class="alert alert-info mb-0">
                         <i class="fas fa-info-circle me-1"></i>
@@ -586,28 +640,37 @@
     </div>
 </div>
 
-{# Modal Remplacer le rapport #}
+{# Modal Remplacer le rapport - AVEC FORMULAIRE INTÉGRÉ #}
 <div class="modal fade" id="confirmReplaceModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-warning">
-                <h5 class="modal-title">
-                    <i class="fas fa-sync-alt me-2"></i>
-                    Remplacer le rapport
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Voulez-vous remplacer le rapport actuel ?</p>
-                <div class="alert alert-warning small">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    L'ancien fichier sera supprimé définitivement.
+            <form method="post" action="{{ path('super_admin_analysis_replace_report', {'id': analysis.id}) }}" enctype="multipart/form-data" id="replaceReportFormModal">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">
+                        <i class="fas fa-sync-alt me-2"></i>
+                        Remplacer le rapport
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-warning" id="confirmReplaceBtn">Confirmer</button>
-            </div>
+                <div class="modal-body">
+                    <p>Voulez-vous remplacer le rapport actuel ?</p>
+                    <div class="alert alert-warning small">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        L'ancien fichier sera supprimé définitivement.
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nouveau fichier</label>
+                            <input type="file" name="report" class="form-control" accept=".xlsx,.xls,.pbix,.pdf,.zip" required>
+                            <small class="text-muted d-block mt-1">Formats acceptés: Excel (.xlsx), Power BI (.pbix), PDF, ZIP</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-sync-alt me-1"></i> Remplacer
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -691,20 +754,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const modal = bootstrap.Modal.getInstance(document.getElementById('confirmGenerateRawModal'));
             modal.hide();
             form.submit();
-        });
-    }
-    
-    // ==================== REPLACER LE RAPPORT ====================
-    const replaceBtn = document.getElementById('confirmReplaceBtn');
-    if (replaceBtn) {
-        replaceBtn.addEventListener('click', function() {
-            // Le formulaire de remplacement est déjà dans la page
-            const form = document.querySelector('#confirmReplaceModal').closest('form');
-            if (form) {
-                form.submit();
-            }
-            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmReplaceModal'));
-            modal.hide();
         });
     }
     

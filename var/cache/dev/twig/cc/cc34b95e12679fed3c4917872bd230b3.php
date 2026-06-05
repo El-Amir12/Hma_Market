@@ -706,11 +706,9 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
                         <hr>
                         
                         <div class=\"fw-bold mb-3\">📤 Uploader le rapport final</div>
-                        
-                        <!-- Formulaire d'upload simple -->
                         <form method=\"post\" action=\"";
-            // line 417
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_upload_report", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 417, $this->source); })()), "id", [], "any", false, false, false, 417)]), "html", null, true);
+            // line 415
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_upload_report", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 415, $this->source); })()), "id", [], "any", false, false, false, 415)]), "html", null, true);
             yield "\" enctype=\"multipart/form-data\" class=\"upload-form\">
                             <div class=\"mb-3\">
                                 <label class=\"form-label\">Sélectionner le fichier</label>
@@ -723,31 +721,31 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
                         </form>
                     ";
         }
-        // line 428
+        // line 426
         yield "                    
                     ";
-        // line 430
+        // line 428
         yield "                    ";
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 430, $this->source); })()), "status", [], "any", false, false, false, 430) == "completed")) {
-            // line 431
+        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 428, $this->source); })()), "status", [], "any", false, false, false, 428) == "completed")) {
+            // line 429
             yield "                        <div class=\"report-card\">
                             <div class=\"d-flex justify-content-between align-items-center\">
                                 <div>
                                     <i class=\"fas fa-file-alt fa-2x me-2\"></i>
                                     <strong>Rapport final</strong>
                                     <div class=\"small\">";
-            // line 436
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 436, $this->source); })()), "finalReportFilename", [], "any", false, false, false, 436), "html", null, true);
+            // line 434
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 434, $this->source); })()), "finalReportFilename", [], "any", false, false, false, 434), "html", null, true);
             yield "</div>
                                     <div class=\"small opacity-75\">Uploadé le ";
-            // line 437
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 437, $this->source); })()), "finalReportUploadedAt", [], "any", false, false, false, 437), "d/m/Y H:i"), "html", null, true);
+            // line 435
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 435, $this->source); })()), "finalReportUploadedAt", [], "any", false, false, false, 435), "d/m/Y H:i"), "html", null, true);
             yield "</div>
                                 </div>
                                 <div class=\"btn-group-vertical\">
                                     <a href=\"";
-            // line 440
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_download_final", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 440, $this->source); })()), "id", [], "any", false, false, false, 440)]), "html", null, true);
+            // line 438
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_download_final", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 438, $this->source); })()), "id", [], "any", false, false, false, 438)]), "html", null, true);
             yield "\" class=\"btn btn-sm mb-1\">
                                         <i class=\"fas fa-download\"></i> Télécharger
                                     </a>
@@ -765,36 +763,21 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
                             L'entreprise peut maintenant télécharger son rapport.
                         </div>
                         
-                        <!-- Option pour retélécharger les données brutes -->
                         <a href=\"";
-            // line 458
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_download_raw", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 458, $this->source); })()), "id", [], "any", false, false, false, 458)]), "html", null, true);
+            // line 455
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_download_raw", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 455, $this->source); })()), "id", [], "any", false, false, false, 455)]), "html", null, true);
             yield "\" class=\"btn btn-outline-secondary w-100\">
                             <i class=\"fas fa-database me-1\"></i> Télécharger les données brutes
                         </a>
-                        
-                        <!-- Formulaire pour remplacer le rapport -->
-                        <form method=\"post\" action=\"";
-            // line 463
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_replace_report", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 463, $this->source); })()), "id", [], "any", false, false, false, 463)]), "html", null, true);
-            yield "\" enctype=\"multipart/form-data\" class=\"upload-form mt-3\">
-                            <div class=\"mb-2\">
-                                <label class=\"form-label\">Remplacer le rapport</label>
-                                <input type=\"file\" name=\"report\" class=\"form-control form-control-sm\" accept=\".xlsx,.xls,.pbix,.pdf,.zip\" required>
-                            </div>
-                            <button type=\"submit\" class=\"btn btn-outline-warning w-100\">
-                                <i class=\"fas fa-sync-alt me-1\"></i> Remplacer le rapport
-                            </button>
-                        </form>
                     ";
         }
-        // line 473
+        // line 459
         yield "                    
                     ";
-        // line 475
+        // line 461
         yield "                    ";
-        if (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 475, $this->source); })()), "status", [], "any", false, false, false, 475) == "processing") &&  !CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 475, $this->source); })()), "rawExportPath", [], "any", false, false, false, 475))) {
-            // line 476
+        if (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 461, $this->source); })()), "status", [], "any", false, false, false, 461) == "processing") &&  !CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 461, $this->source); })()), "rawExportPath", [], "any", false, false, false, 461))) {
+            // line 462
             yield "                        <div class=\"alert alert-warning\">
                             <i class=\"fas fa-spinner fa-pulse me-1\"></i>
                             Génération des données brutes en cours...
@@ -807,13 +790,13 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
                         </button>
                     ";
         }
-        // line 487
+        // line 473
         yield "                    
                     ";
-        // line 489
+        // line 475
         yield "                    ";
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 489, $this->source); })()), "status", [], "any", false, false, false, 489) == "failed")) {
-            // line 490
+        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 475, $this->source); })()), "status", [], "any", false, false, false, 475) == "failed")) {
+            // line 476
             yield "                        <div class=\"alert alert-danger\">
                             <i class=\"fas fa-exclamation-circle me-1\"></i>
                             Une erreur est survenue.
@@ -826,7 +809,7 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
                         </button>
                     ";
         }
-        // line 501
+        // line 487
         yield "                </div>
             </div>
 
@@ -840,21 +823,21 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
                 </div>
                 <div class=\"card-body\">
                     ";
-        // line 513
-        $context["payment"] = Twig\Extension\CoreExtension::first($this->env->getCharset(), (isset($context["payments"]) || array_key_exists("payments", $context) ? $context["payments"] : (function () { throw new RuntimeError('Variable "payments" does not exist.', 513, $this->source); })()));
-        // line 514
+        // line 499
+        $context["payment"] = Twig\Extension\CoreExtension::first($this->env->getCharset(), (isset($context["payments"]) || array_key_exists("payments", $context) ? $context["payments"] : (function () { throw new RuntimeError('Variable "payments" does not exist.', 499, $this->source); })()));
+        // line 500
         yield "                    
                     ";
-        // line 515
-        if ((($tmp = (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 515, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 516
+        // line 501
+        if ((($tmp = (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 501, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 502
             yield "                    <div class=\"row g-2\">
                         <div class=\"col-12\">
                             <div class=\"d-flex justify-content-between\">
                                 <span class=\"text-muted\">ID Transaction</span>
                                 <span class=\"fw-bold\">";
-            // line 520
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 520, $this->source); })()), "transactionId", [], "any", false, false, false, 520), "html", null, true);
+            // line 506
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 506, $this->source); })()), "transactionId", [], "any", false, false, false, 506), "html", null, true);
             yield "</span>
                             </div>
                         </div>
@@ -862,40 +845,175 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
                             <div class=\"d-flex justify-content-between\">
                                 <span class=\"text-muted\">Date de paiement</span>
                                 <span>";
-            // line 526
-            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 526, $this->source); })()), "paidAt", [], "any", false, false, false, 526)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 526, $this->source); })()), "paidAt", [], "any", false, false, false, 526), "d/m/Y H:i:s"), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 526, $this->source); })()), "paidAt", [], "any", false, false, false, 526), "d/m/Y H:i:s"), "html", null, true)));
+            // line 512
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 512, $this->source); })()), "paidAt", [], "any", false, false, false, 512)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 512, $this->source); })()), "paidAt", [], "any", false, false, false, 512), "d/m/Y H:i:s"), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 512, $this->source); })()), "paidAt", [], "any", false, false, false, 512), "d/m/Y H:i:s"), "html", null, true)));
             yield "</span>
                             </div>
                         </div>
-                        <div class=\"col-12\">
+                        
+                        ";
+            // line 517
+            yield "                        ";
+            if (((isset($context["subtotal"]) || array_key_exists("subtotal", $context) ? $context["subtotal"] : (function () { throw new RuntimeError('Variable "subtotal" does not exist.', 517, $this->source); })()) > 0)) {
+                // line 518
+                yield "                        <div class=\"col-12\">
                             <div class=\"d-flex justify-content-between\">
-                                <span class=\"text-muted\">Montant payé</span>
+                                <span class=\"text-muted\">Sous-total</span>
+                                <span>";
+                // line 521
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["subtotal"]) || array_key_exists("subtotal", $context) ? $context["subtotal"] : (function () { throw new RuntimeError('Variable "subtotal" does not exist.', 521, $this->source); })()), 0, ",", " "), "html", null, true);
+                yield " FCFA</span>
+                            </div>
+                        </div>
+                        ";
+            }
+            // line 525
+            yield "                        
+                        ";
+            // line 527
+            yield "                        ";
+            if (((isset($context["tax_amount"]) || array_key_exists("tax_amount", $context) ? $context["tax_amount"] : (function () { throw new RuntimeError('Variable "tax_amount" does not exist.', 527, $this->source); })()) > 0)) {
+                // line 528
+                yield "                        <div class=\"col-12\">
+                            <div class=\"d-flex justify-content-between\">
+                                <span class=\"text-muted\">
+                                    Frais de transaction
+                                    ";
+                // line 532
+                if (((isset($context["tax_rate"]) || array_key_exists("tax_rate", $context) ? $context["tax_rate"] : (function () { throw new RuntimeError('Variable "tax_rate" does not exist.', 532, $this->source); })()) > 0)) {
+                    yield "(";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["tax_rate"]) || array_key_exists("tax_rate", $context) ? $context["tax_rate"] : (function () { throw new RuntimeError('Variable "tax_rate" does not exist.', 532, $this->source); })()), "html", null, true);
+                    yield "%)";
+                }
+                // line 533
+                yield "                                </span>
+                                <span>";
+                // line 534
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["tax_amount"]) || array_key_exists("tax_amount", $context) ? $context["tax_amount"] : (function () { throw new RuntimeError('Variable "tax_amount" does not exist.', 534, $this->source); })()), 0, ",", " "), "html", null, true);
+                yield " FCFA</span>
+                            </div>
+                        </div>
+                        ";
+            }
+            // line 538
+            yield "                        
+                        ";
+            // line 540
+            yield "                        <div class=\"col-12\">
+                            <div class=\"d-flex justify-content-between\">
+                                <span class=\"text-muted\">Montant total payé</span>
                                 <span class=\"fw-bold text-success\">";
-            // line 532
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 532, $this->source); })()), "amountFormatted", [], "any", false, false, false, 532), "html", null, true);
+            // line 543
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 543, $this->source); })()), "amountFormatted", [], "any", false, false, false, 543), "html", null, true);
             yield "</span>
                             </div>
                         </div>
+                        
                         <div class=\"col-12\">
                             <div class=\"d-flex justify-content-between\">
                                 <span class=\"text-muted\">Statut</span>
                                 <span><span class=\"badge bg-success\">";
-            // line 538
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 538, $this->source); })()), "statusLabel", [], "any", false, false, false, 538), "html", null, true);
+            // line 550
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 550, $this->source); })()), "statusLabel", [], "any", false, false, false, 550), "html", null, true);
             yield "</span></span>
                             </div>
                         </div>
+                        
+                        ";
+            // line 555
+            yield "                        ";
+            if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 555, $this->source); })()), "paymentData", [], "any", false, false, false, 555) && CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["payment"] ?? null), "paymentData", [], "any", false, true, false, 555), "mode", [], "any", true, true, false, 555))) {
+                // line 556
+                yield "                        <div class=\"col-12\">
+                            <div class=\"d-flex justify-content-between\">
+                                <span class=\"text-muted\">Mode de paiement</span>
+                                <span>
+                                    ";
+                // line 560
+                $context["mode"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 560, $this->source); })()), "paymentData", [], "any", false, false, false, 560), "mode", [], "any", false, false, false, 560);
+                // line 561
+                yield "                                    ";
+                if ((((isset($context["mode"]) || array_key_exists("mode", $context) ? $context["mode"] : (function () { throw new RuntimeError('Variable "mode" does not exist.', 561, $this->source); })()) == "momo_test") || ((isset($context["mode"]) || array_key_exists("mode", $context) ? $context["mode"] : (function () { throw new RuntimeError('Variable "mode" does not exist.', 561, $this->source); })()) == "momo"))) {
+                    // line 562
+                    yield "                                        Mobile Money
+                                    ";
+                } elseif (((                // line 563
+(isset($context["mode"]) || array_key_exists("mode", $context) ? $context["mode"] : (function () { throw new RuntimeError('Variable "mode" does not exist.', 563, $this->source); })()) == "card_test") || ((isset($context["mode"]) || array_key_exists("mode", $context) ? $context["mode"] : (function () { throw new RuntimeError('Variable "mode" does not exist.', 563, $this->source); })()) == "card"))) {
+                    // line 564
+                    yield "                                        Carte bancaire
+                                    ";
+                } else {
+                    // line 566
+                    yield "                                        ";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::capitalize($this->env->getCharset(), Twig\Extension\CoreExtension::replace((isset($context["mode"]) || array_key_exists("mode", $context) ? $context["mode"] : (function () { throw new RuntimeError('Variable "mode" does not exist.', 566, $this->source); })()), ["_test" => ""])), "html", null, true);
+                    yield "
+                                    ";
+                }
+                // line 568
+                yield "                                </span>
+                            </div>
+                        </div>
+                        ";
+            }
+            // line 572
+            yield "                    </div>
+                    
+                    ";
+            // line 575
+            yield "                    ";
+            if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 575, $this->source); })()), "paymentData", [], "any", false, false, false, 575) && CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 575, $this->source); })()), "paymentData", [], "any", false, false, false, 575), "id", [], "any", false, false, false, 575))) {
+                // line 576
+                yield "                    <div class=\"mt-3 pt-2 border-top\">
+                        <details>
+                            <summary class=\"text-muted small\" style=\"cursor: pointer;\">
+                                <i class=\"fas fa-info-circle me-1\"></i> Détails complets de la transaction
+                            </summary>
+                            <div class=\"mt-2 p-2 bg-light rounded small\">
+                                <strong>ID FedaPay:</strong> ";
+                // line 582
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 582, $this->source); })()), "paymentData", [], "any", false, false, false, 582), "id", [], "any", false, false, false, 582), "html", null, true);
+                yield "<br>
+                                ";
+                // line 583
+                if (CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["payment"] ?? null), "paymentData", [], "any", false, true, false, 583), "currency", [], "any", true, true, false, 583)) {
+                    // line 584
+                    yield "                                <strong>Devise:</strong> ";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 584, $this->source); })()), "paymentData", [], "any", false, false, false, 584), "currency", [], "any", false, false, false, 584), "html", null, true);
+                    yield "<br>
+                                ";
+                }
+                // line 586
+                yield "                                ";
+                if (CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["payment"] ?? null), "paymentData", [], "any", false, true, false, 586), "mode", [], "any", true, true, false, 586)) {
+                    // line 587
+                    yield "                                <strong>Mode:</strong> ";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 587, $this->source); })()), "paymentData", [], "any", false, false, false, 587), "mode", [], "any", false, false, false, 587), "html", null, true);
+                    yield "<br>
+                                ";
+                }
+                // line 589
+                yield "                                <strong>Données brutes:</strong>
+                                <pre class=\"mt-1 mb-0 small\" style=\"font-size: 0.65rem; overflow-x: auto;\">";
+                // line 590
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["payment"]) || array_key_exists("payment", $context) ? $context["payment"] : (function () { throw new RuntimeError('Variable "payment" does not exist.', 590, $this->source); })()), "paymentData", [], "any", false, false, false, 590), Twig\Extension\CoreExtension::constant("JSON_PRETTY_PRINT")), "html", null, true);
+                yield "</pre>
+                            </div>
+                        </details>
                     </div>
                     ";
+            }
+            // line 595
+            yield "                    
+                    ";
         } else {
-            // line 543
+            // line 597
             yield "                    <div class=\"alert alert-info mb-0\">
                         <i class=\"fas fa-info-circle me-1\"></i>
                         Aucun paiement enregistré.
                     </div>
                     ";
         }
-        // line 548
+        // line 602
         yield "                </div>
             </div>
         </div>
@@ -903,10 +1021,10 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
 </div>
 
 ";
-        // line 555
+        // line 609
         yield "
 ";
-        // line 557
+        // line 611
         yield "<div class=\"modal fade\" id=\"confirmGenerateRawModal\" tabindex=\"-1\" data-bs-backdrop=\"static\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -940,34 +1058,46 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
 </div>
 
 ";
-        // line 590
+        // line 644
         yield "<div class=\"modal fade\" id=\"confirmReplaceModal\" tabindex=\"-1\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
-            <div class=\"modal-header bg-warning\">
-                <h5 class=\"modal-title\">
-                    <i class=\"fas fa-sync-alt me-2\"></i>
-                    Remplacer le rapport
-                </h5>
-                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <p>Voulez-vous remplacer le rapport actuel ?</p>
-                <div class=\"alert alert-warning small\">
-                    <i class=\"fas fa-exclamation-triangle me-2\"></i>
-                    L'ancien fichier sera supprimé définitivement.
+            <form method=\"post\" action=\"";
+        // line 647
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_replace_report", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 647, $this->source); })()), "id", [], "any", false, false, false, 647)]), "html", null, true);
+        yield "\" enctype=\"multipart/form-data\" id=\"replaceReportFormModal\">
+                <div class=\"modal-header bg-warning\">
+                    <h5 class=\"modal-title\">
+                        <i class=\"fas fa-sync-alt me-2\"></i>
+                        Remplacer le rapport
+                    </h5>
+                    <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
                 </div>
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-warning\" id=\"confirmReplaceBtn\">Confirmer</button>
-            </div>
+                <div class=\"modal-body\">
+                    <p>Voulez-vous remplacer le rapport actuel ?</p>
+                    <div class=\"alert alert-warning small\">
+                        <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                        L'ancien fichier sera supprimé définitivement.
+                    </div>
+                    <div class=\"mb-3\">
+                        <label class=\"form-label\">Nouveau fichier</label>
+                            <input type=\"file\" name=\"report\" class=\"form-control\" accept=\".xlsx,.xls,.pbix,.pdf,.zip\" required>
+                            <small class=\"text-muted d-block mt-1\">Formats acceptés: Excel (.xlsx), Power BI (.pbix), PDF, ZIP</small>
+                    </div>
+                </div>
+                <div class=\"modal-footer\">
+                    <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
+                    <button type=\"submit\" class=\"btn btn-warning\">
+                        <i class=\"fas fa-sync-alt me-1\"></i> Remplacer
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 ";
-        // line 616
+        // line 679
         yield "<div class=\"modal fade\" id=\"confirmRetryModal\" tabindex=\"-1\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -987,7 +1117,7 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
 </div>
 
 ";
-        // line 635
+        // line 698
         yield "<div class=\"modal fade\" id=\"confirmForcePaidModal\" tabindex=\"-1\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -1008,7 +1138,7 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
 </div>
 
 ";
-        // line 655
+        // line 718
         yield "<div class=\"modal fade\" id=\"confirmCancelModal\" tabindex=\"-1\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -1036,7 +1166,7 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
         yield from [];
     }
 
-    // line 674
+    // line 737
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -1049,14 +1179,14 @@ class __TwigTemplate_4e6d519b2a7d26baf34c8c9af8237c7d extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 675
+        // line 738
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const analysisId = ";
-        // line 678
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 678, $this->source); })()), "id", [], "any", false, false, false, 678), "html", null, true);
+        // line 741
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 741, $this->source); })()), "id", [], "any", false, false, false, 741), "html", null, true);
         yield ";
     
     // ==================== GÉNÉRATION EXPORT BRUT ====================
@@ -1066,8 +1196,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '";
-        // line 686
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_generate_raw", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 686, $this->source); })()), "id", [], "any", false, false, false, 686)]), "html", null, true);
+        // line 749
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_generate_raw", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 749, $this->source); })()), "id", [], "any", false, false, false, 749)]), "html", null, true);
         yield "';
             document.body.appendChild(form);
             generateRawBtn.disabled = true;
@@ -1079,27 +1209,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ==================== REPLACER LE RAPPORT ====================
-    const replaceBtn = document.getElementById('confirmReplaceBtn');
-    if (replaceBtn) {
-        replaceBtn.addEventListener('click', function() {
-            // Le formulaire de remplacement est déjà dans la page
-            const form = document.querySelector('#confirmReplaceModal').closest('form');
-            if (form) {
-                form.submit();
-            }
-            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmReplaceModal'));
-            modal.hide();
-        });
-    }
-    
     // ==================== AUTRES ACTIONS ====================
     const retryBtn = document.getElementById('confirmRetryBtn');
     if (retryBtn) {
         retryBtn.addEventListener('click', () => {
             window.location.href = '";
-        // line 715
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_retry", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 715, $this->source); })()), "id", [], "any", false, false, false, 715)]), "html", null, true);
+        // line 764
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_retry", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 764, $this->source); })()), "id", [], "any", false, false, false, 764)]), "html", null, true);
         yield "';
         });
     }
@@ -1108,8 +1224,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (forcePaidBtn) {
         forcePaidBtn.addEventListener('click', () => {
             window.location.href = '";
-        // line 722
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_force_to_paid", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 722, $this->source); })()), "id", [], "any", false, false, false, 722)]), "html", null, true);
+        // line 771
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_force_to_paid", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 771, $this->source); })()), "id", [], "any", false, false, false, 771)]), "html", null, true);
         yield "';
         });
     }
@@ -1120,8 +1236,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '";
-        // line 731
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_cancel", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 731, $this->source); })()), "id", [], "any", false, false, false, 731)]), "html", null, true);
+        // line 780
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_cancel", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 780, $this->source); })()), "id", [], "any", false, false, false, 780)]), "html", null, true);
         yield "';
             document.body.appendChild(form);
             form.submit();
@@ -1135,16 +1251,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const copyBtn = document.getElementById('copyPaymentLinkBtn');
     
     if (generateLinkBtn && ";
-        // line 743
-        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 743, $this->source); })()), "status", [], "any", false, false, false, 743) == "pending")) ? ("true") : ("false"));
+        // line 792
+        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 792, $this->source); })()), "status", [], "any", false, false, false, 792) == "pending")) ? ("true") : ("false"));
         yield ") {
         generateLinkBtn.addEventListener('click', async () => {
             generateLinkBtn.disabled = true;
             generateLinkBtn.innerHTML = '<span class=\"spinner-border spinner-border-sm me-1\"></span> Génération...';
             
             const response = await fetch('";
-        // line 748
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_payment_link", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 748, $this->source); })()), "id", [], "any", false, false, false, 748)]), "html", null, true);
+        // line 797
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_payment_link", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 797, $this->source); })()), "id", [], "any", false, false, false, 797)]), "html", null, true);
         yield "');
             const data = await response.json();
             
@@ -1173,8 +1289,8 @@ document.addEventListener('DOMContentLoaded', function() {
             sendEmailBtn.innerHTML = '<span class=\"spinner-border spinner-border-sm me-1\"></span> Envoi...';
             
             const response = await fetch('";
-        // line 775
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_send_payment_link", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 775, $this->source); })()), "id", [], "any", false, false, false, 775)]), "html", null, true);
+        // line 824
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_send_payment_link", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["analysis"]) || array_key_exists("analysis", $context) ? $context["analysis"] : (function () { throw new RuntimeError('Variable "analysis" does not exist.', 824, $this->source); })()), "id", [], "any", false, false, false, 824)]), "html", null, true);
         yield "', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1243,7 +1359,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  1177 => 775,  1147 => 748,  1139 => 743,  1124 => 731,  1112 => 722,  1102 => 715,  1070 => 686,  1059 => 678,  1053 => 675,  1040 => 674,  1012 => 655,  991 => 635,  971 => 616,  944 => 590,  910 => 557,  907 => 555,  899 => 548,  892 => 543,  884 => 538,  875 => 532,  866 => 526,  857 => 520,  851 => 516,  849 => 515,  846 => 514,  844 => 513,  830 => 501,  817 => 490,  814 => 489,  811 => 487,  798 => 476,  795 => 475,  792 => 473,  779 => 463,  771 => 458,  750 => 440,  744 => 437,  740 => 436,  733 => 431,  730 => 430,  727 => 428,  713 => 417,  701 => 408,  693 => 402,  690 => 401,  687 => 399,  677 => 391,  674 => 390,  671 => 388,  665 => 385,  644 => 366,  641 => 365,  622 => 348,  614 => 343,  605 => 337,  596 => 331,  587 => 325,  578 => 319,  574 => 318,  570 => 316,  564 => 313,  561 => 312,  556 => 310,  550 => 309,  547 => 308,  544 => 307,  541 => 306,  538 => 305,  535 => 304,  533 => 303,  530 => 302,  527 => 301,  524 => 300,  521 => 299,  518 => 298,  515 => 297,  512 => 296,  509 => 295,  506 => 294,  504 => 293,  485 => 276,  479 => 273,  475 => 272,  471 => 270,  469 => 269,  466 => 268,  459 => 264,  455 => 262,  453 => 261,  450 => 260,  443 => 256,  439 => 254,  433 => 251,  429 => 250,  425 => 248,  423 => 247,  416 => 243,  398 => 227,  391 => 223,  386 => 220,  384 => 219,  377 => 216,  375 => 215,  369 => 214,  358 => 206,  354 => 205,  350 => 204,  340 => 197,  336 => 196,  327 => 190,  318 => 184,  293 => 162,  286 => 158,  278 => 153,  271 => 149,  263 => 143,  250 => 142,  105 => 7,  92 => 6,  66 => 4,  43 => 2,);
+        return array (  1293 => 824,  1263 => 797,  1255 => 792,  1240 => 780,  1228 => 771,  1218 => 764,  1200 => 749,  1189 => 741,  1183 => 738,  1170 => 737,  1142 => 718,  1121 => 698,  1101 => 679,  1067 => 647,  1062 => 644,  1028 => 611,  1025 => 609,  1017 => 602,  1010 => 597,  1006 => 595,  998 => 590,  995 => 589,  989 => 587,  986 => 586,  980 => 584,  978 => 583,  974 => 582,  966 => 576,  963 => 575,  959 => 572,  953 => 568,  947 => 566,  943 => 564,  941 => 563,  938 => 562,  935 => 561,  933 => 560,  927 => 556,  924 => 555,  917 => 550,  907 => 543,  902 => 540,  899 => 538,  892 => 534,  889 => 533,  883 => 532,  877 => 528,  874 => 527,  871 => 525,  864 => 521,  859 => 518,  856 => 517,  849 => 512,  840 => 506,  834 => 502,  832 => 501,  829 => 500,  827 => 499,  813 => 487,  800 => 476,  797 => 475,  794 => 473,  781 => 462,  778 => 461,  775 => 459,  768 => 455,  748 => 438,  742 => 435,  738 => 434,  731 => 429,  728 => 428,  725 => 426,  711 => 415,  701 => 408,  693 => 402,  690 => 401,  687 => 399,  677 => 391,  674 => 390,  671 => 388,  665 => 385,  644 => 366,  641 => 365,  622 => 348,  614 => 343,  605 => 337,  596 => 331,  587 => 325,  578 => 319,  574 => 318,  570 => 316,  564 => 313,  561 => 312,  556 => 310,  550 => 309,  547 => 308,  544 => 307,  541 => 306,  538 => 305,  535 => 304,  533 => 303,  530 => 302,  527 => 301,  524 => 300,  521 => 299,  518 => 298,  515 => 297,  512 => 296,  509 => 295,  506 => 294,  504 => 293,  485 => 276,  479 => 273,  475 => 272,  471 => 270,  469 => 269,  466 => 268,  459 => 264,  455 => 262,  453 => 261,  450 => 260,  443 => 256,  439 => 254,  433 => 251,  429 => 250,  425 => 248,  423 => 247,  416 => 243,  398 => 227,  391 => 223,  386 => 220,  384 => 219,  377 => 216,  375 => 215,  369 => 214,  358 => 206,  354 => 205,  350 => 204,  340 => 197,  336 => 196,  327 => 190,  318 => 184,  293 => 162,  286 => 158,  278 => 153,  271 => 149,  263 => 143,  250 => 142,  105 => 7,  92 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1662,8 +1778,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         <hr>
                         
                         <div class=\"fw-bold mb-3\">📤 Uploader le rapport final</div>
-                        
-                        <!-- Formulaire d'upload simple -->
                         <form method=\"post\" action=\"{{ path('super_admin_analysis_upload_report', {'id': analysis.id}) }}\" enctype=\"multipart/form-data\" class=\"upload-form\">
                             <div class=\"mb-3\">
                                 <label class=\"form-label\">Sélectionner le fichier</label>
@@ -1704,21 +1818,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             L'entreprise peut maintenant télécharger son rapport.
                         </div>
                         
-                        <!-- Option pour retélécharger les données brutes -->
                         <a href=\"{{ path('super_admin_analysis_download_raw', {'id': analysis.id}) }}\" class=\"btn btn-outline-secondary w-100\">
                             <i class=\"fas fa-database me-1\"></i> Télécharger les données brutes
                         </a>
-                        
-                        <!-- Formulaire pour remplacer le rapport -->
-                        <form method=\"post\" action=\"{{ path('super_admin_analysis_replace_report', {'id': analysis.id}) }}\" enctype=\"multipart/form-data\" class=\"upload-form mt-3\">
-                            <div class=\"mb-2\">
-                                <label class=\"form-label\">Remplacer le rapport</label>
-                                <input type=\"file\" name=\"report\" class=\"form-control form-control-sm\" accept=\".xlsx,.xls,.pbix,.pdf,.zip\" required>
-                            </div>
-                            <button type=\"submit\" class=\"btn btn-outline-warning w-100\">
-                                <i class=\"fas fa-sync-alt me-1\"></i> Remplacer le rapport
-                            </button>
-                        </form>
                     {% endif %}
                     
                     {# Cas 5: En traitement sans données brutes #}
@@ -1776,19 +1878,87 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <span>{{ payment.paidAt ? payment.paidAt|date('d/m/Y H:i:s') : analysis.paidAt|date('d/m/Y H:i:s') }}</span>
                             </div>
                         </div>
+                        
+                        {# ✅ Afficher le sous-total si disponible #}
+                        {% if subtotal > 0 %}
                         <div class=\"col-12\">
                             <div class=\"d-flex justify-content-between\">
-                                <span class=\"text-muted\">Montant payé</span>
+                                <span class=\"text-muted\">Sous-total</span>
+                                <span>{{ subtotal|number_format(0, ',', ' ') }} FCFA</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {# ✅ Afficher les frais/taxes #}
+                        {% if tax_amount > 0 %}
+                        <div class=\"col-12\">
+                            <div class=\"d-flex justify-content-between\">
+                                <span class=\"text-muted\">
+                                    Frais de transaction
+                                    {% if tax_rate > 0 %}({{ tax_rate }}%){% endif %}
+                                </span>
+                                <span>{{ tax_amount|number_format(0, ',', ' ') }} FCFA</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {# ✅ Afficher le montant total payé #}
+                        <div class=\"col-12\">
+                            <div class=\"d-flex justify-content-between\">
+                                <span class=\"text-muted\">Montant total payé</span>
                                 <span class=\"fw-bold text-success\">{{ analysis.amountFormatted }}</span>
                             </div>
                         </div>
+                        
                         <div class=\"col-12\">
                             <div class=\"d-flex justify-content-between\">
                                 <span class=\"text-muted\">Statut</span>
                                 <span><span class=\"badge bg-success\">{{ payment.statusLabel }}</span></span>
                             </div>
                         </div>
+                        
+                        {# ✅ Afficher le mode de paiement si disponible #}
+                        {% if payment.paymentData and payment.paymentData.mode is defined %}
+                        <div class=\"col-12\">
+                            <div class=\"d-flex justify-content-between\">
+                                <span class=\"text-muted\">Mode de paiement</span>
+                                <span>
+                                    {% set mode = payment.paymentData.mode %}
+                                    {% if mode == 'momo_test' or mode == 'momo' %}
+                                        Mobile Money
+                                    {% elseif mode == 'card_test' or mode == 'card' %}
+                                        Carte bancaire
+                                    {% else %}
+                                        {{ mode|replace({'_test': ''})|capitalize }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
+                    
+                    {# ✅ Afficher les détails complets de la transaction FedaPay (optionnel) #}
+                    {% if payment.paymentData and payment.paymentData.id %}
+                    <div class=\"mt-3 pt-2 border-top\">
+                        <details>
+                            <summary class=\"text-muted small\" style=\"cursor: pointer;\">
+                                <i class=\"fas fa-info-circle me-1\"></i> Détails complets de la transaction
+                            </summary>
+                            <div class=\"mt-2 p-2 bg-light rounded small\">
+                                <strong>ID FedaPay:</strong> {{ payment.paymentData.id }}<br>
+                                {% if payment.paymentData.currency is defined %}
+                                <strong>Devise:</strong> {{ payment.paymentData.currency }}<br>
+                                {% endif %}
+                                {% if payment.paymentData.mode is defined %}
+                                <strong>Mode:</strong> {{ payment.paymentData.mode }}<br>
+                                {% endif %}
+                                <strong>Données brutes:</strong>
+                                <pre class=\"mt-1 mb-0 small\" style=\"font-size: 0.65rem; overflow-x: auto;\">{{ payment.paymentData|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                            </div>
+                        </details>
+                    </div>
+                    {% endif %}
+                    
                     {% else %}
                     <div class=\"alert alert-info mb-0\">
                         <i class=\"fas fa-info-circle me-1\"></i>
@@ -1836,28 +2006,37 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-{# Modal Remplacer le rapport #}
+{# Modal Remplacer le rapport - AVEC FORMULAIRE INTÉGRÉ #}
 <div class=\"modal fade\" id=\"confirmReplaceModal\" tabindex=\"-1\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
-            <div class=\"modal-header bg-warning\">
-                <h5 class=\"modal-title\">
-                    <i class=\"fas fa-sync-alt me-2\"></i>
-                    Remplacer le rapport
-                </h5>
-                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
-            </div>
-            <div class=\"modal-body\">
-                <p>Voulez-vous remplacer le rapport actuel ?</p>
-                <div class=\"alert alert-warning small\">
-                    <i class=\"fas fa-exclamation-triangle me-2\"></i>
-                    L'ancien fichier sera supprimé définitivement.
+            <form method=\"post\" action=\"{{ path('super_admin_analysis_replace_report', {'id': analysis.id}) }}\" enctype=\"multipart/form-data\" id=\"replaceReportFormModal\">
+                <div class=\"modal-header bg-warning\">
+                    <h5 class=\"modal-title\">
+                        <i class=\"fas fa-sync-alt me-2\"></i>
+                        Remplacer le rapport
+                    </h5>
+                    <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
                 </div>
-            </div>
-            <div class=\"modal-footer\">
-                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                <button type=\"button\" class=\"btn btn-warning\" id=\"confirmReplaceBtn\">Confirmer</button>
-            </div>
+                <div class=\"modal-body\">
+                    <p>Voulez-vous remplacer le rapport actuel ?</p>
+                    <div class=\"alert alert-warning small\">
+                        <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                        L'ancien fichier sera supprimé définitivement.
+                    </div>
+                    <div class=\"mb-3\">
+                        <label class=\"form-label\">Nouveau fichier</label>
+                            <input type=\"file\" name=\"report\" class=\"form-control\" accept=\".xlsx,.xls,.pbix,.pdf,.zip\" required>
+                            <small class=\"text-muted d-block mt-1\">Formats acceptés: Excel (.xlsx), Power BI (.pbix), PDF, ZIP</small>
+                    </div>
+                </div>
+                <div class=\"modal-footer\">
+                    <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
+                    <button type=\"submit\" class=\"btn btn-warning\">
+                        <i class=\"fas fa-sync-alt me-1\"></i> Remplacer
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -1941,20 +2120,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const modal = bootstrap.Modal.getInstance(document.getElementById('confirmGenerateRawModal'));
             modal.hide();
             form.submit();
-        });
-    }
-    
-    // ==================== REPLACER LE RAPPORT ====================
-    const replaceBtn = document.getElementById('confirmReplaceBtn');
-    if (replaceBtn) {
-        replaceBtn.addEventListener('click', function() {
-            // Le formulaire de remplacement est déjà dans la page
-            const form = document.querySelector('#confirmReplaceModal').closest('form');
-            if (form) {
-                form.submit();
-            }
-            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmReplaceModal'));
-            modal.hide();
         });
     }
     

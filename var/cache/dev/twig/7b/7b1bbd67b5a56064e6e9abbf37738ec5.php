@@ -139,6 +139,22 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
         border-radius: 0.5rem;
         margin-bottom: 1rem;
     }
+    .period-error {
+        background: #fee2e2;
+        border-left: 4px solid #dc2626;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .modal-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
 </style>
 ";
         
@@ -150,7 +166,7 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
         yield from [];
     }
 
-    // line 48
+    // line 64
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -163,7 +179,7 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 49
+        // line 65
         yield "<div class=\"container-fluid px-4\">
     <div class=\"d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3\">
         <div>
@@ -171,7 +187,7 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
                 <ol class=\"breadcrumb\">
                     <li class=\"breadcrumb-item\">
                         <a href=\"";
-        // line 55
+        // line 71
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_index");
         yield "\" class=\"text-decoration-none\">
                             <i class=\"fas fa-chart-line me-1\"></i> Analyses
@@ -187,7 +203,7 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
         </div>
         <div>
             <a href=\"";
-        // line 68
+        // line 84
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_index");
         yield "\" class=\"btn btn-outline-secondary\">
                 <i class=\"fas fa-arrow-left me-1\"></i> Retour
@@ -216,8 +232,8 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
                             <div class=\"mb-2\">
                                 <small class=\"text-muted\">Nom de l'entreprise</small>
                                 <div class=\"fw-bold fs-5\">";
-        // line 94
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 94, $this->source); })()), "companyName", [], "any", false, false, false, 94), "html", null, true);
+        // line 110
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 110, $this->source); })()), "companyName", [], "any", false, false, false, 110), "html", null, true);
         yield "</div>
                             </div>
                         </div>
@@ -225,8 +241,8 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
                             <div class=\"mb-2\">
                                 <small class=\"text-muted\">N° Abonnement</small>
                                 <div class=\"fw-bold\">";
-        // line 100
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 100, $this->source); })()), "subscriptionNumber", [], "any", false, false, false, 100), "html", null, true);
+        // line 116
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 116, $this->source); })()), "subscriptionNumber", [], "any", false, false, false, 116), "html", null, true);
         yield "</div>
                             </div>
                         </div>
@@ -234,8 +250,8 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
                             <div class=\"mb-2\">
                                 <small class=\"text-muted\">Type</small>
                                 <div>";
-        // line 106
-        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 106, $this->source); })()), "type", [], "any", false, false, false, 106) == "restaurant")) ? ("🍽️ Restaurant") : ("🛒 Commerce"));
+        // line 122
+        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 122, $this->source); })()), "type", [], "any", false, false, false, 122) == "restaurant")) ? ("🍽️ Restaurant") : ("🛒 Commerce"));
         yield "</div>
                             </div>
                         </div>
@@ -243,8 +259,8 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
                             <div class=\"mb-2\">
                                 <small class=\"text-muted\">Email</small>
                                 <div>";
-        // line 112
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 112, $this->source); })()), "email", [], "any", false, false, false, 112), "html", null, true);
+        // line 128
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 128, $this->source); })()), "email", [], "any", false, false, false, 128), "html", null, true);
         yield "</div>
                             </div>
                         </div>
@@ -264,111 +280,157 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
         </div>
         <div class=\"card-body\">
             ";
-        // line 130
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 130, $this->source); })()), 'form_start', ["attr" => ["id" => "analysisForm"]]);
+        // line 147
+        yield "            ";
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 147, $this->source); })()), 'form_start', ["attr" => ["id" => "analysisForm"]]);
+        yield "
+            ";
+        // line 148
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 148, $this->source); })()), 'errors');
         yield "
             
-            <!-- Type d'analyse -->
+            <!-- Type d'analyse - Caché car on utilise des cartes -->
+            ";
+        // line 151
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 151, $this->source); })()), "type", [], "any", false, false, false, 151), 'widget', ["attr" => ["style" => "display: none;", "id" => "typeInput"]]);
+        yield "
+            
             <div class=\"mb-4\">
                 <label class=\"form-label fw-bold\">📊 Type d'analyse</label>
                 <div class=\"row g-3\" id=\"typeCards\">
-                    <div class=\"col-md-3\">
-                        <div class=\"price-card text-center p-3\" data-type=\"standard\" data-price=\"50000\">
-                            <i class=\"fas fa-file-excel fa-3x text-success mb-2\"></i>
-                            <h6 class=\"mb-1\">Analyse Standard</h6>
-                            <div class=\"price\">50 000 <small>FCFA</small></div>
-                            <small class=\"text-muted\">Export Excel complet</small>
+                    ";
+        // line 156
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["prices"]) || array_key_exists("prices", $context) ? $context["prices"] : (function () { throw new RuntimeError('Variable "prices" does not exist.', 156, $this->source); })()));
+        foreach ($context['_seq'] as $context["_key"] => $context["price"]) {
+            // line 157
+            yield "                        <div class=\"col-md-3\">
+                            <div class=\"price-card text-center p-3\" 
+                                 data-type=\"";
+            // line 159
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 159), "html", null, true);
+            yield "\" 
+                                 data-price=\"";
+            // line 160
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "price", [], "any", false, false, false, 160), "html", null, true);
+            yield "\"
+                                 data-label=\"";
+            // line 161
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "label", [], "any", false, false, false, 161), "html", null, true);
+            yield "\">
+                                ";
+            // line 162
+            if ((CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 162) == "standard")) {
+                // line 163
+                yield "                                    <i class=\"fas fa-file-excel fa-3x text-success mb-2\"></i>
+                                ";
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 164
+$context["price"], "type", [], "any", false, false, false, 164) == "powerbi")) {
+                // line 165
+                yield "                                    <i class=\"fas fa-chart-line fa-3x text-info mb-2\"></i>
+                                ";
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 166
+$context["price"], "type", [], "any", false, false, false, 166) == "custom")) {
+                // line 167
+                yield "                                    <i class=\"fas fa-crown fa-3x text-warning mb-2\"></i>
+                                ";
+            } elseif ((CoreExtension::getAttribute($this->env, $this->source,             // line 168
+$context["price"], "type", [], "any", false, false, false, 168) == "subscription")) {
+                // line 169
+                yield "                                    <i class=\"fas fa-calendar-alt fa-3x text-primary mb-2\"></i>
+                                ";
+            } else {
+                // line 171
+                yield "                                    <i class=\"fas fa-chart-simple fa-3x text-secondary mb-2\"></i>
+                                ";
+            }
+            // line 173
+            yield "                                <h6 class=\"mb-1\">";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "label", [], "any", false, false, false, 173), "html", null, true);
+            yield "</h6>
+                                <div class=\"price\">
+                                    ";
+            // line 175
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "price", [], "any", false, false, false, 175), 0, ",", " "), "html", null, true);
+            yield " 
+                                    <small>FCFA";
+            // line 176
+            if ((CoreExtension::getAttribute($this->env, $this->source, $context["price"], "type", [], "any", false, false, false, 176) == "subscription")) {
+                yield "/mois";
+            }
+            yield "</small>
+                                </div>
+                                <small class=\"text-muted\">";
+            // line 178
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, $context["price"], "description", [], "any", false, false, false, 178)), "truncate", [50], "method", false, false, false, 178), "html", null, true);
+            yield "</small>
+                            </div>
                         </div>
-                    </div>
-                    <div class=\"col-md-3\">
-                        <div class=\"price-card text-center p-3\" data-type=\"powerbi\" data-price=\"150000\">
-                            <i class=\"fas fa-chart-line fa-3x text-info mb-2\"></i>
-                            <h6 class=\"mb-1\">Analyse Power BI</h6>
-                            <div class=\"price\">150 000 <small>FCFA</small></div>
-                            <small class=\"text-muted\">+ Dashboard interactif</small>
-                        </div>
-                    </div>
-                    <div class=\"col-md-3\">
-                        <div class=\"price-card text-center p-3\" data-type=\"custom\" data-price=\"300000\">
-                            <i class=\"fas fa-crown fa-3x text-warning mb-2\"></i>
-                            <h6 class=\"mb-1\">Analyse sur mesure</h6>
-                            <div class=\"price\">300 000 <small>FCFA</small></div>
-                            <small class=\"text-muted\">+ Accompagnement</small>
-                        </div>
-                    </div>
-                    <div class=\"col-md-3\">
-                        <div class=\"price-card text-center p-3\" data-type=\"subscription\" data-price=\"100000\">
-                            <i class=\"fas fa-calendar-alt fa-3x text-primary mb-2\"></i>
-                            <h6 class=\"mb-1\">Abonnement mensuel</h6>
-                            <div class=\"price\">100 000 <small>FCFA/mois</small></div>
-                            <small class=\"text-muted\">Automatique chaque mois</small>
-                        </div>
-                    </div>
-                </div>
+                    ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['price'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 182
+        yield "                </div>
                 <div class=\"type-error text-danger small mt-2\" style=\"display: none;\">
                     <i class=\"fas fa-exclamation-circle me-1\"></i> Veuillez sélectionner un type d'analyse.
                 </div>
-                ";
-        // line 172
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 172, $this->source); })()), "type", [], "any", false, false, false, 172), 'widget', ["attr" => ["style" => "display: none;"]]);
-        yield "
             </div>
-            
+
             <!-- Période -->
             <div class=\"row g-3 mb-4\">
                 <div class=\"col-md-6\">
                     ";
-        // line 178
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 178, $this->source); })()), "period_start", [], "any", false, false, false, 178), 'label', ["label_attr" => ["class" => "form-label fw-bold"]]);
+        // line 191
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 191, $this->source); })()), "period_start", [], "any", false, false, false, 191), 'label', ["label_attr" => ["class" => "form-label fw-bold"], "label" => "📅 Date de début"]);
         yield "
                     ";
-        // line 179
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 179, $this->source); })()), "period_start", [], "any", false, false, false, 179), 'widget');
+        // line 192
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 192, $this->source); })()), "period_start", [], "any", false, false, false, 192), 'widget', ["attr" => ["class" => "form-control", "id" => "periodStart"]]);
         yield "
+                    <small class=\"text-muted\">Maximum 365 jours (1 an)</small>
                     ";
-        // line 180
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 180, $this->source); })()), "period_start", [], "any", false, false, false, 180), 'errors');
+        // line 194
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 194, $this->source); })()), "period_start", [], "any", false, false, false, 194), 'errors');
         yield "
                 </div>
                 <div class=\"col-md-6\">
                     ";
-        // line 183
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 183, $this->source); })()), "period_end", [], "any", false, false, false, 183), 'label', ["label_attr" => ["class" => "form-label fw-bold"]]);
+        // line 197
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 197, $this->source); })()), "period_end", [], "any", false, false, false, 197), 'label', ["label_attr" => ["class" => "form-label fw-bold"], "label" => "📅 Date de fin"]);
         yield "
                     ";
-        // line 184
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 184, $this->source); })()), "period_end", [], "any", false, false, false, 184), 'widget');
+        // line 198
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 198, $this->source); })()), "period_end", [], "any", false, false, false, 198), 'widget', ["attr" => ["class" => "form-control", "id" => "periodEnd"]]);
         yield "
                     ";
-        // line 185
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 185, $this->source); })()), "period_end", [], "any", false, false, false, 185), 'errors');
+        // line 199
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 199, $this->source); })()), "period_end", [], "any", false, false, false, 199), 'errors');
         yield "
                 </div>
             </div>
-            
+
             <!-- Période warning -->
-            <div class=\"period-warning\" id=\"periodWarning\" style=\"display: none;\">
-                <i class=\"fas fa-info-circle me-2\"></i>
-                <span id=\"periodWarningText\"></span>
-            </div>
-            
+            <div id=\"periodWarning\" style=\"display: none;\" class=\"mb-3\"></div>
+
             <!-- Notes -->
             <div class=\"mb-4\">
                 ";
-        // line 197
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 197, $this->source); })()), "notes", [], "any", false, false, false, 197), 'label', ["label_attr" => ["class" => "form-label fw-bold"]]);
+        // line 208
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 208, $this->source); })()), "notes", [], "any", false, false, false, 208), 'label', ["label_attr" => ["class" => "form-label fw-bold"], "label" => "📝 Notes / Instructions"]);
         yield "
                 ";
-        // line 198
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 198, $this->source); })()), "notes", [], "any", false, false, false, 198), 'widget');
-        yield "
-                ";
-        // line 199
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 199, $this->source); })()), "notes", [], "any", false, false, false, 199), 'errors');
+        // line 209
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 209, $this->source); })()), "notes", [], "any", false, false, false, 209), 'widget', ["attr" => ["class" => "form-control", "rows" => 4, "placeholder" => "Informations complémentaires pour l'analyse..."]]);
         yield "
                 <small class=\"text-muted\">Ces notes seront transmises à l'équipe d'analyse</small>
+                ";
+        // line 211
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 211, $this->source); })()), "notes", [], "any", false, false, false, 211), 'errors');
+        yield "
             </div>
-            
+
             <!-- Récapitulatif -->
             <div class=\"info-card\">
                 <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3\">
@@ -383,7 +445,7 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
                     </div>
                 </div>
             </div>
-            
+
             <div class=\"alert alert-warning mt-3\">
                 <div class=\"d-flex gap-3\">
                     <i class=\"fas fa-info-circle fa-2x\"></i>
@@ -397,23 +459,54 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
                     </div>
                 </div>
             </div>
-            
+
             <div class=\"d-flex justify-content-end gap-2 mt-4 pt-3 border-top\">
                 <a href=\"";
-        // line 233
+        // line 244
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("super_admin_analysis_index");
         yield "\" class=\"btn btn-outline-secondary\">
                     <i class=\"fas fa-times me-1\"></i> Annuler
                 </a>
-                <button type=\"submit\" class=\"btn btn-primary\" id=\"submitBtn\" disabled>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"submitBtn\" disabled>
                     <i class=\"fas fa-save me-1\"></i> Créer la demande
                 </button>
             </div>
             
             ";
-        // line 241
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 241, $this->source); })()), 'form_end');
+        // line 252
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 252, $this->source); })()), 'form_end');
         yield "
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMATION -->
+<div class=\"modal fade\" id=\"confirmModal\" tabindex=\"-1\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header bg-primary text-white\">
+                <h5 class=\"modal-title\">
+                    <i class=\"fas fa-question-circle me-2\"></i>
+                    Confirmation
+                </h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body text-center py-4\">
+                <div class=\"modal-icon bg-primary bg-opacity-10\">
+                    <i class=\"fas fa-chart-line fa-3x text-primary\"></i>
+                </div>
+                <p id=\"confirmMessage\" class=\"mb-3\"></p>
+                <div class=\"alert alert-info text-start small\">
+                    <i class=\"fas fa-info-circle me-2\"></i>
+                    Un lien de paiement sera généré et envoyé à l'entreprise.
+                </div>
+            </div>
+            <div class=\"modal-footer justify-content-center\">
+                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmSubmitBtn\">
+                    <i class=\"fas fa-check me-2\"></i> Confirmer
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -427,7 +520,7 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
         yield from [];
     }
 
-    // line 247
+    // line 289
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -440,34 +533,31 @@ class __TwigTemplate_c71b2e77463bfe68f93f2176f4deec39 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 248
+        // line 290
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const typeCards = document.querySelectorAll('.price-card');
-    const typeInput = document.querySelector('#";
-        // line 252
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 252, $this->source); })()), "type", [], "any", false, false, false, 252), "vars", [], "any", false, false, false, 252), "id", [], "any", false, false, false, 252), "html", null, true);
-        yield "');
+    const typeInput = document.getElementById('analysis_request_type');
     const submitBtn = document.getElementById('submitBtn');
     const typeError = document.querySelector('.type-error');
-    const periodStart = document.querySelector('#";
-        // line 255
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 255, $this->source); })()), "period_start", [], "any", false, false, false, 255), "vars", [], "any", false, false, false, 255), "id", [], "any", false, false, false, 255), "html", null, true);
-        yield "');
-    const periodEnd = document.querySelector('#";
-        // line 256
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 256, $this->source); })()), "period_end", [], "any", false, false, false, 256), "vars", [], "any", false, false, false, 256), "id", [], "any", false, false, false, 256), "html", null, true);
-        yield "');
+    const periodStart = document.getElementById('analysis_request_period_start');
+    const periodEnd = document.getElementById('analysis_request_period_end');
     const recapType = document.getElementById('recapType');
     const recapPeriod = document.getElementById('recapPeriod');
     const totalAmountSpan = document.getElementById('totalAmount');
     const periodWarning = document.getElementById('periodWarning');
-    const periodWarningText = document.getElementById('periodWarningText');
+    const form = document.getElementById('analysisForm');
+    
+    const MAX_PERIOD_DAYS = 365;
     
     let selectedType = null;
     let selectedPrice = 0;
+    let selectedLabel = '';
+    
+    const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
     
     // Sélection du type
     typeCards.forEach(card => {
@@ -476,91 +566,158 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('selected');
             selectedType = this.dataset.type;
             selectedPrice = parseInt(this.dataset.price);
-            typeInput.value = selectedType;
+            selectedLabel = this.dataset.label;
+            
+            if (typeInput) {
+                typeInput.value = selectedType;
+            }
+            
             typeError.style.display = 'none';
             submitBtn.disabled = false;
             
-            // Mise à jour récapitulatif
-            const typeLabel = this.querySelector('h6').textContent;
-            recapType.innerHTML = `<strong>\${typeLabel}</strong> - \${selectedPrice.toLocaleString()} FCFA`;
+            recapType.innerHTML = `<strong>\${selectedLabel}</strong> - \${selectedPrice.toLocaleString()} FCFA\${selectedType === 'subscription' ? '/mois' : ''}`;
             updateTotalAmount();
         });
     });
     
-    // Validation des dates
-    function validateDates() {
-        const start = periodStart.value;
-        const end = periodEnd.value;
+    function updateTotalAmount() {
+        if (selectedPrice > 0) {
+            totalAmountSpan.textContent = selectedPrice.toLocaleString() + ' FCFA' + (selectedType === 'subscription' ? '/mois' : '');
+        } else {
+            totalAmountSpan.textContent = '0 FCFA';
+        }
+    }
+    
+    function validatePeriod() {
+        const start = periodStart ? periodStart.value : null;
+        const end = periodEnd ? periodEnd.value : null;
         
         if (start && end) {
             const startDate = new Date(start);
             const endDate = new Date(end);
             const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
             
-            if (diffDays > 365) {
+            if (diffDays > MAX_PERIOD_DAYS) {
+                periodWarning.className = 'period-error mb-3';
+                periodWarning.innerHTML = `
+                    <i class=\"fas fa-exclamation-circle me-2\"></i>
+                    <strong>⚠️ Période trop longue !</strong><br>
+                    La période sélectionnée couvre \${diffDays} jours. La période maximale autorisée est de \${MAX_PERIOD_DAYS} jours (environ 1 an).
+                `;
                 periodWarning.style.display = 'block';
-                periodWarningText.innerHTML = `⚠️ La période sélectionnée couvre \${diffDays} jours. Pour les analyses sur une longue période, des frais supplémentaires peuvent s'appliquer. Contactez le support.`;
+                submitBtn.disabled = true;
             } else if (diffDays > 90) {
+                periodWarning.className = 'period-warning mb-3';
+                periodWarning.innerHTML = `
+                    <i class=\"fas fa-info-circle me-2\"></i>
+                    <strong>ℹ️ Période longue</strong><br>
+                    Période de \${diffDays} jours. L'analyse sera plus volumineuse.
+                `;
                 periodWarning.style.display = 'block';
-                periodWarningText.innerHTML = `ℹ️ Période de \${diffDays} jours. L'analyse sera plus volumineuse.`;
+                submitBtn.disabled = false;
             } else {
                 periodWarning.style.display = 'none';
+                submitBtn.disabled = false;
             }
             
-            recapPeriod.innerHTML = `<strong>\${new Date(start).toLocaleDateString('fr-FR')}</strong> au <strong>\${new Date(end).toLocaleDateString('fr-FR')}</strong> (\${diffDays} jours)`;
+            recapPeriod.innerHTML = `<strong>\${startDate.toLocaleDateString('fr-FR')}</strong> au <strong>\${endDate.toLocaleDateString('fr-FR')}</strong> (\${diffDays} jours)`;
+            return true;
         } else if (start) {
             recapPeriod.innerHTML = `À partir du <strong>\${new Date(start).toLocaleDateString('fr-FR')}</strong>`;
         } else if (end) {
             recapPeriod.innerHTML = `Jusqu'au <strong>\${new Date(end).toLocaleDateString('fr-FR')}</strong>`;
         } else {
             recapPeriod.innerHTML = 'Période non définie';
+            periodWarning.style.display = 'none';
         }
         
         updateTotalAmount();
+        return true;
     }
     
-    function updateTotalAmount() {
-        if (selectedPrice > 0) {
-            totalAmountSpan.textContent = selectedPrice.toLocaleString() + ' FCFA';
-        } else {
-            totalAmountSpan.textContent = '0 FCFA';
-        }
-    }
+    if (periodStart) periodStart.addEventListener('change', validatePeriod);
+    if (periodEnd) periodEnd.addEventListener('change', validatePeriod);
+    validatePeriod();
     
-    periodStart?.addEventListener('change', validateDates);
-    periodEnd?.addEventListener('change', validateDates);
-    
-    validateDates();
-    
-    // Confirmation avant soumission
-    document.getElementById('analysisForm').addEventListener('submit', function(e) {
+    // Bouton d'envoi - ouvre modal de confirmation
+    submitBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
         if (!selectedType) {
-            e.preventDefault();
             typeError.style.display = 'block';
             typeError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            return false;
+            return;
         }
         
-        const start = periodStart.value;
-        const end = periodEnd.value;
+        const start = periodStart ? periodStart.value : null;
+        const end = periodEnd ? periodEnd.value : null;
         
         if (!start || !end) {
-            e.preventDefault();
-            alert('Veuillez sélectionner une période complète.');
-            return false;
+            periodWarning.className = 'period-error mb-3';
+            periodWarning.innerHTML = `
+                <i class=\"fas fa-exclamation-circle me-2\"></i>
+                <strong>⚠️ Période incomplète !</strong><br>
+                Veuillez sélectionner une date de début et une date de fin.
+            `;
+            periodWarning.style.display = 'block';
+            periodWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
         }
         
-        const typeLabel = document.querySelector('.price-card.selected h6').textContent;
-        const message = `Confirmez la création de l'analyse suivante :\\n\\n` +
-                       `📊 Type: \${typeLabel}\\n` +
-                       `📅 Période: \${new Date(start).toLocaleDateString('fr-FR')} au \${new Date(end).toLocaleDateString('fr-FR')}\\n` +
-                       `💰 Montant: \${selectedPrice.toLocaleString()} FCFA\\n\\n` +
-                       `Un lien de paiement sera généré pour l'entreprise.`;
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
         
-        if (!confirm(message)) {
-            e.preventDefault();
-            return false;
+        if (diffDays > MAX_PERIOD_DAYS) {
+            periodWarning.className = 'period-error mb-3';
+            periodWarning.innerHTML = `
+                <i class=\"fas fa-exclamation-circle me-2\"></i>
+                <strong>⚠️ Période trop longue !</strong><br>
+                La période sélectionnée couvre \${diffDays} jours. La période maximale est de \${MAX_PERIOD_DAYS} jours.
+            `;
+            periodWarning.style.display = 'block';
+            periodWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
         }
+        
+        const confirmMessage = document.getElementById('confirmMessage');
+        confirmMessage.innerHTML = `
+            <strong>Confirmez-vous la création de l'analyse ?</strong><br><br>
+            <div class=\"text-start\">
+                <div class=\"mb-2\">
+                    <i class=\"fas fa-building text-primary me-2\"></i>
+                    <strong>Entreprise :</strong> ";
+        // line 441
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 441, $this->source); })()), "companyName", [], "any", false, false, false, 441), "html", null, true);
+        yield "
+                </div>
+                <div class=\"mb-2\">
+                    <i class=\"fas fa-tag text-primary me-2\"></i>
+                    <strong>Type :</strong> \${selectedLabel}
+                </div>
+                <div class=\"mb-2\">
+                    <i class=\"fas fa-calendar text-primary me-2\"></i>
+                    <strong>Période :</strong> \${startDate.toLocaleDateString('fr-FR')} au \${endDate.toLocaleDateString('fr-FR')}
+                </div>
+                <div class=\"mb-2\">
+                    <i class=\"fas fa-hourglass-half text-primary me-2\"></i>
+                    <strong>Durée :</strong> \${diffDays} jours
+                </div>
+                <div>
+                    <i class=\"fas fa-money-bill-wave text-primary me-2\"></i>
+                    <strong>Montant :</strong> \${selectedPrice.toLocaleString()} FCFA\${selectedType === 'subscription' ? '/mois' : ''}
+                </div>
+            </div>
+        `;
+        
+        confirmModal.show();
+    });
+    
+    // ✅ Soumission du formulaire (comme pour l'entreprise)
+    confirmSubmitBtn.addEventListener('click', function() {
+        confirmSubmitBtn.disabled = true;
+        confirmSubmitBtn.innerHTML = '<span class=\"spinner-border spinner-border-sm me-2\"></span> Création en cours...';
+        form.submit();
     });
 });
 </script>
@@ -595,7 +752,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  461 => 256,  457 => 255,  451 => 252,  444 => 248,  431 => 247,  415 => 241,  404 => 233,  367 => 199,  363 => 198,  359 => 197,  344 => 185,  340 => 184,  336 => 183,  330 => 180,  326 => 179,  322 => 178,  313 => 172,  268 => 130,  247 => 112,  238 => 106,  229 => 100,  220 => 94,  191 => 68,  175 => 55,  167 => 49,  154 => 48,  103 => 7,  90 => 6,  66 => 4,  43 => 2,);
+        return array (  691 => 441,  537 => 290,  524 => 289,  477 => 252,  466 => 244,  430 => 211,  425 => 209,  421 => 208,  409 => 199,  405 => 198,  401 => 197,  395 => 194,  390 => 192,  386 => 191,  375 => 182,  365 => 178,  358 => 176,  354 => 175,  348 => 173,  344 => 171,  340 => 169,  338 => 168,  335 => 167,  333 => 166,  330 => 165,  328 => 164,  325 => 163,  323 => 162,  319 => 161,  315 => 160,  311 => 159,  307 => 157,  303 => 156,  295 => 151,  289 => 148,  284 => 147,  263 => 128,  254 => 122,  245 => 116,  236 => 110,  207 => 84,  191 => 71,  183 => 65,  170 => 64,  103 => 7,  90 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -643,6 +800,22 @@ document.addEventListener('DOMContentLoaded', function() {
         padding: 0.75rem 1rem;
         border-radius: 0.5rem;
         margin-bottom: 1rem;
+    }
+    .period-error {
+        background: #fee2e2;
+        border-left: 4px solid #dc2626;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .modal-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
     }
 </style>
 {% endblock %}
@@ -729,79 +902,74 @@ document.addEventListener('DOMContentLoaded', function() {
             </h5>
         </div>
         <div class=\"card-body\">
+            {# ✅ Formulaire Symfony standard comme pour l'entreprise #}
             {{ form_start(form, {'attr': {'id': 'analysisForm'}}) }}
+            {{ form_errors(form) }}
             
-            <!-- Type d'analyse -->
+            <!-- Type d'analyse - Caché car on utilise des cartes -->
+            {{ form_widget(form.type, {'attr': {'style': 'display: none;', 'id': 'typeInput'}}) }}
+            
             <div class=\"mb-4\">
                 <label class=\"form-label fw-bold\">📊 Type d'analyse</label>
                 <div class=\"row g-3\" id=\"typeCards\">
-                    <div class=\"col-md-3\">
-                        <div class=\"price-card text-center p-3\" data-type=\"standard\" data-price=\"50000\">
-                            <i class=\"fas fa-file-excel fa-3x text-success mb-2\"></i>
-                            <h6 class=\"mb-1\">Analyse Standard</h6>
-                            <div class=\"price\">50 000 <small>FCFA</small></div>
-                            <small class=\"text-muted\">Export Excel complet</small>
+                    {% for price in prices %}
+                        <div class=\"col-md-3\">
+                            <div class=\"price-card text-center p-3\" 
+                                 data-type=\"{{ price.type }}\" 
+                                 data-price=\"{{ price.price }}\"
+                                 data-label=\"{{ price.label }}\">
+                                {% if price.type == 'standard' %}
+                                    <i class=\"fas fa-file-excel fa-3x text-success mb-2\"></i>
+                                {% elseif price.type == 'powerbi' %}
+                                    <i class=\"fas fa-chart-line fa-3x text-info mb-2\"></i>
+                                {% elseif price.type == 'custom' %}
+                                    <i class=\"fas fa-crown fa-3x text-warning mb-2\"></i>
+                                {% elseif price.type == 'subscription' %}
+                                    <i class=\"fas fa-calendar-alt fa-3x text-primary mb-2\"></i>
+                                {% else %}
+                                    <i class=\"fas fa-chart-simple fa-3x text-secondary mb-2\"></i>
+                                {% endif %}
+                                <h6 class=\"mb-1\">{{ price.label }}</h6>
+                                <div class=\"price\">
+                                    {{ price.price|number_format(0, ',', ' ') }} 
+                                    <small>FCFA{% if price.type == 'subscription' %}/mois{% endif %}</small>
+                                </div>
+                                <small class=\"text-muted\">{{ price.description|u.truncate(50) }}</small>
+                            </div>
                         </div>
-                    </div>
-                    <div class=\"col-md-3\">
-                        <div class=\"price-card text-center p-3\" data-type=\"powerbi\" data-price=\"150000\">
-                            <i class=\"fas fa-chart-line fa-3x text-info mb-2\"></i>
-                            <h6 class=\"mb-1\">Analyse Power BI</h6>
-                            <div class=\"price\">150 000 <small>FCFA</small></div>
-                            <small class=\"text-muted\">+ Dashboard interactif</small>
-                        </div>
-                    </div>
-                    <div class=\"col-md-3\">
-                        <div class=\"price-card text-center p-3\" data-type=\"custom\" data-price=\"300000\">
-                            <i class=\"fas fa-crown fa-3x text-warning mb-2\"></i>
-                            <h6 class=\"mb-1\">Analyse sur mesure</h6>
-                            <div class=\"price\">300 000 <small>FCFA</small></div>
-                            <small class=\"text-muted\">+ Accompagnement</small>
-                        </div>
-                    </div>
-                    <div class=\"col-md-3\">
-                        <div class=\"price-card text-center p-3\" data-type=\"subscription\" data-price=\"100000\">
-                            <i class=\"fas fa-calendar-alt fa-3x text-primary mb-2\"></i>
-                            <h6 class=\"mb-1\">Abonnement mensuel</h6>
-                            <div class=\"price\">100 000 <small>FCFA/mois</small></div>
-                            <small class=\"text-muted\">Automatique chaque mois</small>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
                 <div class=\"type-error text-danger small mt-2\" style=\"display: none;\">
                     <i class=\"fas fa-exclamation-circle me-1\"></i> Veuillez sélectionner un type d'analyse.
                 </div>
-                {{ form_widget(form.type, {'attr': {'style': 'display: none;'}}) }}
             </div>
-            
+
             <!-- Période -->
             <div class=\"row g-3 mb-4\">
                 <div class=\"col-md-6\">
-                    {{ form_label(form.period_start, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                    {{ form_widget(form.period_start) }}
+                    {{ form_label(form.period_start, '📅 Date de début', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                    {{ form_widget(form.period_start, {'attr': {'class': 'form-control', 'id': 'periodStart'}}) }}
+                    <small class=\"text-muted\">Maximum 365 jours (1 an)</small>
                     {{ form_errors(form.period_start) }}
                 </div>
                 <div class=\"col-md-6\">
-                    {{ form_label(form.period_end, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                    {{ form_widget(form.period_end) }}
+                    {{ form_label(form.period_end, '📅 Date de fin', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                    {{ form_widget(form.period_end, {'attr': {'class': 'form-control', 'id': 'periodEnd'}}) }}
                     {{ form_errors(form.period_end) }}
                 </div>
             </div>
-            
+
             <!-- Période warning -->
-            <div class=\"period-warning\" id=\"periodWarning\" style=\"display: none;\">
-                <i class=\"fas fa-info-circle me-2\"></i>
-                <span id=\"periodWarningText\"></span>
-            </div>
-            
+            <div id=\"periodWarning\" style=\"display: none;\" class=\"mb-3\"></div>
+
             <!-- Notes -->
             <div class=\"mb-4\">
-                {{ form_label(form.notes, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                {{ form_widget(form.notes) }}
-                {{ form_errors(form.notes) }}
+                {{ form_label(form.notes, '📝 Notes / Instructions', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.notes, {'attr': {'class': 'form-control', 'rows': 4, 'placeholder': 'Informations complémentaires pour l\\'analyse...'}}) }}
                 <small class=\"text-muted\">Ces notes seront transmises à l'équipe d'analyse</small>
+                {{ form_errors(form.notes) }}
             </div>
-            
+
             <!-- Récapitulatif -->
             <div class=\"info-card\">
                 <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3\">
@@ -816,7 +984,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
             </div>
-            
+
             <div class=\"alert alert-warning mt-3\">
                 <div class=\"d-flex gap-3\">
                     <i class=\"fas fa-info-circle fa-2x\"></i>
@@ -830,17 +998,48 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
             </div>
-            
+
             <div class=\"d-flex justify-content-end gap-2 mt-4 pt-3 border-top\">
                 <a href=\"{{ path('super_admin_analysis_index') }}\" class=\"btn btn-outline-secondary\">
                     <i class=\"fas fa-times me-1\"></i> Annuler
                 </a>
-                <button type=\"submit\" class=\"btn btn-primary\" id=\"submitBtn\" disabled>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"submitBtn\" disabled>
                     <i class=\"fas fa-save me-1\"></i> Créer la demande
                 </button>
             </div>
             
             {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMATION -->
+<div class=\"modal fade\" id=\"confirmModal\" tabindex=\"-1\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header bg-primary text-white\">
+                <h5 class=\"modal-title\">
+                    <i class=\"fas fa-question-circle me-2\"></i>
+                    Confirmation
+                </h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body text-center py-4\">
+                <div class=\"modal-icon bg-primary bg-opacity-10\">
+                    <i class=\"fas fa-chart-line fa-3x text-primary\"></i>
+                </div>
+                <p id=\"confirmMessage\" class=\"mb-3\"></p>
+                <div class=\"alert alert-info text-start small\">
+                    <i class=\"fas fa-info-circle me-2\"></i>
+                    Un lien de paiement sera généré et envoyé à l'entreprise.
+                </div>
+            </div>
+            <div class=\"modal-footer justify-content-center\">
+                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmSubmitBtn\">
+                    <i class=\"fas fa-check me-2\"></i> Confirmer
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -851,19 +1050,25 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const typeCards = document.querySelectorAll('.price-card');
-    const typeInput = document.querySelector('#{{ form.type.vars.id }}');
+    const typeInput = document.getElementById('analysis_request_type');
     const submitBtn = document.getElementById('submitBtn');
     const typeError = document.querySelector('.type-error');
-    const periodStart = document.querySelector('#{{ form.period_start.vars.id }}');
-    const periodEnd = document.querySelector('#{{ form.period_end.vars.id }}');
+    const periodStart = document.getElementById('analysis_request_period_start');
+    const periodEnd = document.getElementById('analysis_request_period_end');
     const recapType = document.getElementById('recapType');
     const recapPeriod = document.getElementById('recapPeriod');
     const totalAmountSpan = document.getElementById('totalAmount');
     const periodWarning = document.getElementById('periodWarning');
-    const periodWarningText = document.getElementById('periodWarningText');
+    const form = document.getElementById('analysisForm');
+    
+    const MAX_PERIOD_DAYS = 365;
     
     let selectedType = null;
     let selectedPrice = 0;
+    let selectedLabel = '';
+    
+    const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
     
     // Sélection du type
     typeCards.forEach(card => {
@@ -872,91 +1077,155 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('selected');
             selectedType = this.dataset.type;
             selectedPrice = parseInt(this.dataset.price);
-            typeInput.value = selectedType;
+            selectedLabel = this.dataset.label;
+            
+            if (typeInput) {
+                typeInput.value = selectedType;
+            }
+            
             typeError.style.display = 'none';
             submitBtn.disabled = false;
             
-            // Mise à jour récapitulatif
-            const typeLabel = this.querySelector('h6').textContent;
-            recapType.innerHTML = `<strong>\${typeLabel}</strong> - \${selectedPrice.toLocaleString()} FCFA`;
+            recapType.innerHTML = `<strong>\${selectedLabel}</strong> - \${selectedPrice.toLocaleString()} FCFA\${selectedType === 'subscription' ? '/mois' : ''}`;
             updateTotalAmount();
         });
     });
     
-    // Validation des dates
-    function validateDates() {
-        const start = periodStart.value;
-        const end = periodEnd.value;
+    function updateTotalAmount() {
+        if (selectedPrice > 0) {
+            totalAmountSpan.textContent = selectedPrice.toLocaleString() + ' FCFA' + (selectedType === 'subscription' ? '/mois' : '');
+        } else {
+            totalAmountSpan.textContent = '0 FCFA';
+        }
+    }
+    
+    function validatePeriod() {
+        const start = periodStart ? periodStart.value : null;
+        const end = periodEnd ? periodEnd.value : null;
         
         if (start && end) {
             const startDate = new Date(start);
             const endDate = new Date(end);
             const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
             
-            if (diffDays > 365) {
+            if (diffDays > MAX_PERIOD_DAYS) {
+                periodWarning.className = 'period-error mb-3';
+                periodWarning.innerHTML = `
+                    <i class=\"fas fa-exclamation-circle me-2\"></i>
+                    <strong>⚠️ Période trop longue !</strong><br>
+                    La période sélectionnée couvre \${diffDays} jours. La période maximale autorisée est de \${MAX_PERIOD_DAYS} jours (environ 1 an).
+                `;
                 periodWarning.style.display = 'block';
-                periodWarningText.innerHTML = `⚠️ La période sélectionnée couvre \${diffDays} jours. Pour les analyses sur une longue période, des frais supplémentaires peuvent s'appliquer. Contactez le support.`;
+                submitBtn.disabled = true;
             } else if (diffDays > 90) {
+                periodWarning.className = 'period-warning mb-3';
+                periodWarning.innerHTML = `
+                    <i class=\"fas fa-info-circle me-2\"></i>
+                    <strong>ℹ️ Période longue</strong><br>
+                    Période de \${diffDays} jours. L'analyse sera plus volumineuse.
+                `;
                 periodWarning.style.display = 'block';
-                periodWarningText.innerHTML = `ℹ️ Période de \${diffDays} jours. L'analyse sera plus volumineuse.`;
+                submitBtn.disabled = false;
             } else {
                 periodWarning.style.display = 'none';
+                submitBtn.disabled = false;
             }
             
-            recapPeriod.innerHTML = `<strong>\${new Date(start).toLocaleDateString('fr-FR')}</strong> au <strong>\${new Date(end).toLocaleDateString('fr-FR')}</strong> (\${diffDays} jours)`;
+            recapPeriod.innerHTML = `<strong>\${startDate.toLocaleDateString('fr-FR')}</strong> au <strong>\${endDate.toLocaleDateString('fr-FR')}</strong> (\${diffDays} jours)`;
+            return true;
         } else if (start) {
             recapPeriod.innerHTML = `À partir du <strong>\${new Date(start).toLocaleDateString('fr-FR')}</strong>`;
         } else if (end) {
             recapPeriod.innerHTML = `Jusqu'au <strong>\${new Date(end).toLocaleDateString('fr-FR')}</strong>`;
         } else {
             recapPeriod.innerHTML = 'Période non définie';
+            periodWarning.style.display = 'none';
         }
         
         updateTotalAmount();
+        return true;
     }
     
-    function updateTotalAmount() {
-        if (selectedPrice > 0) {
-            totalAmountSpan.textContent = selectedPrice.toLocaleString() + ' FCFA';
-        } else {
-            totalAmountSpan.textContent = '0 FCFA';
-        }
-    }
+    if (periodStart) periodStart.addEventListener('change', validatePeriod);
+    if (periodEnd) periodEnd.addEventListener('change', validatePeriod);
+    validatePeriod();
     
-    periodStart?.addEventListener('change', validateDates);
-    periodEnd?.addEventListener('change', validateDates);
-    
-    validateDates();
-    
-    // Confirmation avant soumission
-    document.getElementById('analysisForm').addEventListener('submit', function(e) {
+    // Bouton d'envoi - ouvre modal de confirmation
+    submitBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
         if (!selectedType) {
-            e.preventDefault();
             typeError.style.display = 'block';
             typeError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            return false;
+            return;
         }
         
-        const start = periodStart.value;
-        const end = periodEnd.value;
+        const start = periodStart ? periodStart.value : null;
+        const end = periodEnd ? periodEnd.value : null;
         
         if (!start || !end) {
-            e.preventDefault();
-            alert('Veuillez sélectionner une période complète.');
-            return false;
+            periodWarning.className = 'period-error mb-3';
+            periodWarning.innerHTML = `
+                <i class=\"fas fa-exclamation-circle me-2\"></i>
+                <strong>⚠️ Période incomplète !</strong><br>
+                Veuillez sélectionner une date de début et une date de fin.
+            `;
+            periodWarning.style.display = 'block';
+            periodWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
         }
         
-        const typeLabel = document.querySelector('.price-card.selected h6').textContent;
-        const message = `Confirmez la création de l'analyse suivante :\\n\\n` +
-                       `📊 Type: \${typeLabel}\\n` +
-                       `📅 Période: \${new Date(start).toLocaleDateString('fr-FR')} au \${new Date(end).toLocaleDateString('fr-FR')}\\n` +
-                       `💰 Montant: \${selectedPrice.toLocaleString()} FCFA\\n\\n` +
-                       `Un lien de paiement sera généré pour l'entreprise.`;
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
         
-        if (!confirm(message)) {
-            e.preventDefault();
-            return false;
+        if (diffDays > MAX_PERIOD_DAYS) {
+            periodWarning.className = 'period-error mb-3';
+            periodWarning.innerHTML = `
+                <i class=\"fas fa-exclamation-circle me-2\"></i>
+                <strong>⚠️ Période trop longue !</strong><br>
+                La période sélectionnée couvre \${diffDays} jours. La période maximale est de \${MAX_PERIOD_DAYS} jours.
+            `;
+            periodWarning.style.display = 'block';
+            periodWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
         }
+        
+        const confirmMessage = document.getElementById('confirmMessage');
+        confirmMessage.innerHTML = `
+            <strong>Confirmez-vous la création de l'analyse ?</strong><br><br>
+            <div class=\"text-start\">
+                <div class=\"mb-2\">
+                    <i class=\"fas fa-building text-primary me-2\"></i>
+                    <strong>Entreprise :</strong> {{ company.companyName }}
+                </div>
+                <div class=\"mb-2\">
+                    <i class=\"fas fa-tag text-primary me-2\"></i>
+                    <strong>Type :</strong> \${selectedLabel}
+                </div>
+                <div class=\"mb-2\">
+                    <i class=\"fas fa-calendar text-primary me-2\"></i>
+                    <strong>Période :</strong> \${startDate.toLocaleDateString('fr-FR')} au \${endDate.toLocaleDateString('fr-FR')}
+                </div>
+                <div class=\"mb-2\">
+                    <i class=\"fas fa-hourglass-half text-primary me-2\"></i>
+                    <strong>Durée :</strong> \${diffDays} jours
+                </div>
+                <div>
+                    <i class=\"fas fa-money-bill-wave text-primary me-2\"></i>
+                    <strong>Montant :</strong> \${selectedPrice.toLocaleString()} FCFA\${selectedType === 'subscription' ? '/mois' : ''}
+                </div>
+            </div>
+        `;
+        
+        confirmModal.show();
+    });
+    
+    // ✅ Soumission du formulaire (comme pour l'entreprise)
+    confirmSubmitBtn.addEventListener('click', function() {
+        confirmSubmitBtn.disabled = true;
+        confirmSubmitBtn.innerHTML = '<span class=\"spinner-border spinner-border-sm me-2\"></span> Création en cours...';
+        form.submit();
     });
 });
 </script>
