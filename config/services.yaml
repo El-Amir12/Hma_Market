@@ -89,6 +89,12 @@ services:
         tags: ['twig.extension']
         public: false
 
+    App\Twig\ColorExtension:
+        tags: ['twig.extension']
+
+    App\Twig\CompanyExtension:
+        tags: ['twig.extension']
+
     # ==================== SERVICES PDF ====================
     Dompdf\Dompdf:
         public: false
@@ -134,6 +140,7 @@ services:
             $slugger: '@Symfony\Component\String\Slugger\SluggerInterface'
         public: false
 
+    # ==================== SERVICE DE SUPPRESSION COMPLET ====================
     App\Service\CompanyDeletionService:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
@@ -143,6 +150,16 @@ services:
             $photosDirectory: '%photos_directory%'
             $productsDirectory: '%products_directory%'
             $categoriesDirectory: '%categories_directory%'
+            $uploadsDirectory: '%uploads_directory%'
+            $categoriesPlatsDirectory: '%categories_plats_directory%'
+            $imagesPlatsDirectory: '%images_plats_directory%'
+            $promotionsDirectory: '%promotions_directory%'
+            $bonCommandeDirectory: '%bon_commande_directory%'
+            $recuAchatDirectory: '%recu_achat_directory%'
+            $recuAbonnementDirectory: '%recus_abonnement_directory%'
+            $exportsDirectory: '%exports_directory%'
+            $salesExportsDirectory: '%sales_exports_directory%'
+            $saleReceiptsDirectory: '%sale_receipts_directory%'
 
     App\Service\FedaPayService:
         arguments:
@@ -305,6 +322,25 @@ services:
             $supportEmail: '%support_email%'
         public: true
 
+    # ==================== SERVICES DE RAPPORTS ====================
+    App\Service\Report\FinancialCalculatorService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $paymentRepository: '@App\Repository\PaymentRepository'
+            $subscriptionRepository: '@App\Repository\SubscriptionRepository'
+            $logger: '@monolog.logger'
+        public: true
+
+    App\Service\Report\SalesReportService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+        public: true
+
+    App\Service\Report\StockReportService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+        public: true
+
 
     # ==================== SERVICES SUPER ADMIN ====================
     App\Service\SuperAdmin\CompanyAnalysisExportService:
@@ -400,3 +436,9 @@ services:
             $logger: '@monolog.logger'
         tags:
             - { name: controller.service_arguments }
+
+    App\Service\ProxyInitializerService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+        public: true
+            

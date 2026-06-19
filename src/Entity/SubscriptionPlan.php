@@ -45,6 +45,16 @@ class SubscriptionPlan
     #[ORM\Column(nullable: true)]
     private ?int $maxSuppliers = null;
 
+    // ========== CHAMPS POUR LES RESTAURANTS (correspondent à HmaService) ==========
+    
+    #[ORM\Column(nullable: true)]
+    private ?int $maxRecipes = null;
+    
+    #[ORM\Column(nullable: true)]
+    private ?int $maxRecipeCategories = null;
+    
+    // ========================================================
+
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $features = null;
 
@@ -70,6 +80,8 @@ class SubscriptionPlan
     {
         $this->subscriptions = new ArrayCollection();
     }
+
+    // ==================== GETTERS & SETTERS ====================
 
     public function getId(): ?int
     {
@@ -175,16 +187,38 @@ class SubscriptionPlan
         return $this;
     }
 
-    /**
-     * Retourne les fonctionnalités sous forme de tableau.
-     * Si la valeur est null en base, retourne un tableau vide.
-     */
+    // ========== GETTERS & SETTERS POUR RESTAURANT ==========
+
+    public function getMaxRecipes(): ?int
+    {
+        return $this->maxRecipes;
+    }
+
+    public function setMaxRecipes(?int $maxRecipes): static
+    {
+        $this->maxRecipes = $maxRecipes;
+        return $this;
+    }
+
+    public function getMaxRecipeCategories(): ?int
+    {
+        return $this->maxRecipeCategories;
+    }
+
+    public function setMaxRecipeCategories(?int $maxRecipeCategories): static
+    {
+        $this->maxRecipeCategories = $maxRecipeCategories;
+        return $this;
+    }
+
+    // ============================================================
+
     public function getFeatures(): array
     {
         return $this->features ?? [];
     }
 
-    public function setFeatures(array $features): static
+    public function setFeatures(?array $features): static
     {
         $this->features = $features;
         return $this;
@@ -234,18 +268,6 @@ class SubscriptionPlan
         return $this;
     }
 
-    #[ORM\PrePersist]
-    public function setCreatedAtValue(): void
-    {
-        $this->createdAt = new \DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
     /**
      * @return Collection<int, Subscription>
      */
@@ -273,6 +295,22 @@ class SubscriptionPlan
         return $this;
     }
 
+    // ==================== LIFECYCLE CALLBACKS ====================
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    // ==================== METHODES UTILITAIRES ====================
+
     /**
      * Vérifie si le plan est illimité (tous les champs de limite sont null)
      */
@@ -282,6 +320,8 @@ class SubscriptionPlan
             && $this->maxProducts === null 
             && $this->maxOrdersPerMonth === null
             && $this->maxCategories === null
-            && $this->maxSuppliers === null;
+            && $this->maxSuppliers === null
+            && $this->maxRecipes === null
+            && $this->maxRecipeCategories === null;
     }
 }

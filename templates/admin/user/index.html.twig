@@ -156,77 +156,126 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
+                <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                     <h5 class="mb-0 fw-bold"><i class="bi bi-sliders2 me-2"></i>Filtres avancés</h5>
-                    {% if is_super_admin or can_add_user %}
-                        <a href="{{ path('app_user_new') }}" class="btn btn-success">
-                            <i class="bi bi-person-plus-fill me-2"></i>Nouvel utilisateur
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        {# ✅ Boutons Filtrer et Effacer #}
+                        <a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary px-3">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i>Effacer
                         </a>
-                    {% else %}
-                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#quotaReachedModal">
-                            <i class="bi bi-person-plus-fill me-2"></i>Limite atteinte
+                        <button type="submit" form="userFilterForm" class="btn btn-primary px-4">
+                            <i class="bi bi-funnel me-1"></i>Filtrer
                         </button>
-                    {% endif %}
+                        
+                        {# Bouton Nouvel utilisateur #}
+                        {% if is_super_admin or can_add_user %}
+                            <a href="{{ path('app_user_new') }}" class="btn btn-success">
+                                <i class="bi bi-person-plus-fill me-1"></i>Nouvel utilisateur
+                            </a>
+                        {% else %}
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#quotaReachedModal">
+                                <i class="bi bi-person-plus-fill me-1"></i>Limite atteinte
+                            </button>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="card-body">
-                    <form method="get" action="{{ path('app_user_index') }}" class="row g-3">
-                        <div class="col-md-{% if is_super_admin %}4{% else %}5{% endif %}">
-                            <label for="search" class="form-label fw-bold">Rechercher</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-                                <input type="text" name="search" id="search" class="form-control bg-light border-0" placeholder="Nom, email, téléphone..." value="{{ search }}">
-                                {% if search %}
-                                <a href="{{ path('app_user_index', {page: currentPage, role: role, status: status, company: companyId}) }}" class="btn btn-outline-secondary border-0" title="Effacer">
-                                    <i class="bi bi-x-circle"></i>
-                                </a>
-                                {% endif %}
-                            </div>
-                        </div>
+                    <form method="get" action="{{ path('app_user_index') }}" class="row g-3" id="userFilterForm">
                         
+                        {# ✅ CAS 1: SUPER ADMIN - 4 filtres en 3,3,3,3 #}
                         {% if is_super_admin %}
-                        <div class="col-md-3">
-                            <label for="company" class="form-label fw-bold">Entreprise</label>
-                            <select name="company" id="company" class="form-select bg-light border-0">
-                                <option value="">Toutes</option>
-                                {% for company in companies %}
-                                <option value="{{ company.id }}" {{ companyId == company.id ? 'selected' }}>{{ company.companyName }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                            
+                            {# 1. RECHERCHE - 3/12 (25%) #}
+                            <div class="col-12 col-md-3">
+                                <label for="search" class="form-label fw-bold">Rechercher</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                                    <input type="text" name="search" id="search" class="form-control bg-light border-0" placeholder="Nom, email, téléphone..." value="{{ search }}">
+                                    {% if search %}
+                                    <a href="{{ path('app_user_index', {page: currentPage, role: role, status: status, company: companyId}) }}" class="btn btn-outline-secondary border-0" title="Effacer">
+                                        <i class="bi bi-x-circle"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            {# 2. ENTREPRISE - 3/12 (25%) #}
+                            <div class="col-12 col-md-3">
+                                <label for="company" class="form-label fw-bold">Entreprise</label>
+                                <select name="company" id="company" class="form-select bg-light border-0">
+                                    <option value="">Toutes</option>
+                                    {% for company in companies %}
+                                    <option value="{{ company.id }}" {{ companyId == company.id ? 'selected' }}>{{ company.companyName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            {# 3. RÔLE - 3/12 (25%) #}
+                            <div class="col-12 col-md-3">
+                                <label for="role" class="form-label fw-bold">Rôle</label>
+                                <select name="role" id="role" class="form-select bg-light border-0">
+                                    <option value="">Tous</option>
+                                    <option value="ROLE_ADMIN" {{ role == 'ROLE_ADMIN' ? 'selected' }}>Administrateurs</option>
+                                    <option value="ROLE_MANAGER" {{ role == 'ROLE_MANAGER' ? 'selected' }}>Gestionnaires</option>
+                                    <option value="ROLE_STOCK_MANAGER" {{ role == 'ROLE_STOCK_MANAGER' ? 'selected' }}>Responsables Stock</option>
+                                    <option value="ROLE_CASHIER" {{ role == 'ROLE_CASHIER' ? 'selected' }}>Caissiers</option>
+                                </select>
+                            </div>
+                            
+                            {# 4. STATUT - 3/12 (25%) #}
+                            <div class="col-12 col-md-3">
+                                <label for="status" class="form-label fw-bold">Statut</label>
+                                <select name="status" id="status" class="form-select bg-light border-0">
+                                    <option value="">Tous</option>
+                                    <option value="active" {{ status == 'active' ? 'selected' }}>Actifs</option>
+                                    <option value="inactive" {{ status == 'inactive' ? 'selected' }}>Désactivés</option>
+                                    <option value="quota" {{ status == 'quota' ? 'selected' }}>Hors quota</option>
+                                    <option value="blocked" {{ status == 'blocked' ? 'selected' }}>Bloqués</option>
+                                </select>
+                            </div>
+                        
+                        {# ✅ CAS 2: ADMIN - 3 filtres en 4,4,4 #}
+                        {% else %}
+                            
+                            {# 1. RECHERCHE - 4/12 (33.33%) #}
+                            <div class="col-12 col-md-4">
+                                <label for="search" class="form-label fw-bold">Rechercher</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                                    <input type="text" name="search" id="search" class="form-control bg-light border-0" placeholder="Nom, email, téléphone..." value="{{ search }}">
+                                    {% if search %}
+                                    <a href="{{ path('app_user_index', {page: currentPage, role: role, status: status, company: companyId}) }}" class="btn btn-outline-secondary border-0" title="Effacer">
+                                        <i class="bi bi-x-circle"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            {# 2. RÔLE - 4/12 (33.33%) #}
+                            <div class="col-12 col-md-4">
+                                <label for="role" class="form-label fw-bold">Rôle</label>
+                                <select name="role" id="role" class="form-select bg-light border-0">
+                                    <option value="">Tous</option>
+                                    <option value="ROLE_ADMIN" {{ role == 'ROLE_ADMIN' ? 'selected' }}>Administrateurs</option>
+                                    <option value="ROLE_MANAGER" {{ role == 'ROLE_MANAGER' ? 'selected' }}>Gestionnaires</option>
+                                    <option value="ROLE_STOCK_MANAGER" {{ role == 'ROLE_STOCK_MANAGER' ? 'selected' }}>Responsables Stock</option>
+                                    <option value="ROLE_CASHIER" {{ role == 'ROLE_CASHIER' ? 'selected' }}>Caissiers</option>
+                                </select>
+                            </div>
+                            
+                            {# 3. STATUT - 4/12 (33.33%) #}
+                            <div class="col-12 col-md-4">
+                                <label for="status" class="form-label fw-bold">Statut</label>
+                                <select name="status" id="status" class="form-select bg-light border-0">
+                                    <option value="">Tous</option>
+                                    <option value="active" {{ status == 'active' ? 'selected' }}>Actifs</option>
+                                    <option value="inactive" {{ status == 'inactive' ? 'selected' }}>Désactivés</option>
+                                    <option value="quota" {{ status == 'quota' ? 'selected' }}>Hors quota</option>
+                                </select>
+                            </div>
+                            
                         {% endif %}
                         
-                        <div class="col-md-{% if is_super_admin %}3{% else %}4{% endif %}">
-                            <label for="role" class="form-label fw-bold">Rôle</label>
-                            <select name="role" id="role" class="form-select bg-light border-0">
-                                <option value="">Tous</option>
-                                <option value="ROLE_ADMIN" {{ role == 'ROLE_ADMIN' ? 'selected' }}>Administrateurs</option>
-                                <option value="ROLE_MANAGER" {{ role == 'ROLE_MANAGER' ? 'selected' }}>Gestionnaires</option>
-                                <option value="ROLE_STOCK_MANAGER" {{ role == 'ROLE_STOCK_MANAGER' ? 'selected' }}>Responsables Stock</option>
-                                <option value="ROLE_CASHIER" {{ role == 'ROLE_CASHIER' ? 'selected' }}>Caissiers</option>
-                            </select>
-                        </div>
-                        
-                        <div class="col-md-2">
-                            <label for="status" class="form-label fw-bold">Statut</label>
-                            <select name="status" id="status" class="form-select bg-light border-0">
-                                <option value="">Tous</option>
-                                <option value="active" {{ status == 'active' ? 'selected' }}>Actifs</option>
-                                <option value="inactive" {{ status == 'inactive' ? 'selected' }}>Désactivés</option>
-                                <option value="quota" {{ status == 'quota' ? 'selected' }}>Hors quota</option>
-                                {% if is_super_admin %}
-                                <option value="blocked" {{ status == 'blocked' ? 'selected' }}>Bloqués</option>
-                                {% endif %}
-                            </select>
-                        </div>
-                        
-                        <div class="col-12 d-flex justify-content-end gap-2 mt-4">
-                            <a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary px-4">
-                                <i class="bi bi-arrow-counterclockwise me-2"></i>Effacer
-                            </a>
-                            <button type="submit" class="btn btn-primary px-5">
-                                <i class="bi bi-funnel me-2"></i>Filtrer
-                            </button>
-                        </div>
                     </form>
                 </div>
             </div>

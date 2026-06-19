@@ -197,6 +197,135 @@
         white-space: nowrap;
         z-index: 1000;
     }
+
+    /* ==================== ANIMATIONS ET NOTIFICATIONS ==================== */
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .notification-toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        min-width: 320px;
+        padding: 1rem 1.25rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+        animation: slideIn 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .notification-toast.success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+    .notification-toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+    .notification-toast.warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+    
+    /* Loading overlay */
+    .global-loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(3px);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+    
+    .global-loading-content {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 2rem 2.5rem;
+        text-align: center;
+        box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease;
+    }
+    
+    .global-loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e2e8f0;
+        border-top-color: #0463f1;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 1rem;
+    }
+    
+    .global-loading-text {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+    
+    .global-loading-subtext {
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+    
+    /* Row loading animation */
+    .row-loading {
+        position: relative;
+        pointer-events: none;
+        opacity: 0.6;
+    }
+    
+    .row-loading::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+        animation: shimmer 1s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    
+    /* Button loading state */
+    .btn-loading {
+        position: relative;
+        pointer-events: none;
+        opacity: 0.7;
+    }
+    
+    .btn-loading .btn-text {
+        visibility: hidden;
+    }
+    
+    .btn-loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 18px;
+        height: 18px;
+        margin: -9px 0 0 -9px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
 </style>
 {% endblock %}
 
@@ -384,7 +513,7 @@
             <h5 class="mb-0 fw-semibold">
                 <i class="fas fa-list me-2 text-primary"></i>
                 Liste des entreprises
-                <span class="badge bg-secondary ms-2">{{ pagination.getTotalItemCount }} entreprise(s)</span>
+                <span class="badge bg-secondary ms-2" id="companiesCount">{{ pagination.getTotalItemCount }} entreprise(s)</span>
             </h5>
         </div>
         <div class="table-responsive-scroll">
@@ -402,9 +531,9 @@
                         <th style="min-width: 120px;">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="companiesTableBody">
                     {% for company in pagination %}
-                        <tr id="company-row-{{ company.id }}">
+                        <tr id="company-row-{{ company.id }}" data-company-name="{{ company.companyName }}">
                             <td><input type="checkbox" class="row-checkbox form-check-input" value="{{ company.id }}"></td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
@@ -437,7 +566,7 @@
                                     <br><small class="text-muted">{{ company.subscriptionEndsAt|date('d/m/Y') }}</small>
                                 {% endif %}
                             </td>
-                            <td>
+                            <td class="status-cell">
                                 {% if company.hmaActive %}
                                     <span class="status-badge status-active"><i class="fas fa-check-circle me-1"></i> Active</span>
                                 {% else %}
@@ -486,7 +615,7 @@
                                 <br><small class="text-muted">{{ company.createdAt|time_diff }}</small>
                             </td>
                             <td>
-                                <div class="btn-group">
+                                <div class="btn-group" role="group">
                                     <a href="{{ path('app_super_admin_hma_service_show', {'id': company.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
                                         <i class="fas fa-eye"></i>
                                     </a>
@@ -578,7 +707,6 @@
     </div>
 </div>
 
-<!-- templates/super_admin/hma_service/index.html.twig -->
 <!-- MODAL POUR SUPPRESSION AVEC CONFIRMATION PAR NOM -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -603,7 +731,6 @@
                     Cette action est <strong>irréversible</strong>. Toutes les données associées seront définitivement supprimées.
                 </div>
                 
-                <!-- ✅ CHAMP DE CONFIRMATION PAR NOM -->
                 <div class="mb-3 text-start">
                     <label for="confirmCompanyName" class="form-label fw-semibold">
                         Tapez le nom de l'entreprise pour confirmer :
@@ -640,36 +767,115 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentToggleId = null;
     let currentDeleteId = null;
     let companyToDelete = null;
+    let deleteInProgress = false;
+    let globalLoadingOverlay = null;
 
-    // ==================== FONCTIONS UTILITAIRES ====================
+    // ==================== FONCTIONS DE CHARGEMENT ====================
     
     /**
-     * Afficher une notification
+     * Affiche un overlay de chargement global
      */
-    function showNotification(message, type = 'success') {
-        // Supprimer les anciennes notifications
-        const oldNotifications = document.querySelectorAll('.notification');
-        oldNotifications.forEach(n => n.remove());
+    function showGlobalLoading(message = 'Suppression en cours...', subMessage = 'Veuillez patienter') {
+        if (globalLoadingOverlay) {
+            globalLoadingOverlay.remove();
+        }
         
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <div class="d-flex align-items-center">
-                <i class="bi bi-${type === 'success' ? 'check-circle-fill' : 'exclamation-circle-fill'} me-3 fs-4"></i>
-                <div>${message}</div>
+        globalLoadingOverlay = document.createElement('div');
+        globalLoadingOverlay.className = 'global-loading-overlay';
+        globalLoadingOverlay.innerHTML = `
+            <div class="global-loading-content">
+                <div class="global-loading-spinner"></div>
+                <div class="global-loading-text">${message}</div>
+                <div class="global-loading-subtext">${subMessage}</div>
             </div>
         `;
+        document.body.appendChild(globalLoadingOverlay);
+    }
+    
+    /**
+     * Masque l'overlay de chargement global
+     */
+    function hideGlobalLoading() {
+        if (globalLoadingOverlay) {
+            globalLoadingOverlay.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                if (globalLoadingOverlay) {
+                    globalLoadingOverlay.remove();
+                    globalLoadingOverlay = null;
+                }
+            }, 300);
+        }
+    }
+    
+    /**
+     * Affiche un effet de chargement sur une ligne du tableau
+     */
+    function showRowLoading(companyId) {
+        const row = document.getElementById(`company-row-${companyId}`);
+        if (row) {
+            row.classList.add('row-loading');
+        }
+    }
+    
+    /**
+     * Masque l'effet de chargement sur une ligne
+     */
+    function hideRowLoading(companyId) {
+        const row = document.getElementById(`company-row-${companyId}`);
+        if (row) {
+            row.classList.remove('row-loading');
+        }
+    }
+    
+    /**
+     * Affiche un effet de chargement sur un bouton
+     */
+    function showButtonLoading(button, text = 'Chargement...') {
+        button.classList.add('btn-loading');
+        const originalText = button.innerHTML;
+        button.setAttribute('data-original-text', originalText);
+        button.innerHTML = `<span class="btn-text">${text}</span>`;
+        return originalText;
+    }
+    
+    /**
+     * Restaure l'état normal d'un bouton
+     */
+    function hideButtonLoading(button) {
+        button.classList.remove('btn-loading');
+        const originalText = button.getAttribute('data-original-text');
+        if (originalText) {
+            button.innerHTML = originalText;
+        }
+    }
+    
+    /**
+     * Affiche une notification toast
+     */
+    function showNotification(message, type = 'success') {
+        const oldNotifications = document.querySelectorAll('.notification-toast');
+        oldNotifications.forEach(n => n.remove());
         
-        document.body.appendChild(notification);
+        const icons = {
+            success: 'fas fa-check-circle',
+            error: 'fas fa-exclamation-circle',
+            warning: 'fas fa-exclamation-triangle'
+        };
         
-        // Animation d'entrée
-        setTimeout(() => notification.classList.add('show'), 10);
+        const toast = document.createElement('div');
+        toast.className = `notification-toast ${type}`;
+        toast.innerHTML = `
+            <i class="${icons[type] || icons.success} fs-4"></i>
+            <div class="flex-grow-1">${message}</div>
+            <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.remove()"></button>
+        `;
         
-        // Disparition après 3 secondes
+        document.body.appendChild(toast);
+        
         setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
     }
 
     /**
@@ -684,15 +890,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!statusCell || !toggleBtn) return;
         
-        // Mettre à jour le badge de statut
         statusCell.innerHTML = isActive 
-            ? '<span class="badge status-active status-badge"><i class="bi bi-check-circle me-1"></i>Active</span>'
-            : '<span class="badge status-inactive status-badge"><i class="bi bi-x-circle me-1"></i>Désactivée</span>';
+            ? '<span class="status-badge status-active"><i class="fas fa-check-circle me-1"></i> Active</span>'
+            : '<span class="status-badge status-inactive"><i class="fas fa-ban me-1"></i> Désactivée</span>';
         
-        // Mettre à jour le bouton toggle
         toggleBtn.dataset.active = isActive ? 'true' : 'false';
         toggleBtn.className = `btn btn-sm btn-outline-${isActive ? 'danger' : 'success'} toggle-status-btn`;
-        toggleBtn.innerHTML = `<i class="bi bi-${isActive ? 'toggle-off' : 'toggle-on'}"></i>`;
+        toggleBtn.innerHTML = `<i class="fas fa-${isActive ? 'toggle-off' : 'toggle-on'}"></i>`;
         toggleBtn.title = isActive ? 'Désactiver' : 'Activer';
     }
 
@@ -708,30 +912,25 @@ document.addEventListener('DOMContentLoaded', function() {
             
             setTimeout(() => {
                 row.remove();
-                
-                // Mettre à jour le compteur d'entreprises
                 updateCompaniesCount();
                 
-                // Vérifier s'il reste des lignes
-                const remainingRows = document.querySelectorAll('tbody tr').length;
+                const remainingRows = document.querySelectorAll('#companiesTableBody tr').length;
                 if (remainingRows === 0) {
-                    // Recharger pour afficher l'état vide proprement
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 500);
+                    setTimeout(() => window.location.reload(), 500);
                 }
             }, 300);
         }
     }
 
     /**
-     * Mettre à jour le compteur d'entreprises dans l'en-tête
+     * Mettre à jour le compteur d'entreprises
      */
     function updateCompaniesCount() {
-        const countElement = document.querySelector('.card-header .badge-count');
+        const countElement = document.getElementById('companiesCount');
         if (countElement) {
             const currentCount = parseInt(countElement.textContent) || 0;
-            countElement.textContent = Math.max(0, currentCount - 1);
+            const newCount = Math.max(0, currentCount - 1);
+            countElement.textContent = `${newCount} entreprise(s)`;
         }
     }
 
@@ -739,10 +938,11 @@ document.addEventListener('DOMContentLoaded', function() {
      * Réinitialiser le modal de toggle
      */
     function resetToggleModal() {
-        const modal = document.getElementById('toggleStatusModal');
-        const submitBtn = modal.querySelector('button[type="submit"]');
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="bi bi-check me-2"></i>Confirmer';
+        const submitBtn = document.querySelector('#toggleStatusForm button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="bi bi-check me-2"></i>Confirmer';
+        }
     }
 
     /**
@@ -757,48 +957,39 @@ document.addEventListener('DOMContentLoaded', function() {
         if (confirmBtn) {
             confirmBtn.disabled = true;
             confirmBtn.innerHTML = '<i class="bi bi-trash me-2"></i>Supprimer définitivement';
+            confirmBtn.classList.remove('btn-loading');
         }
         if (errorDiv) errorDiv.classList.add('d-none');
     }
 
     // ==================== GESTION DU MODAL DE TOGGLE ====================
 
-    // Boutons de toggle status
     document.querySelectorAll('.toggle-status-btn').forEach(button => {
         button.addEventListener('click', function() {
-            const id = this.dataset.id;
+            currentToggleId = this.dataset.id;
             const name = this.dataset.name;
             const isActive = this.dataset.active === 'true';
             
-            currentToggleId = id;
-            
-            // Mettre à jour le message
             const message = isActive ? 'Désactiver cette entreprise ?' : 'Activer cette entreprise ?';
             document.getElementById('toggleStatusMessage').textContent = message;
             document.getElementById('toggleCompanyName').textContent = name;
             
-            // Récupérer le token depuis le champ caché
-            const tokenInput = document.getElementById('toggle_token_' + id);
+            const tokenInput = document.getElementById('toggle_token_' + currentToggleId);
             if (tokenInput) {
                 document.getElementById('toggleStatusToken').value = tokenInput.value;
             }
             
-            // Mettre à jour l'action du formulaire
-            document.getElementById('toggleStatusForm').action = '/super-admin/hma-service/' + id + '/toggle-status';
+            document.getElementById('toggleStatusForm').action = '/super-admin/hma-service/' + currentToggleId + '/toggle-status';
         });
     });
 
-    // Réinitialiser le modal de toggle quand il est fermé
     const toggleModal = document.getElementById('toggleStatusModal');
     if (toggleModal) {
-        toggleModal.addEventListener('hidden.bs.modal', function() {
-            resetToggleModal();
-        });
+        toggleModal.addEventListener('hidden.bs.modal', resetToggleModal);
     }
 
-    // ==================== GESTION DU MODAL DE SUPPRESSION AVEC CONFIRMATION ====================
+    // ==================== GESTION DU MODAL DE SUPPRESSION ====================
 
-    // Boutons de suppression
     document.querySelectorAll('.delete-company-btn').forEach(button => {
         button.addEventListener('click', function() {
             const id = this.dataset.id;
@@ -807,10 +998,8 @@ document.addEventListener('DOMContentLoaded', function() {
             companyToDelete = { id, name };
             currentDeleteId = id;
             
-            // Mettre à jour le message
             document.getElementById('deleteCompanyName').textContent = name;
             
-            // Réinitialiser le champ de confirmation
             const confirmInput = document.getElementById('confirmCompanyName');
             const confirmBtn = document.getElementById('confirmDeleteBtn');
             const errorDiv = document.getElementById('confirmError');
@@ -819,18 +1008,16 @@ document.addEventListener('DOMContentLoaded', function() {
             if (confirmBtn) confirmBtn.disabled = true;
             if (errorDiv) errorDiv.classList.add('d-none');
             
-            // Récupérer le token depuis le champ caché
             const tokenInput = document.getElementById('delete_token_' + id);
             if (tokenInput) {
                 document.getElementById('deleteToken').value = tokenInput.value;
             }
             
-            // Mettre à jour l'action du formulaire
             document.getElementById('deleteForm').action = '/super-admin/hma-service/' + id + '/delete';
         });
     });
 
-    // Vérifier la saisie du nom de confirmation
+    // Vérification de la saisie du nom
     const confirmInput = document.getElementById('confirmCompanyName');
     const confirmBtn = document.getElementById('confirmDeleteBtn');
     const errorDiv = document.getElementById('confirmError');
@@ -850,178 +1037,173 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Gérer la touche Entrée dans le champ de confirmation
         confirmInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !confirmBtn.disabled) {
+            if (e.key === 'Enter' && !confirmBtn.disabled && !deleteInProgress) {
                 e.preventDefault();
                 confirmBtn.click();
             }
         });
     }
 
-    // Bouton de confirmation de suppression
+    // Bouton de confirmation de suppression avec effet de chargement
     if (confirmBtn) {
-        confirmBtn.addEventListener('click', function() {
-            if (!companyToDelete) return;
+        confirmBtn.addEventListener('click', async function() {
+            if (!companyToDelete || deleteInProgress) return;
+            
+            deleteInProgress = true;
+            
+            // Afficher l'effet de chargement sur le bouton
+            showButtonLoading(this, 'Suppression...');
+            
+            // Afficher l'overlay global
+            showGlobalLoading(
+                `Suppression de "${companyToDelete.name}"...`, 
+                'Veuillez patienter, suppression des données en cours'
+            );
+            
+            // Afficher l'effet de chargement sur la ligne
+            showRowLoading(companyToDelete.id);
             
             const form = document.getElementById('deleteForm');
             const formData = new FormData(form);
             const url = `/super-admin/hma-service/${companyToDelete.id}/delete`;
             
-            // Désactiver le bouton
-            this.disabled = true;
-            this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Suppression...';
-            
-            // Fermer le modal immédiatement pour meilleure UX
+            // Fermer le modal immédiatement
             const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
             if (modal) modal.hide();
             
-            // Envoyer la requête AJAX
-            fetch(url, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                
                 if (!response.ok) {
                     throw new Error('Erreur réseau');
                 }
-                return response.json();
-            })
-            .then(data => {
+                
+                const data = await response.json();
+                
                 if (data.success) {
-                    // Afficher une notification de succès
                     showNotification(data.message, 'success');
-                    
-                    // Supprimer la ligne du tableau
-                    if (companyToDelete.id) {
-                        removeCompanyRow(companyToDelete.id);
-                    }
+                    removeCompanyRow(companyToDelete.id);
                 } else {
                     showNotification(data.message || 'Une erreur est survenue', 'error');
+                    hideRowLoading(companyToDelete.id);
                 }
-            })
-            .catch(error => {
+                
+            } catch (error) {
                 console.error('Erreur:', error);
                 showNotification('Erreur de communication avec le serveur', 'error');
-            })
-            .finally(() => {
-                // Réinitialiser le modal
+                hideRowLoading(companyToDelete.id);
+            } finally {
+                // Masquer l'overlay après un court délai
+                setTimeout(() => {
+                    hideGlobalLoading();
+                }, 500);
+                
+                hideButtonLoading(confirmBtn);
                 resetDeleteModal();
-            });
+                deleteInProgress = false;
+                companyToDelete = null;
+                currentDeleteId = null;
+            }
         });
     }
 
-    // Réinitialiser le modal de suppression quand il est fermé
     const deleteModal = document.getElementById('deleteModal');
     if (deleteModal) {
         deleteModal.addEventListener('hidden.bs.modal', function() {
-            resetDeleteModal();
-            companyToDelete = null;
-            currentDeleteId = null;
+            if (!deleteInProgress) {
+                resetDeleteModal();
+                companyToDelete = null;
+                currentDeleteId = null;
+            }
         });
     }
 
     // ==================== GESTION DES SOUMISSIONS AJAX DU TOGGLE ====================
 
-    // Gestion de la soumission du formulaire de toggle
     const toggleForm = document.getElementById('toggleStatusForm');
     if (toggleForm) {
-        toggleForm.addEventListener('submit', function(e) {
+        toggleForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const form = this;
             const formData = new FormData(form);
             const url = form.action;
             const submitBtn = form.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
             const modal = bootstrap.Modal.getInstance(document.getElementById('toggleStatusModal'));
             
-            // Désactiver le bouton
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Traitement...';
+            showButtonLoading(submitBtn, 'Traitement...');
+            showRowLoading(currentToggleId);
             
-            // Envoyer la requête AJAX
-            fetch(url, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                
                 if (!response.ok) {
                     throw new Error('Erreur réseau');
                 }
-                return response.json();
-            })
-            .then(data => {
-                // Fermer le modal
+                
+                const data = await response.json();
+                
                 if (modal) modal.hide();
                 
                 if (data.success) {
-                    // Afficher une notification de succès
                     showNotification(data.message, 'success');
-                    
-                    // Mettre à jour l'interface sans recharger
                     if (currentToggleId) {
                         updateCompanyStatus(currentToggleId, data.active);
                     }
                 } else {
-                    // Afficher l'erreur
                     showNotification(data.message || 'Une erreur est survenue', 'error');
                 }
-            })
-            .catch(error => {
+                
+            } catch (error) {
                 console.error('Erreur:', error);
                 showNotification('Erreur de communication avec le serveur', 'error');
-                
-                // Réactiver le bouton si le modal est encore ouvert
-                if (modal && modal._isShown) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                }
-            });
+            } finally {
+                hideButtonLoading(submitBtn);
+                hideRowLoading(currentToggleId);
+                resetToggleModal();
+            }
         });
     }
 
     // ==================== GESTION DES FILTRES ====================
 
     window.applyFilters = function() {
-        const search = document.getElementById('searchInput').value.trim();
-        const plan = document.getElementById('planFilter').value;
-        const companyType = document.getElementById('companyTypeFilter').value; // ✅ AJOUT
-        const dateFrom = document.getElementById('dateFrom').value;
-        const dateTo = document.getElementById('dateTo').value;
+        const search = document.getElementById('searchInput')?.value.trim() || '';
+        const plan = document.getElementById('planFilter')?.value || '';
+        const companyType = document.getElementById('companyTypeFilter')?.value || '';
+        const dateFrom = document.getElementById('dateFrom')?.value || '';
+        const dateTo = document.getElementById('dateTo')?.value || '';
         
-        let url = new URL(window.location.href);
+        const url = new URL(window.location.href);
+        
+        ['search', 'plan', 'company_type', 'date_from', 'date_to'].forEach(param => {
+            url.searchParams.delete(param);
+        });
         
         if (search) url.searchParams.set('search', search);
-        else url.searchParams.delete('search');
-        
         if (plan) url.searchParams.set('plan', plan);
-        else url.searchParams.delete('plan');
-        
-        if (companyType) url.searchParams.set('company_type', companyType); // ✅ AJOUT
-        else url.searchParams.delete('company_type');
-        
+        if (companyType) url.searchParams.set('company_type', companyType);
         if (dateFrom) url.searchParams.set('date_from', dateFrom);
-        else url.searchParams.delete('date_from');
-        
         if (dateTo) url.searchParams.set('date_to', dateTo);
-        else url.searchParams.delete('date_to');
         
         url.searchParams.set('page', '1');
         window.location.href = url.toString();
     };
 
     window.clearFilters = function() {
-        let url = new URL(window.location.href);
+        const url = new URL(window.location.href);
         url.searchParams.delete('search');
         url.searchParams.delete('plan');
-        url.searchParams.delete('company_type'); // ✅ AJOUT
+        url.searchParams.delete('company_type');
         url.searchParams.delete('status');
         url.searchParams.delete('date_from');
         url.searchParams.delete('date_to');
@@ -1030,7 +1212,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     window.filterByStatus = function(status) {
-        let url = new URL(window.location.href);
+        const url = new URL(window.location.href);
         if (status === 'all') {
             url.searchParams.delete('status');
         } else {
@@ -1041,7 +1223,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     window.removeFilter = function(filter) {
-        let url = new URL(window.location.href);
+        const url = new URL(window.location.href);
         if (filter === 'date_from' || filter === 'date_to') {
             url.searchParams.delete('date_from');
             url.searchParams.delete('date_to');
@@ -1062,13 +1244,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Gérer la sélection individuelle
         document.querySelectorAll('.row-checkbox').forEach(cb => {
             cb.addEventListener('change', function() {
                 const allChecked = document.querySelectorAll('.row-checkbox:checked').length;
                 const total = document.querySelectorAll('.row-checkbox').length;
-                selectAll.checked = allChecked === total;
-                selectAll.indeterminate = allChecked > 0 && allChecked < total;
+                if (selectAll) {
+                    selectAll.checked = allChecked === total;
+                    selectAll.indeterminate = allChecked > 0 && allChecked < total;
+                }
             });
         });
     }
@@ -1086,15 +1269,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==================== INITIALISATION ====================
-
-    // Initialiser l'état des checkboxes
-    const checkboxes = document.querySelectorAll('.row-checkbox');
-    if (checkboxes.length > 0 && selectAll) {
-        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
-        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-        selectAll.checked = allChecked;
-        selectAll.indeterminate = anyChecked && !allChecked;
-    }
 
     console.log('✅ JavaScript chargé avec succès');
 });

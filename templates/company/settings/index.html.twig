@@ -1,0 +1,1158 @@
+{# templates/company/settings/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Paramètres entreprise - {{ company.companyName }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    {# ✅ UTILISER LES VARIABLES PASSÉES PAR LE CONTRÔLEUR #}
+    :root {
+        --primary-color: {{ primaryColor|default('#0463f1') }};
+        --primary-dark: {{ primaryColor|default('#0463f1')|color_darken(15) }};
+        --secondary-color: {{ secondaryColor|default('#8b5cf6') }};
+    }
+    
+    .settings-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    /* Hero Header */
+    .settings-hero {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        border-radius: 24px;
+        padding: 2rem 2.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 40px color-mix(in srgb, var(--primary-color) 30%, transparent);
+    }
+    
+    .settings-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 80%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: heroPulse 6s ease-in-out infinite;
+    }
+    
+    @keyframes heroPulse {
+        0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.5; }
+        50% { transform: scale(1.1) rotate(5deg); opacity: 0.8; }
+    }
+    
+    .settings-hero h1 {
+        color: white;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        position: relative;
+    }
+    
+    .settings-hero p {
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 0;
+        position: relative;
+    }
+    
+    .info-badge {
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 0.5rem 1.2rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border: 1px solid rgba(255,255,255,0.2);
+        position: relative;
+    }
+    
+    /* Navigation par onglets */
+    .settings-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        background: white;
+        border-radius: 16px;
+        padding: 0.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        border: 1px solid #f1f5f9;
+    }
+    
+    .settings-tab {
+        padding: 0.7rem 1.5rem;
+        border: none;
+        background: transparent;
+        font-weight: 600;
+        color: #64748b;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+    
+    .settings-tab i {
+        margin-right: 0.5rem;
+    }
+    
+    .settings-tab:hover {
+        background: #f1f5f9;
+        color: var(--primary-color);
+    }
+    
+    .settings-tab.active {
+        background: var(--primary-color);
+        color: white;
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 40%, transparent);
+    }
+    
+    /* Sections */
+    .settings-section {
+        background: white;
+        border-radius: 24px;
+        padding: 1.5rem 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        border: 1px solid #f1f5f9;
+        animation: fadeInUp 0.5s ease;
+    }
+    
+    .settings-section:hover {
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+    
+    .section-icon {
+        width: 48px;
+        height: 48px;
+        background: var(--primary-color);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+    }
+    
+    .section-icon:hover {
+        transform: scale(1.05) rotate(-5deg);
+    }
+    
+    .section-title h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+        color: #1e293b;
+    }
+    
+    .section-title p {
+        color: #64748b;
+        font-size: 0.85rem;
+        margin-bottom: 0;
+    }
+    
+    /* Logo preview */
+    .logo-preview {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 1rem 1.5rem;
+        margin-top: 1rem;
+        border: 2px dashed #e5e7eb;
+        transition: all 0.3s ease;
+    }
+    
+    .logo-preview:hover {
+        border-color: var(--primary-color);
+        background: #f0f7ff;
+    }
+    
+    .logo-preview-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 16px;
+        object-fit: cover;
+        background: white;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+    
+    .logo-preview-img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    /* ===== PALETTE DE COULEURS ===== */
+    .color-palette-group {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 1rem 1.5rem;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+    
+    .color-palette-group:hover {
+        border-color: var(--primary-color);
+    }
+    
+    .color-palette-label {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        color: #1e293b;
+    }
+    
+    .color-palette-label i {
+        font-size: 1.2rem;
+    }
+    
+    .color-palette {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+    }
+    
+    .color-swatch {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        position: relative;
+    }
+    
+    .color-swatch:hover {
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .color-swatch.active {
+        border-color: white;
+        box-shadow: 0 0 0 2px var(--primary-color), 0 4px 12px rgba(0,0,0,0.25);
+        transform: scale(1.1);
+    }
+    
+    .color-swatch.active::after {
+        content: '\f00c';
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 14px;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+    
+    .color-hex-display {
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #1e293b;
+        background: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        min-width: 80px;
+        text-align: center;
+        margin-left: 0.5rem;
+    }
+    
+    .color-picker-custom {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: 0.5rem;
+    }
+    
+    .color-picker-custom input[type="color"] {
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        padding: 0;
+        background: none;
+        border: 2px solid #e5e7eb;
+        transition: all 0.2s;
+    }
+    
+    .color-picker-custom input[type="color"]:hover {
+        transform: scale(1.1);
+    }
+    
+    .color-picker-custom input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 2px;
+    }
+    
+    .color-picker-custom input[type="color"]::-webkit-color-swatch {
+        border-radius: 50%;
+        border: none;
+    }
+    
+    /* Preview des couleurs en action */
+    .color-preview-demo {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 16px;
+        border: 1px solid #e5e7eb;
+    }
+    
+    .color-preview-demo .demo-btn {
+        padding: 0.5rem 1.5rem;
+        border-radius: 12px;
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .color-preview-demo .demo-btn-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    .color-preview-demo .demo-btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+    }
+    
+    .color-preview-demo .demo-btn-secondary {
+        background: var(--secondary-color);
+        color: white;
+    }
+    
+    .color-preview-demo .demo-btn-secondary:hover {
+        filter: brightness(0.85);
+        transform: translateY(-2px);
+    }
+    
+    .color-preview-demo .demo-badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: white;
+        background: var(--primary-color);
+    }
+    
+    /* Ticket preview */
+    .ticket-preview {
+        background: white;
+        border-radius: 16px;
+        padding: 1.2rem;
+        max-width: 320px;
+        margin-top: 1rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+    
+    .ticket-preview:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+    
+    .ticket-header {
+        text-align: center;
+        border-bottom: 2px dashed #e5e7eb;
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    .ticket-header strong {
+        color: var(--primary-color);
+    }
+    
+    .ticket-items {
+        font-size: 0.75rem;
+        padding: 0.3rem 0;
+    }
+    
+    .ticket-total {
+        border-top: 2px dashed #e5e7eb;
+        padding-top: 0.5rem;
+        margin-top: 0.5rem;
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .ticket-footer {
+        text-align: center;
+        border-top: 2px dashed #e5e7eb;
+        padding-top: 0.5rem;
+        margin-top: 0.5rem;
+        font-size: 0.7rem;
+        color: #64748b;
+    }
+    
+    /* Form styling */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-bottom: 0.4rem;
+        color: #1e293b;
+    }
+    
+    .form-label .required {
+        color: var(--danger-color);
+        margin-left: 0.25rem;
+    }
+    
+    .form-control, .form-select {
+        border-radius: 12px;
+        border: 2px solid #e5e7eb;
+        padding: 0.625rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-color) 20%, transparent);
+        outline: none;
+    }
+    
+    .form-control:hover, .form-select:hover {
+        border-color: var(--primary-color);
+    }
+    
+    .form-control[readonly] {
+        background: #f1f5f9;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+    
+    .text-muted {
+        color: #94a3b8 !important;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+    }
+    
+    /* Action buttons */
+    .action-buttons {
+        position: sticky;
+        bottom: 1.5rem;
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 60px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        margin-top: 2rem;
+        border: 1px solid #f1f5f9;
+        backdrop-filter: blur(10px);
+    }
+    
+    .action-buttons .btn {
+        border-radius: 50px;
+        padding: 0.6rem 1.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .action-buttons .btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-primary {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        border-color: var(--primary-dark);
+        box-shadow: 0 8px 25px color-mix(in srgb, var(--primary-color) 40%, transparent);
+    }
+    
+    .btn-outline-secondary {
+        border-color: #e5e7eb;
+        color: #64748b;
+    }
+    
+    .btn-outline-secondary:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+    
+    .btn-secondary {
+        background: #f1f5f9;
+        border-color: #e5e7eb;
+        color: #475569;
+    }
+    
+    .btn-secondary:hover {
+        background: #e5e7eb;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+        .settings-hero {
+            padding: 1.5rem;
+        }
+        .settings-hero h1 {
+            font-size: 1.5rem;
+        }
+        .settings-section {
+            padding: 1.25rem;
+        }
+        .settings-tab {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+        .action-buttons {
+            flex-direction: column;
+            gap: 1rem;
+            border-radius: 24px;
+            padding: 1rem;
+        }
+        .action-buttons .btn {
+            width: 100%;
+            justify-content: center;
+        }
+        .action-buttons div {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .color-palette {
+            gap: 0.5rem;
+        }
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+        }
+        .logo-preview {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .settings-hero {
+            padding: 1rem;
+        }
+        .settings-hero h1 {
+            font-size: 1.2rem;
+        }
+        .settings-section {
+            padding: 1rem;
+        }
+        .settings-tabs {
+            flex-direction: column;
+        }
+        .settings-tab {
+            width: 100%;
+            text-align: center;
+        }
+        .color-palette {
+            justify-content: center;
+        }
+        .color-palette-label {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .ticket-preview {
+            max-width: 100%;
+        }
+        .color-picker-custom input[type="color"] {
+            width: 30px;
+            height: 30px;
+        }
+        .color-hex-display {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            min-width: 60px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid settings-container py-4">
+    
+    <!-- Hero Section -->
+    <div class="settings-hero">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1>
+                    <i class="fas fa-sliders-h me-2"></i>
+                    Paramètres entreprise
+                </h1>
+                <p>Personnalisez l'identité visuelle et les documents de votre entreprise</p>
+            </div>
+            <div class="info-badge">
+                <i class="fas fa-shield-alt me-1"></i>
+                Propriétaire uniquement
+            </div>
+        </div>
+    </div>
+    
+    <!-- Onglets -->
+    <div class="settings-tabs" id="settingsTabs">
+        <button class="settings-tab active" data-section="general">
+            <i class="fas fa-building"></i> Général
+        </button>
+        <button class="settings-tab" data-section="branding">
+            <i class="fas fa-palette"></i> Apparence
+        </button>
+        <button class="settings-tab" data-section="contact">
+            <i class="fas fa-address-card"></i> Contact
+        </button>
+        <button class="settings-tab" data-section="receipt">
+            <i class="fas fa-receipt"></i> Ticket
+        </button>
+        <button class="settings-tab" data-section="taxes">
+            <i class="fas fa-percent"></i> Taxes
+        </button>
+    </div>
+    
+    {{ form_start(form, {'attr': {'id': 'companySettingsForm', 'class': 'settings-form'}}) }}
+    
+    {# ✅ CHAMPS CACHÉS POUR LES COULEURS - CECI EST CRUCIAL #}
+    <input type="hidden" name="primary_color" id="primary_color" value="{{ primaryColor|default('#0463f1') }}">
+    <input type="hidden" name="secondary_color" id="secondary_color" value="{{ secondaryColor|default('#8b5cf6') }}">
+    
+    <!-- Section 1: Général -->
+    <div id="section-general" class="settings-section">
+        <div class="section-header">
+            <div class="section-icon">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="section-title">
+                <h3>Informations générales</h3>
+                <p>Identité et description de votre entreprise</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form_label(form.companyName, 'Nom de l\'entreprise') }}
+                    {{ form_widget(form.companyName, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Restaurant Le Gourmet'}}) }}
+                    <small class="text-muted">Apparaît dans le header, les factures et les tickets</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form_label(form.slogan, 'Slogan') }}
+                    {{ form_widget(form.slogan, {'attr': {'class': 'form-control', 'placeholder': 'Ex: La qualité fait la différence'}}) }}
+                    <small class="text-muted">Optionnel - Apparaît sous le nom</small>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    {{ form_label(form.description, 'Description') }}
+                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Présentez votre activité...'}}) }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="logo-preview">
+            {% if company.logo %}
+                <img src="{{ asset('uploads/logos/' ~ company.logo) }}" class="logo-preview-img" alt="Logo">
+            {% else %}
+                <div class="logo-preview-img d-flex align-items-center justify-content-center bg-light">
+                    <i class="fas fa-store fa-2x text-muted"></i>
+                </div>
+            {% endif %}
+            <div class="flex-grow-1">
+                {{ form_label(form.logoFile, 'Logo de l\'entreprise') }}
+                {{ form_widget(form.logoFile, {'attr': {'class': 'form-control', 'accept': 'image/*'}}) }}
+                <small class="text-muted">Format recommandé: PNG ou JPG, 200x200px</small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section 2: Apparence -->
+    <div id="section-branding" class="settings-section" style="display: none;">
+        <div class="section-header">
+            <div class="section-icon">
+                <i class="fas fa-palette"></i>
+            </div>
+            <div class="section-title">
+                <h3>Apparence & Personnalisation</h3>
+                <p>Choisissez les couleurs de votre interface</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Couleur principale -->
+            <div class="col-md-6">
+                <div class="color-palette-group">
+                    <div class="color-palette-label">
+                        <i class="fas fa-circle" style="color: var(--primary-color);"></i>
+                        Couleur principale
+                        <span class="color-hex-display" id="primaryColorHexDisplay">{{ primaryColor|default('#0463f1') }}</span>
+                        <div class="color-picker-custom">
+                            <input type="color" id="primaryColorPickerCustom" value="{{ primaryColor|default('#0463f1') }}" title="Choisir une couleur personnalisée">
+                        </div>
+                    </div>
+                    <div class="color-palette" id="primaryPalette">
+                        {# 10 couleurs prédéfinies #}
+                        {% set primaryColors = ['#0463f1', '#dc2626', '#16a34a', '#ea580c', '#8b5cf6', '#db2777', '#0891b2', '#4f46e5', '#ca8a04', '#6b7280'] %}
+                        {% for color in primaryColors %}
+                            <div class="color-swatch {% if color == primaryColor|default('#0463f1') %}active{% endif %}" 
+                                 style="background: {{ color }};" 
+                                 data-color="{{ color }}"
+                                 data-target="primary"></div>
+                        {% endfor %}
+                    </div>
+                    <div class="color-helper-text mt-2">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Cliquez sur une couleur pour la sélectionner ou utilisez le sélecteur personnalisé
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Couleur secondaire -->
+            <div class="col-md-6">
+                <div class="color-palette-group">
+                    <div class="color-palette-label">
+                        <i class="fas fa-circle" style="color: var(--secondary-color);"></i>
+                        Couleur secondaire
+                        <span class="color-hex-display" id="secondaryColorHexDisplay">{{ secondaryColor|default('#8b5cf6') }}</span>
+                        <div class="color-picker-custom">
+                            <input type="color" id="secondaryColorPickerCustom" value="{{ secondaryColor|default('#8b5cf6') }}" title="Choisir une couleur personnalisée">
+                        </div>
+                    </div>
+                    <div class="color-palette" id="secondaryPalette">
+                        {# 10 couleurs prédéfinies #}
+                        {% set secondaryColors = ['#8b5cf6', '#3b82f6', '#06b6d4', '#22c55e', '#eab308', '#f97316', '#ef4444', '#ec4899', '#14b8a6', '#64748b'] %}
+                        {% for color in secondaryColors %}
+                            <div class="color-swatch {% if color == secondaryColor|default('#8b5cf6') %}active{% endif %}" 
+                                 style="background: {{ color }};" 
+                                 data-color="{{ color }}"
+                                 data-target="secondary"></div>
+                        {% endfor %}
+                    </div>
+                    <div class="color-helper-text mt-2">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Cliquez sur une couleur pour la sélectionner ou utilisez le sélecteur personnalisé
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Aperçu des couleurs en action -->
+        <div class="color-preview-demo">
+            <span class="fw-bold me-2">Aperçu :</span>
+            <button class="demo-btn demo-btn-primary">
+                <i class="fas fa-check me-1"></i> Bouton principal
+            </button>
+            <button class="demo-btn demo-btn-secondary">
+                <i class="fas fa-check me-1"></i> Bouton secondaire
+            </button>
+            <span class="demo-badge">
+                <i class="fas fa-tag me-1"></i> Badge
+            </span>
+        </div>
+    </div>
+    
+    <!-- Section 3: Contact -->
+    <div id="section-contact" class="settings-section" style="display: none;">
+        <div class="section-header">
+            <div class="section-icon">
+                <i class="fas fa-address-card"></i>
+            </div>
+            <div class="section-title">
+                <h3>Coordonnées</h3>
+                <p>Informations de contact et localisation</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form_label(form.email, 'Email') }}
+                    {{ form_widget(form.email, {'attr': {'class': 'form-control', 'readonly': 'readonly', 'disabled': 'disabled'}}) }}
+                    <small class="text-muted">L'email ne peut pas être modifié. Contactez le support en cas de besoin.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form_label(form.phone, 'Téléphone') }}
+                    {{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    {{ form_label(form.address, 'Adresse') }}
+                    {{ form_widget(form.address, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    {{ form_label(form.city, 'Ville') }}
+                    {{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    {{ form_label(form.country, 'Pays') }}
+                    {{ form_widget(form.country, {'attr': {'class': 'form-select'}}) }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    {{ form_label(form.website, 'Site web') }}
+                    {{ form_widget(form.website, {'attr': {'class': 'form-control', 'type': 'url'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section 4: Ticket de caisse -->
+    <div id="section-receipt" class="settings-section" style="display: none;">
+        <div class="section-header">
+            <div class="section-icon">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <div class="section-title">
+                <h3>Ticket de caisse</h3>
+                <p>Personnalisez l'apparence de vos tickets</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form_label(form.receiptHeader, 'En-tête du ticket') }}
+                    {{ form_widget(form.receiptHeader, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Merci de votre visite !\nBonne journée'}}) }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form_label(form.receiptFooter, 'Pied de page') }}
+                    {{ form_widget(form.receiptFooter, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Suivez-nous sur Instagram\n@votrepage'}}) }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Aperçu du ticket -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mt-2">
+                    <span class="fw-bold small text-muted">
+                        <i class="fas fa-eye me-1"></i> Aperçu du ticket
+                    </span>
+                </div>
+                <div class="ticket-preview">
+                    <div class="ticket-header">
+                        <strong>{{ company.companyName }}</strong>
+                        {% if company.slogan %}
+                            <br><small>{{ company.slogan }}</small>
+                        {% endif %}
+                        <br><small class="text-muted">{{ company.address ? company.address ~ ' - ' : '' }}{{ company.city }}</small>
+                        <br><small>Tél: {{ company.phone }}</small>
+                    </div>
+                    <div class="ticket-items">
+                        <div class="d-flex justify-content-between">
+                            <span>Article 1</span>
+                            <span>1 x 500 FCFA</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Article 2</span>
+                            <span>2 x 1000 FCFA</span>
+                        </div>
+                    </div>
+                    <div class="ticket-total">
+                        <span>TOTAL</span>
+                        <span>2500 FCFA</span>
+                    </div>
+                    <div class="ticket-footer" id="ticketPreviewFooter">
+                        {{ form.receiptHeader.vars.value ?: 'Merci de votre visite !' }}
+                        <br>
+                        {{ form.receiptFooter.vars.value ?: 'À bientôt !' }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="alert alert-info mt-3 border-0" style="background: #e0f2fe; color: #0284c7;">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Ces messages apparaîtront sur tous les tickets de caisse imprimés.
+                </div>
+                <div class="alert alert-warning border-0 mt-2" style="background: #fef3c7; color: #92400e;">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Astuce : Utilisez <strong>\n</strong> pour faire des retours à la ligne.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section 5: Taxes -->
+    <div id="section-taxes" class="settings-section" style="display: none;">
+        <div class="section-header">
+            <div class="section-icon">
+                <i class="fas fa-percent"></i>
+            </div>
+            <div class="section-title">
+                <h3>Taxes et devises</h3>
+                <p>Configuration fiscale de votre entreprise</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    {{ form_label(form.defaultTaxRate, 'Taux de TVA par défaut (%)') }}
+                    {{ form_widget(form.defaultTaxRate, {'attr': {'class': 'form-control', 'step': '0.1'}}) }}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="alert alert-secondary border-0 d-flex align-items-center" style="background: #f1f5f9;">
+                    <div>
+                        <i class="fas fa-exchange-alt fa-2x me-3 text-primary"></i>
+                    </div>
+                    <div>
+                        <strong>Devise actuelle :</strong> 
+                        {% set country = company.country %}
+                        {% set currency = {
+                            'CM': 'XAF', 'CI': 'XOF', 'SN': 'XOF', 'FR': 'EUR', 
+                            'US': 'USD', 'BJ': 'FCFA', 'TG': 'XOF', 'ML': 'XOF',
+                            'BF': 'XOF', 'NE': 'XOF', 'GA': 'XAF', 'CG': 'XAF',
+                            'CD': 'CDF', 'MA': 'MAD', 'TN': 'TND', 'DZ': 'DZD'
+                        }[country] ?? 'FCFA' %}
+                        <span class="fw-bold text-primary">{{ currency }}</span>
+                        <span class="text-muted ms-2">(Basée sur le pays sélectionné)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Boutons d'action sticky -->
+    <div class="action-buttons">
+        <a href="{{ path('app_dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i> Annuler
+        </a>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                <i class="fas fa-undo me-2"></i> Réinitialiser
+            </button>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-2"></i> Enregistrer
+            </button>
+        </div>
+    </div>
+    
+    {{ form_end(form) }}
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ==================== GESTION DES ONGLETS ====================
+    const tabs = document.querySelectorAll('.settings-tab');
+    const sections = {
+        general: document.getElementById('section-general'),
+        branding: document.getElementById('section-branding'),
+        contact: document.getElementById('section-contact'),
+        receipt: document.getElementById('section-receipt'),
+        taxes: document.getElementById('section-taxes')
+    };
+    
+    function showSection(sectionId) {
+        Object.values(sections).forEach(section => {
+            if (section) section.style.display = 'none';
+        });
+        if (sections[sectionId]) sections[sectionId].style.display = 'block';
+        tabs.forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.section === sectionId);
+        });
+    }
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            showSection(tab.dataset.section);
+        });
+    });
+    
+    // ==================== PALETTE DE COULEURS ====================
+    const primaryHexDisplay = document.getElementById('primaryColorHexDisplay');
+    const secondaryHexDisplay = document.getElementById('secondaryColorHexDisplay');
+    const primaryPickerCustom = document.getElementById('primaryColorPickerCustom');
+    const secondaryPickerCustom = document.getElementById('secondaryColorPickerCustom');
+    
+    // ✅ Récupération des champs cachés
+    const hiddenPrimary = document.getElementById('primary_color');
+    const hiddenSecondary = document.getElementById('secondary_color');
+    
+    // Fonction pour mettre à jour l'affichage et le formulaire
+    function updatePrimaryColor(color) {
+        // ✅ Mettre à jour le champ caché
+        if (hiddenPrimary) hiddenPrimary.value = color;
+        
+        // Mettre à jour le picker personnalisé
+        if (primaryPickerCustom) primaryPickerCustom.value = color;
+        // Mettre à jour l'affichage hex
+        if (primaryHexDisplay) primaryHexDisplay.textContent = color;
+        // Mettre à jour le CSS
+        document.documentElement.style.setProperty('--primary-color', color);
+        // Mettre à jour les démos
+        document.querySelectorAll('.demo-btn-primary').forEach(btn => {
+            btn.style.background = color;
+        });
+        document.querySelectorAll('.demo-badge').forEach(badge => {
+            badge.style.background = color;
+        });
+        document.querySelectorAll('.section-icon').forEach(icon => {
+            icon.style.background = color;
+        });
+        // Marquer la swatch active
+        document.querySelectorAll('#primaryPalette .color-swatch').forEach(sw => {
+            sw.classList.toggle('active', sw.dataset.color === color);
+        });
+        // Mettre à jour le label de la palette
+        const labelIcon = document.querySelector('.color-palette-label i');
+        if (labelIcon) labelIcon.style.color = color;
+    }
+    
+    function updateSecondaryColor(color) {
+        // ✅ Mettre à jour le champ caché
+        if (hiddenSecondary) hiddenSecondary.value = color;
+        
+        if (secondaryPickerCustom) secondaryPickerCustom.value = color;
+        if (secondaryHexDisplay) secondaryHexDisplay.textContent = color;
+        document.documentElement.style.setProperty('--secondary-color', color);
+        document.querySelectorAll('.demo-btn-secondary').forEach(btn => {
+            btn.style.background = color;
+        });
+        document.querySelectorAll('#secondaryPalette .color-swatch').forEach(sw => {
+            sw.classList.toggle('active', sw.dataset.color === color);
+        });
+        const labelIcon = document.querySelectorAll('.color-palette-label i')[1];
+        if (labelIcon) labelIcon.style.color = color;
+    }
+    
+    // Gestion des clics sur les swatches
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.addEventListener('click', function() {
+            const color = this.dataset.color;
+            const target = this.dataset.target;
+            if (target === 'primary') {
+                updatePrimaryColor(color);
+            } else {
+                updateSecondaryColor(color);
+            }
+        });
+    });
+    
+    // Gestion des pickers personnalisés
+    if (primaryPickerCustom) {
+        primaryPickerCustom.addEventListener('input', function() {
+            updatePrimaryColor(this.value);
+        });
+    }
+    
+    if (secondaryPickerCustom) {
+        secondaryPickerCustom.addEventListener('input', function() {
+            updateSecondaryColor(this.value);
+        });
+    }
+    
+    // ==================== APERÇU DU TICKET ====================
+    const receiptHeaderInput = document.querySelector('#{{ form.receiptHeader.vars.id }}');
+    const receiptFooterInput = document.querySelector('#{{ form.receiptFooter.vars.id }}');
+    const ticketFooter = document.getElementById('ticketPreviewFooter');
+    
+    function updateTicketPreview() {
+        if (ticketFooter) {
+            const headerText = receiptHeaderInput?.value || 'Merci de votre visite !';
+            const footerText = receiptFooterInput?.value || 'À bientôt !';
+            ticketFooter.innerHTML = headerText.replace(/\n/g, '<br>') + '<br>' + footerText.replace(/\n/g, '<br>');
+        }
+    }
+    
+    if (receiptHeaderInput) receiptHeaderInput.addEventListener('input', updateTicketPreview);
+    if (receiptFooterInput) receiptFooterInput.addEventListener('input', updateTicketPreview);
+    
+    // ==================== RÉINITIALISATION ====================
+    window.resetForm = function() {
+        if (confirm('Êtes-vous sûr de vouloir réinitialiser tous les paramètres ?')) {
+            document.getElementById('companySettingsForm').reset();
+            setTimeout(() => {
+                updatePrimaryColor('#0463f1');
+                updateSecondaryColor('#8b5cf6');
+                updateTicketPreview();
+                showNotification('Formulaire réinitialisé', 'info');
+            }, 100);
+        }
+    };
+    
+    // ==================== NOTIFICATION ====================
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        const bgColor = type === 'success' ? 'success' : (type === 'error' ? 'danger' : 'info');
+        const icon = type === 'success' ? 'check-circle' : (type === 'error' ? 'exclamation-circle' : 'info-circle');
+        notification.className = `position-fixed bottom-0 end-0 p-3 m-3 bg-${bgColor} text-white rounded shadow`;
+        notification.style.zIndex = '9999';
+        notification.innerHTML = `<i class="fas fa-${icon} me-2"></i>${message}`;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+    }
+    
+    // Afficher notification si flash message
+    {% for flash in app.flashes('success') %}
+        showNotification('{{ flash }}', 'success');
+    {% endfor %}
+});
+</script>
+{% endblock %}
+{% endblock %}

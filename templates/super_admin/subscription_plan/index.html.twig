@@ -30,7 +30,10 @@
     <!-- Messages flash -->
     {% for label, messages in app.flashes %}
         {% for message in messages %}
-            <div class="alert alert-{{ label }} alert-dismissible fade show rounded-4 shadow-sm mb-4">{{ message }}</div>
+            <div class="alert alert-{{ label }} alert-dismissible fade show rounded-4 shadow-sm mb-4">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         {% endfor %}
     {% endfor %}
 
@@ -47,7 +50,18 @@
             <div class="col-xl-4 col-lg-6">
                 <div class="card h-100 border-0 shadow-lg hover-lift rounded-4 overflow-hidden d-flex flex-column">
                     <!-- En-tête avec nom et badge illimité/limité -->
-                    <div class="card-header bg-gradient-{{ plan.name|lower }} text-white py-3 d-flex justify-content-between align-items-center">
+                    {% set bgClass = 'bg-gradient-secondary' %}
+                    {% if plan.name|lower == 'freemium' %}
+                        {% set bgClass = 'bg-gradient-freemium' %}
+                    {% elseif plan.name|lower == 'basic' %}
+                        {% set bgClass = 'bg-gradient-basic' %}
+                    {% elseif plan.name|lower == 'premium' %}
+                        {% set bgClass = 'bg-gradient-premium' %}
+                    {% elseif plan.name|lower == 'trial' %}
+                        {% set bgClass = 'bg-gradient-trial' %}
+                    {% endif %}
+                    
+                    <div class="card-header {{ bgClass }} text-white py-3 d-flex justify-content-between align-items-center">
                         <h5 class="mb-0 fw-bold">{{ plan.displayName }}</h5>
                         <span class="badge bg-white text-dark rounded-pill px-3 py-2">
                             {% if plan.isUnlimited %}Illimité{% else %}Limité{% endif %}
@@ -61,27 +75,108 @@
                             <p class="text-muted">/mois • <small>{{ plan.priceYearly|number_format(0, ',', ' ') }} FCFA/an</small></p>
                         </div>
 
-                        <!-- Limites affichées ligne par ligne (même si illimité) -->
-                        <div class="mb-4">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-people-fill text-success me-3 fs-5"></i>
-                                <span><strong>Utilisateurs/rôle :</strong> {{ plan.maxUsersPerRole is null ? '∞' : plan.maxUsersPerRole }}</span>
+                        <!-- Section Commerce -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold text-primary mb-2">
+                                <i class="bi bi-shop me-2"></i>Commerce
+                            </h6>
+                            <div class="mb-2">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-people-fill text-success me-3 fs-5"></i>
+                                    <span>
+                                        <strong>Utilisateurs/rôle :</strong> 
+                                        {% set maxUsers = plan.maxUsersPerRole %}
+                                        {% if maxUsers is null or maxUsers >= 999999999 %}
+                                            ♾️ Illimité
+                                        {% else %}
+                                            {{ maxUsers|number_format }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-box-fill text-info me-3 fs-5"></i>
+                                    <span>
+                                        <strong>Produits :</strong> 
+                                        {% set maxProducts = plan.maxProducts %}
+                                        {% if maxProducts is null or maxProducts >= 999999999 %}
+                                            ♾️ Illimité
+                                        {% else %}
+                                            {{ maxProducts|number_format }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-cart-fill text-warning me-3 fs-5"></i>
+                                    <span>
+                                        <strong>Commandes/mois :</strong> 
+                                        {% set maxOrders = plan.maxOrdersPerMonth %}
+                                        {% if maxOrders is null or maxOrders >= 999999999 %}
+                                            ♾️ Illimité
+                                        {% else %}
+                                            {{ maxOrders|number_format }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-tags-fill text-primary me-3 fs-5"></i>
+                                    <span>
+                                        <strong>Catégories :</strong> 
+                                        {% set maxCategories = plan.maxCategories %}
+                                        {% if maxCategories is null or maxCategories >= 999999999 %}
+                                            ♾️ Illimité
+                                        {% else %}
+                                            {{ maxCategories|number_format }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-truck text-secondary me-3 fs-5"></i>
+                                    <span>
+                                        <strong>Fournisseurs :</strong> 
+                                        {% set maxSuppliers = plan.maxSuppliers %}
+                                        {% if maxSuppliers is null or maxSuppliers >= 999999999 %}
+                                            ♾️ Illimité
+                                        {% else %}
+                                            {{ maxSuppliers|number_format }}
+                                        {% endif %}
+                                    </span>
+                                </div>
                             </div>
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-box-fill text-info me-3 fs-5"></i>
-                                <span><strong>Produits :</strong> {{ plan.maxProducts is null ? '∞' : plan.maxProducts }}</span>
-                            </div>
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-cart-fill text-warning me-3 fs-5"></i>
-                                <span><strong>Commandes/mois :</strong> {{ plan.maxOrdersPerMonth is null ? '∞' : plan.maxOrdersPerMonth }}</span>
-                            </div>
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-tags-fill text-primary me-3 fs-5"></i>
-                                <span><strong>Catégories :</strong> {{ plan.maxCategories is null ? '∞' : plan.maxCategories }}</span>
-                            </div>
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-truck-fill text-secondary me-3 fs-5"></i>
-                                <span><strong>Fournisseurs :</strong> {{ plan.maxSuppliers is null ? '∞' : plan.maxSuppliers }}</span>
+                        </div>
+
+                        <!-- Section Restaurant (Recettes) -->
+                        <div class="mb-3 pt-2 border-top">
+                            <h6 class="fw-bold text-success mb-2">
+                                <i class="bi bi-egg-fried me-2"></i>Restaurant
+                            </h6>
+                            <div class="mb-2">
+                                <!-- Recettes -->
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-book-fill text-success me-3 fs-5"></i>
+                                    <span>
+                                        <strong>Recettes :</strong> 
+                                        {% set maxRecipes = plan.maxRecipes %}
+                                        {% if maxRecipes is null or maxRecipes >= 999999999 %}
+                                            ♾️ Illimité
+                                        {% else %}
+                                            {{ maxRecipes|number_format }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                
+                                <!-- Catégories de recettes -->
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-tag-fill text-info me-3 fs-5"></i>
+                                    <span>
+                                        <strong>Catégories de recettes :</strong> 
+                                        {% set maxRecipeCategories = plan.maxRecipeCategories %}
+                                        {% if maxRecipeCategories is null or maxRecipeCategories >= 999999999 %}
+                                            ♾️ Illimité
+                                        {% else %}
+                                            {{ maxRecipeCategories|number_format }}
+                                        {% endif %}
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
@@ -104,18 +199,30 @@
 
                         <!-- Actions centrées -->
                         <div class="d-flex gap-2 justify-content-center mt-2">
-                            <a href="{{ path('app_super_admin_subscription_plan_show', {'id': plan.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3" title="Détails"><i class="bi bi-eye"></i></a>
-                            <a href="{{ path('app_super_admin_subscription_plan_edit', {'id': plan.id}) }}" class="btn btn-sm btn-outline-warning rounded-pill px-3" title="Modifier"><i class="bi bi-pencil"></i></a>
-                            <button type="button" class="btn btn-sm btn-outline-{{ plan.isActive ? 'danger' : 'success' }} rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#toggleModal{{ plan.id }}" title="{{ plan.isActive ? 'Désactiver' : 'Activer' }}"><i class="bi bi-{{ plan.isActive ? 'pause-fill' : 'play-fill' }}"></i></button>
+                            <a href="{{ path('app_super_admin_subscription_plan_show', {'id': plan.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3" title="Détails">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ path('app_super_admin_subscription_plan_edit', {'id': plan.id}) }}" class="btn btn-sm btn-outline-warning rounded-pill px-3" title="Modifier">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-{{ plan.isActive ? 'danger' : 'success' }} rounded-pill px-3" 
+                                    data-bs-toggle="modal" data-bs-target="#toggleModal{{ plan.id }}" 
+                                    title="{{ plan.isActive ? 'Désactiver' : 'Activer' }}">
+                                <i class="bi bi-{{ plan.isActive ? 'pause-fill' : 'play-fill' }}"></i>
+                            </button>
                             {% if plan.subscriptions|length == 0 %}
-                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#deleteModal{{ plan.id }}" title="Supprimer"><i class="bi bi-trash"></i></button>
+                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" 
+                                        data-bs-toggle="modal" data-bs-target="#deleteModal{{ plan.id }}" 
+                                        title="Supprimer">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Modal Toggle (placé dans la boucle, après la carte) -->
+            <!-- Modal Toggle -->
             <div class="modal fade" id="toggleModal{{ plan.id }}" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 rounded-4">
@@ -147,13 +254,15 @@
                 </div>
             </div>
 
-            <!-- Modal Delete (si pas d'abonnements) -->
+            <!-- Modal Delete -->
             {% if plan.subscriptions|length == 0 %}
             <div class="modal fade" id="deleteModal{{ plan.id }}" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 rounded-4">
                         <div class="modal-header bg-danger text-white border-0">
-                            <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-2"></i>Supprimer le plan</h5>
+                            <h5 class="modal-title">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>Supprimer le plan
+                            </h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body p-4">
@@ -220,6 +329,15 @@
 .bg-gradient-freemium { background: linear-gradient(135deg, #6b7280, #4b5563); }
 .bg-gradient-basic    { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
 .bg-gradient-premium  { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+.bg-gradient-trial    { background: linear-gradient(135deg, #10b981, #059669); }
 .bg-gradient-secondary{ background: linear-gradient(135deg, #9ca3af, #6b7280); }
+
+/* Animation des boutons */
+.btn {
+    transition: all 0.2s ease;
+}
+.btn:hover {
+    transform: translateY(-2px);
+}
 </style>
 {% endblock %}

@@ -9,7 +9,7 @@ use App\Form\ProductType;
 use App\Service\UniqueNameValidator;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
-use App\Service\UnitConverter; // Ajout de l'import
+use App\Service\UnitConverter; 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -27,6 +27,10 @@
         background: linear-gradient(145deg, #ffffff, #f5f3ff);
         border: 2px solid #818cf8;
     }
+    .plan-card.freemium {
+        background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+        opacity: 0.95;
+    }
     .plan-badge {
         position: absolute;
         top: 20px;
@@ -42,6 +46,9 @@
     }
     .plan-badge.premium {
         background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    }
+    .plan-badge.freemium {
+        background: linear-gradient(135deg, #6b7280, #4b5563);
     }
     .plan-icon {
         font-size: 3rem;
@@ -67,19 +74,19 @@
     .feature-list {
         list-style: none;
         padding: 0;
-        margin: 2rem 0;
+        margin: 1rem 0;
     }
     .feature-list li {
-        padding: 0.6rem 0;
+        padding: 0.5rem 0;
         display: flex;
         align-items: center;
         gap: 0.75rem;
         color: #334155;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
     .feature-list i {
         color: #10b981;
-        font-size: 1.25rem;
+        font-size: 1.1rem;
         flex-shrink: 0;
     }
     .btn-plan {
@@ -104,6 +111,76 @@
     }
     .btn-plan.premium:hover {
         box-shadow: 0 10px 25px -5px #8b5cf6;
+    }
+    .btn-plan.disabled {
+        background: linear-gradient(135deg, #9ca3af, #6b7280);
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+    .btn-plan.disabled:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    /* Section limites spécifiques */
+    .limits-section {
+        background: #f1f5f9;
+        border-radius: 16px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    .limits-section.unlimited {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+    }
+    .limits-title {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        color: #64748b;
+        margin-bottom: 0.75rem;
+    }
+    .limit-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .limit-item:last-child {
+        border-bottom: none;
+    }
+    .limit-icon {
+        width: 32px;
+        text-align: center;
+    }
+    .limit-text {
+        flex: 1;
+        font-size: 0.9rem;
+        color: #334155;
+    }
+    .limit-value {
+        font-weight: 700;
+        color: #1e293b;
+    }
+    .separator {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+    .separator::before,
+    .separator::after {
+        content: '';
+        flex: 1;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    .separator span {
+        padding: 0 1rem;
+        color: #64748b;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     /* Bloc informations entreprise */
     .company-info {
@@ -197,6 +274,26 @@
         border-radius: 50px;
         margin-left: 0.5rem;
     }
+    /* Badge restaurant */
+    .restaurant-badge {
+        background: linear-gradient(135deg, #10b981, #059669);
+        font-size: 0.7rem;
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        color: white;
+        display: inline-block;
+        margin-left: 0.5rem;
+    }
+    /* Message freemium */
+    .freemium-message {
+        background: #fef3c7;
+        border-radius: 12px;
+        padding: 0.75rem;
+        margin-top: 1rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #92400e;
+    }
     @media (max-width: 768px) {
         .plan-price {
             font-size: 2.5rem;
@@ -226,7 +323,6 @@
                 </div>
                 <div class="col-md-4 text-md-end mt-3 mt-md-0">
                     <div class="d-inline-block position-relative">
-                        {# ID unique pour le span #}
                         <span class="subscription-number" id="subscriptionNumberSpan" onclick="copySubscriptionNumber()">
                             <i class="bi bi-hash me-2"></i>{{ company.subscriptionNumber }}
                         </span>
@@ -267,39 +363,198 @@
 
     <div class="row g-4 justify-content-center">
         {% for plan in plans %}
-            {% if plan.name != 'freemium' %} {# Exclure le plan freemium #}
-            <div class="col-lg-5 col-md-6">
-                <div class="card plan-card {{ plan.name == 'basic' ? 'basic' : 'premium' }}">
+            <div class="col-lg-4 col-md-6">
+                <div class="card plan-card {{ plan.name == 'basic' ? 'basic' : (plan.name == 'premium' ? 'premium' : 'freemium') }}">
                     <div class="card-body p-4 p-xl-5">
                         <div class="text-center">
                             <div class="plan-icon">
-                                <i class="bi {{ plan.name == 'basic' ? 'bi-rocket' : 'bi-stars' }}"></i>
+                                {% if plan.name == 'basic' %}
+                                    <i class="bi bi-rocket"></i>
+                                {% elseif plan.name == 'premium' %}
+                                    <i class="bi bi-stars"></i>
+                                {% else %}
+                                    <i class="bi bi-gift"></i>
+                                {% endif %}
                             </div>
-                            <span class="plan-badge {{ plan.name == 'premium' ? 'premium' : '' }}">{{ plan.displayName }}</span>
+                            <span class="plan-badge {{ plan.name == 'premium' ? 'premium' : (plan.name == 'freemium' ? 'freemium' : '') }}">
+                                {{ plan.displayName }}
+                            </span>
                             
                             <div class="plan-price mt-3">
-                                {{ plan.priceMonthly|number_format(0, ',', ' ') }} <small>FCFA/mois</small>
+                                {% if plan.name == 'freemium' %}
+                                    GRATUIT
+                                {% else %}
+                                    {{ plan.priceMonthly|number_format(0, ',', ' ') }} <small>FCFA/mois</small>
+                                {% endif %}
                             </div>
                             <p class="text-muted mt-3">{{ plan.description }}</p>
                         </div>
 
+                        <!-- Séparateur avant les fonctionnalités -->
+                        <div class="separator">
+                            <span>Fonctionnalités incluses</span>
+                        </div>
+
+                        <!-- Section des fonctionnalités générales -->
                         <ul class="feature-list">
-                            {% for feature in plan.features %}
+                            {% for feature in plan.features|slice(0, 5) %}
                                 <li><i class="bi bi-check-circle-fill"></i> {{ feature }}</li>
                             {% endfor %}
+                            {% if plan.features|length > 5 %}
+                                <li><i class="bi bi-plus-circle-fill text-primary"></i> +{{ plan.features|length - 5 }} autres fonctionnalités</li>
+                            {% endif %}
                         </ul>
 
-                        <button class="btn-plan w-100 {{ plan.name == 'premium' ? 'premium' : '' }}" 
-                                data-plan-id="{{ plan.id }}" 
-                                data-plan-name="{{ plan.displayName }}"
-                                data-monthly-price="{{ plan.priceMonthly|number_format(0, ',', ' ') }}"
-                                data-yearly-price="{{ plan.priceYearly|number_format(0, ',', ' ') }}">
-                            Choisir {{ plan.displayName }}
-                        </button>
+                        <!-- Séparateur avant les limites -->
+                        <div class="separator">
+                            <span>Limites du plan</span>
+                        </div>
+
+                        <!-- Section des limites spécifiques pour les restaurants (UNIQUEMENT POUR LES RESTAURANTS) -->
+                        {% set companyType = app.user.hmaService.companyType ?? 'commerce' %}
+                        {% if companyType == 'restaurant' %}
+                        <div class="limits-section">
+                            <div class="limits-title">
+                                <i class="bi bi-egg-fried me-1"></i> Limites Restaurant
+                            </div>
+                            
+                            <!-- Limite Recettes -->
+                            <div class="limit-item">
+                                <div class="limit-icon">
+                                    <i class="bi bi-book-fill text-success"></i>
+                                </div>
+                                <div class="limit-text">
+                                    <strong>Recettes</strong>
+                                </div>
+                                <div class="limit-value">
+                                    {% if plan.maxRecipes is null or plan.maxRecipes >= 999999999 %}
+                                        ♾️ Illimité
+                                    {% else %}
+                                        {{ plan.maxRecipes|number_format }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Limite Catégories de recettes -->
+                            <div class="limit-item">
+                                <div class="limit-icon">
+                                    <i class="bi bi-tag-fill text-info"></i>
+                                </div>
+                                <div class="limit-text">
+                                    <strong>Catégories de recettes</strong>
+                                </div>
+                                <div class="limit-value">
+                                    {% if plan.maxRecipeCategories is null or plan.maxRecipeCategories >= 999999999 %}
+                                        ♾️ Illimité
+                                    {% else %}
+                                        {{ plan.maxRecipeCategories|number_format }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Section des limites commerce -->
+                        {% set isPremiumUnlimited = plan.name == 'premium' and (plan.maxProducts is null or plan.maxProducts >= 999999999) %}
+                        <div class="limits-section {{ isPremiumUnlimited ? 'unlimited' : '' }}">
+                            <div class="limits-title">
+                                <i class="bi bi-shop me-1"></i> Limites Commerce
+                                {% if isPremiumUnlimited %}
+                                    <span class="badge bg-warning text-dark ms-2">Illimité ✨</span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="limit-item">
+                                <div class="limit-icon"><i class="bi bi-box-fill text-info"></i></div>
+                                <div class="limit-text"><strong>Produits</strong></div>
+                                <div class="limit-value">
+                                    {% if plan.maxProducts is null or plan.maxProducts >= 999999999 %}
+                                        ♾️ Illimité
+                                    {% else %}
+                                        {{ plan.maxProducts|number_format }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="limit-item">
+                                <div class="limit-icon"><i class="bi bi-cart-fill text-warning"></i></div>
+                                <div class="limit-text"><strong>Commandes / mois</strong></div>
+                                <div class="limit-value">
+                                    {% if plan.maxOrdersPerMonth is null or plan.maxOrdersPerMonth >= 999999999 %}
+                                        ♾️ Illimité
+                                    {% else %}
+                                        {{ plan.maxOrdersPerMonth|number_format }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="limit-item">
+                                <div class="limit-icon"><i class="bi bi-tags-fill text-primary"></i></div>
+                                <div class="limit-text"><strong>Catégories</strong></div>
+                                <div class="limit-value">
+                                    {% if plan.maxCategories is null or plan.maxCategories >= 999999999 %}
+                                        ♾️ Illimité
+                                    {% else %}
+                                        {{ plan.maxCategories|number_format }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="limit-item">
+                                <div class="limit-icon"><i class="bi bi-truck text-secondary"></i></div>
+                                <div class="limit-text"><strong>Fournisseurs</strong></div>
+                                <div class="limit-value">
+                                    {% if plan.maxSuppliers is null or plan.maxSuppliers >= 999999999 %}
+                                        ♾️ Illimité
+                                    {% else %}
+                                        {{ plan.maxSuppliers|number_format }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="limit-item">
+                                <div class="limit-icon"><i class="bi bi-people-fill text-success"></i></div>
+                                <div class="limit-text"><strong>Utilisateurs / rôle</strong></div>
+                                <div class="limit-value">
+                                    {% if plan.maxUsersPerRole is null or plan.maxUsersPerRole >= 999999999 %}
+                                        ♾️ Illimité
+                                    {% else %}
+                                        {{ plan.maxUsersPerRole|number_format }}
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            {# Message spécial pour Premium illimité #}
+                            {% if isPremiumUnlimited %}
+                            <div class="mt-2 pt-2 text-center">
+                                <small class="text-warning-dark">
+                                    <i class="bi bi-infinity me-1"></i>
+                                    Toutes les limites sont illimitées avec le plan Premium !
+                                </small>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        {% if plan.name == 'freemium' %}
+                            <div class="freemium-message">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Plan gratuit - Pas de paiement requis
+                            </div>
+                            <button class="btn-plan disabled w-100 mt-3" disabled>
+                                <i class="bi bi-lock me-2"></i>Plan actuel
+                            </button>
+                        {% else %}
+                            <button class="btn-plan w-100 {{ plan.name == 'premium' ? 'premium' : '' }}" 
+                                    data-plan-id="{{ plan.id }}" 
+                                    data-plan-name="{{ plan.displayName }}"
+                                    data-monthly-price="{{ plan.priceMonthly|number_format(0, ',', ' ') }}"
+                                    data-yearly-price="{{ plan.priceYearly|number_format(0, ',', ' ') }}">
+                                Choisir {{ plan.displayName }}
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -319,7 +574,6 @@
                     <div class="mb-4">
                         <label for="subscriptionNumberInput" class="form-label fw-semibold">Numéro d'abonnement</label>
                         <div class="input-group">
-                            {# ID unique pour l'input #}
                             <input type="text" class="form-control" id="subscriptionNumberInput" name="subscription_number" 
                                    required placeholder="Ex: AB12345678" 
                                    pattern="[A-Z0-9]{10}" title="10 caractères alphanumériques majuscules"
@@ -374,7 +628,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const modal = new bootstrap.Modal(document.getElementById('billingModal'));
-    const selectButtons = document.querySelectorAll('.btn-plan');
+    const selectButtons = document.querySelectorAll('.btn-plan:not(.disabled)');
     
     selectButtons.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -411,7 +665,6 @@ document.addEventListener('DOMContentLoaded', function() {
 // Fonction pour copier le numéro d'abonnement depuis le bloc d'information (span)
 function copySubscriptionNumber() {
     const span = document.getElementById('subscriptionNumberSpan');
-    // Le texte du span inclut le numéro (l'icône est un élément <i> sans texte)
     const num = span.innerText.trim();
     navigator.clipboard.writeText(num).then(() => {
         const feedback = document.getElementById('copyFeedback');
@@ -428,10 +681,9 @@ function copySubscriptionNumber() {
 function copyInputToClipboard(inputId) {
     const input = document.getElementById(inputId);
     input.select();
-    input.setSelectionRange(0, 99999); // Pour mobile
+    input.setSelectionRange(0, 99999);
     document.execCommand('copy');
     
-    // Feedback optionnel sur le bouton
     const btn = event.target.closest('button');
     const originalHtml = btn.innerHTML;
     btn.innerHTML = '<i class="bi bi-check"></i>';

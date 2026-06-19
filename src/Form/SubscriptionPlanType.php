@@ -19,6 +19,7 @@ class SubscriptionPlanType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // ========== INFORMATIONS GÉNÉRALES ==========
             ->add('name', TextType::class, [
                 'label' => 'Nom technique',
                 'attr' => ['placeholder' => 'ex: basic, premium']
@@ -32,6 +33,8 @@ class SubscriptionPlanType extends AbstractType
                 'required' => false,
                 'attr' => ['rows' => 4, 'placeholder' => 'Courte description du plan...']
             ])
+
+            // ========== TARIFS ==========
             ->add('priceMonthly', MoneyType::class, [
                 'label' => 'Prix mensuel (FCFA)',
                 'currency' => 'XOF',
@@ -46,6 +49,8 @@ class SubscriptionPlanType extends AbstractType
                 'grouping' => true,
                 'attr' => ['placeholder' => 'ex: 250000']
             ])
+
+            // ========== LIMITES COMMERCE ==========
             ->add('maxUsersPerRole', IntegerType::class, [
                 'label' => 'Max utilisateurs par rôle',
                 'required' => false,
@@ -71,16 +76,40 @@ class SubscriptionPlanType extends AbstractType
                 'required' => false,
                 'attr' => ['placeholder' => 'Laissez vide pour illimité']
             ])
+
+            // ========== LIMITES RESTAURANT ==========
+            ->add('maxRecipes', IntegerType::class, [
+                'label' => 'Max recettes',
+                'required' => false,
+                'attr' => ['placeholder' => 'Laissez vide pour illimité']
+            ])
+            ->add('maxRecipeCategories', IntegerType::class, [
+                'label' => 'Max catégories de recettes',
+                'required' => false,
+                'attr' => ['placeholder' => 'Laissez vide pour illimité']
+            ])
+
+            // ========== FONCTIONNALITÉS ==========
             ->add('features', CollectionType::class, [
-                'label' => 'Fonctionnalités (une par ligne)',
+                'label' => false,  // ← Désactive complètement le label
                 'entry_type' => TextType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
                 'by_reference' => false,
                 'required' => false,
-                'attr' => ['class' => 'features-collection']
+                'attr' => [
+                    'class' => 'features-collection'
+                ],
+                'entry_options' => [
+                    'attr' => [
+                        'placeholder' => 'Ex: Gestion des stocks, Export PDF, API...',
+                        'class' => 'form-control rounded-3'
+                    ]
+                ]
             ])
+
+            // ========== STATUT ==========
             ->add('isActive', CheckboxType::class, [
                 'label' => 'Actif',
                 'required' => false,

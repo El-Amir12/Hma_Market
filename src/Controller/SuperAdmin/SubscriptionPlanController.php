@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/super-admin/subscription-plans')]
@@ -18,13 +18,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class SubscriptionPlanController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager
     ) {}
 
     #[Route('/', name: 'app_super_admin_subscription_plan_index', methods: ['GET'])]
     public function index(SubscriptionPlanRepository $repository): Response
     {
-        $plans = $repository->findAll();
+        $plans = $repository->findBy([], ['displayName' => 'ASC']);
 
         return $this->render('super_admin/subscription_plan/index.html.twig', [
             'plans' => $plans,
@@ -69,7 +69,7 @@ class SubscriptionPlanController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            $this->addFlash('success', 'Plan mis à jour.');
+            $this->addFlash('success', 'Plan mis à jour avec succès.');
 
             return $this->redirectToRoute('app_super_admin_subscription_plan_index');
         }
@@ -83,7 +83,9 @@ class SubscriptionPlanController extends AbstractController
     #[Route('/{id}/toggle', name: 'app_super_admin_subscription_plan_toggle', methods: ['POST'])]
     public function toggle(Request $request, SubscriptionPlan $plan): Response
     {
-        if (!$this->isCsrfTokenValid('toggle' . $plan->getId(), $request->request->get('_token'))) {
+        $submittedToken = $request->request->get('_token');
+        
+        if (!$this->isCsrfTokenValid('toggle' . $plan->getId(), $submittedToken)) {
             $this->addFlash('error', 'Token CSRF invalide.');
             return $this->redirectToRoute('app_super_admin_subscription_plan_index');
         }
@@ -92,7 +94,7 @@ class SubscriptionPlanController extends AbstractController
         $this->entityManager->flush();
 
         $status = $plan->isActive() ? 'activé' : 'désactivé';
-        $this->addFlash('success', "Plan {$plan->getDisplayName()} {$status}.");
+        $this->addFlash('success', sprintf('Le plan "%s" a été %s avec succès.', $plan->getDisplayName(), $status));
 
         return $this->redirectToRoute('app_super_admin_subscription_plan_index');
     }
@@ -100,20 +102,23 @@ class SubscriptionPlanController extends AbstractController
     #[Route('/{id}', name: 'app_super_admin_subscription_plan_delete', methods: ['POST'])]
     public function delete(Request $request, SubscriptionPlan $plan): Response
     {
-        if (!$this->isCsrfTokenValid('delete' . $plan->getId(), $request->request->get('_token'))) {
+        $submittedToken = $request->request->get('_token');
+        
+        if (!$this->isCsrfTokenValid('delete' . $plan->getId(), $submittedToken)) {
             $this->addFlash('error', 'Token CSRF invalide.');
             return $this->redirectToRoute('app_super_admin_subscription_plan_index');
         }
 
         if ($plan->getSubscriptions()->count() > 0) {
-            $this->addFlash('error', 'Impossible de supprimer un plan utilisé par des abonnements.');
+            $this->addFlash('error', sprintf('Impossible de supprimer le plan "%s" car il est utilisé par des abonnements.', $plan->getDisplayName()));
             return $this->redirectToRoute('app_super_admin_subscription_plan_index');
         }
 
+        $planName = $plan->getDisplayName();
         $this->entityManager->remove($plan);
         $this->entityManager->flush();
 
-        $this->addFlash('success', 'Plan supprimé.');
+        $this->addFlash('success', sprintf('Le plan "%s" a été supprimé avec succès.', $planName));
 
         return $this->redirectToRoute('app_super_admin_subscription_plan_index');
     }

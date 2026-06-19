@@ -136,7 +136,7 @@ class MenuBuilder
     }
 
     /**
-     * ✅ NOUVEAU MENU : Gestion des stocks (Ajustements, Transferts, Inventaires)
+     * Menu Gestion des stocks (Ajustements, Transferts, Inventaires)
      */
     private function getStockManagementMenu(): array
     {
@@ -173,15 +173,6 @@ class MenuBuilder
                 'route' => 'app_admin_stock_movement_index',
                 'label' => 'Mouvements de stock',
                 'icon' => 'fas fa-history'
-            ],
-            [
-                'type' => 'divider'
-            ],
-            [
-                'type' => 'link',
-                'route' => 'app_stock_adjustment_index',
-                'label' => '📊 Statistiques stock',
-                'icon' => 'fas fa-chart-pie'
             ]
         ];
         
@@ -193,9 +184,137 @@ class MenuBuilder
         ];
     }
 
+    /**
+     * Menu FOURNISSEURS
+     */
+    private function getSuppliersMenu(): array
+    {
+        return [
+            'type' => 'dropdown',
+            'label' => 'Fournisseurs',
+            'icon' => 'fas fa-truck',
+            'children' => [
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_supplier_index', 
+                    'label' => 'Liste des fournisseurs',
+                    'icon' => 'fas fa-list-ul'
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_supplier_new', 
+                    'label' => 'Ajouter un fournisseur',
+                    'icon' => 'fas fa-plus-circle'
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * Menu APPROVISIONNEMENT
+     */
+    private function getProcurementMenu(): array
+    {
+        return [
+            'type' => 'dropdown',
+            'label' => 'Approvisionnement',
+            'icon' => 'fas fa-truck',
+            'children' => [
+                [
+                    'type' => 'link',
+                    'route' => 'purchase_index', 
+                    'label' => 'Commandes d\'achat',
+                    'icon' => 'fas fa-clipboard-list'
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_supplier_credit_note_index', 
+                    'label' => 'Avoirs Fournisseurs',
+                    'icon' => 'fas fa-file-invoice-dollar'
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_stock_movement_index', 
+                    'label' => 'Mouvement du stock',
+                    'icon' => 'fas fa-exchange-alt'
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_location_index', 
+                    'label' => 'Emplacement',
+                    'icon' => 'fas fa-map-marker-alt'
+                ],
+                [
+                    'type' => 'link',
+                    'route' => 'app_admin_stock_batch_all', 
+                    'label' => 'Gestion des lots',
+                    'icon' => 'fas fa-cubes'
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * Menu CATALOGUE
+     */
+    private function getCatalogueMenu(): array
+    {
+        $children = [
+            [
+                'type' => 'link',
+                'route' => 'app_admin_category_index',
+                'label' => 'Catégories',
+                'icon' => 'fas fa-tags'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_product_new',
+                'label' => 'Nouveau produit',
+                'icon' => 'fas fa-box'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_product_index', 
+                'label' => 'Produits',
+                'icon' => 'fas fa-boxes'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_promotion_index', 
+                'label' => 'Promotions',
+                'icon' => 'fas fa-percent'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_promotion_category_index', 
+                'label' => 'Catégories promo',
+                'icon' => 'fas fa-tags'
+            ],
+            [
+                'type' => 'link',
+                'route' => 'app_admin_promotion_product_index',
+                'label' => 'Promotions des produits',
+                'icon' => 'fas fa-tag'
+            ]
+        ];
+
+        return [
+            'type' => 'dropdown',
+            'label' => 'Catalogue',
+            'icon' => 'fas fa-th',
+            'children' => $children
+        ];
+    }
+
+    /**
+     * ✅ MENU SUPER ADMIN COMPLET
+     */
     private function getSuperAdminMenu(): array
     {
         return [
+            // ============================================
+            // SECTION 1: SUPER ADMINISTRATION
+            // ============================================
             [
                 'type' => 'section',
                 'label' => 'SUPER ADMINISTRATION'
@@ -221,22 +340,19 @@ class MenuBuilder
                         'type' => 'link',
                         'route' => 'app_super_admin_hma_service_index',
                         'label' => 'Toutes les entreprises',
-                        'icon' => 'fas fa-building',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-building'
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_user_index',
+                        'route' => 'super_admin_subscription_index',
                         'label' => 'Abonnements',
-                        'icon' => 'fas fa-credit-card',
-                        'coming_soon' => true
+                        'icon' => 'fas fa-credit-card'
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_user_index',
+                        'route' => 'app_super_admin_statistics_index',
                         'label' => 'Statistiques globales',
-                        'icon' => 'fas fa-chart-bar',
-                        'coming_soon' => true
+                        'icon' => 'fas fa-chart-bar'
                     ]
                 ]
             ],
@@ -259,25 +375,79 @@ class MenuBuilder
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_user_index',
+                        'route' => 'app_dashboard',
                         'label' => 'Configuration globale',
-                        'icon' => 'fas fa-sliders-h',
-                        'coming_soon' => true
+                        'icon' => 'fas fa-sliders-h'
                     ]
                 ]
             ],
+
+            // ============================================
+            // SECTION 2: E-COMMERCE (NOUVEAU)
+            // ============================================
             [
                 'type' => 'section',
-                'label' => 'ANALYSES'
+                'label' => 'E-COMMERCE'
+            ],
+            // Fournisseurs
+            $this->getSuppliersMenu(),
+            // Approvisionnement
+            $this->getProcurementMenu(),
+            // Ventes
+            $this->getSalesMenu(),
+            // Gestion des stocks
+            $this->getStockManagementMenu(),
+            // Catalogue
+            $this->getCatalogueMenu(),
+
+            // ============================================
+            // SECTION 4: RAPPORTS
+            // ============================================
+            [
+                'type' => 'section',
+                'label' => 'RAPPORTS'
             ],
             [
                 'type' => 'dropdown',
-                'label' => 'Analyses approfondies',
-                'icon' => 'fas fa-chart-pie',
+                'label' => 'Rapports',
+                'icon' => 'fas fa-chart-bar',
                 'children' => [
                     [
                         'type' => 'link',
-                        'route' => 'super_admin_analysis_index',
+                        'route' => 'app_financial_report_index',
+                        'label' => 'Rapport financier',
+                        'icon' => 'fas fa-calculator'
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_sales_report_index',
+                        'label' => 'Rapport des ventes',
+                        'icon' => 'fas fa-chart-line'
+                    ],
+                    [
+                        'type' => 'link',
+                        'route' => 'app_stock_report_index',
+                        'label' => 'Rapport de stock',
+                        'icon' => 'fas fa-box'
+                    ]
+                ]
+            ],
+
+            // ============================================
+            // SECTION 5: ANALYSES APPROFONDIES (SUPER ADMIN)
+            // ============================================
+            [
+                'type' => 'section',
+                'label' => 'ANALYSES APPROFONDIES'
+            ],
+            [
+                'type' => 'dropdown',
+                'label' => 'Analyses Super Admin',
+                'icon' => 'fas fa-microscope',
+                'children' => [
+                    [
+                        'type' => 'link',
+                        'route' => 'app_dashboard',
                         'label' => 'Toutes les demandes',
                         'icon' => 'fas fa-list'
                     ],
@@ -286,7 +456,7 @@ class MenuBuilder
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'super_admin_analysis_index',
+                        'route' => 'app_dashboard',
                         'label' => 'Statistiques des analyses',
                         'icon' => 'fas fa-chart-bar'
                     ]
@@ -309,17 +479,15 @@ class MenuBuilder
                 'children' => [
                     [
                         'type' => 'link',
-                        'route' => 'app_user_index',
+                        'route' => 'app_company_settings_index',
                         'label' => 'Paramètres entreprise',
-                        'icon' => 'fas fa-sliders-h',
-                        'coming_soon' => true
+                        'icon' => 'fas fa-sliders-h'
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_user_index',
+                        'route' => 'admin_subscription_index',
                         'label' => 'Abonnement',
-                        'icon' => 'fas fa-credit-card',
-                        'coming_soon' => true
+                        'icon' => 'fas fa-credit-card'
                     ]
                 ]
             ],
@@ -351,15 +519,13 @@ class MenuBuilder
                         'type' => 'link',
                         'route' => 'app_admin_supplier_index', 
                         'label' => 'Liste des fournisseurs',
-                        'icon' => 'fas fa-list-ul',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-list-ul'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_admin_supplier_new', 
                         'label' => 'Ajouter un fournisseur',
-                        'icon' => 'fas fa-plus-circle',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-plus-circle'
                     ]
                 ]
             ],
@@ -372,73 +538,65 @@ class MenuBuilder
                         'type' => 'link',
                         'route' => 'purchase_index', 
                         'label' => 'Commandes d\'achat',
-                        'icon' => 'fas fa-clipboard-list',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-clipboard-list'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_supplier_credit_note_index', 
                         'label' => 'Avoirs Fournisseurs',
-                        'icon' => 'fas fa-file-invoice-dollar',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-file-invoice-dollar'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_admin_stock_movement_index', 
                         'label' => 'Mouvement du stock',
-                        'icon' => 'fas fa-exchange-alt',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-exchange-alt'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_admin_location_index', 
                         'label' => 'Emplacement',
-                        'icon' => 'fas fa-map-marker-alt',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-map-marker-alt'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_admin_stock_batch_all', 
                         'label' => 'Gestion des lots',
-                        'icon' => 'fas fa-cubes',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-cubes'
                     ]
                 ]
             ]
         ];
 
-        // ✅ SECTION VENTES (dropdown)
+        // SECTION VENTES
         $menu[] = [
             'type' => 'section',
             'label' => 'VENTES'
         ];
         $menu[] = $this->getSalesMenu();
 
-        // ✅ NOUVEAU MENU GESTION DES STOCKS
+        // MENU GESTION DES STOCKS
         $menu[] = $this->getStockManagementMenu();
 
-        // Section Catalogue (produits)
+        // Section Catalogue
         $catalogueChildren = [
             [
                 'type' => 'link',
                 'route' => 'app_admin_category_index',
                 'label' => 'Catégories',
-                'icon' => 'fas fa-tags',
-                'coming_soon' => false
+                'icon' => 'fas fa-tags'
             ],
             [
                 'type' => 'link',
                 'route' => 'app_admin_product_new',
                 'label' => 'Nouveau produit',
-                'icon' => 'fas fa-box',
-                'coming_soon' => false
+                'icon' => 'fas fa-box'
             ],
             [
                 'type' => 'link',
                 'route' => 'app_admin_product_index', 
                 'label' => 'Produits',
-                'icon' => 'fas fa-boxes',
-                'coming_soon' => false
+                'icon' => 'fas fa-boxes'
             ],
         ];
 
@@ -447,22 +605,19 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => 'app_admin_promotion_index', 
                 'label' => 'Promotions',
-                'icon' => 'fas fa-percent',
-                'coming_soon' => false
+                'icon' => 'fas fa-percent'
             ];
             $catalogueChildren[] = [
                 'type' => 'link',
                 'route' => 'app_admin_promotion_category_index', 
                 'label' => 'Catégories promo',
-                'icon' => 'fas fa-tags',
-                'coming_soon' => false
+                'icon' => 'fas fa-tags'
             ];
             $catalogueChildren[] = [
                 'type' => 'link',
                 'route' => 'app_admin_promotion_product_index',
                 'label' => 'Promotions des produits',
-                'icon' => 'fas fa-tag',
-                'coming_soon' => false
+                'icon' => 'fas fa-tag'
             ];
         }
 
@@ -479,43 +634,37 @@ class MenuBuilder
                     'type' => 'link',
                     'route' => 'app_admin_category_recipe_index', 
                     'label' => 'Section du menu',
-                    'icon' => 'fas fa-th',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-th'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_recipe_new',
                     'label' => 'Nouvel article',
-                    'icon' => 'fas fa-plus-circle',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-plus-circle'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_recipe_index',
                     'label' => 'Menu',
-                    'icon' => 'fas fa-utensils',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-utensils'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_promotion_index', 
                     'label' => 'Promotions',
-                    'icon' => 'fas fa-percent',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-percent'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_restaurant_promotion_category_index', 
                     'label' => 'Catégories promo',
-                    'icon' => 'fas fa-tags',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-tags'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_restaurant_promotion_recipe_index', 
                     'label' => 'Promotions des articles',
-                    'icon' => 'fas fa-tag',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-tag'
                 ]
             ];
             $menu[] = [
@@ -526,7 +675,7 @@ class MenuBuilder
             ];
         }
 
-        // ✅ SECTION ANALYSES (AJOUTÉE)
+        // SECTION ANALYSES
         $menu[] = [
             'type' => 'section',
             'label' => 'ANALYSES'
@@ -562,14 +711,14 @@ class MenuBuilder
             ]
         ];
 
-        // ✅ SECTION VENTES (dropdown)
+        // SECTION VENTES
         $menu[] = [
             'type' => 'section',
             'label' => 'VENTES'
         ];
         $menu[] = $this->getSalesMenu();
 
-        // ✅ NOUVEAU MENU GESTION DES STOCKS
+        // MENU GESTION DES STOCKS
         $menu[] = $this->getStockManagementMenu();
 
         $produitsChildren = [
@@ -577,50 +726,43 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => 'app_admin_product_index', 
                 'label' => 'Produits',
-                'icon' => 'fas fa-boxes',
-                'coming_soon' => false
+                'icon' => 'fas fa-boxes'
             ],
             [
                 'type' => 'link',
                 'route' => 'app_admin_product_new', 
                 'label' => 'Nouveau produit',
-                'icon' => 'fas fa-plus-circle',
-                'coming_soon' => false
+                'icon' => 'fas fa-plus-circle'
             ],
             [
                 'type' => 'link',
                 'route' => 'app_admin_category_index',
                 'label' => 'Catégories',
-                'icon' => 'fas fa-tags',
-                'coming_soon' => false
+                'icon' => 'fas fa-tags'
             ],
             [
                 'type' => 'link',
                 'route' => 'purchase_index', 
                 'label' => 'Approvisionnement',
-                'icon' => 'fas fa-truck',
-                'coming_soon' => false
+                'icon' => 'fas fa-truck'
             ],
             [
                 'type' => 'link',
                 'route' => 'app_admin_stock_movement_index', 
                 'label' => 'Mouvement du stock',
-                'icon' => 'fas fa-exchange-alt',
-                'coming_soon' => false
+                'icon' => 'fas fa-exchange-alt'
             ],
             [
                 'type' => 'link',
                 'route' => 'app_admin_location_index', 
                 'label' => 'Emplacement',
-                'icon' => 'fas fa-map-marker-alt',
-                'coming_soon' => false
+                'icon' => 'fas fa-map-marker-alt'
             ],
             [
                 'type' => 'link',
                 'route' => 'app_admin_stock_batch_all',
                 'label' => 'Gestion des lots',
-                'icon' => 'fas fa-cubes',
-                'coming_soon' => false
+                'icon' => 'fas fa-cubes'
             ],
         ];
 
@@ -629,22 +771,19 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => 'app_admin_promotion_index', 
                 'label' => 'Promotions',
-                'icon' => 'fas fa-percent',
-                'coming_soon' => false
+                'icon' => 'fas fa-percent'
             ];
             $produitsChildren[] = [
                 'type' => 'link',
                 'route' => 'app_admin_promotion_category_index', 
                 'label' => 'Catégories promo',
-                'icon' => 'fas fa-tags',
-                'coming_soon' => false
+                'icon' => 'fas fa-tags'
             ];
             $produitsChildren[] = [
                 'type' => 'link',
                 'route' => 'app_admin_promotion_product_index', 
                 'label' => 'Promotions des produits',
-                'icon' => 'fas fa-tag',
-                'coming_soon' => false
+                'icon' => 'fas fa-tag'
             ];
         }
 
@@ -661,43 +800,37 @@ class MenuBuilder
                     'type' => 'link',
                     'route' => 'app_admin_category_recipe_index', 
                     'label' => 'Section du menu',
-                    'icon' => 'fas fa-th',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-th'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_recipe_new',
                     'label' => 'Nouvel article',
-                    'icon' => 'fas fa-plus-circle',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-plus-circle'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_recipe_index',
                     'label' => 'Menu',
-                    'icon' => 'fas fa-utensils',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-utensils'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_promotion_index', 
                     'label' => 'Promotions',
-                    'icon' => 'fas fa-percent',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-percent'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_restaurant_promotion_category_index', 
                     'label' => 'Catégories promo',
-                    'icon' => 'fas fa-tags',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-tags'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_restaurant_promotion_recipe_index', 
                     'label' => 'Promotions des articles',
-                    'icon' => 'fas fa-tag',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-tag'
                 ]
             ];
             $menu[] = [
@@ -708,7 +841,7 @@ class MenuBuilder
             ];
         }
 
-        // ✅ SECTION ANALYSES (AJOUTÉE)
+        // SECTION ANALYSES
         $menu[] = [
             'type' => 'section',
             'label' => 'ANALYSES'
@@ -740,10 +873,8 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => 'app_admin_stock_batch_all', 
                 'label' => 'Dashboard stock',
-                'icon' => 'fas fa-chart-pie',
-                'coming_soon' => false
+                'icon' => 'fas fa-chart-pie'
             ],
-            // ✅ NOUVEAU MENU GESTION DES STOCKS
             $this->getStockManagementMenu(),
             [
                 'type' => 'dropdown',
@@ -754,29 +885,25 @@ class MenuBuilder
                         'type' => 'link',
                         'route' => 'purchase_index', 
                         'label' => 'Approvisionnement',
-                        'icon' => 'fas fa-clipboard-list',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-clipboard-list'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_admin_stock_movement_index',
                         'label' => 'Mouvement du stock',
-                        'icon' => 'fas fa-exchange-alt',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-exchange-alt'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_admin_location_index',
                         'label' => 'Emplacement',
-                        'icon' => 'fas fa-map-marker-alt',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-map-marker-alt'
                     ],
                     [
                         'type' => 'link',
                         'route' => 'app_admin_stock_batch_all', 
                         'label' => 'Gestion des lots',
-                        'icon' => 'fas fa-cubes',
-                        'coming_soon' => false
+                        'icon' => 'fas fa-cubes'
                     ]
                 ]
             ]
@@ -794,12 +921,11 @@ class MenuBuilder
                 'type' => 'link',
                 'route' => $this->isRestaurant() ? 'restaurant_sale_index' : 'retail_sale_index',
                 'label' => 'Caisse',
-                'icon' => 'fas fa-cash-register',
-                'coming_soon' => false
+                'icon' => 'fas fa-cash-register'
             ]
         ];
 
-        // ✅ SECTION VENTES (dropdown)
+        // SECTION VENTES
         $menu[] = [
             'type' => 'section',
             'label' => 'VENTES'
@@ -812,50 +938,43 @@ class MenuBuilder
                     'type' => 'link',
                     'route' => 'app_admin_category_index',
                     'label' => 'Catégories',
-                    'icon' => 'fas fa-tags',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-tags'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_product_index', 
                     'label' => 'Produits',
-                    'icon' => 'fas fa-boxes',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-boxes'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_stock_batch_all',
                     'label' => 'Stock',
-                    'icon' => 'fas fa-cubes',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-cubes'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_location_index',
                     'label' => 'Emplacements',
-                    'icon' => 'fas fa-map-marker-alt',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-map-marker-alt'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_promotion_index', 
                     'label' => 'Promotions',
-                    'icon' => 'fas fa-percent',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-percent'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_promotion_category_index', 
                     'label' => 'Catégories promo',
-                    'icon' => 'fas fa-tags',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-tags'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_promotion_product_index',
                     'label' => 'Promotions des produits',
-                    'icon' => 'fas fa-tag',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-tag'
                 ]
             ];
 
@@ -873,50 +992,43 @@ class MenuBuilder
                     'type' => 'link',
                     'route' => 'app_admin_category_recipe_index', 
                     'label' => 'Section du menu',
-                    'icon' => 'fas fa-utensils',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-utensils'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_recipe_index',
                     'label' => 'Menu',
-                    'icon' => 'fas fa-hamburger',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-hamburger'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_stock_batch_all',
                     'label' => 'Stock',
-                    'icon' => 'fas fa-cubes',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-cubes'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_location_index',
                     'label' => 'Emplacements',
-                    'icon' => 'fas fa-map-marker-alt',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-map-marker-alt'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_admin_promotion_index', 
                     'label' => 'Promotions',
-                    'icon' => 'fas fa-percent',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-percent'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_restaurant_promotion_category_index', 
                     'label' => 'Catégories promo',
-                    'icon' => 'fas fa-tags',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-tags'
                 ],
                 [
                     'type' => 'link',
                     'route' => 'app_restaurant_promotion_recipe_index', 
                     'label' => 'Promotions des articles',
-                    'icon' => 'fas fa-tag',
-                    'coming_soon' => false
+                    'icon' => 'fas fa-tag'
                 ]
             ];
 
@@ -938,27 +1050,24 @@ class MenuBuilder
         if ($this->security->isGranted('ROLE_ADMIN')) {
             $children[] = [
                 'type' => 'link',
-                'route' => 'app_user_index',
+                'route' => 'app_financial_report_index',
                 'label' => 'Rapport financier',
-                'icon' => 'fas fa-calculator',
-                'coming_soon' => true
+                'icon' => 'fas fa-calculator'
             ];
         }
         
         $children[] = [
             'type' => 'link',
-            'route' => 'app_user_index',
+            'route' => 'app_sales_report_index',
             'label' => 'Rapport des ventes',
-            'icon' => 'fas fa-chart-line',
-            'coming_soon' => true
+            'icon' => 'fas fa-chart-line'
         ];
         
         $children[] = [
             'type' => 'link',
-            'route' => 'app_user_index',
+            'route' => 'app_stock_report_index',
             'label' => 'Rapport de stock',
-            'icon' => 'fas fa-box',
-            'coming_soon' => true
+            'icon' => 'fas fa-box'
         ];
         
         return [

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Proxy;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -156,6 +157,30 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $country = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slogan = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $receipt_header = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $receipt_footer = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $default_tax_rate = null;
+
+    #[ORM\Column(length: 7, nullable: true)]
+    private ?string $primary_color = null;
+
+    #[ORM\Column(length: 7, nullable: true)]
+    private ?string $secondary_color = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $website = null;
 
     /**
      * @var Collection<int, Subscription>
@@ -478,6 +503,94 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCountry(?string $country): static
     {
         $this->country = $country;
+        return $this;
+    }
+
+    public function getSlogan(): ?string
+    {
+        return $this->slogan;
+    }
+
+    public function setSlogan(?string $slogan): static
+    {
+        $this->slogan = $slogan;
+        return $this;
+    }
+
+    public function getReceiptHeader(): ?string
+    {
+        return $this->receipt_header;
+    }
+
+    public function setReceiptHeader(?string $receipt_header): static
+    {
+        $this->receipt_header = $receipt_header;
+        return $this;
+    }
+
+    public function getReceiptFooter(): ?string
+    {
+        return $this->receipt_footer;
+    }
+
+    public function setReceiptFooter(?string $receipt_footer): static
+    {
+        $this->receipt_footer = $receipt_footer;
+        return $this;
+    }
+
+    public function getDefaultTaxRate(): ?float
+    {
+        return $this->default_tax_rate;
+    }
+
+    public function setDefaultTaxRate(?float $default_tax_rate): static
+    {
+        $this->default_tax_rate = $default_tax_rate;
+        return $this;
+    }
+
+    public function getPrimaryColor(): ?string
+    {
+        return $this->primary_color;
+    }
+
+    public function setPrimaryColor(?string $primary_color): static
+    {
+        $this->primary_color = $primary_color;
+        return $this;
+    }
+
+    public function getSecondaryColor(): ?string
+    {
+        return $this->secondary_color;
+    }
+
+    public function setSecondaryColor(?string $secondary_color): static
+    {
+        $this->secondary_color = $secondary_color;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): static
+    {
+        $this->website = $website;
         return $this;
     }
 
@@ -1471,6 +1584,89 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
     public function isUnlimitedSales(): bool
     {
         return $this->getMaxOrdersPerDay() === PHP_INT_MAX;
+    }
+
+    /**
+     * @return Collection<int, ReturnOrder>
+     */
+    public function getReturnOrders(): Collection
+    {
+        // Si vous avez une relation OneToMany avec ReturnOrder
+        return $this->returnOrders ?? new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, SupplierCreditNote>
+     */
+    public function getSupplierCreditNotes(): Collection
+    {
+        // Si vous avez une relation OneToMany avec SupplierCreditNote
+        return $this->supplierCreditNotes ?? new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, AnalysisRequest>
+     */
+    public function getAnalysisRequests(): Collection
+    {
+        // Si vous avez une relation OneToMany avec AnalysisRequest
+        return $this->analysisRequests ?? new ArrayCollection();
+    }
+    
+    /**
+     * Obtenir le nombre total de produits
+     */
+    public function getTotalProductsCount(): int
+    {
+        return $this->products->filter(fn(Product $p) => $p->isSubscriptionActive())->count();
+    }
+
+    /**
+     * Obtenir le nombre total de commandes
+     */
+    public function getTotalOrdersCount(): int
+    {
+        return $this->orders->count();
+    }
+
+    /**
+     * Obtenir le chiffre d'affaires total
+     */
+    public function getTotalRevenue(): float
+    {
+        $total = 0;
+        foreach ($this->orders as $order) {
+            $total += (float) $order->getTotalAmount();
+        }
+        return $total;
+    }
+
+    /**
+     * Obtenir le chiffre d'affaires par mois
+     */
+    public function getMonthlyRevenue(int $months = 12): array
+    {
+        $revenue = [];
+        $now = new \DateTime();
+        
+        for ($i = $months - 1; $i >= 0; $i--) {
+            $start = (clone $now)->modify("-$i months")->modify('first day of this month')->setTime(0, 0, 0);
+            $end = (clone $now)->modify("-$i months")->modify('last day of this month')->setTime(23, 59, 59);
+            
+            $monthlyTotal = 0;
+            foreach ($this->orders as $order) {
+                if ($order->getCreatedAt() >= $start && $order->getCreatedAt() <= $end) {
+                    $monthlyTotal += (float) $order->getTotalAmount();
+                }
+            }
+            
+            $revenue[] = [
+                'month' => $start->format('M Y'),
+                'revenue' => $monthlyTotal
+            ];
+        }
+        
+        return $revenue;
     }
 
 }

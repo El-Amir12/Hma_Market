@@ -8,24 +8,31 @@
     <div class="row mb-5">
         <div class="col-12">
             <div class="modern-header position-relative overflow-hidden rounded-5 shadow-lg p-5 text-white" 
-                 style="background: linear-gradient(145deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);">
+                style="background: linear-gradient(145deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);">
                 <div class="floating-bg">
                     <div class="shape shape-1"></div>
                     <div class="shape shape-2"></div>
                     <div class="shape shape-3"></div>
                 </div>
                 <div class="position-relative z-1">
-                    <div class="d-flex align-items-center gap-4">
-                        <div class="icon-wrapper bg-white bg-opacity-20 backdrop-blur rounded-4 p-4">
-                            <i class="bi bi-tag text-white display-4"></i>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-4">
+                            <div class="icon-wrapper bg-white bg-opacity-20 backdrop-blur rounded-4 p-4">
+                                <i class="fas fa-tag text-white display-4"></i>
+                            </div>
+                            <div>
+                                <h1 class="display-4 fw-bold mb-2">{{ plan.displayName }}</h1>
+                                <p class="text-white-50 mb-0 fs-5">Détails du plan d'abonnement • 
+                                    <span class="badge bg-white text-dark rounded-pill px-3 py-2 ms-2">
+                                        {% if plan.isUnlimited %}Illimité{% else %}Limité{% endif %}
+                                    </span>
+                                </p>
+                            </div>
                         </div>
                         <div>
-                            <h1 class="display-4 fw-bold mb-2">{{ plan.displayName }}</h1>
-                            <p class="text-white-50 mb-0 fs-5">Détails du plan d'abonnement • 
-                                <span class="badge bg-white text-dark rounded-pill px-3 py-2 ms-2">
-                                    {% if plan.isUnlimited %}Illimité{% else %}Limité{% endif %}
-                                </span>
-                            </p>
+                            <a href="{{ path('app_super_admin_subscription_plan_index') }}" class="btn btn-light rounded-pill px-4 shadow-sm" style="cursor: pointer; position: relative; z-index: 100;">
+                                <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -43,7 +50,7 @@
         {% for message in messages %}
             <div class="alert alert-{{ label }} alert-dismissible fade show rounded-4 shadow-sm mb-4 border-0" role="alert">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-{{ label == 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill' }} fs-4 me-3"></i>
+                    <i class="fas fa-{{ label == 'success' ? 'check-circle' : 'exclamation-triangle' }} fs-4 me-3"></i>
                     <span>{{ message }}</span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -52,11 +59,11 @@
     {% endfor %}
 
     <!-- Détails du plan -->
-    <div class="row justify-content-center mb-5">
-        <div class="col-lg-10">
+    <div class="row mb-5">
+        <div class="col-12">
             <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
                 <div class="card-header bg-gradient-primary text-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold"><i class="bi bi-info-circle-fill me-2"></i>Informations générales</h5>
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-info-circle me-2"></i>Informations générales</h5>
                 </div>
                 <div class="card-body p-4">
                     <!-- Informations générales -->
@@ -65,19 +72,19 @@
                             <ul class="list-unstyled">
                                 <li class="mb-3 d-flex align-items-center">
                                     <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
-                                        <i class="bi bi-tag-fill text-primary"></i>
+                                        <i class="fas fa-tag text-white"></i>
                                     </div>
                                     <div><strong>Nom technique :</strong> {{ plan.name }}</div>
                                 </li>
                                 <li class="mb-3 d-flex align-items-center">
                                     <div class="bg-success bg-opacity-10 p-2 rounded-3 me-3">
-                                        <i class="bi bi-calendar-check text-success"></i>
+                                        <i class="fas fa-calendar-check text-white"></i>
                                     </div>
                                     <div><strong>Créé le :</strong> {{ plan.createdAt|date('d/m/Y H:i') }}</div>
                                 </li>
                                 <li class="mb-3 d-flex align-items-center">
                                     <div class="bg-warning bg-opacity-10 p-2 rounded-3 me-3">
-                                        <i class="bi bi-arrow-repeat text-warning"></i>
+                                        <i class="fas fa-sync-alt text-white"></i>
                                     </div>
                                     <div><strong>Dernière mise à jour :</strong> {{ plan.updatedAt ? plan.updatedAt|date('d/m/Y H:i') : 'Jamais' }}</div>
                                 </li>
@@ -87,19 +94,19 @@
                             <ul class="list-unstyled">
                                 <li class="mb-3 d-flex align-items-center">
                                     <div class="bg-success bg-opacity-10 p-2 rounded-3 me-3">
-                                        <i class="bi bi-currency-exchange text-success"></i>
+                                        <i class="fas fa-money-bill-wave text-white"></i>
                                     </div>
                                     <div><strong>Prix mensuel :</strong> {{ plan.priceMonthly|number_format(0, ',', ' ') }} FCFA</div>
                                 </li>
                                 <li class="mb-3 d-flex align-items-center">
                                     <div class="bg-warning bg-opacity-10 p-2 rounded-3 me-3">
-                                        <i class="bi bi-currency-exchange text-warning"></i>
+                                        <i class="fas fa-money-bill-wave text-white"></i>
                                     </div>
                                     <div><strong>Prix annuel :</strong> {{ plan.priceYearly|number_format(0, ',', ' ') }} FCFA</div>
                                 </li>
                                 <li class="mb-3 d-flex align-items-center">
                                     <div class="bg-info bg-opacity-10 p-2 rounded-3 me-3">
-                                        <i class="bi bi-bar-chart text-info"></i>
+                                        <i class="fas fa-chart-bar text-white"></i>
                                     </div>
                                     <div><strong>Abonnements :</strong> {{ plan.subscriptions|length }}</div>
                                 </li>
@@ -107,60 +114,81 @@
                         </div>
                     </div>
 
-                    <!-- Description (déplacée ici, avant les limites) -->
+                    <!-- Description -->
                     {% if plan.description %}
                         <div class="description-box p-3 rounded-3 mt-4 mb-4">
-                            <i class="bi bi-quote me-2 text-info"></i>
+                            <i class="fas fa-quote-left me-2 text-info"></i>
                             <em>{{ plan.description }}</em>
                         </div>
                     {% endif %}
 
                     <hr class="my-4">
 
-                    <!-- Limites en badges -->
-                    <h6 class="fw-bold mb-3"><i class="bi bi-speedometer2 me-2"></i>Limites du plan</h6>
+                    <!-- Limites Commerce -->
+                    <h6 class="fw-bold mb-3"><i class="fas fa-store me-2 text-primary"></i>Limites Commerce</h6>
                     <div class="d-flex flex-wrap gap-2 mb-4">
                         {% if plan.maxUsersPerRole is not null %}
                             <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
-                                <i class="bi bi-people-fill text-success me-1"></i> {{ plan.maxUsersPerRole }} utilisateurs/rôle
+                                <i class="fas fa-users text-success me-1"></i> {{ plan.maxUsersPerRole }} utilisateurs/rôle
                             </span>
                         {% endif %}
                         {% if plan.maxProducts is not null %}
                             <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
-                                <i class="bi bi-box-fill text-info me-1"></i> {{ plan.maxProducts }} produits
+                                <i class="fas fa-box text-info me-1"></i> {{ plan.maxProducts|number_format }} produits
                             </span>
                         {% endif %}
                         {% if plan.maxOrdersPerMonth is not null %}
                             <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
-                                <i class="bi bi-cart-fill text-warning me-1"></i> {{ plan.maxOrdersPerMonth }} commandes/mois
+                                <i class="fas fa-shopping-cart text-warning me-1"></i> {{ plan.maxOrdersPerMonth|number_format }} commandes/mois
                             </span>
                         {% endif %}
                         {% if plan.maxCategories is not null %}
                             <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
-                                <i class="bi bi-tags-fill text-primary me-1"></i> {{ plan.maxCategories }} catégories
+                                <i class="fas fa-tags text-primary me-1"></i> {{ plan.maxCategories|number_format }} catégories
                             </span>
                         {% endif %}
                         {% if plan.maxSuppliers is not null %}
                             <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
-                                <i class="bi bi-truck-fill text-secondary me-1"></i> {{ plan.maxSuppliers }} fournisseurs
-                            </span>
-                        {% endif %}
-
-                        {# Si aucune limite n'est définie (plan illimité) #}
-                        {% if plan.maxUsersPerRole is null and plan.maxProducts is null and plan.maxOrdersPerMonth is null and plan.maxCategories is null and plan.maxSuppliers is null %}
-                            <span class="badge bg-success text-white px-4 py-2 rounded-pill fs-6">
-                                <i class="bi bi-infinity me-1"></i> Toutes les limites sont illimitées
+                                <i class="fas fa-truck text-secondary me-1"></i> {{ plan.maxSuppliers|number_format }} fournisseurs
                             </span>
                         {% endif %}
                     </div>
 
-                    <!-- Fonctionnalités améliorées pour meilleure lisibilité -->
+                    <!-- Limites Restaurant -->
+                    {% set hasRestaurantLimits = plan.maxRecipes is not null or plan.maxRecipeCategories is not null %}
+                    {% if hasRestaurantLimits %}
+                        <h6 class="fw-bold mb-3 mt-4"><i class="fas fa-utensils me-2 text-success"></i>Limites Restaurant</h6>
+                        <div class="d-flex flex-wrap gap-2 mb-4">
+                            {% if plan.maxRecipes is not null %}
+                                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                                    <i class="fas fa-book text-success me-1"></i> 
+                                    {% if plan.maxRecipes >= 999999999 %}
+                                        ♾️ Recettes illimitées
+                                    {% else %}
+                                        {{ plan.maxRecipes|number_format }} recettes
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                            {% if plan.maxRecipeCategories is not null %}
+                                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                                    <i class="fas fa-tag text-info me-1"></i> 
+                                    {% if plan.maxRecipeCategories >= 999999999 %}
+                                        ♾️ Catégories de recettes illimitées
+                                    {% else %}
+                                        {{ plan.maxRecipeCategories|number_format }} catégories de recettes
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Fonctionnalités incluses -->
                     {% if plan.features|length > 0 %}
-                        <h6 class="fw-bold mb-3"><i class="bi bi-star-fill text-warning me-2"></i>Fonctionnalités incluses</h6>
+                        <h6 class="fw-bold mb-3"><i class="fas fa-star text-warning me-2"></i>Fonctionnalités incluses</h6>
                         <div class="d-flex flex-wrap gap-2 mb-3">
                             {% for feature in plan.features %}
                                 <span class="badge bg-light text-dark border rounded-pill px-3 py-2">
-                                    <i class="bi bi-check-circle-fill text-success me-1"></i> {{ feature }}
+                                    <i class="fas fa-check-circle text-success me-1"></i> {{ feature }}
                                 </span>
                             {% endfor %}
                         </div>
@@ -169,11 +197,11 @@
                     <!-- Statut -->
                     <div class="mt-4 d-flex align-items-center gap-3">
                         <span class="badge bg-{{ plan.isActive ? 'success' : 'secondary' }} fs-6 p-3 rounded-pill">
-                            <i class="bi bi-{{ plan.isActive ? 'check-circle' : 'x-circle' }} me-1"></i>
+                            <i class="fas fa-{{ plan.isActive ? 'check-circle' : 'times-circle' }} me-1"></i>
                             {{ plan.isActive ? 'Plan actif' : 'Plan inactif' }}
                         </span>
                         <span class="badge bg-info fs-6 p-3 rounded-pill">
-                            <i class="bi bi-bar-chart me-1"></i>
+                            <i class="fas fa-chart-bar me-1"></i>
                             {{ plan.subscriptions|length }} abonnement(s) souscrit(s)
                         </span>
                     </div>
@@ -182,23 +210,23 @@
                 <!-- Actions du footer -->
                 <div class="card-footer bg-transparent border-0 p-4 d-flex justify-content-between">
                     <a href="{{ path('app_super_admin_subscription_plan_index') }}" class="btn btn-outline-secondary rounded-pill px-4">
-                        <i class="bi bi-arrow-left me-2"></i>Retour
+                        <i class="fas fa-arrow-left me-2"></i>Retour à la liste
                     </a>
                     <div class="d-flex gap-2">
                         <button type="button" class="btn btn-outline-{{ plan.isActive ? 'warning' : 'success' }} rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#toggleModal">
-                            <i class="bi bi-{{ plan.isActive ? 'pause-fill' : 'play-fill' }} me-2"></i>
+                            <i class="fas fa-{{ plan.isActive ? 'pause' : 'play' }} me-2"></i>
                             {{ plan.isActive ? 'Désactiver' : 'Activer' }}
                         </button>
                         <a href="{{ path('app_super_admin_subscription_plan_edit', {'id': plan.id}) }}" class="btn btn-outline-primary rounded-pill px-4">
-                            <i class="bi bi-pencil-square me-2"></i>Modifier
+                            <i class="fas fa-edit me-2"></i>Modifier
                         </a>
                         {% if plan.subscriptions|length == 0 %}
                             <button type="button" class="btn btn-outline-danger rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                <i class="bi bi-trash me-2"></i>Supprimer
+                                <i class="fas fa-trash me-2"></i>Supprimer
                             </button>
                         {% else %}
                             <button type="button" class="btn btn-outline-danger rounded-pill px-4" disabled title="Impossible de supprimer : des abonnements sont liés à ce plan">
-                                <i class="bi bi-trash me-2"></i>Supprimer
+                                <i class="fas fa-trash me-2"></i>Supprimer
                             </button>
                         {% endif %}
                     </div>
@@ -207,28 +235,57 @@
         </div>
     </div>
 
-    <!-- Tableau des abonnements avec recherche et pagination -->
+    <!-- Liste des abonnements -->
     <div class="row justify-content-center">
         <div class="col-lg-12">
             <div class="card border-0 shadow-lg rounded-4">
-                <div class="card-header bg-gradient-secondary text-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold"><i class="bi bi-list-ul me-2"></i>Liste des abonnements souscrits</h5>
-                    <span class="badge bg-white text-dark rounded-pill px-3">{{ plan.subscriptions|length }} abonnement(s)</span>
+                <div class="card-header bg-gradient-secondary text-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Liste des abonnements souscrits</h5>
+                    <div class="d-flex gap-2 align-items-center">
+                        <span class="badge bg-white text-dark rounded-pill px-3">{{ plan.subscriptions|length }} abonnement(s)</span>
+                        <button class="btn btn-light btn-sm rounded-pill px-3" id="filterToggleBtn">
+                            <i class="fas fa-filter me-1"></i>Filtres
+                        </button>
+                        <button class="btn btn-outline-light btn-sm rounded-pill px-3" id="resetFiltersBtn" style="display: none;">
+                            <i class="fas fa-undo-alt me-1"></i>Réinitialiser
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body p-4">
-                    <!-- Barre de recherche -->
-                    <div class="row mb-4">
-                        <div class="col-md-6">
+                    <!-- Panneau de filtres (caché par défaut) -->
+                    <div id="filterPanel" class="row g-3 mb-4" style="display: none;">
+                        <div class="col-md-4">
                             <div class="input-group">
                                 <span class="input-group-text bg-transparent border-end-0">
-                                    <i class="bi bi-search"></i>
+                                    <i class="fas fa-search"></i>
                                 </span>
-                                <input type="text" class="form-control border-start-0" id="tableSearch" placeholder="Rechercher par entreprise, email, statut...">
+                                <input type="text" class="form-control border-start-0" id="tableSearch" placeholder="Rechercher par entreprise, email...">
                             </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                                <input type="date" class="form-control" id="dateStartFilter" placeholder="Date début">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                                <input type="date" class="form-control" id="dateEndFilter" placeholder="Date fin">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary w-100" id="applyFiltersBtn">
+                                <i class="fas fa-filter me-1"></i>Appliquer
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Tableau avec scroll et recherche -->
+                    <!-- Tableau avec scroll -->
                     <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
                         <table class="table table-hover align-middle mb-0" id="subscriptionsTable">
                             <thead class="bg-light sticky-top">
@@ -243,7 +300,7 @@
                             </thead>
                             <tbody>
                                 {% for subscription in plan.subscriptions %}
-                                    <tr class="subscription-row">
+                                    <tr class="subscription-row" data-start-date="{{ subscription.startsAt ? subscription.startsAt|date('Y-m-d') : '' }}" data-end-date="{{ subscription.endsAt ? subscription.endsAt|date('Y-m-d') : '' }}">
                                         <td class="company-cell">
                                             <div class="d-flex align-items-center">
                                                 <div class="symbol symbol-40px me-2">
@@ -251,7 +308,7 @@
                                                         <img src="{{ asset('uploads/logos/' ~ subscription.hmaService.logo) }}" alt="logo" class="rounded-circle" width="32" height="32">
                                                     {% else %}
                                                         <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                                            <i class="bi bi-building text-muted"></i>
+                                                            <i class="fas fa-building text-muted"></i>
                                                         </div>
                                                     {% endif %}
                                                 </div>
@@ -260,10 +317,10 @@
                                                     <br><small class="text-muted">{{ subscription.hmaService.email }}</small>
                                                 </div>
                                             </div>
-                                        </td>
-                                        <td>
+                                        </div>
+                                        <td class="text-center">
                                             <span class="badge bg-info">{{ subscription.billingPeriod == 'monthly' ? 'Mensuel' : 'Annuel' }}</span>
-                                        </td>
+                                        </div>
                                         <td class="status-cell">
                                             {% set statusClass = {
                                                 'active': 'success',
@@ -280,33 +337,33 @@
                                             <span class="badge bg-{{ statusClass[subscription.status] ?? 'secondary' }}">
                                                 {{ statusLabel[subscription.status] ?? subscription.status }}
                                             </span>
-                                        </td>
-                                        <td>{{ subscription.startsAt|date('d/m/Y') }}</td>
-                                        <td>{{ subscription.endsAt|date('d/m/Y') }}</td>
+                                        </div>
+                                        <td class="text-center">{{ subscription.startsAt ? subscription.startsAt|date('d/m/Y') : '-' }}</div>
+                                        <td class="text-center">{{ subscription.endsAt ? subscription.endsAt|date('d/m/Y') : '-' }}</div>
                                         <td class="text-end px-4">
                                             <div class="d-flex gap-2 justify-content-end">
-                                                <a href="{{ path('app_super_admin_subscription_show', {'id': subscription.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill" data-bs-toggle="tooltip" title="Détails abonnement">
-                                                    <i class="bi bi-eye"></i>
+                                                <a href="{{ path('super_admin_subscription_show', {'id': subscription.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill" data-bs-toggle="tooltip" title="Détails abonnement">
+                                                    <i class="fas fa-eye"></i>
                                                 </a>
                                                 <a href="{{ path('app_super_admin_hma_service_show', {'id': subscription.hmaService.id}) }}" class="btn btn-sm btn-outline-info rounded-pill" data-bs-toggle="tooltip" title="Voir l'entreprise">
-                                                    <i class="bi bi-building"></i>
+                                                    <i class="fas fa-building"></i>
                                                 </a>
                                             </div>
-                                        </td>
+                                        </div>
                                     </tr>
                                 {% else %}
                                     <tr>
                                         <td colspan="6" class="text-center py-5">
-                                            <i class="bi bi-inbox display-4 text-muted"></i>
+                                            <i class="fas fa-inbox display-4 text-muted"></i>
                                             <p class="mt-3 fs-5">Aucun abonnement n'est associé à ce plan pour le moment.</p>
-                                        </td>
+                                        </div>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- Pagination simple (JavaScript) -->
+                    <!-- Pagination -->
                     {% if plan.subscriptions|length > 10 %}
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div>
@@ -329,7 +386,7 @@
         <div class="modal-content border-0 rounded-4">
             <div class="modal-header bg-{{ plan.isActive ? 'warning' : 'success' }} text-white border-0">
                 <h5 class="modal-title">
-                    <i class="bi bi-{{ plan.isActive ? 'pause-circle' : 'play-circle' }} me-2"></i>
+                    <i class="fas fa-{{ plan.isActive ? 'pause-circle' : 'play-circle' }} me-2"></i>
                     {{ plan.isActive ? 'Désactiver' : 'Activer' }} le plan
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -363,7 +420,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4">
             <div class="modal-header bg-danger text-white border-0">
-                <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-2"></i>Supprimer le plan</h5>
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Supprimer le plan</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
@@ -401,6 +458,7 @@
     background: rgba(255,255,255,0.15);
     border-radius: 50%;
     filter: blur(3px);
+    pointer-events: none;
 }
 .shape-1 {
     width: 300px;
@@ -467,7 +525,6 @@
 .backdrop-blur {
     backdrop-filter: blur(8px);
 }
-/* Amélioration contraste badges */
 .badge.bg-light {
     color: #212529 !important;
     background-color: #f8f9fa !important;
@@ -476,7 +533,6 @@
 .badge.bg-light i {
     font-size: 0.9em;
 }
-
 .description-box {
     background-color: rgba(13, 202, 240, 0.1);
     border-left: 4px solid #0dcaf0;
@@ -487,27 +543,90 @@
 }
 </style>
 
-<!-- JavaScript pour la recherche et la pagination -->
+<!-- JavaScript pour la recherche, les filtres de date et la pagination -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const filterToggleBtn = document.getElementById('filterToggleBtn');
+    const filterPanel = document.getElementById('filterPanel');
+    const resetFiltersHeaderBtn = document.getElementById('resetFiltersBtn');
     const searchInput = document.getElementById('tableSearch');
+    const dateStartFilter = document.getElementById('dateStartFilter');
+    const dateEndFilter = document.getElementById('dateEndFilter');
+    const applyFiltersBtn = document.getElementById('applyFiltersBtn');
     const table = document.getElementById('subscriptionsTable');
     const rows = table ? Array.from(table.querySelectorAll('tbody tr:not(.no-results)')) : [];
     const rowsPerPage = 10;
     let currentPage = 1;
     let filteredRows = rows;
+    
+    // Variables pour stocker les filtres actifs
+    let activeSearchTerm = '';
+    let activeDateStart = '';
+    let activeDateEnd = '';
+
+    // Toggle du panneau de filtres
+    if (filterToggleBtn && filterPanel) {
+        filterToggleBtn.addEventListener('click', function() {
+            if (filterPanel.style.display === 'none' || filterPanel.style.display === '') {
+                filterPanel.style.display = 'flex';
+                filterToggleBtn.innerHTML = '<i class="fas fa-filter me-1"></i>Masquer filtres';
+            } else {
+                filterPanel.style.display = 'none';
+                filterToggleBtn.innerHTML = '<i class="fas fa-filter me-1"></i>Filtres';
+            }
+        });
+    }
 
     function filterTable() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
         filteredRows = rows.filter(row => {
+            // Recherche texte
             const companyCell = row.querySelector('.company-cell')?.innerText.toLowerCase() || '';
             const statusCell = row.querySelector('.status-cell')?.innerText.toLowerCase() || '';
             const periodCell = row.cells[1]?.innerText.toLowerCase() || '';
-            return companyCell.includes(searchTerm) || statusCell.includes(searchTerm) || periodCell.includes(searchTerm);
+            const matchesSearch = companyCell.includes(activeSearchTerm) || statusCell.includes(activeSearchTerm) || periodCell.includes(activeSearchTerm);
+            
+            // Filtre date début
+            const rowStartDate = row.dataset.startDate || '';
+            const matchesStartDate = !activeDateStart || (rowStartDate && rowStartDate >= activeDateStart);
+            
+            // Filtre date fin
+            const rowEndDate = row.dataset.endDate || '';
+            const matchesEndDate = !activeDateEnd || (rowEndDate && rowEndDate <= activeDateEnd);
+            
+            return matchesSearch && matchesStartDate && matchesEndDate;
         });
+        
         currentPage = 1;
         updatePagination();
         displayRows();
+        
+        // Afficher/masquer le bouton réinitialiser
+        if (activeSearchTerm || activeDateStart || activeDateEnd) {
+            resetFiltersHeaderBtn.style.display = 'inline-block';
+        } else {
+            resetFiltersHeaderBtn.style.display = 'none';
+        }
+    }
+
+    function applyFilters() {
+        activeSearchTerm = searchInput.value.toLowerCase().trim();
+        activeDateStart = dateStartFilter.value;
+        activeDateEnd = dateEndFilter.value;
+        filterTable();
+        
+        // Optionnel : fermer le panneau après application
+        // filterPanel.style.display = 'none';
+        // filterToggleBtn.innerHTML = '<i class="fas fa-filter me-1"></i>Filtres';
+    }
+
+    function resetFilters() {
+        searchInput.value = '';
+        dateStartFilter.value = '';
+        dateEndFilter.value = '';
+        activeSearchTerm = '';
+        activeDateStart = '';
+        activeDateEnd = '';
+        filterTable();
     }
 
     function displayRows() {
@@ -531,7 +650,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!noResultsRow) {
                 const tr = document.createElement('tr');
                 tr.className = 'no-results';
-                tr.innerHTML = '<td colspan="6" class="text-center py-4"><i class="bi bi-exclamation-circle me-2"></i>Aucun résultat trouvé</td>';
+                tr.innerHTML = '<td colspan="6" class="text-center py-4"><i class="fas fa-exclamation-circle me-2"></i>Aucun résultat trouvé<\/td>';
                 table.querySelector('tbody').appendChild(tr);
             }
         } else if (noResultsRow) {
@@ -576,14 +695,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (searchInput) {
-        searchInput.addEventListener('input', filterTable);
-    }
+    if (applyFiltersBtn) applyFiltersBtn.addEventListener('click', applyFilters);
+    if (resetFiltersHeaderBtn) resetFiltersHeaderBtn.addEventListener('click', resetFilters);
 
+    // Initialisation
     if (rows.length > 0) {
         displayRows();
         updatePagination();
     }
+    
+    // Cacher le bouton réinitialiser au départ
+    if (resetFiltersHeaderBtn) resetFiltersHeaderBtn.style.display = 'none';
 });
 </script>
 {% endblock %}
