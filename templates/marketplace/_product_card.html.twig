@@ -1,0 +1,130 @@
+{# templates/marketplace/_product_card.html.twig #}
+
+{# ==================== DÉFINITION DES VARIABLES DE PROMOTION ==================== #}
+{% set hasActivePromotion = false %}
+{% set discountPercent = 0 %}
+{% set discountAmount = 0 %}
+{% set promotionType = '' %}
+{% set promotionName = '' %}
+
+{% for promotionProduct in product.promotionProducts %}
+    {% set promotion = promotionProduct.promotion %}
+    {% if promotion.isActive and promotion.startDate <= date() and (promotion.endDate is null or promotion.endDate >= date()) %}
+        {% set hasActivePromotion = true %}
+        {% set promotionName = promotion.name %}
+        {% set typePromotion = promotion.typePromotion %}
+        {% if typePromotion %}
+            {% set typeName = typePromotion.name|lower %}
+            {% if typeName == 'pourcentage' or typeName == 'percentage' or typeName == '%' %}
+                {% set promotionType = 'percentage' %}
+                {% set discountPercent = promotion.discountPercentage|default(0) %}
+            {% elseif typeName == 'montant fixe' or typeName == 'fixed' or typeName == 'fixe' %}
+                {% set promotionType = 'fixed' %}
+                {% set discountAmount = promotion.discountAmount|default(0) %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+{# ==================== CARTE PRODUIT ==================== #}
+<div class="product-card {% if hasActivePromotion %}has-promotion{% endif %}">
+    <div class="product-image">
+        {% if product.image %}
+            <img src="{{ asset('uploads/products/' ~ product.image) }}" alt="{{ product.name }}" loading="lazy">
+        {% else %}
+            <div class="placeholder">
+                <i class="fas fa-box"></i>
+            </div>
+        {% endif %}
+        
+        {# BADGE DE PROMOTION #}
+        {% if hasActivePromotion %}
+            <span class="product-badge discount">
+                {% if promotionType == 'percentage' %}
+                    -{{ discountPercent }}%
+                {% elseif promotionType == 'fixed' %}
+                    -{{ discountAmount|price_with_currency(product.hmaService) }}
+                {% endif %}
+            </span>
+            <span class="product-badge promo-label">🔥 PROMO</span>
+        {% endif %}
+        
+        {# BOUTON FAVORIS #}
+        {% if app.user and is_customer(app.user) %}
+            <button class="favorite-btn {% if product.id in favoriteIds %}active{% endif %}" 
+                    onclick="toggleFavorite(this, {{ product.id }})"
+                    data-product-id="{{ product.id }}">
+                <i class="{% if product.id in favoriteIds %}fas{% else %}far{% endif %} fa-heart"></i>
+            </button>
+        {% endif %}
+    </div>
+    
+    <div class="product-body">
+        <span class="product-category">{{ product.category.name }}</span>
+        <h5 class="product-name">{{ product.name }}</h5>
+        
+        {# ==================== PRIX ==================== #}
+        <div class="product-pricing">
+            {% if hasActivePromotion %}
+                {# Calcul du prix promo #}
+                {% if promotionType == 'percentage' and discountPercent > 0 %}
+                    {% set promoPrice = product.salePrice * (1 - discountPercent / 100) %}
+                {% elseif promotionType == 'fixed' and discountAmount > 0 %}
+                    {% set promoPrice = product.salePrice - discountAmount %}
+                {% else %}
+                    {% set promoPrice = product.salePrice %}
+                {% endif %}
+                
+                {# Affichage : prix promo en rouge + prix barré #}
+                <span class="product-price promo-price">
+                    {{ promoPrice|price_with_currency(product.hmaService) }}
+                </span>
+                <span class="old-price">
+                    {{ product.salePrice|price_with_currency(product.hmaService) }}
+                </span>
+                
+                {# Nom de la promotion #}
+                {% if promotionName %}
+                    <span class="promo-name-tag">
+                        <i class="fas fa-tag"></i> {{ promotionName }}
+                    </span>
+                {% endif %}
+                
+            {% else %}
+                {# Pas de promotion : prix normal #}
+                <span class="product-price">
+                    {{ product.salePrice|price_with_currency(product.hmaService) }}
+                </span>
+            {% endif %}
+        </div>
+        
+        {# NOTES #}
+        <div class="product-rating">
+            <div class="stars">
+                {% set rating = product.averageRating|default(0) %}
+                {% for i in 1..5 %}
+                    {% if i <= rating %}
+                        <i class="fas fa-star filled"></i>
+                    {% elseif i - 0.5 <= rating %}
+                        <i class="fas fa-star-half-alt half-filled"></i>
+                    {% else %}
+                        <i class="far fa-star"></i>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <span class="rating-text">(<strong>{{ product.ratingsCount|default(0) }}</strong>)</span>
+        </div>
+        
+        {# BOUTONS D'ACTION #}
+        <div class="action-buttons">
+            <a href="{{ path('marketplace_product_show', {id: product.id}) }}" class="btn-view">
+                <i class="fas fa-eye"></i> Voir
+            </a>
+            <button class="add-to-cart" 
+                    data-product-id="{{ product.id }}"
+                    {% if product.currentStock <= 0 %}disabled{% endif %}>
+                <i class="fas fa-cart-plus"></i> Ajouter
+            </button>
+        </div>
+    </div>
+</div>

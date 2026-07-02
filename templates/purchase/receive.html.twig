@@ -8,22 +8,11 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style>
-    :root {
-        --primary: #0463f1;
-        --success: #10b981;
-        --warning: #f59e0b;
-        --danger: #ef4444;
-        --info: #3b82f6;
-        --gray-50: #f9fafb;
-        --gray-100: #f3f4f6;
-        --gray-200: #e5e7eb;
-        --gray-600: #4b5563;
-        --gray-700: #374151;
-    }
+    /* ✅ NE PAS REDÉFINIR :root ICI - Utiliser les variables de base.html.twig */
     
     .batch-card {
         transition: all 0.3s ease;
-        border-left: 4px solid var(--primary);
+        border-left: 4px solid var(--primary-color);
         margin-bottom: 1.25rem;
         border-radius: 0.75rem;
         overflow: hidden;
@@ -33,13 +22,13 @@
         box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
     .batch-card.has-issue {
-        border-left-color: var(--warning);
+        border-left-color: var(--warning-color);
         background-color: #fffbeb;
     }
     .batch-card.removed {
         opacity: 0.6;
         background-color: var(--gray-100);
-        border-left-color: var(--gray-600);
+        border-left-color: #6c757d;
     }
     
     .perishable-badge {
@@ -54,7 +43,7 @@
         width: 1.2rem;
         height: 1.2rem;
         cursor: pointer;
-        accent-color: var(--danger);
+        accent-color: var(--danger-color);
     }
     
     .issue-indicator {
@@ -67,7 +56,7 @@
         font-size: 0.85rem;
     }
     .issue-indicator i {
-        color: var(--warning);
+        color: var(--warning-color);
         font-size: 1.1rem;
     }
     .issue-indicator strong {
@@ -102,7 +91,7 @@
     
     .select2-container--bootstrap-5 .select2-selection {
         border-radius: 0.5rem;
-        border-color: var(--gray-200);
+        border-color: #e5e7eb;
         min-height: 38px;
     }
     
@@ -123,7 +112,7 @@
         position: absolute;
         top: -8px;
         right: -8px;
-        background: var(--danger);
+        background: var(--danger-color);
         color: white;
         border-radius: 50%;
         width: 20px;
@@ -143,12 +132,85 @@
     .attachment-preview .file-placeholder {
         width: 80px;
         height: 80px;
-        background: var(--gray-100);
+        background: #f3f4f6;
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid var(--gray-200);
+        border: 1px solid #e5e7eb;
+    }
+    
+    .btn-primary {
+        background: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+    }
+    .btn-primary:hover {
+        background: var(--primary-dark) !important;
+        border-color: var(--primary-dark) !important;
+    }
+    
+    .btn-success {
+        background: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-success:hover {
+        background: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+        opacity: 0.9;
+    }
+    
+    .btn-danger {
+        background: var(--danger-color) !important;
+        border-color: var(--danger-color) !important;
+    }
+    .btn-danger:hover {
+        background: var(--danger-color) !important;
+        border-color: var(--danger-color) !important;
+        opacity: 0.9;
+    }
+    
+    .text-primary {
+        color: var(--primary-color) !important;
+    }
+    
+    .badge.bg-primary {
+        background: var(--primary-color) !important;
+    }
+    
+    /* ✅ Styles pour le loading du modal */
+    .modal-loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.85);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1060;
+        border-radius: 0.5rem;
+        backdrop-filter: blur(4px);
+    }
+    .modal-loading-overlay.show {
+        display: flex;
+    }
+    .modal-content {
+        position: relative;
+        overflow: hidden;
+    }
+    .spinner-container {
+        text-align: center;
+    }
+    .spinner-container .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        color: var(--primary-color);
+    }
+    .spinner-container .loading-text {
+        margin-top: 1rem;
+        color: var(--primary-color);
+        font-weight: 500;
     }
     
     @media (max-width: 768px) {
@@ -477,10 +539,20 @@
     </form>
 </div>
 
-<!-- Modal de confirmation de réception -->
-<div class="modal fade" id="confirmReceptionModal" tabindex="-1">
+<!-- Modal de confirmation de réception AVEC EFFET DE CHARGEMENT -->
+<div class="modal fade" id="confirmReceptionModal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
+            <!-- Overlay de chargement -->
+            <div class="modal-loading-overlay" id="confirmModalLoading">
+                <div class="spinner-container">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                    <div class="loading-text">Traitement en cours...</div>
+                </div>
+            </div>
+            
             <div class="modal-header bg-success text-white">
                 <h5 class="modal-title">
                     <i class="bi bi-check-circle me-2"></i>Confirmer la réception
@@ -501,7 +573,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelConfirmBtn">Annuler</button>
                 <button type="button" class="btn btn-success" id="confirmReceptionSubmit">
                     <i class="bi bi-check-lg me-1"></i> Confirmer
                 </button>
@@ -510,11 +582,11 @@
     </div>
 </div>
 
-<!-- Modal Signaler un problème - AVEC GESTION DES PIÈCES JOINTES -->
+<!-- Modal Signaler un problème -->
 <div class="modal fade" id="reportIssueModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header bg-danger text-white py-2">
+            <div class="modal-header" style="background: var(--danger-color); color: white; padding: 0.5rem 1rem;">
                 <h5 class="modal-title fs-6">
                     <i class="bi bi-exclamation-triangle me-2"></i><span id="modalTitle">Signaler un problème</span>
                 </h5>
@@ -604,7 +676,7 @@
                 </div>
                 <div class="modal-footer py-2">
                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-sm btn-danger" id="submitIssueBtn">
+                    <button type="submit" class="btn btn-sm" id="submitIssueBtn" style="background: var(--danger-color); color: white; border-color: var(--danger-color);">
                         <i class="bi bi-send me-1"></i> Signaler
                     </button>
                 </div>
@@ -617,7 +689,7 @@
 <div class="modal fade" id="deleteIssueModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
+            <div class="modal-header" style="background: var(--danger-color); color: white;">
                 <h5 class="modal-title">
                     <i class="bi bi-exclamation-triangle me-2"></i> Confirmer la suppression
                 </h5>
@@ -630,7 +702,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                 <form method="post" id="deleteIssueForm" action="">
-                    <button type="submit" class="btn btn-danger">
+                    <button type="submit" class="btn" style="background: var(--danger-color); color: white; border-color: var(--danger-color);">
                         <i class="bi bi-trash me-1"></i> Supprimer
                     </button>
                 </form>
@@ -646,7 +718,9 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Select2
+    // ============================================
+    // SELECT2
+    // ============================================
     document.querySelectorAll('.location-select').forEach(select => {
         if (typeof $ !== 'undefined') {
             $(select).select2({
@@ -659,7 +733,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Case "Ne pas réceptionner"
+    // ============================================
+    // CASE "Ne pas réceptionner"
+    // ============================================
     document.querySelectorAll('.remove-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             const card = this.closest('.batch-card');
@@ -675,7 +751,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Dates expiration
+    // ============================================
+    // DATES EXPIRATION
+    // ============================================
     document.querySelectorAll('input[name^="expiry_date_"]').forEach(input => {
         input.addEventListener('change', function() {
             if (new Date(this.value) < new Date().setHours(0,0,0,0)) {
@@ -685,7 +763,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ========== GESTION DES PIÈCES JOINTES ==========
+    // ============================================
+    // GESTION DES PIÈCES JOINTES
+    // ============================================
     let currentAttachments = [];
     const attachmentsPreview = document.getElementById('attachmentsPreview');
     const existingAttachmentsInput = document.getElementById('existing_attachments');
@@ -715,13 +795,11 @@ document.addEventListener('DOMContentLoaded', function() {
             attachmentsPreview.appendChild(previewDiv);
         });
         
-        // Mettre à jour le champ hidden
         if (existingAttachmentsInput) {
             existingAttachmentsInput.value = JSON.stringify(currentAttachments);
         }
     }
     
-    // Suppression d'une pièce jointe
     document.addEventListener('click', function(e) {
         const removeBtn = e.target.closest('.remove-attachment');
         if (removeBtn) {
@@ -733,7 +811,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ========== MODAL SIGNALEMENT ==========
+    // ============================================
+    // MODAL SIGNALEMENT
+    // ============================================
     let currentUnitPrice = 0, currentOrderedQuantity = 0, currentUnit = 'pièce(s)', isEditMode = false;
     const quantityAll = document.getElementById('quantity_all');
     const quantityPartial = document.getElementById('quantity_partial');
@@ -792,14 +872,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (unitPriceEl) unitPriceEl.textContent = parseFloat(this.dataset.unitPrice).toLocaleString('fr-FR') + ' FCFA';
             if (batchIdEl) batchIdEl.value = this.dataset.itemId;
             
-            // Afficher l'unité
             if (totalQuantityLabel) totalQuantityLabel.textContent = this.dataset.quantity;
             if (totalUnitLabel) totalUnitLabel.textContent = currentUnit;
             if (reportUnitName) reportUnitName.textContent = currentUnit;
             
             if (affectedQty) affectedQty.max = this.dataset.quantity;
             
-            // Réinitialiser les pièces jointes
             currentAttachments = [];
             updateAttachmentsPreview();
             
@@ -821,7 +899,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (priorityEl) priorityEl.value = issuePriority;
                 if (stockActionEl) stockActionEl.value = issueStockAction;
                 
-                // Charger les pièces jointes existantes
                 if (issueAttachments && issueAttachments.length) {
                     currentAttachments = [...issueAttachments];
                     updateAttachmentsPreview();
@@ -856,18 +933,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Submit du formulaire d'issue - ajouter les pièces jointes existantes
     const issueForm = document.getElementById('issueForm');
     if (issueForm) {
         issueForm.addEventListener('submit', function(e) {
-            // S'assurer que les pièces jointes existantes sont bien envoyées
             if (existingAttachmentsInput && currentAttachments.length > 0) {
                 existingAttachmentsInput.value = JSON.stringify(currentAttachments);
             }
         });
     }
 
-    // ========== SUPPRESSION DE PROBLÈME ==========
+    // ============================================
+    // SUPPRESSION DE PROBLÈME
+    // ============================================
     const deleteModal = new bootstrap.Modal(document.getElementById('deleteIssueModal'));
     const deleteMessage = document.getElementById('deleteMessage');
     const deleteForm = document.getElementById('deleteIssueForm');
@@ -889,10 +966,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ========== CONFIRMATION DE RÉCEPTION ==========
+    // ============================================
+    // CONFIRMATION DE RÉCEPTION AVEC LOADING
+    // ============================================
     const confirmModal = new bootstrap.Modal(document.getElementById('confirmReceptionModal'));
     const confirmBtn = document.getElementById('confirmReceptionBtn');
     const confirmSubmit = document.getElementById('confirmReceptionSubmit');
+    const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
+    const confirmLoading = document.getElementById('confirmModalLoading');
     const receiveForm = document.getElementById('receiveForm');
     
     if (confirmBtn) {
@@ -915,12 +996,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const requiredInputs = document.querySelectorAll('[required]');
             
             requiredInputs.forEach(input => {
-                // Ignorer si désactivé
                 if (input.disabled) return;
-                // Ignorer si caché
                 if (input.offsetParent === null) return;
                 
-                // Vérifier la valeur
                 let value = input.value.trim();
                 if (input.type === 'checkbox') {
                     value = input.checked ? 'checked' : '';
@@ -950,7 +1028,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (confirmSubmit) {
         confirmSubmit.addEventListener('click', function() {
-            receiveForm.submit();
+            // ✅ Activer le loading
+            if (confirmLoading) {
+                confirmLoading.classList.add('show');
+            }
+            
+            // ✅ Désactiver le bouton pour éviter les doubles clics
+            this.disabled = true;
+            this.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Traitement...';
+            
+            // ✅ Désactiver le bouton Annuler
+            if (cancelConfirmBtn) {
+                cancelConfirmBtn.disabled = true;
+            }
+            
+            // ✅ Soumettre le formulaire après un petit délai pour que l'utilisateur voie le loading
+            setTimeout(function() {
+                receiveForm.submit();
+            }, 300);
         });
     }
 });

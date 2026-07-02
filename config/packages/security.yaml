@@ -1,27 +1,26 @@
-# config/packages/security.yaml
 security:
-    enable_authenticator_manager: true
-    
-    # Configuration des encodeurs de mot de passe
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
         App\Entity\HmaService:
             algorithm: auto
         App\Entity\User:
             algorithm: auto
+        App\Entity\Customer:
+            algorithm: auto
 
-    # Fournisseurs d'utilisateurs
     providers:
         user_provider:
             entity:
                 class: App\Entity\User
                 property: email
-        
         hma_service_provider:
             entity:
                 class: App\Entity\HmaService
                 property: email
-        
+        customer_provider:
+            entity:
+                class: App\Entity\Customer
+                property: email
         chain_provider:
             chain:
                 providers: ['user_provider', 'hma_service_provider']
@@ -31,32 +30,59 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        customer:
+            pattern: ^/marketplace
+            provider: customer_provider
+            user_checker: App\Security\CustomerUserChecker
+            form_login:
+                login_path: marketplace_login
+                check_path: marketplace_login
+                enable_csrf: true
+                default_target_path: marketplace_home
+                success_handler: App\Security\CustomerLoginSuccessHandler
+                username_parameter: email
+                password_parameter: password
+                use_referer: true
+            logout:
+                path: marketplace_logout
+                target: marketplace_home
+                invalidate_session: true
+                delete_cookies:
+                    PHPSESSID: ~
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                always_remember_me: true
+                remember_me_parameter: '_remember_me'
+            entry_point: App\Security\CustomerAuthenticator
+            security: true
+            stateless: false
+            context: customer_context
+
         main:
             lazy: true
             provider: chain_provider
             user_checker: App\Security\UserChecker
-            
             custom_authenticator: App\Security\LoginFormAuthentificatorAuthenticator
-            
             logout:
                 path: app_logout
                 target: app_login
                 invalidate_session: true
                 delete_cookies:
                     PHPSESSID: ~
-            
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
                 always_remember_me: false
                 remember_me_parameter: '_remember_me'
+            entry_point: App\Security\LoginFormAuthentificatorAuthenticator
+            context: admin_context
 
     access_control:
         # ============================================
-        # 1. ROUTES PUBLIQUES (PRIORITÉ MAXIMALE)
+        # 1. ROUTES PUBLIQUES (ACCÈS LIBRE)
         # ============================================
-        # Authentification
         - { path: ^/login$, roles: PUBLIC_ACCESS }
         - { path: ^/register$, roles: PUBLIC_ACCESS }
         - { path: ^/first-login, roles: PUBLIC_ACCESS }
@@ -68,7 +94,29 @@ security:
         - { path: ^/payment/error, roles: PUBLIC_ACCESS }
         - { path: ^/payment/already-processed, roles: PUBLIC_ACCESS }
         
-        # Pages marketing
+        # Marketplace - Authentification Customer (PUBLIC)
+        - { path: ^/marketplace/login, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/register, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/forgot-password, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/check-email, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/verify-email/, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/resend-verification/, roles: PUBLIC_ACCESS }
+        
+        # Marketplace - Pages publiques (ACCÈS LIBRE)
+        - { path: ^/marketplace/$, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace$, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/home, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/products, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/product/, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/category/, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/pharmacies, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/pharmacy/, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/ajax/, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/search, roles: PUBLIC_ACCESS }
+        - { path: ^/marketplace/change-password, roles: ROLE_CUSTOMER }
+        
+        # Pages marketing publiques
         - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/contact$, roles: PUBLIC_ACCESS }
         - { path: ^/about$, roles: PUBLIC_ACCESS }
@@ -84,71 +132,69 @@ security:
         - { path: ^/images/, roles: PUBLIC_ACCESS }
 
         # ============================================
-        # 2. ROUTES SUPER ADMIN (DOSSIER SuperAdmin)
-        #    ⚠️ DOIT VENIR AVANT /admin/ !
+        # 2. ROUTES SUPER ADMIN
         # ============================================
         - { path: ^/super-admin/, roles: ROLE_SUPER_ADMIN }
-
-        # ============================================
-        # 2.1. ROUTES SUPER ADMIN - ANALYSES (NOUVEAU)
-        # ============================================
         - { path: ^/super-admin/analysis, roles: ROLE_SUPER_ADMIN }
 
         # ============================================
-        # 3. ROUTES ADMIN ENTREPRISE (DOSSIER Admin)
+        # 3. ROUTES ADMIN ENTREPRISE
         # ============================================
         - { path: ^/admin/category, roles: [ROLE_ADMIN, ROLE_MANAGER] }
         - { path: ^/admin/product, roles: [ROLE_ADMIN, ROLE_MANAGER] }
         - { path: ^/admin/recipe, roles: [ROLE_ADMIN, ROLE_MANAGER] }
+        - { path: ^/admin/stock-batch, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER, ROLE_CASHIER] }
         - { path: ^/admin/, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
 
         # ============================================
-        # 3.1. ROUTES APPROVISIONNEMENT (ACHATS)
+        # 4. ROUTES APPROVISIONNEMENT
         # ============================================
         - { path: ^/purchase, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER, ROLE_CASHIER] }
 
         # ============================================
-        # 3.2. ROUTES APPROVISIONNEMENT (ACHATS)
+        # 5. ROUTES GESTION DES STOCKS
         # ============================================
-        - { path: ^/admin/stock-batch, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER, ROLE_CASHIER] }
-
-        # ============================================
-        # 3.3.GESTION DES STOCKS
-        # ============================================
-        # Ajustements de stock
         - { path: ^/stock/adjustment, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER] }
-        
-        # Inventaires
         - { path: ^/stock/inventory, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER] }
-        
-        # Transferts
         - { path: ^/stock/transfer, roles: [ROLE_ADMIN, ROLE_MANAGER] }
-        
-        # API Stock
         - { path: ^/api/stock/, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_STOCK_MANAGER] }
 
-
         # ============================================
-        # 4. ROUTES PAR RÔLE SPÉCIFIQUE
+        # 6. ROUTES PAR RÔLE SPÉCIFIQUE
         # ============================================
-        # Gestionnaires (Manager)
         - { path: ^/manager/, roles: [ROLE_MANAGER, ROLE_ADMIN, ROLE_SUPER_ADMIN] }
-        
-        # Responsables Stock
         - { path: ^/stock/, roles: [ROLE_STOCK_MANAGER, ROLE_MANAGER, ROLE_ADMIN, ROLE_SUPER_ADMIN] }
-        
-        # Caissiers
         - { path: ^/cashier/, roles: [ROLE_CASHIER, ROLE_STOCK_MANAGER, ROLE_MANAGER, ROLE_ADMIN, ROLE_SUPER_ADMIN] }
 
         # ============================================
-        # 5. ROUTES UTILISATEUR CONNECTÉ
+        # 7. ROUTES UTILISATEUR CONNECTÉ (BACK OFFICE)
         # ============================================
         - { path: ^/dashboard, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/profile, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/change-password, roles: IS_AUTHENTICATED_FULLY }
 
         # ============================================
-        # 6. TOUT LE RESTE (CATCH-ALL)
+        # 8. ROUTES CUSTOMER (PROTÉGÉES - NÉCESSITENT ROLE_CUSTOMER)
+        # ============================================
+        - { path: ^/marketplace/cart, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/cart/add, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/cart/remove, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/cart/update, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/cart/count, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/checkout, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/checkout/success, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/checkout/cancel, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/orders, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/order/, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/profile, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/favorites, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/favorites/toggle, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/favorites/count, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/payment, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/account, roles: ROLE_CUSTOMER }
+
+        # ============================================
+        # 9. TOUT LE RESTE (CATCH-ALL)
         # ============================================
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
         

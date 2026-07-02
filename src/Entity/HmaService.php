@@ -108,6 +108,9 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isActive = null;
 
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $isPublic = false;
+
     #[ORM\Column]
     private ?bool $hma_active = true;
 
@@ -134,6 +137,9 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: true)]
     private ?\DateTime $subscriptionEndsAt = null;
+
+    #[ORM\Column(options: ['default' => true])]
+    private bool $company_public = true;
 
     // Compteurs pour les limites
     #[ORM\Column(options: ['default' => 0])]
@@ -181,6 +187,9 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $website = null;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $guard_periods = null;
 
     /**
      * @var Collection<int, Subscription>
@@ -429,6 +438,23 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Vérifie si l'entreprise est publique (visible sur le marketplace)
+     */
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    /**
+     * Définit si l'entreprise est publique
+     */
+    public function setIsPublic(bool $isPublic): static
+    {
+        $this->isPublic = $isPublic;
+        return $this;
+    }
+
     public function isHmaActive(): ?bool
     {
         return $this->hma_active;
@@ -594,6 +620,17 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getGuardPeriods(): ?array
+    {
+        return $this->guard_periods;
+    }
+
+    public function setGuardPeriods(?array $guard_periods): static
+    {
+        $this->guard_periods = $guard_periods;
+        return $this;
+    }
+
     // ==================== NOUVEAUX GETTERS & SETTERS ====================
 
     public function getSubscriptionPlan(): ?string
@@ -627,6 +664,23 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->subscriptionEndsAt = $subscriptionEndsAt;
         return $this;
+    }
+
+    public function isCompanyPublic(): bool
+    {
+        return $this->company_public;
+    }
+
+    public function setCompanyPublic(bool $company_public): static
+    {
+        $this->company_public = $company_public;
+        return $this;
+    }
+
+    // ✅ Méthode pour vérifier si l'entreprise est visible sur le marketplace
+    public function isVisibleOnMarketplace(): bool
+    {
+        return $this->isPublic && $this->company_public;
     }
 
     public function getProductCount(): int
@@ -1417,6 +1471,16 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
         $maxPerRole = $limits['max_users_per_role'];
         $activatedUsers = [];
 
+        // ✅ Mettre à jour isPublic en fonction du plan
+        $plan = $this->getCurrentPlan();
+        $this->isPublic = match($plan) {
+            self::PLAN_PREMIUM => true,   // Premium : public
+            self::PLAN_BASIC => true,     // Basic : public
+            self::PLAN_FREEMIUM => false, // Freemium : non public
+            self::PLAN_TRIAL => false,    // Trial : non public
+            default => false
+        };
+
         // Regrouper les utilisateurs par rôle (ignorer ROLE_USER)
         $usersByRole = [];
         foreach ($this->users as $user) {
@@ -1667,6 +1731,29 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
         }
         
         return $revenue;
+    }
+
+    /**
+     * Vérifie si l'entreprise doit être publique selon son plan
+     */
+    public function shouldBePublic(): bool
+    {
+        $plan = $this->getCurrentPlan();
+        return in_array($plan, [self::PLAN_BASIC, self::PLAN_PREMIUM]);
+    }
+
+    /**
+     * Met à jour le statut public de l'entreprise selon le plan
+     * Retourne true si le statut a changé
+     */
+    public function updatePublicStatusFromPlan(): bool
+    {
+        $shouldBePublic = $this->shouldBePublic();
+        if ($this->isPublic !== $shouldBePublic) {
+            $this->isPublic = $shouldBePublic;
+            return true;
+        }
+        return false;
     }
 
 }

@@ -17,6 +17,8 @@
     <!-- TomSelect CDN (pour l'autocomplete) -->
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
     
+    {% include 'components/_dynamic_styles.html.twig' %}
+    
     
     <!-- Custom CSS -->
     <style>
@@ -1103,7 +1105,7 @@
         }
     </style>
 
-        {# ✅ STYLES DYNAMIQUES - AVEC EXTENSION TWIG #}
+    {# ✅ STYLES DYNAMIQUES - AVEC EXTENSION TWIG #}
     {% set primaryColor = '#0463f1' %}
     {% set secondaryColor = '#8b5cf6' %}
     

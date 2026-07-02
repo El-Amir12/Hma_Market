@@ -8,7 +8,7 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style>
-    :root { --primary-color: #0463f1; --success-color: #10b981; --danger-color: #ef4444; --warning-color: #f59e0b; --info-color: #3b82f6; }
+    /* ✅ NE PAS REDÉFINIR :root ICI - Utiliser les variables de base.html.twig */
 
     .sale-container {
         max-width: 1400px;
@@ -69,7 +69,7 @@
     }
     
     .barcode-scanner-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
         border-radius: 16px;
         padding: 1rem;
         color: white;
@@ -208,13 +208,13 @@
     
     .product-list-price .promo-badge {
         font-size: 0.7rem;
-        color: #0463f1;
+        color: var(--primary-color);
         display: block;
     }
     
     .prescription-badge {
         display: inline-block;
-        background: #dc2626;
+        background: var(--danger-color);
         color: white;
         font-size: 0.6rem;
         padding: 0.2rem 0.5rem;
@@ -229,12 +229,12 @@
     }
     
     .cart-prescription-warning {
-        background: #fee2e2;
-        border-left: 3px solid #dc2626;
+        background: rgba(var(--danger-rgb), 0.1);
+        border-left: 3px solid var(--danger-color);
         padding: 0.25rem 0.5rem;
         margin-top: 0.25rem;
         font-size: 0.7rem;
-        color: #dc2626;
+        color: var(--danger-color);
         border-radius: 4px;
     }
     
@@ -284,7 +284,7 @@
     }
     
     .cart-item-actions .edit-item {
-        color: #f59e0b;
+        color: var(--warning-color);
     }
     
     .cart-item-actions .edit-item:hover {
@@ -292,7 +292,7 @@
     }
     
     .cart-item-actions .remove-item {
-        color: #ef4444;
+        color: var(--danger-color);
     }
     
     .cart-item-actions .remove-item:hover {
@@ -422,12 +422,12 @@
     }
 
     #amountPaid.is-valid {
-        border-color: #28a745;
+        border-color: var(--success-color);
         background-color: #f0fff4;
     }
 
     #amountPaid.is-invalid {
-        border-color: #dc3545;
+        border-color: var(--danger-color);
         background-color: #fff5f5;
     }
 
@@ -461,6 +461,42 @@
         width: 14px;
         margin-right: 4px;
         color: #6c757d;
+    }
+
+    /* ✅ Badge promotion avec couleur dynamique */
+    .badge-promo {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+    }
+
+    /* ✅ Stat-badge avec couleurs dynamiques */
+    .stat-badge.bg-primary {
+        background: var(--primary-color) !important;
+    }
+    
+    .stat-badge.bg-warning {
+        background: var(--warning-color) !important;
+    }
+    
+    .stat-badge.bg-danger {
+        background: var(--danger-color) !important;
+    }
+    
+    .stat-badge.bg-success {
+        background: var(--success-color) !important;
+    }
+
+    /* ✅ Message d'information */
+    .filter-info {
+        background: rgba(var(--primary-rgb), 0.05) !important;
+        border-left: 4px solid var(--primary-color) !important;
+        padding: 0.75rem 1rem !important;
+        border-radius: 12px !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .filter-info .text-primary {
+        color: var(--primary-color) !important;
     }
 </style>
 {% endblock %}
@@ -538,32 +574,6 @@
         </div>
     </div>
     {% endif %}
-
-    <div class="barcode-scanner-section">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <div class="d-flex align-items-center gap-3">
-                    <i class="fas fa-camera fa-2x"></i>
-                    <div>
-                        <h5 class="mb-0">Scan code-barres</h5>
-                        <small>Scannez le code-barres du produit</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group barcode-input-group">
-                    <input type="text" class="form-control" id="barcodeInput" 
-                           placeholder="Code-barres..." autocomplete="off" autofocus>
-                    <button class="btn btn-light" type="button" id="scanBarcodeBtn">
-                        <i class="fas fa-qrcode"></i> Scanner
-                    </button>
-                </div>
-                <small class="text-white-50 d-block mt-1">
-                    <i class="fas fa-info-circle"></i> Scannez le code-barres ou saisissez-le manuellement
-                </small>
-            </div>
-        </div>
-    </div>
 
     <div class="search-section">
         <div class="search-bar">
@@ -662,7 +672,7 @@
                                     {% if item.has_promotion %}
                                         <div class="total text-primary fw-bold">
                                             {{ item.total_price|number_format(0, ',', ' ') }} FCFA
-                                            <span class="badge bg-primary ms-2" style="background-color: #0463f1 !important; color: white !important;">
+                                            <span class="badge badge-promo ms-2">
                                                 -{{ item.promotion.discount_percentage }}%
                                             </span>
                                         </div>
@@ -932,7 +942,7 @@ const URLs = {
     updateQuantity: "{{ path('sale_update_quantity', {'type': 'product', 'id': 'ID_PLACEHOLDER'}) }}",
     removeItem: "{{ path('sale_remove_item', {'type': 'product', 'id': 'ID_PLACEHOLDER'}) }}",
     clearCart: "{{ path('sale_clear_cart') }}",
-    searchCustomer: "{{ path('api_search_customer') }}"
+    searchCustomer: "{{ path('retail_sale_search_customer') }}" // ✅ CORRIGÉ
 };
 
 let state = {
@@ -1662,36 +1672,166 @@ if (DOM.confirmClearCartBtn) {
     });
 }
 
-// ==================== RECHERCHE CLIENT ====================
+// ==================== RECHERCHE CLIENT (CORRIGÉE) ====================
 if (DOM.customerPhone && DOM.checkCustomerBtn) {
     async function searchCustomer() {
         const phone = DOM.customerPhone.value.trim();
         if (!phone || phone.length < 6) {
             DOM.nameHint.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Numéro invalide (6 chiffres minimum)';
             DOM.customerName.value = '';
+            DOM.customerName.disabled = false;
             return;
         }
+        
         setSimpleButtonLoading(DOM.checkCustomerBtn, true);
-        DOM.nameHint.innerHTML = '<i class="fas fa-spinner fa-spin text-info"></i> Recherche...';
+        DOM.nameHint.innerHTML = '<i class="fas fa-spinner fa-spin text-info"></i> Recherche en cours...';
+        
         try {
-            const response = await fetch(`${URLs.searchCustomer}?phone=${encodeURIComponent(phone)}`);
-            const data = await response.json();
-            if (data.found && data.customer_name) {
-                DOM.customerName.value = data.customer_name;
-                DOM.nameHint.innerHTML = '<i class="fas fa-check-circle text-success"></i> Client trouvé !';
-            } else {
-                DOM.customerName.value = '';
-                DOM.nameHint.innerHTML = '<i class="fas fa-user-plus text-info"></i> Nouveau client';
-                DOM.customerName.focus();
+            const url = `${URLs.searchCustomer}?phone=${encodeURIComponent(phone)}`;
+            console.log('🔵 Recherche client URL:', url);
+            
+            const response = await fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP ${response.status}`);
             }
+            
+            const data = await response.json();
+            console.log('🔵 Résultat recherche client:', data);
+            
+            if (data.found && data.customer) {
+                const customer = data.customer;
+                const stats = data.stats || {};
+                const recentOrders = data.recent_orders || [];
+                
+                // Remplir les champs
+                DOM.customerName.value = customer.full_name || '';
+                DOM.customerName.disabled = true;
+                
+                // Afficher les informations du client
+                let infoHtml = `
+                    <div class="alert alert-success mt-2">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong><i class="fas fa-user-check me-2"></i> Client trouvé</strong>
+                                <div class="mt-1">
+                                    <span class="badge bg-primary">${customer.full_name || 'Nom inconnu'}</span>
+                                    ${customer.email ? `<span class="badge bg-info ms-1">${customer.email}</span>` : ''}
+                                    ${customer.phone ? `<span class="badge bg-secondary ms-1">${customer.phone}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted d-block">Client depuis</small>
+                                <small>${customer.created_at ? new Date(customer.created_at).toLocaleDateString('fr-FR') : 'N/A'}</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Statistiques
+                if (stats.total_orders > 0) {
+                    infoHtml += `
+                        <div class="alert alert-info mt-2">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <strong>${stats.total_orders}</strong>
+                                    <small class="d-block text-muted">Commandes</small>
+                                </div>
+                                <div class="col-4">
+                                    <strong>${stats.total_spent.toLocaleString('fr-FR')} FCFA</strong>
+                                    <small class="d-block text-muted">Total dépensé</small>
+                                </div>
+                                <div class="col-4">
+                                    <strong>${stats.last_order_date ? new Date(stats.last_order_date).toLocaleDateString('fr-FR') : 'N/A'}</strong>
+                                    <small class="d-block text-muted">Dernière commande</small>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Dernières commandes
+                if (recentOrders.length > 0) {
+                    infoHtml += `
+                        <div class="mt-2">
+                            <small class="text-muted">Dernières commandes:</small>
+                            <ul class="list-unstyled small mb-0">
+                    `;
+                    recentOrders.slice(0, 3).forEach(order => {
+                        infoHtml += `
+                            <li class="d-flex justify-content-between align-items-center border-bottom py-1">
+                                <span>#${order.order_number}</span>
+                                <span>${order.total_amount.toLocaleString('fr-FR')} FCFA</span>
+                                <span class="badge ${order.status === 'completed' ? 'bg-success' : 'bg-warning'}">${order.status}</span>
+                            </li>
+                        `;
+                    });
+                    infoHtml += `
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                DOM.nameHint.innerHTML = infoHtml;
+                
+                // Bouton pour débloquer la modification du nom
+                const unlockBtn = document.createElement('button');
+                unlockBtn.type = 'button';
+                unlockBtn.className = 'btn btn-sm btn-link text-warning mt-1';
+                unlockBtn.innerHTML = '<i class="fas fa-unlock me-1"></i> Modifier le nom';
+                unlockBtn.onclick = function() {
+                    DOM.customerName.disabled = false;
+                    DOM.customerName.focus();
+                    this.remove();
+                    DOM.nameHint.innerHTML = '<i class="fas fa-edit text-warning"></i> Nom modifiable';
+                };
+                DOM.nameHint.appendChild(unlockBtn);
+                
+                showToast('success', 'Client trouvé !');
+                
+            } else {
+                // Client non trouvé
+                DOM.customerName.value = '';
+                DOM.customerName.disabled = false;
+                DOM.nameHint.innerHTML = `
+                    <div class="alert alert-warning mt-2">
+                        <i class="fas fa-user-plus me-2"></i>
+                        <strong>Nouveau client</strong>
+                        <p class="mb-0 small">Aucun client trouvé avec ce numéro. Saisissez le nom du nouveau client.</p>
+                    </div>
+                `;
+                DOM.customerName.focus();
+                showToast('info', 'Nouveau client - Saisissez son nom');
+            }
+            
         } catch (error) {
-            DOM.nameHint.innerHTML = '<i class="fas fa-exclamation-triangle text-danger"></i> Erreur de connexion';
+            console.error('🔴 Erreur recherche client:', error);
+            DOM.nameHint.innerHTML = '<i class="fas fa-exclamation-triangle text-danger"></i> Erreur de connexion au serveur';
+            showToast('error', 'Erreur lors de la recherche du client');
         } finally {
             setSimpleButtonLoading(DOM.checkCustomerBtn, false);
         }
     }
+    
+    // Événements
     DOM.checkCustomerBtn.addEventListener('click', searchCustomer);
-    DOM.customerPhone.addEventListener('keypress', (e) => { if (e.key === 'Enter') searchCustomer(); });
+    DOM.customerPhone.addEventListener('keypress', (e) => { 
+        if (e.key === 'Enter') searchCustomer(); 
+    });
+    
+    // Recherche automatique après saisie (debounced)
+    let searchTimeout = null;
+    DOM.customerPhone.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        const phone = DOM.customerPhone.value.trim();
+        if (phone.length >= 6) {
+            searchTimeout = setTimeout(searchCustomer, 800);
+        }
+    });
 }
 
 // ==================== SÉLECTION CATÉGORIES ====================
@@ -1721,16 +1861,36 @@ if (DOM.searchInput) {
 
 // ==================== OUVERTURE MODALE ENCAISSEMENT ====================
 function openCheckoutModal() {
-    if (DOM.customerPhone) DOM.customerPhone.value = '';
-    if (DOM.customerName) DOM.customerName.value = '';
-    if (DOM.amountPaidInput) DOM.amountPaidInput.value = '0';
-    if (DOM.totalToPaySpan) DOM.totalToPaySpan.innerHTML = state.currentCartTotal.toLocaleString('fr-FR');
+    // Réinitialiser les champs
+    if (DOM.customerPhone) {
+        DOM.customerPhone.value = '';
+        DOM.customerPhone.classList.remove('is-valid', 'is-invalid');
+    }
+    if (DOM.customerName) {
+        DOM.customerName.value = '';
+        DOM.customerName.disabled = false;
+    }
+    if (DOM.amountPaidInput) {
+        DOM.amountPaidInput.value = '0';
+        DOM.amountPaidInput.classList.remove('is-valid', 'is-invalid');
+    }
+    if (DOM.totalToPaySpan) {
+        DOM.totalToPaySpan.innerHTML = state.currentCartTotal.toLocaleString('fr-FR');
+    }
+    if (DOM.nameHint) {
+        DOM.nameHint.innerHTML = '<i class="fas fa-info-circle text-muted"></i> Saisissez un numéro et cliquez sur Vérifier';
+    }
+    
     setTimeout(() => {
         if (DOM.amountPaidInput) {
             DOM.amountPaidInput.dispatchEvent(new Event('input', { bubbles: true }));
             updateChangeAmount();
         }
-    }, 50);
+        if (DOM.customerPhone) {
+            DOM.customerPhone.focus();
+        }
+    }, 100);
+    
     new bootstrap.Modal(document.getElementById('checkoutModal')).show();
 }
 
@@ -1741,8 +1901,6 @@ if (DOM.checkoutBtn) {
             new bootstrap.Modal(document.getElementById('quotaReachedModal')).show();
             return;
         }
-        
-        // 🔥 PLUS DE CONFIRMATION DE PRESCRIPTION ICI - DÉJÀ FAITE À L'AJOUT
         openCheckoutModal();
     });
 }
@@ -1840,7 +1998,13 @@ if (DOM.confirmCheckoutBtn) {
         const formData = new FormData(document.getElementById('checkoutForm'));
         
         try {
-            const response = await fetch(URLs.checkout, { method: 'POST', body: formData });
+            const response = await fetch(URLs.checkout, { 
+                method: 'POST', 
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
             const data = await response.json();
             
             if (data.success) {
@@ -1858,10 +2022,11 @@ if (DOM.confirmCheckoutBtn) {
                 }
                 setTimeout(() => location.reload(), 1000);
             } else {
-                showToast('error', data.error);
+                showToast('error', data.error || 'Erreur lors de l\'enregistrement');
             }
         } catch (error) {
-            showToast('error', 'Erreur lors de l\'enregistrement');
+            console.error('Erreur checkout:', error);
+            showToast('error', 'Erreur: ' + error.message);
         } finally {
             state.isProcessing = false;
             setButtonLoading(DOM.confirmCheckoutBtn, false);

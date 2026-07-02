@@ -42,6 +42,7 @@ class SaleService
     
     /**
      * Ajoute un produit au panier
+     * ✅ CORRIGÉ : Utilisation de getProductTotalStock()
      */
     public function addProductToCart(Product $product, int $quantity = 1, ?string $notes = null): array
     {
@@ -53,11 +54,14 @@ class SaleService
         if (isset($this->cart[$productId])) {
             $newQuantity = $this->cart[$productId]['quantity'] + $quantity;
             
-            if ($product->getStockQuantity() < $newQuantity) {
+            // ✅ CORRECTION : Utiliser getProductTotalStock()
+            $totalStock = $this->getProductTotalStock($product);
+            if ($totalStock < $newQuantity) {
                 throw new \Exception(sprintf(
-                    'Stock insuffisant. Vous avez déjà %d dans le panier. Total demandé: %d',
+                    'Stock insuffisant. Vous avez déjà %d dans le panier. Total demandé: %d, Disponible: %d',
                     $this->cart[$productId]['quantity'],
-                    $newQuantity
+                    $newQuantity,
+                    $totalStock
                 ));
             }
             
@@ -193,6 +197,7 @@ class SaleService
     
     /**
      * Met à jour la quantité d'un article dans le panier
+     * ✅ CORRIGÉ : Utilisation de getProductTotalStock()
      */
     public function updateCartItemQuantity(int $itemId, string $type, int $quantity): array
     {
@@ -209,13 +214,17 @@ class SaleService
         
         if ($type === 'product') {
             $product = $this->productRepository->find($itemId);
-            if ($product && $product->getStockQuantity() < $quantity) {
-                throw new \Exception(sprintf(
-                    'Stock insuffisant pour "%s". Disponible: %d %s',
-                    $product->getName(),
-                    $product->getStockQuantity(),
-                    $product->getUnit() ?? 'unités'
-                ));
+            if ($product) {
+                // ✅ CORRECTION : Utiliser getProductTotalStock()
+                $totalStock = $this->getProductTotalStock($product);
+                if ($totalStock < $quantity) {
+                    throw new \Exception(sprintf(
+                        'Stock insuffisant pour "%s". Disponible: %d %s',
+                        $product->getName(),
+                        $totalStock,
+                        $product->getUnit() ?? 'unités'
+                    ));
+                }
             }
             if ($product && $product->hasExpiryDate() && $product->getExpiryDate() < new \DateTime()) {
                 throw new \Exception('Ce produit a expiré.');
@@ -442,6 +451,7 @@ class SaleService
     
     /**
      * Vérifie la disponibilité des ingrédients
+     * ✅ CORRIGÉ : Utilisation de getProductTotalStock()
      */
     private function checkRecipeStockAvailability(Recipe $recipe, int $quantity): void
     {
@@ -457,13 +467,15 @@ class SaleService
                 );
             }
             
-            if ($product->getStockQuantity() < $neededQuantity) {
+            // ✅ CORRECTION : Utiliser getProductTotalStock()
+            $totalStock = $this->getProductTotalStock($product);
+            if ($totalStock < $neededQuantity) {
                 throw new \Exception(sprintf(
                     'Stock insuffisant pour l\'ingrédient "%s". Besoin: %.2f %s, Disponible: %d %s',
                     $product->getName(),
                     $neededQuantity,
                     $product->getUnit() ?? 'unité',
-                    $product->getStockQuantity(),
+                    $totalStock,
                     $product->getUnit() ?? 'unité'
                 ));
             }
@@ -472,6 +484,7 @@ class SaleService
     
     /**
      * Vérifications produit
+     * ✅ CORRIGÉ : Utilisation de getProductTotalStock()
      */
     private function validateProductBeforeAdd(Product $product, int $quantity): void
     {
@@ -483,10 +496,12 @@ class SaleService
             throw new \Exception('Ce produit n\'est pas disponible actuellement.');
         }
         
-        if ($product->getStockQuantity() < $quantity) {
+        // ✅ CORRECTION : Utiliser getProductTotalStock()
+        $totalStock = $this->getProductTotalStock($product);
+        if ($totalStock < $quantity) {
             throw new \Exception(sprintf(
                 'Stock insuffisant. Disponible: %d %s',
-                $product->getStockQuantity(),
+                $totalStock,
                 $product->getUnit() ?? 'unités'
             ));
         }
@@ -509,7 +524,7 @@ class SaleService
             throw new \Exception('Ce plat n\'est pas disponible actuellement.');
         }
     }
-    
+
     /**
      * Valide une vente avec vérification complète des promotions
      */
@@ -553,6 +568,7 @@ class SaleService
             throw new \Exception('Service non trouvé');
         }
         
+        // 1. Créer la commande
         $order = new Order();
         $order->setOrderNumber($this->generateOrderNumber($managedHmaService));
         $order->setCustomerName($customerName);
@@ -571,6 +587,14 @@ class SaleService
         
         $this->entityManager->persist($order);
         
+        // ✅ FLUSH IMMÉDIAT pour générer l'ID
+        $this->entityManager->flush();
+        
+        // ✅ Maintenant $order->getId() est disponible
+        $orderId = $order->getId();
+        $this->logger->info('Commande créée avec ID', ['order_id' => $orderId]);
+        
+        // 2. Traiter les items avec l'ID de la commande
         foreach ($this->cart as $item) {
             if ($item['type'] === 'product') {
                 $orderItem = $this->processProductItem($order, $item, $managedUser);
@@ -581,9 +605,13 @@ class SaleService
             $order->addOrderItem($orderItem);
         }
         
+        // 3. Enregistrer l'utilisation quotidienne
         $this->recordDailyUsage($managedHmaService);
+        
+        // 4. Flush final pour les items
         $this->entityManager->flush();
         
+        // 5. Synchroniser les stocks
         foreach ($this->cart as $item) {
             if ($item['type'] === 'product') {
                 $product = $this->productRepository->find($item['id']);
@@ -654,7 +682,6 @@ class SaleService
     
     /**
      * Traite un article de type produit
-     * ✅ CORRECTION : Ajout de la promotion appliquée
      */
     private function processProductItem(Order $order, array $item, User $user): OrderItem
     {
@@ -693,14 +720,13 @@ class SaleService
             $orderItem->setStockBatchId($usedBatches[0]['batch']->getId());
         }
         
-        // ✅ NOUVEAU : Ajout de la promotion appliquée (relation directe)
+        // Ajout de la promotion appliquée
         if (!empty($item['has_promotion']) && !empty($item['promotion']) && isset($item['promotion']['id'])) {
             $promotion = $this->entityManager->getRepository(\App\Entity\Promotion::class)->find($item['promotion']['id']);
             if ($promotion) {
                 $orderItem->setAppliedPromotion($promotion);
             }
             
-            // Dénormalisation pour compatibilité
             $orderItem->setPromotionId($item['promotion']['id']);
             $orderItem->setPromotionName($item['promotion']['name']);
             $orderItem->setPromotionDiscountAmount((string) ($item['promotion']['discount_amount'] ?? 0));
@@ -713,7 +739,6 @@ class SaleService
     
     /**
      * Traite un article de type recette
-     * ✅ CORRECTION : Ajout de la promotion appliquée
      */
     private function processRecipeItem(Order $order, array $item, User $user): OrderItem
     {
@@ -758,14 +783,13 @@ class SaleService
         $orderItem->setRecipe($recipe);
         $orderItem->setVente($order);
         
-        // ✅ NOUVEAU : Ajout de la promotion appliquée (relation directe)
+        // Ajout de la promotion appliquée
         if (!empty($item['has_promotion']) && !empty($item['promotion']) && isset($item['promotion']['id'])) {
             $promotion = $this->entityManager->getRepository(\App\Entity\Promotion::class)->find($item['promotion']['id']);
             if ($promotion) {
                 $orderItem->setAppliedPromotion($promotion);
             }
             
-            // Dénormalisation pour compatibilité
             $orderItem->setPromotionId($item['promotion']['id']);
             $orderItem->setPromotionName($item['promotion']['name']);
             $orderItem->setPromotionDiscountAmount((string) ($item['promotion']['discount_amount'] ?? 0));
@@ -836,5 +860,26 @@ class SaleService
     public function isReadyForCheckout(): bool
     {
         return !empty($this->cart);
+    }
+
+    /**
+     * Calcule le stock total d'un produit = stock_quantity + lots actifs
+     * ✅ Utilisé pour l'affichage du stock disponible
+     */
+    public function getProductTotalStock(Product $product): int
+    {
+        $now = new \DateTime();
+        $totalStock = $product->getStockQuantity() ?? 0;
+        
+        foreach ($product->getStockBatches() as $batch) {
+            // ✅ Ne compter que les lots actifs, avec quantité > 0, et non expirés
+            if ($batch->isActive() 
+                && $batch->getCurrentQuantity() > 0
+                && (!$batch->getExpiryDate() || $batch->getExpiryDate() >= $now)) {
+                $totalStock += $batch->getCurrentQuantity();
+            }
+        }
+        
+        return $totalStock;
     }
 }

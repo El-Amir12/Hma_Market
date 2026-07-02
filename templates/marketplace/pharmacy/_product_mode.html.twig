@@ -1,0 +1,549 @@
+{# templates/marketplace/pharmacy/_product_mode.html.twig #}
+
+<style>
+    .pharmacy-selected-info {
+        background: var(--primary-light);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        border-left: 4px solid var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .pharmacy-selected-info .pharmacy-name {
+        font-weight: 600;
+        color: var(--dark-color);
+    }
+
+    .pharmacy-selected-info .pharmacy-name i {
+        color: var(--primary-color);
+    }
+
+    .pharmacy-selected-info .btn-outline-primary {
+        border-radius: 50px;
+        padding: 0.4rem 1.2rem;
+        font-size: 0.85rem;
+    }
+
+    .product-select-container {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid var(--gray-200);
+        margin-top: 1.5rem;
+    }
+
+    .product-select-container .form-label {
+        font-size: 1rem;
+    }
+
+    .product-select-container .badge {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.75rem;
+    }
+
+    .no-products-message {
+        text-align: center;
+        padding: 2rem;
+        color: var(--gray-500);
+    }
+
+    .no-products-message i {
+        font-size: 3rem;
+        color: var(--gray-300);
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    /* ✅ Styles pour le statut */
+    .product-status {
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .product-status.in-stock {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .product-status.in-stock i {
+        color: #16a34a;
+    }
+
+    .product-status.out-of-stock {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .product-status.out-of-stock i {
+        color: #dc2626;
+    }
+
+    .prescription-badge {
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
+        background: #fef3c7;
+        color: #92400e;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 20px;
+        border: 2px dashed var(--gray-200);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h4 {
+        color: var(--dark-color);
+        font-weight: 700;
+    }
+
+    .empty-state .text-muted {
+        color: var(--gray-500);
+    }
+
+    .empty-state .btn-primary {
+        border-radius: 50px;
+        padding: 0.6rem 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .pharmacy-selected-info { flex-direction: column; align-items: flex-start; }
+        .product-select-container { padding: 1rem; }
+    }
+</style>
+
+{# ============================================================ #}
+{# 1. PHARMACIE SÉLECTIONNÉE                                     #}
+{# ============================================================ #}
+{% if selectedPharmacyData %}
+    <div class="pharmacy-selected-info">
+        <div class="d-flex align-items-center gap-3">
+            <i class="fas fa-store" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+            <div>
+                <span class="pharmacy-name">
+                    <i class="fas fa-hospital me-1"></i>
+                    {{ selectedPharmacyData.companyName }}
+                </span>
+                <span class="text-muted ms-2">- {{ selectedPharmacyData.city }}</span>
+            </div>
+        </div>
+        <a href="{{ path('marketplace_pharmacy_search', {
+            mode: 'product', 
+            country: selectedCountry, 
+            city: selectedCity
+        }) }}" class="btn btn-sm btn-outline-primary">
+            <i class="fas fa-undo"></i> Changer de pharmacie
+        </a>
+    </div>
+
+    {# ============================================================ #}
+    {# 2. FILTRES PRODUITS                                           #}
+    {# ============================================================ #}
+    {{ include('marketplace/pharmacy/_product_filters.html.twig', {
+        selectedPharmacy: selectedPharmacy,
+        selectedCountry: selectedCountry,
+        selectedCity: selectedCity,
+        categories: categories,
+        selectedCategory: selectedCategory,
+        selectedForm: selectedForm,
+        selectedDosage: selectedDosage,
+        prescriptionRequired: prescriptionRequired,
+        forms: forms|default([]),
+        filterApplied: filterApplied|default(false)
+    }) }}
+
+    {# ============================================================ #}
+    {# 3. SELECT2 DES PRODUITS                                       #}
+    {# ============================================================ #}
+    <div class="product-select-container">
+        <label class="form-label fw-semibold">
+            <i class="fas fa-box text-primary me-1"></i> Produits disponibles
+            <span class="badge bg-primary ms-2">{{ products|length }}</span>
+        </label>
+        
+        {% if products|length > 0 %}
+            <select id="productSelect" class="form-control select2-product">
+                <option value="">-- Sélectionnez un produit --</option>
+                {% for product in products %}
+                    <option value="{{ product.id }}" 
+                            data-name="{{ product.name }}"
+                            data-category="{{ product.category ? product.category.name : 'Non catégorisé' }}"
+                            data-price="{{ product.salePrice|price_with_currency(product.hmaService) }}"
+                            data-stock="{{ product.stockQuantity|default(0) }}"
+                            data-prescription="{{ product.prescriptionRequired ? 'true' : 'false' }}"
+                            data-form="{{ product.form|default('') }}"
+                            data-dosage="{{ product.dosage|default('') }}"
+                            data-unit="{{ product.unit|default('') }}"
+                            data-description="{{ product.description|default('') }}"
+                            data-barcode="{{ product.barcode|default('') }}">
+                        {{ product.name }} 
+                        {% if product.form %} - {{ product.form }}{% endif %}
+                        {% if product.dosage %} ({{ product.dosage }}){% endif %}
+                    </option>
+                {% endfor %}
+            </select>
+        {% else %}
+            <div class="no-products-message">
+                <i class="fas fa-box-open"></i>
+                <p>Aucun produit disponible dans cette pharmacie.</p>
+                <p class="text-muted small">Les produits apparaîtront ici une fois ajoutés.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    {# ============================================================ #}
+    {# 4. MODAL DÉTAIL PRODUIT                                       #}
+    {# ============================================================ #}
+    <div class="modal fade product-detail-modal" id="productDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productDetailTitle">Détail du produit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body" id="productDetailBody">
+                    <div class="text-center py-4">
+                        <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{# ============================================================ #}
+{# 5. PAYS ET VILLE SÉLECTIONNÉS, MAIS PAS DE PHARMACIE         #}
+{# ============================================================ #}
+{% elseif selectedCountry and selectedCity %}
+    <div class="empty-state">
+        <i class="fas fa-store"></i>
+        <h4>Sélectionnez une pharmacie</h4>
+        <p class="text-muted">
+            Pour rechercher des produits, veuillez sélectionner une pharmacie dans la liste ci-dessus.
+        </p>
+        <a href="{{ path('marketplace_pharmacy_search', {
+            mode: 'product', 
+            country: selectedCountry, 
+            city: selectedCity
+        }) }}" class="btn btn-primary mt-3">
+            <i class="fas fa-undo me-1"></i>Actualiser
+        </a>
+    </div>
+
+{# ============================================================ #}
+{# 6. AUCUNE SÉLECTION                                           #}
+{# ============================================================ #}
+{% else %}
+    <div class="empty-state">
+        <i class="fas fa-search-location"></i>
+        <h4>Sélectionnez un pays et une ville</h4>
+        <p class="text-muted">
+            Pour rechercher des produits, veuillez d'abord sélectionner un pays, une ville, puis une pharmacie.
+        </p>
+    </div>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== INITIALISATION PRODUCT MODE ===');
+    
+    // ============================================================ //
+    // 1. INITIALISATION DU SELECT2 PRODUIT                         //
+    // ============================================================ //
+    {% if products|length > 0 %}
+    const productSelect = document.getElementById('productSelect');
+    
+    if (productSelect) {
+        console.log('✅ Product select trouvé, ID:', productSelect.id);
+        console.log('📊 Nombre de produits:', {{ products|length }});
+        
+        // Vérifier que jQuery et Select2 sont disponibles
+        if (typeof jQuery === 'undefined') {
+            console.error('❌ jQuery non chargé !');
+            return;
+        }
+        
+        if (typeof jQuery.fn.select2 === 'undefined') {
+            console.error('❌ Select2 non chargé !');
+            return;
+        }
+        
+        // ✅ S'assurer que le select est visible
+        productSelect.style.display = 'block';
+        productSelect.style.width = '100%';
+        productSelect.style.visibility = 'visible';
+        productSelect.style.opacity = '1';
+        
+        // ✅ Attendre que le DOM soit complètement chargé
+        setTimeout(function() {
+            // Détruire toute instance existante
+            if (jQuery(productSelect).data('select2')) {
+                jQuery(productSelect).select2('destroy');
+                console.log('🔄 Instance Select2 détruite');
+            }
+            
+            // Initialiser Select2
+            jQuery(productSelect).select2({
+                theme: 'default',
+                width: '100%',
+                placeholder: '-- Sélectionnez un produit --',
+                allowClear: true,
+                language: 'fr',
+                templateResult: formatProductOption,
+                templateSelection: formatProductSelection,
+                escapeMarkup: function(markup) {
+                    return markup;
+                }
+            });
+            
+            console.log('✅ Product Select2 initialisé avec succès');
+            
+            // Forcer le re-rendu
+            jQuery(productSelect).trigger('change');
+            
+            // Vérifier que le conteneur Select2 est visible
+            const select2Container = jQuery(productSelect).next('.select2-container');
+            if (select2Container.length) {
+                select2Container.css({
+                    'display': 'block',
+                    'width': '100%',
+                    'visibility': 'visible',
+                    'opacity': '1'
+                });
+                console.log('✅ Conteneur Select2 visible');
+            } else {
+                console.warn('⚠️ Conteneur Select2 non trouvé');
+            }
+        }, 200);
+        
+        // Événement de sélection
+        jQuery(productSelect).on('select2:select', function(e) {
+            console.log('🖱️ Produit sélectionné:', e.params.data);
+            const data = e.params.data;
+            const element = data.element;
+            
+            if (element) {
+                const product = {
+                    id: element.value,
+                    name: element.getAttribute('data-name') || data.text,
+                    category: element.getAttribute('data-category') || 'Non catégorisé',
+                    price: element.getAttribute('data-price') || 'Prix non défini',
+                    stock: parseInt(element.getAttribute('data-stock') || 0),
+                    prescription: element.getAttribute('data-prescription') === 'true',
+                    form: element.getAttribute('data-form') || '',
+                    dosage: element.getAttribute('data-dosage') || '',
+                    unit: element.getAttribute('data-unit') || '',
+                    description: element.getAttribute('data-description') || '',
+                    barcode: element.getAttribute('data-barcode') || ''
+                };
+                
+                showProductDetail(product);
+            }
+        });
+    } else {
+        console.warn('⚠️ Élément #productSelect non trouvé');
+    }
+    {% else %}
+    console.log('ℹ️ Aucun produit disponible');
+    {% endif %}
+});
+
+// ============================================================ //
+// 2. FONCTIONS DE FORMATAGE                                     //
+// ============================================================ //
+function formatProductOption(option) {
+    if (!option.id) {
+        return option.text;
+    }
+
+    const element = option.element;
+    if (!element) {
+        return option.text;
+    }
+    
+    const productName = element.getAttribute('data-name') || option.text;
+    const category = element.getAttribute('data-category') || 'Non catégorisé';
+    const price = element.getAttribute('data-price') || 'Prix non défini';
+    const prescription = element.getAttribute('data-prescription') === 'true';
+    const form = element.getAttribute('data-form') || '';
+    const dosage = element.getAttribute('data-dosage') || '';
+    const unit = element.getAttribute('data-unit') || '';
+
+    let metaParts = [];
+    if (form) metaParts.push(form);
+    if (dosage) metaParts.push(dosage);
+    if (unit) metaParts.push(unit);
+    const metaText = metaParts.length > 0 ? ` - ${metaParts.join(' · ')}` : '';
+
+    let html = `
+        <div class="product-info">
+            <div>
+                <span class="product-name">${productName}</span>
+                <span class="product-meta">${category}${metaText}</span>
+                ${prescription ? '<span class="prescription-badge"><i class="fas fa-prescription-bottle"></i> Ordonnance</span>' : ''}
+            </div>
+            <span class="product-price">${price}</span>
+        </div>
+    `;
+
+    return jQuery(html);
+}
+
+function formatProductSelection(option) {
+    if (!option.id) {
+        return option.text;
+    }
+
+    const element = option.element;
+    if (!element) {
+        return option.text;
+    }
+    
+    const productName = element.getAttribute('data-name') || option.text;
+    const price = element.getAttribute('data-price') || '';
+    const prescription = element.getAttribute('data-prescription') === 'true';
+
+    let html = `
+        <div class="d-flex justify-content-between align-items-center w-100">
+            <span>
+                <i class="fas fa-box me-2 text-primary"></i>
+                ${productName}
+                ${prescription ? '<span class="badge bg-warning ms-1"><i class="fas fa-prescription-bottle"></i></span>' : ''}
+            </span>
+            <span class="text-primary fw-bold">${price}</span>
+        </div>
+    `;
+
+    return jQuery(html);
+}
+
+// ============================================================ //
+// 3. AFFICHAGE DU DÉTAIL DU PRODUIT AVEC STATUT                //
+// ============================================================ //
+function showProductDetail(product) {
+    console.log('📦 Affichage du détail du produit:', product);
+    
+    const body = document.getElementById('productDetailBody');
+    const title = document.getElementById('productDetailTitle');
+    
+    if (!body || !title) {
+        console.error('❌ Éléments de la modale non trouvés');
+        return;
+    }
+    
+    title.textContent = product.name || 'Détail du produit';
+    
+    // ✅ Déterminer le statut du stock
+    const stock = product.stock || 0;
+    const isInStock = stock > 0;
+    const statusClass = isInStock ? 'in-stock' : 'out-of-stock';
+    const statusIcon = isInStock ? 'fa-check-circle' : 'fa-times-circle';
+    const statusText = isInStock ? 'Disponible' : 'Non disponible';
+    
+    body.innerHTML = `
+        <div class="container-fluid p-0">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="mb-3">
+                        <h6 class="text-muted"><i class="fas fa-tag me-1"></i> Catégorie</h6>
+                        <p class="mb-0">${product.category || 'Non catégorisé'}</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h6 class="text-muted"><i class="fas fa-capsules me-1"></i> Forme</h6>
+                                <p class="mb-0">${product.form || 'Non spécifiée'}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h6 class="text-muted"><i class="fas fa-weight me-1"></i> Dosage</h6>
+                                <p class="mb-0">${product.dosage || 'Non spécifié'}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="text-muted"><i class="fas fa-ruler me-1"></i> Unité</h6>
+                        <p class="mb-0">${product.unit || 'Non spécifiée'}</p>
+                    </div>
+
+                    ${product.description ? `
+                        <div class="mb-3">
+                            <h6 class="text-muted"><i class="fas fa-align-left me-1"></i> Description</h6>
+                            <p class="mb-0">${product.description}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${product.barcode ? `
+                        <div class="mb-3">
+                            <h6 class="text-muted"><i class="fas fa-barcode me-1"></i> Code-barres</h6>
+                            <p class="mb-0" style="font-family: monospace;">${product.barcode}</p>
+                        </div>
+                    ` : ''}
+                </div>
+
+                <div class="col-md-5">
+                    <div class="card bg-light p-3">
+                        <div class="mb-3">
+                            <h6 class="text-muted">Prix</h6>
+                            <p class="h3 text-primary mb-0">${product.price}</p>
+                        </div>
+
+                        <!-- ✅ STATUT DU PRODUIT -->
+                        <div class="mb-3">
+                            <h6 class="text-muted">Disponibilité</h6>
+                            <span class="product-status ${statusClass}">
+                                <i class="fas ${statusIcon}"></i> ${statusText}
+                            </span>
+                        </div>
+
+                        ${product.prescription ? `
+                            <div>
+                                <h6 class="text-muted">Prescription</h6>
+                                <span class="prescription-badge">
+                                    <i class="fas fa-prescription-bottle"></i> Ordonnance requise
+                                </span>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    const modalElement = document.getElementById('productDetailModal');
+    if (modalElement) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+        console.log('✅ Modale ouverte');
+    } else {
+        console.error('❌ Élément #productDetailModal non trouvé');
+    }
+}
+</script>

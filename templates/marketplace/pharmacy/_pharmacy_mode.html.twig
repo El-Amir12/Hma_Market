@@ -1,0 +1,31 @@
+{# templates/marketplace/pharmacy/_pharmacy_mode.html.twig #}
+
+{% if selectedPharmacyData %}
+    {# Détail d'une pharmacie #}
+    {{ include('marketplace/pharmacy/_pharmacy_detail.html.twig', {
+        selectedPharmacyData: selectedPharmacyData,
+        selectedCountry: selectedCountry,
+        selectedCity: selectedCity,
+        searchPharmacy: searchPharmacy|default('')
+    }) }}
+
+{% elseif selectedCountry and selectedCity %}
+    {# Liste des pharmacies #}
+    {{ include('marketplace/pharmacy/_pharmacy_list.html.twig', {
+        pharmacies: pharmacies,
+        selectedCountry: selectedCountry,
+        selectedCity: selectedCity,
+        searchPharmacy: searchPharmacy|default(''),
+        currentPage: currentPage,
+        totalPages: totalPages,
+        totalPharmacies: totalPharmacies
+    }) }}
+
+{% else %}
+    {# Aucune sélection #}
+    <div class="empty-state">
+        <i class="fas fa-search-location"></i>
+        <h4>Sélectionnez un pays et une ville</h4>
+        <p class="text-muted">Choisissez un pays puis une ville pour voir les pharmacies disponibles.</p>
+    </div>
+{% endif %}

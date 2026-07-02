@@ -415,7 +415,9 @@ class PurchaseController extends AbstractController
     }
     
     /**
-     * Traite la réception avec création des lots, des avoirs, du reçu et mise à jour du stock
+     * Traite la réception avec création des lots, des avoirs, du reçu
+     * ✅ CORRIGÉ : NE PAS modifier stock_quantity
+     * ✅ CORRIGÉ : Recharger le produit pour éviter les erreurs de cascade
      */
     private function processReceptionWithIssues(
         Purchase $purchase,
@@ -445,6 +447,13 @@ class PurchaseController extends AbstractController
             }
             
             $product = $item->getProduct();
+            
+            // ✅ RECHARGER le produit pour s'assurer qu'il est géré par l'EntityManager
+            $managedProduct = $this->em->getRepository(Product::class)->find($product->getId());
+            if (!$managedProduct) {
+                throw new \Exception(sprintf('Produit "%s" non trouvé en base de données', $product->getName()));
+            }
+            
             $receivedQuantity = $data['received_quantity'];
             $receivedPrice = $data['received_price'] > 0 ? $data['received_price'] : (float)$item->getUnitPrice();
             $batchNumber = $data['batch_number'] ?: 'LOT-' . $purchase->getPurchaseNumber() . '-' . $itemId;
@@ -452,22 +461,23 @@ class PurchaseController extends AbstractController
             
             $problematicQuantity = $issue ? (int)($issue['affected_quantity'] ?? 0) : 0;
             
-            // 🔥 CORRECTION 1: NE PAS soustraire les produits problématiques ici
+            // ✅ CORRECTION: NE PAS soustraire les produits problématiques
             // On met TOUTE la quantité reçue en stock
-            $goodQuantity = $receivedQuantity; // Au lieu de $receivedQuantity - $problematicQuantity
+            $goodQuantity = $receivedQuantity;
             
+            // ✅ Création du lot
             $stockBatch = new StockBatch();
             $stockBatch->setBatchNumber($batchNumber);
-            $stockBatch->setProduct($product);
+            $stockBatch->setProduct($managedProduct);
             $stockBatch->setUnitPrice((string)$receivedPrice);
             $stockBatch->setInitialQuantity($receivedQuantity);
-            $stockBatch->setCurrentQuantity($goodQuantity); // Toute la quantité reçue
+            $stockBatch->setCurrentQuantity($goodQuantity);
             $stockBatch->setIsActive(true);
             $stockBatch->setHmaService($purchase->getHmaService());
             $stockBatch->setCreatedAt(new \DateTime());
             $stockBatch->setPurchaseItemId($itemId);
             
-            if ($product->hasExpiryDate()) {
+            if ($managedProduct->hasExpiryDate()) {
                 if (!empty($data['manufacturing_date'])) {
                     $manufacturingDate = new \DateTime($data['manufacturing_date']);
                     $stockBatch->setManufacturingDate($manufacturingDate);
@@ -490,7 +500,7 @@ class PurchaseController extends AbstractController
             
             $this->em->persist($stockBatch);
             
-            // 🔥 CORRECTION 2: Créer l'avoir avec stock_action = 'reduce'
+            // ✅ Créer l'avoir avec stock_action = 'reduce'
             if ($issue && $problematicQuantity > 0) {
                 $attachments = $issue['attachments'] ?? null;
                 
@@ -506,7 +516,7 @@ class PurchaseController extends AbstractController
                     $managedUser,
                     $purchase->getHmaService(),
                     $problematicQuantity,
-                    SupplierCreditNoteService::STOCK_ACTION_REDUCE  // 🔥 Forcer 'reduce'
+                    SupplierCreditNoteService::STOCK_ACTION_REDUCE
                 );
                 
                 $stockBatch->setHasIssue(true);
@@ -520,26 +530,43 @@ class PurchaseController extends AbstractController
                 $totalProblematicItems += $problematicQuantity;
             }
             
-            // 🔥 CORRECTION 3: Mettre TOUTE la quantité reçue en stock (pas la quantité bonne)
-            $currentStock = $product->getStockQuantity() ?? 0;
-            $product->setStockQuantity($currentStock + $receivedQuantity); // TOUTE la quantité
+            // ✅ CRÉATION DU MOUVEMENT DE STOCK
+            $movement = new \App\Entity\StockMovement();
+            $movement->setMovementType('purchase_in');
+            $movement->setQuantity($receivedQuantity);
+            $movement->setUnitPrice((string)$receivedPrice);
+            $movement->setProduct($managedProduct);
+            $movement->setStockBatch($stockBatch);
+            $movement->setPurchaseItem($item);
+            $movement->setUser($purchase->getUser());
+            $movement->setHmaService($purchase->getHmaService());
+            $movement->setCreatedAt(new \DateTime());
+            $movement->setNotes('Réception commande ' . $purchase->getPurchaseNumber());
+            $movement->setReferenceId($purchase->getId());
+            $this->em->persist($movement);
             
-            $this->logger->info('Mise à jour stock produit', [
-                'product_id' => $product->getId(),
-                'product_name' => $product->getName(),
-                'ancien_stock' => $currentStock,
-                'ajout' => $receivedQuantity,
-                'problematique' => $problematicQuantity,
-                'nouveau_stock' => $currentStock + $receivedQuantity
+            // ❌ SUPPRIMÉ : NE PAS mettre à jour stock_quantity
+            // ✅ stock_quantity reste inchangé
+            
+            // ✅ Mettre à jour la relation PurchaseItem avec le produit géré
+            $item->setProduct($managedProduct);
+            $this->em->persist($item);
+            
+            $this->logger->info('Lot créé pour réception (stock_quantity inchangé)', [
+                'product_id' => $managedProduct->getId(),
+                'product_name' => $managedProduct->getName(),
+                'received_quantity' => $receivedQuantity,
+                'stock_quantity' => $managedProduct->getStockQuantity(),
+                'batch_number' => $batchNumber
             ]);
-            
-            $this->em->persist($product);
         }
         
+        // ✅ Mise à jour du statut de la commande
         $purchase->setStatus(Purchase::STATUS_RECEIVED);
         $purchase->setReceivedAt(new \DateTimeImmutable());
         $this->em->persist($purchase);
         
+        // ✅ Génération du reçu
         try {
             $recuPath = $this->pdfGenerator->generatePurchaseReceipt($purchase);
             if ($recuPath) {
@@ -552,6 +579,7 @@ class PurchaseController extends AbstractController
         
         $this->em->flush();
         
+        // ✅ Envoi de la notification
         try {
             $this->purchaseFlowService->getNotificationService()->sendPurchaseReceivedConfirmation($purchase, $createdCreditNotes);
             $this->logger->info('Confirmation de réception envoyée au fournisseur', [
@@ -767,7 +795,7 @@ class PurchaseController extends AbstractController
             $batchNumber = $request->request->get('batch_number');
             $unitPrice = (float)$request->request->get('unit_price', 0);
             
-            // 🔥 CORRECTION: Récupérer les pièces jointes existantes
+            // Récupérer les pièces jointes existantes
             $existingAttachmentsRaw = $request->request->get('existing_attachments', '');
             $attachments = [];
             

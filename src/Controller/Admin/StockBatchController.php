@@ -6,7 +6,10 @@ namespace App\Controller\Admin;
 use App\Entity\HmaService;
 use App\Entity\Location;
 use App\Entity\Product;
+use App\Entity\PurchaseItem;
+use App\Entity\Purchase;      
 use App\Entity\StockBatch;
+use App\Entity\SupplierCreditNote; // ✅ AJOUTÉ
 use App\Form\StockBatchEditType;
 use App\Repository\LocationRepository;
 use App\Repository\ProductRepository;
@@ -151,6 +154,32 @@ final class StockBatchController extends AbstractController
         $totalItems = $batches->count();
         $totalPages = ceil($totalItems / $limit);
 
+        // ✅ Construire le purchaseMap, purchaseItems, canReportIssue ET supplierCreditNotes
+        $purchaseMap = [];
+        $purchaseItems = [];
+        $canReportIssueMap = [];
+        $supplierCreditNoteMap = []; // ✅ NOUVEAU : stocker les avoirs associés
+        
+        foreach ($batches as $batch) {
+            if ($batch->getPurchaseItemId()) {
+                $purchaseItem = $this->entityManager->getRepository(PurchaseItem::class)->find($batch->getPurchaseItemId());
+                if ($purchaseItem && $purchaseItem->getPurchase()) {
+                    $purchaseMap[$batch->getPurchaseItemId()] = $purchaseItem->getPurchase()->getPurchaseNumber();
+                    $purchaseItems[$batch->getId()] = $purchaseItem;
+                }
+            }
+            
+            // ✅ Calculer si le signalement est autorisé pour ce lot
+            $canReportIssueMap[$batch->getId()] = $this->canReportIssue($batch);
+            
+            // ✅ Récupérer l'avoir associé au lot (si existant)
+            $creditNote = $this->entityManager->getRepository(SupplierCreditNote::class)
+                ->findOneBy(['stockBatch' => $batch, 'status' => 'pending']);
+            if ($creditNote) {
+                $supplierCreditNoteMap[$batch->getId()] = $creditNote;
+            }
+        }
+
         return $this->render('admin/stock_batch/all.html.twig', [
             'batches' => $batches,
             'products' => $products,
@@ -160,6 +189,11 @@ final class StockBatchController extends AbstractController
             'products_filtered_count' => $productsFilteredCount,
             'totalPages' => $totalPages,
             'currentPage' => $page,
+            'purchaseMap' => $purchaseMap,
+            'purchaseItems' => $purchaseItems,
+            'canReportIssue' => $canReportIssueMap,
+            'supplierCreditNotes' => $supplierCreditNoteMap, // ✅ AJOUTÉ
+            
             'hmaService' => $hmaService,
             'filters' => [
                 'search' => $search,
@@ -330,7 +364,48 @@ final class StockBatchController extends AbstractController
             $direction
         );
 
+        // ✅ Calculer canReportIssue pour chaque lot et récupérer les avoirs
+        $canReportIssueMap = [];
+        $purchaseItems = [];
+        $supplierCreditNoteMap = [];
+        
+        // ✅ Compter les lots actifs et inactifs
+        $activeBatches = 0;
+        $inactiveBatches = 0;
+        
+        foreach ($batches as $batch) {
+            $canReportIssueMap[$batch->getId()] = $this->canReportIssue($batch);
+            
+            // Récupérer les PurchaseItems pour les numéros de commande
+            if ($batch->getPurchaseItemId()) {
+                $purchaseItem = $this->entityManager->getRepository(PurchaseItem::class)->find($batch->getPurchaseItemId());
+                if ($purchaseItem) {
+                    $purchaseItems[$batch->getId()] = $purchaseItem;
+                }
+            }
+            
+            // ✅ Récupérer l'avoir associé au lot
+            $creditNote = $this->entityManager->getRepository(SupplierCreditNote::class)
+                ->findOneBy(['stockBatch' => $batch, 'status' => 'pending']);
+            if ($creditNote) {
+                $supplierCreditNoteMap[$batch->getId()] = $creditNote;
+            }
+            
+            // ✅ Compter les lots actifs et inactifs
+            if ($batch->isActive()) {
+                $activeBatches++;
+            } else {
+                $inactiveBatches++;
+            }
+        }
+
+        // ✅ Récupérer les statistiques existantes
         $stats = $batchRepository->getStatsForProduct($product);
+        
+        // ✅ Ajouter les lots inactifs aux statistiques
+        $stats['inactive_batches'] = $inactiveBatches;
+        $stats['active_batches'] = $activeBatches;
+
         $locations = $batchRepository->findDistinctLocations($product);
 
         return $this->render('admin/stock_batch/index.html.twig', [
@@ -340,6 +415,9 @@ final class StockBatchController extends AbstractController
             'locations' => $locations,
             'hmaService' => $hmaService,
             'companyType' => $hmaService->getType(),
+            'purchaseItems' => $purchaseItems,
+            'canReportIssue' => $canReportIssueMap,
+            'supplierCreditNotes' => $supplierCreditNoteMap,
             'filters' => [
                 'search' => $search,
                 'status' => $status,
@@ -365,9 +443,28 @@ final class StockBatchController extends AbstractController
             throw new AccessDeniedException('Accès non autorisé.');
         }
 
+        // ✅ Récupérer le PurchaseItem pour la page de détail
+        $purchaseItem = null;
+        if ($batch->getPurchaseItemId()) {
+            $purchaseItem = $this->entityManager->getRepository(PurchaseItem::class)->find($batch->getPurchaseItemId());
+        }
+
+        // ✅ Récupérer l'avoir associé au lot
+        $supplierCreditNote = null;
+        if ($batch->hasIssue()) {
+            $supplierCreditNote = $this->entityManager->getRepository(SupplierCreditNote::class)
+                ->findOneBy(['stockBatch' => $batch, 'status' => 'pending']);
+        }
+
+        // ✅ Vérifier si le signalement est autorisé
+        $canReportIssue = $this->canReportIssue($batch);
+
         return $this->render('admin/stock_batch/show.html.twig', [
             'batch' => $batch,
             'product' => $batch->getProduct(),
+            'purchaseItem' => $purchaseItem,
+            'supplierCreditNote' => $supplierCreditNote, // ✅ AJOUTÉ
+            'canReportIssue' => $canReportIssue,
             'canEdit' => $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_MANAGER') || $this->isGranted('ROLE_STOCK_MANAGER'),
             'canDelete' => $this->isGranted('ROLE_ADMIN'),
             'companyType' => $hmaService->getType(),
@@ -502,7 +599,6 @@ final class StockBatchController extends AbstractController
             return $this->redirectToRoute('app_admin_stock_batch_all');
         }
         
-        // ✅ CORRECTION : Utiliser purchaseItemId au lieu de getPurchaseItem()
         if ($batch->getPurchaseItemId()) {
             $this->addFlash('error', 'Impossible de supprimer ce lot car il est lié à un achat.');
             return $this->redirectToRoute('app_admin_stock_batch_all');
@@ -1185,5 +1281,55 @@ final class StockBatchController extends AbstractController
             'closed' => 'Clôturé',
             default => 'Tous'
         };
+    }
+
+    /**
+     * Vérifie si un signalement est encore autorisé pour ce lot
+     * ✅ Un problème peut être signalé si :
+     * - Le lot a un purchaseItemId
+     * - La commande associée est réceptionnée
+     * - La date de réception est inférieure à 30 jours
+     */
+    private function canReportIssue(StockBatch $batch): bool
+    {
+        // Si le lot n'a pas de purchaseItemId, on ne peut pas remonter à la commande
+        if (!$batch->getPurchaseItemId()) {
+            return false;
+        }
+        
+        // Récupérer le PurchaseItem
+        $purchaseItem = $this->entityManager->getRepository(PurchaseItem::class)->find($batch->getPurchaseItemId());
+        if (!$purchaseItem) {
+            return false;
+        }
+        
+        // Récupérer la commande
+        $purchase = $purchaseItem->getPurchase();
+        if (!$purchase) {
+            return false;
+        }
+        
+        // Le lot doit venir d'une commande réceptionnée
+        if ($purchase->getStatus() !== Purchase::STATUS_RECEIVED) {
+            return false;
+        }
+        
+        // Si le lot a déjà un avoir, on ne peut pas signaler
+        if ($batch->hasIssue()) {
+            return false;
+        }
+        
+        // ✅ Si la commande est réceptionnée depuis moins de 30 jours
+        $receivedAt = $purchase->getReceivedAt();
+        if (!$receivedAt) {
+            return false;
+        }
+        
+        $now = new \DateTime();
+        $diff = $receivedAt->diff($now);
+        $days = $diff->days;
+        
+        // Autoriser le signalement dans les 30 jours suivant la réception
+        return $days <= 30;
     }
 }

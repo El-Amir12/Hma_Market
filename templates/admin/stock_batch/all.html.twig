@@ -8,6 +8,8 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style>
+    /* ✅ Utilisation des variables CSS de base.html.twig */
+    
     /* Cartes statistiques */
     .stat-card {
         transition: transform 0.2s, box-shadow 0.2s;
@@ -53,7 +55,7 @@
         display: inline-block;
     }
     .table-hover tbody tr:hover {
-        background-color: rgba(4, 99, 241, 0.05);
+        background-color: rgba(var(--primary-rgb), 0.05);
         cursor: pointer;
     }
     .progress {
@@ -98,12 +100,46 @@
         .stat-icon i { font-size: 1.3rem; }
     }
     .issue-critical {
-        background-color: #dc3545 !important;
+        background-color: var(--danger-color) !important;
         color: white !important;
     }
     .issue-high {
         background-color: #fd7e14 !important;
         color: white !important;
+    }
+    
+    /* ✅ Boutons avec couleurs dynamiques */
+    .btn-primary {
+        background: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+    }
+    .btn-primary:hover {
+        background: var(--primary-dark) !important;
+        border-color: var(--primary-dark) !important;
+    }
+    .text-primary {
+        color: var(--primary-color) !important;
+    }
+    .bg-primary {
+        background: var(--primary-color) !important;
+    }
+    .bg-primary.bg-opacity-10 {
+        background: rgba(var(--primary-rgb), 0.1) !important;
+    }
+    .bg-success.bg-opacity-10 {
+        background: rgba(46, 204, 113, 0.1) !important;
+    }
+    .bg-warning.bg-opacity-10 {
+        background: rgba(243, 156, 18, 0.1) !important;
+    }
+    .bg-info.bg-opacity-10 {
+        background: rgba(52, 152, 219, 0.1) !important;
+    }
+    .bg-danger.bg-opacity-10 {
+        background: rgba(231, 76, 60, 0.1) !important;
+    }
+    .bg-secondary.bg-opacity-10 {
+        background: rgba(108, 117, 125, 0.1) !important;
     }
 </style>
 {% endblock %}
@@ -421,6 +457,17 @@
                             {% set hasIssue = batch.hasIssue %}
                             {% set locationDisplay = batch.locationEntity ? batch.locationEntity.displayName : (batch.location ?: '—') %}
                             
+                            {# ✅ Vérifier si le signalement est autorisé #}
+                            {% set canReport = false %}
+                            {% if not hasIssue and batch.purchaseItemId %}
+                                {% if canReportIssue is defined and canReportIssue[batch.id] is defined %}
+                                    {% set canReport = canReportIssue[batch.id] %}
+                                {% endif %}
+                            {% endif %}
+                            
+                            {# ✅ Récupérer le PurchaseItem pour ce batch #}
+                            {% set purchaseItem = purchaseItems[batch.id] is defined ? purchaseItems[batch.id] : null %}
+                            
                             <tr class="
                                 {% if isExpired %}table-danger
                                 {% elseif isExpiringSoon %}table-warning
@@ -430,58 +477,154 @@
                             ">
                                 <td><input type="checkbox" class="form-check-input batch-checkbox" value="{{ batch.id }}"></td>
                                 <td>
-                                    <strong>{{ batch.batchNumber }}</strong>
-                                    {% if batch.purchaseItem %}<br><small class="text-muted"><i class="fas fa-receipt me-1"></i> {{ batch.purchaseItem.purchase.purchaseNumber }}</small>{% endif %}
+                                    <div class="d-flex flex-column">
+                                        <strong>{{ batch.batchNumber }}</strong>
+                                        {% if batch.purchaseItemId %}
+                                            {# Numéro de commande #}
+                                            <small class="text-muted">
+                                                <i class="fas fa-receipt me-1"></i> 
+                                                {% if purchaseMap is defined and purchaseMap[batch.purchaseItemId] is defined %}
+                                                    {{ purchaseMap[batch.purchaseItemId] }}
+                                                {% else %}
+                                                    ACHAT #{{ batch.purchaseItemId }}
+                                                {% endif %}
+                                            </small>
+                                            
+                                            {# ✅ DATE D'ACHAT, FOURNISSEUR ET QUANTITÉ #}
+                                            {% if purchaseItem and purchaseItem.purchase %}
+                                                <small class="text-muted">
+                                                    <i class="fas fa-calendar-alt me-1"></i>
+                                                    {{ purchaseItem.purchase.createdAt|date('d/m/Y') }}
+                                                </small>
+                                                {% if purchaseItem.purchase.supplier %}
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-truck me-1"></i>
+                                                        {{ purchaseItem.purchase.supplier.name|default('') }}
+                                                    </small>
+                                                {% endif %}
+                                                <small class="text-muted">
+                                                    <i class="fas fa-box me-1"></i>
+                                                    {{ purchaseItem.quantity }} {{ batch.product.unit|default('pièce(s)') }}
+                                                </small>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
                                 </td>
                                 <td>
                                     <a href="{{ path('app_admin_product_show', {'id': batch.product.id}) }}" class="text-decoration-none">{{ batch.product.name|u.truncate(35) }}</a>
                                     <br><small class="text-muted"><i class="fas fa-barcode me-1"></i>{{ batch.product.barcode }}</small>
                                 </td>
                                 <td>
-                                    {% if locationDisplay != '—' %}<span class="badge bg-info text-dark"><i class="fas fa-map-marker-alt me-1"></i> {{ locationDisplay }}</span>{% else %}<span class="text-muted">—</span>{% endif %}
+                                    {% if locationDisplay != '—' %}
+                                        <span class="badge bg-info text-dark"><i class="fas fa-map-marker-alt me-1"></i> {{ locationDisplay }}</span>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     <div>
                                         <span class="fw-bold">{{ batch.currentQuantity }}</span>
                                         <small class="text-muted">/ {{ batch.initialQuantity }}</small>
-                                        <div class="progress mt-1" style="height:4px"><div class="progress-bar {% if batch.currentQuantity/batch.initialQuantity*100 <= 10 %}bg-danger{% elseif batch.currentQuantity/batch.initialQuantity*100 <= 30 %}bg-warning{% else %}bg-success{% endif %}" style="width:{{ (batch.currentQuantity / batch.initialQuantity * 100)|round }}%"></div></div>
-                                        {% if isLowStock %}<br><span class="badge bg-warning text-dark mt-1">Stock faible</span>{% endif %}
+                                        <div class="progress mt-1" style="height:4px">
+                                            <div class="progress-bar 
+                                                {% if batch.currentQuantity/batch.initialQuantity*100 <= 10 %}bg-danger
+                                                {% elseif batch.currentQuantity/batch.initialQuantity*100 <= 30 %}bg-warning
+                                                {% else %}bg-success{% endif %}" 
+                                                style="width:{{ (batch.currentQuantity / batch.initialQuantity * 100)|round }}%">
+                                            </div>
+                                        </div>
+                                        {% if isLowStock %}
+                                            <br><span class="badge bg-warning text-dark mt-1">Stock faible</span>
+                                        {% endif %}
                                     </div>
                                 </td>
                                 <td>{{ batch.unitPrice|price_with_currency(batch.hmaService) }}</td>
-                                <tr>
+                                <td>
                                     {% if batch.expiryDate %}
-                                        <div><span class="fw-bold">{{ batch.expiryDate|date('d/m/Y') }}</span>
-                                        {% if isExpired %}<br><span class="badge bg-danger mt-1">Expiré</span>
-                                        {% elseif isExpiringSoon %}<br><span class="badge bg-warning text-dark mt-1">J-{{ batch.expiryDate.diff(date()).days }}</span>{% endif %}</div>
-                                    {% else %}<span class="text-muted">—</span>{% endif %}
+                                        <div>
+                                            <span class="fw-bold">{{ batch.expiryDate|date('d/m/Y') }}</span>
+                                            {% if isExpired %}
+                                                <br><span class="badge bg-danger mt-1">Expiré</span>
+                                            {% elseif isExpiringSoon %}
+                                                <br><span class="badge bg-warning text-dark mt-1">J-{{ batch.expiryDate.diff(date()).days }}</span>
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     {% if hasIssue %}
                                         <span class="badge {{ batch.issueStatusBadgeClass }}">{{ batch.issueStatusLabel }}</span>
-                                        {% if batch.issuePriority == 'critical' %}<span class="badge bg-danger mt-1 d-block">Critique</span>
-                                        {% elseif batch.issuePriority == 'high' %}<span class="badge bg-warning text-dark mt-1 d-block">Haute</span>{% endif %}
-                                        <small class="text-muted d-block">{{ batch.issueDeclaredAmount|price_with_currency(batch.hmaService) }}</small>
-                                    {% else %}<span class="text-muted">—</span>{% endif %}
-                                </td>
-                                <td><span class="badge {{ batch.isActive ? 'bg-success' : 'bg-secondary' }}">{{ batch.isActive ? 'Actif' : 'Inactif' }}</span></td>
-                                <td class="text-center">
-                                    <div class="btn-group" role="group">
-                                        <a href="{{ path('app_admin_stock_batch_print', {'id': batch.id}) }}" class="btn btn-sm btn-outline-secondary" title="Imprimer" target="_blank"><i class="fas fa-print"></i></a>
-                                        <a href="{{ path('app_admin_stock_batch_show', {'id': batch.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir"><i class="fas fa-eye"></i></a>
-                                        <a href="{{ path('app_admin_stock_batch_edit', {'id': batch.id}) }}" class="btn btn-sm btn-outline-warning" title="Modifier"><i class="fas fa-map-marker-alt"></i></a>
-                                        {% if not hasIssue %}
-                                            <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-sm btn-outline-danger" title="Signaler un problème"><i class="fas fa-exclamation-triangle"></i></a>
-                                        {% else %}
-                                            <a href="{{ path('app_supplier_credit_note_show', {'id': batch.activeIssue.id}) }}" class="btn btn-sm btn-outline-info" title="Voir l'avoir"><i class="fas fa-file-invoice-dollar"></i></a>
+                                        {% if batch.issuePriority == 'critical' %}
+                                            <span class="badge bg-danger mt-1 d-block">Critique</span>
+                                        {% elseif batch.issuePriority == 'high' %}
+                                            <span class="badge bg-warning text-dark mt-1 d-block">Haute</span>
                                         {% endif %}
-                                        <button type="button" class="btn btn-sm btn-outline-info toggle-batch-btn" data-batch-id="{{ batch.id }}" data-is-active="{{ batch.isActive ? '1' : '0' }}" data-batch-number="{{ batch.batchNumber }}" data-token="{{ csrf_token('toggle-batch' ~ batch.id) }}"><i class="fas {{ batch.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i></button>
-                                        {% if is_granted('ROLE_ADMIN') and batch.stockMovements|length == 0 and not hasIssue %}<button type="button" class="btn btn-sm btn-outline-danger delete-batch-btn" data-batch-id="{{ batch.id }}" data-batch-number="{{ batch.batchNumber }}" data-token="{{ csrf_token('delete-batch' ~ batch.id) }}"><i class="fas fa-trash"></i></button>{% endif %}
-                                    </div>
+                                        <small class="text-muted d-block">{{ batch.issueDeclaredAmount|price_with_currency(batch.hmaService) }}</small>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
                                 </td>
+                                <td>
+                                    <span class="badge {{ batch.isActive ? 'bg-success' : 'bg-secondary' }}">
+                                        {{ batch.isActive ? 'Actif' : 'Inactif' }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+    <div class="btn-group" role="group">
+        <a href="{{ path('app_admin_stock_batch_print', {'id': batch.id}) }}" class="btn btn-sm btn-outline-secondary" title="Imprimer" target="_blank">
+            <i class="fas fa-print"></i>
+        </a>
+        <a href="{{ path('app_admin_stock_batch_show', {'id': batch.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
+            <i class="fas fa-eye"></i>
+        </a>
+        <a href="{{ path('app_admin_stock_batch_edit', {'id': batch.id}) }}" class="btn btn-sm btn-outline-warning" title="Modifier">
+            <i class="fas fa-map-marker-alt"></i>
+        </a>
+        
+        {# ✅ SIGNALER UN PROBLÈME - UNIQUEMENT SI AUTORISÉ #}
+        {% if canReport %}
+            <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-sm btn-outline-danger" title="Signaler un problème">
+                <i class="fas fa-exclamation-triangle"></i>
+            </a>
+        {% elseif hasIssue and supplierCreditNotes[batch.id] is defined %}
+            <a href="{{ path('app_supplier_credit_note_show', {'id': supplierCreditNotes[batch.id].id}) }}" class="btn btn-sm btn-outline-info" title="Voir l'avoir">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </a>
+        {% else %}
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Signalement non disponible (délai de 30 jours dépassé)">
+                <i class="fas fa-exclamation-triangle text-muted"></i>
+            </button>
+        {% endif %}
+        
+        <button type="button" class="btn btn-sm btn-outline-info toggle-batch-btn" 
+                data-batch-id="{{ batch.id }}" 
+                data-is-active="{{ batch.isActive ? '1' : '0' }}" 
+                data-batch-number="{{ batch.batchNumber }}" 
+                data-token="{{ csrf_token('toggle-batch' ~ batch.id) }}">
+            <i class="fas {{ batch.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
+        </button>
+        
+        {% if is_granted('ROLE_ADMIN') and batch.stockMovements|length == 0 and not hasIssue %}
+            <button type="button" class="btn btn-sm btn-outline-danger delete-batch-btn" 
+                    data-batch-id="{{ batch.id }}" 
+                    data-batch-number="{{ batch.batchNumber }}" 
+                    data-token="{{ csrf_token('delete-batch' ~ batch.id) }}">
+                <i class="fas fa-trash"></i>
+            </button>
+        {% endif %}
+    </div>
+</td>
                             </tr>
                         {% else %}
-                            <tr><td colspan="10" class="text-center py-5"><i class="fas fa-box-open fa-3x text-muted mb-3"></i><p class="text-muted mb-0">Aucun lot trouvé</p><p class="text-muted small">Modifiez vos filtres ou créez des achats pour générer des lots</p></td></tr>
+                            <tr>
+                                <td colspan="10" class="text-center py-5">
+                                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted mb-0">Aucun lot trouvé</p>
+                                    <p class="text-muted small">Modifiez vos filtres ou créez des achats pour générer des lots</p>
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -497,10 +640,10 @@
 </div>
 
 <!-- Modales -->
-<div class="modal fade" id="printOptionsModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header bg-primary text-white"><h5 class="modal-title"><i class="fas fa-print me-2"></i> Options d'impression</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="alert alert-info"><i class="fas fa-info-circle me-2"></i> <span id="selectedCount">0</span> lot(s) sélectionné(s)</div><div class="d-grid gap-2"><button type="button" class="btn btn-primary" id="print-selected"><i class="fas fa-print me-2"></i> Imprimer la sélection</button><button type="button" class="btn btn-outline-primary" id="print-all"><i class="fas fa-print me-2"></i> Imprimer tous les lots</button></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button></div></div></div></div>
-<div class="modal fade" id="importExcelModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header bg-success text-white"><h5 class="modal-title"><i class="fas fa-file-excel me-2"></i> Importer des lots</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="alert alert-info"><i class="fas fa-info-circle me-2"></i> Utilisez l'export pour obtenir le template.</div><form method="post" action="{{ path('app_admin_stock_batch_import_excel') }}" enctype="multipart/form-data"><div class="mb-3"><label class="form-label fw-bold">Fichier Excel (.xlsx)</label><input type="file" name="excel_file" class="form-control" accept=".xlsx,.xls" required></div><div class="form-check mb-3"><input type="checkbox" name="update_only_location" class="form-check-input" id="updateOnlyLocation" checked><label class="form-check-label" for="updateOnlyLocation">Mettre à jour uniquement les emplacements</label></div><div class="d-grid"><button type="submit" class="btn btn-success"><i class="fas fa-upload me-2"></i> Importer</button></div></form></div></div></div></div>
+<div class="modal fade" id="printOptionsModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header" style="background: var(--primary-color); color: white;"><h5 class="modal-title"><i class="fas fa-print me-2"></i> Options d'impression</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="alert alert-info"><i class="fas fa-info-circle me-2"></i> <span id="selectedCount">0</span> lot(s) sélectionné(s)</div><div class="d-grid gap-2"><button type="button" class="btn btn-primary" id="print-selected"><i class="fas fa-print me-2"></i> Imprimer la sélection</button><button type="button" class="btn btn-outline-primary" id="print-all"><i class="fas fa-print me-2"></i> Imprimer tous les lots</button></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button></div></div></div></div>
+<div class="modal fade" id="importExcelModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header" style="background: var(--success-color); color: white;"><h5 class="modal-title"><i class="fas fa-file-excel me-2"></i> Importer des lots</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="alert alert-info"><i class="fas fa-info-circle me-2"></i> Utilisez l'export pour obtenir le template.</div><form method="post" action="{{ path('app_admin_stock_batch_import_excel') }}" enctype="multipart/form-data"><div class="mb-3"><label class="form-label fw-bold">Fichier Excel (.xlsx)</label><input type="file" name="excel_file" class="form-control" accept=".xlsx,.xls" required></div><div class="form-check mb-3"><input type="checkbox" name="update_only_location" class="form-check-input" id="updateOnlyLocation" checked><label class="form-check-label" for="updateOnlyLocation">Mettre à jour uniquement les emplacements</label></div><div class="d-grid"><button type="submit" class="btn" style="background: var(--success-color); color: white; border-color: var(--success-color);"><i class="fas fa-upload me-2"></i> Importer</button></div></form></div></div></div></div>
 <div class="modal fade" id="toggleBatchModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Confirmation</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p id="toggleBatchMessage"></p></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button><form id="toggleBatchForm" method="post"><input type="hidden" name="_token" id="toggleBatchToken"><button type="submit" class="btn" id="toggleBatchBtn"></button></form></div></div></div></div>
-<div class="modal fade" id="deleteBatchModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header bg-danger text-white"><h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Supprimer le lot</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><p id="deleteBatchMessage"></p></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button><form id="deleteBatchForm" method="post"><input type="hidden" name="_token" id="deleteBatchToken"><button type="submit" class="btn btn-danger">Supprimer</button></form></div></div></div></div>
+<div class="modal fade" id="deleteBatchModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header" style="background: var(--danger-color); color: white;"><h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Supprimer le lot</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><p id="deleteBatchMessage"></p></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button><form id="deleteBatchForm" method="post"><input type="hidden" name="_token" id="deleteBatchToken"><button type="submit" class="btn" style="background: var(--danger-color); color: white; border-color: var(--danger-color);">Supprimer</button></form></div></div></div></div>
 
 {% endblock %}
 

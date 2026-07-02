@@ -39,17 +39,17 @@
         width: 12px;
         height: 12px;
         border-radius: 50%;
-        background: #0463f1;
+        background: var(--primary-color);
         border: 2px solid white;
-        box-shadow: 0 0 0 2px #0463f1;
+        box-shadow: 0 0 0 2px var(--primary-color);
     }
     .timeline-item.issue::before {
-        background: #dc3545;
-        box-shadow: 0 0 0 2px #dc3545;
+        background: var(--danger-color);
+        box-shadow: 0 0 0 2px var(--danger-color);
     }
     .timeline-item.resolved::before {
-        background: #28a745;
-        box-shadow: 0 0 0 2px #28a745;
+        background: var(--success-color);
+        box-shadow: 0 0 0 2px var(--success-color);
     }
     .issue-badge {
         font-size: 0.75rem;
@@ -69,11 +69,11 @@
     .status-card {
         border-left: 4px solid;
     }
-    .status-pending { border-left-color: #ffc107; }
-    .status-acknowledged { border-left-color: #17a2b8; }
-    .status-under_review { border-left-color: #0d6efd; }
-    .status-recovered { border-left-color: #28a745; }
-    .status-lost { border-left-color: #dc3545; }
+    .status-pending { border-left-color: var(--warning-color); }
+    .status-acknowledged { border-left-color: var(--info-color); }
+    .status-under_review { border-left-color: var(--primary-color); }
+    .status-recovered { border-left-color: var(--success-color); }
+    .status-lost { border-left-color: var(--danger-color); }
     .status-closed { border-left-color: #6c757d; }
     .badge i { margin-right: 4px; }
     @media print {
@@ -111,6 +111,23 @@
             <p class="text-muted mt-1">
                 <i class="fas fa-calendar-alt me-1"></i> Créé le {{ batch.createdAt|date('d/m/Y H:i') }}
                 {% if batch.updatedAt %} | Modifié le {{ batch.updatedAt|date('d/m/Y H:i') }}{% endif %}
+                {% if purchaseItem is defined and purchaseItem and purchaseItem.purchase %}
+                    {% set purchase = purchaseItem.purchase %}
+                    {% if purchase.receivedAt %}
+                        {% set daysSinceReception = date().diff(purchase.receivedAt).days %}
+                        {% set daysRemaining = 30 - daysSinceReception %}
+                        <br>
+                        <span class="badge {% if daysRemaining > 0 %}bg-success{% else %}bg-secondary{% endif %}">
+                            <i class="fas fa-calendar-check me-1"></i>
+                            Réceptionné le {{ purchase.receivedAt|date('d/m/Y') }}
+                            {% if daysRemaining > 0 %}
+                                ({{ daysRemaining }} jour(s) restant pour signaler)
+                            {% else %}
+                                (Délai de signalement expiré)
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                {% endif %}
             </p>
         </div>
         <div class="btn-group">
@@ -122,21 +139,69 @@
                     <i class="fas fa-edit me-1"></i> Modifier
                 </a>
             {% endif %}
-            {% if not batch.hasIssue %}
-                <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-outline-danger btn-action">
-                    <i class="fas fa-exclamation-triangle me-1"></i> Signaler un problème
-                </a>
-            {% else %}
-                <a href="{{ path('app_supplier_credit_note_show', {'id': batch.supplierCreditNoteId}) }}" class="btn btn-outline-info btn-action">
-                    <i class="fas fa-file-invoice-dollar me-1"></i> Voir l'avoir
-                </a>
-                {# 🔥 Ajout d'un bouton pour signaler un autre problème si nécessaire #}
-                {% if batch.issueStatus == 'recovered' or batch.issueStatus == 'closed' %}
-                    <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-outline-warning btn-action">
-                        <i class="fas fa-exclamation-triangle me-1"></i> Nouveau problème
+            
+            {# ✅ CONDITION POUR SIGNALER UN PROBLÈME #}
+            {% if batch.hasIssue %}
+                {# Si le lot a un avoir #}
+                {% set creditNote = supplierCreditNote is defined ? supplierCreditNote : null %}
+                {% if creditNote %}
+                    <a href="{{ path('app_supplier_credit_note_show', {'id': creditNote.id}) }}" class="btn btn-outline-info btn-action">
+                        <i class="fas fa-file-invoice-dollar me-1"></i> Voir l'avoir
+                    </a>
+                {% else %}
+                    <button type="button" class="btn btn-outline-secondary btn-action" disabled title="Avoir non trouvé">
+                        <i class="fas fa-file-invoice-dollar me-1"></i> Avoir introuvable
+                    </button>
+                {% endif %}
+            {% elseif canReportIssue is defined and canReportIssue %}
+                {# Si le signalement est autorisé - calcul du temps restant #}
+                {% if purchaseItem is defined and purchaseItem and purchaseItem.purchase %}
+                    {% set purchase = purchaseItem.purchase %}
+                    {% if purchase.receivedAt %}
+                        {% set daysSinceReception = date().diff(purchase.receivedAt).days %}
+                        {% set daysRemaining = 30 - daysSinceReception %}
+                        <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-outline-danger btn-action" title="Encore {{ daysRemaining }} jour(s) pour signaler un problème">
+                            <i class="fas fa-exclamation-triangle me-1"></i> Signaler un problème
+                            <span class="badge bg-danger ms-1">{{ daysRemaining }}j</span>
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-outline-danger btn-action">
+                            <i class="fas fa-exclamation-triangle me-1"></i> Signaler un problème
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-outline-danger btn-action">
+                        <i class="fas fa-exclamation-triangle me-1"></i> Signaler un problème
                     </a>
                 {% endif %}
+            {% else %}
+                {# Si le signalement n'est pas autorisé #}
+                {% if purchaseItem is defined and purchaseItem and purchaseItem.purchase %}
+                    {% set purchase = purchaseItem.purchase %}
+                    {% if purchase.receivedAt %}
+                        {% set daysSinceReception = date().diff(purchase.receivedAt).days %}
+                        {% if daysSinceReception > 30 %}
+                            <button type="button" class="btn btn-outline-secondary btn-action" disabled title="Délai de 30 jours dépassé ({{ daysSinceReception }} jours)">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Signalement expiré
+                                <span class="badge bg-secondary ms-1">+{{ daysSinceReception - 30 }}j</span>
+                            </button>
+                        {% else %}
+                            <button type="button" class="btn btn-outline-secondary btn-action" disabled title="Commande non réceptionnée">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Signalement indisponible
+                            </button>
+                        {% endif %}
+                    {% else %}
+                        <button type="button" class="btn btn-outline-secondary btn-action" disabled title="Commande non réceptionnée">
+                            <i class="fas fa-exclamation-triangle me-1"></i> Signalement indisponible
+                        </button>
+                    {% endif %}
+                {% else %}
+                    <button type="button" class="btn btn-outline-secondary btn-action" disabled title="Signalement non disponible">
+                        <i class="fas fa-exclamation-triangle me-1"></i> Signalement indisponible
+                    </button>
+                {% endif %}
             {% endif %}
+            
             <a href="{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}" class="btn btn-outline-secondary btn-action">
                 <i class="fas fa-arrow-left me-1"></i> Retour
             </a>
@@ -376,15 +441,24 @@
                     <i class="fas fa-check-circle fa-3x text-success mb-2"></i>
                     <h5 class="mb-1">Aucun problème signalé</h5>
                     <p class="text-muted small mb-3">Ce lot n'a pas d'avoir fournisseur associé</p>
-                    <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-outline-danger btn-sm">
-                        <i class="fas fa-exclamation-triangle me-1"></i> Signaler un problème
-                    </a>
+                    
+                    {# ✅ CONDITION POUR SIGNALER UN PROBLÈME #}
+                    {% if canReportIssue %}
+                        <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-outline-danger btn-sm">
+                            <i class="fas fa-exclamation-triangle me-1"></i> Signaler un problème
+                        </a>
+                    {% else %}
+                        <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Signalement non disponible (commande trop ancienne ou non réceptionnée)">
+                            <i class="fas fa-exclamation-triangle me-1"></i> Signalement indisponible
+                        </button>
+                        <p class="text-muted small mt-2">Le signalement n'est disponible que pour les lots issus de commandes réceptionnées depuis moins de 30 jours.</p>
+                    {% endif %}
                 </div>
             </div>
             {% endif %}
 
-            <!-- 🔥 Informations d'achat - -->
-            {% if batch.purchaseItemId %}
+            <!-- Informations d'achat -->
+            {% if purchaseItem %}
             <div class="card info-card border-0 shadow-sm mb-4">
                 <div class="card-header bg-white py-3">
                     <h5 class="mb-0 fw-semibold">
@@ -393,31 +467,22 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    {# Récupérer le PurchaseItem via son ID (à passer depuis le contrôleur) #}
-                    {% set purchaseItem = purchase_item is defined ? purchase_item : null %}
-                    {% if purchaseItem and purchaseItem.purchase %}
-                        <dl class="row mb-0">
-                            <dt class="col-sm-4 text-muted">Commande</dt>
-                            <dd class="col-sm-8">
-                                <a href="{{ path('purchase_show', {'id': purchaseItem.purchase.id}) }}" class="text-decoration-none">
-                                    {{ purchaseItem.purchase.purchaseNumber }}
-                                </a>
-                            </dd>
-                            <dt class="col-sm-4 text-muted">Fournisseur</dt>
-                            <dd class="col-sm-8">{{ purchaseItem.purchase.supplier.name|default('Non renseigné') }}</dd>
-                            <dt class="col-sm-4 text-muted">Date d'achat</dt>
-                            <dd class="col-sm-8">{{ purchaseItem.purchase.createdAt|date('d/m/Y') }}</dd>
-                            <dt class="col-sm-4 text-muted">Quantité achetée</dt>
-                            <dd class="col-sm-8">{{ purchaseItem.quantity }} {{ product.unit|default('pièce(s)') }}</dd>
-                            <dt class="col-sm-4 text-muted">Prix d'achat</dt>
-                            <dd class="col-sm-8">{{ purchaseItem.unitPrice|price_with_currency(batch.hmaService) }}</dd>
-                        </dl>
-                    {% else %}
-                        <div class="text-center py-3">
-                            <i class="fas fa-link fa-2x text-muted mb-2"></i>
-                            <p class="text-muted mb-0">Information d'achat non disponible</p>
-                        </div>
-                    {% endif %}
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted">Commande</dt>
+                        <dd class="col-sm-8">
+                            <a href="{{ path('purchase_show', {'id': purchaseItem.purchase.id}) }}" class="text-decoration-none">
+                                {{ purchaseItem.purchase.purchaseNumber }}
+                            </a>
+                        </dd>
+                        <dt class="col-sm-4 text-muted">Fournisseur</dt>
+                        <dd class="col-sm-8">{{ purchaseItem.purchase.supplier.name|default('Non renseigné') }}</dd>
+                        <dt class="col-sm-4 text-muted">Date d'achat</dt>
+                        <dd class="col-sm-8">{{ purchaseItem.purchase.createdAt|date('d/m/Y') }}</dd>
+                        <dt class="col-sm-4 text-muted">Quantité achetée</dt>
+                        <dd class="col-sm-8">{{ purchaseItem.quantity }} {{ product.unit|default('pièce(s)') }}</dd>
+                        <dt class="col-sm-4 text-muted">Prix d'achat</dt>
+                        <dd class="col-sm-8">{{ purchaseItem.unitPrice|price_with_currency(batch.hmaService) }}</dd>
+                    </dl>
                 </div>
             </div>
             {% endif %}
@@ -501,7 +566,6 @@
 {{ parent() }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Ajouter une classe pour l'impression
     const printBtn = document.querySelector('button[onclick="window.print()"]');
     if (printBtn) {
         printBtn.addEventListener('click', function() {

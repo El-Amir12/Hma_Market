@@ -95,6 +95,15 @@ services:
     App\Twig\CompanyExtension:
         tags: ['twig.extension']
 
+    App\Twig\MarketplaceExtension:
+        tags: ['twig.extension']
+        arguments:
+            - '@App\Repository\CategoryRepository'
+            - '@App\Repository\CustomerRepository'
+            - '@doctrine.orm.entity_manager'
+            - '@security.helper'
+            - '@App\Service\MarketplaceDataService'
+
     # ==================== SERVICES PDF ====================
     Dompdf\Dompdf:
         public: false
@@ -290,6 +299,17 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    App\EventListener\CustomerLoginListener:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    App\EventListener\MustChangePasswordListener:
+        arguments:
+            - '@security.token_storage'
+            - '@router'
+        tags:
+            - { name: kernel.event_subscriber }
+
     App\Service\UniqueNameValidator:
         autowire: true
         autoconfigure: true
@@ -441,4 +461,26 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
         public: true
+
+    # ==================== REPOSITORIES MARKETPLACE ====================
+    App\Repository\CustomerRepository:
+        arguments:
+            $registry: '@doctrine'
+        public: true
+
+    App\Repository\CartRepository:
+        arguments:
+            $registry: '@doctrine'
+        public: true
+
+    App\Repository\CartItemRepository:
+        arguments:
+            $registry: '@doctrine'
+        public: true
+
+    App\Service\MarketplaceDataService:
+        arguments:
+            - '@security.helper'
+            - '@App\Repository\FavoriteRepository'
+            - '@App\Repository\CartRepository'
             

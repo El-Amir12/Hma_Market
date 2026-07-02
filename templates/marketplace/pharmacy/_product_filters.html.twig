@@ -1,0 +1,438 @@
+{# templates/marketplace/pharmacy/_product_filters.html.twig #}
+
+<style>
+    .product-filters-container {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid var(--gray-200);
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .product-filters-container .filter-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .product-filters-container .filter-item {
+        flex: 1;
+        min-width: 180px;
+    }
+
+    .filter-item label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+        display: block;
+        color: var(--dark-color);
+    }
+
+    .filter-item label i {
+        color: var(--primary-color);
+    }
+
+    .filter-item .form-select,
+    .filter-item .form-control {
+        border-radius: 12px;
+        border: 2px solid var(--gray-200);
+        padding: 0.6rem 1rem;
+        height: 48px;
+        transition: all 0.3s ease;
+        background-color: white;
+    }
+
+    .filter-item .form-control:focus,
+    .filter-item .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(4, 99, 241, 0.08);
+        outline: none;
+    }
+
+    .filter-item .form-control::placeholder {
+        color: #94a3b8;
+        font-size: 0.9rem;
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .filter-actions .btn {
+        border-radius: 12px;
+        padding: 0.6rem 1.5rem;
+        font-weight: 600;
+        height: 48px;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .filter-actions .btn-primary {
+        background: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        color: white;
+    }
+
+    .filter-actions .btn-primary:hover {
+        background: #0355d4;
+        border-color: #0355d4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(4, 99, 241, 0.3);
+    }
+
+    .filter-actions .btn-outline-secondary {
+        background: white;
+        border: 2px solid var(--gray-200);
+        color: var(--gray-500);
+    }
+
+    .filter-actions .btn-outline-secondary:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    .prescription-check {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding-top: 0.5rem;
+        height: 48px;
+    }
+
+    .prescription-check input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--primary-color);
+        cursor: pointer;
+        flex-shrink: 0;
+        border-radius: 4px;
+        border: 2px solid var(--gray-300);
+        transition: all 0.2s ease;
+    }
+
+    .prescription-check input[type="checkbox"]:checked {
+        border-color: var(--primary-color);
+    }
+
+    .prescription-check label {
+        cursor: pointer;
+        font-weight: 500;
+        margin-bottom: 0;
+        color: var(--dark-color);
+    }
+
+    .prescription-check label i {
+        color: #f59e0b;
+    }
+
+    .active-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--gray-200);
+    }
+
+    .active-filters .filter-tag {
+        background: var(--primary-light);
+        color: var(--primary-color);
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .active-filters .filter-tag .remove-filter {
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .active-filters .filter-tag .remove-filter:hover {
+        opacity: 1;
+    }
+
+    .filter-status {
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--gray-500);
+    }
+
+    .filter-status .applied {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .product-filters-container { padding: 1rem; }
+        .product-filters-container .filter-group { flex-direction: column; }
+        .filter-item { min-width: 100%; }
+        .filter-actions { width: 100%; }
+        .filter-actions .btn { flex: 1; justify-content: center; }
+        .prescription-check { height: auto; padding-top: 0; }
+    }
+</style>
+
+<div class="product-filters-container">
+    <form method="get" id="productFilterForm" class="filter-group">
+        <input type="hidden" name="mode" value="product">
+        <input type="hidden" name="country" value="{{ selectedCountry }}">
+        <input type="hidden" name="city" value="{{ selectedCity }}">
+        <input type="hidden" name="pharmacy" value="{{ selectedPharmacy }}">
+        <input type="hidden" name="filter_applied" value="1">
+
+        {# Catégorie #}
+        <div class="filter-item">
+            <label for="categorySelect">
+                <i class="fas fa-tags text-primary me-1"></i> Catégorie
+            </label>
+            <select name="category" id="categorySelect" class="form-select select2-category">
+                <option value="">Toutes les catégories</option>
+                {% if categories|length > 0 %}
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if category.id == selectedCategory %}selected{% endif %}>
+                            {% for i in 0..category.level %}
+                                &nbsp;&nbsp;
+                            {% endfor %}
+                            {% if category.level > 0 %}↳{% endif %}
+                            {{ category.name }}
+                            <span class="text-muted">({{ category.productCount }})</span>
+                        </option>
+                    {% endfor %}
+                {% else %}
+                    <option value="" disabled>Aucune catégorie disponible</option>
+                {% endif %}
+            </select>
+        </div>
+
+        {# Forme #}
+        <div class="filter-item">
+            <label for="formSelect">
+                <i class="fas fa-capsules text-primary me-1"></i> Forme
+            </label>
+            <select name="form" id="formSelect" class="form-select">
+                <option value="">Toutes les formes</option>
+                {% if forms|default([])|length > 0 %}
+                    {% for form in forms %}
+                        <option value="{{ form }}" {% if selectedForm == form %}selected{% endif %}>
+                            {{ form }}
+                        </option>
+                    {% endfor %}
+                {% else %}
+                    <option value="" disabled>Aucune forme disponible</option>
+                {% endif %}
+            </select>
+        </div>
+
+        {# Dosage #}
+        <div class="filter-item">
+            <label for="dosageInput">
+                <i class="fas fa-weight text-primary me-1"></i> Dosage
+            </label>
+            <input type="text" name="dosage" id="dosageInput" class="form-control" 
+                   placeholder="ex: 500mg, 10ml, 5g..." 
+                   value="{{ selectedDosage|default('') }}">
+        </div>
+
+        {# Prescription #}
+        <div class="filter-item" style="min-width: 150px; flex: 0.5;">
+            <div class="prescription-check">
+                <input type="checkbox" name="prescription_required" id="prescriptionCheck" 
+                       value="1" {{ prescriptionRequired == '1' ? 'checked' : '' }}>
+                <label for="prescriptionCheck">
+                    <i class="fas fa-prescription-bottle"></i> Ordonnance
+                </label>
+            </div>
+        </div>
+
+        {# Actions #}
+        <div class="filter-actions">
+            <button type="submit" class="btn btn-primary" id="filterButton">
+                <i class="fas fa-filter"></i> Filtrer
+            </button>
+            <a href="{{ path('marketplace_pharmacy_search', {
+                mode: 'product', 
+                country: selectedCountry, 
+                city: selectedCity, 
+                pharmacy: selectedPharmacy
+            }) }}" class="btn btn-outline-secondary" id="clearFiltersButton">
+                <i class="fas fa-eraser"></i> Effacer
+            </a>
+        </div>
+    </form>
+
+    {# Statut des filtres #}
+    <div class="filter-status">
+        {% if filterApplied|default(false) %}
+            <span class="applied"><i class="fas fa-check-circle"></i> Filtres appliqués</span>
+        {% else %}
+            <span><i class="fas fa-info-circle"></i> Tous les produits sont affichés</span>
+        {% endif %}
+    </div>
+
+    {# Filtres actifs #}
+    {% set hasActiveFilters = selectedCategory or selectedForm or selectedDosage or prescriptionRequired is not null %}
+    {% if hasActiveFilters %}
+        <div class="active-filters">
+            <span class="text-muted" style="font-size: 0.85rem; font-weight: 500;">Filtres actifs :</span>
+            
+            {% if selectedCategory %}
+                {% set categoryName = '' %}
+                {% for cat in categories %}
+                    {% if cat.id == selectedCategory %}
+                        {% set categoryName = cat.name %}
+                    {% endif %}
+                {% endfor %}
+                <span class="filter-tag">
+                    <i class="fas fa-tag"></i> {{ categoryName }}
+                    <a href="{{ path('marketplace_pharmacy_search', {
+                        mode: 'product', 
+                        country: selectedCountry, 
+                        city: selectedCity, 
+                        pharmacy: selectedPharmacy,
+                        form: selectedForm,
+                        dosage: selectedDosage,
+                        prescription_required: prescriptionRequired,
+                        filter_applied: 1
+                    }) }}" class="remove-filter" title="Supprimer ce filtre">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </span>
+            {% endif %}
+
+            {% if selectedForm %}
+                <span class="filter-tag">
+                    <i class="fas fa-capsules"></i> {{ selectedForm }}
+                    <a href="{{ path('marketplace_pharmacy_search', {
+                        mode: 'product', 
+                        country: selectedCountry, 
+                        city: selectedCity, 
+                        pharmacy: selectedPharmacy,
+                        category: selectedCategory,
+                        dosage: selectedDosage,
+                        prescription_required: prescriptionRequired,
+                        filter_applied: 1
+                    }) }}" class="remove-filter" title="Supprimer ce filtre">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </span>
+            {% endif %}
+
+            {% if selectedDosage %}
+                <span class="filter-tag">
+                    <i class="fas fa-weight"></i> {{ selectedDosage }}
+                    <a href="{{ path('marketplace_pharmacy_search', {
+                        mode: 'product', 
+                        country: selectedCountry, 
+                        city: selectedCity, 
+                        pharmacy: selectedPharmacy,
+                        category: selectedCategory,
+                        form: selectedForm,
+                        prescription_required: prescriptionRequired,
+                        filter_applied: 1
+                    }) }}" class="remove-filter" title="Supprimer ce filtre">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </span>
+            {% endif %}
+
+            {% if prescriptionRequired == '1' %}
+                <span class="filter-tag">
+                    <i class="fas fa-prescription-bottle"></i> Ordonnance requise
+                    <a href="{{ path('marketplace_pharmacy_search', {
+                        mode: 'product', 
+                        country: selectedCountry, 
+                        city: selectedCity, 
+                        pharmacy: selectedPharmacy,
+                        category: selectedCategory,
+                        form: selectedForm,
+                        dosage: selectedDosage,
+                        filter_applied: 1
+                    }) }}" class="remove-filter" title="Supprimer ce filtre">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </span>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== INITIALISATION PRODUCT FILTERS ===');
+    
+    const categorySelect = document.getElementById('categorySelect');
+    if (categorySelect) {
+        console.log('✅ Category select trouvé, ID:', categorySelect.id);
+        console.log('📊 Nombre d\'options de catégories:', categorySelect.options.length);
+        
+        // Afficher les options dans la console
+        for (let i = 0; i < categorySelect.options.length; i++) {
+            console.log(`  Option ${i}:`, categorySelect.options[i].value, categorySelect.options[i].text);
+        }
+        
+        // ✅ S'assurer que le select est visible
+        categorySelect.style.display = 'block';
+        categorySelect.style.width = '100%';
+        categorySelect.style.visibility = 'visible';
+        categorySelect.style.opacity = '1';
+        
+        // ✅ Attendre que le DOM soit complètement chargé
+        setTimeout(function() {
+            if (typeof jQuery !== 'undefined' && typeof jQuery.fn.select2 !== 'undefined') {
+                // Détruire toute instance existante
+                if (jQuery(categorySelect).data('select2')) {
+                    jQuery(categorySelect).select2('destroy');
+                    console.log('🔄 Instance Select2 détruite');
+                }
+                
+                // Initialiser Select2
+                jQuery(categorySelect).select2({
+                    theme: 'default',
+                    width: '100%',
+                    placeholder: 'Toutes les catégories',
+                    allowClear: true,
+                    language: 'fr'
+                });
+                
+                console.log('✅ Category Select2 initialisé avec succès');
+                
+                // Forcer le re-rendu
+                jQuery(categorySelect).trigger('change');
+                
+                // Vérifier que le conteneur Select2 est visible
+                const select2Container = jQuery(categorySelect).next('.select2-container');
+                if (select2Container.length) {
+                    select2Container.css({
+                        'display': 'block',
+                        'width': '100%',
+                        'visibility': 'visible',
+                        'opacity': '1'
+                    });
+                    console.log('✅ Conteneur Select2 visible');
+                } else {
+                    console.warn('⚠️ Conteneur Select2 non trouvé');
+                }
+            } else {
+                console.error('❌ jQuery ou Select2 non disponibles');
+            }
+        }, 200);
+    } else {
+        console.warn('⚠️ Élément #categorySelect non trouvé');
+    }
+});
+</script>

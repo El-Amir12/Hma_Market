@@ -44,7 +44,7 @@ class Order
     #[ORM\Column(length: 20)]
     private ?string $status = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
     #[ORM\Column]
@@ -73,10 +73,21 @@ class Order
     #[ORM\JoinColumn(nullable: false)]
     private ?HmaService $hma_service = null;
 
+    // ❌ SUPPRIMER cette relation
+    // #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'orders')]
+    // #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id', nullable: true)]
+    // private ?Customer $customer = null;
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
+        $this->is_active = true;
+        $this->subscription_active = true;
     }
+
+    // ==================== GETTERS & SETTERS ====================
 
     public function getId(): ?int
     {
@@ -91,7 +102,6 @@ class Order
     public function setOrderNumber(string $order_number): static
     {
         $this->order_number = $order_number;
-
         return $this;
     }
 
@@ -103,7 +113,6 @@ class Order
     public function setCustomerName(string $customer_name): static
     {
         $this->customer_name = $customer_name;
-
         return $this;
     }
 
@@ -115,7 +124,6 @@ class Order
     public function setCustomerPhone(string $customer_phone): static
     {
         $this->customer_phone = $customer_phone;
-
         return $this;
     }
 
@@ -127,7 +135,6 @@ class Order
     public function setTotalAmount(string $total_amount): static
     {
         $this->total_amount = $total_amount;
-
         return $this;
     }
 
@@ -139,7 +146,6 @@ class Order
     public function setAmountPaid(string $amount_paid): static
     {
         $this->amount_paid = $amount_paid;
-
         return $this;
     }
 
@@ -151,7 +157,6 @@ class Order
     public function setChangeAmount(string $change_amount): static
     {
         $this->change_amount = $change_amount;
-
         return $this;
     }
 
@@ -163,7 +168,6 @@ class Order
     public function setPaymentMethod(string $payment_method): static
     {
         $this->payment_method = $payment_method;
-
         return $this;
     }
 
@@ -175,7 +179,6 @@ class Order
     public function setPaymentStatus(string $payment_status): static
     {
         $this->payment_status = $payment_status;
-
         return $this;
     }
 
@@ -187,7 +190,6 @@ class Order
     public function setStatus(string $status): static
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -196,10 +198,9 @@ class Order
         return $this->notes;
     }
 
-    public function setNotes(string $notes): static
+    public function setNotes(?string $notes): static
     {
         $this->notes = $notes;
-
         return $this;
     }
 
@@ -211,7 +212,6 @@ class Order
     public function setCreatedAt(\DateTime $created_at): static
     {
         $this->created_at = $created_at;
-
         return $this;
     }
 
@@ -223,7 +223,6 @@ class Order
     public function setUpdatedAt(\DateTime $updated_at): static
     {
         $this->updated_at = $updated_at;
-
         return $this;
     }
 
@@ -235,7 +234,6 @@ class Order
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -247,6 +245,28 @@ class Order
     public function setIsActive(bool $is_active): static
     {
         $this->is_active = $is_active;
+        return $this;
+    }
+
+    public function isSubscriptionActive(): bool
+    {
+        return $this->subscription_active;
+    }
+
+    public function setSubscriptionActive(bool $subscription_active): self
+    {
+        $this->subscription_active = $subscription_active;
+        return $this;
+    }
+
+    public function getHmaService(): ?HmaService
+    {
+        return $this->hma_service;
+    }
+
+    public function setHmaService(?HmaService $hma_service): static
+    {
+        $this->hma_service = $hma_service;
         return $this;
     }
 
@@ -264,43 +284,32 @@ class Order
             $this->orderItems->add($orderItem);
             $orderItem->setVente($this);
         }
-
         return $this;
     }
 
     public function removeOrderItem(OrderItem $orderItem): static
     {
         if ($this->orderItems->removeElement($orderItem)) {
-            // set the owning side to null (unless already changed)
             if ($orderItem->getVente() === $this) {
                 $orderItem->setVente(null);
             }
         }
-
         return $this;
     }
 
-    public function getHmaService(): ?HmaService  
-    {
-        return $this->hma_service;
-    }
+    // ❌ SUPPRIMER les méthodes getCustomer() et setCustomer()
+    // public function getCustomer(): ?Customer
+    // {
+    //     return $this->customer;
+    // }
 
-    public function setHmaService(?HmaService $hma_service): static  
-    {
-        $this->hma_service = $hma_service;
-        return $this;
-    }
+    // public function setCustomer(?Customer $customer): static
+    // {
+    //     $this->customer = $customer;
+    //     return $this;
+    // }
 
-        public function isSubscriptionActive(): bool
-    {
-        return $this->subscription_active;
-    }
-
-    public function setSubscriptionActive(bool $subscription_active): self
-    {
-        $this->subscription_active = $subscription_active;
-        return $this;
-    }
+    // ==================== MÉTHODES DE CALCUL ====================
 
     /**
      * Calcule le sous-total HT de la commande (sans les remises)
@@ -309,7 +318,7 @@ class Order
     {
         $subtotal = 0;
         foreach ($this->orderItems as $item) {
-            $subtotal += (float)$item->getTotalPrice();
+            $subtotal += (float) $item->getTotalPrice();
         }
         return $subtotal;
     }
@@ -321,8 +330,7 @@ class Order
     {
         $discount = 0;
         foreach ($this->orderItems as $item) {
-    
-            $discount += (float)($item->getDiscountAmountValue() ?? 0);
+            $discount += (float) ($item->getDiscountAmountValue() ?? 0);
         }
         return $discount;
     }

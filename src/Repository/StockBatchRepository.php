@@ -21,7 +21,190 @@ class StockBatchRepository extends ServiceEntityRepository
         parent::__construct($registry, StockBatch::class);
     }
 
-    // ... (toutes les méthodes existantes restent inchangées)
+    /**
+     * Récupère les statistiques pour un produit spécifique
+     */
+    public function getStatsForProduct(Product $product): array
+    {
+        $now = new \DateTime();
+        $thirtyDays = (clone $now)->modify('+30 days');
+        
+        $qb = $this->createQueryBuilder('b')
+            ->select(
+                'COUNT(b.id) as total_batches',
+                'SUM(CASE WHEN b.is_active = true THEN 1 ELSE 0 END) as active_batches',
+                'SUM(CASE WHEN b.is_active = false THEN 1 ELSE 0 END) as inactive_batches',
+                'SUM(CASE WHEN b.expiry_date IS NOT NULL AND b.expiry_date < :now THEN 1 ELSE 0 END) as expired_batches',
+                'SUM(CASE WHEN b.expiry_date IS NOT NULL AND b.expiry_date >= :now AND b.expiry_date <= :thirtyDays THEN 1 ELSE 0 END) as expiring_soon_batches',
+                'SUM(b.current_quantity) as total_quantity',
+                'SUM(CASE WHEN b.has_issue = true AND (b.issue_status != :closed AND b.issue_status != :recovered AND b.issue_status IS NOT NULL) THEN 1 ELSE 0 END) as open_issues',
+                'SUM(CASE WHEN b.has_issue = true AND (b.issue_status != :closed AND b.issue_status != :recovered AND b.issue_status IS NOT NULL) THEN b.issue_declared_amount ELSE 0 END) as total_issue_amount'
+            )
+            ->where('b.product = :product')
+            ->setParameter('product', $product)
+            ->setParameter('now', $now)
+            ->setParameter('thirtyDays', $thirtyDays)
+            ->setParameter('closed', 'closed')
+            ->setParameter('recovered', 'recovered')
+            ->getQuery()
+            ->getSingleResult();
+
+        // Remplacer les valeurs null par 0
+        return array_map(function($value) {
+            return $value ?? 0;
+        }, $qb);
+    }
+
+    /**
+     * Récupère les statistiques globales pour un service HMA
+     */
+    public function getStatsForHmaService(HmaService $hmaService): array
+    {
+        $now = new \DateTime();
+        $thirtyDays = (clone $now)->modify('+30 days');
+        
+        $qb = $this->createQueryBuilder('b')
+            ->select(
+                'COUNT(b.id) as total_batches',
+                'SUM(CASE WHEN b.is_active = true THEN 1 ELSE 0 END) as active_batches',
+                'SUM(CASE WHEN b.is_active = false THEN 1 ELSE 0 END) as inactive_batches',
+                'SUM(CASE WHEN b.expiry_date IS NOT NULL AND b.expiry_date < :now THEN 1 ELSE 0 END) as expired_batches',
+                'SUM(CASE WHEN b.expiry_date IS NOT NULL AND b.expiry_date >= :now AND b.expiry_date <= :thirtyDays THEN 1 ELSE 0 END) as expiring_soon_batches',
+                'SUM(b.current_quantity) as total_quantity',
+                'SUM(CASE WHEN b.has_issue = true AND (b.issue_status != :closed AND b.issue_status != :recovered AND b.issue_status IS NOT NULL) THEN 1 ELSE 0 END) as open_issues',
+                'SUM(CASE WHEN b.has_issue = true AND (b.issue_status != :closed AND b.issue_status != :recovered AND b.issue_status IS NOT NULL) THEN b.issue_declared_amount ELSE 0 END) as total_issue_amount'
+            )
+            ->where('b.hma_service = :hmaService')
+            ->setParameter('hmaService', $hmaService)
+            ->setParameter('now', $now)
+            ->setParameter('thirtyDays', $thirtyDays)
+            ->setParameter('closed', 'closed')
+            ->setParameter('recovered', 'recovered')
+            ->getQuery()
+            ->getSingleResult();
+
+        // Remplacer les valeurs null par 0
+        return array_map(function($value) {
+            return $value ?? 0;
+        }, $qb);
+    }
+
+    /**
+     * Récupère les emplacements distincts pour un produit
+     */
+    public function findDistinctLocations(Product $product): array
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->select('DISTINCT b.location')
+            ->where('b.product = :product')
+            ->andWhere('b.location IS NOT NULL')
+            ->andWhere('b.location != :empty')
+            ->setParameter('product', $product)
+            ->setParameter('empty', '')
+            ->orderBy('b.location', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return array_column($qb, 'location');
+    }
+
+    /**
+     * Récupère les emplacements distincts pour un service HMA
+     */
+    public function findDistinctLocationsForHmaService(HmaService $hmaService): array
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->select('DISTINCT b.location')
+            ->where('b.hma_service = :hmaService')
+            ->andWhere('b.location IS NOT NULL')
+            ->andWhere('b.location != :empty')
+            ->setParameter('hmaService', $hmaService)
+            ->setParameter('empty', '')
+            ->orderBy('b.location', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return array_column($qb, 'location');
+    }
+
+    /**
+     * Récupère le nombre total de lots pour un service HMA
+     */
+    public function countByHmaService(HmaService $hmaService): int
+    {
+        return $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->where('b.hma_service = :hmaService')
+            ->setParameter('hmaService', $hmaService)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Récupère le nombre de lots actifs pour un service HMA
+     */
+    public function countActiveByHmaService(HmaService $hmaService): int
+    {
+        return $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->where('b.hma_service = :hmaService')
+            ->andWhere('b.is_active = true')
+            ->setParameter('hmaService', $hmaService)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Récupère le nombre de lots expirés pour un service HMA
+     */
+    public function countExpiredByHmaService(HmaService $hmaService): int
+    {
+        $now = new \DateTime();
+        
+        return $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->where('b.hma_service = :hmaService')
+            ->andWhere('b.expiry_date IS NOT NULL')
+            ->andWhere('b.expiry_date < :now')
+            ->setParameter('hmaService', $hmaService)
+            ->setParameter('now', $now)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Récupère le nombre de lots qui expirent bientôt pour un service HMA
+     */
+    public function countExpiringSoonByHmaService(HmaService $hmaService): int
+    {
+        $now = new \DateTime();
+        $thirtyDays = (clone $now)->modify('+30 days');
+        
+        return $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->where('b.hma_service = :hmaService')
+            ->andWhere('b.expiry_date IS NOT NULL')
+            ->andWhere('b.expiry_date >= :now')
+            ->andWhere('b.expiry_date <= :thirtyDays')
+            ->setParameter('hmaService', $hmaService)
+            ->setParameter('now', $now)
+            ->setParameter('thirtyDays', $thirtyDays)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Récupère la quantité totale en stock pour un service HMA
+     */
+    public function getTotalQuantityByHmaService(HmaService $hmaService): int
+    {
+        return $this->createQueryBuilder('b')
+            ->select('SUM(b.current_quantity)')
+            ->where('b.hma_service = :hmaService')
+            ->setParameter('hmaService', $hmaService)
+            ->getQuery()
+            ->getSingleScalarResult() ?? 0;
+    }
 
     /**
      * Récupère les lots filtrés pour un produit spécifique (avec filtres avoir)
@@ -95,7 +278,7 @@ class StockBatchRepository extends ServiceEntityRepository
                ->setParameter('location', $location);
         }
 
-        // 🔥 NOUVEAUX FILTRES POUR LES AVOIRS
+        // Filtres pour les avoirs
         if ($hasIssue === 'yes') {
             $qb->andWhere('b.has_issue = true');
         } elseif ($hasIssue === 'no') {
@@ -205,7 +388,7 @@ class StockBatchRepository extends ServiceEntityRepository
                ->setParameter('location', $location);
         }
 
-        // 🔥 NOUVEAUX FILTRES POUR LES AVOIRS
+        // Filtres pour les avoirs
         if ($hasIssue === 'yes') {
             $qb->andWhere('b.has_issue = true');
         } elseif ($hasIssue === 'no') {
@@ -232,6 +415,110 @@ class StockBatchRepository extends ServiceEntityRepository
         }
 
         return $this->paginate($qb->getQuery(), $page, $limit);
+    }
+
+    /**
+     * Récupère les lots pour un produit spécifique avec pagination
+     */
+    public function findPaginatedByProduct(
+        Product $product,
+        int $page = 1,
+        int $limit = 20
+    ): Paginator {
+        $qb = $this->createQueryBuilder('b')
+            ->where('b.product = :product')
+            ->setParameter('product', $product)
+            ->orderBy('b.created_at', 'DESC');
+
+        return $this->paginate($qb->getQuery(), $page, $limit);
+    }
+
+    /**
+     * Récupère les lots actifs pour un produit
+     */
+    public function findActiveByProduct(Product $product): array
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.product = :product')
+            ->andWhere('b.is_active = true')
+            ->andWhere('b.current_quantity > 0')
+            ->setParameter('product', $product)
+            ->orderBy('b.expiry_date', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Récupère les lots expirés pour un service HMA
+     */
+    public function findExpiredByHmaService(HmaService $hmaService): array
+    {
+        $now = new \DateTime();
+        
+        return $this->createQueryBuilder('b')
+            ->where('b.hma_service = :hmaService')
+            ->andWhere('b.expiry_date IS NOT NULL')
+            ->andWhere('b.expiry_date < :now')
+            ->setParameter('hmaService', $hmaService)
+            ->setParameter('now', $now)
+            ->orderBy('b.expiry_date', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Récupère les lots qui expirent bientôt pour un service HMA
+     */
+    public function findExpiringSoonByHmaService(HmaService $hmaService): array
+    {
+        $now = new \DateTime();
+        $thirtyDays = (clone $now)->modify('+30 days');
+        
+        return $this->createQueryBuilder('b')
+            ->where('b.hma_service = :hmaService')
+            ->andWhere('b.expiry_date IS NOT NULL')
+            ->andWhere('b.expiry_date >= :now')
+            ->andWhere('b.expiry_date <= :thirtyDays')
+            ->setParameter('hmaService', $hmaService)
+            ->setParameter('now', $now)
+            ->setParameter('thirtyDays', $thirtyDays)
+            ->orderBy('b.expiry_date', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Récupère les lots avec avoirs ouverts pour un service HMA
+     */
+    public function findOpenIssuesByHmaService(HmaService $hmaService): array
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.hma_service = :hmaService')
+            ->andWhere('b.has_issue = true')
+            ->andWhere('b.issue_status != :closed')
+            ->andWhere('b.issue_status != :recovered')
+            ->setParameter('hmaService', $hmaService)
+            ->setParameter('closed', 'closed')
+            ->setParameter('recovered', 'recovered')
+            ->orderBy('b.issue_priority', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Récupère les lots en stock faible pour un service HMA
+     */
+    public function findLowStockByHmaService(HmaService $hmaService, int $threshold = 10): array
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.hma_service = :hmaService')
+            ->andWhere('b.current_quantity <= :threshold')
+            ->andWhere('b.is_active = true')
+            ->setParameter('hmaService', $hmaService)
+            ->setParameter('threshold', $threshold)
+            ->orderBy('b.current_quantity', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     private function paginate($query, int $page, int $limit): Paginator

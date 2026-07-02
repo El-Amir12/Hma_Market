@@ -8,11 +8,13 @@ use App\Entity\StockBatch;
 use App\Entity\SupplierCreditNote;
 use App\Entity\SupplierCreditNoteHistory;
 use App\Entity\User;
+use App\Entity\PurchaseItem; // ✅ AJOUTÉ
 use App\Form\SupplierCreditNoteType;
 use App\Repository\PurchaseRepository;
 use App\Repository\StockBatchRepository;
 use App\Repository\SupplierCreditNoteRepository;
 use App\Repository\SupplierRepository;
+use App\Repository\PurchaseItemRepository; // ✅ AJOUTÉ
 use App\Service\SupplierCreditNoteService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,7 +33,7 @@ final class SupplierCreditNoteController extends AbstractController
 
     public function __construct(
         private readonly SluggerInterface $slugger,
-        private readonly EntityManagerInterface $entityManager  // 🔥 Injection de l'EntityManager
+        private readonly EntityManagerInterface $entityManager
     ) {}
 
     /**
@@ -52,7 +54,6 @@ final class SupplierCreditNoteController extends AbstractController
             return null;
         }
         
-        // 🔥 CORRECTION: Utilisation de l'entityManager injecté au lieu de $this->container->get()
         $hmaService = $this->entityManager
             ->getRepository(HmaService::class)
             ->find($hmaService->getId());
@@ -139,6 +140,7 @@ final class SupplierCreditNoteController extends AbstractController
         Request $request,
         int $batchId,
         StockBatchRepository $stockBatchRepository,
+        PurchaseItemRepository $purchaseItemRepository, // ✅ AJOUTÉ
         PurchaseRepository $purchaseRepository,
         SupplierCreditNoteService $service
     ): Response {
@@ -165,7 +167,13 @@ final class SupplierCreditNoteController extends AbstractController
             throw new AccessDeniedException('Ce lot ne vous appartient pas.');
         }
 
-        $purchase = $stockBatch->getPurchaseItem()?->getPurchase();
+        // ✅ CORRECTION : Récupérer le PurchaseItem via son ID
+        $purchaseItem = null;
+        if ($stockBatch->getPurchaseItemId()) {
+            $purchaseItem = $purchaseItemRepository->find($stockBatch->getPurchaseItemId());
+        }
+        
+        $purchase = $purchaseItem?->getPurchase();
         if (!$purchase) {
             throw $this->createNotFoundException('Aucune commande associée à ce lot');
         }
@@ -240,7 +248,6 @@ final class SupplierCreditNoteController extends AbstractController
             throw new AccessDeniedException('Cet avoir ne vous appartient pas.');
         }
 
-        // 🔥 Utilisation de l'entityManager injecté
         $histories = $this->entityManager
             ->getRepository(SupplierCreditNoteHistory::class)
             ->findBy(['creditNote' => $creditNote], ['performed_at' => 'ASC']);

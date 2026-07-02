@@ -35,11 +35,17 @@ class Category
     #[ORM\Column]
     private ?bool $is_active = true;
 
+    #[ORM\Column(options: ['default' => false])]
+    private bool $is_public = false;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updated_at = null;
+
+    #[ORM\Column(options: ['default' => true])]
+    private bool $company_public = true;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
@@ -157,6 +163,17 @@ class Category
         return $this;
     }
 
+    public function isPublic(): bool
+    {
+        return $this->is_public;
+    }
+
+    public function setIsPublic(bool $is_public): static
+    {
+        $this->is_public = $is_public;
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
@@ -179,6 +196,23 @@ class Category
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    public function isCompanyPublic(): bool
+    {
+        return $this->company_public;
+    }
+
+    public function setCompanyPublic(bool $company_public): static
+    {
+        $this->company_public = $company_public;
+        return $this;
+    }
+
+    // ✅ Méthode pour vérifier si la catégorie est visible sur la marketplace
+    public function isVisibleOnMarketplace(): bool
+    {
+        return $this->is_public && $this->company_public;
     }
 
     public function getParent(): ?self

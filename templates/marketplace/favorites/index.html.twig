@@ -1,0 +1,57 @@
+{# templates/marketplace/favorites/index.html.twig #}
+{% extends 'base_marketplace.html.twig' %}
+
+{% block title %}Mes favoris - HMA Market{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="h2 fw-bold mb-4">
+            <i class="fas fa-heart text-danger me-2"></i>
+            Mes favoris
+        </h1>
+    </div>
+</div>
+
+{% if favorites|length > 0 %}
+    <div class="row g-4">
+        {% for favorite in favorites %}
+            <div class="col-md-3 col-6">
+                <div class="product-card">
+                    <div class="product-image">
+                        {% if favorite.product.image %}
+                            <img src="{{ asset('uploads/products/' ~ favorite.product.image) }}" alt="{{ favorite.product.name }}">
+                        {% else %}
+                            <div class="placeholder">
+                                <i class="fas fa-box"></i>
+                            </div>
+                        {% endif %}
+                        <button class="favorite-btn active" onclick="toggleFavorite(this, {{ favorite.product.id }})">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="product-body">
+                        <div class="product-category">{{ favorite.product.category ? favorite.product.category.name : 'Non catégorisé' }}</div>
+                        <h6 class="product-name">{{ favorite.product.name }}</h6>
+                        <div class="product-price">
+                            {{ favorite.product.salePrice|number_format(0, ',', ' ') }} FCFA
+                        </div>
+                        <button class="add-to-cart mt-2" data-product-id="{{ favorite.product.id }}">
+                            <i class="fas fa-cart-plus me-1"></i>Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-heart fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">Aucun favori</h4>
+        <p class="text-muted">Ajoutez vos produits préférés en cliquant sur le cœur ❤️</p>
+        <a href="{{ path('marketplace_products') }}" class="btn btn-primary">
+            <i class="fas fa-arrow-left me-2"></i>Découvrir les produits
+        </a>
+    </div>
+{% endif %}
+{% endblock %}

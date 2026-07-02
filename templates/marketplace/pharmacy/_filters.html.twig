@@ -1,0 +1,184 @@
+{# templates/marketplace/pharmacy/_filters.html.twig #}
+
+<style>
+    .filters-container {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid var(--gray-200);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .filters-container .filter-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .filters-container .filter-item {
+        flex: 1;
+        min-width: 180px;
+    }
+
+    .filter-item label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+        display: block;
+        color: var(--dark-color);
+    }
+
+    .filter-item label i {
+        color: var(--primary-color);
+    }
+
+    .filter-item .form-select,
+    .filter-item .form-control {
+        border-radius: 12px;
+        border: 2px solid var(--gray-200);
+        padding: 0.6rem 1rem;
+        height: 48px;
+        transition: all 0.3s ease;
+        background-color: white;
+    }
+
+    .filter-item .form-control:focus,
+    .filter-item .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(4, 99, 241, 0.08);
+        outline: none;
+    }
+
+    .filter-item .form-control::placeholder {
+        color: #94a3b8;
+        font-size: 0.9rem;
+    }
+
+    .pharmacy-select-container {
+        display: none;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--gray-200);
+    }
+
+    .pharmacy-select-container.visible {
+        display: block;
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .filter-actions .btn {
+        border-radius: 12px;
+        padding: 0.6rem 1.5rem;
+        font-weight: 600;
+        height: 48px;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .filter-actions .btn-primary {
+        background: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        color: white;
+    }
+
+    .filter-actions .btn-primary:hover {
+        background: #0355d4;
+        border-color: #0355d4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(4, 99, 241, 0.3);
+    }
+
+    .filter-actions .btn-outline-secondary {
+        background: white;
+        border: 2px solid var(--gray-200);
+        color: var(--gray-500);
+    }
+
+    .filter-actions .btn-outline-secondary:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .filters-container { padding: 1rem; }
+        .filters-container .filter-group { flex-direction: column; }
+        .filter-item { min-width: 100%; }
+        .filter-actions { width: 100%; }
+        .filter-actions .btn { flex: 1; justify-content: center; }
+    }
+</style>
+
+<div class="filters-container">
+    <form method="get" id="filterForm" class="filter-group">
+        <input type="hidden" name="mode" value="{{ mode }}">
+        
+        <div class="filter-item">
+            <label for="countrySelect">
+                <i class="fas fa-globe text-primary me-1"></i> Pays
+            </label>
+            <select id="countrySelect" class="form-select select2">
+                <option value="">-- Sélectionnez un pays --</option>
+            </select>
+        </div>
+        
+        <div class="filter-item">
+            <label for="citySelect">
+                <i class="fas fa-city text-primary me-1"></i> Ville
+            </label>
+            <select id="citySelect" class="form-select select2" disabled>
+                <option value="">-- Sélectionnez une ville --</option>
+            </select>
+        </div>
+
+        {% if mode == 'pharmacy' %}
+        <div class="filter-item">
+            <label for="searchPharmacyInput">
+                <i class="fas fa-search text-primary me-1"></i> Rechercher
+            </label>
+            <input type="text" id="searchPharmacyInput" class="form-control" 
+                   placeholder="Nom de la pharmacie..." 
+                   value="{{ searchPharmacy|default('') }}">
+        </div>
+        {% endif %}
+
+        <div class="filter-actions">
+            <button type="button" id="applyFiltersBtn" class="btn btn-primary">
+                <i class="fas fa-check"></i> Appliquer
+            </button>
+            <button type="button" id="clearFiltersBtn" class="btn btn-outline-secondary">
+                <i class="fas fa-eraser"></i> Effacer
+            </button>
+        </div>
+    </form>
+
+    {# Sélecteur de pharmacie (visible uniquement en mode product) #}
+    <div id="pharmacySelector" class="pharmacy-select-container {% if mode == 'product' and selectedCity %}visible{% endif %}">
+        <div class="filter-group" style="margin-top: 0;">
+            <div class="filter-item" style="flex: 1;">
+                <label for="pharmacySelect">
+                    <i class="fas fa-store text-primary me-1"></i> Pharmacie
+                </label>
+                <select id="pharmacySelect" class="form-select select2" {% if not selectedCity %}disabled{% endif %}>
+                    <option value="">-- Sélectionnez une pharmacie --</option>
+                    {% if pharmacies|length > 0 %}
+                        {% for pharmacy in pharmacies %}
+                            <option value="{{ pharmacy.id }}" {% if selectedPharmacy == pharmacy.id %}selected{% endif %}>
+                                {{ pharmacy.name }}
+                            </option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+    </div>
+</div>

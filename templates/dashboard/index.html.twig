@@ -6,24 +6,7 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    /* Variables CSS */
-    :root {
-        --primary-color: #3498db;
-        --primary-light: #5dade2;
-        --primary-dark: #2980b9;
-        --success-color: #2ecc71;
-        --info-color: #3498db;
-        --warning-color: #f39c12;
-        --danger-color: #e74c3c;
-        --secondary-color: #95a5a6;
-        --dark-color: #2c3e50;
-        
-        --card-shadow: 0 6px 15px rgba(52, 152, 219, 0.1);
-        --card-shadow-hover: 0 12px 25px rgba(52, 152, 219, 0.15);
-        --border-radius-lg: 12px;
-        --border-radius-sm: 8px;
-        --transition-smooth: all 0.3s ease;
-    }
+    /* ✅ NE PAS REDÉFINIR :root ICI - Utiliser les variables de base.html.twig */
     
     /* Layout fix */
     .row {
@@ -234,14 +217,34 @@
         font-weight: 500;
     }
     
-    .movement-type.in {
+    .movement-type.purchase_in {
         background-color: rgba(46, 204, 113, 0.1);
         color: var(--success-color);
     }
     
-    .movement-type.out {
+    .movement-type.sale_out {
         background-color: rgba(231, 76, 60, 0.1);
         color: var(--danger-color);
+    }
+    
+    .movement-type.adjustment_in {
+        background-color: rgba(52, 152, 219, 0.1);
+        color: var(--info-color);
+    }
+    
+    .movement-type.adjustment_out {
+        background-color: rgba(243, 156, 18, 0.1);
+        color: var(--warning-color);
+    }
+    
+    .movement-type.return_in {
+        background-color: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+    }
+    
+    .movement-type.return_out {
+        background-color: rgba(149, 165, 166, 0.1);
+        color: var(--secondary-color);
     }
     
     .product-name {
@@ -438,59 +441,59 @@
 
     /* Welcome Card Moderne - Bleu */
     .welcome-card-modern {
-    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
-    border-radius: 16px;
-    padding: 2rem;
-    color: white;
-    box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
-    text-align: center;
-}
+        background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        color: white;
+        box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        text-align: center;
+    }
 
-.welcome-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
+    .welcome-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
 
-.welcome-greeting {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.welcome-details {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.detail-item {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(5px);
-    padding: 0.5rem 1.2rem;
-    border-radius: 30px;
-    font-size: 1rem;
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.detail-item i {
-    font-size: 1.1rem;
-    margin-right: 0.5rem;
-}
-
-@media (max-width: 768px) {
     .welcome-greeting {
-        font-size: 1.6rem;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+
     .welcome-details {
-        flex-direction: column;
-        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
     }
-}
+
+    .detail-item {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(5px);
+        padding: 0.5rem 1.2rem;
+        border-radius: 30px;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .detail-item i {
+        font-size: 1.1rem;
+        margin-right: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .welcome-greeting {
+            font-size: 1.6rem;
+        }
+        .welcome-details {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -580,7 +583,7 @@
                     </div>
                 </div>
 
-                <!-- Subscription Widget (conserve la ligne suivante inchangée) -->
+                <!-- Subscription Widget -->
                 <div class="subscription-widget-container fade-in" style="animation-delay: 0.2s">
                     {{ include('components/_subscription_widget.html.twig') }}
                 </div>
@@ -594,7 +597,7 @@
                                 <div class="card-header">
                                     <div>
                                         <h6 class="card-title">Produits Totaux</h6>
-                                        <div class="stat-number">0</div>
+                                        <div class="stat-number">{{ stats.total_products|default(0)|number_format(0, ',', ' ') }}</div>
                                         <div class="stat-subtitle">Articles en catalogue</div>
                                     </div>
                                     <div class="stat-icon-wrapper">
@@ -602,7 +605,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <a href="#" class="text-primary text-decoration-none small">
+                                    <a href="{{ path('app_admin_product_index') }}" class="text-primary text-decoration-none small">
                                         <i class="bi bi-arrow-right me-1"></i>
                                         Voir le catalogue
                                     </a>
@@ -618,7 +621,7 @@
                                 <div class="card-header">
                                     <div>
                                         <h6 class="card-title">Ventes Totales</h6>
-                                        <div class="stat-number">0</div>
+                                        <div class="stat-number">{{ stats.total_orders|default(0)|number_format(0, ',', ' ') }}</div>
                                         <div class="stat-subtitle">Transactions complétées</div>
                                     </div>
                                     <div class="stat-icon-wrapper">
@@ -626,7 +629,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <a href="#" class="text-success text-decoration-none small">
+                                    <a href="{{ path('app_orders_index') }}" class="text-success text-decoration-none small">
                                         <i class="bi bi-arrow-right me-1"></i>
                                         Voir les ventes
                                     </a>
@@ -642,15 +645,15 @@
                                 <div class="card-header">
                                     <div>
                                         <h6 class="card-title">Chiffre d'Affaires</h6>
-                                        <div class="stat-number">0 FCFA</div>
-                                        <div class="stat-subtitle">Total généré</div>
+                                        <div class="stat-number">{{ stats.total_revenue|default(0)|number_format(0, ',', ' ') }}</div>
+                                        <div class="stat-subtitle">FCFA générés</div>
                                     </div>
                                     <div class="stat-icon-wrapper">
                                         <i class="bi bi-currency-exchange"></i>
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <a href="#" class="text-info text-decoration-none small">
+                                    <a href="{{ path('app_financial_report_index') }}" class="text-info text-decoration-none small">
                                         <i class="bi bi-arrow-right me-1"></i>
                                         Voir rapports
                                     </a>
@@ -666,8 +669,8 @@
                                 <div class="card-header">
                                     <div>
                                         <h6 class="card-title">Clients</h6>
-                                        <div class="stat-number">0</div>
-                                        <div class="stat-subtitle">Clients actifs</div>
+                                        <div class="stat-number">{{ stats.total_customers|default(0)|number_format(0, ',', ' ') }}</div>
+                                        <div class="stat-subtitle">Clients uniques</div>
                                     </div>
                                     <div class="stat-icon-wrapper">
                                         <i class="bi bi-people"></i>
@@ -693,15 +696,15 @@
                                 <div class="card-header">
                                     <div>
                                         <h6 class="card-title">Ventes Aujourd'hui</h6>
-                                        <div class="stat-number">0</div>
-                                        <div class="stat-subtitle">0 FCFA générés</div>
+                                        <div class="stat-number">{{ stats.today_orders|default(0)|number_format(0, ',', ' ') }}</div>
+                                        <div class="stat-subtitle">{{ stats.today_revenue|default(0)|number_format(0, ',', ' ') }} FCFA</div>
                                     </div>
                                     <div class="stat-icon-wrapper">
                                         <i class="bi bi-cash-stack"></i>
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <span class="badge bg-light text-dark">En attente: 0</span>
+                                    <span class="badge bg-light text-dark">En attente: {{ stats.pending_orders|default(0) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -715,7 +718,7 @@
                                 <div class="card-header">
                                     <div>
                                         <h6 class="card-title">Stock Faible</h6>
-                                        <div class="stat-number">0</div>
+                                        <div class="stat-number">{{ stats.low_stock|default(0)|number_format(0, ',', ' ') }}</div>
                                         <div class="stat-subtitle">Produits à réapprovisionner</div>
                                     </div>
                                     <div class="stat-icon-wrapper">
@@ -723,7 +726,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <a href="#" class="text-danger text-decoration-none small">
+                                    <a href="{{ path('app_stock_report_index') }}" class="text-danger text-decoration-none small">
                                         <i class="bi bi-arrow-right me-1"></i>
                                         Réapprovisionner
                                     </a>
@@ -740,7 +743,7 @@
                                 <div class="card-header">
                                     <div>
                                         <h6 class="card-title">Utilisateurs</h6>
-                                        <div class="stat-number">0</div>
+                                        <div class="stat-number">{{ stats.total_users|default(0)|number_format(0, ',', ' ') }}</div>
                                         <div class="stat-subtitle">Comptes actifs</div>
                                     </div>
                                     <div class="stat-icon-wrapper">
@@ -764,7 +767,7 @@
                                 <div class="card-header">
                                     <div>
                                         <h6 class="card-title">En Attente</h6>
-                                        <div class="stat-number">0</div>
+                                        <div class="stat-number">{{ stats.pending_orders|default(0)|number_format(0, ',', ' ') }}</div>
                                         <div class="stat-subtitle">Commandes à traiter</div>
                                     </div>
                                     <div class="stat-icon-wrapper">
@@ -772,7 +775,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <a href="#" class="text-primary text-decoration-none small">
+                                    <a href="{{ path('app_orders_index') }}" class="text-primary text-decoration-none small">
                                         <i class="bi bi-arrow-right me-1"></i>
                                         Traiter maintenant
                                     </a>
@@ -793,18 +796,49 @@
                                         <i class="bi bi-arrow-left-right text-primary me-2"></i>
                                         Derniers Mouvements de Stock
                                     </h5>
-                                    <a href="#" class="text-primary text-decoration-none small">
+                                    <a href="{{ path('app_admin_stock_movement_index') }}" class="text-primary text-decoration-none small">
                                         Voir tout <i class="bi bi-arrow-right ms-1"></i>
                                     </a>
                                 </div>
                                 
                                 <div id="stockMovements">
-                                    <!-- Les mouvements seront chargés ici -->
-                                    <div class="empty-state">
-                                        <i class="bi bi-arrow-left-right"></i>
-                                        <p class="mb-0">Aucun mouvement de stock récent</p>
-                                        <small class="text-muted">Les mouvements apparaîtront ici</small>
-                                    </div>
+                                    {% if recentMovements is empty %}
+                                        <div class="empty-state">
+                                            <i class="bi bi-arrow-left-right"></i>
+                                            <p class="mb-0">Aucun mouvement de stock récent</p>
+                                            <small class="text-muted">Les mouvements apparaîtront ici</small>
+                                        </div>
+                                    {% else %}
+                                        {% for movement in recentMovements %}
+                                            <div class="movement-item">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex align-items-center mb-1">
+                                                            {# ✅ CORRIGÉ: Utilisation de movement_type au lieu de type #}
+                                                            {% set isInMovement = movement.movementType in ['purchase_in', 'adjustment_in', 'return_in', 'transfer_in'] %}
+                                                            <span class="movement-type {{ movement.movementType }} me-2">
+                                                                <i class="bi bi-{{ isInMovement ? 'arrow-down-left' : 'arrow-up-right' }} me-1"></i>
+                                                                {{ movement.movementTypeLabel }}
+                                                            </span>
+                                                        </div>
+                                                        <div class="product-name">{{ movement.product.name }}</div>
+                                                        <div class="movement-date">
+                                                            <i class="bi bi-calendar me-1"></i>
+                                                            {{ movement.createdAt|date('d/m/Y H:i') }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        {# ✅ CORRIGÉ: Utilisation de movement_type pour déterminer le signe #}
+                                                        {% set isPositive = movement.movementType in ['purchase_in', 'adjustment_in', 'return_in', 'transfer_in'] %}
+                                                        <div class="movement-quantity {{ isPositive ? 'text-success' : 'text-danger' }}">
+                                                            {{ isPositive ? '+' : '-' }}{{ movement.quantity|number_format(0, ',', ' ') }}
+                                                        </div>
+                                                        <small class="text-muted">{{ movement.product.unit ?? 'unités' }}</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -822,34 +856,34 @@
                                 <div class="row g-3">
                                     {% if is_granted('ROLE_CASHIER') %}
                                     <div class="col-12">
-                                        <button class="quick-action-btn w-100">
+                                        <a href="{{ isRestaurant ? path('restaurant_sale_index') : path('retail_sale_index') }}" class="quick-action-btn w-100 text-decoration-none">
                                             <i class="bi bi-cart-plus text-primary"></i>
                                             <span class="fw-medium">Nouvelle Vente</span>
-                                        </button>
+                                        </a>
                                     </div>
                                     {% endif %}
                                     
                                     {% if is_granted('ROLE_MANAGER') or is_granted('ROLE_ADMIN') %}
                                     <div class="col-12">
-                                        <button class="quick-action-btn w-100">
+                                        <a href="{{ path('app_admin_product_new') }}" class="quick-action-btn w-100 text-decoration-none">
                                             <i class="bi bi-plus-circle text-success"></i>
                                             <span class="fw-medium">Ajouter Produit</span>
-                                        </button>
+                                        </a>
                                     </div>
                                     {% endif %}
                                     
                                     {% if is_granted('ROLE_STOCK_MANAGER') %}
                                     <div class="col-12">
-                                        <button class="quick-action-btn w-100">
+                                        <a href="{{ path('app_stock_adjustment_index') }}" class="quick-action-btn w-100 text-decoration-none">
                                             <i class="bi bi-boxes text-warning"></i>
                                             <span class="fw-medium">Gérer Stock</span>
-                                        </button>
+                                        </a>
                                     </div>
                                     {% endif %}
                                     
                                     {% if is_granted('ROLE_ADMIN') %}
                                     <div class="col-12">
-                                        <a href="{{ path('app_user_new') }}" class="quick-action-btn w-100">
+                                        <a href="{{ path('app_user_new') }}" class="quick-action-btn w-100 text-decoration-none">
                                             <i class="bi bi-person-plus text-info"></i>
                                             <span class="fw-medium">Nouvel Utilisateur</span>
                                         </a>
@@ -921,6 +955,25 @@
                                         <div class="info-label">Pays</div>
                                         <p class="info-value">
                                             {{ hmaService.country ?? 'Non spécifié' }}
+                                        </p>
+                                    </div>
+                                    
+                                    {# ✅ AJOUT : Longitude et Latitude #}
+                                    <div class="info-item">
+                                        <div class="info-label">📍 Coordonnées GPS</div>
+                                        <p class="info-value">
+                                            {% if hmaService.longitude is not null and hmaService.latitude is not null %}
+                                                <span class="d-block">
+                                                    <i class="bi bi-geo-alt me-1"></i>
+                                                    Lat: {{ hmaService.latitude|number_format(6, ',', ' ') }}
+                                                </span>
+                                                <span class="d-block">
+                                                    <i class="bi bi-geo-alt me-1"></i>
+                                                    Lng: {{ hmaService.longitude|number_format(6, ',', ' ') }}
+                                                </span>
+                                            {% else %}
+                                                <span class="text-muted">Non spécifiées</span>
+                                            {% endif %}
                                         </p>
                                     </div>
                                     
@@ -1016,14 +1069,236 @@
     <!-- end main content-->
 </div>
 <!-- END layout-wrapper -->
+{# ... tout le contenu existant ... #}
+
+<!-- ✅ MODAL DE CONFIRMATION POUR LA VISIBILITÉ -->
+<div class="modal fade" id="visibilityConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header {% if company and company.companyPublic %}bg-warning{% else %}bg-success{% endif %} text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-shop me-2"></i>
+                    {% if company and company.companyPublic %}
+                        Masquer votre boutique
+                    {% else %}
+                        Rendre votre boutique visible
+                    {% endif %}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                {% if company and company.companyPublic %}
+                    <i class="bi bi-eye-slash text-warning" style="font-size: 4rem;"></i>
+                    <h4 class="mt-3">Masquer votre boutique ?</h4>
+                    <p class="text-muted">
+                        Votre boutique ne sera plus visible sur le marketplace.
+                        Les clients ne pourront plus voir vos produits.
+                    </p>
+                    <div class="alert alert-warning">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Vous pourrez toujours réactiver la visibilité à tout moment.
+                    </div>
+                {% else %}
+                    <i class="bi bi-eye text-success" style="font-size: 4rem;"></i>
+                    <h4 class="mt-3">Rendre votre boutique visible ?</h4>
+                    <p class="text-muted">
+                        Votre boutique sera visible sur le marketplace.
+                        Les clients pourront voir vos produits et passer des commandes.
+                    </p>
+                    <div class="alert alert-success">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Vous pourrez toujours masquer votre boutique à tout moment.
+                    </div>
+                {% endif %}
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="post" action="{{ path('app_dashboard_toggle_visibility') }}" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('toggle_visibility') }}">
+                    <input type="hidden" name="action" value="{{ company and company.companyPublic ? 'hide' : 'show' }}">
+                    <button type="submit" class="btn {% if company and company.companyPublic %}btn-warning{% else %}btn-success{% endif %}">
+                        <i class="bi {% if company and company.companyPublic %}bi-eye-slash{% else %}bi-eye{% endif %} me-2"></i>
+                        {% if company and company.companyPublic %}
+                            Masquer ma boutique
+                        {% else %}
+                            Rendre visible
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ MODAL PÉRIODES DE GARDE -->
+<div class="modal fade" id="guardPeriodsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--primary-color); color: white;">
+                <h5 class="modal-title">
+                    <i class="bi bi-clock-history me-2"></i>
+                    Modifier les périodes de garde
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{{ path('app_dashboard_guard_periods') }}">
+                <div class="modal-body">
+                    <input type="hidden" name="_token" value="{{ csrf_token('guard_periods') }}">
+                    
+                    <p class="text-muted mb-3">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Définissez les jours et horaires de garde pour votre pharmacie.
+                    </p>
+                    
+                    <div id="guardPeriodsContainer">
+                        {# ✅ Récupération correcte des périodes depuis l'objet company #}
+                        {% set guardPeriods = company ? company.guardPeriods|default([]) : [] %}
+                        
+                        {% if guardPeriods is empty %}
+                            <div class="text-center text-muted py-3">
+                                <i class="bi bi-clock fs-3 d-block mb-2"></i>
+                                Aucune période de garde configurée
+                            </div>
+                            <div class="guard-period-row d-flex gap-2 align-items-center mb-2">
+                                <select name="guard_periods[0][day]" class="form-select" style="flex: 1;">
+                                    <option value="">Choisir un jour</option>
+                                    <option value="monday">Lundi</option>
+                                    <option value="tuesday">Mardi</option>
+                                    <option value="wednesday">Mercredi</option>
+                                    <option value="thursday">Jeudi</option>
+                                    <option value="friday">Vendredi</option>
+                                    <option value="saturday">Samedi</option>
+                                    <option value="sunday">Dimanche</option>
+                                </select>
+                                <input type="time" name="guard_periods[0][start]" class="form-control" style="width: 120px;" placeholder="Début">
+                                <input type="time" name="guard_periods[0][end]" class="form-control" style="width: 120px;" placeholder="Fin">
+                                <button type="button" class="btn btn-danger remove-guard-period" disabled>
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        {% else %}
+                            {% for period in guardPeriods %}
+                                <div class="guard-period-row d-flex gap-2 align-items-center mb-2">
+                                    <select name="guard_periods[{{ loop.index0 }}][day]" class="form-select" style="flex: 1;">
+                                        <option value="">Choisir un jour</option>
+                                        <option value="monday" {% if period.day == 'monday' %}selected{% endif %}>Lundi</option>
+                                        <option value="tuesday" {% if period.day == 'tuesday' %}selected{% endif %}>Mardi</option>
+                                        <option value="wednesday" {% if period.day == 'wednesday' %}selected{% endif %}>Mercredi</option>
+                                        <option value="thursday" {% if period.day == 'thursday' %}selected{% endif %}>Jeudi</option>
+                                        <option value="friday" {% if period.day == 'friday' %}selected{% endif %}>Vendredi</option>
+                                        <option value="saturday" {% if period.day == 'saturday' %}selected{% endif %}>Samedi</option>
+                                        <option value="sunday" {% if period.day == 'sunday' %}selected{% endif %}>Dimanche</option>
+                                    </select>
+                                    <input type="time" name="guard_periods[{{ loop.index0 }}][start]" class="form-control" style="width: 120px;" value="{{ period.start ?? '' }}">
+                                    <input type="time" name="guard_periods[{{ loop.index0 }}][end]" class="form-control" style="width: 120px;" value="{{ period.end ?? '' }}">
+                                    <button type="button" class="btn btn-danger remove-guard-period">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="addGuardPeriod">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Ajouter une période
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn" style="background: var(--primary-color); color: white;">
+                        <i class="bi bi-save me-2"></i>
+                        Enregistrer les périodes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Welcome Machine Animation
-        const welcomeElement = document.getElementById('welcomeMessage');
+document.addEventListener('DOMContentLoaded', function() {
+    // ============================================
+    // 1. GESTION DES PÉRIODES DE GARDE
+    // ============================================
+    const container = document.getElementById('guardPeriodsContainer');
+    const addBtn = document.getElementById('addGuardPeriod');
+    
+    if (container && addBtn) {
+        let periodIndex = container.querySelectorAll('.guard-period-row').length || 0;
+
+        // Fonction pour réinitialiser les champs d'une ligne
+        function resetRow(row) {
+            row.querySelectorAll('select, input').forEach(el => el.value = '');
+        }
+
+        // Fonction pour créer une nouvelle ligne
+        function createRow(index) {
+            const row = document.createElement('div');
+            row.className = 'guard-period-row d-flex gap-2 align-items-center mb-2';
+            row.innerHTML = `
+                <select name="guard_periods[${index}][day]" class="form-select" style="flex: 1;">
+                    <option value="">Choisir un jour</option>
+                    <option value="monday">Lundi</option>
+                    <option value="tuesday">Mardi</option>
+                    <option value="wednesday">Mercredi</option>
+                    <option value="thursday">Jeudi</option>
+                    <option value="friday">Vendredi</option>
+                    <option value="saturday">Samedi</option>
+                    <option value="sunday">Dimanche</option>
+                </select>
+                <input type="time" name="guard_periods[${index}][start]" class="form-control" style="width: 120px;" placeholder="Début">
+                <input type="time" name="guard_periods[${index}][end]" class="form-control" style="width: 120px;" placeholder="Fin">
+                <button type="button" class="btn btn-danger remove-guard-period">
+                    <i class="bi bi-trash"></i>
+                </button>
+            `;
+            return row;
+        }
+
+        // Ajouter une période
+        addBtn.addEventListener('click', function() {
+            const row = createRow(periodIndex);
+            container.appendChild(row);
+            
+            // Gérer la suppression de la nouvelle ligne
+            const removeBtn = row.querySelector('.remove-guard-period');
+            removeBtn.addEventListener('click', function() {
+                const rows = container.querySelectorAll('.guard-period-row');
+                if (rows.length > 1) {
+                    row.remove();
+                } else {
+                    resetRow(row);
+                }
+            });
+            
+            periodIndex++;
+        });
+
+        // Supprimer une période (délégation d'événements)
+        container.addEventListener('click', function(e) {
+            const removeBtn = e.target.closest('.remove-guard-period');
+            if (removeBtn) {
+                const row = removeBtn.closest('.guard-period-row');
+                const rows = container.querySelectorAll('.guard-period-row');
+                if (rows.length > 1) {
+                    row.remove();
+                } else {
+                    resetRow(row);
+                }
+            }
+        });
+    }
+
+    // ============================================
+    // 2. WELCOME MACHINE ANIMATION
+    // ============================================
+    const welcomeElement = document.getElementById('welcomeMessage');
+    if (welcomeElement) {
         const fullName = "{{ app.user.fullName ?? app.user.companyName ?? 'Utilisateur' }}";
         const welcomeText = `Welcome ${fullName} ! 👋`;
         let index = 0;
@@ -1035,103 +1310,20 @@
                 index++;
                 setTimeout(typeWelcomeText, 100);
             } else {
-                // Keep cursor blinking for a while, then remove it
                 setTimeout(() => {
                     welcomeElement.innerHTML = welcomeText;
                 }, 2000);
             }
         }
 
-        // Start typing animation after a short delay
         setTimeout(typeWelcomeText, 500);
+    }
 
-        // Load Stock Movements (simulation)
-        function loadStockMovements() {
-            const movementsContainer = document.getElementById('stockMovements');
-            
-            // Simulation de données - À remplacer par une requête AJAX réelle
-            const sampleMovements = [
-                {
-                    id: 1,
-                    product: "Samsung Galaxy S23",
-                    type: "in",
-                    quantity: 50,
-                    date: new Date().toISOString(),
-                    reference: "IN-2024-001"
-                },
-                {
-                    id: 2,
-                    product: "iPhone 15 Pro",
-                    type: "out",
-                    quantity: 15,
-                    date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
-                    reference: "OUT-2024-015"
-                },
-                {
-                    id: 3,
-                    product: "MacBook Air M2",
-                    type: "in",
-                    quantity: 25,
-                    date: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
-                    reference: "IN-2024-002"
-                },
-                {
-                    id: 4,
-                    product: "Dell XPS 13",
-                    type: "out",
-                    quantity: 8,
-                    date: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
-                    reference: "OUT-2024-014"
-                }
-            ];
-
-            if (sampleMovements.length > 0) {
-                let html = '';
-                sampleMovements.forEach(movement => {
-                    const date = new Date(movement.date);
-                    const formattedDate = date.toLocaleDateString('fr-FR', { 
-                        day: '2-digit', 
-                        month: 'short',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    
-                    html += `
-                        <div class="movement-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <span class="movement-type ${movement.type} me-2">
-                                            <i class="bi bi-${movement.type === 'in' ? 'arrow-down-left' : 'arrow-up-right'} me-1"></i>
-                                            ${movement.type === 'in' ? 'Entrée' : 'Sortie'}
-                                        </span>
-                                        <small class="text-muted">${movement.reference}</small>
-                                    </div>
-                                    <div class="product-name">${movement.product}</div>
-                                    <div class="movement-date">
-                                        <i class="bi bi-calendar me-1"></i>
-                                        ${formattedDate}
-                                    </div>
-                                </div>
-                                <div class="text-end">
-                                    <div class="movement-quantity ${movement.type === 'in' ? 'text-success' : 'text-danger'}">
-                                        ${movement.type === 'in' ? '+' : '-'}${movement.quantity}
-                                    </div>
-                                    <small class="text-muted">unités</small>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                movementsContainer.innerHTML = html;
-            }
-        }
-
-        // Load movements after a delay
-        setTimeout(loadStockMovements, 1500);
-
-        // Counter animations
-        const counters = document.querySelectorAll('.stat-number');
+    // ============================================
+    // 3. COUNTER ANIMATIONS
+    // ============================================
+    const counters = document.querySelectorAll('.stat-number');
+    if (counters.length > 0) {
         const observerOptions = {
             threshold: 0.5,
             rootMargin: '0px 0px -100px 0px'
@@ -1141,7 +1333,7 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const element = entry.target;
-                    const target = parseInt(element.textContent) || 0;
+                    const target = parseInt(element.textContent.replace(/\s/g, '')) || 0;
                     if (target > 0) {
                         animateCounter(element, target);
                     }
@@ -1151,19 +1343,20 @@
         }, observerOptions);
 
         counters.forEach(counter => {
-            if (parseInt(counter.textContent) > 0) {
+            const value = parseInt(counter.textContent.replace(/\s/g, ''));
+            if (value > 0) {
                 counterObserver.observe(counter);
             }
         });
 
         function animateCounter(element, target) {
             let current = 0;
-            const increment = target / 100;
+            const increment = Math.ceil(target / 60);
             const duration = 1500;
-            const interval = duration / (target / increment);
+            const interval = Math.min(50, duration / 60);
             
             const timer = setInterval(() => {
-                current = Math.ceil(current + increment);
+                current = Math.min(current + increment, target);
                 element.textContent = current.toLocaleString('fr-FR');
                 
                 if (current >= target) {
@@ -1172,64 +1365,70 @@
                 }
             }, interval);
         }
+    }
 
-        // Quick Actions Handlers
-        document.querySelectorAll('.quick-action-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                const action = this.querySelector('span').textContent;
-                
-                // Simulation d'action - À remplacer par des vrais handlers
-                console.log(`Action rapide: ${action}`);
-                
-                // Feedback visuel
-                const originalBg = this.style.backgroundColor;
-                const originalColor = this.style.color;
-                this.style.backgroundColor = '#e8f4ff';
-                this.style.color = '#3498db';
-                
-                setTimeout(() => {
-                    this.style.backgroundColor = originalBg;
-                    this.style.color = originalColor;
-                }, 300);
-            });
-        });
-
-        // Update date/time
-        function updateDateTime() {
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('fr-FR', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            const timeStr = now.toLocaleTimeString('fr-FR', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+    // ============================================
+    // 4. QUICK ACTIONS HANDLERS
+    // ============================================
+    document.querySelectorAll('.quick-action-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            // Si c'est un lien, ne pas interférer
+            if (this.tagName === 'A') return;
             
-            // Optionnel: Mettre à jour un élément spécifique si nécessaire
-            const timeElements = document.querySelectorAll('.current-time');
-            timeElements.forEach(el => {
-                el.textContent = `${dateStr} - ${timeStr}`;
-            });
-        }
-
-        // Update time initially and every minute
-        updateDateTime();
-        setInterval(updateDateTime, 60000);
-        
-        // Card hover effects
-        const cards = document.querySelectorAll('.dashboard-card');
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-8px) scale(1.02)';
-            });
+            const action = this.querySelector('span')?.textContent || 'Action';
+            console.log(`Action rapide: ${action}`);
             
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
-            });
+            // Feedback visuel
+            const originalBg = this.style.backgroundColor;
+            const originalColor = this.style.color;
+            this.style.backgroundColor = 'rgba(52, 152, 219, 0.1)';
+            this.style.color = '#3498db';
+            
+            setTimeout(() => {
+                this.style.backgroundColor = originalBg;
+                this.style.color = originalColor;
+            }, 300);
         });
     });
+
+    // ============================================
+    // 5. DATE/TIME UPDATE
+    // ============================================
+    function updateDateTime() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('fr-FR', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        const timeStr = now.toLocaleTimeString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const timeElements = document.querySelectorAll('.current-time');
+        timeElements.forEach(el => {
+            el.textContent = `${dateStr} - ${timeStr}`;
+        });
+    }
+
+    updateDateTime();
+    setInterval(updateDateTime, 60000);
+
+    // ============================================
+    // 6. CARD HOVER EFFECTS
+    // ============================================
+    const cards = document.querySelectorAll('.dashboard-card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+});
 </script>
 {% endblock %}

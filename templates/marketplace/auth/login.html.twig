@@ -1,0 +1,100 @@
+{# templates/marketplace/auth/login.html.twig #}
+{% extends 'base_marketplace.html.twig' %}
+
+{% block title %}Connexion client - HMA Market{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <i class="fas fa-store fa-3x text-primary mb-3"></i>
+                    <h3 class="fw-bold">Connexion</h3>
+                    <p class="text-muted">Connectez-vous pour accéder à votre compte</p>
+                </div>
+
+                {# Flash messages #}
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }} alert-dismissible fade show rounded-3" role="alert">
+                            <i class="fas fa-{% if label == 'success' %}check-circle{% elseif label == 'danger' %}exclamation-circle{% elseif label == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                            {{ message|raw }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
+                {# Erreur de connexion #}
+                {% if error %}
+                    <div class="alert alert-danger rounded-3">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                {# ✅ Message spécifique pour compte non activé #}
+                {% if error and 'activer' in error.messageKey|lower %}
+                    <div class="alert alert-warning rounded-3">
+                        <i class="fas fa-envelope me-2"></i>
+                        <strong>Compte non activé :</strong> Vérifiez votre email ou 
+                        <a href="{{ path('marketplace_resend_verification', {email: last_username}) }}" class="alert-link fw-bold">
+                            renvoyer l'email de vérification
+                        </a>
+                    </div>
+                {% endif %}
+
+                <form method="post" action="{{ path('marketplace_login') }}">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email</label>
+                        <input type="email" 
+                               name="email" 
+                               class="form-control form-control-lg" 
+                               value="{{ last_username }}" 
+                               placeholder="votre@email.com"
+                               required 
+                               autofocus>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Mot de passe</label>
+                        <input type="password" 
+                               name="password" 
+                               class="form-control form-control-lg" 
+                               placeholder="••••••••"
+                               required>
+                    </div>
+
+                    <div class="mb-3 d-flex justify-content-between align-items-center">
+                        <div class="form-check">
+                            <input type="checkbox" 
+                                   name="_remember_me" 
+                                   class="form-check-input" 
+                                   id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Se souvenir de moi</label>
+                        </div>
+                        <a href="{{ path('marketplace_forgot_password') }}" class="text-decoration-none small">
+                            Mot de passe oublié ?
+                        </a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                    </button>
+
+                    <div class="text-center mt-3">
+                        <p class="text-muted small">
+                            Pas encore de compte ? 
+                            <a href="{{ path('marketplace_register') }}" class="text-primary fw-semibold">
+                                Inscrivez-vous
+                            </a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

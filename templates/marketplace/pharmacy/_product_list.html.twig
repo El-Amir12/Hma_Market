@@ -1,0 +1,455 @@
+{# templates/marketplace/pharmacy/_product_list.html.twig #}
+{# 
+    ATTENTION: Ce template n'est plus utilisé directement pour afficher une liste.
+    Les produits sont maintenant affichés dans un Select2 dans _product_mode.html.twig.
+    Ce template est conservé pour compatibilité mais n'est plus utilisé.
+    
+    Variables attendues:
+    - products: array
+    - selectedPharmacy: string
+    - selectedCountry: string
+    - selectedCity: string
+    - searchProduct: string|null
+    - selectedCategory: string|null
+    - selectedForm: string|null
+    - selectedDosage: string|null
+    - prescriptionRequired: string|null
+#}
+
+<style>
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 14px;
+        padding: 1.2rem;
+        border: 1px solid var(--gray-200);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        height: 100%;
+        position: relative;
+    }
+
+    .product-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        border-color: var(--primary-color);
+    }
+
+    .product-card .product-name {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 0.25rem;
+        font-size: 1rem;
+    }
+
+    .product-card .product-category {
+        font-size: 0.8rem;
+        color: var(--gray-500);
+        margin-bottom: 0.5rem;
+    }
+
+    .product-card .product-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .product-card .product-meta .meta-tag {
+        font-size: 0.7rem;
+        padding: 0.15rem 0.6rem;
+        border-radius: 50px;
+        background: var(--gray-100);
+        color: var(--gray-500);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .product-card .product-status {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .product-status.in-stock {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .product-status.in-stock i {
+        color: #16a34a;
+    }
+
+    .product-status.out-of-stock {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .product-status.out-of-stock i {
+        color: #dc2626;
+    }
+
+    .product-card .product-price {
+        font-weight: 700;
+        color: var(--primary-color);
+        font-size: 1.1rem;
+    }
+
+    .product-prescription {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.15rem 0.6rem;
+        border-radius: 50px;
+        background: #fef3c7;
+        color: #92400e;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .product-card .product-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--gray-100);
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .product-card .stock-info {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+    }
+
+    .product-results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .product-results-header .result-count {
+        font-weight: 600;
+        color: var(--dark-color);
+    }
+
+    .product-results-header .result-count i {
+        color: var(--primary-color);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 20px;
+        border: 2px dashed var(--gray-200);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h5 {
+        color: var(--dark-color);
+        font-weight: 700;
+    }
+
+    .empty-state .text-muted {
+        color: var(--gray-500);
+    }
+
+    @media (max-width: 768px) {
+        .product-grid { grid-template-columns: 1fr; }
+        .product-card .product-footer { flex-direction: column; align-items: flex-start; }
+        .product-results-header { flex-direction: column; align-items: flex-start; }
+    }
+</style>
+
+{# ============================================================ #}
+{# 1. EN-TÊTE DES RÉSULTATS                                     #}
+{# ============================================================ #}
+<div class="product-results-header">
+    <div class="result-count">
+        <i class="fas fa-box me-2"></i>
+        {{ products|length }} produit(s) trouvé(s)
+        {% if searchProduct|default('') %}
+            <span class="text-muted" style="font-weight: 400; font-size: 0.9rem;">
+                pour "{{ searchProduct }}"
+            </span>
+        {% endif %}
+    </div>
+    <div class="text-muted" style="font-size: 0.85rem;">
+        <i class="fas fa-info-circle me-1"></i>
+        Cliquez sur un produit pour voir ses détails
+    </div>
+</div>
+
+{# ============================================================ #}
+{# 2. GRILLE DES PRODUITS                                       #}
+{# ============================================================ #}
+{% if products|length > 0 %}
+    <div class="product-grid">
+        {% for product in products %}
+            <div class="product-card" 
+                 data-product='{{ {
+                     id: product.id,
+                     name: product.name,
+                     categoryName: product.category ? product.category.name : 'Non catégorisé',
+                     salePrice: product.salePrice,
+                     stockQuantity: product.stockQuantity,
+                     prescriptionRequired: product.prescriptionRequired,
+                     form: product.form,
+                     dosage: product.dosage,
+                     unit: product.unit,
+                     description: product.description,
+                     barcode: product.barcode,
+                     hmaService: product.hmaService
+                 }|json_encode|e('html_attr') }}'
+                 onclick="showProductDetail(this)">
+                <div class="product-name">{{ product.name }}</div>
+                
+                <div class="product-category">
+                    <i class="fas fa-tag me-1"></i>
+                    {{ product.category ? product.category.name : 'Non catégorisé' }}
+                </div>
+
+                <div class="product-meta">
+                    {% if product.form %}
+                        <span class="meta-tag">
+                            <i class="fas fa-capsules"></i> {{ product.form }}
+                        </span>
+                    {% endif %}
+                    {% if product.dosage %}
+                        <span class="meta-tag">
+                            <i class="fas fa-weight"></i> {{ product.dosage }}
+                        </span>
+                    {% endif %}
+                    {% if product.unit %}
+                        <span class="meta-tag">
+                            <i class="fas fa-ruler"></i> {{ product.unit }}
+                        </span>
+                    {% endif %}
+                    {% if product.prescriptionRequired %}
+                        <span class="product-prescription">
+                            <i class="fas fa-prescription-bottle"></i> Ordonnance
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div class="product-footer">
+                    <div>
+                        {% set currentStock = product.stockQuantity|default(0) %}
+                        {% if currentStock > 0 %}
+                            <span class="product-status in-stock">
+                                <i class="fas fa-check-circle"></i> Disponible
+                            </span>
+                            <span class="stock-info">
+                                ({{ currentStock }} en stock)
+                            </span>
+                        {% else %}
+                            <span class="product-status out-of-stock">
+                                <i class="fas fa-times-circle"></i> Non disponible
+                            </span>
+                        {% endif %}
+                    </div>
+                    <span class="product-price">
+                        {{ product.salePrice|price_with_currency(product.hmaService) }}
+                    </span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{# ============================================================ #}
+{# 3. AUCUN PRODUIT TROUVÉ                                      #}
+{# ============================================================ #}
+{% else %}
+    <div class="empty-state">
+        <i class="fas fa-box-open"></i>
+        <h5>Aucun produit trouvé</h5>
+        <p class="text-muted">
+            {% set hasFilters = selectedCategory or selectedForm or selectedDosage or prescriptionRequired is not null %}
+            {% if hasFilters or searchProduct|default('') %}
+                Aucun produit ne correspond à vos critères de recherche.
+                <br>
+                <span style="font-size: 0.85rem;">
+                    <i class="fas fa-lightbulb me-1"></i>
+                    Essayez de modifier vos filtres ou d'élargir votre recherche.
+                </span>
+            {% else %}
+                Aucun produit disponible dans cette pharmacie pour le moment.
+            {% endif %}
+        </p>
+        {% if hasFilters or searchProduct|default('') %}
+            <a href="{{ path('marketplace_pharmacy_search', {
+                mode: 'product', 
+                country: selectedCountry, 
+                city: selectedCity, 
+                pharmacy: selectedPharmacy
+            }) }}" class="btn btn-primary mt-3">
+                <i class="fas fa-undo me-1"></i>Voir tous les produits
+            </a>
+        {% endif %}
+    </div>
+{% endif %}
+
+{# ============================================================ #}
+{# 4. MODAL DÉTAIL PRODUIT                                      #}
+{# ============================================================ #}
+<div class="modal fade product-detail-modal" id="productDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productDetailTitle">Détail du produit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body" id="productDetailBody">
+                <div class="text-center py-4">
+                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ============================================================ #
+    // 1. AFFICHER LE DÉTAIL D'UN PRODUIT                          #
+    // ============================================================ #
+    window.showProductDetail = function(element) {
+        try {
+            const productData = element.dataset.product;
+            if (!productData) return;
+            
+            const product = JSON.parse(productData);
+            
+            const body = document.getElementById('productDetailBody');
+            const title = document.getElementById('productDetailTitle');
+            
+            title.textContent = product.name || 'Détail du produit';
+            
+            const stock = product.stockQuantity || 0;
+            const statusClass = stock > 0 ? 'in-stock' : 'out-of-stock';
+            const statusText = stock > 0 ? 'Disponible' : 'Non disponible';
+            const statusIcon = stock > 0 ? 'fa-check-circle' : 'fa-times-circle';
+            
+            body.innerHTML = `
+                <div class="container-fluid p-0">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="mb-3">
+                                <h6 class="text-muted"><i class="fas fa-tag me-1"></i> Catégorie</h6>
+                                <p class="mb-0">${product.categoryName || 'Non catégorisé'}</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <h6 class="text-muted"><i class="fas fa-capsules me-1"></i> Forme</h6>
+                                        <p class="mb-0">${product.form || 'Non spécifiée'}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <h6 class="text-muted"><i class="fas fa-weight me-1"></i> Dosage</h6>
+                                        <p class="mb-0">${product.dosage || 'Non spécifié'}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <h6 class="text-muted"><i class="fas fa-ruler me-1"></i> Unité</h6>
+                                <p class="mb-0">${product.unit || 'Non spécifiée'}</p>
+                            </div>
+
+                            ${product.description ? `
+                                <div class="mb-3">
+                                    <h6 class="text-muted"><i class="fas fa-align-left me-1"></i> Description</h6>
+                                    <p class="mb-0">${product.description}</p>
+                                </div>
+                            ` : ''}
+                            
+                            ${product.barcode ? `
+                                <div class="mb-3">
+                                    <h6 class="text-muted"><i class="fas fa-barcode me-1"></i> Code-barres</h6>
+                                    <p class="mb-0" style="font-family: monospace;">${product.barcode}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="card bg-light p-3">
+                                <div class="mb-3">
+                                    <h6 class="text-muted">Prix</h6>
+                                    <p class="h3 text-primary mb-0">
+                                        ${product.salePrice ? product.salePrice + ' €' : 'Prix non défini'}
+                                    </p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <h6 class="text-muted">Disponibilité</h6>
+                                    ${stock > 0 ? `
+                                        <span class="product-status in-stock">
+                                            <i class="fas fa-check-circle"></i> Disponible
+                                            <span class="text-muted" style="font-weight: 400; font-size: 0.75rem;">(${stock} en stock)</span>
+                                        </span>
+                                    ` : `
+                                        <span class="product-status out-of-stock">
+                                            <i class="fas fa-times-circle"></i> Non disponible
+                                        </span>
+                                    `}
+                                </div>
+
+                                ${product.prescriptionRequired ? `
+                                    <div>
+                                        <h6 class="text-muted">Prescription</h6>
+                                        <span class="prescription-badge">
+                                            <i class="fas fa-prescription-bottle"></i> Ordonnance requise
+                                        </span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const modal = new bootstrap.Modal(document.getElementById('productDetailModal'));
+            modal.show();
+            
+        } catch (e) {
+            console.error('Erreur lors de l\'affichage du produit:', e);
+            const body = document.getElementById('productDetailBody');
+            if (body) {
+                body.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Une erreur est survenue lors du chargement des détails du produit.
+                    </div>
+                `;
+            }
+        }
+    };
+});
+</script>

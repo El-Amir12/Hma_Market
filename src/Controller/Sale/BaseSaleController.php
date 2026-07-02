@@ -12,6 +12,7 @@ use App\Service\Sale\SaleService;
 use App\Service\Sale\PromotionCalculator;
 use App\Service\UnitConverter;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface; // ✅ AJOUTER CET IMPORT
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +28,8 @@ abstract class BaseSaleController extends AbstractController
         protected EntityManagerInterface $entityManager,
         protected SaleService $saleService,
         protected PromotionCalculator $promotionCalculator,
-        protected UnitConverter $unitConverter
+        protected UnitConverter $unitConverter,
+        protected LoggerInterface $logger // ✅ AJOUTER CE PARAMÈTRE
     ) {
     }
     
@@ -84,7 +86,7 @@ abstract class BaseSaleController extends AbstractController
                     'unit_price' => (float) $item['unit_price'],
                     'total_price' => (float) $item['total_price'],
                     'quantity' => (int) $item['quantity'],
-                    'notes' => $item['notes'] ?? null, // 🔥 Inclure les notes
+                    'notes' => $item['notes'] ?? null,
                     'original_unit_price' => (float) ($item['original_unit_price'] ?? $item['unit_price']),
                     'has_promotion' => (bool) ($item['has_promotion'] ?? false),
                     'prescription_required' => (bool) ($item['prescription_required'] ?? false),
@@ -100,6 +102,7 @@ abstract class BaseSaleController extends AbstractController
                 'count' => count($items)
             ]);
         } catch (\Exception $e) {
+            $this->logger->error('Erreur cartData', ['error' => $e->getMessage()]);
             return $this->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -116,14 +119,18 @@ abstract class BaseSaleController extends AbstractController
         $this->checkSaleAccess();
         
         $quantity = (int) $request->request->get('quantity', 1);
-        $notes = $request->request->get('notes'); // 🔥 Récupérer les notes
+        $notes = $request->request->get('notes');
+        
+        $this->logger->info('Tentative d\'ajout au panier', [
+            'id' => $id,
+            'quantity' => $quantity
+        ]);
         
         try {
             $recipe = $this->entityManager->getRepository(Recipe::class)->find($id);
             if ($recipe) {
-                // ✅ Vérifications avant ajout
                 $this->validateRecipeBeforeAdd($recipe, $quantity);
-                $cartItem = $this->saleService->addRecipeToCart($recipe, $quantity, $notes); // 🔥 Passer les notes
+                $cartItem = $this->saleService->addRecipeToCart($recipe, $quantity, $notes);
                 return $this->json([
                     'success' => true,
                     'cart_item' => $cartItem,
@@ -137,9 +144,8 @@ abstract class BaseSaleController extends AbstractController
                 return $this->json(['error' => 'Produit ou plat non trouvé'], 404);
             }
             
-            // ✅ Vérifications avant ajout
             $this->validateProductBeforeAdd($product, $quantity);
-            $cartItem = $this->saleService->addProductToCart($product, $quantity, $notes); // 🔥 Passer les notes
+            $cartItem = $this->saleService->addProductToCart($product, $quantity, $notes);
             
             return $this->json([
                 'success' => true,
@@ -148,6 +154,10 @@ abstract class BaseSaleController extends AbstractController
                 'cart_count' => count($this->saleService->getCart())
             ]);
         } catch (\Exception $e) {
+            $this->logger->error('Erreur ajout panier', [
+                'id' => $id,
+                'error' => $e->getMessage()
+            ]);
             return $this->json(['error' => $e->getMessage()], 400);
         }
     }
@@ -157,26 +167,24 @@ abstract class BaseSaleController extends AbstractController
      */
     private function validateProductBeforeAdd(Product $product, int $quantity): void
     {
-        // Vérifier si le produit est actif
         if (!$product->isActive()) {
             throw new \Exception('Ce produit n\'est pas disponible à la vente.');
         }
         
-        // Vérifier si l'abonnement est actif
         if (!$product->isSubscriptionActive()) {
             throw new \Exception('Ce produit n\'est pas disponible actuellement.');
         }
         
-        // Vérifier le stock
-        if ($product->getStockQuantity() < $quantity) {
+        // Vérifier le stock total (incluant les lots)
+        $totalStock = $this->getProductTotalStock($product);
+        if ($totalStock < $quantity) {
             throw new \Exception(sprintf(
                 'Stock insuffisant. Disponible: %d %s',
-                $product->getStockQuantity(),
+                $totalStock,
                 $product->getUnit() ?? 'unités'
             ));
         }
         
-        // Vérifier si le produit a une date d'expiration
         if ($product->hasExpiryDate() && $product->getExpiryDate() < new \DateTime()) {
             throw new \Exception('Ce produit a expiré et ne peut plus être vendu.');
         }
@@ -187,22 +195,22 @@ abstract class BaseSaleController extends AbstractController
      */
     private function validateRecipeBeforeAdd(Recipe $recipe, int $quantity): void
     {
-        // Vérifier si la recette est active
         if (!$recipe->isActive()) {
             throw new \Exception('Ce plat n\'est pas disponible à la vente.');
         }
         
-        // Vérifier si l'abonnement est actif
         if (!$recipe->isSubscriptionActive()) {
             throw new \Exception('Ce plat n\'est pas disponible actuellement.');
         }
         
-        // Vérifier la disponibilité des ingrédients
         foreach ($recipe->getRecipeItems() as $item) {
             $product = $item->getProduct();
+            if (!$product) {
+                throw new \Exception(sprintf('Produit introuvable pour l\'ingrédient de la recette "%s"', $recipe->getName()));
+            }
+            
             $neededQuantity = $item->getQuantity() * $quantity;
             
-            // Conversion d'unité si nécessaire
             if ($item->getUnit() && $product->getUnit()) {
                 $neededQuantity = $this->unitConverter->convert(
                     $neededQuantity,
@@ -211,17 +219,34 @@ abstract class BaseSaleController extends AbstractController
                 );
             }
             
-            if ($product->getStockQuantity() < $neededQuantity) {
+            $totalStock = $this->getProductTotalStock($product);
+            if ($totalStock < $neededQuantity) {
                 throw new \Exception(sprintf(
-                    'Stock insuffisant pour l\'ingrédient "%s". Besoin: %.2f %s, Disponible: %d %s',
+                    'Stock insuffisant pour l\'ingrédient "%s". Besoin: %.2f %s, Disponible: %.2f %s',
                     $product->getName(),
                     $neededQuantity,
                     $product->getUnit() ?? 'unité',
-                    $product->getStockQuantity(),
+                    $totalStock,
                     $product->getUnit() ?? 'unité'
                 ));
             }
         }
+    }
+
+    /**
+     * ✅ Calcule le stock total d'un produit (stock_quantity + lots actifs)
+     */
+    private function getProductTotalStock(Product $product): int
+    {
+        $totalStock = $product->getStockQuantity() ?? 0;
+        
+        foreach ($product->getStockBatches() as $batch) {
+            if ($batch->isActive() && $batch->getCurrentQuantity() > 0) {
+                $totalStock += $batch->getCurrentQuantity();
+            }
+        }
+        
+        return $totalStock;
     }
 
     #[Route('/sale/update-quantity/{type}/{id}', name: 'sale_update_quantity', methods: ['PUT'])]
@@ -241,21 +266,25 @@ abstract class BaseSaleController extends AbstractController
         }
         
         try {
-            // ✅ Vérifications supplémentaires avant mise à jour
             if ($type === 'product') {
                 $product = $this->entityManager->getRepository(Product::class)->find($id);
-                if ($product && $product->getStockQuantity() < $quantity) {
-                    return $this->json(['error' => sprintf(
-                        'Stock insuffisant. Disponible: %d %s',
-                        $product->getStockQuantity(),
-                        $product->getUnit() ?? 'unités'
-                    )], 400);
+                if ($product) {
+                    $totalStock = $this->getProductTotalStock($product);
+                    if ($totalStock < $quantity) {
+                        return $this->json(['error' => sprintf(
+                            'Stock insuffisant. Disponible: %d %s',
+                            $totalStock,
+                            $product->getUnit() ?? 'unités'
+                        )], 400);
+                    }
                 }
             } else {
                 $recipe = $this->entityManager->getRepository(Recipe::class)->find($id);
                 if ($recipe) {
                     foreach ($recipe->getRecipeItems() as $item) {
                         $product = $item->getProduct();
+                        if (!$product) continue;
+                        
                         $neededQuantity = $item->getQuantity() * $quantity;
                         
                         if ($item->getUnit() && $product->getUnit()) {
@@ -266,7 +295,8 @@ abstract class BaseSaleController extends AbstractController
                             );
                         }
                         
-                        if ($product->getStockQuantity() < $neededQuantity) {
+                        $totalStock = $this->getProductTotalStock($product);
+                        if ($totalStock < $neededQuantity) {
                             return $this->json(['error' => sprintf(
                                 'Stock insuffisant pour l\'ingrédient "%s"',
                                 $product->getName()
@@ -284,6 +314,7 @@ abstract class BaseSaleController extends AbstractController
                 'cart_total' => $this->saleService->getCartTotal()
             ]);
         } catch (\Exception $e) {
+            $this->logger->error('Erreur updateQuantity', ['error' => $e->getMessage()]);
             return $this->json(['error' => $e->getMessage()], 400);
         }
     }
@@ -302,6 +333,7 @@ abstract class BaseSaleController extends AbstractController
                 'cart_count' => count($this->saleService->getCart())
             ]);
         } catch (\Exception $e) {
+            $this->logger->error('Erreur removeItem', ['error' => $e->getMessage()]);
             return $this->json(['error' => $e->getMessage()], 400);
         }
     }
@@ -324,34 +356,40 @@ abstract class BaseSaleController extends AbstractController
     {
         $this->checkSaleAccess();
         
-        /** @var User $user */
-        $user = $this->getUser();
-        $hmaService = $this->getCurrentHmaService();
-        
-        if (!$hmaService) {
-            return $this->json(['error' => 'Aucune entreprise associée'], 400);
-        }
-        
-        $customerName = $request->request->get('customer_name');
-        $customerPhone = $request->request->get('customer_phone');
-        $paymentMethod = $request->request->get('payment_method');
-        $amountPaid = (float) $request->request->get('amount_paid', 0);
-        $notes = $request->request->get('notes');
-        
-        if (!$customerPhone) {
-            return $this->json(['error' => 'Le téléphone du client est requis'], 400);
-        }
-        
-        if (!in_array($paymentMethod, self::PAYMENT_METHODS)) {
-            return $this->json(['error' => 'Mode de paiement invalide'], 400);
-        }
-        
-        $cartTotal = $this->saleService->getCartTotal();
-        if ($amountPaid < $cartTotal) {
-            return $this->json(['error' => sprintf('Montant insuffisant. Total: %s FCFA', number_format($cartTotal, 0, ',', ' '))], 400);
-        }
-        
         try {
+            /** @var User $user */
+            $user = $this->getUser();
+            $hmaService = $this->getCurrentHmaService();
+            
+            if (!$hmaService) {
+                return $this->json(['error' => 'Aucune entreprise associée'], 400);
+            }
+            
+            $customerName = $request->request->get('customer_name');
+            $customerPhone = $request->request->get('customer_phone');
+            $paymentMethod = $request->request->get('payment_method');
+            $amountPaid = (float) $request->request->get('amount_paid', 0);
+            $notes = $request->request->get('notes');
+            
+            $this->logger->info('Checkout - Données reçues', [
+                'customer_phone' => $customerPhone,
+                'payment_method' => $paymentMethod,
+                'amount_paid' => $amountPaid
+            ]);
+            
+            if (!$customerPhone) {
+                return $this->json(['error' => 'Le téléphone du client est requis'], 400);
+            }
+            
+            if (!in_array($paymentMethod, self::PAYMENT_METHODS)) {
+                return $this->json(['error' => 'Mode de paiement invalide'], 400);
+            }
+            
+            $cartTotal = $this->saleService->getCartTotal();
+            if ($amountPaid < $cartTotal) {
+                return $this->json(['error' => sprintf('Montant insuffisant. Total: %s FCFA', number_format($cartTotal, 0, ',', ' '))], 400);
+            }
+            
             $order = $this->saleService->validateSale(
                 $user,
                 $hmaService,
@@ -362,6 +400,11 @@ abstract class BaseSaleController extends AbstractController
                 $notes
             );
             
+            $this->logger->info('Vente validée', [
+                'order_id' => $order->getId(),
+                'order_number' => $order->getOrderNumber()
+            ]);
+            
             return $this->json([
                 'success' => true,
                 'message' => 'Vente enregistrée avec succès',
@@ -371,7 +414,11 @@ abstract class BaseSaleController extends AbstractController
                 'redirect_url' => $this->generateUrl('sale_receipt', ['id' => $order->getId()])
             ]);
         } catch (\Exception $e) {
-            return $this->json(['error' => $e->getMessage()], 400);
+            $this->logger->error('Erreur checkout', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return $this->json(['error' => $e->getMessage()], 500);
         }
     }
     
@@ -407,6 +454,7 @@ abstract class BaseSaleController extends AbstractController
                 'cart_item' => $cartItem
             ]);
         } catch (\Exception $e) {
+            $this->logger->error('Erreur updateNotes', ['error' => $e->getMessage()]);
             return $this->json(['error' => $e->getMessage()], 400);
         }
     }

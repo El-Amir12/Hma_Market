@@ -1,0 +1,21 @@
+{# templates/marketplace/pharmacy/_category_options.html.twig #}
+{# 
+    Variables attendues:
+    - categories: array des catégories avec level (id, name, level, productCount)
+    - selected: id de la catégorie sélectionnée
+#}
+
+{% if categories|length > 0 %}
+    {% for category in categories %}
+        <option value="{{ category.id }}" {% if category.id == selected %}selected{% endif %}>
+            {% for i in 0..category.level %}
+                &nbsp;&nbsp;
+            {% endfor %}
+            {% if category.level > 0 %}↳{% endif %}
+            {{ category.name }}
+            <span class="text-muted">({{ category.productCount }})</span>
+        </option>
+    {% endfor %}
+{% else %}
+    <option value="" disabled>Aucune catégorie disponible</option>
+{% endif %}

@@ -278,6 +278,8 @@ class PurchaseFlowService
 
     /**
      * Réceptionne une commande et crée les lots
+     * ✅ CORRIGÉ : NE PAS modifier stock_quantity
+     * ✅ CORRIGÉ : Détacher le produit pour éviter les mises à jour automatiques
      */
     public function receivePurchase(Purchase $purchase, array $batchData): void
     {
@@ -288,6 +290,8 @@ class PurchaseFlowService
         $this->entityManager->beginTransaction();
 
         try {
+            $processedProducts = []; // Pour suivre les produits déjà traités
+
             foreach ($purchase->getPurchaseItems() as $item) {
                 $product = $item->getProduct();
                 $data = $batchData[$item->getId()] ?? [];
@@ -336,6 +340,7 @@ class PurchaseFlowService
                     $batchNumber = $this->generateBatchNumber($product);
                 }
 
+                // ✅ Création du lot
                 $stockBatch = new StockBatch();
                 $stockBatch->setBatchNumber($batchNumber);
                 $stockBatch->setInitialQuantity($receivedQuantity);
@@ -359,7 +364,7 @@ class PurchaseFlowService
 
                 $this->entityManager->persist($stockBatch);
 
-                // ✅ CORRECTION: Utiliser 'purchase_in' au lieu de 'PURCHASE'
+                // ✅ Mouvement de stock
                 $movement = new StockMovement();
                 $movement->setMovementType('purchase_in');
                 $movement->setQuantity($receivedQuantity);
@@ -375,8 +380,36 @@ class PurchaseFlowService
 
                 $this->entityManager->persist($movement);
 
-                $product->setStockQuantity($product->getStockQuantity() + $receivedQuantity);
-                $this->entityManager->persist($product);
+                // ❌ SUPPRIMÉ : $product->setStockQuantity($product->getStockQuantity() + $receivedQuantity);
+                // ✅ stock_quantity reste inchangé, seul le lot est créé
+                
+                // ✅ AJOUT : Détacher le produit pour éviter les mises à jour automatiques
+                // Cela empêche les Lifecycle Callbacks de modifier stock_quantity
+                if (!in_array($product->getId(), $processedProducts)) {
+                    $this->entityManager->detach($product);
+                    $processedProducts[] = $product->getId();
+                }
+                
+                $this->logger->info('Lot créé pour réception', [
+                    'product_id' => $product->getId(),
+                    'product_name' => $product->getName(),
+                    'quantity' => $receivedQuantity,
+                    'batch_number' => $batchNumber
+                ]);
+            }
+
+            // ✅ Recharger le produit pour avoir une instance gérée si nécessaire
+            // pour les opérations ultérieures
+            foreach ($processedProducts as $productId) {
+                $product = $this->entityManager->getRepository(Product::class)->find($productId);
+                if ($product) {
+                    // Le stock_quantity n'est pas modifié
+                    $this->logger->info('Stock quantity après réception', [
+                        'product_id' => $product->getId(),
+                        'product_name' => $product->getName(),
+                        'stock_quantity' => $product->getStockQuantity()
+                    ]);
+                }
             }
 
             $purchase->calculateTotalAmount();
@@ -394,8 +427,9 @@ class PurchaseFlowService
 
             $this->notificationService->sendPurchaseReceivedConfirmation($purchase);
 
-            $this->logger->info('Commande réceptionnée', [
+            $this->logger->info('Commande réceptionnée avec succès', [
                 'purchase_id' => $purchase->getId(),
+                'items_count' => count($purchase->getPurchaseItems())
             ]);
 
         } catch (\Exception $e) {
@@ -491,6 +525,42 @@ class PurchaseFlowService
                 'purchase_id' => $purchase->getId(),
                 'error' => $e->getMessage()
             ]);
+        }
+    }
+
+    /**
+     * Met à jour le stock d'un produit à partir des lots
+     * ✅ Nouvelle méthode pour recalculer stock_quantity si nécessaire
+     */
+    public function updateProductStockFromBatches(Product $product): void
+    {
+        $totalStock = 0;
+        foreach ($product->getStockBatches() as $batch) {
+            if ($batch->isActive() && $batch->getCurrentQuantity() > 0) {
+                $totalStock += $batch->getCurrentQuantity();
+            }
+        }
+        $product->setStockQuantity($totalStock);
+        $this->entityManager->persist($product);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Synchronise le stock de tous les produits d'une commande
+     * ✅ Nouvelle méthode pour recalculer tous les stocks après réception
+     */
+    public function syncStockAfterReceipt(Purchase $purchase): void
+    {
+        foreach ($purchase->getPurchaseItems() as $item) {
+            $product = $item->getProduct();
+            if ($product) {
+                $this->updateProductStockFromBatches($product);
+                $this->logger->info('Stock synchronisé pour le produit', [
+                    'product_id' => $product->getId(),
+                    'product_name' => $product->getName(),
+                    'new_stock' => $product->getStockQuantity()
+                ]);
+            }
         }
     }
 }

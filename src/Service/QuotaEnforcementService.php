@@ -21,7 +21,6 @@ class QuotaEnforcementService
 
     /**
      * Applique les quotas actuels à toutes les entreprises.
-     * Retourne un tableau associatif avec les totaux de désactivations/réactivations.
      */
     public function enforceAllQuotas(): array
     {
@@ -32,29 +31,47 @@ class QuotaEnforcementService
             'supplier' => ['deactivated' => 0, 'reactivated' => 0],
             'recipe' => ['deactivated' => 0, 'reactivated' => 0],
             'category_recipe' => ['deactivated' => 0, 'reactivated' => 0],
+            'public_status' => ['set_public' => 0, 'set_private' => 0],
         ];
 
         foreach ($companies as $company) {
             $results = $this->enforceQuotas($company);
-            foreach ($results as $type => $counts) {
-                $totalResults[$type]['deactivated'] += $counts['deactivated'];
-                $totalResults[$type]['reactivated'] += $counts['reactivated'];
+            
+            $totalResults['product']['deactivated'] += $results['product']['deactivated'];
+            $totalResults['product']['reactivated'] += $results['product']['reactivated'];
+            $totalResults['category']['deactivated'] += $results['category']['deactivated'];
+            $totalResults['category']['reactivated'] += $results['category']['reactivated'];
+            $totalResults['supplier']['deactivated'] += $results['supplier']['deactivated'];
+            $totalResults['supplier']['reactivated'] += $results['supplier']['reactivated'];
+            $totalResults['recipe']['deactivated'] += $results['recipe']['deactivated'];
+            $totalResults['recipe']['reactivated'] += $results['recipe']['reactivated'];
+            $totalResults['category_recipe']['deactivated'] += $results['category_recipe']['deactivated'];
+            $totalResults['category_recipe']['reactivated'] += $results['category_recipe']['reactivated'];
+            
+            if (isset($results['public_status'])) {
+                $totalResults['public_status']['set_public'] += $results['public_status']['set_public'];
+                $totalResults['public_status']['set_private'] += $results['public_status']['set_private'];
             }
         }
+        
         $this->em->flush();
         $this->logger->info('Quotas appliqués pour toutes les entreprises.', $totalResults);
         return $totalResults;
     }
 
     /**
-     * Applique les quotas actuels à une entreprise.
-     * Retourne un tableau associatif par type d'entité avec 'deactivated' et 'reactivated'.
+     * ✅ APPLIQUE LES QUOTAS POUR UNE ENTREPRISE
+     * C'est la méthode clé qui met à jour is_public
      */
     public function enforceQuotas(HmaService $company): array
     {
         $limits = $company->getCurrentLimits();
         $results = [];
 
+        // ✅ 1. Mise à jour du statut public de l'entreprise
+        $results['public_status'] = $this->updateCompanyPublicStatus($company);
+
+        // ✅ 2. Mise à jour des entités liées (quotas)
         $results['product'] = $this->enforceForEntity(
             $company,
             Product::class,
@@ -86,14 +103,128 @@ class QuotaEnforcementService
             'category_recipe'
         );
 
+        // ✅ 3. Mise à jour du statut public des entités liées (is_public)
+        // ✅ Récupérer les résultats pour les ajouter aux statistiques
+        $publicResults = $this->updateEntitiesPublicStatus($company);
+        
+        // ✅ Ajouter les résultats de produits et catégories aux statistiques
+        $results['public_status']['set_public'] += $publicResults['set_public'];
+        $results['public_status']['set_private'] += $publicResults['set_private'];
+
+        // ✅ 4. Flush pour sauvegarder toutes les modifications
         $this->em->flush();
+
         return $results;
     }
 
     /**
+     * ✅ Met à jour le statut public de l'entreprise en fonction du plan
+     */
+    private function updateCompanyPublicStatus(HmaService $company): array
+    {
+        $plan = $company->getCurrentPlan();
+        
+        // ✅ is_public dépend du plan
+        $shouldBePublic = in_array($plan, [HmaService::PLAN_BASIC, HmaService::PLAN_PREMIUM]);
+        
+        $setPublic = 0;
+        $setPrivate = 0;
+        
+        if ($company->isPublic() !== $shouldBePublic) {
+            $company->setIsPublic($shouldBePublic);
+            if ($shouldBePublic) {
+                $setPublic = 1;
+                $this->logger->info("Entreprise {$company->getId()} passée en public (plan: $plan)");
+            } else {
+                $setPrivate = 1;
+                $this->logger->info("Entreprise {$company->getId()} passée en privé (plan: $plan)");
+            }
+        }
+        
+        return ['set_public' => $setPublic, 'set_private' => $setPrivate];
+    }
+
+    /**
+     * ✅ Met à jour le statut public des entités liées (is_public)
+     * ✅ Retourne le nombre d'entités modifiées
+     */
+    private function updateEntitiesPublicStatus(HmaService $company): array
+    {
+        $plan = $company->getCurrentPlan();
+        $shouldBePublic = in_array($plan, [HmaService::PLAN_BASIC, HmaService::PLAN_PREMIUM]);
+
+        $setPublic = 0;
+        $setPrivate = 0;
+
+        // ✅ Mettre à jour is_public des produits
+        $productResults = $this->updateEntityPublicStatus(
+            Product::class,
+            $company,
+            $shouldBePublic,
+            'Product'
+        );
+        $setPublic += $productResults['set_public'];
+        $setPrivate += $productResults['set_private'];
+
+        // ✅ Mettre à jour is_public des catégories
+        $categoryResults = $this->updateEntityPublicStatus(
+            Category::class,
+            $company,
+            $shouldBePublic,
+            'Category'
+        );
+        $setPublic += $categoryResults['set_public'];
+        $setPrivate += $categoryResults['set_private'];
+
+        return ['set_public' => $setPublic, 'set_private' => $setPrivate];
+    }
+
+    /**
+     * ✅ Met à jour le statut public d'une entité spécifique
+     * ✅ Retourne le nombre d'entités modifiées
+     */
+    private function updateEntityPublicStatus(string $entityClass, HmaService $company, bool $shouldBePublic, string $entityName): array
+    {
+        $setPublic = 0;
+        $setPrivate = 0;
+
+        // ✅ Compter d'abord les entités avant modification
+        $countQb = $this->em->createQueryBuilder()
+            ->select('COUNT(e.id)')
+            ->from($entityClass, 'e')
+            ->where('e.hma_service = :company')
+            ->andWhere('e.is_public != :newValue')
+            ->setParameter('company', $company)
+            ->setParameter('newValue', $shouldBePublic);
+        
+        $countToUpdate = $countQb->getQuery()->getSingleScalarResult();
+
+        if ($countToUpdate > 0) {
+            // ✅ Mettre à jour is_public
+            $qb = $this->em->createQueryBuilder();
+            $qb->update($entityClass, 'e')
+               ->set('e.is_public', ':isPublic')
+               ->where('e.hma_service = :company')
+               ->setParameter('isPublic', $shouldBePublic)
+               ->setParameter('company', $company);
+
+            $updated = $qb->getQuery()->execute();
+            
+            if ($shouldBePublic) {
+                $setPublic = $updated;
+            } else {
+                $setPrivate = $updated;
+            }
+            
+            $status = $shouldBePublic ? 'public' : 'privé';
+            $this->logger->info("$updated $entityName(s) passés en $status pour l'entreprise {$company->getId()}");
+        }
+
+        return ['set_public' => $setPublic, 'set_private' => $setPrivate];
+    }
+
+    /**
      * Pour une entité donnée, désactive les plus anciens en excès et réactive les plus récents
-     * si la limite augmente.
-     * @return array ['deactivated' => int, 'reactivated' => int]
      */
     private function enforceForEntity(HmaService $company, string $entityClass, int $limit, string $entityName): array
     {
@@ -101,7 +232,6 @@ class QuotaEnforcementService
         $reactivated = 0;
 
         if ($limit === PHP_INT_MAX) {
-            // Pas de limite : réactiver tout
             $reactivated = $this->activateAllForEntity($company, $entityClass);
             return ['deactivated' => 0, 'reactivated' => $reactivated];
         }
@@ -113,7 +243,7 @@ class QuotaEnforcementService
             ->where('e.hma_service = :company')
             ->andWhere('e.subscription_active = true')
             ->setParameter('company', $company)
-            ->orderBy('e.created_at', 'ASC'); // plus ancien d'abord
+            ->orderBy('e.created_at', 'ASC');
 
         $activeElements = $activeQb->getQuery()->getResult();
         $activeCount = count($activeElements);
@@ -128,7 +258,7 @@ class QuotaEnforcementService
             $activeCount -= $deactivated;
         }
 
-        // 2. Si la limite est plus grande que le nombre actuel, réactiver les plus récents inactifs
+        // 2. Réactiver les plus récents inactifs si la limite le permet
         if ($activeCount < $limit) {
             $inactiveQb = $this->em->createQueryBuilder()
                 ->select('e')
@@ -136,7 +266,7 @@ class QuotaEnforcementService
                 ->where('e.hma_service = :company')
                 ->andWhere('e.subscription_active = false')
                 ->setParameter('company', $company)
-                ->orderBy('e.created_at', 'DESC'); // plus récent d'abord
+                ->orderBy('e.created_at', 'DESC');
 
             $inactiveElements = $inactiveQb->getQuery()->getResult();
             $needed = $limit - $activeCount;
@@ -153,7 +283,6 @@ class QuotaEnforcementService
 
     /**
      * Réactive tous les éléments d'une entité pour une entreprise.
-     * @return int Nombre d'entités réactivées
      */
     private function activateAllForEntity(HmaService $company, string $entityClass): int
     {

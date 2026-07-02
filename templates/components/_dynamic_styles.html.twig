@@ -1,0 +1,43 @@
+{# templates/components/_dynamic_styles.html.twig #}
+
+{% set defaultPrimary = '#0463f1' %}
+{% set defaultSecondary = '#8b5cf6' %}
+{% set primaryColor = defaultPrimary %}
+{% set secondaryColor = defaultSecondary %}
+
+{% if app.user and app.user.hmaServiceId %}
+    {% set companyId = app.user.hmaServiceId.getId() %}
+    {% set companyColors = get_company_colors(companyId) %}
+    {% set primaryColor = companyColors.primary %}
+    {% set secondaryColor = companyColors.secondary %}
+{% endif %}
+
+{# Calcul des couleurs dérivées - Réduction du pourcentage d'éclaircissement #}
+{% set primaryDark = primaryColor|color_darken(15) %}
+{% set primaryLight = primaryColor|color_lighten(40) %}  
+{% set primaryRgb = primaryColor|hex_to_rgb %}
+{% set secondaryDark = secondaryColor|color_darken(15) %}
+{% set secondaryLight = secondaryColor|color_lighten(40) %} 
+{% set secondaryRgb = secondaryColor|hex_to_rgb %}
+
+<style>
+    :root {
+        --primary-color: {{ primaryColor }};
+        --primary-dark: {{ primaryDark }};
+        --primary-light: {{ primaryLight }};
+        --primary-rgb: {{ primaryRgb }};
+        
+        --secondary-color: {{ secondaryColor }};
+        --secondary-dark: {{ secondaryDark }};
+        --secondary-light: {{ secondaryLight }};
+        --secondary-rgb: {{ secondaryRgb }};
+        
+        /* Variables de compatibilité */
+        --success-color: #10b981;
+        --danger-color: #ef4444;
+        --warning-color: #f59e0b;
+        --info-color: #3b82f6;
+        --dark-color: #1f2937;
+        --light-color: #f9fafb;
+    }
+</style>

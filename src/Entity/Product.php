@@ -61,6 +61,9 @@ class Product
     #[ORM\Column(nullable: true)]  
     private ?\DateTime $updated_at = null;
 
+    #[ORM\Column(options: ['default' => true])]
+    private bool $company_public = true;
+
     #[ORM\Column(nullable: true)]
     private ?\DateTime $last_stock_updated_at = null;
 
@@ -116,11 +119,22 @@ class Product
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $is_storable = false;
 
+    #[ORM\Column(options: ['default' => false])]
+    private bool $is_public = false;
+
+    
+
     /**
      * @var Collection<int, PromotionProduct>
      */
     #[ORM\OneToMany(targetEntity: PromotionProduct::class, mappedBy: 'product', orphanRemoval: true)]
     private Collection $promotionProducts;
+
+    /**
+     * @var Collection<int, Rating>
+     */
+    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'product', cascade: ['remove'])]
+    private Collection $ratings;
 
     public function __construct()
     {
@@ -128,9 +142,15 @@ class Product
         $this->stockBatches = new ArrayCollection();
         $this->stockMovements = new ArrayCollection();
         $this->promotionProducts = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
         $this->is_active = true;
         $this->is_storable = false;
+        $this->is_public = false;
+        $this->subscription_active = true;
+        $this->created_at = new \DateTime();
     }
+
+    // ==================== GETTERS & SETTERS DE BASE ====================
 
     public function getId(): ?int
     {
@@ -145,7 +165,6 @@ class Product
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -157,7 +176,6 @@ class Product
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
-
         return $this;
     }
 
@@ -166,10 +184,9 @@ class Product
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -181,7 +198,6 @@ class Product
     public function setBarcode(string $barcode): static
     {
         $this->barcode = $barcode;
-
         return $this;
     }
 
@@ -190,10 +206,9 @@ class Product
         return $this->sale_price;
     }
 
-    public function setSalePrice(string $sale_price): static
+    public function setSalePrice(?string $sale_price): static
     {
         $this->sale_price = $sale_price;
-
         return $this;
     }
 
@@ -205,7 +220,6 @@ class Product
     public function setPurchasePrice(string $purchase_price): static
     {
         $this->purchase_price = $purchase_price;
-
         return $this;
     }
 
@@ -217,7 +231,6 @@ class Product
     public function setStockQuantity(int $stock_quantity): static
     {
         $this->stock_quantity = $stock_quantity;
-
         return $this;
     }
 
@@ -229,7 +242,6 @@ class Product
     public function setMinQuantity(int $min_quantity): static
     {
         $this->min_quantity = $min_quantity;
-
         return $this;
     }
 
@@ -241,7 +253,6 @@ class Product
     public function setImage(?string $image): static  
     {
         $this->image = $image;
-
         return $this;
     }
 
@@ -250,13 +261,12 @@ class Product
         return $this->has_expiry_date;
     }
 
-    public function setHasExpiryDate(bool $has_expiry_date): static
+    public function setHasExpiryDate(?bool $has_expiry_date): static
     {
         $this->has_expiry_date = $has_expiry_date;
         return $this;
     }
 
-    // Ajoutez cette méthode pour les appels booléens
     public function hasExpiryDate(): bool
     {
         return $this->has_expiry_date ?? false;
@@ -281,7 +291,6 @@ class Product
     public function setIsActive(bool $is_active): static
     {
         $this->is_active = $is_active;
-
         return $this;
     }
 
@@ -293,7 +302,6 @@ class Product
     public function setCreatedAt(\DateTime $created_at): static
     {
         $this->created_at = $created_at;
-
         return $this;
     }
 
@@ -302,11 +310,27 @@ class Product
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTime $updated_at): static
+    public function setUpdatedAt(?\DateTime $updated_at): static
     {
         $this->updated_at = $updated_at;
-
         return $this;
+    }
+
+    public function isCompanyPublic(): bool
+    {
+        return $this->company_public;
+    }
+
+    public function setCompanyPublic(bool $company_public): static
+    {
+        $this->company_public = $company_public;
+        return $this;
+    }
+
+    // ✅ Méthode pour vérifier si le produit est visible sur la marketplace
+    public function isVisibleOnMarketplace(): bool
+    {
+        return $this->is_public && $this->company_public;
     }
 
     public function getLastStockUpdatedAt(): ?\DateTime
@@ -350,7 +374,6 @@ class Product
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
-
         return $this;
     }
 
@@ -362,188 +385,7 @@ class Product
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
         return $this;
-    }
-
-    /**
-     * @return Collection<int, PurchaseItem>
-     */
-    public function getPurchaseItems(): Collection
-    {
-        return $this->purchaseItems;
-    }
-
-    public function addPurchaseItem(PurchaseItem $purchaseItem): static
-    {
-        if (!$this->purchaseItems->contains($purchaseItem)) {
-            $this->purchaseItems->add($purchaseItem);
-            $purchaseItem->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removePurchaseItem(PurchaseItem $purchaseItem): static
-    {
-        if ($this->purchaseItems->removeElement($purchaseItem)) {
-            // set the owning side to null (unless already changed)
-            if ($purchaseItem->getProduct() === $this) {
-                $purchaseItem->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, StockBatch>
-     */
-    public function getStockBatches(): Collection
-    {
-        return $this->stockBatches;
-    }
-
-    public function addStockBatch(StockBatch $stockBatch): static
-    {
-        if (!$this->stockBatches->contains($stockBatch)) {
-            $this->stockBatches->add($stockBatch);
-            $stockBatch->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeStockBatch(StockBatch $stockBatch): static
-    {
-        if ($this->stockBatches->removeElement($stockBatch)) {
-            // set the owning side to null (unless already changed)
-            if ($stockBatch->getProduct() === $this) {
-                $stockBatch->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, StockMovement>
-     */
-    public function getStockMovements(): Collection
-    {
-        return $this->stockMovements;
-    }
-
-    public function addStockMovement(StockMovement $stockMovement): static
-    {
-        if (!$this->stockMovements->contains($stockMovement)) {
-            $this->stockMovements->add($stockMovement);
-            $stockMovement->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeStockMovement(StockMovement $stockMovement): static
-    {
-        if ($this->stockMovements->removeElement($stockMovement)) {
-            // set the owning side to null (unless already changed)
-            if ($stockMovement->getProduct() === $this) {
-                $stockMovement->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function __toString(): string
-    {
-        if ($this->name && $this->barcode) {
-            return sprintf('%s (%s)', $this->name, $this->barcode);
-        }
-        
-        return $this->name ?: 'Nouveau produit';
-    }
-
-    /**
-     * Méthode utilitaire pour vérifier si le stock est faible
-     */
-    public function isLowStock(): bool
-    {
-        return $this->stock_quantity <= $this->min_quantity;
-    }
-
-    /**
-     * Méthode utilitaire pour obtenir le statut du stock
-     */
-    public function getStockStatus(): string
-    {
-        if ($this->stock_quantity <= 0) {
-            return 'out_of_stock';
-        } elseif ($this->isLowStock()) {
-            return 'low_stock';
-        } else {
-            return 'in_stock';
-        }
-    }
-
-    /**
-     * Méthode utilitaire pour obtenir le statut du stock sous forme de badge
-     */
-    public function getStockStatusBadge(): string
-    {
-        $status = $this->getStockStatus();
-        
-        switch ($status) {
-            case 'out_of_stock':
-                return '<span class="badge bg-danger">Rupture de stock</span>';
-            case 'low_stock':
-                return '<span class="badge bg-warning text-dark">Stock faible</span>';
-            default:
-                return '<span class="badge bg-success">En stock</span>';
-        }
-    }
-
-    /**
-     * Calcule la marge du produit
-     */
-    public function getMargin(): float
-    {
-        $purchasePrice = (float) $this->purchase_price;
-        $salePrice = (float) $this->sale_price;
-        
-        if ($purchasePrice > 0) {
-            return $salePrice - $purchasePrice;
-        }
-        
-        return 0.0;
-    }
-
-    /**
-     * Calcule le pourcentage de marge
-     */
-    public function getMarginPercentage(): float
-    {
-        $purchasePrice = (float) $this->purchase_price;
-        $margin = $this->getMargin();
-        
-        if ($purchasePrice > 0) {
-            return ($margin / $purchasePrice) * 100;
-        }
-        
-        return 0.0;
-    }
-
-    public function getStockBadgeClass(): string
-    {
-        $status = $this->getStockStatus();
-        $classes = [
-            'out_of_stock' => 'bg-danger',
-            'low_stock' => 'bg-warning text-dark',
-            'in_stock' => 'bg-success',
-        ];
-        
-        return $classes[$status] ?? 'bg-secondary';
     }
 
     public function getHmaService(): ?HmaService 
@@ -565,7 +407,6 @@ class Product
     public function setDosage(?string $dosage): static
     {
         $this->dosage = $dosage;
-
         return $this;
     }
 
@@ -577,7 +418,6 @@ class Product
     public function setForm(?string $form): static
     {
         $this->form = $form;
-
         return $this;
     }
 
@@ -597,10 +437,114 @@ class Product
         return $this->prescription_required;
     }
 
-    public function setPrescriptionRequired(bool $prescription_required): static
+    public function setPrescriptionRequired(?bool $prescription_required): static
     {
         $this->prescription_required = $prescription_required;
+        return $this;
+    }
 
+    public function isStorable(): bool
+    {
+        return $this->is_storable;
+    }
+
+    public function setIsStorable(bool $is_storable): self
+    {
+        $this->is_storable = $is_storable;
+        return $this;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->is_public;
+    }
+
+    public function setIsPublic(bool $is_public): static
+    {
+        $this->is_public = $is_public;
+        return $this;
+    }
+
+    // ==================== COLLECTIONS ====================
+
+    /**
+     * @return Collection<int, PurchaseItem>
+     */
+    public function getPurchaseItems(): Collection
+    {
+        return $this->purchaseItems;
+    }
+
+    public function addPurchaseItem(PurchaseItem $purchaseItem): static
+    {
+        if (!$this->purchaseItems->contains($purchaseItem)) {
+            $this->purchaseItems->add($purchaseItem);
+            $purchaseItem->setProduct($this);
+        }
+        return $this;
+    }
+
+    public function removePurchaseItem(PurchaseItem $purchaseItem): static
+    {
+        if ($this->purchaseItems->removeElement($purchaseItem)) {
+            if ($purchaseItem->getProduct() === $this) {
+                $purchaseItem->setProduct(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, StockBatch>
+     */
+    public function getStockBatches(): Collection
+    {
+        return $this->stockBatches;
+    }
+
+    public function addStockBatch(StockBatch $stockBatch): static
+    {
+        if (!$this->stockBatches->contains($stockBatch)) {
+            $this->stockBatches->add($stockBatch);
+            $stockBatch->setProduct($this);
+        }
+        return $this;
+    }
+
+    public function removeStockBatch(StockBatch $stockBatch): static
+    {
+        if ($this->stockBatches->removeElement($stockBatch)) {
+            if ($stockBatch->getProduct() === $this) {
+                $stockBatch->setProduct(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, StockMovement>
+     */
+    public function getStockMovements(): Collection
+    {
+        return $this->stockMovements;
+    }
+
+    public function addStockMovement(StockMovement $stockMovement): static
+    {
+        if (!$this->stockMovements->contains($stockMovement)) {
+            $this->stockMovements->add($stockMovement);
+            $stockMovement->setProduct($this);
+        }
+        return $this;
+    }
+
+    public function removeStockMovement(StockMovement $stockMovement): static
+    {
+        if ($this->stockMovements->removeElement($stockMovement)) {
+            if ($stockMovement->getProduct() === $this) {
+                $stockMovement->setProduct(null);
+            }
+        }
         return $this;
     }
 
@@ -618,43 +562,56 @@ class Product
             $this->promotionProducts->add($promotionProduct);
             $promotionProduct->setProduct($this);
         }
-
         return $this;
     }
 
     public function removePromotionProduct(PromotionProduct $promotionProduct): static
     {
         if ($this->promotionProducts->removeElement($promotionProduct)) {
-            // set the owning side to null (unless already changed)
             if ($promotionProduct->getProduct() === $this) {
                 $promotionProduct->setProduct(null);
             }
         }
-
-        return $this;
-    }
-
-    public function isStorable(): bool
-    {
-        return $this->is_storable;
-    }
-
-    public function setIsStorable(bool $is_storable): self
-    {
-        $this->is_storable = $is_storable;
         return $this;
     }
 
     /**
+     * @return Collection<int, Rating>
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): static
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings->add($rating);
+            $rating->setProduct($this);
+        }
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): static
+    {
+        if ($this->ratings->removeElement($rating)) {
+            if ($rating->getProduct() === $this) {
+                $rating->setProduct(null);
+            }
+        }
+        return $this;
+    }
+
+    // ==================== MÉTHODES DE STOCK ====================
+
+    /**
      * Calcule le stock actuel total
-     * Stock = stock_quantity (initial) + somme des quantités des lots actifs
      */
     public function getCurrentStock(): int
     {
         $totalStock = $this->stock_quantity ?? 0;
         
         foreach ($this->getStockBatches() as $batch) {
-            // Vérifier si le lot est actif et a une quantité valide
             if (($batch->isActive() === null || $batch->isActive() === true) && $batch->getCurrentQuantity() > 0) {
                 $totalStock += $batch->getCurrentQuantity();
             }
@@ -664,8 +621,7 @@ class Product
     }
 
     /**
-     * Calcule le stock actuel en ne comptant que les lots (exclut le stock initial)
-     * Utile si le stock initial a déjà été intégré dans les lots
+     * Calcule le stock en ne comptant que les lots
      */
     public function getStockFromBatches(): int
     {
@@ -678,5 +634,144 @@ class Product
         }
         
         return $totalStock;
+    }
+
+    public function isLowStock(): bool
+    {
+        return $this->getCurrentStock() <= $this->min_quantity;
+    }
+
+    public function getStockStatus(): string
+    {
+        $stock = $this->getCurrentStock();
+        if ($stock <= 0) {
+            return 'out_of_stock';
+        } elseif ($this->isLowStock()) {
+            return 'low_stock';
+        } else {
+            return 'in_stock';
+        }
+    }
+
+    public function getStockStatusBadge(): string
+    {
+        $status = $this->getStockStatus();
+        
+        switch ($status) {
+            case 'out_of_stock':
+                return '<span class="badge bg-danger">Rupture de stock</span>';
+            case 'low_stock':
+                return '<span class="badge bg-warning text-dark">Stock faible</span>';
+            default:
+                return '<span class="badge bg-success">En stock</span>';
+        }
+    }
+
+    public function getStockBadgeClass(): string
+    {
+        $status = $this->getStockStatus();
+        $classes = [
+            'out_of_stock' => 'bg-danger',
+            'low_stock' => 'bg-warning text-dark',
+            'in_stock' => 'bg-success',
+        ];
+        
+        return $classes[$status] ?? 'bg-secondary';
+    }
+
+    // ==================== MÉTHODES DE PRIX ET MARGE ====================
+
+    public function getMargin(): float
+    {
+        $purchasePrice = (float) $this->purchase_price;
+        $salePrice = (float) $this->sale_price;
+        
+        if ($purchasePrice > 0) {
+            return $salePrice - $purchasePrice;
+        }
+        
+        return 0.0;
+    }
+
+    public function getMarginPercentage(): float
+    {
+        $purchasePrice = (float) $this->purchase_price;
+        $margin = $this->getMargin();
+        
+        if ($purchasePrice > 0) {
+            return ($margin / $purchasePrice) * 100;
+        }
+        
+        return 0.0;
+    }
+
+    // ==================== MÉTHODES DE NOTATION ====================
+
+    /**
+     * Calcule la note moyenne du produit
+     */
+    public function getAverageRating(): float
+    {
+        if ($this->ratings->isEmpty()) {
+            return 0;
+        }
+        
+        $total = 0;
+        foreach ($this->ratings as $rating) {
+            $total += $rating->getScore();
+        }
+        return round($total / $this->ratings->count(), 1);
+    }
+
+    /**
+     * Retourne le nombre de notes
+     */
+    public function getRatingsCount(): int
+    {
+        return $this->ratings->count();
+    }
+
+    /**
+     * Retourne la distribution des notes (1 à 5 étoiles)
+     */
+    public function getRatingDistribution(): array
+    {
+        $distribution = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+        foreach ($this->ratings as $rating) {
+            $score = $rating->getScore();
+            if (isset($distribution[$score])) {
+                $distribution[$score]++;
+            }
+        }
+        return $distribution;
+    }
+
+    /**
+     * Retourne le pourcentage pour chaque note
+     */
+    public function getRatingPercentages(): array
+    {
+        $total = $this->getRatingsCount();
+        if ($total === 0) {
+            return [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+        }
+        
+        $distribution = $this->getRatingDistribution();
+        $percentages = [];
+        foreach ($distribution as $score => $count) {
+            $percentages[$score] = round(($count / $total) * 100);
+        }
+        return $percentages;
+    }
+
+    // ==================== AUTRES MÉTHODES ====================
+
+    public function __toString(): string
+    {
+        if ($this->name && $this->barcode) {
+            return sprintf('%s (%s)', $this->name, $this->barcode);
+        }
+        
+        return $this->name ?: 'Nouveau produit';
     }
 }
