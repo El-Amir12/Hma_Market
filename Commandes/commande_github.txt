@@ -47,3 +47,32 @@ git remote -v
 git push origin hma-market-saas --
 
 https://prospect.omneseducation.com/app/international/study
+
+# Lorsque le cache est volomineux 
+Control A + Supprimer  dans le fichier var/log/dev.log 
+Ajout dans le fichier .gitignore à la racine du projet 
+echo "var/log/" >> .gitignore
+echo "var/log/*.log" >> .gitignore
+echo "*.log" >> .gitignore
+
+# Vérifier l'état
+git status
+
+# Voir les fichiers ignorés
+git status --ignored
+
+# Ajouter .gitignore
+git add .gitignore
+
+# Vider le fichier de log
+> var/log/dev.log
+
+# Ajouter le fichier vidé
+git add var/log/dev.log
+
+# Commit
+git commit -m "Ajout des logs dans .gitignore et vidage des logs"
+
+# Push
+git push origin hma-market-saas
+
