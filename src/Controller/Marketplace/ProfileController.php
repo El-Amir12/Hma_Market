@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 #[Route('/marketplace/profile')]
 class ProfileController extends AbstractController
@@ -65,7 +66,8 @@ class ProfileController extends AbstractController
     #[Route('/change-password', name: 'marketplace_change_password', methods: ['GET', 'POST'])]
     public function changePassword(
         Request $request,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
+        TokenStorageInterface $tokenStorage
     ): Response {
         /** @var Customer|null $customer */
         $customer = $this->getUser();
@@ -74,15 +76,13 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('marketplace_login');
         }
 
-        // ✅ Vérifier si c'est la première connexion (mustChangePassword = true)
+        // ✅ Vérifier si c'est la première connexion
         $mustChangePassword = $customer->isMustChangePassword();
 
         // ✅ Choisir le formulaire approprié
         if ($mustChangePassword) {
-            // ✅ Première connexion : formulaire sans ancien mot de passe
             $form = $this->createForm(FirstLoginChangePasswordType::class);
         } else {
-            // ✅ Changement volontaire : formulaire avec ancien mot de passe
             $form = $this->createForm(CustomerChangePasswordType::class);
         }
         
@@ -93,38 +93,47 @@ class ProfileController extends AbstractController
             if ($mustChangePassword) {
                 $newPassword = $form->get('newPassword')->getData();
                 
-                // Hasher le nouveau mot de passe
                 $hashedPassword = $passwordHasher->hashPassword($customer, $newPassword);
                 $customer->setPassword($hashedPassword);
-                
-                // ✅ Désactiver l'obligation de changer le mot de passe
                 $customer->setMustChangePassword(false);
+                $customer->resetFailedLoginAttempts();
                 
                 $this->entityManager->flush();
 
                 $this->addFlash('success', '✅ Votre mot de passe a été changé avec succès !');
-                return $this->redirectToRoute('marketplace_home');
+                $this->addFlash('info', '🔒 Veuillez vous reconnecter avec votre nouveau mot de passe.');
+
+                // ✅ Déconnecter l'utilisateur
+                $tokenStorage->setToken(null);
+                $request->getSession()->invalidate();
+
+                return $this->redirectToRoute('marketplace_logout');
             }
             
             // ✅ Cas du changement volontaire (avec ancien mot de passe)
             $oldPassword = $form->get('oldPassword')->getData();
             $newPassword = $form->get('newPassword')->getData();
 
-            // Vérifier l'ancien mot de passe
             if (!$passwordHasher->isPasswordValid($customer, $oldPassword)) {
                 $this->addFlash('error', '❌ L\'ancien mot de passe est incorrect.');
                 return $this->redirectToRoute('marketplace_change_password');
             }
 
-            // Hasher le nouveau mot de passe
             $hashedPassword = $passwordHasher->hashPassword($customer, $newPassword);
             $customer->setPassword($hashedPassword);
-            
             $customer->setUpdatedAt(new \DateTimeImmutable());
+            $customer->resetFailedLoginAttempts();
+            
             $this->entityManager->flush();
 
             $this->addFlash('success', '✅ Votre mot de passe a été changé avec succès !');
-            return $this->redirectToRoute('marketplace_profile');
+            $this->addFlash('info', '🔒 Veuillez vous reconnecter avec votre nouveau mot de passe.');
+
+            // ✅ Déconnecter l'utilisateur pour sécurité
+            $tokenStorage->setToken(null);
+            $request->getSession()->invalidate();
+
+            return $this->redirectToRoute('marketplace_logout');
         }
 
         // ✅ Passer les variables au template
@@ -144,10 +153,8 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('marketplace_login');
         }
 
-        $orders = $customer->getOrders();
-
         return $this->render('marketplace/profile/orders.html.twig', [
-            'orders' => $orders,
+            
         ]);
     }
 }

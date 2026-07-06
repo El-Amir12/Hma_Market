@@ -1,4 +1,5 @@
 {# templates/admin/category/index.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Catégories de produits - HMA Market{% endblock %}
@@ -126,6 +127,19 @@
     color: #0463f1 !important;
 }
 
+/* ✅ Badges en bas de la carte */
+.category-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 0.5rem;
+}
+
+.category-badges .badge {
+    font-size: 9px;
+    padding: 3px 6px;
+}
+
 @media (max-width: 768px) {
     .stat-icon {
         width: 40px;
@@ -222,7 +236,7 @@
         </div>
     {% endfor %}
 
-    <!-- Container des statistiques dynamiques - 7 cartes -->
+    <!-- Container des statistiques dynamiques -->
     <div class="card shadow mb-4">
         <div class="card-header bg-white py-3">
             <h5 class="mb-0">
@@ -313,6 +327,33 @@
                     </div>
                 </div>
             </div>
+            {# ✅ Statistiques de visibilité (uniquement pour les pharmacies) #}
+            {% if companyType == 'pharmacy' %}
+            <div class="row mt-3 border-top pt-3">
+                <div class="col-md-6 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-success text-uppercase small fw-bold">Visibles sur marketplace</span>
+                                <h3 class="mb-0 text-success">{{ visibleFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-eye fa-2x text-success opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-secondary text-uppercase small fw-bold">Masquées sur marketplace</span>
+                                <h3 class="mb-0 text-secondary">{{ hiddenFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-eye-slash fa-2x text-secondary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 
@@ -331,9 +372,81 @@
         </div>
         <div class="card-body bg-white">
             <form method="get" id="filter-form">
-                <div class="row g-3">
-                    {% if companyType == 'restaurant' %}
-                        <!-- Cas RESTAURANT : 4 filtres -->
+                {% if companyType == 'pharmacy' %}
+                    {# ✅ CAS PHARMACIE : 2 lignes de 3 filtres #}
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-search me-1"></i> Recherche
+                            </label>
+                            <input type="text" name="search" class="form-control" 
+                                placeholder="Nom, description..." 
+                                value="{{ search }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-toggle-on me-1"></i> Statut
+                            </label>
+                            <select name="status" class="form-select">
+                                <option value="all" {{ status == 'all' ? 'selected' : '' }}>Tous</option>
+                                <option value="active" {{ status == 'active' ? 'selected' : '' }}>Actives</option>
+                                <option value="inactive" {{ status == 'inactive' ? 'selected' : '' }}>Inactives</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-sitemap me-1"></i> Type
+                            </label>
+                            <select name="type" class="form-select">
+                                <option value="all" {{ type == 'all' ? 'selected' : '' }}>Toutes</option>
+                                <option value="main" {{ type == 'main' ? 'selected' : '' }}>Principales</option>
+                                <option value="sub" {{ type == 'sub' ? 'selected' : '' }}>Sous-catégories</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-chart-line me-1"></i> Quota
+                            </label>
+                            <select name="sub_status" class="form-select">
+                                <option value="all" {{ subStatus == 'all' ? 'selected' : '' }}>Tous</option>
+                                <option value="active" {{ subStatus == 'active' ? 'selected' : '' }}>Dans quota</option>
+                                <option value="inactive" {{ subStatus == 'inactive' ? 'selected' : '' }}>Hors quota</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-eye me-1"></i> Visibilité marketplace
+                            </label>
+                            <select name="visibility" class="form-select">
+                                <option value="all" {{ visibility == 'all' ? 'selected' : '' }}>Toutes</option>
+                                <option value="visible" {{ visibility == 'visible' ? 'selected' : '' }}>Visibles</option>
+                                <option value="hidden" {{ visibility == 'hidden' ? 'selected' : '' }}>Masquées</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">
+                                <i class="fas fa-percent me-1"></i> Promotion
+                            </label>
+                            <select name="promotion" id="promotion" class="form-select" style="width: 100%;">
+                                <option value="0">🎯 Toutes les promotions</option>
+                                {% for promotion in promotions %}
+                                    <option value="{{ promotion.id }}" {{ selectedPromotion == promotion.id ? 'selected' : '' }}>
+                                        {{ promotion.name }}
+                                        {% if promotion.discountPercentage %}
+                                            (-{{ promotion.discountPercentage }}%)
+                                        {% elseif promotion.discountAmount %}
+                                            (-{{ promotion.discountAmount|number_format(0, ',', ' ') }} FCFA)
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                {% elseif companyType == 'restaurant' %}
+                    {# CAS RESTAURANT : 4 filtres sur 1 ligne #}
+                    <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">
                                 <i class="fas fa-search me-1"></i> Recherche
@@ -372,8 +485,10 @@
                                 <option value="inactive" {{ subStatus == 'inactive' ? 'selected' : '' }}>Hors quota</option>
                             </select>
                         </div>
-                    {% else %}
-                        <!-- Cas NON RESTAURANT (market, etc.) : 5 filtres -->
+                    </div>
+                {% else %}
+                    {# CAS AUTRES (market, retail, etc.) : 5 filtres sur 1 ligne #}
+                    <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">
                                 <i class="fas fa-search me-1"></i> Recherche
@@ -430,8 +545,8 @@
                                 {% endfor %}
                             </select>
                         </div>
-                    {% endif %}
-                </div>
+                    </div>
+                {% endif %}
             </form>
         </div>
     </div>
@@ -444,12 +559,24 @@
         </div>
     {% endif %}
 
+    {# Message filtre visibilité (pour les pharmacies) #}
+    {% if companyType == 'pharmacy' and visibility != 'all' %}
+        <div class="alert alert-info mb-4">
+            <i class="fas fa-info-circle me-2"></i>
+            {% if visibility == 'visible' %}
+                Affichage des catégories <strong>visibles</strong> sur le marketplace.
+            {% else %}
+                Affichage des catégories <strong>masquées</strong> sur le marketplace.
+            {% endif %}
+        </div>
+    {% endif %}
+
     <!-- Grille des catégories -->
     <div class="row g-4">
         {% for category in categories %}
             <div class="col-xl-3 col-lg-4 col-md-6">
                 <div class="category-card card h-100 border-0 shadow-sm hover-card overflow-hidden">
-                    <!-- Zone image réduite -->
+                    <!-- Zone image (sans badges) -->
                     <div class="category-image-wrapper position-relative">
                         {% if category.image %}
                             <img src="{{ asset('uploads/categories/' ~ category.image) }}" 
@@ -460,30 +587,6 @@
                                 <i class="fas fa-folder-open fa-3x text-muted"></i>
                             </div>
                         {% endif %}
-                        
-                        <!-- Badges en haut à droite -->
-                        <div class="position-absolute top-0 end-0 p-2">
-                            <div class="d-flex flex-column gap-1">
-                                {% if not category.subscriptionActive %}
-                                    <span class="badge bg-warning text-dark">
-                                        <i class="fas fa-clock fa-xs me-1"></i> Hors quota
-                                    </span>
-                                {% elseif category.isActive %}
-                                    <span class="badge bg-success">
-                                        <i class="fas fa-check-circle fa-xs me-1"></i> Active
-                                    </span>
-                                {% else %}
-                                    <span class="badge bg-danger">
-                                        <i class="fas fa-pause-circle fa-xs me-1"></i> Inactive
-                                    </span>
-                                {% endif %}
-                                {% if category.subscriptionActive %}
-                                    <span class="badge bg-info">
-                                        <i class="fas fa-database fa-xs me-1"></i> Dans quota
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </div>
                     </div>
 
                     <div class="card-body d-flex flex-column">
@@ -553,8 +656,44 @@
                             {{ category.description|default('Aucune description')|u.truncate(60, '...') }}
                         </p>
                         
+                        <!-- ✅ Badges sous la description -->
+                        <div class="category-badges">
+                            {% if not category.subscriptionActive %}
+                                <span class="badge bg-warning text-dark">
+                                    <i class="fas fa-clock fa-xs me-1"></i> Hors quota
+                                </span>
+                            {% else %}
+                                {% if category.isActive %}
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle fa-xs me-1"></i> Active
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-pause-circle fa-xs me-1"></i> Inactive
+                                    </span>
+                                {% endif %}
+                                {% if category.subscriptionActive %}
+                                    <span class="badge bg-info">
+                                        <i class="fas fa-database fa-xs me-1"></i> Dans quota
+                                    </span>
+                                {% endif %}
+                            {% endif %}
+                            {# ✅ Badge de visibilité (pour les pharmacies) #}
+                            {% if companyType == 'pharmacy' %}
+                                {% if category.companyPublic %}
+                                    <span class="badge bg-primary">
+                                        <i class="fas fa-eye fa-xs me-1"></i> Visible
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="fas fa-eye-slash fa-xs me-1"></i> Masquée
+                                    </span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
                         <!-- Statistiques -->
-                        <div class="d-flex gap-2 mb-3">
+                        <div class="d-flex gap-2 mt-3 mb-3">
                             <div class="flex-fill text-center py-1 bg-light rounded-2">
                                 <i class="fas fa-box text-primary fa-sm"></i>
                                 <span class="fw-bold ms-1">{{ category.productCount ?? category.products|length }}</span>

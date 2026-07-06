@@ -58,7 +58,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Construit la requête de base sans les compteurs.
+     * Construit la requête de base avec le filtre de visibilité
      */
     private function getBaseQueryBuilder(
         HmaService $hmaService,
@@ -66,7 +66,8 @@ class CategoryRepository extends ServiceEntityRepository
         string $type = 'all',
         string $subStatus = 'all',
         string $search = '',
-        ?int $promotionId = null
+        ?int $promotionId = null,
+        string $visibility = 'all'
     ): QueryBuilder {
         $qb = $this->createQueryBuilder('c')
             ->andWhere('c.hma_service = :service')
@@ -93,6 +94,13 @@ class CategoryRepository extends ServiceEntityRepository
             $qb->andWhere('c.subscription_active = :subActive')->setParameter('subActive', false);
         }
 
+        // ✅ Filtre de visibilité company_public
+        if ($visibility === 'visible') {
+            $qb->andWhere('c.company_public = :visible')->setParameter('visible', true);
+        } elseif ($visibility === 'hidden') {
+            $qb->andWhere('c.company_public = :visible')->setParameter('visible', false);
+        }
+
         // Recherche textuelle
         if (!empty($search)) {
             $qb->andWhere('c.name LIKE :search OR c.description LIKE :search')
@@ -116,9 +124,10 @@ class CategoryRepository extends ServiceEntityRepository
         string $type = 'all',
         string $subStatus = 'all',
         string $search = '',
-        ?int $promotionId = null
+        ?int $promotionId = null,
+        string $visibility = 'all'
     ): int {
-        $qb = $this->getBaseQueryBuilder($hmaService, $status, $type, $subStatus, $search, $promotionId);
+        $qb = $this->getBaseQueryBuilder($hmaService, $status, $type, $subStatus, $search, $promotionId, $visibility);
         return (int) $qb->select('COUNT(DISTINCT c.id)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -135,10 +144,11 @@ class CategoryRepository extends ServiceEntityRepository
         string $search = '',
         int $page = 1,
         int $limit = 12,
-        ?int $promotionId = null
+        ?int $promotionId = null,
+        string $visibility = 'all'
     ): Paginator {
         // 1. Récupérer les catégories paginées (sans compteurs)
-        $qb = $this->getBaseQueryBuilder($hmaService, $status, $type, $subStatus, $search, $promotionId)
+        $qb = $this->getBaseQueryBuilder($hmaService, $status, $type, $subStatus, $search, $promotionId, $visibility)
             ->orderBy('c.created_at', 'DESC');
 
         $query = $qb->getQuery();

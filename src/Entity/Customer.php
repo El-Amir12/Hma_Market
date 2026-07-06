@@ -84,6 +84,21 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $last_login_at = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $failedLoginAttempts = 0;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $lockedUntil = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $lastFailedAttemptAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $resetPasswordToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $resetPasswordTokenExpiresAt = null;
+
     // Propriété pour le mot de passe en clair (non persistée)
     private ?string $plainPassword = null;
 
@@ -326,6 +341,130 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getFailedLoginAttempts(): ?int
+    {
+        return $this->failedLoginAttempts;
+    }
+
+    public function setFailedLoginAttempts(?int $failedLoginAttempts): static
+    {
+        $this->failedLoginAttempts = $failedLoginAttempts;
+        return $this;
+    }
+
+    public function getLockedUntil(): ?\DateTime
+    {
+        return $this->lockedUntil;
+    }
+
+    public function setLockedUntil(?\DateTime $lockedUntil): static
+    {
+        $this->lockedUntil = $lockedUntil;
+        return $this;
+    }
+
+    public function getLastFailedAttemptAt(): ?\DateTime
+    {
+        return $this->lastFailedAttemptAt;
+    }
+
+    public function setLastFailedAttemptAt(?\DateTime $lastFailedAttemptAt): static
+    {
+        $this->lastFailedAttemptAt = $lastFailedAttemptAt;
+        return $this;
+    }
+
+    public function getResetPasswordToken(): ?string
+    {
+        return $this->resetPasswordToken;
+    }
+
+    public function setResetPasswordToken(?string $resetPasswordToken): static
+    {
+        $this->resetPasswordToken = $resetPasswordToken;
+        return $this;
+    }
+
+    public function getResetPasswordTokenExpiresAt(): ?\DateTime
+    {
+        return $this->resetPasswordTokenExpiresAt;
+    }
+
+    public function setResetPasswordTokenExpiresAt(?\DateTime $resetPasswordTokenExpiresAt): static
+    {
+        $this->resetPasswordTokenExpiresAt = $resetPasswordTokenExpiresAt;
+        return $this;
+    }
+
+    public function incrementFailedLoginAttempts(): static
+    {
+        $this->failedLoginAttempts = ($this->failedLoginAttempts ?? 0) + 1;
+        $this->lastFailedAttemptAt = new \DateTime();
+        
+        // Bloquer après 5 tentatives
+        if ($this->failedLoginAttempts >= 5) {
+            $this->lockedUntil = new \DateTime('+15 minutes');
+        }
+        
+        return $this;
+    }
+
+    public function resetFailedLoginAttempts(): static
+    {
+        $this->failedLoginAttempts = 0;
+        $this->lockedUntil = null;
+        $this->lastFailedAttemptAt = null;
+        return $this;
+    }
+
+    public function isLocked(): bool
+    {
+        if ($this->lockedUntil === null) {
+            return false;
+        }
+        return $this->lockedUntil > new \DateTime();
+    }
+
+    public function getRemainingLockMinutes(): ?int
+    {
+        if (!$this->isLocked()) {
+            return null;
+        }
+        $now = new \DateTime();
+        $diff = $now->diff($this->lockedUntil);
+        return ($diff->h * 60) + $diff->i;
+    }
+
+    public function getRemainingAttempts(): int
+    {
+        if ($this->isLocked()) {
+            return 0;
+        }
+        return max(0, 5 - ($this->failedLoginAttempts ?? 0));
+    }
+
+    public function generateResetToken(): string
+    {
+        $token = bin2hex(random_bytes(32));
+        $this->resetPasswordToken = $token;
+        $this->resetPasswordTokenExpiresAt = new \DateTime('+1 hour');
+        return $token;
+    }
+
+    public function isValidResetToken(string $token): bool
+    {
+        return $this->resetPasswordToken === $token 
+            && $this->resetPasswordTokenExpiresAt !== null
+            && $this->resetPasswordTokenExpiresAt > new \DateTime();
+    }
+
+    public function clearResetToken(): static
+    {
+        $this->resetPasswordToken = null;
+        $this->resetPasswordTokenExpiresAt = null;
+        return $this;
+    }
+
     public function getCart(): ?Cart
     {
         return $this->cart;
@@ -352,30 +491,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     public function isDeleted(): bool
     {
         return $this->deleted_at !== null;
-    }
-
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): static
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->setCustomer($this);
-        }
-        return $this;
-    }
-
-    public function removeOrder(Order $order): static
-    {
-        if ($this->orders->removeElement($order)) {
-            if ($order->getCustomer() === $this) {
-                $order->setCustomer(null);
-            }
-        }
-        return $this;
     }
 
     // ==================== LIFECYCLE CALLBACKS ====================

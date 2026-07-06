@@ -66,6 +66,8 @@ final class ProductController extends AbstractController
             throw new AccessDeniedException('Aucun service associé à votre compte.');
         }
 
+        $companyType = $hmaService->getType();
+
         $page = $request->query->getInt('page', 1);
         $limit = 12;
         $search = $request->query->get('search', '');
@@ -77,7 +79,8 @@ final class ProductController extends AbstractController
         $form = $request->query->get('form', '');
         $prescriptionRequired = $request->query->get('prescription_required', '');
         $promotionId = $request->query->getInt('promotion', 0);
-        $unit = $request->query->get('unit', ''); // Nouveau paramètre
+        $unit = $request->query->get('unit', '');
+        $visibility = $request->query->get('visibility', ''); // ✅ Nouveau paramètre
 
         // Récupérer les promotions de l'entreprise pour le select
         $promotions = $entityManager->getRepository(Promotion::class)->findBy(
@@ -103,7 +106,8 @@ final class ProductController extends AbstractController
             $page,
             $limit,
             $promotionId > 0 ? $promotionId : null,
-            $unit // Ajout du paramètre unité
+            $unit,
+            $visibility // ✅ Ajout du paramètre visibilité
         );
 
         $totalFiltered = $productRepository->countFiltered(
@@ -117,7 +121,8 @@ final class ProductController extends AbstractController
             $prescriptionRequired,
             $search,
             $promotionId > 0 ? $promotionId : null,
-            $unit
+            $unit,
+            $visibility
         );
         $activeFiltered = $productRepository->countFiltered(
             $hmaService,
@@ -130,7 +135,8 @@ final class ProductController extends AbstractController
             $prescriptionRequired,
             $search,
             $promotionId > 0 ? $promotionId : null,
-            $unit
+            $unit,
+            $visibility
         );
         $inactiveFiltered = $productRepository->countFiltered(
             $hmaService,
@@ -143,7 +149,8 @@ final class ProductController extends AbstractController
             $prescriptionRequired,
             $search,
             $promotionId > 0 ? $promotionId : null,
-            $unit
+            $unit,
+            $visibility
         );
         $lowStockFiltered = $productRepository->countFiltered(
             $hmaService,
@@ -156,7 +163,8 @@ final class ProductController extends AbstractController
             $prescriptionRequired,
             $search,
             $promotionId > 0 ? $promotionId : null,
-            $unit
+            $unit,
+            $visibility
         );
         $perishableFiltered = $productRepository->countFiltered(
             $hmaService,
@@ -169,7 +177,8 @@ final class ProductController extends AbstractController
             $prescriptionRequired,
             $search,
             $promotionId > 0 ? $promotionId : null,
-            $unit
+            $unit,
+            $visibility
         );
         $nonPerishableFiltered = $productRepository->countFiltered(
             $hmaService,
@@ -182,7 +191,8 @@ final class ProductController extends AbstractController
             $prescriptionRequired,
             $search,
             $promotionId > 0 ? $promotionId : null,
-            $unit
+            $unit,
+            $visibility
         );
 
         $subscriptionActiveFiltered = $productRepository->countFiltered(
@@ -196,7 +206,8 @@ final class ProductController extends AbstractController
             $prescriptionRequired,
             $search,
             $promotionId > 0 ? $promotionId : null,
-            $unit
+            $unit,
+            $visibility
         );
         $subscriptionInactiveFiltered = $productRepository->countFiltered(
             $hmaService,
@@ -209,16 +220,49 @@ final class ProductController extends AbstractController
             $prescriptionRequired,
             $search,
             $promotionId > 0 ? $promotionId : null,
-            $unit
+            $unit,
+            $visibility
         );
+
+        // ✅ Statistiques de visibilité (pour les pharmacies)
+        $visibleFiltered = 0;
+        $hiddenFiltered = 0;
+        if ($companyType === 'pharmacy') {
+            $visibleFiltered = $productRepository->countFiltered(
+                $hmaService,
+                $categoryId,
+                $status,
+                $expiryType,
+                $subscriptionStatus,
+                $dosage,
+                $form,
+                $prescriptionRequired,
+                $search,
+                $promotionId > 0 ? $promotionId : null,
+                $unit,
+                'visible'
+            );
+            $hiddenFiltered = $productRepository->countFiltered(
+                $hmaService,
+                $categoryId,
+                $status,
+                $expiryType,
+                $subscriptionStatus,
+                $dosage,
+                $form,
+                $prescriptionRequired,
+                $search,
+                $promotionId > 0 ? $promotionId : null,
+                $unit,
+                'hidden'
+            );
+        }
 
         $activeCount = $productRepository->countSubscriptionActive($hmaService);
         $limits = $hmaService->getCurrentLimits();
         $quota = $limits['max_products'] ?? PHP_INT_MAX;
         $quotaReached = $quota !== PHP_INT_MAX && $activeCount >= $quota;
         $type_promotion = $promotionId > 0 ? $entityManager->getRepository(Promotion::class)->find($promotionId)?->getTypePromotion() : null;
-
-         // Si une promotion est sélectionnée, filtrer les produits pour n'afficher que ceux qui correspondent au type de promotion
 
         $totalItems = $paginator->count();
         $totalPages = ceil($totalItems / $limit);
@@ -233,6 +277,7 @@ final class ProductController extends AbstractController
             'selectedStatus' => $status,
             'selectedExpiryType' => $expiryType,
             'selectedSubscriptionStatus' => $subscriptionStatus,
+            'selectedVisibility' => $visibility, // ✅ Passage du filtre de visibilité
             'dosage' => $dosage,
             'form' => $form,
             'prescriptionRequired' => $prescriptionRequired,
@@ -245,15 +290,17 @@ final class ProductController extends AbstractController
             'nonPerishableFiltered' => $nonPerishableFiltered,
             'subscriptionActiveFiltered' => $subscriptionActiveFiltered,
             'subscriptionInactiveFiltered' => $subscriptionInactiveFiltered,
+            'visibleFiltered' => $visibleFiltered, // ✅ Pour les pharmacies
+            'hiddenFiltered' => $hiddenFiltered,   // ✅ Pour les pharmacies
             'activeCount' => $activeCount,
             'quota' => $quota === PHP_INT_MAX ? 'Illimité' : $quota,
             'quotaReached' => $quotaReached,
-            'companyType' => $hmaService->getType(),
+            'companyType' => $companyType,
             'promotions' => $promotions,
             'typePromotion' => $type_promotion,
             'selectedPromotion' => $promotionId,
-            'units' => $units,          // Ajout
-            'selectedUnit' => $unit,    // Ajout
+            'units' => $units,
+            'selectedUnit' => $unit,
         ]);
     }
 
@@ -477,6 +524,7 @@ final class ProductController extends AbstractController
     public function toggleStatus(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         $this->checkAccess();
+
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
         if (!$user) {

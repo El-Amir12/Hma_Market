@@ -145,32 +145,72 @@
 
                     <hr class="my-4">
 
-                    <!-- Statut -->
-                    <div class="card border-0 bg-light">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-toggle-on me-2 text-primary"></i>
-                                    <span class="fw-bold">Statut de la catégorie</span>
+                    <div class="row g-3">
+                        <!-- Statut -->
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-toggle-on me-2 text-primary"></i>
+                                            <span class="fw-bold">Statut de la catégorie</span>
+                                        </div>
+                                        <span class="badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }}" id="status-badge">
+                                            {{ form.is_active.vars.data ? 'ACTIVE' : 'INACTIVE' }}
+                                        </span>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        {{ form_widget(form.is_active, {'attr': {
+                                            'class': 'form-check-input',
+                                            'role': 'switch'
+                                        }}) }}
+                                        <label class="form-check-label" for="{{ form.is_active.vars.id }}" id="status-label">
+                                            {{ form.is_active.vars.data ? 'Catégorie active' : 'Catégorie inactive' }}
+                                        </label>
+                                    </div>
+                                    <small class="text-muted mt-1 d-block">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Les catégories inactives ne seront pas visibles dans le catalogue.
+                                    </small>
                                 </div>
-                                <span class="badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }}" id="status-badge">
-                                    {{ form.is_active.vars.data ? 'ACTIVE' : 'INACTIVE' }}
-                                </span>
                             </div>
-                            <div class="form-check form-switch">
-                                {{ form_widget(form.is_active, {'attr': {
-                                    'class': 'form-check-input',
-                                    'role': 'switch'
-                                }}) }}
-                                <label class="form-check-label" for="{{ form.is_active.vars.id }}" id="status-label">
-                                    {{ form.is_active.vars.data ? 'Catégorie active' : 'Catégorie inactive' }}
-                                </label>
-                            </div>
-                            <small class="text-muted mt-1 d-block">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Les catégories inactives ne seront pas visibles dans le catalogue.
-                            </small>
                         </div>
+
+                        {# ✅ AJOUT : Visibilité sur le marketplace (uniquement pour les pharmacies) #}
+                        {% if companyType == 'pharmacy' %}
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-globe me-2 text-primary"></i>
+                                            <span class="fw-bold">Visibilité marketplace</span>
+                                        </div>
+                                        <span class="badge {{ form.company_public.vars.data ? 'bg-success' : 'bg-secondary' }}" id="visibility-badge">
+                                            {{ form.company_public.vars.data ? 'VISIBLE' : 'MASQUÉE' }}
+                                        </span>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        {{ form_widget(form.company_public, {'attr': {
+                                            'class': 'form-check-input',
+                                            'role': 'switch'
+                                        }}) }}
+                                        <label class="form-check-label" for="{{ form.company_public.vars.id }}" id="visibility-label">
+                                            {{ form.company_public.vars.data ? 'Visible sur le marketplace' : 'Masquée sur le marketplace' }}
+                                        </label>
+                                    </div>
+                                    <small class="text-muted mt-1 d-block">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Décochez pour masquer cette catégorie sur le marketplace
+                                    </small>
+                                    <small class="text-muted mt-1 d-block">
+                                        <i class="fas fa-eye-slash me-1"></i>
+                                        Elle restera visible dans votre back-office
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -292,6 +332,21 @@ document.addEventListener('DOMContentLoaded', function() {
             statusLabel.textContent = isActive ? 'Catégorie active' : 'Catégorie inactive';
         });
     }
+
+    {# ✅ Gestion de la visibilité marketplace (pour les pharmacies) #}
+    {% if companyType == 'pharmacy' %}
+    const visibilitySwitch = document.getElementById('{{ form.company_public.vars.id }}');
+    const visibilityBadge = document.getElementById('visibility-badge');
+    const visibilityLabel = document.getElementById('visibility-label');
+    if (visibilitySwitch && visibilityBadge && visibilityLabel) {
+        visibilitySwitch.addEventListener('change', function() {
+            const isVisible = this.checked;
+            visibilityBadge.textContent = isVisible ? 'VISIBLE' : 'MASQUÉE';
+            visibilityBadge.className = isVisible ? 'badge bg-success' : 'badge bg-secondary';
+            visibilityLabel.textContent = isVisible ? 'Visible sur le marketplace' : 'Masquée sur le marketplace';
+        });
+    }
+    {% endif %}
 
     // Validation Bootstrap
     const forms = document.querySelectorAll('.needs-validation');

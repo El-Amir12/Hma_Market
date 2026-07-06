@@ -1,3 +1,5 @@
+# config/packages/security.yaml
+
 security:
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
@@ -34,18 +36,11 @@ security:
             pattern: ^/marketplace
             provider: customer_provider
             user_checker: App\Security\CustomerUserChecker
-            form_login:
-                login_path: marketplace_login
-                check_path: marketplace_login
-                enable_csrf: true
-                default_target_path: marketplace_home
-                success_handler: App\Security\CustomerLoginSuccessHandler
-                username_parameter: email
-                password_parameter: password
-                use_referer: true
+            # ✅ Utiliser UNIQUEMENT custom_authenticator (pas form_login en plus)
+            custom_authenticator: App\Security\CustomerAuthenticator
             logout:
                 path: marketplace_logout
-                target: marketplace_home
+                target: marketplace_login
                 invalidate_session: true
                 delete_cookies:
                     PHPSESSID: ~
@@ -114,8 +109,26 @@ security:
         - { path: ^/marketplace/pharmacy/, roles: PUBLIC_ACCESS }
         - { path: ^/marketplace/ajax/, roles: PUBLIC_ACCESS }
         - { path: ^/marketplace/search, roles: PUBLIC_ACCESS }
-        - { path: ^/marketplace/change-password, roles: ROLE_CUSTOMER }
         
+        # Marketplace - Routes protégées
+        - { path: ^/marketplace/change-password, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/cart, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/cart/add, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/cart/remove, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/cart/update, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/cart/count, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/checkout, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/checkout/success, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/checkout/cancel, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/orders, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/order/, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/profile, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/favorites, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/favorites/toggle, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/favorites/count, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/payment, roles: ROLE_CUSTOMER }
+        - { path: ^/marketplace/account, roles: ROLE_CUSTOMER }
+
         # Pages marketing publiques
         - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/contact$, roles: PUBLIC_ACCESS }
@@ -174,27 +187,7 @@ security:
         - { path: ^/change-password, roles: IS_AUTHENTICATED_FULLY }
 
         # ============================================
-        # 8. ROUTES CUSTOMER (PROTÉGÉES - NÉCESSITENT ROLE_CUSTOMER)
-        # ============================================
-        - { path: ^/marketplace/cart, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/cart/add, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/cart/remove, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/cart/update, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/cart/count, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/checkout, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/checkout/success, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/checkout/cancel, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/orders, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/order/, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/profile, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/favorites, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/favorites/toggle, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/favorites/count, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/payment, roles: ROLE_CUSTOMER }
-        - { path: ^/marketplace/account, roles: ROLE_CUSTOMER }
-
-        # ============================================
-        # 9. TOUT LE RESTE (CATCH-ALL)
+        # 8. TOUT LE RESTE (CATCH-ALL)
         # ============================================
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
         

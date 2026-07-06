@@ -1,0 +1,44 @@
+{# templates/marketplace/auth/check_email.html.twig #}
+{% extends 'base_marketplace.html.twig' %}
+
+{% block title %}Vérifiez votre email - HMA Market{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-5 text-center">
+                <i class="fas fa-envelope fa-4x text-success mb-4"></i>
+                
+                <h3 class="fw-bold mb-3">Email envoyé !</h3>
+                
+                <p class="text-muted mb-4">
+                    Un email de réinitialisation a été envoyé à votre adresse.<br>
+                    Veuillez vérifier votre boîte de réception et suivre les instructions.
+                </p>
+
+                <div class="alert alert-info rounded-3">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    <small>Si vous ne recevez pas l'email dans quelques minutes, vérifiez vos spams.</small>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <a href="{{ path('marketplace_login') }}" class="btn btn-primary py-3 fw-semibold">
+                        <i class="fas fa-sign-in-alt me-2"></i>Retour à la connexion
+                    </a>
+                    <a href="{{ path('marketplace_forgot_password') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-redo me-2"></i>Renvoyer l'email
+                    </a>
+                </div>
+
+                <hr class="my-4">
+
+                <p class="small text-muted mb-0">
+                    <i class="fas fa-clock me-1"></i>
+                    Le lien de réinitialisation expire dans 1 heure
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

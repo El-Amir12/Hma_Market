@@ -39,7 +39,7 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
 
     protected function doGetParent(array $context): bool|string|Template|TemplateWrapper
     {
-        // line 2
+        // line 3
         return "base.html.twig";
     }
 
@@ -52,7 +52,7 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "admin/category/show.html.twig"));
 
-        $this->parent = $this->load("base.html.twig", 2);
+        $this->parent = $this->load("base.html.twig", 3);
         yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
         
         $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
@@ -62,7 +62,7 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
 
     }
 
-    // line 4
+    // line 5
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -75,7 +75,7 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
 
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 4, $this->source); })()), "name", [], "any", false, false, false, 4), "html", null, true);
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 5, $this->source); })()), "name", [], "any", false, false, false, 5), "html", null, true);
         yield " - Détails - HMA Market";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -86,7 +86,7 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         yield from [];
     }
 
-    // line 6
+    // line 7
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -99,7 +99,7 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 7
+        // line 8
         yield "<div class=\"container-fluid px-4\">
     <!-- En-tête avec navigation et actions -->
     <div class=\"d-flex justify-content-between align-items-center mb-4\">
@@ -108,30 +108,30 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                 <ol class=\"breadcrumb\">
                     <li class=\"breadcrumb-item\">
                         <a href=\"";
-        // line 14
+        // line 15
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_index");
         yield "\" class=\"text-decoration-none\">
                             <i class=\"fas fa-tags me-1\"></i> Catégories de produits
                         </a>
                     </li>
                     <li class=\"breadcrumb-item active\">";
-        // line 18
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 18, $this->source); })()), "name", [], "any", false, false, false, 18)), "truncate", [20, "..."], "method", false, false, false, 18), "html", null, true);
+        // line 19
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 19, $this->source); })()), "name", [], "any", false, false, false, 19)), "truncate", [20, "..."], "method", false, false, false, 19), "html", null, true);
         yield "</li>
                 </ol>
             </nav>
             
             <div class=\"d-flex align-items-center\">
                 <a href=\"";
-        // line 23
+        // line 24
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_index");
         yield "\" class=\"btn btn-outline-secondary me-3 btn-hover-scale\">
                     <i class=\"fas fa-arrow-left me-1\"></i> Retour
                 </a>
                 <h1 class=\"h3 mb-0 text-gray-800 slide-in-left\">
                     <i class=\"fas fa-tags me-2\"></i> ";
-        // line 27
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 27, $this->source); })()), "name", [], "any", false, false, false, 27), "html", null, true);
+        // line 28
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 28, $this->source); })()), "name", [], "any", false, false, false, 28), "html", null, true);
         yield "
                 </h1>
             </div>
@@ -139,8 +139,8 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         </div>
         <div class=\"btn-group float-up\">
             <a href=\"";
-        // line 33
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 33, $this->source); })()), "id", [], "any", false, false, false, 33)]), "html", null, true);
+        // line 34
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 34, $this->source); })()), "id", [], "any", false, false, false, 34)]), "html", null, true);
         yield "\" class=\"btn btn-warning btn-hover-lift\">
                 <i class=\"fas fa-edit me-2\"></i> Modifier
             </a>
@@ -155,14 +155,14 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
 
     <!-- Alertes flash -->
     ";
-        // line 46
+        // line 47
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 46, $this->source); })()), "flashes", ["success"], "method", false, false, false, 46));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 47, $this->source); })()), "flashes", ["success"], "method", false, false, false, 47));
         foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
-            // line 47
+            // line 48
             yield "        <div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">
             <i class=\"fas fa-check-circle me-2\"></i> ";
-            // line 48
+            // line 49
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["message"], "html", null, true);
             yield "
             <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
@@ -172,17 +172,17 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 52
+        // line 53
         yield "    
     ";
-        // line 53
+        // line 54
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 53, $this->source); })()), "flashes", ["error"], "method", false, false, false, 53));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 54, $this->source); })()), "flashes", ["error"], "method", false, false, false, 54));
         foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
-            // line 54
+            // line 55
             yield "        <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
             <i class=\"fas fa-exclamation-circle me-2\"></i> ";
-            // line 55
+            // line 56
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["message"], "html", null, true);
             yield "
             <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
@@ -192,7 +192,7 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 59
+        // line 60
         yield "
     <div class=\"row\">
         <!-- Carte principale des informations -->
@@ -203,6 +203,48 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                         <h5 class=\"card-title mb-0\">
                             <i class=\"fas fa-info-circle me-2\"></i> Informations de la catégorie
                         </h5>
+                        <!-- ✅ Badge de statut dans l'en-tête -->
+                        <div>
+                            ";
+        // line 72
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 72, $this->source); })()), "isActive", [], "any", false, false, false, 72)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 73
+            yield "                                <span class=\"badge bg-success me-2\">
+                                    <i class=\"fas fa-check-circle me-1\"></i> Active
+                                </span>
+                            ";
+        } else {
+            // line 77
+            yield "                                <span class=\"badge bg-danger me-2\">
+                                    <i class=\"fas fa-times-circle me-1\"></i> Inactive
+                                </span>
+                            ";
+        }
+        // line 81
+        yield "                            ";
+        // line 82
+        yield "                            ";
+        if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 82, $this->source); })()) == "pharmacy")) {
+            // line 83
+            yield "                                ";
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 83, $this->source); })()), "companyPublic", [], "any", false, false, false, 83)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 84
+                yield "                                    <span class=\"badge bg-primary\">
+                                        <i class=\"fas fa-eye me-1\"></i> Visible sur marketplace
+                                    </span>
+                                ";
+            } else {
+                // line 88
+                yield "                                    <span class=\"badge bg-secondary\">
+                                        <i class=\"fas fa-eye-slash me-1\"></i> Masquée sur marketplace
+                                    </span>
+                                ";
+            }
+            // line 92
+            yield "                            ";
+        }
+        // line 93
+        yield "                        </div>
                     </div>
                 </div>
                 <div class=\"card-body\">
@@ -211,49 +253,29 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                         <div class=\"col-md-4 mb-4 mb-md-0\">
                             <div class=\"text-center\">
                                 ";
-        // line 76
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 76, $this->source); })()), "image", [], "any", false, false, false, 76)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 77
+        // line 101
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 101, $this->source); })()), "image", [], "any", false, false, false, 101)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 102
             yield "                                    <img src=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/categories/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 77, $this->source); })()), "image", [], "any", false, false, false, 77))), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/categories/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 102, $this->source); })()), "image", [], "any", false, false, false, 102))), "html", null, true);
             yield "\" 
                                          alt=\"";
-            // line 78
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 78, $this->source); })()), "name", [], "any", false, false, false, 78), "html", null, true);
+            // line 103
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 103, $this->source); })()), "name", [], "any", false, false, false, 103), "html", null, true);
             yield "\"
                                          class=\"img-fluid rounded shadow-lg mb-3 category-image\"
                                          style=\"max-height: 200px; object-fit: cover;\">
                                 ";
         } else {
-            // line 82
+            // line 107
             yield "                                    <div class=\"bg-gradient-primary rounded d-flex align-items-center justify-content-center mb-3 category-placeholder\"
                                          style=\"height: 200px;\">
                                         <i class=\"fas fa-folder fa-5x text-white\"></i>
                                     </div>
                                 ";
         }
-        // line 87
-        yield "                                
-                                <!-- Statut -->
-                                <div class=\"mb-3\">
-                                    ";
-        // line 90
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 90, $this->source); })()), "isActive", [], "any", false, false, false, 90)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 91
-            yield "                                        <span class=\"badge bg-success rounded-pill px-3 py-2\">
-                                            <i class=\"fas fa-toggle-on me-1\"></i> Active
-                                        </span>
-                                    ";
-        } else {
-            // line 95
-            yield "                                        <span class=\"badge bg-danger rounded-pill px-3 py-2\">
-                                            <i class=\"fas fa-toggle-off me-1\"></i> Inactive
-                                        </span>
-                                    ";
-        }
-        // line 99
-        yield "                                </div>
-                            </div>
+        // line 112
+        yield "                            </div>
                         </div>
 
                         <!-- Détails -->
@@ -262,73 +284,78 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                                 <div class=\"info-item\">
                                     <div class=\"info-label\"><i class=\"fas fa-tag text-primary me-2\"></i> Nom</div>
                                     <div class=\"info-value\">";
-        // line 108
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 108, $this->source); })()), "name", [], "any", false, false, false, 108), "html", null, true);
+        // line 120
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 120, $this->source); })()), "name", [], "any", false, false, false, 120), "html", null, true);
         yield "</div>
                                 </div>
                                 
                                 <div class=\"info-item\">
                                     <div class=\"info-label\"><i class=\"fas fa-link text-primary me-2\"></i> Slug</div>
                                     <div class=\"info-value\"><code class=\"bg-light p-2 rounded\">";
-        // line 113
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 113, $this->source); })()), "slug", [], "any", false, false, false, 113), "html", null, true);
+        // line 125
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 125, $this->source); })()), "slug", [], "any", false, false, false, 125), "html", null, true);
         yield "</code></div>
                                 </div>
                                 
                                 <div class=\"info-item\">
                                     <div class=\"info-label\"><i class=\"fas fa-align-left text-primary me-2\"></i> Description</div>
                                     <div class=\"info-value\">";
-        // line 118
-        yield Twig\Extension\CoreExtension::nl2br($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["category"] ?? null), "description", [], "any", true, true, false, 118)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 118, $this->source); })()), "description", [], "any", false, false, false, 118), "Aucune description")) : ("Aucune description")), "html", null, true));
+        // line 130
+        yield Twig\Extension\CoreExtension::nl2br($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["category"] ?? null), "description", [], "any", true, true, false, 130)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 130, $this->source); })()), "description", [], "any", false, false, false, 130), "Aucune description")) : ("Aucune description")), "html", null, true));
         yield "</div>
                                 </div>
                                 
+                                <!-- ✅ Catégorie parente simplifiée -->
                                 <div class=\"info-item\">
                                     <div class=\"info-label\"><i class=\"fas fa-sitemap text-primary me-2\"></i> Catégorie parente</div>
                                     <div class=\"info-value\">
                                         ";
-        // line 124
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 124, $this->source); })()), "parent", [], "any", false, false, false, 124)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 125
+        // line 137
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 137, $this->source); })()), "parent", [], "any", false, false, false, 137)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 138
             yield "                                            <a href=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 125, $this->source); })()), "parent", [], "any", false, false, false, 125), "id", [], "any", false, false, false, 125)]), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 138, $this->source); })()), "parent", [], "any", false, false, false, 138), "id", [], "any", false, false, false, 138)]), "html", null, true);
             yield "\" 
-                                               class=\"badge bg-info text-decoration-none\">
-                                                <i class=\"fas fa-level-up-alt me-1\"></i> ";
-            // line 127
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 127, $this->source); })()), "parent", [], "any", false, false, false, 127), "name", [], "any", false, false, false, 127), "html", null, true);
+                                               class=\"text-decoration-none\">
+                                                <span class=\"badge bg-primary\">
+                                                    <i class=\"fas fa-level-up-alt me-1\"></i> ";
+            // line 141
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 141, $this->source); })()), "parent", [], "any", false, false, false, 141), "name", [], "any", false, false, false, 141), "html", null, true);
             yield "
+                                                </span>
                                             </a>
                                         ";
         } else {
-            // line 130
-            yield "                                            <span class=\"badge bg-secondary\"><i class=\"fas fa-folder me-1\"></i> Catégorie principale</span>
+            // line 145
+            yield "                                            <span class=\"text-muted\">
+                                                <i class=\"fas fa-folder me-1\"></i> Catégorie principale (aucune parente)
+                                            </span>
                                         ";
         }
-        // line 132
+        // line 149
         yield "                                    </div>
                                 </div>
                                 
                                 ";
-        // line 135
-        if ((CoreExtension::getAttribute($this->env, $this->source, ($context["category"] ?? null), "user", [], "any", true, true, false, 135) && CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 135, $this->source); })()), "user", [], "any", false, false, false, 135))) {
-            // line 136
+        // line 152
+        if ((CoreExtension::getAttribute($this->env, $this->source, ($context["category"] ?? null), "user", [], "any", true, true, false, 152) && CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 152, $this->source); })()), "user", [], "any", false, false, false, 152))) {
+            // line 153
             yield "                                <div class=\"info-item\">
                                     <div class=\"info-label\"><i class=\"fas fa-user text-primary me-2\"></i> Créateur</div>
                                     <div class=\"info-value\">";
-            // line 138
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 138, $this->source); })()), "user", [], "any", false, false, false, 138), "email", [], "any", false, false, false, 138), "html", null, true);
+            // line 155
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 155, $this->source); })()), "user", [], "any", false, false, false, 155), "email", [], "any", false, false, false, 155), "html", null, true);
             yield "</div>
                                 </div>
                                 ";
         }
-        // line 141
+        // line 158
         yield "                                
                                 <div class=\"info-item\">
                                     <div class=\"info-label\"><i class=\"fas fa-calendar-plus text-primary me-2\"></i> Créée le</div>
                                     <div class=\"info-value\">";
-        // line 144
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 144, $this->source); })()), "createdAt", [], "any", false, false, false, 144), "d/m/Y à H:i"), "html", null, true);
+        // line 161
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 161, $this->source); })()), "createdAt", [], "any", false, false, false, 161), "d/m/Y à H:i"), "html", null, true);
         yield "</div>
                                 </div>
                                 
@@ -336,19 +363,19 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                                     <div class=\"info-label\"><i class=\"fas fa-calendar-edit text-primary me-2\"></i> Modifiée le</div>
                                     <div class=\"info-value\">
                                         ";
-        // line 150
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 150, $this->source); })()), "updatedAt", [], "any", false, false, false, 150)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 151
+        // line 167
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 167, $this->source); })()), "updatedAt", [], "any", false, false, false, 167)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 168
             yield "                                            ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 151, $this->source); })()), "updatedAt", [], "any", false, false, false, 151), "d/m/Y à H:i"), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 168, $this->source); })()), "updatedAt", [], "any", false, false, false, 168), "d/m/Y à H:i"), "html", null, true);
             yield "
                                         ";
         } else {
-            // line 153
+            // line 170
             yield "                                            <span class=\"text-muted\">Jamais modifiée</span>
                                         ";
         }
-        // line 155
+        // line 172
         yield "                                    </div>
                                 </div>
                             </div>
@@ -367,8 +394,8 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                 <div class=\"card-body\">
                     <div class=\"text-center mb-4\">
                         <div class=\"display-4 text-primary mb-1\">";
-        // line 172
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 172, $this->source); })()), "products", [], "any", false, false, false, 172)), "html", null, true);
+        // line 189
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 189, $this->source); })()), "products", [], "any", false, false, false, 189)), "html", null, true);
         yield "</div>
                         <div class=\"text-muted\">Produits dans cette catégorie</div>
                     </div>
@@ -380,8 +407,8 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                             <div class=\"stat-icon bg-primary\"><i class=\"fas fa-box text-white\"></i></div>
                             <div class=\"stat-content\">
                                 <div class=\"stat-number\">";
-        // line 182
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), Twig\Extension\CoreExtension::filter($this->env, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 182, $this->source); })()), "products", [], "any", false, false, false, 182), function ($__p__) use ($context, $macros) { $context["p"] = $__p__; return CoreExtension::getAttribute($this->env, $this->source, (isset($context["p"]) || array_key_exists("p", $context) ? $context["p"] : (function () { throw new RuntimeError('Variable "p" does not exist.', 182, $this->source); })()), "isActive", [], "any", false, false, false, 182); })), "html", null, true);
+        // line 199
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), Twig\Extension\CoreExtension::filter($this->env, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 199, $this->source); })()), "products", [], "any", false, false, false, 199), function ($__p__) use ($context, $macros) { $context["p"] = $__p__; return CoreExtension::getAttribute($this->env, $this->source, (isset($context["p"]) || array_key_exists("p", $context) ? $context["p"] : (function () { throw new RuntimeError('Variable "p" does not exist.', 199, $this->source); })()), "isActive", [], "any", false, false, false, 199); })), "html", null, true);
         yield "</div>
                                 <div class=\"stat-label\">Produits actifs</div>
                             </div>
@@ -391,8 +418,8 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                             <div class=\"stat-icon bg-warning\"><i class=\"fas fa-box text-dark\"></i></div>
                             <div class=\"stat-content\">
                                 <div class=\"stat-number\">";
-        // line 190
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), Twig\Extension\CoreExtension::filter($this->env, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 190, $this->source); })()), "products", [], "any", false, false, false, 190), function ($__p__) use ($context, $macros) { $context["p"] = $__p__; return  !CoreExtension::getAttribute($this->env, $this->source, (isset($context["p"]) || array_key_exists("p", $context) ? $context["p"] : (function () { throw new RuntimeError('Variable "p" does not exist.', 190, $this->source); })()), "isActive", [], "any", false, false, false, 190); })), "html", null, true);
+        // line 207
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), Twig\Extension\CoreExtension::filter($this->env, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 207, $this->source); })()), "products", [], "any", false, false, false, 207), function ($__p__) use ($context, $macros) { $context["p"] = $__p__; return  !CoreExtension::getAttribute($this->env, $this->source, (isset($context["p"]) || array_key_exists("p", $context) ? $context["p"] : (function () { throw new RuntimeError('Variable "p" does not exist.', 207, $this->source); })()), "isActive", [], "any", false, false, false, 207); })), "html", null, true);
         yield "</div>
                                 <div class=\"stat-label\">Produits inactifs</div>
                             </div>
@@ -402,8 +429,8 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                             <div class=\"stat-icon bg-info\"><i class=\"fas fa-sitemap text-white\"></i></div>
                             <div class=\"stat-content\">
                                 <div class=\"stat-number\">";
-        // line 198
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 198, $this->source); })()), "children", [], "any", false, false, false, 198)), "html", null, true);
+        // line 215
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 215, $this->source); })()), "children", [], "any", false, false, false, 215)), "html", null, true);
         yield "</div>
                                 <div class=\"stat-label\">Sous-catégories</div>
                             </div>
@@ -413,8 +440,8 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                             <div class=\"stat-icon bg-success\"><i class=\"fas fa-layer-group text-white\"></i></div>
                             <div class=\"stat-content\">
                                 <div class=\"stat-number\">";
-        // line 206
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 206, $this->source); })()), "parent", [], "any", false, false, false, 206)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 206, $this->source); })()), "parent", [], "any", false, false, false, 206), "children", [], "any", false, false, false, 206)), "html", null, true)) : (0));
+        // line 223
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 223, $this->source); })()), "parent", [], "any", false, false, false, 223)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 223, $this->source); })()), "parent", [], "any", false, false, false, 223), "children", [], "any", false, false, false, 223)), "html", null, true)) : (0));
         yield "</div>
                                 <div class=\"stat-label\">Catégories sœurs</div>
                             </div>
@@ -431,63 +458,62 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                 <div class=\"card-body\">
                     <div class=\"d-grid gap-2\">
                         <a href=\"";
-        // line 221
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 221, $this->source); })()), "id", [], "any", false, false, false, 221)]), "html", null, true);
+        // line 238
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 238, $this->source); })()), "id", [], "any", false, false, false, 238)]), "html", null, true);
         yield "\" class=\"btn btn-warning btn-lg\">
                             <i class=\"fas fa-edit me-2\"></i> Modifier
                         </a>
                         
                         ";
-        // line 225
-        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 225, $this->source); })()), "children", [], "any", false, false, false, 225)) > 0)) {
-            // line 226
+        // line 242
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 242, $this->source); })()), "children", [], "any", false, false, false, 242)) > 0)) {
+            // line 243
             yield "                            <a href=\"";
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_index");
             yield "?parent=";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 226, $this->source); })()), "id", [], "any", false, false, false, 226), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 243, $this->source); })()), "id", [], "any", false, false, false, 243), "html", null, true);
             yield "\" class=\"btn btn-info btn-lg\">
                                 <i class=\"fas fa-eye me-2\"></i> Voir les sous-catégories
                             </a>
                         ";
         }
-        // line 230
+        // line 247
         yield "                        
                         ";
-        // line 231
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 231, $this->source); })()), "parent", [], "any", false, false, false, 231)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 232
+        // line 248
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 248, $this->source); })()), "parent", [], "any", false, false, false, 248)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 249
             yield "                            <a href=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 232, $this->source); })()), "parent", [], "any", false, false, false, 232), "id", [], "any", false, false, false, 232)]), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 249, $this->source); })()), "parent", [], "any", false, false, false, 249), "id", [], "any", false, false, false, 249)]), "html", null, true);
             yield "\" class=\"btn btn-secondary btn-lg\">
                                 <i class=\"fas fa-level-up-alt me-2\"></i> Voir la catégorie parente
                             </a>
                         ";
         }
-        // line 236
+        // line 253
         yield "                        
                         <a href=\"";
-        // line 237
+        // line 254
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_new");
         yield "?category=";
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 237, $this->source); })()), "id", [], "any", false, false, false, 237), "html", null, true);
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 254, $this->source); })()), "id", [], "any", false, false, false, 254), "html", null, true);
         yield "\" class=\"btn btn-primary btn-lg\">
                             <i class=\"fas fa-plus me-2\"></i> Ajouter un produit
                         </a>
                         ";
-        // line 240
-        if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 240, $this->source); })()) != "restaurant")) {
-            // line 241
+        // line 257
+        if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 257, $this->source); })()) != "restaurant")) {
+            // line 258
             yield "                            <a href=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_promotions", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 241, $this->source); })()), "id", [], "any", false, false, false, 241)]), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_promotions", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 258, $this->source); })()), "id", [], "any", false, false, false, 258)]), "html", null, true);
             yield "\" 
-                                class=\"btn btn-sm btn-outline-warning\" title=\"Promotions\">
-                                <i class=\"fas fa-percent\"></i> Promotions
+                                class=\"btn btn-outline-warning btn-lg\">
+                                <i class=\"fas fa-percent me-2\"></i> Promotions
                             </a>
                         ";
         }
-        // line 245
+        // line 262
         yield "    
-                        
                     </div>
                 </div>
             </div>
@@ -501,15 +527,15 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                 <i class=\"fas fa-boxes me-2\"></i> 
                 Produits dans cette catégorie 
                 <span class=\"badge bg-light text-dark ms-2\">";
-        // line 259
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 259, $this->source); })()), "products", [], "any", false, false, false, 259)), "html", null, true);
+        // line 275
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 275, $this->source); })()), "products", [], "any", false, false, false, 275)), "html", null, true);
         yield "</span>
             </h5>
             <a href=\"";
-        // line 261
+        // line 277
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_new");
         yield "?category=";
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 261, $this->source); })()), "id", [], "any", false, false, false, 261), "html", null, true);
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 277, $this->source); })()), "id", [], "any", false, false, false, 277), "html", null, true);
         yield "\" class=\"btn btn-light btn-sm\">
                 <i class=\"fas fa-plus me-1\"></i> Ajouter un produit
             </a>
@@ -517,9 +543,9 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         
         <div class=\"card-body\">
             ";
-        // line 267
-        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 267, $this->source); })()), "products", [], "any", false, false, false, 267)) > 0)) {
-            // line 268
+        // line 283
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 283, $this->source); })()), "products", [], "any", false, false, false, 283)) > 0)) {
+            // line 284
             yield "                <div class=\"table-responsive\">
                     <table class=\"table table-hover align-middle\">
                         <thead class=\"table-light\">
@@ -536,103 +562,122 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
                         </thead>
                         <tbody>
                             ";
-            // line 283
+            // line 299
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 283, $this->source); })()), "products", [], "any", false, false, false, 283));
+            $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 299, $this->source); })()), "products", [], "any", false, false, false, 299));
             foreach ($context['_seq'] as $context["_key"] => $context["product"]) {
-                // line 284
+                // line 300
                 yield "                                <tr class=\"product-row\">
                                     <td style=\"width: 70px;\">
                                         ";
-                // line 286
-                if ((CoreExtension::getAttribute($this->env, $this->source, $context["product"], "image", [], "any", false, false, false, 286) && (CoreExtension::getAttribute($this->env, $this->source, $context["product"], "image", [], "any", false, false, false, 286) != "default-product.png"))) {
-                    // line 287
+                // line 302
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["product"], "image", [], "any", false, false, false, 302) && (CoreExtension::getAttribute($this->env, $this->source, $context["product"], "image", [], "any", false, false, false, 302) != "default-product.png"))) {
+                    // line 303
                     yield "                                            <img src=\"";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/products/" . CoreExtension::getAttribute($this->env, $this->source, $context["product"], "image", [], "any", false, false, false, 287))), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/products/" . CoreExtension::getAttribute($this->env, $this->source, $context["product"], "image", [], "any", false, false, false, 303))), "html", null, true);
                     yield "\" 
                                                  alt=\"";
-                    // line 288
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "name", [], "any", false, false, false, 288), "html", null, true);
+                    // line 304
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "name", [], "any", false, false, false, 304), "html", null, true);
                     yield "\"
                                                  class=\"img-thumbnail\" 
                                                  style=\"width: 60px; height: 60px; object-fit: cover;\">
                                         ";
                 } else {
-                    // line 292
+                    // line 308
                     yield "                                            <div class=\"bg-light d-flex align-items-center justify-content-center\" 
                                                  style=\"width: 60px; height: 60px;\">
                                                 <i class=\"fas fa-box text-muted\"></i>
                                             </div>
                                         ";
                 }
-                // line 297
+                // line 313
                 yield "                                    </td>
                                     <td><strong>";
-                // line 298
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "name", [], "any", false, false, false, 298), "html", null, true);
+                // line 314
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "name", [], "any", false, false, false, 314), "html", null, true);
                 yield "</strong></td>
                                     <td>";
-                // line 299
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "description", [], "any", false, false, false, 299)), "truncate", [50, "..."], "method", false, false, false, 299), "html", null, true);
+                // line 315
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "description", [], "any", false, false, false, 315)), "truncate", [50, "..."], "method", false, false, false, 315), "html", null, true);
                 yield "</td>
                                     <td><span class=\"fw-bold text-primary\">";
-                // line 300
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "purchasePrice", [], "any", false, false, false, 300), 0, ",", " "), "html", null, true);
+                // line 316
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "purchasePrice", [], "any", false, false, false, 316), 0, ",", " "), "html", null, true);
                 yield " FCFA</span></td>
                                     <td>
                                         ";
-                // line 302
-                if ((($tmp =  !(null === CoreExtension::getAttribute($this->env, $this->source, $context["product"], "salePrice", [], "any", false, false, false, 302))) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 303
+                // line 318
+                if ((($tmp =  !(null === CoreExtension::getAttribute($this->env, $this->source, $context["product"], "salePrice", [], "any", false, false, false, 318))) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 319
                     yield "                                            <span class=\"fw-bold text-success\">";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "salePrice", [], "any", false, false, false, 303), 0, ",", " "), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "salePrice", [], "any", false, false, false, 319), 0, ",", " "), "html", null, true);
                     yield " FCFA</span>
                                         ";
                 } else {
-                    // line 305
+                    // line 321
                     yield "                                            <span class=\"text-muted\">-</span>
                                         ";
                 }
-                // line 307
+                // line 323
                 yield "                                    </td>
                                     <td>
                                         <span class=\"badge ";
-                // line 309
-                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["product"], "stockQuantity", [], "any", false, false, false, 309) <= CoreExtension::getAttribute($this->env, $this->source, $context["product"], "minQuantity", [], "any", false, false, false, 309))) ? ("bg-warning text-dark") : ("bg-info"));
+                // line 325
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["product"], "stockQuantity", [], "any", false, false, false, 325) <= CoreExtension::getAttribute($this->env, $this->source, $context["product"], "minQuantity", [], "any", false, false, false, 325))) ? ("bg-warning text-dark") : ("bg-info"));
                 yield "\">
                                             ";
-                // line 310
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "stockQuantity", [], "any", false, false, false, 310), "html", null, true);
+                // line 326
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "stockQuantity", [], "any", false, false, false, 326), "html", null, true);
                 yield " ";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["product"], "unit", [], "any", true, true, false, 310)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "unit", [], "any", false, false, false, 310), "")) : ("")), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["product"], "unit", [], "any", true, true, false, 326)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["product"], "unit", [], "any", false, false, false, 326), "")) : ("")), "html", null, true);
                 yield "
                                         </span>
                                     </td>
                                     <td>
-                                        ";
-                // line 314
-                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["product"], "isActive", [], "any", false, false, false, 314)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 315
-                    yield "                                            <span class=\"badge bg-success\">Actif</span>
-                                        ";
-                } else {
-                    // line 317
-                    yield "                                            <span class=\"badge bg-danger\">Inactif</span>
-                                        ";
+                                        <div class=\"d-flex flex-column gap-1\">
+                                            <span class=\"badge ";
+                // line 331
+                yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["product"], "isActive", [], "any", false, false, false, 331)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("bg-success") : ("bg-danger"));
+                yield "\">
+                                                ";
+                // line 332
+                yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["product"], "isActive", [], "any", false, false, false, 332)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Actif") : ("Inactif"));
+                yield "
+                                            </span>
+                                            ";
+                // line 335
+                yield "                                            ";
+                if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 335, $this->source); })()) == "pharmacy")) {
+                    // line 336
+                    yield "                                                <span class=\"badge ";
+                    yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["product"], "companyPublic", [], "any", false, false, false, 336)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("bg-primary") : ("bg-secondary"));
+                    yield "\" style=\"font-size: 9px;\">
+                                                    <i class=\"fas ";
+                    // line 337
+                    yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["product"], "companyPublic", [], "any", false, false, false, 337)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("fa-eye") : ("fa-eye-slash"));
+                    yield " me-1\"></i>
+                                                    ";
+                    // line 338
+                    yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["product"], "companyPublic", [], "any", false, false, false, 338)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Visible") : ("Masqué"));
+                    yield "
+                                                </span>
+                                            ";
                 }
-                // line 319
-                yield "                                    </td>
+                // line 341
+                yield "                                        </div>
+                                    </td>
                                     <td class=\"text-end\">
                                         <div class=\"btn-group btn-group-sm\">
                                             <a href=\"";
-                // line 322
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["product"], "id", [], "any", false, false, false, 322)]), "html", null, true);
+                // line 345
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["product"], "id", [], "any", false, false, false, 345)]), "html", null, true);
                 yield "\" class=\"btn btn-outline-info\" title=\"Voir\">
                                                 <i class=\"fas fa-eye\"></i>
                                             </a>
                                             <a href=\"";
-                // line 325
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["product"], "id", [], "any", false, false, false, 325)]), "html", null, true);
+                // line 348
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["product"], "id", [], "any", false, false, false, 348)]), "html", null, true);
                 yield "\" class=\"btn btn-outline-warning\" title=\"Modifier\">
                                                 <i class=\"fas fa-edit\"></i>
                                             </a>
@@ -644,52 +689,52 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['product'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 332
+            // line 355
             yield "                        </tbody>
                     </table>
                 </div>
             ";
         } else {
-            // line 336
+            // line 359
             yield "                <div class=\"text-center py-5\">
                     <i class=\"fas fa-box-open fa-4x text-muted mb-3\"></i>
                     <h5 class=\"text-muted\">Aucun produit dans cette catégorie</h5>
                     <p class=\"text-muted mb-4\">Commencez par ajouter des produits à cette catégorie</p>
                     <a href=\"";
-            // line 340
+            // line 363
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_product_new");
             yield "?category=";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 340, $this->source); })()), "id", [], "any", false, false, false, 340), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 363, $this->source); })()), "id", [], "any", false, false, false, 363), "html", null, true);
             yield "\" class=\"btn btn-primary\">
                         <i class=\"fas fa-plus me-1\"></i> Ajouter un produit
                     </a>
                 </div>
             ";
         }
-        // line 345
+        // line 368
         yield "        </div>
     </div>
 
     <!-- Liste des sous-catégories -->
     ";
-        // line 349
-        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 349, $this->source); })()), "children", [], "any", false, false, false, 349)) > 0)) {
-            // line 350
+        // line 372
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 372, $this->source); })()), "children", [], "any", false, false, false, 372)) > 0)) {
+            // line 373
             yield "    <div class=\"card shadow-lg border-0 card-hover\">
         <div class=\"card-header bg-gradient-info text-white py-3 d-flex justify-content-between align-items-center\">
             <h5 class=\"card-title mb-0\">
                 <i class=\"fas fa-sitemap me-2\"></i> 
                 Sous-catégories 
                 <span class=\"badge bg-light text-dark ms-2\">";
-            // line 355
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 355, $this->source); })()), "children", [], "any", false, false, false, 355)), "html", null, true);
+            // line 378
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 378, $this->source); })()), "children", [], "any", false, false, false, 378)), "html", null, true);
             yield "</span>
             </h5>
             <a href=\"";
-            // line 357
+            // line 380
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_new");
             yield "?parent=";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 357, $this->source); })()), "id", [], "any", false, false, false, 357), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 380, $this->source); })()), "id", [], "any", false, false, false, 380), "html", null, true);
             yield "\" class=\"btn btn-light btn-sm\">
                 <i class=\"fas fa-plus me-1\"></i> Ajouter une sous-catégorie
             </a>
@@ -698,70 +743,88 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         <div class=\"card-body\">
             <div class=\"row\">
                 ";
-            // line 364
+            // line 387
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 364, $this->source); })()), "children", [], "any", false, false, false, 364));
+            $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 387, $this->source); })()), "children", [], "any", false, false, false, 387));
             foreach ($context['_seq'] as $context["_key"] => $context["child"]) {
-                // line 365
+                // line 388
                 yield "                <div class=\"col-md-6 col-lg-4 mb-3\">
                     <div class=\"card border-0 bg-light h-100 card-hover-sm\">
                         <div class=\"card-body\">
                             <div class=\"d-flex align-items-start\">
                                 ";
-                // line 369
-                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["child"], "image", [], "any", false, false, false, 369)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 370
+                // line 392
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["child"], "image", [], "any", false, false, false, 392)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 393
                     yield "                                    <img src=\"";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/categories/" . CoreExtension::getAttribute($this->env, $this->source, $context["child"], "image", [], "any", false, false, false, 370))), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/categories/" . CoreExtension::getAttribute($this->env, $this->source, $context["child"], "image", [], "any", false, false, false, 393))), "html", null, true);
                     yield "\" 
                                          alt=\"";
-                    // line 371
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "name", [], "any", false, false, false, 371), "html", null, true);
+                    // line 394
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "name", [], "any", false, false, false, 394), "html", null, true);
                     yield "\"
                                          class=\"rounded me-3\"
                                          style=\"width: 60px; height: 60px; object-fit: cover;\">
                                 ";
                 } else {
-                    // line 375
+                    // line 398
                     yield "                                    <div class=\"bg-secondary rounded d-flex align-items-center justify-content-center me-3\"
                                          style=\"width: 60px; height: 60px;\">
                                         <i class=\"fas fa-folder text-white\"></i>
                                     </div>
                                 ";
                 }
-                // line 380
+                // line 403
                 yield "                                <div class=\"flex-grow-1\">
                                     <h6 class=\"mb-1\">";
-                // line 381
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "name", [], "any", false, false, false, 381), "html", null, true);
+                // line 404
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["child"], "name", [], "any", false, false, false, 404), "html", null, true);
                 yield "</h6>
-                                    <div class=\"d-flex align-items-center mb-2\">
+                                    <div class=\"d-flex flex-wrap align-items-center gap-1 mb-2\">
+                                        <span class=\"badge ";
+                // line 406
+                yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["child"], "isActive", [], "any", false, false, false, 406)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("bg-success") : ("bg-danger"));
+                yield "\">
+                                            ";
+                // line 407
+                yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["child"], "isActive", [], "any", false, false, false, 407)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Active") : ("Inactive"));
+                yield "
+                                        </span>
+                                        <span class=\"badge bg-primary\">";
+                // line 409
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["child"], "products", [], "any", false, false, false, 409)), "html", null, true);
+                yield " produits</span>
                                         ";
-                // line 383
-                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["child"], "isActive", [], "any", false, false, false, 383)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 384
-                    yield "                                            <span class=\"badge bg-success me-2\">Active</span>
-                                        ";
-                } else {
-                    // line 386
-                    yield "                                            <span class=\"badge bg-danger me-2\">Inactive</span>
+                // line 411
+                yield "                                        ";
+                if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 411, $this->source); })()) == "pharmacy")) {
+                    // line 412
+                    yield "                                            <span class=\"badge ";
+                    yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["child"], "companyPublic", [], "any", false, false, false, 412)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("bg-primary") : ("bg-secondary"));
+                    yield "\" style=\"font-size: 9px;\">
+                                                <i class=\"fas ";
+                    // line 413
+                    yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["child"], "companyPublic", [], "any", false, false, false, 413)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("fa-eye") : ("fa-eye-slash"));
+                    yield " me-1\"></i>
+                                                ";
+                    // line 414
+                    yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["child"], "companyPublic", [], "any", false, false, false, 414)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Visible") : ("Masquée"));
+                    yield "
+                                            </span>
                                         ";
                 }
-                // line 388
-                yield "                                        <span class=\"badge bg-primary\">";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["child"], "products", [], "any", false, false, false, 388)), "html", null, true);
-                yield " produits</span>
-                                    </div>
+                // line 417
+                yield "                                    </div>
                                     <div class=\"btn-group btn-group-sm\">
                                         <a href=\"";
-                // line 391
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["child"], "id", [], "any", false, false, false, 391)]), "html", null, true);
+                // line 419
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["child"], "id", [], "any", false, false, false, 419)]), "html", null, true);
                 yield "\" class=\"btn btn-outline-info\">
                                             <i class=\"fas fa-eye\"></i>
                                         </a>
                                         <a href=\"";
-                // line 394
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["child"], "id", [], "any", false, false, false, 394)]), "html", null, true);
+                // line 422
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["child"], "id", [], "any", false, false, false, 422)]), "html", null, true);
                 yield "\" class=\"btn btn-outline-warning\">
                                             <i class=\"fas fa-edit\"></i>
                                         </a>
@@ -776,15 +839,14 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['child'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 404
+            // line 432
             yield "            </div>
         </div>
     </div>
     ";
         }
-        // line 408
+        // line 436
         yield "</div>
-
 
 <!-- Modal de suppression avec confirmation -->
 <div class=\"modal fade\" id=\"deleteCategoryModal\" tabindex=\"-1\">
@@ -799,8 +861,8 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
             <div class=\"modal-body text-center py-4\">
                 <i class=\"fas fa-trash-alt fa-4x text-danger mb-3\"></i>
                 <h5>Êtes-vous sûr de vouloir supprimer la catégorie <strong id=\"deleteCategoryNameSpan\">";
-        // line 423
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 423, $this->source); })()), "name", [], "any", false, false, false, 423), "html", null, true);
+        // line 450
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 450, $this->source); })()), "name", [], "any", false, false, false, 450), "html", null, true);
         yield "</strong> ?</h5>
                 <p class=\"text-muted\">Cette action est irréversible.</p>
 
@@ -838,7 +900,7 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         yield from [];
     }
 
-    // line 452
+    // line 479
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -851,7 +913,7 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 453
+        // line 480
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
 <style>
@@ -910,7 +972,7 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         yield from [];
     }
 
-    // line 502
+    // line 529
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -923,7 +985,7 @@ class __TwigTemplate_e2f9b21849d36c7ecc3865b5fd380982 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 503
+        // line 530
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
@@ -940,16 +1002,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteCategoryNameSpan = document.getElementById('deleteCategoryNameSpan');
 
     const categoryName = \"";
-        // line 517
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 517, $this->source); })()), "name", [], "any", false, false, false, 517), "js"), "html", null, true);
+        // line 544
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 544, $this->source); })()), "name", [], "any", false, false, false, 544), "js"), "html", null, true);
         yield "\";
     const hasProducts = ";
-        // line 518
-        yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 518, $this->source); })()), "products", [], "any", false, false, false, 518)) > 0)) ? ("true") : ("false"));
+        // line 545
+        yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 545, $this->source); })()), "products", [], "any", false, false, false, 545)) > 0)) ? ("true") : ("false"));
         yield ";
     const hasChildren = ";
-        // line 519
-        yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 519, $this->source); })()), "children", [], "any", false, false, false, 519)) > 0)) ? ("true") : ("false"));
+        // line 546
+        yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 546, $this->source); })()), "children", [], "any", false, false, false, 546)) > 0)) ? ("true") : ("false"));
         yield ";
 
     // Initialisation du modal (affichage conditionnel)
@@ -985,12 +1047,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (deleteButton) {
         deleteButton.addEventListener('click', function() {
             deleteForm.action = `/admin/category/";
-        // line 553
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 553, $this->source); })()), "id", [], "any", false, false, false, 553), "html", null, true);
+        // line 580
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 580, $this->source); })()), "id", [], "any", false, false, false, 580), "html", null, true);
         yield "`;
             deleteToken.value = '";
-        // line 554
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 554, $this->source); })()), "id", [], "any", false, false, false, 554))), "html", null, true);
+        // line 581
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 581, $this->source); })()), "id", [], "any", false, false, false, 581))), "html", null, true);
         yield "';
             deleteConfirmInput.value = '';
             deleteConfirmBtn.disabled = (hasProducts || hasChildren);
@@ -1030,12 +1092,13 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  993 => 554,  989 => 553,  952 => 519,  948 => 518,  944 => 517,  927 => 503,  914 => 502,  855 => 453,  842 => 452,  803 => 423,  786 => 408,  780 => 404,  764 => 394,  758 => 391,  751 => 388,  747 => 386,  743 => 384,  741 => 383,  736 => 381,  733 => 380,  726 => 375,  719 => 371,  714 => 370,  712 => 369,  706 => 365,  702 => 364,  690 => 357,  685 => 355,  678 => 350,  676 => 349,  670 => 345,  660 => 340,  654 => 336,  648 => 332,  635 => 325,  629 => 322,  624 => 319,  620 => 317,  616 => 315,  614 => 314,  605 => 310,  601 => 309,  597 => 307,  593 => 305,  587 => 303,  585 => 302,  580 => 300,  576 => 299,  572 => 298,  569 => 297,  562 => 292,  555 => 288,  550 => 287,  548 => 286,  544 => 284,  540 => 283,  523 => 268,  521 => 267,  510 => 261,  505 => 259,  489 => 245,  480 => 241,  478 => 240,  470 => 237,  467 => 236,  459 => 232,  457 => 231,  454 => 230,  444 => 226,  442 => 225,  435 => 221,  417 => 206,  406 => 198,  395 => 190,  384 => 182,  371 => 172,  352 => 155,  348 => 153,  342 => 151,  340 => 150,  331 => 144,  326 => 141,  320 => 138,  316 => 136,  314 => 135,  309 => 132,  305 => 130,  299 => 127,  293 => 125,  291 => 124,  282 => 118,  274 => 113,  266 => 108,  255 => 99,  249 => 95,  243 => 91,  241 => 90,  236 => 87,  229 => 82,  222 => 78,  217 => 77,  215 => 76,  196 => 59,  186 => 55,  183 => 54,  179 => 53,  176 => 52,  166 => 48,  163 => 47,  159 => 46,  143 => 33,  134 => 27,  127 => 23,  119 => 18,  112 => 14,  103 => 7,  90 => 6,  66 => 4,  43 => 2,);
+        return array (  1055 => 581,  1051 => 580,  1014 => 546,  1010 => 545,  1006 => 544,  989 => 530,  976 => 529,  917 => 480,  904 => 479,  865 => 450,  849 => 436,  843 => 432,  827 => 422,  821 => 419,  817 => 417,  811 => 414,  807 => 413,  802 => 412,  799 => 411,  795 => 409,  790 => 407,  786 => 406,  781 => 404,  778 => 403,  771 => 398,  764 => 394,  759 => 393,  757 => 392,  751 => 388,  747 => 387,  735 => 380,  730 => 378,  723 => 373,  721 => 372,  715 => 368,  705 => 363,  699 => 359,  693 => 355,  680 => 348,  674 => 345,  668 => 341,  662 => 338,  658 => 337,  653 => 336,  650 => 335,  645 => 332,  641 => 331,  631 => 326,  627 => 325,  623 => 323,  619 => 321,  613 => 319,  611 => 318,  606 => 316,  602 => 315,  598 => 314,  595 => 313,  588 => 308,  581 => 304,  576 => 303,  574 => 302,  570 => 300,  566 => 299,  549 => 284,  547 => 283,  536 => 277,  531 => 275,  516 => 262,  507 => 258,  505 => 257,  497 => 254,  494 => 253,  486 => 249,  484 => 248,  481 => 247,  471 => 243,  469 => 242,  462 => 238,  444 => 223,  433 => 215,  422 => 207,  411 => 199,  398 => 189,  379 => 172,  375 => 170,  369 => 168,  367 => 167,  358 => 161,  353 => 158,  347 => 155,  343 => 153,  341 => 152,  336 => 149,  330 => 145,  323 => 141,  316 => 138,  314 => 137,  304 => 130,  296 => 125,  288 => 120,  278 => 112,  271 => 107,  264 => 103,  259 => 102,  257 => 101,  247 => 93,  244 => 92,  238 => 88,  232 => 84,  229 => 83,  226 => 82,  224 => 81,  218 => 77,  212 => 73,  210 => 72,  196 => 60,  186 => 56,  183 => 55,  179 => 54,  176 => 53,  166 => 49,  163 => 48,  159 => 47,  143 => 34,  134 => 28,  127 => 24,  119 => 19,  112 => 15,  103 => 8,  90 => 7,  66 => 5,  43 => 3,);
     }
 
     public function getSourceContext(): Source
     {
         return new Source("{# templates/admin/category/show.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ category.name }} - Détails - HMA Market{% endblock %}
@@ -1103,6 +1166,30 @@ document.addEventListener('DOMContentLoaded', function() {
                         <h5 class=\"card-title mb-0\">
                             <i class=\"fas fa-info-circle me-2\"></i> Informations de la catégorie
                         </h5>
+                        <!-- ✅ Badge de statut dans l'en-tête -->
+                        <div>
+                            {% if category.isActive %}
+                                <span class=\"badge bg-success me-2\">
+                                    <i class=\"fas fa-check-circle me-1\"></i> Active
+                                </span>
+                            {% else %}
+                                <span class=\"badge bg-danger me-2\">
+                                    <i class=\"fas fa-times-circle me-1\"></i> Inactive
+                                </span>
+                            {% endif %}
+                            {# ✅ Badge de visibilité (pour les pharmacies) #}
+                            {% if companyType == 'pharmacy' %}
+                                {% if category.companyPublic %}
+                                    <span class=\"badge bg-primary\">
+                                        <i class=\"fas fa-eye me-1\"></i> Visible sur marketplace
+                                    </span>
+                                {% else %}
+                                    <span class=\"badge bg-secondary\">
+                                        <i class=\"fas fa-eye-slash me-1\"></i> Masquée sur marketplace
+                                    </span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 <div class=\"card-body\">
@@ -1121,19 +1208,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <i class=\"fas fa-folder fa-5x text-white\"></i>
                                     </div>
                                 {% endif %}
-                                
-                                <!-- Statut -->
-                                <div class=\"mb-3\">
-                                    {% if category.isActive %}
-                                        <span class=\"badge bg-success rounded-pill px-3 py-2\">
-                                            <i class=\"fas fa-toggle-on me-1\"></i> Active
-                                        </span>
-                                    {% else %}
-                                        <span class=\"badge bg-danger rounded-pill px-3 py-2\">
-                                            <i class=\"fas fa-toggle-off me-1\"></i> Inactive
-                                        </span>
-                                    {% endif %}
-                                </div>
                             </div>
                         </div>
 
@@ -1155,16 +1229,21 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class=\"info-value\">{{ category.description|default('Aucune description')|nl2br }}</div>
                                 </div>
                                 
+                                <!-- ✅ Catégorie parente simplifiée -->
                                 <div class=\"info-item\">
                                     <div class=\"info-label\"><i class=\"fas fa-sitemap text-primary me-2\"></i> Catégorie parente</div>
                                     <div class=\"info-value\">
                                         {% if category.parent %}
                                             <a href=\"{{ path('app_admin_category_show', {'id': category.parent.id}) }}\" 
-                                               class=\"badge bg-info text-decoration-none\">
-                                                <i class=\"fas fa-level-up-alt me-1\"></i> {{ category.parent.name }}
+                                               class=\"text-decoration-none\">
+                                                <span class=\"badge bg-primary\">
+                                                    <i class=\"fas fa-level-up-alt me-1\"></i> {{ category.parent.name }}
+                                                </span>
                                             </a>
                                         {% else %}
-                                            <span class=\"badge bg-secondary\"><i class=\"fas fa-folder me-1\"></i> Catégorie principale</span>
+                                            <span class=\"text-muted\">
+                                                <i class=\"fas fa-folder me-1\"></i> Catégorie principale (aucune parente)
+                                            </span>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -1276,11 +1355,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         </a>
                         {% if companyType != 'restaurant' %}
                             <a href=\"{{ path('app_admin_category_promotions', {'id': category.id}) }}\" 
-                                class=\"btn btn-sm btn-outline-warning\" title=\"Promotions\">
-                                <i class=\"fas fa-percent\"></i> Promotions
+                                class=\"btn btn-outline-warning btn-lg\">
+                                <i class=\"fas fa-percent me-2\"></i> Promotions
                             </a>
                         {% endif %}    
-                        
                     </div>
                 </div>
             </div>
@@ -1348,11 +1426,18 @@ document.addEventListener('DOMContentLoaded', function() {
                                         </span>
                                     </td>
                                     <td>
-                                        {% if product.isActive %}
-                                            <span class=\"badge bg-success\">Actif</span>
-                                        {% else %}
-                                            <span class=\"badge bg-danger\">Inactif</span>
-                                        {% endif %}
+                                        <div class=\"d-flex flex-column gap-1\">
+                                            <span class=\"badge {{ product.isActive ? 'bg-success' : 'bg-danger' }}\">
+                                                {{ product.isActive ? 'Actif' : 'Inactif' }}
+                                            </span>
+                                            {# ✅ Badge de visibilité pour les produits (pharmacies) #}
+                                            {% if companyType == 'pharmacy' %}
+                                                <span class=\"badge {{ product.companyPublic ? 'bg-primary' : 'bg-secondary' }}\" style=\"font-size: 9px;\">
+                                                    <i class=\"fas {{ product.companyPublic ? 'fa-eye' : 'fa-eye-slash' }} me-1\"></i>
+                                                    {{ product.companyPublic ? 'Visible' : 'Masqué' }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
                                     </td>
                                     <td class=\"text-end\">
                                         <div class=\"btn-group btn-group-sm\">
@@ -1416,13 +1501,18 @@ document.addEventListener('DOMContentLoaded', function() {
                                 {% endif %}
                                 <div class=\"flex-grow-1\">
                                     <h6 class=\"mb-1\">{{ child.name }}</h6>
-                                    <div class=\"d-flex align-items-center mb-2\">
-                                        {% if child.isActive %}
-                                            <span class=\"badge bg-success me-2\">Active</span>
-                                        {% else %}
-                                            <span class=\"badge bg-danger me-2\">Inactive</span>
-                                        {% endif %}
+                                    <div class=\"d-flex flex-wrap align-items-center gap-1 mb-2\">
+                                        <span class=\"badge {{ child.isActive ? 'bg-success' : 'bg-danger' }}\">
+                                            {{ child.isActive ? 'Active' : 'Inactive' }}
+                                        </span>
                                         <span class=\"badge bg-primary\">{{ child.products|length }} produits</span>
+                                        {# ✅ Badge de visibilité pour les sous-catégories (pharmacies) #}
+                                        {% if companyType == 'pharmacy' %}
+                                            <span class=\"badge {{ child.companyPublic ? 'bg-primary' : 'bg-secondary' }}\" style=\"font-size: 9px;\">
+                                                <i class=\"fas {{ child.companyPublic ? 'fa-eye' : 'fa-eye-slash' }} me-1\"></i>
+                                                {{ child.companyPublic ? 'Visible' : 'Masquée' }}
+                                            </span>
+                                        {% endif %}
                                     </div>
                                     <div class=\"btn-group btn-group-sm\">
                                         <a href=\"{{ path('app_admin_category_show', {'id': child.id}) }}\" class=\"btn btn-outline-info\">
@@ -1443,7 +1533,6 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     {% endif %}
 </div>
-
 
 <!-- Modal de suppression avec confirmation -->
 <div class=\"modal fade\" id=\"deleteCategoryModal\" tabindex=\"-1\">

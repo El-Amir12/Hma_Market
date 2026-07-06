@@ -62,8 +62,7 @@ return [
         '/company/analysis' => [[['_route' => 'company_analysis_index', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::index'], null, ['GET' => 0], null, true, false, null]],
         '/company/analysis/new' => [[['_route' => 'company_analysis_new', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/company/settings' => [[['_route' => 'app_company_settings_index', '_controller' => 'App\\Controller\\Company\\CompanySettingsController::index'], null, ['GET' => 0, 'POST' => 1], null, true, false, null]],
-        '/marketplace/forgot-password' => [[['_route' => 'marketplace_forgot_password', '_controller' => 'App\\Controller\\Customer\\ResetPasswordController::request'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        '/marketplace/check-email' => [[['_route' => 'marketplace_check_email', '_controller' => 'App\\Controller\\Customer\\ResetPasswordController::checkEmail'], null, null, null, false, false, null]],
+        '/company/settings/guard-periods' => [[['_route' => 'app_company_settings_guard_periods', '_controller' => 'App\\Controller\\Company\\CompanySettingsController::saveGuardPeriods'], null, ['POST' => 0], null, false, false, null]],
         '/toggle-visibility' => [[['_route' => 'app_dashboard_toggle_visibility', '_controller' => 'App\\Controller\\DashboardController::toggleVisibility'], null, ['POST' => 0], null, false, false, null]],
         '/guard-periods' => [[['_route' => 'app_dashboard_guard_periods', '_controller' => 'App\\Controller\\DashboardController::saveGuardPeriods'], null, ['POST' => 0], null, false, false, null]],
         '/dashboard/company/details' => [[['_route' => 'app_dashboard_hmaservice_details', '_controller' => 'App\\Controller\\Dashboard\\HmaServiceProfileController::showDetails'], null, ['GET' => 0], null, false, false, null]],
@@ -82,6 +81,8 @@ return [
         '/marketplace/cart' => [[['_route' => 'marketplace_cart', '_controller' => 'App\\Controller\\Marketplace\\CartController::index'], null, null, null, true, false, null]],
         '/marketplace/cart/clear' => [[['_route' => 'marketplace_cart_clear', '_controller' => 'App\\Controller\\Marketplace\\CartController::clear'], null, ['POST' => 0], null, false, false, null]],
         '/marketplace/favorites' => [[['_route' => 'marketplace_favorites', '_controller' => 'App\\Controller\\Marketplace\\FavoriteController::index'], null, null, null, false, false, null]],
+        '/marketplace/forgot-password' => [[['_route' => 'marketplace_forgot_password', '_controller' => 'App\\Controller\\Marketplace\\ForgotPasswordController::forgotPassword'], null, null, null, false, false, null]],
+        '/marketplace/check-email' => [[['_route' => 'marketplace_check_email', '_controller' => 'App\\Controller\\Marketplace\\ForgotPasswordController::checkEmail'], null, null, null, false, false, null]],
         '/marketplace' => [[['_route' => 'marketplace_home', '_controller' => 'App\\Controller\\Marketplace\\HomeController::index'], null, null, null, false, false, null]],
         '/marketplace/favorite/toggle' => [[['_route' => 'marketplace_favorite_toggle', '_controller' => 'App\\Controller\\Marketplace\\HomeController::toggleFavorite'], null, ['POST' => 0], null, false, false, null]],
         '/marketplace/favorites/count' => [[['_route' => 'marketplace_favorites_count', '_controller' => 'App\\Controller\\Marketplace\\HomeController::getFavoritesCount'], null, ['GET' => 0], null, false, false, null]],
@@ -400,32 +401,32 @@ return [
                     .')'
                 .')'
                 .'|/ma(?'
+                    .'|nager/team/([^/]++)(?'
+                        .'|(*:2360)'
+                        .'|/edit(*:2374)'
+                    .')'
                     .'|rketplace/(?'
+                        .'|verify\\-email/([^/]++)(*:2419)'
                         .'|rese(?'
-                            .'|t\\-password/([^/]++)(*:2378)'
-                            .'|nd\\-verification/([^/]++)(*:2412)'
+                            .'|nd\\-verification/([^/]++)(*:2460)'
+                            .'|t\\-password/([^/]++)(*:2489)'
                         .')'
-                        .'|verify\\-email/([^/]++)(*:2444)'
                         .'|cart/(?'
-                            .'|update/([^/]++)(*:2476)'
-                            .'|remove/([^/]++)(*:2500)'
+                            .'|update/([^/]++)(*:2522)'
+                            .'|remove/([^/]++)(*:2546)'
                         .')'
-                        .'|favorite/check/([^/]++)(*:2533)'
+                        .'|favorite/check/([^/]++)(*:2579)'
                         .'|p(?'
                             .'|harmacies/api/pharmacy/([^/]++)/(?'
-                                .'|categories(*:2591)'
-                                .'|forms(*:2605)'
+                                .'|categories(*:2637)'
+                                .'|forms(*:2651)'
                             .')'
                             .'|roducts/(?'
-                                .'|([^/]++)(*:2634)'
-                                .'|detail/([^/]++)(*:2658)'
-                                .'|([^/]++)/([^/]++)(*:2684)'
+                                .'|([^/]++)(*:2680)'
+                                .'|detail/([^/]++)(*:2704)'
+                                .'|([^/]++)/([^/]++)(*:2730)'
                             .')'
                         .')'
-                    .')'
-                    .'|nager/team/([^/]++)(?'
-                        .'|(*:2718)'
-                        .'|/edit(*:2732)'
                     .')'
                 .')'
                 .'|/p(?'
@@ -692,19 +693,19 @@ return [
         2258 => [[['_route' => 'company_analysis_download', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::download'], ['id'], ['GET' => 0], null, false, false, null]],
         2297 => [[['_route' => 'marketplace_category', '_controller' => 'App\\Controller\\Marketplace\\CategoryController::show'], ['slug'], null, null, false, true, null]],
         2321 => [[['_route' => 'customer_order_show', '_controller' => 'App\\Controller\\Marketplace\\OrderController::show'], ['id'], null, null, false, true, null]],
-        2378 => [[['_route' => 'marketplace_reset_password', '_controller' => 'App\\Controller\\Customer\\ResetPasswordController::reset'], ['token'], null, null, false, true, null]],
-        2412 => [[['_route' => 'marketplace_resend_verification', '_controller' => 'App\\Controller\\Marketplace\\AuthController::resendVerification'], ['email'], null, null, false, true, null]],
-        2444 => [[['_route' => 'marketplace_verify_email', '_controller' => 'App\\Controller\\Marketplace\\AuthController::verifyEmail'], ['token'], null, null, false, true, null]],
-        2476 => [[['_route' => 'marketplace_cart_update', '_controller' => 'App\\Controller\\Marketplace\\CartController::update'], ['id'], ['POST' => 0], null, false, true, null]],
-        2500 => [[['_route' => 'marketplace_cart_remove', '_controller' => 'App\\Controller\\Marketplace\\CartController::remove'], ['id'], ['POST' => 0], null, false, true, null]],
-        2533 => [[['_route' => 'marketplace_favorite_check', '_controller' => 'App\\Controller\\Marketplace\\FavoriteController::check'], ['productId'], ['GET' => 0], null, false, true, null]],
-        2591 => [[['_route' => 'api_pharmacy_categories', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::getPharmacyCategories'], ['id'], null, null, false, false, null]],
-        2605 => [[['_route' => 'api_pharmacy_forms', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::getPharmacyForms'], ['id'], null, null, false, false, null]],
-        2634 => [[['_route' => 'marketplace_product_show', '_controller' => 'App\\Controller\\Marketplace\\ProductController::show'], ['id'], null, null, false, true, null]],
-        2658 => [[['_route' => 'marketplace_product_detail', '_controller' => 'App\\Controller\\Marketplace\\ProductController::detail'], ['id'], null, null, false, true, null]],
-        2684 => [[['_route' => 'marketplace_product_detail_slug', '_controller' => 'App\\Controller\\Marketplace\\ProductController::showWithSlug'], ['id', 'slug'], null, null, false, true, null]],
-        2718 => [[['_route' => 'app_manager_team_show', '_controller' => 'App\\Controller\\Manager\\TeamController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        2732 => [[['_route' => 'app_manager_team_edit', '_controller' => 'App\\Controller\\Manager\\TeamController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2360 => [[['_route' => 'app_manager_team_show', '_controller' => 'App\\Controller\\Manager\\TeamController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        2374 => [[['_route' => 'app_manager_team_edit', '_controller' => 'App\\Controller\\Manager\\TeamController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2419 => [[['_route' => 'marketplace_verify_email', '_controller' => 'App\\Controller\\Marketplace\\AuthController::verifyEmail'], ['token'], null, null, false, true, null]],
+        2460 => [[['_route' => 'marketplace_resend_verification', '_controller' => 'App\\Controller\\Marketplace\\AuthController::resendVerification'], ['email'], null, null, false, true, null]],
+        2489 => [[['_route' => 'marketplace_reset_password', '_controller' => 'App\\Controller\\Marketplace\\ForgotPasswordController::resetPassword'], ['token'], null, null, false, true, null]],
+        2522 => [[['_route' => 'marketplace_cart_update', '_controller' => 'App\\Controller\\Marketplace\\CartController::update'], ['id'], ['POST' => 0], null, false, true, null]],
+        2546 => [[['_route' => 'marketplace_cart_remove', '_controller' => 'App\\Controller\\Marketplace\\CartController::remove'], ['id'], ['POST' => 0], null, false, true, null]],
+        2579 => [[['_route' => 'marketplace_favorite_check', '_controller' => 'App\\Controller\\Marketplace\\FavoriteController::check'], ['productId'], ['GET' => 0], null, false, true, null]],
+        2637 => [[['_route' => 'api_pharmacy_categories', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::getPharmacyCategories'], ['id'], null, null, false, false, null]],
+        2651 => [[['_route' => 'api_pharmacy_forms', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::getPharmacyForms'], ['id'], null, null, false, false, null]],
+        2680 => [[['_route' => 'marketplace_product_show', '_controller' => 'App\\Controller\\Marketplace\\ProductController::show'], ['id'], null, null, false, true, null]],
+        2704 => [[['_route' => 'marketplace_product_detail', '_controller' => 'App\\Controller\\Marketplace\\ProductController::detail'], ['id'], null, null, false, true, null]],
+        2730 => [[['_route' => 'marketplace_product_detail_slug', '_controller' => 'App\\Controller\\Marketplace\\ProductController::showWithSlug'], ['id', 'slug'], null, null, false, true, null]],
         2774 => [[['_route' => 'payment_success_with_id', '_controller' => 'App\\Controller\\PaymentController::successWithId'], ['id'], ['GET' => 0], null, false, true, null]],
         2810 => [[['_route' => 'payment_already_processed', '_controller' => 'App\\Controller\\PaymentController::alreadyProcessed'], ['id'], ['GET' => 0], null, false, true, null]],
         2849 => [[['_route' => 'print_ticket', '_controller' => 'App\\Controller\\PrintController::printTicket'], ['id', 'type'], ['GET' => 0], null, false, true, null]],

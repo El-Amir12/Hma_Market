@@ -35,7 +35,8 @@ class ProductRepository extends ServiceEntityRepository
         int $page = 1,
         int $limit = 12,
         ?int $promotionId = null,
-        string $unit = '' // Nouveau paramètre
+        string $unit = '',
+        string $visibility = '' // ✅ Nouveau paramètre
     ): Paginator {
         $qb = $this->createQueryBuilder('p')
             ->leftJoin('p.category', 'c')
@@ -100,6 +101,15 @@ class ProductRepository extends ServiceEntityRepository
             }
         }
 
+        // ✅ Filtre par visibilité (company_public)
+        if ($visibility) {
+            if ($visibility === 'visible') {
+                $qb->andWhere('p.company_public = true');
+            } elseif ($visibility === 'hidden') {
+                $qb->andWhere('p.company_public = false');
+            }
+        }
+
         // Filtres supplémentaires : dosage, forme, prescription_required
         if ($dosage) {
             $qb->andWhere('p.dosage LIKE :dosage')
@@ -145,7 +155,8 @@ class ProductRepository extends ServiceEntityRepository
         string $prescriptionRequired = '',
         string $search = '',
         ?int $promotionId = null,
-        string $unit = '' // Nouveau paramètre
+        string $unit = '',
+        string $visibility = '' // ✅ Nouveau paramètre
     ): int {
         $qb = $this->createQueryBuilder('p')
             ->select('COUNT(p.id)');
@@ -201,6 +212,15 @@ class ProductRepository extends ServiceEntityRepository
                 $qb->andWhere('p.subscription_active = true');
             } elseif ($subscriptionStatus === 'inactive') {
                 $qb->andWhere('p.subscription_active = false');
+            }
+        }
+
+        // ✅ Filtre par visibilité (company_public)
+        if ($visibility) {
+            if ($visibility === 'visible') {
+                $qb->andWhere('p.company_public = true');
+            } elseif ($visibility === 'hidden') {
+                $qb->andWhere('p.company_public = false');
             }
         }
 
@@ -287,7 +307,7 @@ class ProductRepository extends ServiceEntityRepository
         return $paginator;
     }
 
-     /**
+    /**
      * Retourne la liste des unités distinctes utilisées par les produits de l'entreprise.
      *
      * @return array<string>

@@ -62,6 +62,8 @@ final class CategoryController extends AbstractController
             throw new AccessDeniedException('Aucun service associé à votre compte.');
         }
 
+        $companyType = $hmaService->getType(); // ✅ Récupération du type
+
         $page = $request->query->getInt('page', 1);
         $limit = 12;
         $search = $request->query->get('search', '');
@@ -69,29 +71,31 @@ final class CategoryController extends AbstractController
         $type = $request->query->get('type', 'all');
         $subStatus = $request->query->get('sub_status', '');
         $promotionId = $request->query->getInt('promotion', 0);
+        $visibility = $request->query->get('visibility', 'all'); 
 
-        // 🔥 Récupérer UNIQUEMENT les promotions qui concernent les catégories de produits
-        // Pour les restaurants, ce filtre n'est pas pertinent car ils ne font pas de promotions sur les catégories de produits
-        // Donc on conditionne l'affichage selon le type d'entreprise
-        $companyType = $hmaService->getType();
+        // Récupérer les promotions
         $promotions = [];
-        
         if ($companyType !== 'restaurant') {
-            // Pour les entreprises non-restaurant, on récupère les promotions liées aux catégories de produits
             $promotions = $promotionRepository->findActiveForProductCategories($hmaService);
         }
 
         $paginator = $categoryRepository->findFilteredPaginated(
-            $hmaService, $status, $type, $subStatus, $search, $page, $limit, $promotionId > 0 ? $promotionId : null
+            $hmaService, $status, $type, $subStatus, $search, $page, $limit, 
+            $promotionId > 0 ? $promotionId : null,
+            $visibility // ✅ Passage du filtre de visibilité
         );
 
-        $totalFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null);
-        $activeFiltered = $categoryRepository->countFiltered($hmaService, 'active', $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null);
-        $inactiveFiltered = $categoryRepository->countFiltered($hmaService, 'inactive', $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null);
-        $mainFiltered = $categoryRepository->countFiltered($hmaService, $status, 'main', $subStatus, $search, $promotionId > 0 ? $promotionId : null);
-        $subFiltered = $categoryRepository->countFiltered($hmaService, $status, 'sub', $subStatus, $search, $promotionId > 0 ? $promotionId : null);
-        $subscriptionActiveFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, 'active', $search, $promotionId > 0 ? $promotionId : null);
-        $subscriptionInactiveFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, 'inactive', $search, $promotionId > 0 ? $promotionId : null);
+        $totalFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null, $visibility);
+        $activeFiltered = $categoryRepository->countFiltered($hmaService, 'active', $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null, $visibility);
+        $inactiveFiltered = $categoryRepository->countFiltered($hmaService, 'inactive', $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null, $visibility);
+        $mainFiltered = $categoryRepository->countFiltered($hmaService, $status, 'main', $subStatus, $search, $promotionId > 0 ? $promotionId : null, $visibility);
+        $subFiltered = $categoryRepository->countFiltered($hmaService, $status, 'sub', $subStatus, $search, $promotionId > 0 ? $promotionId : null, $visibility);
+        $subscriptionActiveFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, 'active', $search, $promotionId > 0 ? $promotionId : null, $visibility);
+        $subscriptionInactiveFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, 'inactive', $search, $promotionId > 0 ? $promotionId : null, $visibility);
+
+        // ✅ Statistiques de visibilité (pour les pharmacies)
+        $visibleFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null, 'visible');
+        $hiddenFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null, 'hidden');
 
         $activeCount = $categoryRepository->countSubscriptionActive($hmaService);
         $limits = $hmaService->getCurrentLimits();
@@ -112,6 +116,7 @@ final class CategoryController extends AbstractController
             'status' => $status,
             'type' => $type,
             'subStatus' => $subStatus,
+            'visibility' => $visibility, // ✅ Passage du filtre de visibilité
             'totalItems' => $totalItems,
             'totalFiltered' => $totalFiltered,
             'activeFiltered' => $activeFiltered,
@@ -120,6 +125,8 @@ final class CategoryController extends AbstractController
             'subFiltered' => $subFiltered,
             'subscriptionActiveFiltered' => $subscriptionActiveFiltered,
             'subscriptionInactiveFiltered' => $subscriptionInactiveFiltered,
+            'visibleFiltered' => $visibleFiltered, // ✅ Pour les pharmacies
+            'hiddenFiltered' => $hiddenFiltered,   // ✅ Pour les pharmacies
             'activeCount' => $activeCount,
             'quota' => $quota === PHP_INT_MAX ? 'Illimité' : $quota,
             'quotaReached' => $quotaReached,
@@ -137,18 +144,15 @@ final class CategoryController extends AbstractController
     {
         $this->checkAccess();
 
-        // Récupérer l'utilisateur connecté
         $user = $this->getUser();
         if (!$user) {
             throw new AccessDeniedException('Utilisateur non connecté.');
         }
 
-        // S'assurer que c'est bien un utilisateur (et non HmaService)
         if (!$user instanceof \App\Entity\User) {
             throw new AccessDeniedException('Seuls les utilisateurs peuvent créer des catégories.');
         }
 
-        // Recharger l'utilisateur pour qu'il soit géré par l'EntityManager
         $user = $entityManager->getRepository(\App\Entity\User::class)->find($user->getId());
         if (!$user) {
             throw new AccessDeniedException('Utilisateur introuvable.');
@@ -159,13 +163,13 @@ final class CategoryController extends AbstractController
             throw new AccessDeniedException('Aucun service associé.');
         }
 
-        // Recharger le service pour qu'il soit géré
         $hmaService = $entityManager->getRepository(HmaService::class)->find($hmaService->getId());
         if (!$hmaService) {
             throw new AccessDeniedException('Service introuvable.');
         }
 
-        // Vérification du quota
+        $companyType = $hmaService->getType(); // ✅ Récupération du type
+
         $activeCount = $entityManager->getRepository(Category::class)->countActive($hmaService);
         $quota = $hmaService->getMaxCategories();
         if ($quota !== PHP_INT_MAX && $activeCount >= $quota) {
@@ -185,23 +189,22 @@ final class CategoryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // ✅ Vérification de l'unicité du nom
             $validation = $this->uniqueNameValidator->validate($category, Category::class, 'catégorie', $hmaService->getId());
             
             if (!$validation['valid']) {
                 $this->addFlash('error', $validation['message']);
                 return $this->render('admin/category/new.html.twig', [
                     'form' => $form->createView(),
-                    'category' => $category
+                    'category' => $category,
+                    'companyType' => $companyType 
                 ]);
             }
-            // Slug
+
             if (!$category->getSlug()) {
                 $slug = $this->slugger->slug($category->getName())->lower();
                 $category->setSlug($slug);
             }
 
-            // Image
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
@@ -219,6 +222,7 @@ final class CategoryController extends AbstractController
         return $this->render('admin/category/new.html.twig', [
             'category' => $category,
             'form' => $form,
+            'companyType' => $companyType // ✅ Passage de la variable
         ]);
     }
 
@@ -240,7 +244,8 @@ final class CategoryController extends AbstractController
         if (!$hmaService) throw new AccessDeniedException('Aucun service associé.');
         $this->checkOwnership($category, $hmaService);
 
-        // Récupérer l'utilisateur connecté (pour éventuellement vérifier des droits)
+        $companyType = $hmaService->getType(); // ✅ Récupération du type
+
         $user = $this->getUser();
         if (!$user) {
             throw new AccessDeniedException('Utilisateur non connecté.');
@@ -261,8 +266,10 @@ final class CategoryController extends AbstractController
                 return $this->render('admin/category/edit.html.twig', [
                     'category' => $category,
                     'form' => $form,
+                    'companyType' => $companyType // ✅ Passage de la variable
                 ]);
             }
+
             $newSlug = $this->slugger->slug($category->getName())->lower();
             $category->setSlug($newSlug);
 
@@ -286,6 +293,7 @@ final class CategoryController extends AbstractController
         return $this->render('admin/category/edit.html.twig', [
             'category' => $category,
             'form' => $form,
+            'companyType' => $companyType // ✅ Passage de la variable
         ]);
     }
 

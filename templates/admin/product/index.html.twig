@@ -1,4 +1,5 @@
 {# templates/admin/product/index.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Gestion des Produits - HMA Market{% endblock %}
@@ -46,6 +47,19 @@
 #extraFilters {
     transition: all 0.3s ease;
 }
+
+/* ✅ Badges en bas de la carte */
+.product-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 0.5rem;
+}
+.product-badges .badge {
+    font-size: 9px;
+    padding: 3px 6px;
+}
+
 /* Styles Select2 */
 .select2-container--bootstrap-5 .select2-selection {
     height: 38px !important;
@@ -240,6 +254,34 @@
                     </div>
                 </div>
             </div>
+
+            {# ✅ Statistiques de visibilité (uniquement pour les pharmacies) #}
+            {% if companyType == 'pharmacy' %}
+            <div class="row mt-3 border-top pt-3">
+                <div class="col-md-6 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-success text-uppercase small fw-bold">Visibles sur marketplace</span>
+                                <h3 class="mb-0 text-success">{{ visibleFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-eye fa-2x text-success opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="stat-item p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-secondary text-uppercase small fw-bold">Masqués sur marketplace</span>
+                                <h3 class="mb-0 text-secondary">{{ hiddenFiltered }}</h3>
+                            </div>
+                            <i class="fas fa-eye-slash fa-2x text-secondary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 
@@ -336,7 +378,7 @@
                     </div>
                 </div>
 
-                <!-- Filtres supplémentaires (masqués par défaut) avec trait de séparation -->
+                <!-- ✅ Filtres supplémentaires avec visibilité pour pharmacies -->
                 <div id="extraFilters" style="display: none;">
                     <hr class="my-4">
                     
@@ -395,7 +437,7 @@
                             </div>
                         </div>
                     {% elseif companyType == 'pharmacy' %}
-                        <!-- PHARMACY : 4 filtres -->
+                        <!-- ✅ PHARMACY : 5 filtres (dont visibilité) -->
                         <div class="row g-3">
                             <div class="col-12 col-md-3">
                                 <label class="form-label fw-semibold small">
@@ -411,7 +453,27 @@
                                 <input type="text" name="form" id="form" value="{{ form }}" 
                                     class="form-control" placeholder="Ex: comprimé">
                             </div>
-                            <div class="col-12 col-md-3">
+                            <div class="col-12 col-md-2">
+                                <label class="form-label fw-semibold small">
+                                    <i class="fas fa-prescription-bottle me-1"></i> Prescription
+                                </label>
+                                <select name="prescription_required" class="form-select">
+                                    <option value="">Tous</option>
+                                    <option value="1" {{ prescriptionRequired == '1' ? 'selected' : '' }}>Prescription obligatoire</option>
+                                    <option value="0" {{ prescriptionRequired == '0' ? 'selected' : '' }}>Sans prescription</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <label class="form-label fw-semibold small">
+                                    <i class="fas fa-eye me-1"></i> Visibilité
+                                </label>
+                                <select name="visibility" class="form-select">
+                                    <option value="">Tous</option>
+                                    <option value="visible" {{ selectedVisibility == 'visible' ? 'selected' : '' }}>Visibles</option>
+                                    <option value="hidden" {{ selectedVisibility == 'hidden' ? 'selected' : '' }}>Masqués</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-2">
                                 <label class="form-label fw-semibold small">
                                     <i class="fas fa-percent me-1"></i> Promotion
                                 </label>
@@ -429,16 +491,6 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-12 col-md-3">
-                                <label class="form-label fw-semibold small">
-                                    <i class="fas fa-prescription-bottle me-1"></i> Prescription
-                                </label>
-                                <select name="prescription_required" class="form-select">
-                                    <option value="">Tous</option>
-                                    <option value="1" {{ prescriptionRequired == '1' ? 'selected' : '' }}>Prescription obligatoire</option>
-                                    <option value="0" {{ prescriptionRequired == '0' ? 'selected' : '' }}>Sans prescription</option>
-                                </select>
-                            </div>
                         </div>
                     {% endif %}
                 </div>
@@ -446,12 +498,24 @@
         </div>
     </div>
 
+    {# Message filtre visibilité (pour les pharmacies) #}
+    {% if companyType == 'pharmacy' and selectedVisibility != '' %}
+        <div class="alert alert-info mb-4">
+            <i class="fas fa-info-circle me-2"></i>
+            {% if selectedVisibility == 'visible' %}
+                Affichage des produits <strong>visibles</strong> sur le marketplace.
+            {% else %}
+                Affichage des produits <strong>masqués</strong> sur le marketplace.
+            {% endif %}
+        </div>
+    {% endif %}
+
     <!-- Grille de produits -->
     <div class="row g-3">
         {% for product in products %}
         <div class="col-xl-3 col-lg-4 col-md-6">
             <div class="card product-card h-100 shadow-sm">
-                <div class="product-image-container position-relative">
+                <div class="product-image-container">
                     {% if product.image and product.image != 'default-product.png' %}
                         <img src="{{ asset('uploads/products/' ~ product.image) }}" 
                              alt="{{ product.name }}" 
@@ -461,18 +525,6 @@
                             <i class="fas fa-box fa-4x text-muted"></i>
                         </div>
                     {% endif %}
-
-                    <!-- Badges de statut superposés (en haut à gauche) -->
-                    <div class="position-absolute top-0 start-0 p-2">
-                        <div class="d-flex flex-column gap-1">
-                            <span class="badge {{ product.isActive ? 'bg-success' : 'bg-danger' }}">
-                                {{ product.isActive ? 'Actif' : 'Inactif' }}
-                            </span>
-                            {% if not product.subscriptionActive %}
-                                <span class="badge bg-warning text-dark">Hors quota</span>
-                            {% endif %}
-                        </div>
-                    </div>
                 </div>
 
                 <div class="card-body d-flex flex-column">
@@ -538,6 +590,47 @@
                             <i class="fas fa-question-circle me-1"></i>Non catégorisé
                         {% endif %}
                     </p>
+
+                    <!-- ✅ Badges sous la catégorie -->
+                    <div class="product-badges">
+                        {% if not product.subscriptionActive %}
+                            <span class="badge bg-warning text-dark">
+                                <i class="fas fa-clock fa-xs me-1"></i> Hors quota
+                            </span>
+                        {% else %}
+                            {% if product.isActive %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check-circle fa-xs me-1"></i> Actif
+                                </span>
+                            {% else %}
+                                <span class="badge bg-danger">
+                                    <i class="fas fa-pause-circle fa-xs me-1"></i> Inactif
+                                </span>
+                            {% endif %}
+                        {% endif %}
+                        {% if product.subscriptionActive %}
+                            <span class="badge bg-info">
+                                <i class="fas fa-database fa-xs me-1"></i> Dans quota
+                            </span>
+                        {% endif %}
+                        {# ✅ Badge de visibilité (pour les pharmacies) #}
+                        {% if companyType == 'pharmacy' %}
+                            {% if product.companyPublic %}
+                                <span class="badge bg-primary">
+                                    <i class="fas fa-eye fa-xs me-1"></i> Visible
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                    <i class="fas fa-eye-slash fa-xs me-1"></i> Masqué
+                                </span>
+                            {% endif %}
+                        {% endif %}
+                        {% if product.hasExpiryDate %}
+                            <span class="badge bg-warning text-dark">
+                                <i class="fas fa-calendar-alt fa-xs me-1"></i> Périssable
+                            </span>
+                        {% endif %}
+                    </div>
 
                     {% if companyType != 'restaurant' %}
                     <div class="row g-0 mb-2">
@@ -879,9 +972,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('form')?.value;
         const promotion = document.getElementById('promotion')?.value;
         const prescription = document.querySelector('[name="prescription_required"]')?.value;
+        const visibility = document.querySelector('[name="visibility"]')?.value;
         
         // Si un filtre supplémentaire a une valeur, afficher la section
-        if ((dosage && dosage !== '') || (form && form !== '') || (promotion && promotion !== '0') || (prescription && prescription !== '')) {
+        if ((dosage && dosage !== '') || (form && form !== '') || (promotion && promotion !== '0') || 
+            (prescription && prescription !== '') || (visibility && visibility !== '')) {
             extraFilters.style.display = 'block';
             toggleExtraBtn.innerHTML = '<i class="fas fa-times me-1"></i> Masquer filtres';
         }

@@ -7,10 +7,8 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    {# ✅ UTILISER LES VARIABLES PASSÉES PAR LE CONTRÔLEUR #}
     :root {
         --primary-color: {{ primaryColor|default('#0463f1') }};
-        --primary-dark: {{ primaryColor|default('#0463f1')|color_darken(15) }};
         --secondary-color: {{ secondaryColor|default('#8b5cf6') }};
     }
     
@@ -19,9 +17,8 @@
         margin: 0 auto;
     }
     
-    /* Hero Header */
     .settings-hero {
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        background: linear-gradient(135deg, var(--primary-color), color-mix(in srgb, var(--primary-color) 85%, black));
         border-radius: 24px;
         padding: 2rem 2.5rem;
         margin-bottom: 2rem;
@@ -72,7 +69,6 @@
         position: relative;
     }
     
-    /* Navigation par onglets */
     .settings-tabs {
         display: flex;
         gap: 0.5rem;
@@ -112,7 +108,6 @@
         box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 40%, transparent);
     }
     
-    /* Sections */
     .settings-section {
         background: white;
         border-radius: 24px;
@@ -168,7 +163,6 @@
         margin-bottom: 0;
     }
     
-    /* Logo preview */
     .logo-preview {
         display: flex;
         align-items: center;
@@ -183,7 +177,7 @@
     
     .logo-preview:hover {
         border-color: var(--primary-color);
-        background: #f0f7ff;
+        background: color-mix(in srgb, var(--primary-color) 5%, #f8fafc);
     }
     
     .logo-preview-img {
@@ -202,7 +196,6 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
-    /* ===== PALETTE DE COULEURS ===== */
     .color-palette-group {
         background: #f8fafc;
         border-radius: 16px;
@@ -316,7 +309,6 @@
         border: none;
     }
     
-    /* Preview des couleurs en action */
     .color-preview-demo {
         display: flex;
         gap: 1rem;
@@ -344,7 +336,7 @@
     }
     
     .color-preview-demo .demo-btn-primary:hover {
-        background: var(--primary-dark);
+        background: color-mix(in srgb, var(--primary-color) 85%, black);
         transform: translateY(-2px);
     }
     
@@ -367,7 +359,6 @@
         background: var(--primary-color);
     }
     
-    /* Ticket preview */
     .ticket-preview {
         background: white;
         border-radius: 16px;
@@ -420,7 +411,6 @@
         color: #64748b;
     }
     
-    /* Form styling */
     .form-group {
         margin-bottom: 1.25rem;
     }
@@ -433,7 +423,7 @@
     }
     
     .form-label .required {
-        color: var(--danger-color);
+        color: #ef4444;
         margin-left: 0.25rem;
     }
     
@@ -467,7 +457,188 @@
         margin-top: 0.25rem;
     }
     
-    /* Action buttons */
+    /* ✅ STYLES POUR LA VISIBILITÉ ET GARDE - SIMPLIFIÉ */
+    .pharmacy-fields-wrapper {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 1.25rem 1.5rem;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+    }
+    
+    .pharmacy-fields-wrapper:hover {
+        border-color: var(--primary-color);
+    }
+    
+    .pharmacy-fields-title {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .pharmacy-fields-title i {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+    }
+    
+    .pharmacy-fields-title .badge-pharmacy {
+        background: var(--primary-color);
+        color: white;
+        font-size: 0.65rem;
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+    
+    .pharmacy-field-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .pharmacy-field-row:last-child {
+        border-bottom: none;
+    }
+    
+    .pharmacy-field-label {
+        min-width: 140px;
+        font-weight: 500;
+        color: #475569;
+        font-size: 0.9rem;
+    }
+    
+    /* ✅ TOGGLE SWITCH SIMPLIFIÉ ET FONCTIONNEL */
+    .toggle-container-simple {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .toggle-simple {
+        position: relative;
+        width: 52px;
+        height: 28px;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+    
+    .toggle-simple input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        position: absolute;
+    }
+    
+    .toggle-simple .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #cbd5e1;
+        transition: 0.3s;
+        border-radius: 34px;
+    }
+    
+    .toggle-simple .slider::before {
+        content: "";
+        position: absolute;
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background: white;
+        transition: 0.3s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .toggle-simple input:checked + .slider {
+        background: var(--primary-color);
+    }
+    
+    .toggle-simple input:checked + .slider::before {
+        transform: translateX(24px);
+    }
+    
+    .toggle-status-simple {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .toggle-status-simple .visible {
+        color: #22c55e;
+    }
+    
+    .toggle-status-simple .hidden {
+        color: #94a3b8;
+    }
+    
+    .guard-periods-compact {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .guard-periods-compact .period-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        padding: 0.25rem 0.8rem;
+        border-radius: 20px;
+        border: 1px solid #e5e7eb;
+        margin: 0.2rem 0.3rem 0.2rem 0;
+        font-size: 0.8rem;
+    }
+    
+    .guard-periods-compact .period-item .day {
+        font-weight: 600;
+        color: #1e293b;
+    }
+    
+    .guard-periods-compact .period-item .time {
+        color: #475569;
+        font-family: monospace;
+        font-size: 0.75rem;
+    }
+    
+    .guard-periods-compact .empty {
+        color: #94a3b8;
+        font-size: 0.85rem;
+        font-style: italic;
+    }
+    
+    .btn-guard-edit {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.25rem 1rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    
+    .btn-guard-edit:hover {
+        background: color-mix(in srgb, var(--primary-color) 85%, black);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 40%, transparent);
+        color: white;
+    }
+    
     .action-buttons {
         position: sticky;
         bottom: 1.5rem;
@@ -502,8 +673,8 @@
     }
     
     .btn-primary:hover {
-        background: var(--primary-dark);
-        border-color: var(--primary-dark);
+        background: color-mix(in srgb, var(--primary-color) 85%, black);
+        border-color: color-mix(in srgb, var(--primary-color) 85%, black);
         box-shadow: 0 8px 25px color-mix(in srgb, var(--primary-color) 40%, transparent);
     }
     
@@ -527,98 +698,74 @@
         background: #e5e7eb;
     }
     
-    /* Animations */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .modal-content {
+        border-radius: 24px;
+        border: none;
+        overflow: hidden;
     }
     
-    /* Responsive */
+    .modal-header {
+        border-bottom: none;
+        padding: 1.5rem 2rem;
+    }
+    
+    .modal-body {
+        padding: 1.5rem 2rem;
+    }
+    
+    .modal-footer {
+        border-top: none;
+        padding: 1rem 2rem 1.5rem;
+    }
+    
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+        opacity: 0.7;
+    }
+    
+    .modal-header .btn-close:hover {
+        opacity: 1;
+    }
+    
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
     @media (max-width: 992px) {
-        .settings-hero {
-            padding: 1.5rem;
-        }
-        .settings-hero h1 {
-            font-size: 1.5rem;
-        }
-        .settings-section {
-            padding: 1.25rem;
-        }
-        .settings-tab {
-            padding: 0.5rem 1rem;
-            font-size: 0.8rem;
-        }
+        .settings-hero { padding: 1.5rem; }
+        .settings-hero h1 { font-size: 1.5rem; }
+        .settings-section { padding: 1.25rem; }
+        .settings-tab { padding: 0.5rem 1rem; font-size: 0.8rem; }
         .action-buttons {
             flex-direction: column;
             gap: 1rem;
             border-radius: 24px;
             padding: 1rem;
         }
-        .action-buttons .btn {
-            width: 100%;
-            justify-content: center;
-        }
-        .action-buttons div {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .color-palette {
-            gap: 0.5rem;
-        }
-        .color-swatch {
-            width: 30px;
-            height: 30px;
-        }
-        .logo-preview {
-            flex-direction: column;
-            text-align: center;
-        }
+        .action-buttons .btn { width: 100%; justify-content: center; }
+        .action-buttons div { width: 100%; display: flex; flex-direction: column; gap: 0.5rem; }
+        .color-palette { gap: 0.5rem; }
+        .color-swatch { width: 30px; height: 30px; }
+        .logo-preview { flex-direction: column; text-align: center; }
+        .pharmacy-field-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+        .pharmacy-field-label { min-width: auto; }
+        .guard-periods-compact { width: 100%; }
     }
     
     @media (max-width: 576px) {
-        .settings-hero {
-            padding: 1rem;
-        }
-        .settings-hero h1 {
-            font-size: 1.2rem;
-        }
-        .settings-section {
-            padding: 1rem;
-        }
-        .settings-tabs {
-            flex-direction: column;
-        }
-        .settings-tab {
-            width: 100%;
-            text-align: center;
-        }
-        .color-palette {
-            justify-content: center;
-        }
-        .color-palette-label {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .ticket-preview {
-            max-width: 100%;
-        }
-        .color-picker-custom input[type="color"] {
-            width: 30px;
-            height: 30px;
-        }
-        .color-hex-display {
-            font-size: 0.75rem;
-            padding: 0.2rem 0.5rem;
-            min-width: 60px;
-        }
+        .settings-hero { padding: 1rem; }
+        .settings-hero h1 { font-size: 1.2rem; }
+        .settings-section { padding: 1rem; }
+        .settings-tabs { flex-direction: column; }
+        .settings-tab { width: 100%; text-align: center; }
+        .color-palette { justify-content: center; }
+        .color-palette-label { flex-direction: column; align-items: flex-start; }
+        .ticket-preview { max-width: 100%; }
+        .color-picker-custom input[type="color"] { width: 30px; height: 30px; }
+        .color-hex-display { font-size: 0.75rem; padding: 0.2rem 0.5rem; min-width: 60px; }
+        .pharmacy-fields-wrapper { padding: 0.75rem 1rem; }
+        .btn-guard-edit { font-size: 0.7rem; padding: 0.2rem 0.8rem; }
     }
 </style>
 {% endblock %}
@@ -626,7 +773,6 @@
 {% block body %}
 <div class="container-fluid settings-container py-4">
     
-    <!-- Hero Section -->
     <div class="settings-hero">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
@@ -643,7 +789,6 @@
         </div>
     </div>
     
-    <!-- Onglets -->
     <div class="settings-tabs" id="settingsTabs">
         <button class="settings-tab active" data-section="general">
             <i class="fas fa-building"></i> Général
@@ -664,11 +809,10 @@
     
     {{ form_start(form, {'attr': {'id': 'companySettingsForm', 'class': 'settings-form'}}) }}
     
-    {# ✅ CHAMPS CACHÉS POUR LES COULEURS - CECI EST CRUCIAL #}
     <input type="hidden" name="primary_color" id="primary_color" value="{{ primaryColor|default('#0463f1') }}">
     <input type="hidden" name="secondary_color" id="secondary_color" value="{{ secondaryColor|default('#8b5cf6') }}">
     
-    <!-- Section 1: Général -->
+    <!-- Section Général -->
     <div id="section-general" class="settings-section">
         <div class="section-header">
             <div class="section-icon">
@@ -695,6 +839,87 @@
                     <small class="text-muted">Optionnel - Apparaît sous le nom</small>
                 </div>
             </div>
+            
+            <!-- ✅ CHAMPS PHARMACIE SIMPLIFIÉS -->
+            {% set companyType = company.type|default('') %}
+            {% if companyType == 'pharmacy' %}
+            <div class="col-12">
+                <div class="pharmacy-fields-wrapper">
+                    <div class="pharmacy-fields-title">
+                        <i class="fas fa-hospital"></i>
+                        Paramètres pharmacie
+                        <span class="badge-pharmacy">Pharmacie</span>
+                    </div>
+                    
+                    <!-- Ligne 1: Visibilité - avec toggle SIMPLE -->
+                    <div class="pharmacy-field-row">
+                        <div class="pharmacy-field-label">
+                            <i class="fas fa-eye me-1"></i> Visibilité
+                        </div>
+                        <div class="toggle-container-simple">
+                            <label class="toggle-simple">
+                                <input type="checkbox" id="company_public" name="company_public" 
+                                       {% if company.companyPublic %}checked{% endif %}>
+                                <span class="slider"></span>
+                            </label>
+                            <span class="toggle-status-simple" id="visibilityStatus">
+                                <span class="{% if company.companyPublic %}visible{% else %}hidden{% endif %}" id="visibilityText">
+                                    {% if company.companyPublic %}
+                                        <i class="fas fa-eye me-1"></i> Visible
+                                    {% else %}
+                                        <i class="fas fa-eye-slash me-1"></i> Masquée
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </div>
+                        <small class="text-muted" id="visibilityHelp">
+                            {% if company.companyPublic %}
+                                Produits visibles sur le marketplace
+                            {% else %}
+                                Produits masqués sur le marketplace
+                            {% endif %}
+                        </small>
+                    </div>
+                    
+                    <!-- Ligne 2: Périodes de garde -->
+                    <div class="pharmacy-field-row">
+                        <div class="pharmacy-field-label">
+                            <i class="fas fa-clock me-1"></i> Périodes de garde
+                        </div>
+                        <div class="guard-periods-compact" id="guardPeriodsDisplay">
+                            {% set guardPeriods = company.guardPeriods|default([]) %}
+                            {% if guardPeriods is empty %}
+                                <span class="empty">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Aucune période configurée
+                                </span>
+                            {% else %}
+                                {% set daysMap = {
+                                    'monday': 'Lun',
+                                    'tuesday': 'Mar',
+                                    'wednesday': 'Mer',
+                                    'thursday': 'Jeu',
+                                    'friday': 'Ven',
+                                    'saturday': 'Sam',
+                                    'sunday': 'Dim'
+                                } %}
+                                {% for period in guardPeriods %}
+                                    <span class="period-item">
+                                        <span class="day">{{ daysMap[period.day]|default(period.day|slice(0,3)) }}</span>
+                                        <span class="time">{{ period.start }} - {{ period.end }}</span>
+                                    </span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <button type="button" class="btn-guard-edit" data-bs-toggle="modal" data-bs-target="#guardPeriodsModal">
+                            <i class="fas fa-edit"></i>
+                            Modifier
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
             <div class="col-12">
                 <div class="form-group">
                     {{ form_label(form.description, 'Description') }}
@@ -719,7 +944,7 @@
         </div>
     </div>
     
-    <!-- Section 2: Apparence -->
+    <!-- Section Apparence -->
     <div id="section-branding" class="settings-section" style="display: none;">
         <div class="section-header">
             <div class="section-icon">
@@ -732,7 +957,6 @@
         </div>
         
         <div class="row g-4">
-            <!-- Couleur principale -->
             <div class="col-md-6">
                 <div class="color-palette-group">
                     <div class="color-palette-label">
@@ -740,11 +964,10 @@
                         Couleur principale
                         <span class="color-hex-display" id="primaryColorHexDisplay">{{ primaryColor|default('#0463f1') }}</span>
                         <div class="color-picker-custom">
-                            <input type="color" id="primaryColorPickerCustom" value="{{ primaryColor|default('#0463f1') }}" title="Choisir une couleur personnalisée">
+                            <input type="color" id="primaryColorPickerCustom" value="{{ primaryColor|default('#0463f1') }}">
                         </div>
                     </div>
                     <div class="color-palette" id="primaryPalette">
-                        {# 10 couleurs prédéfinies #}
                         {% set primaryColors = ['#0463f1', '#dc2626', '#16a34a', '#ea580c', '#8b5cf6', '#db2777', '#0891b2', '#4f46e5', '#ca8a04', '#6b7280'] %}
                         {% for color in primaryColors %}
                             <div class="color-swatch {% if color == primaryColor|default('#0463f1') %}active{% endif %}" 
@@ -753,14 +976,9 @@
                                  data-target="primary"></div>
                         {% endfor %}
                     </div>
-                    <div class="color-helper-text mt-2">
-                        <i class="fas fa-info-circle me-1"></i>
-                        Cliquez sur une couleur pour la sélectionner ou utilisez le sélecteur personnalisé
-                    </div>
                 </div>
             </div>
             
-            <!-- Couleur secondaire -->
             <div class="col-md-6">
                 <div class="color-palette-group">
                     <div class="color-palette-label">
@@ -768,11 +986,10 @@
                         Couleur secondaire
                         <span class="color-hex-display" id="secondaryColorHexDisplay">{{ secondaryColor|default('#8b5cf6') }}</span>
                         <div class="color-picker-custom">
-                            <input type="color" id="secondaryColorPickerCustom" value="{{ secondaryColor|default('#8b5cf6') }}" title="Choisir une couleur personnalisée">
+                            <input type="color" id="secondaryColorPickerCustom" value="{{ secondaryColor|default('#8b5cf6') }}">
                         </div>
                     </div>
                     <div class="color-palette" id="secondaryPalette">
-                        {# 10 couleurs prédéfinies #}
                         {% set secondaryColors = ['#8b5cf6', '#3b82f6', '#06b6d4', '#22c55e', '#eab308', '#f97316', '#ef4444', '#ec4899', '#14b8a6', '#64748b'] %}
                         {% for color in secondaryColors %}
                             <div class="color-swatch {% if color == secondaryColor|default('#8b5cf6') %}active{% endif %}" 
@@ -781,15 +998,10 @@
                                  data-target="secondary"></div>
                         {% endfor %}
                     </div>
-                    <div class="color-helper-text mt-2">
-                        <i class="fas fa-info-circle me-1"></i>
-                        Cliquez sur une couleur pour la sélectionner ou utilisez le sélecteur personnalisé
-                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Aperçu des couleurs en action -->
         <div class="color-preview-demo">
             <span class="fw-bold me-2">Aperçu :</span>
             <button class="demo-btn demo-btn-primary">
@@ -804,7 +1016,7 @@
         </div>
     </div>
     
-    <!-- Section 3: Contact -->
+    <!-- Section Contact -->
     <div id="section-contact" class="settings-section" style="display: none;">
         <div class="section-header">
             <div class="section-icon">
@@ -857,7 +1069,7 @@
         </div>
     </div>
     
-    <!-- Section 4: Ticket de caisse -->
+    <!-- Section Ticket -->
     <div id="section-receipt" class="settings-section" style="display: none;">
         <div class="section-header">
             <div class="section-icon">
@@ -884,7 +1096,6 @@
             </div>
         </div>
         
-        <!-- Aperçu du ticket -->
         <div class="row">
             <div class="col-md-6">
                 <div class="mt-2">
@@ -935,7 +1146,7 @@
         </div>
     </div>
     
-    <!-- Section 5: Taxes -->
+    <!-- Section Taxes -->
     <div id="section-taxes" class="settings-section" style="display: none;">
         <div class="section-header">
             <div class="section-icon">
@@ -976,7 +1187,6 @@
         </div>
     </div>
     
-    <!-- Boutons d'action sticky -->
     <div class="action-buttons">
         <a href="{{ path('app_dashboard') }}" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-2"></i> Annuler
@@ -993,6 +1203,92 @@
     
     {{ form_end(form) }}
 </div>
+
+<!-- ✅ MODAL PÉRIODES DE GARDE -->
+<div class="modal fade" id="guardPeriodsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--primary-color); color: white;">
+                <h5 class="modal-title">
+                    <i class="fas fa-clock-history me-2"></i>
+                    Modifier les périodes de garde
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{{ path('app_company_settings_guard_periods') }}">
+                <div class="modal-body">
+                    <input type="hidden" name="_token" value="{{ csrf_token('guard_periods') }}">
+                    
+                    <p class="text-muted mb-3">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Définissez les jours et horaires de garde pour votre pharmacie.
+                    </p>
+                    
+                    <div id="guardPeriodsContainer">
+                        {% set guardPeriods = company.guardPeriods|default([]) %}
+                        
+                        {% if guardPeriods is empty %}
+                            <div class="text-center text-muted py-3">
+                                <i class="fas fa-clock fs-3 d-block mb-2"></i>
+                                Aucune période de garde configurée
+                            </div>
+                            <div class="guard-period-row d-flex gap-2 align-items-center mb-2">
+                                <select name="guard_periods[0][day]" class="form-select" style="flex: 1;">
+                                    <option value="">Choisir un jour</option>
+                                    <option value="monday">Lundi</option>
+                                    <option value="tuesday">Mardi</option>
+                                    <option value="wednesday">Mercredi</option>
+                                    <option value="thursday">Jeudi</option>
+                                    <option value="friday">Vendredi</option>
+                                    <option value="saturday">Samedi</option>
+                                    <option value="sunday">Dimanche</option>
+                                </select>
+                                <input type="time" name="guard_periods[0][start]" class="form-control" style="width: 120px;" placeholder="Début">
+                                <input type="time" name="guard_periods[0][end]" class="form-control" style="width: 120px;" placeholder="Fin">
+                                <button type="button" class="btn btn-danger remove-guard-period" disabled>
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        {% else %}
+                            {% for period in guardPeriods %}
+                                <div class="guard-period-row d-flex gap-2 align-items-center mb-2">
+                                    <select name="guard_periods[{{ loop.index0 }}][day]" class="form-select" style="flex: 1;">
+                                        <option value="">Choisir un jour</option>
+                                        <option value="monday" {% if period.day == 'monday' %}selected{% endif %}>Lundi</option>
+                                        <option value="tuesday" {% if period.day == 'tuesday' %}selected{% endif %}>Mardi</option>
+                                        <option value="wednesday" {% if period.day == 'wednesday' %}selected{% endif %}>Mercredi</option>
+                                        <option value="thursday" {% if period.day == 'thursday' %}selected{% endif %}>Jeudi</option>
+                                        <option value="friday" {% if period.day == 'friday' %}selected{% endif %}>Vendredi</option>
+                                        <option value="saturday" {% if period.day == 'saturday' %}selected{% endif %}>Samedi</option>
+                                        <option value="sunday" {% if period.day == 'sunday' %}selected{% endif %}>Dimanche</option>
+                                    </select>
+                                    <input type="time" name="guard_periods[{{ loop.index0 }}][start]" class="form-control" style="width: 120px;" value="{{ period.start ?? '' }}">
+                                    <input type="time" name="guard_periods[{{ loop.index0 }}][end]" class="form-control" style="width: 120px;" value="{{ period.end ?? '' }}">
+                                    <button type="button" class="btn btn-danger remove-guard-period">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="addGuardPeriod">
+                        <i class="fas fa-plus-circle me-1"></i>
+                        Ajouter une période
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn" style="background: var(--primary-color); color: white;">
+                        <i class="fas fa-save me-2"></i>
+                        Enregistrer les périodes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
@@ -1024,28 +1320,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // ==================== TOGGLE VISIBILITÉ SIMPLIFIÉ ====================
+    const visibilityToggle = document.getElementById('company_public');
+    const visibilityText = document.getElementById('visibilityText');
+    const visibilityHelp = document.getElementById('visibilityHelp');
+    
+    function updateVisibility() {
+        if (!visibilityToggle) return;
+        
+        if (visibilityToggle.checked) {
+            if (visibilityText) {
+                visibilityText.innerHTML = '<i class="fas fa-eye me-1"></i> Visible';
+                visibilityText.className = 'visible';
+            }
+            if (visibilityHelp) {
+                visibilityHelp.textContent = 'Produits visibles sur le marketplace';
+            }
+        } else {
+            if (visibilityText) {
+                visibilityText.innerHTML = '<i class="fas fa-eye-slash me-1"></i> Masquée';
+                visibilityText.className = 'hidden';
+            }
+            if (visibilityHelp) {
+                visibilityHelp.textContent = 'Produits masqués sur le marketplace';
+            }
+        }
+    }
+    
+    if (visibilityToggle) {
+        visibilityToggle.addEventListener('change', updateVisibility);
+        updateVisibility();
+    }
+    
     // ==================== PALETTE DE COULEURS ====================
     const primaryHexDisplay = document.getElementById('primaryColorHexDisplay');
     const secondaryHexDisplay = document.getElementById('secondaryColorHexDisplay');
     const primaryPickerCustom = document.getElementById('primaryColorPickerCustom');
     const secondaryPickerCustom = document.getElementById('secondaryColorPickerCustom');
     
-    // ✅ Récupération des champs cachés
     const hiddenPrimary = document.getElementById('primary_color');
     const hiddenSecondary = document.getElementById('secondary_color');
     
-    // Fonction pour mettre à jour l'affichage et le formulaire
     function updatePrimaryColor(color) {
-        // ✅ Mettre à jour le champ caché
         if (hiddenPrimary) hiddenPrimary.value = color;
-        
-        // Mettre à jour le picker personnalisé
         if (primaryPickerCustom) primaryPickerCustom.value = color;
-        // Mettre à jour l'affichage hex
         if (primaryHexDisplay) primaryHexDisplay.textContent = color;
-        // Mettre à jour le CSS
         document.documentElement.style.setProperty('--primary-color', color);
-        // Mettre à jour les démos
+        
         document.querySelectorAll('.demo-btn-primary').forEach(btn => {
             btn.style.background = color;
         });
@@ -1055,19 +1376,32 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.section-icon').forEach(icon => {
             icon.style.background = color;
         });
-        // Marquer la swatch active
         document.querySelectorAll('#primaryPalette .color-swatch').forEach(sw => {
             sw.classList.toggle('active', sw.dataset.color === color);
         });
-        // Mettre à jour le label de la palette
-        const labelIcon = document.querySelector('.color-palette-label i');
-        if (labelIcon) labelIcon.style.color = color;
+        document.querySelectorAll('#guardPeriodsModal .modal-header').forEach(header => {
+            header.style.background = color;
+        });
+        document.querySelectorAll('.settings-hero').forEach(hero => {
+            hero.style.background = `linear-gradient(135deg, ${color}, color-mix(in srgb, ${color} 85%, black))`;
+        });
+        document.querySelectorAll('.badge-pharmacy').forEach(badge => {
+            badge.style.background = color;
+        });
+        document.querySelectorAll('.btn-guard-edit').forEach(btn => {
+            btn.style.background = color;
+        });
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.style.background = color;
+            btn.style.borderColor = color;
+        });
+        document.querySelectorAll('.toggle-simple input:checked + .slider').forEach(el => {
+            el.style.background = color;
+        });
     }
     
     function updateSecondaryColor(color) {
-        // ✅ Mettre à jour le champ caché
         if (hiddenSecondary) hiddenSecondary.value = color;
-        
         if (secondaryPickerCustom) secondaryPickerCustom.value = color;
         if (secondaryHexDisplay) secondaryHexDisplay.textContent = color;
         document.documentElement.style.setProperty('--secondary-color', color);
@@ -1077,11 +1411,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('#secondaryPalette .color-swatch').forEach(sw => {
             sw.classList.toggle('active', sw.dataset.color === color);
         });
-        const labelIcon = document.querySelectorAll('.color-palette-label i')[1];
-        if (labelIcon) labelIcon.style.color = color;
     }
     
-    // Gestion des clics sur les swatches
     document.querySelectorAll('.color-swatch').forEach(swatch => {
         swatch.addEventListener('click', function() {
             const color = this.dataset.color;
@@ -1094,7 +1425,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Gestion des pickers personnalisés
     if (primaryPickerCustom) {
         primaryPickerCustom.addEventListener('input', function() {
             updatePrimaryColor(this.value);
@@ -1123,6 +1453,69 @@ document.addEventListener('DOMContentLoaded', function() {
     if (receiptHeaderInput) receiptHeaderInput.addEventListener('input', updateTicketPreview);
     if (receiptFooterInput) receiptFooterInput.addEventListener('input', updateTicketPreview);
     
+    // ==================== PÉRIODES DE GARDE ====================
+    const container = document.getElementById('guardPeriodsContainer');
+    const addBtn = document.getElementById('addGuardPeriod');
+    
+    if (container && addBtn) {
+        let periodIndex = container.querySelectorAll('.guard-period-row').length || 0;
+        
+        function resetRow(row) {
+            row.querySelectorAll('select, input').forEach(el => el.value = '');
+        }
+        
+        function createRow(index) {
+            const row = document.createElement('div');
+            row.className = 'guard-period-row d-flex gap-2 align-items-center mb-2';
+            row.innerHTML = `
+                <select name="guard_periods[${index}][day]" class="form-select" style="flex: 1;">
+                    <option value="">Choisir un jour</option>
+                    <option value="monday">Lundi</option>
+                    <option value="tuesday">Mardi</option>
+                    <option value="wednesday">Mercredi</option>
+                    <option value="thursday">Jeudi</option>
+                    <option value="friday">Vendredi</option>
+                    <option value="saturday">Samedi</option>
+                    <option value="sunday">Dimanche</option>
+                </select>
+                <input type="time" name="guard_periods[${index}][start]" class="form-control" style="width: 120px;" placeholder="Début">
+                <input type="time" name="guard_periods[${index}][end]" class="form-control" style="width: 120px;" placeholder="Fin">
+                <button type="button" class="btn btn-danger remove-guard-period">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            return row;
+        }
+        
+        addBtn.addEventListener('click', function() {
+            const row = createRow(periodIndex);
+            container.appendChild(row);
+            const removeBtn = row.querySelector('.remove-guard-period');
+            removeBtn.addEventListener('click', function() {
+                const rows = container.querySelectorAll('.guard-period-row');
+                if (rows.length > 1) {
+                    row.remove();
+                } else {
+                    resetRow(row);
+                }
+            });
+            periodIndex++;
+        });
+        
+        container.addEventListener('click', function(e) {
+            const removeBtn = e.target.closest('.remove-guard-period');
+            if (removeBtn) {
+                const row = removeBtn.closest('.guard-period-row');
+                const rows = container.querySelectorAll('.guard-period-row');
+                if (rows.length > 1) {
+                    row.remove();
+                } else {
+                    resetRow(row);
+                }
+            }
+        });
+    }
+    
     // ==================== RÉINITIALISATION ====================
     window.resetForm = function() {
         if (confirm('Êtes-vous sûr de vouloir réinitialiser tous les paramètres ?')) {
@@ -1131,6 +1524,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePrimaryColor('#0463f1');
                 updateSecondaryColor('#8b5cf6');
                 updateTicketPreview();
+                if (visibilityToggle) {
+                    visibilityToggle.checked = {{ company.companyPublic ? 'true' : 'false' }};
+                    updateVisibility();
+                }
                 showNotification('Formulaire réinitialisé', 'info');
             }, 100);
         }
@@ -1148,11 +1545,9 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => notification.remove(), 3000);
     }
     
-    // Afficher notification si flash message
     {% for flash in app.flashes('success') %}
         showNotification('{{ flash }}', 'success');
     {% endfor %}
 });
 </script>
-{% endblock %}
 {% endblock %}

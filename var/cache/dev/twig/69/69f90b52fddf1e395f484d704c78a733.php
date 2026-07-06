@@ -110,20 +110,77 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
                 ";
         // line 18
         yield "                ";
+        $context["login_error"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 18, $this->source); })()), "session", [], "any", false, false, false, 18), "get", ["_login_error"], "method", false, false, false, 18);
+        // line 19
+        yield "                ";
+        if ((($tmp = (isset($context["login_error"]) || array_key_exists("login_error", $context) ? $context["login_error"] : (function () { throw new RuntimeError('Variable "login_error" does not exist.', 19, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 20
+            yield "                    <div class=\"alert alert-";
+            if (((CoreExtension::inFilter("bloqué", (isset($context["login_error"]) || array_key_exists("login_error", $context) ? $context["login_error"] : (function () { throw new RuntimeError('Variable "login_error" does not exist.', 20, $this->source); })())) || CoreExtension::inFilter("Bloqué", (isset($context["login_error"]) || array_key_exists("login_error", $context) ? $context["login_error"] : (function () { throw new RuntimeError('Variable "login_error" does not exist.', 20, $this->source); })()))) || CoreExtension::inFilter("blocage", (isset($context["login_error"]) || array_key_exists("login_error", $context) ? $context["login_error"] : (function () { throw new RuntimeError('Variable "login_error" does not exist.', 20, $this->source); })())))) {
+                yield "danger";
+            } else {
+                yield "warning";
+            }
+            yield " alert-dismissible fade show rounded-3\" role=\"alert\">
+                        <i class=\"fas fa-";
+            // line 21
+            if ((CoreExtension::inFilter("bloqué", (isset($context["login_error"]) || array_key_exists("login_error", $context) ? $context["login_error"] : (function () { throw new RuntimeError('Variable "login_error" does not exist.', 21, $this->source); })())) || CoreExtension::inFilter("Bloqué", (isset($context["login_error"]) || array_key_exists("login_error", $context) ? $context["login_error"] : (function () { throw new RuntimeError('Variable "login_error" does not exist.', 21, $this->source); })())))) {
+                yield "exclamation-circle";
+            } else {
+                yield "exclamation-triangle";
+            }
+            yield " me-2\"></i>
+                        ";
+            // line 22
+            yield (isset($context["login_error"]) || array_key_exists("login_error", $context) ? $context["login_error"] : (function () { throw new RuntimeError('Variable "login_error" does not exist.', 22, $this->source); })());
+            yield "
+                        <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
+                    </div>
+                    ";
+            // line 25
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 25, $this->source); })()), "session", [], "any", false, false, false, 25), "remove", ["_login_error"], "method", false, false, false, 25), "html", null, true);
+            yield "
+                ";
+        }
+        // line 27
+        yield "
+                ";
+        // line 29
+        yield "                ";
+        $context["force_change_password"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 29, $this->source); })()), "session", [], "any", false, false, false, 29), "get", ["_force_change_password"], "method", false, false, false, 29);
+        // line 30
+        yield "                ";
+        if ((($tmp = (isset($context["force_change_password"]) || array_key_exists("force_change_password", $context) ? $context["force_change_password"] : (function () { throw new RuntimeError('Variable "force_change_password" does not exist.', 30, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 31
+            yield "                    <div class=\"alert alert-warning rounded-3\" role=\"alert\">
+                        <i class=\"fas fa-lock me-2\"></i>
+                        <strong>🔒 Sécurité :</strong> Vous devez changer votre mot de passe temporaire avant de continuer.
+                    </div>
+                    ";
+            // line 35
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 35, $this->source); })()), "session", [], "any", false, false, false, 35), "remove", ["_force_change_password"], "method", false, false, false, 35), "html", null, true);
+            yield "
+                ";
+        }
+        // line 37
+        yield "
+                ";
+        // line 39
+        yield "                ";
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 18, $this->source); })()), "flashes", [], "any", false, false, false, 18));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 39, $this->source); })()), "flashes", [], "any", false, false, false, 39));
         foreach ($context['_seq'] as $context["label"] => $context["messages"]) {
-            // line 19
+            // line 40
             yield "                    ";
             $context['_parent'] = $context;
             $context['_seq'] = CoreExtension::ensureTraversable($context["messages"]);
             foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
-                // line 20
+                // line 41
                 yield "                        <div class=\"alert alert-";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["label"], "html", null, true);
                 yield " alert-dismissible fade show rounded-3\" role=\"alert\">
                             <i class=\"fas fa-";
-                // line 21
+                // line 42
                 if (($context["label"] == "success")) {
                     yield "check-circle";
                 } elseif (($context["label"] == "danger")) {
@@ -135,7 +192,7 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
                 }
                 yield " me-2\"></i>
                             ";
-                // line 22
+                // line 43
                 yield $context["message"];
                 yield "
                             <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
@@ -145,55 +202,55 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 26
+            // line 47
             yield "                ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['label'], $context['messages'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 27
+        // line 48
         yield "
                 ";
-        // line 29
+        // line 50
         yield "                ";
-        if ((($tmp = (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 29, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 30
-            yield "                    <div class=\"alert alert-danger rounded-3\">
+        if ((($tmp = (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 50, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 51
+            yield "                    <div class=\"alert alert-danger rounded-3\" role=\"alert\">
                         <i class=\"fas fa-exclamation-circle me-2\"></i>
                         ";
-            // line 32
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans(CoreExtension::getAttribute($this->env, $this->source, (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 32, $this->source); })()), "messageKey", [], "any", false, false, false, 32), CoreExtension::getAttribute($this->env, $this->source, (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 32, $this->source); })()), "messageData", [], "any", false, false, false, 32), "security"), "html", null, true);
+            // line 53
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans(CoreExtension::getAttribute($this->env, $this->source, (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 53, $this->source); })()), "messageKey", [], "any", false, false, false, 53), CoreExtension::getAttribute($this->env, $this->source, (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 53, $this->source); })()), "messageData", [], "any", false, false, false, 53), "security"), "html", null, true);
             yield "
                     </div>
                 ";
         }
-        // line 35
+        // line 56
         yield "
                 ";
-        // line 37
+        // line 58
         yield "                ";
-        if (((isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 37, $this->source); })()) && CoreExtension::inFilter("activer", Twig\Extension\CoreExtension::lower($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 37, $this->source); })()), "messageKey", [], "any", false, false, false, 37))))) {
-            // line 38
-            yield "                    <div class=\"alert alert-warning rounded-3\">
+        if (((isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 58, $this->source); })()) && CoreExtension::inFilter("activer", Twig\Extension\CoreExtension::lower($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 58, $this->source); })()), "messageKey", [], "any", false, false, false, 58))))) {
+            // line 59
+            yield "                    <div class=\"alert alert-warning rounded-3\" role=\"alert\">
                         <i class=\"fas fa-envelope me-2\"></i>
                         <strong>Compte non activé :</strong> Vérifiez votre email ou 
                         <a href=\"";
-            // line 41
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_resend_verification", ["email" => (isset($context["last_username"]) || array_key_exists("last_username", $context) ? $context["last_username"] : (function () { throw new RuntimeError('Variable "last_username" does not exist.', 41, $this->source); })())]), "html", null, true);
+            // line 62
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_resend_verification", ["email" => (isset($context["last_username"]) || array_key_exists("last_username", $context) ? $context["last_username"] : (function () { throw new RuntimeError('Variable "last_username" does not exist.', 62, $this->source); })())]), "html", null, true);
             yield "\" class=\"alert-link fw-bold\">
                             renvoyer l'email de vérification
                         </a>
                     </div>
                 ";
         }
-        // line 46
+        // line 67
         yield "
                 <form method=\"post\" action=\"";
-        // line 47
+        // line 68
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_login");
         yield "\">
                     <input type=\"hidden\" name=\"_csrf_token\" value=\"";
-        // line 48
+        // line 69
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken("authenticate"), "html", null, true);
         yield "\">
 
@@ -203,8 +260,8 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
                                name=\"email\" 
                                class=\"form-control form-control-lg\" 
                                value=\"";
-        // line 55
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["last_username"]) || array_key_exists("last_username", $context) ? $context["last_username"] : (function () { throw new RuntimeError('Variable "last_username" does not exist.', 55, $this->source); })()), "html", null, true);
+        // line 76
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["last_username"]) || array_key_exists("last_username", $context) ? $context["last_username"] : (function () { throw new RuntimeError('Variable "last_username" does not exist.', 76, $this->source); })()), "html", null, true);
         yield "\" 
                                placeholder=\"votre@email.com\"
                                required 
@@ -229,7 +286,7 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
                             <label class=\"form-check-label\" for=\"rememberMe\">Se souvenir de moi</label>
                         </div>
                         <a href=\"";
-        // line 78
+        // line 99
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_forgot_password");
         yield "\" class=\"text-decoration-none small\">
                             Mot de passe oublié ?
@@ -244,7 +301,7 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
                         <p class=\"text-muted small\">
                             Pas encore de compte ? 
                             <a href=\"";
-        // line 90
+        // line 111
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_register");
         yield "\" class=\"text-primary fw-semibold\">
                                 Inscrivez-vous
@@ -252,10 +309,43 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
                         </p>
                     </div>
                 </form>
+
+                <hr class=\"my-4\">
+
+                <div class=\"text-center\">
+                    <p class=\"small text-muted mb-0\">
+                        <i class=\"fas fa-shield-alt me-1 text-success\"></i>
+                        Connexion sécurisée
+                        <span class=\"mx-2\">•</span>
+                        <i class=\"fas fa-clock me-1\"></i>
+                        5 tentatives avant blocage
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .alert {
+        border-left: 4px solid;
+    }
+    .alert-warning {
+        border-left-color: #ffc107;
+    }
+    .alert-danger {
+        border-left-color: #dc3545;
+    }
+    .alert-success {
+        border-left-color: #28a745;
+    }
+    .alert-info {
+        border-left-color: #17a2b8;
+    }
+    .btn-close:focus {
+        box-shadow: none;
+    }
+</style>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -287,7 +377,7 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  248 => 90,  233 => 78,  207 => 55,  197 => 48,  193 => 47,  190 => 46,  182 => 41,  177 => 38,  174 => 37,  171 => 35,  165 => 32,  161 => 30,  158 => 29,  155 => 27,  149 => 26,  139 => 22,  127 => 21,  122 => 20,  117 => 19,  112 => 18,  100 => 7,  87 => 6,  64 => 4,  41 => 2,);
+        return array (  305 => 111,  290 => 99,  264 => 76,  254 => 69,  250 => 68,  247 => 67,  239 => 62,  234 => 59,  231 => 58,  228 => 56,  222 => 53,  218 => 51,  215 => 50,  212 => 48,  206 => 47,  196 => 43,  184 => 42,  179 => 41,  174 => 40,  169 => 39,  166 => 37,  161 => 35,  155 => 31,  152 => 30,  149 => 29,  146 => 27,  141 => 25,  135 => 22,  127 => 21,  118 => 20,  115 => 19,  112 => 18,  100 => 7,  87 => 6,  64 => 4,  41 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -308,7 +398,28 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
                     <p class=\"text-muted\">Connectez-vous pour accéder à votre compte</p>
                 </div>
 
-                {# Flash messages #}
+                {# ✅ Message d'erreur personnalisé (tentatives, blocage) #}
+                {% set login_error = app.session.get('_login_error') %}
+                {% if login_error %}
+                    <div class=\"alert alert-{% if 'bloqué' in login_error or 'Bloqué' in login_error or 'blocage' in login_error %}danger{% else %}warning{% endif %} alert-dismissible fade show rounded-3\" role=\"alert\">
+                        <i class=\"fas fa-{% if 'bloqué' in login_error or 'Bloqué' in login_error %}exclamation-circle{% else %}exclamation-triangle{% endif %} me-2\"></i>
+                        {{ login_error|raw }}
+                        <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
+                    </div>
+                    {{ app.session.remove('_login_error') }}
+                {% endif %}
+
+                {# ✅ Message de changement de mot de passe obligatoire #}
+                {% set force_change_password = app.session.get('_force_change_password') %}
+                {% if force_change_password %}
+                    <div class=\"alert alert-warning rounded-3\" role=\"alert\">
+                        <i class=\"fas fa-lock me-2\"></i>
+                        <strong>🔒 Sécurité :</strong> Vous devez changer votre mot de passe temporaire avant de continuer.
+                    </div>
+                    {{ app.session.remove('_force_change_password') }}
+                {% endif %}
+
+                {# Flash messages (pour les autres messages) #}
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
                         <div class=\"alert alert-{{ label }} alert-dismissible fade show rounded-3\" role=\"alert\">
@@ -319,9 +430,9 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
                     {% endfor %}
                 {% endfor %}
 
-                {# Erreur de connexion #}
+                {# Erreur de connexion Symfony #}
                 {% if error %}
-                    <div class=\"alert alert-danger rounded-3\">
+                    <div class=\"alert alert-danger rounded-3\" role=\"alert\">
                         <i class=\"fas fa-exclamation-circle me-2\"></i>
                         {{ error.messageKey|trans(error.messageData, 'security') }}
                     </div>
@@ -329,7 +440,7 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
 
                 {# ✅ Message spécifique pour compte non activé #}
                 {% if error and 'activer' in error.messageKey|lower %}
-                    <div class=\"alert alert-warning rounded-3\">
+                    <div class=\"alert alert-warning rounded-3\" role=\"alert\">
                         <i class=\"fas fa-envelope me-2\"></i>
                         <strong>Compte non activé :</strong> Vérifiez votre email ou 
                         <a href=\"{{ path('marketplace_resend_verification', {email: last_username}) }}\" class=\"alert-link fw-bold\">
@@ -387,10 +498,43 @@ class __TwigTemplate_214c36468bdcaf7594140ed7938c8367 extends Template
                         </p>
                     </div>
                 </form>
+
+                <hr class=\"my-4\">
+
+                <div class=\"text-center\">
+                    <p class=\"small text-muted mb-0\">
+                        <i class=\"fas fa-shield-alt me-1 text-success\"></i>
+                        Connexion sécurisée
+                        <span class=\"mx-2\">•</span>
+                        <i class=\"fas fa-clock me-1\"></i>
+                        5 tentatives avant blocage
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .alert {
+        border-left: 4px solid;
+    }
+    .alert-warning {
+        border-left-color: #ffc107;
+    }
+    .alert-danger {
+        border-left-color: #dc3545;
+    }
+    .alert-success {
+        border-left-color: #28a745;
+    }
+    .alert-info {
+        border-left-color: #17a2b8;
+    }
+    .btn-close:focus {
+        box-shadow: none;
+    }
+</style>
 {% endblock %}", "marketplace/auth/login.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\marketplace\\auth\\login.html.twig");
     }
 }

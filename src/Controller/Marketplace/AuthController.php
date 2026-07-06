@@ -28,7 +28,6 @@ class AuthController extends AbstractController
         if ($user instanceof Customer) {
             // ✅ Si l'utilisateur doit changer son mot de passe
             if ($user->isMustChangePassword()) {
-                // ✅ Message flash simple
                 $this->addFlash('warning', '🔒 Pour des raisons de sécurité, vous devez changer votre mot de passe temporaire avant de continuer.');
                 return $this->redirectToRoute('marketplace_change_password');
             }

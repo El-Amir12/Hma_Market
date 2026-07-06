@@ -75,4 +75,27 @@ git commit -m "Ajout des logs dans .gitignore et vidage des logs"
 
 # Push
 git push origin hma-market-saas
+# 1. Supprimer de l'historique directement
+git filter-branch --force --index-filter "git rm --cached --ignore-unmatch var/log/dev.log" --prune-empty --tag-name-filter cat -- --all
+
+# 2. Nettoyer
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+
+# 3. Ajouter .gitignore pour éviter le futur
+echo "var/log/" >> .gitignore
+git add .gitignore
+git commit -m "Ignorer les logs"
+
+# 4. Push
+git push origin hma-market-saas --force
+
+
+
+
+
+
+
+
+
 

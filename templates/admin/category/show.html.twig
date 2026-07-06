@@ -1,4 +1,5 @@
 {# templates/admin/category/show.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ category.name }} - Détails - HMA Market{% endblock %}
@@ -66,6 +67,30 @@
                         <h5 class="card-title mb-0">
                             <i class="fas fa-info-circle me-2"></i> Informations de la catégorie
                         </h5>
+                        <!-- ✅ Badge de statut dans l'en-tête -->
+                        <div>
+                            {% if category.isActive %}
+                                <span class="badge bg-success me-2">
+                                    <i class="fas fa-check-circle me-1"></i> Active
+                                </span>
+                            {% else %}
+                                <span class="badge bg-danger me-2">
+                                    <i class="fas fa-times-circle me-1"></i> Inactive
+                                </span>
+                            {% endif %}
+                            {# ✅ Badge de visibilité (pour les pharmacies) #}
+                            {% if companyType == 'pharmacy' %}
+                                {% if category.companyPublic %}
+                                    <span class="badge bg-primary">
+                                        <i class="fas fa-eye me-1"></i> Visible sur marketplace
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="fas fa-eye-slash me-1"></i> Masquée sur marketplace
+                                    </span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -84,19 +109,6 @@
                                         <i class="fas fa-folder fa-5x text-white"></i>
                                     </div>
                                 {% endif %}
-                                
-                                <!-- Statut -->
-                                <div class="mb-3">
-                                    {% if category.isActive %}
-                                        <span class="badge bg-success rounded-pill px-3 py-2">
-                                            <i class="fas fa-toggle-on me-1"></i> Active
-                                        </span>
-                                    {% else %}
-                                        <span class="badge bg-danger rounded-pill px-3 py-2">
-                                            <i class="fas fa-toggle-off me-1"></i> Inactive
-                                        </span>
-                                    {% endif %}
-                                </div>
                             </div>
                         </div>
 
@@ -118,16 +130,21 @@
                                     <div class="info-value">{{ category.description|default('Aucune description')|nl2br }}</div>
                                 </div>
                                 
+                                <!-- ✅ Catégorie parente simplifiée -->
                                 <div class="info-item">
                                     <div class="info-label"><i class="fas fa-sitemap text-primary me-2"></i> Catégorie parente</div>
                                     <div class="info-value">
                                         {% if category.parent %}
                                             <a href="{{ path('app_admin_category_show', {'id': category.parent.id}) }}" 
-                                               class="badge bg-info text-decoration-none">
-                                                <i class="fas fa-level-up-alt me-1"></i> {{ category.parent.name }}
+                                               class="text-decoration-none">
+                                                <span class="badge bg-primary">
+                                                    <i class="fas fa-level-up-alt me-1"></i> {{ category.parent.name }}
+                                                </span>
                                             </a>
                                         {% else %}
-                                            <span class="badge bg-secondary"><i class="fas fa-folder me-1"></i> Catégorie principale</span>
+                                            <span class="text-muted">
+                                                <i class="fas fa-folder me-1"></i> Catégorie principale (aucune parente)
+                                            </span>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -239,11 +256,10 @@
                         </a>
                         {% if companyType != 'restaurant' %}
                             <a href="{{ path('app_admin_category_promotions', {'id': category.id}) }}" 
-                                class="btn btn-sm btn-outline-warning" title="Promotions">
-                                <i class="fas fa-percent"></i> Promotions
+                                class="btn btn-outline-warning btn-lg">
+                                <i class="fas fa-percent me-2"></i> Promotions
                             </a>
                         {% endif %}    
-                        
                     </div>
                 </div>
             </div>
@@ -311,11 +327,18 @@
                                         </span>
                                     </td>
                                     <td>
-                                        {% if product.isActive %}
-                                            <span class="badge bg-success">Actif</span>
-                                        {% else %}
-                                            <span class="badge bg-danger">Inactif</span>
-                                        {% endif %}
+                                        <div class="d-flex flex-column gap-1">
+                                            <span class="badge {{ product.isActive ? 'bg-success' : 'bg-danger' }}">
+                                                {{ product.isActive ? 'Actif' : 'Inactif' }}
+                                            </span>
+                                            {# ✅ Badge de visibilité pour les produits (pharmacies) #}
+                                            {% if companyType == 'pharmacy' %}
+                                                <span class="badge {{ product.companyPublic ? 'bg-primary' : 'bg-secondary' }}" style="font-size: 9px;">
+                                                    <i class="fas {{ product.companyPublic ? 'fa-eye' : 'fa-eye-slash' }} me-1"></i>
+                                                    {{ product.companyPublic ? 'Visible' : 'Masqué' }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
                                     </td>
                                     <td class="text-end">
                                         <div class="btn-group btn-group-sm">
@@ -379,13 +402,18 @@
                                 {% endif %}
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1">{{ child.name }}</h6>
-                                    <div class="d-flex align-items-center mb-2">
-                                        {% if child.isActive %}
-                                            <span class="badge bg-success me-2">Active</span>
-                                        {% else %}
-                                            <span class="badge bg-danger me-2">Inactive</span>
-                                        {% endif %}
+                                    <div class="d-flex flex-wrap align-items-center gap-1 mb-2">
+                                        <span class="badge {{ child.isActive ? 'bg-success' : 'bg-danger' }}">
+                                            {{ child.isActive ? 'Active' : 'Inactive' }}
+                                        </span>
                                         <span class="badge bg-primary">{{ child.products|length }} produits</span>
+                                        {# ✅ Badge de visibilité pour les sous-catégories (pharmacies) #}
+                                        {% if companyType == 'pharmacy' %}
+                                            <span class="badge {{ child.companyPublic ? 'bg-primary' : 'bg-secondary' }}" style="font-size: 9px;">
+                                                <i class="fas {{ child.companyPublic ? 'fa-eye' : 'fa-eye-slash' }} me-1"></i>
+                                                {{ child.companyPublic ? 'Visible' : 'Masquée' }}
+                                            </span>
+                                        {% endif %}
                                     </div>
                                     <div class="btn-group btn-group-sm">
                                         <a href="{{ path('app_admin_category_show', {'id': child.id}) }}" class="btn btn-outline-info">
@@ -406,7 +434,6 @@
     </div>
     {% endif %}
 </div>
-
 
 <!-- Modal de suppression avec confirmation -->
 <div class="modal fade" id="deleteCategoryModal" tabindex="-1">
@@ -560,3 +587,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
+

@@ -14,7 +14,28 @@
                     <p class="text-muted">Connectez-vous pour accéder à votre compte</p>
                 </div>
 
-                {# Flash messages #}
+                {# ✅ Message d'erreur personnalisé (tentatives, blocage) #}
+                {% set login_error = app.session.get('_login_error') %}
+                {% if login_error %}
+                    <div class="alert alert-{% if 'bloqué' in login_error or 'Bloqué' in login_error or 'blocage' in login_error %}danger{% else %}warning{% endif %} alert-dismissible fade show rounded-3" role="alert">
+                        <i class="fas fa-{% if 'bloqué' in login_error or 'Bloqué' in login_error %}exclamation-circle{% else %}exclamation-triangle{% endif %} me-2"></i>
+                        {{ login_error|raw }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {{ app.session.remove('_login_error') }}
+                {% endif %}
+
+                {# ✅ Message de changement de mot de passe obligatoire #}
+                {% set force_change_password = app.session.get('_force_change_password') %}
+                {% if force_change_password %}
+                    <div class="alert alert-warning rounded-3" role="alert">
+                        <i class="fas fa-lock me-2"></i>
+                        <strong>🔒 Sécurité :</strong> Vous devez changer votre mot de passe temporaire avant de continuer.
+                    </div>
+                    {{ app.session.remove('_force_change_password') }}
+                {% endif %}
+
+                {# Flash messages (pour les autres messages) #}
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
                         <div class="alert alert-{{ label }} alert-dismissible fade show rounded-3" role="alert">
@@ -25,9 +46,9 @@
                     {% endfor %}
                 {% endfor %}
 
-                {# Erreur de connexion #}
+                {# Erreur de connexion Symfony #}
                 {% if error %}
-                    <div class="alert alert-danger rounded-3">
+                    <div class="alert alert-danger rounded-3" role="alert">
                         <i class="fas fa-exclamation-circle me-2"></i>
                         {{ error.messageKey|trans(error.messageData, 'security') }}
                     </div>
@@ -35,7 +56,7 @@
 
                 {# ✅ Message spécifique pour compte non activé #}
                 {% if error and 'activer' in error.messageKey|lower %}
-                    <div class="alert alert-warning rounded-3">
+                    <div class="alert alert-warning rounded-3" role="alert">
                         <i class="fas fa-envelope me-2"></i>
                         <strong>Compte non activé :</strong> Vérifiez votre email ou 
                         <a href="{{ path('marketplace_resend_verification', {email: last_username}) }}" class="alert-link fw-bold">
@@ -93,8 +114,41 @@
                         </p>
                     </div>
                 </form>
+
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <p class="small text-muted mb-0">
+                        <i class="fas fa-shield-alt me-1 text-success"></i>
+                        Connexion sécurisée
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-clock me-1"></i>
+                        5 tentatives avant blocage
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .alert {
+        border-left: 4px solid;
+    }
+    .alert-warning {
+        border-left-color: #ffc107;
+    }
+    .alert-danger {
+        border-left-color: #dc3545;
+    }
+    .alert-success {
+        border-left-color: #28a745;
+    }
+    .alert-info {
+        border-left-color: #17a2b8;
+    }
+    .btn-close:focus {
+        box-shadow: none;
+    }
+</style>
 {% endblock %}

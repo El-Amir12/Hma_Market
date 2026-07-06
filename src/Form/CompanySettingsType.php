@@ -96,9 +96,6 @@ class CompanySettingsType extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'form-control']
             ])
-            
-            // ❌ SUPPRIMEZ primaryColor ET secondaryColor ICI
-            // Ils sont gérés via les champs cachés dans le template
         ;
     }
     

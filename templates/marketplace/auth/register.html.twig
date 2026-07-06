@@ -318,7 +318,7 @@
                     {% endfor %}
 
                     {# Information pour les admins #}
-                    {% if app.user and is_admin_user(app.user) %}
+                    {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
                         <div class="alert-custom alert-info">
                             <i class="fas fa-info-circle"></i>
                             <strong>Information :</strong> La Marketplace est indépendante de Hma Market.

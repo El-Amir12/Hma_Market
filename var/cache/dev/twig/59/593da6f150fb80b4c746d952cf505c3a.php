@@ -252,53 +252,111 @@ class __TwigTemplate_c149dad92cfa5343cd28b540279a1010 extends Template
 
                     <hr class=\"my-4\">
 
-                    <!-- Statut -->
-                    <div class=\"card border-0 bg-light\">
-                        <div class=\"card-body\">
-                            <div class=\"d-flex align-items-center justify-content-between mb-2\">
-                                <div class=\"d-flex align-items-center\">
-                                    <i class=\"fas fa-toggle-on me-2 text-primary\"></i>
-                                    <span class=\"fw-bold\">Statut de la catégorie</span>
-                                </div>
-                                <span class=\"badge ";
-        // line 156
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 156, $this->source); })()), "is_active", [], "any", false, false, false, 156), "vars", [], "any", false, false, false, 156), "data", [], "any", false, false, false, 156)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("bg-success") : ("bg-danger"));
+                    <div class=\"row g-3\">
+                        <!-- Statut -->
+                        <div class=\"col-md-6\">
+                            <div class=\"card border-0 bg-light h-100\">
+                                <div class=\"card-body\">
+                                    <div class=\"d-flex align-items-center justify-content-between mb-2\">
+                                        <div class=\"d-flex align-items-center\">
+                                            <i class=\"fas fa-toggle-on me-2 text-primary\"></i>
+                                            <span class=\"fw-bold\">Statut de la catégorie</span>
+                                        </div>
+                                        <span class=\"badge ";
+        // line 158
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 158, $this->source); })()), "is_active", [], "any", false, false, false, 158), "vars", [], "any", false, false, false, 158), "data", [], "any", false, false, false, 158)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("bg-success") : ("bg-danger"));
         yield "\" id=\"status-badge\">
-                                    ";
-        // line 157
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 157, $this->source); })()), "is_active", [], "any", false, false, false, 157), "vars", [], "any", false, false, false, 157), "data", [], "any", false, false, false, 157)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("ACTIVE") : ("INACTIVE"));
+                                            ";
+        // line 159
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 159, $this->source); })()), "is_active", [], "any", false, false, false, 159), "vars", [], "any", false, false, false, 159), "data", [], "any", false, false, false, 159)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("ACTIVE") : ("INACTIVE"));
         yield "
-                                </span>
-                            </div>
-                            <div class=\"form-check form-switch\">
-                                ";
-        // line 161
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 161, $this->source); })()), "is_active", [], "any", false, false, false, 161), 'widget', ["attr" => ["class" => "form-check-input", "role" => "switch"]]);
-        // line 164
-        yield "
-                                <label class=\"form-check-label\" for=\"";
-        // line 165
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 165, $this->source); })()), "is_active", [], "any", false, false, false, 165), "vars", [], "any", false, false, false, 165), "id", [], "any", false, false, false, 165), "html", null, true);
-        yield "\" id=\"status-label\">
-                                    ";
+                                        </span>
+                                    </div>
+                                    <div class=\"form-check form-switch\">
+                                        ";
+        // line 163
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 163, $this->source); })()), "is_active", [], "any", false, false, false, 163), 'widget', ["attr" => ["class" => "form-check-input", "role" => "switch"]]);
         // line 166
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 166, $this->source); })()), "is_active", [], "any", false, false, false, 166), "vars", [], "any", false, false, false, 166), "data", [], "any", false, false, false, 166)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Catégorie active") : ("Catégorie inactive"));
         yield "
-                                </label>
+                                        <label class=\"form-check-label\" for=\"";
+        // line 167
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 167, $this->source); })()), "is_active", [], "any", false, false, false, 167), "vars", [], "any", false, false, false, 167), "id", [], "any", false, false, false, 167), "html", null, true);
+        yield "\" id=\"status-label\">
+                                            ";
+        // line 168
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 168, $this->source); })()), "is_active", [], "any", false, false, false, 168), "vars", [], "any", false, false, false, 168), "data", [], "any", false, false, false, 168)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Catégorie active") : ("Catégorie inactive"));
+        yield "
+                                        </label>
+                                    </div>
+                                    <small class=\"text-muted mt-1 d-block\">
+                                        <i class=\"fas fa-info-circle me-1\"></i>
+                                        Les catégories inactives ne seront pas visibles dans le catalogue.
+                                    </small>
+                                </div>
                             </div>
-                            <small class=\"text-muted mt-1 d-block\">
-                                <i class=\"fas fa-info-circle me-1\"></i>
-                                Les catégories inactives ne seront pas visibles dans le catalogue.
-                            </small>
                         </div>
-                    </div>
+
+                        ";
+        // line 180
+        yield "                        ";
+        if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 180, $this->source); })()) == "pharmacy")) {
+            // line 181
+            yield "                        <div class=\"col-md-6\">
+                            <div class=\"card border-0 bg-light h-100\">
+                                <div class=\"card-body\">
+                                    <div class=\"d-flex align-items-center justify-content-between mb-2\">
+                                        <div class=\"d-flex align-items-center\">
+                                            <i class=\"fas fa-globe me-2 text-primary\"></i>
+                                            <span class=\"fw-bold\">Visibilité marketplace</span>
+                                        </div>
+                                        <span class=\"badge ";
+            // line 189
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 189, $this->source); })()), "company_public", [], "any", false, false, false, 189), "vars", [], "any", false, false, false, 189), "data", [], "any", false, false, false, 189)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("bg-success") : ("bg-secondary"));
+            yield "\" id=\"visibility-badge\">
+                                            ";
+            // line 190
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 190, $this->source); })()), "company_public", [], "any", false, false, false, 190), "vars", [], "any", false, false, false, 190), "data", [], "any", false, false, false, 190)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("VISIBLE") : ("MASQUÉE"));
+            yield "
+                                        </span>
+                                    </div>
+                                    <div class=\"form-check form-switch\">
+                                        ";
+            // line 194
+            yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 194, $this->source); })()), "company_public", [], "any", false, false, false, 194), 'widget', ["attr" => ["class" => "form-check-input", "role" => "switch"]]);
+            // line 197
+            yield "
+                                        <label class=\"form-check-label\" for=\"";
+            // line 198
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 198, $this->source); })()), "company_public", [], "any", false, false, false, 198), "vars", [], "any", false, false, false, 198), "id", [], "any", false, false, false, 198), "html", null, true);
+            yield "\" id=\"visibility-label\">
+                                            ";
+            // line 199
+            yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 199, $this->source); })()), "company_public", [], "any", false, false, false, 199), "vars", [], "any", false, false, false, 199), "data", [], "any", false, false, false, 199)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("Visible sur le marketplace") : ("Masquée sur le marketplace"));
+            yield "
+                                        </label>
+                                    </div>
+                                    <small class=\"text-muted mt-1 d-block\">
+                                        <i class=\"fas fa-info-circle me-1\"></i>
+                                        Décochez pour masquer cette catégorie sur le marketplace
+                                    </small>
+                                    <small class=\"text-muted mt-1 d-block\">
+                                        <i class=\"fas fa-eye-slash me-1\"></i>
+                                        Elle restera visible dans votre back-office
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        ";
+        }
+        // line 214
+        yield "                    </div>
                 </div>
 
                 <!-- Footer avec boutons d'action -->
                 <div class=\"card-footer bg-light py-3\">
                     <div class=\"d-flex justify-content-between align-items-center\">
                         <a href=\"";
-        // line 180
+        // line 220
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_index");
         yield "\" class=\"btn btn-outline-secondary\">
                             <i class=\"fas fa-times me-2\"></i> Annuler
@@ -307,22 +365,22 @@ class __TwigTemplate_c149dad92cfa5343cd28b540279a1010 extends Template
                             <button type=\"submit\" class=\"btn btn-primary btn-lg px-4\">
                                 <i class=\"fas fa-save me-2\"></i>
                                 ";
-        // line 186
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("button_label", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["button_label"]) || array_key_exists("button_label", $context) ? $context["button_label"] : (function () { throw new RuntimeError('Variable "button_label" does not exist.', 186, $this->source); })()), "Enregistrer")) : ("Enregistrer")), "html", null, true);
+        // line 226
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("button_label", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["button_label"]) || array_key_exists("button_label", $context) ? $context["button_label"] : (function () { throw new RuntimeError('Variable "button_label" does not exist.', 226, $this->source); })()), "Enregistrer")) : ("Enregistrer")), "html", null, true);
         yield "
                             </button>
                             ";
-        // line 188
-        if ((CoreExtension::getAttribute($this->env, $this->source, ($context["category"] ?? null), "id", [], "any", true, true, false, 188) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 188, $this->source); })()), "id", [], "any", false, false, false, 188)))) {
-            // line 189
+        // line 228
+        if ((CoreExtension::getAttribute($this->env, $this->source, ($context["category"] ?? null), "id", [], "any", true, true, false, 228) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 228, $this->source); })()), "id", [], "any", false, false, false, 228)))) {
+            // line 229
             yield "                                <a href=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 189, $this->source); })()), "id", [], "any", false, false, false, 189)]), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 229, $this->source); })()), "id", [], "any", false, false, false, 229)]), "html", null, true);
             yield "\" class=\"btn btn-info btn-lg\">
                                     <i class=\"fas fa-eye me-2\"></i> Voir
                                 </a>
                             ";
         }
-        // line 193
+        // line 233
         yield "                        </div>
                     </div>
                 </div>
@@ -331,16 +389,16 @@ class __TwigTemplate_c149dad92cfa5343cd28b540279a1010 extends Template
     </div>
 
     ";
-        // line 200
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 200, $this->source); })()), 'form_end');
+        // line 240
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 240, $this->source); })()), 'form_end');
         yield "
 </div>
 
 <!-- Modal pour supprimer l'image -->
 ";
-        // line 204
-        if (((CoreExtension::getAttribute($this->env, $this->source, ($context["category"] ?? null), "id", [], "any", true, true, false, 204) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 204, $this->source); })()), "id", [], "any", false, false, false, 204))) && CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 204, $this->source); })()), "image", [], "any", false, false, false, 204))) {
-            // line 205
+        // line 244
+        if (((CoreExtension::getAttribute($this->env, $this->source, ($context["category"] ?? null), "id", [], "any", true, true, false, 244) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 244, $this->source); })()), "id", [], "any", false, false, false, 244))) && CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 244, $this->source); })()), "image", [], "any", false, false, false, 244))) {
+            // line 245
             yield "<div class=\"modal fade\" id=\"deleteImageModal\" tabindex=\"-1\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
@@ -358,12 +416,12 @@ class __TwigTemplate_c149dad92cfa5343cd28b540279a1010 extends Template
                 </div>
                 <div class=\"mb-3\">
                     <img src=\"";
-            // line 221
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/categories/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 221, $this->source); })()), "image", [], "any", false, false, false, 221))), "html", null, true);
+            // line 261
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/categories/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 261, $this->source); })()), "image", [], "any", false, false, false, 261))), "html", null, true);
             yield "\"
                          alt=\"";
-            // line 222
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 222, $this->source); })()), "name", [], "any", false, false, false, 222), "html", null, true);
+            // line 262
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 262, $this->source); })()), "name", [], "any", false, false, false, 262), "html", null, true);
             yield "\"
                          class=\"rounded shadow-lg\"
                          style=\"width: 150px; height: 150px; object-fit: cover;\">
@@ -374,12 +432,12 @@ class __TwigTemplate_c149dad92cfa5343cd28b540279a1010 extends Template
                     <i class=\"fas fa-times me-2\"></i> Annuler
                 </button>
                 <form action=\"";
-            // line 231
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_delete_image", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 231, $this->source); })()), "id", [], "any", false, false, false, 231)]), "html", null, true);
+            // line 271
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_delete_image", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 271, $this->source); })()), "id", [], "any", false, false, false, 271)]), "html", null, true);
             yield "\" method=\"post\" class=\"d-inline\">
                     <input type=\"hidden\" name=\"_token\" value=\"";
-            // line 232
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete-image" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 232, $this->source); })()), "id", [], "any", false, false, false, 232))), "html", null, true);
+            // line 272
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete-image" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 272, $this->source); })()), "id", [], "any", false, false, false, 272))), "html", null, true);
             yield "\">
                     <button type=\"submit\" class=\"btn btn-danger\">
                         <i class=\"fas fa-trash me-2\"></i> Supprimer l'image
@@ -391,15 +449,15 @@ class __TwigTemplate_c149dad92cfa5343cd28b540279a1010 extends Template
 </div>
 ";
         }
-        // line 242
+        // line 282
         yield "
 ";
-        // line 243
+        // line 283
         yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
-        // line 310
+        // line 365
         yield "
 ";
-        // line 311
+        // line 366
         yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
         
         $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
@@ -410,7 +468,7 @@ class __TwigTemplate_c149dad92cfa5343cd28b540279a1010 extends Template
         yield from [];
     }
 
-    // line 243
+    // line 283
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -423,7 +481,7 @@ class __TwigTemplate_c149dad92cfa5343cd28b540279a1010 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 244
+        // line 284
         yield "<script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"></script>
 <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
 <script>
@@ -465,8 +523,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Gestion du statut (badge)
     const activeSwitch = document.getElementById('";
-        // line 284
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 284, $this->source); })()), "is_active", [], "any", false, false, false, 284), "vars", [], "any", false, false, false, 284), "id", [], "any", false, false, false, 284), "html", null, true);
+        // line 324
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 324, $this->source); })()), "is_active", [], "any", false, false, false, 324), "vars", [], "any", false, false, false, 324), "id", [], "any", false, false, false, 324), "html", null, true);
         yield "');
     const statusBadge = document.getElementById('status-badge');
     const statusLabel = document.getElementById('status-label');
@@ -479,6 +537,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    ";
+        // line 337
+        yield "    ";
+        if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 337, $this->source); })()) == "pharmacy")) {
+            // line 338
+            yield "    const visibilitySwitch = document.getElementById('";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 338, $this->source); })()), "company_public", [], "any", false, false, false, 338), "vars", [], "any", false, false, false, 338), "id", [], "any", false, false, false, 338), "html", null, true);
+            yield "');
+    const visibilityBadge = document.getElementById('visibility-badge');
+    const visibilityLabel = document.getElementById('visibility-label');
+    if (visibilitySwitch && visibilityBadge && visibilityLabel) {
+        visibilitySwitch.addEventListener('change', function() {
+            const isVisible = this.checked;
+            visibilityBadge.textContent = isVisible ? 'VISIBLE' : 'MASQUÉE';
+            visibilityBadge.className = isVisible ? 'badge bg-success' : 'badge bg-secondary';
+            visibilityLabel.textContent = isVisible ? 'Visible sur le marketplace' : 'Masquée sur le marketplace';
+        });
+    }
+    ";
+        }
+        // line 350
+        yield "
     // Validation Bootstrap
     const forms = document.querySelectorAll('.needs-validation');
     Array.from(forms).forEach(form => {
@@ -502,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function() {
         yield from [];
     }
 
-    // line 311
+    // line 366
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -515,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 312
+        // line 367
         yield "<link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
 <link href=\"https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css\" rel=\"stylesheet\" />
 <style>
@@ -638,7 +718,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  519 => 312,  506 => 311,  469 => 284,  427 => 244,  414 => 243,  403 => 311,  400 => 310,  398 => 243,  395 => 242,  382 => 232,  378 => 231,  366 => 222,  362 => 221,  344 => 205,  342 => 204,  335 => 200,  326 => 193,  318 => 189,  316 => 188,  311 => 186,  302 => 180,  285 => 166,  281 => 165,  278 => 164,  276 => 161,  269 => 157,  265 => 156,  242 => 136,  235 => 132,  232 => 131,  230 => 128,  218 => 119,  211 => 115,  208 => 114,  206 => 110,  194 => 101,  187 => 97,  184 => 96,  182 => 92,  173 => 85,  169 => 83,  165 => 81,  163 => 80,  146 => 66,  141 => 64,  132 => 58,  124 => 52,  122 => 48,  115 => 43,  108 => 38,  104 => 36,  93 => 27,  91 => 26,  85 => 23,  81 => 22,  78 => 21,  76 => 20,  59 => 6,  55 => 4,  53 => 3,  50 => 2,);
+        return array (  599 => 367,  586 => 366,  561 => 350,  545 => 338,  542 => 337,  527 => 324,  485 => 284,  472 => 283,  461 => 366,  458 => 365,  456 => 283,  453 => 282,  440 => 272,  436 => 271,  424 => 262,  420 => 261,  402 => 245,  400 => 244,  393 => 240,  384 => 233,  376 => 229,  374 => 228,  369 => 226,  360 => 220,  352 => 214,  334 => 199,  330 => 198,  327 => 197,  325 => 194,  318 => 190,  314 => 189,  304 => 181,  301 => 180,  287 => 168,  283 => 167,  280 => 166,  278 => 163,  271 => 159,  267 => 158,  242 => 136,  235 => 132,  232 => 131,  230 => 128,  218 => 119,  211 => 115,  208 => 114,  206 => 110,  194 => 101,  187 => 97,  184 => 96,  182 => 92,  173 => 85,  169 => 83,  165 => 81,  163 => 80,  146 => 66,  141 => 64,  132 => 58,  124 => 52,  122 => 48,  115 => 43,  108 => 38,  104 => 36,  93 => 27,  91 => 26,  85 => 23,  81 => 22,  78 => 21,  76 => 20,  59 => 6,  55 => 4,  53 => 3,  50 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -790,32 +870,72 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     <hr class=\"my-4\">
 
-                    <!-- Statut -->
-                    <div class=\"card border-0 bg-light\">
-                        <div class=\"card-body\">
-                            <div class=\"d-flex align-items-center justify-content-between mb-2\">
-                                <div class=\"d-flex align-items-center\">
-                                    <i class=\"fas fa-toggle-on me-2 text-primary\"></i>
-                                    <span class=\"fw-bold\">Statut de la catégorie</span>
+                    <div class=\"row g-3\">
+                        <!-- Statut -->
+                        <div class=\"col-md-6\">
+                            <div class=\"card border-0 bg-light h-100\">
+                                <div class=\"card-body\">
+                                    <div class=\"d-flex align-items-center justify-content-between mb-2\">
+                                        <div class=\"d-flex align-items-center\">
+                                            <i class=\"fas fa-toggle-on me-2 text-primary\"></i>
+                                            <span class=\"fw-bold\">Statut de la catégorie</span>
+                                        </div>
+                                        <span class=\"badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }}\" id=\"status-badge\">
+                                            {{ form.is_active.vars.data ? 'ACTIVE' : 'INACTIVE' }}
+                                        </span>
+                                    </div>
+                                    <div class=\"form-check form-switch\">
+                                        {{ form_widget(form.is_active, {'attr': {
+                                            'class': 'form-check-input',
+                                            'role': 'switch'
+                                        }}) }}
+                                        <label class=\"form-check-label\" for=\"{{ form.is_active.vars.id }}\" id=\"status-label\">
+                                            {{ form.is_active.vars.data ? 'Catégorie active' : 'Catégorie inactive' }}
+                                        </label>
+                                    </div>
+                                    <small class=\"text-muted mt-1 d-block\">
+                                        <i class=\"fas fa-info-circle me-1\"></i>
+                                        Les catégories inactives ne seront pas visibles dans le catalogue.
+                                    </small>
                                 </div>
-                                <span class=\"badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }}\" id=\"status-badge\">
-                                    {{ form.is_active.vars.data ? 'ACTIVE' : 'INACTIVE' }}
-                                </span>
                             </div>
-                            <div class=\"form-check form-switch\">
-                                {{ form_widget(form.is_active, {'attr': {
-                                    'class': 'form-check-input',
-                                    'role': 'switch'
-                                }}) }}
-                                <label class=\"form-check-label\" for=\"{{ form.is_active.vars.id }}\" id=\"status-label\">
-                                    {{ form.is_active.vars.data ? 'Catégorie active' : 'Catégorie inactive' }}
-                                </label>
-                            </div>
-                            <small class=\"text-muted mt-1 d-block\">
-                                <i class=\"fas fa-info-circle me-1\"></i>
-                                Les catégories inactives ne seront pas visibles dans le catalogue.
-                            </small>
                         </div>
+
+                        {# ✅ AJOUT : Visibilité sur le marketplace (uniquement pour les pharmacies) #}
+                        {% if companyType == 'pharmacy' %}
+                        <div class=\"col-md-6\">
+                            <div class=\"card border-0 bg-light h-100\">
+                                <div class=\"card-body\">
+                                    <div class=\"d-flex align-items-center justify-content-between mb-2\">
+                                        <div class=\"d-flex align-items-center\">
+                                            <i class=\"fas fa-globe me-2 text-primary\"></i>
+                                            <span class=\"fw-bold\">Visibilité marketplace</span>
+                                        </div>
+                                        <span class=\"badge {{ form.company_public.vars.data ? 'bg-success' : 'bg-secondary' }}\" id=\"visibility-badge\">
+                                            {{ form.company_public.vars.data ? 'VISIBLE' : 'MASQUÉE' }}
+                                        </span>
+                                    </div>
+                                    <div class=\"form-check form-switch\">
+                                        {{ form_widget(form.company_public, {'attr': {
+                                            'class': 'form-check-input',
+                                            'role': 'switch'
+                                        }}) }}
+                                        <label class=\"form-check-label\" for=\"{{ form.company_public.vars.id }}\" id=\"visibility-label\">
+                                            {{ form.company_public.vars.data ? 'Visible sur le marketplace' : 'Masquée sur le marketplace' }}
+                                        </label>
+                                    </div>
+                                    <small class=\"text-muted mt-1 d-block\">
+                                        <i class=\"fas fa-info-circle me-1\"></i>
+                                        Décochez pour masquer cette catégorie sur le marketplace
+                                    </small>
+                                    <small class=\"text-muted mt-1 d-block\">
+                                        <i class=\"fas fa-eye-slash me-1\"></i>
+                                        Elle restera visible dans votre back-office
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -937,6 +1057,21 @@ document.addEventListener('DOMContentLoaded', function() {
             statusLabel.textContent = isActive ? 'Catégorie active' : 'Catégorie inactive';
         });
     }
+
+    {# ✅ Gestion de la visibilité marketplace (pour les pharmacies) #}
+    {% if companyType == 'pharmacy' %}
+    const visibilitySwitch = document.getElementById('{{ form.company_public.vars.id }}');
+    const visibilityBadge = document.getElementById('visibility-badge');
+    const visibilityLabel = document.getElementById('visibility-label');
+    if (visibilitySwitch && visibilityBadge && visibilityLabel) {
+        visibilitySwitch.addEventListener('change', function() {
+            const isVisible = this.checked;
+            visibilityBadge.textContent = isVisible ? 'VISIBLE' : 'MASQUÉE';
+            visibilityBadge.className = isVisible ? 'badge bg-success' : 'badge bg-secondary';
+            visibilityLabel.textContent = isVisible ? 'Visible sur le marketplace' : 'Masquée sur le marketplace';
+        });
+    }
+    {% endif %}
 
     // Validation Bootstrap
     const forms = document.querySelectorAll('.needs-validation');

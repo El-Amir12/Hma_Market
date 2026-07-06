@@ -1,5 +1,6 @@
 <?php
 // src/Form/CustomerResetPasswordRequestFormType.php
+declare(strict_types=1);
 
 namespace App\Form;
 
@@ -18,7 +19,7 @@ class CustomerResetPasswordRequestFormType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                     'placeholder' => 'votre@email.com',
                     'autocomplete' => 'email'
                 ],

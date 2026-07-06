@@ -1,3 +1,5 @@
+{# templates/admin/category_recipe/index.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Gestion des Catégories de Plats - HMA Market{% endblock %}
@@ -40,6 +42,19 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
+
+/* ✅ Badges en bas de la carte */
+.category-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 0.5rem;
+}
+.category-badges .badge {
+    font-size: 9px;
+    padding: 3px 6px;
+}
+
 /* Styles Select2 - Correction d'alignement vertical comme dans Recipe */
 .select2-container--bootstrap-5 .select2-selection {
     height: 38px !important;
@@ -386,8 +401,8 @@
         {% for category in categories %}
         <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
             <div class="card category-card shadow h-100 {{ not category.subscriptionActive ? 'border-warning' : '' }}">
-                <!-- Image avec badges superposés (en haut à gauche) -->
-                <div class="category-image-container position-relative">
+                <!-- Image (sans badges superposés) -->
+                <div class="category-image-container">
                     {% if category.image %}
                         <img src="{{ asset('uploads/categories_plats/' ~ category.image) }}" 
                             alt="{{ category.name }}"
@@ -397,22 +412,6 @@
                             <i class="fas fa-utensils fa-4x text-muted"></i>
                         </div>
                     {% endif %}
-
-                    <!-- Badges de statut superposés (en haut à gauche) -->
-                    <div class="position-absolute top-0 start-0 p-2">
-                        <div class="d-flex flex-column gap-1">
-                            {% if not category.subscriptionActive %}
-                                <span class="badge bg-warning"><i class="fas fa-clock me-1"></i> En attente (quota)</span>
-                            {% elseif category.isActive %}
-                                <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Active</span>
-                            {% else %}
-                                <span class="badge bg-danger"><i class="fas fa-pause-circle me-1"></i> Désactivée</span>
-                            {% endif %}
-                            {% if category.subscriptionActive %}
-                                <span class="badge bg-info"><i class="fas fa-database me-1"></i> Dans quota</span>
-                            {% endif %}
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Contenu -->
@@ -479,6 +478,28 @@
                         {{ category.description|default('Aucune description')|u.truncate(80, '...') }}
                     </p>
                     
+                    <!-- ✅ Badges sous la description -->
+                    <div class="category-badges">
+                        {% if not category.subscriptionActive %}
+                            <span class="badge bg-warning text-dark">
+                                <i class="fas fa-clock fa-xs me-1"></i> En attente
+                            </span>
+                        {% elseif category.isActive %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle fa-xs me-1"></i> Active
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger">
+                                <i class="fas fa-pause-circle fa-xs me-1"></i> Désactivée
+                            </span>
+                        {% endif %}
+                        {% if category.subscriptionActive %}
+                            <span class="badge bg-info">
+                                <i class="fas fa-database fa-xs me-1"></i> Dans quota
+                            </span>
+                        {% endif %}
+                    </div>
+
                     <!-- Compteurs Recettes & Sous-catégories (côte à côte) -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="text-center px-2 py-1 bg-light rounded" style="min-width: 45%;">

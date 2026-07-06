@@ -1,4 +1,5 @@
 <?php
+// src/Form/CategoryType.php
 
 namespace App\Form;
 
@@ -21,6 +22,7 @@ class CategoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $hmaService = $options['hma_service'] ?? null;
+        $companyType = $hmaService ? $hmaService->getType() : 'retail';
 
         $builder
             ->add('name', TextType::class, [
@@ -94,6 +96,20 @@ class CategoryType extends AbstractType
                     return 'Sous-catégories (niveau ' . $level . ')';
                 }
             ]);
+
+        // ✅ AJOUT : Champ company_public uniquement pour les pharmacies
+        if ($companyType === 'pharmacy') {
+            $builder->add('company_public', CheckboxType::class, [
+                'label' => 'Visible sur le marketplace',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-check-input'
+                ],
+                'label_attr' => [
+                    'class' => 'form-check-label'
+                ]
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -103,5 +119,4 @@ class CategoryType extends AbstractType
             'hma_service' => null,
         ]);
     }
-    
 }

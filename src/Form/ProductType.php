@@ -193,12 +193,21 @@ class ProductType extends AbstractType
                 'attr' => ['placeholder' => 'Ex: comprimé, sirop', 'class' => 'form-control']
             ]);
 
+        // ✅ Champs spécifiques aux pharmacies
         if ($companyType === 'pharmacy') {
-            $builder->add('prescription_required', CheckboxType::class, [
-                'label' => 'Prescription obligatoire',
-                'required' => false,
-                'attr' => ['class' => 'form-check-input']
-            ]);
+            $builder
+                ->add('prescription_required', CheckboxType::class, [
+                    'label' => 'Prescription obligatoire',
+                    'required' => false,
+                    'attr' => ['class' => 'form-check-input']
+                ])
+                // ✅ AJOUT : Visibilité sur le marketplace
+                ->add('company_public', CheckboxType::class, [
+                    'label' => 'Visible sur le marketplace',
+                    'required' => false,
+                    'attr' => ['class' => 'form-check-input'],
+                    'help' => 'Décochez pour masquer ce produit sur le marketplace (il restera visible dans votre back-office)'
+                ]);
         }
 
         // Définir la valeur par défaut "pièce" pour l'unité

@@ -1,4 +1,5 @@
 {# templates/admin/product/_form.html.twig #}
+
 {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
 <div class="row g-4">
     <!-- Carte Image -->
@@ -153,6 +154,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <!-- Unité de mesure -->
                 <div class="row g-3 mt-3">
                     <div class="col-md-12">
@@ -272,7 +274,7 @@
                     </div>
                 </div>
 
-                <!-- Message informatif sur le stock (déplacé après les deux champs) -->
+                <!-- Message informatif sur le stock -->
                 {% if canEditStock is defined and not canEditStock %}
                 <div class="row mt-2">
                     <div class="col-12">
@@ -428,22 +430,47 @@
                     </div>
                 </div>
 
-                {# Champ prescription_required uniquement pour les pharmacies #}
+                {# ✅ Champs spécifiques aux pharmacies #}
                 {% if companyType == 'pharmacy' %}
                 <div class="row g-3 mt-3">
-                    <div class="col-12">
+                    <div class="col-md-6">
                         <div class="card border-0 bg-light">
                             <div class="card-body">
                                 <div class="form-check form-switch">
                                     {{ form_widget(form.prescription_required, {'attr': {'class': 'form-check-input'}}) }}
                                     <label class="form-check-label" for="{{ form.prescription_required.vars.id }}">
+                                        <i class="fas fa-prescription me-2 text-danger"></i>
                                         Prescription obligatoire
                                     </label>
                                     <div class="invalid-feedback d-block">{{ form_errors(form.prescription_required) }}</div>
                                     <small class="text-muted mt-1 d-block">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    Requiert une ordonance à la vente
-                                </small>
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Requiert une ordonnance à la vente
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {# ✅ AJOUT : Visibilité sur le marketplace #}
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body">
+                                <div class="form-check form-switch">
+                                    {{ form_widget(form.company_public, {'attr': {'class': 'form-check-input'}}) }}
+                                    <label class="form-check-label" for="{{ form.company_public.vars.id }}">
+                                        <i class="fas fa-globe me-2 text-primary"></i>
+                                        Visible sur le marketplace
+                                    </label>
+                                    <div class="invalid-feedback d-block">{{ form_errors(form.company_public) }}</div>
+                                    <small class="text-muted mt-1 d-block">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Décochez pour masquer ce produit sur le marketplace
+                                    </small>
+                                    <small class="text-muted mt-1 d-block">
+                                        <i class="fas fa-eye-slash me-1"></i>
+                                        Il restera visible dans votre back-office
+                                    </small>
                                 </div>
                             </div>
                         </div>

@@ -103,20 +103,14 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
 <style>
-    ";
-        // line 11
-        yield "    :root {
+    :root {
         --primary-color: ";
-        // line 12
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("primaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["primaryColor"]) || array_key_exists("primaryColor", $context) ? $context["primaryColor"] : (function () { throw new RuntimeError('Variable "primaryColor" does not exist.', 12, $this->source); })()), "#0463f1")) : ("#0463f1")), "html", null, true);
-        yield ";
-        --primary-dark: ";
-        // line 13
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['App\Twig\ColorExtension']->colorDarken(((array_key_exists("primaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["primaryColor"]) || array_key_exists("primaryColor", $context) ? $context["primaryColor"] : (function () { throw new RuntimeError('Variable "primaryColor" does not exist.', 13, $this->source); })()), "#0463f1")) : ("#0463f1")), 15), "html", null, true);
+        // line 11
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("primaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["primaryColor"]) || array_key_exists("primaryColor", $context) ? $context["primaryColor"] : (function () { throw new RuntimeError('Variable "primaryColor" does not exist.', 11, $this->source); })()), "#0463f1")) : ("#0463f1")), "html", null, true);
         yield ";
         --secondary-color: ";
-        // line 14
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("secondaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["secondaryColor"]) || array_key_exists("secondaryColor", $context) ? $context["secondaryColor"] : (function () { throw new RuntimeError('Variable "secondaryColor" does not exist.', 14, $this->source); })()), "#8b5cf6")) : ("#8b5cf6")), "html", null, true);
+        // line 12
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("secondaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["secondaryColor"]) || array_key_exists("secondaryColor", $context) ? $context["secondaryColor"] : (function () { throw new RuntimeError('Variable "secondaryColor" does not exist.', 12, $this->source); })()), "#8b5cf6")) : ("#8b5cf6")), "html", null, true);
         yield ";
     }
     
@@ -125,9 +119,8 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         margin: 0 auto;
     }
     
-    /* Hero Header */
     .settings-hero {
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        background: linear-gradient(135deg, var(--primary-color), color-mix(in srgb, var(--primary-color) 85%, black));
         border-radius: 24px;
         padding: 2rem 2.5rem;
         margin-bottom: 2rem;
@@ -178,7 +171,6 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         position: relative;
     }
     
-    /* Navigation par onglets */
     .settings-tabs {
         display: flex;
         gap: 0.5rem;
@@ -218,7 +210,6 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 40%, transparent);
     }
     
-    /* Sections */
     .settings-section {
         background: white;
         border-radius: 24px;
@@ -274,7 +265,6 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         margin-bottom: 0;
     }
     
-    /* Logo preview */
     .logo-preview {
         display: flex;
         align-items: center;
@@ -289,7 +279,7 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
     
     .logo-preview:hover {
         border-color: var(--primary-color);
-        background: #f0f7ff;
+        background: color-mix(in srgb, var(--primary-color) 5%, #f8fafc);
     }
     
     .logo-preview-img {
@@ -308,7 +298,6 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
-    /* ===== PALETTE DE COULEURS ===== */
     .color-palette-group {
         background: #f8fafc;
         border-radius: 16px;
@@ -422,7 +411,6 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         border: none;
     }
     
-    /* Preview des couleurs en action */
     .color-preview-demo {
         display: flex;
         gap: 1rem;
@@ -450,7 +438,7 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
     }
     
     .color-preview-demo .demo-btn-primary:hover {
-        background: var(--primary-dark);
+        background: color-mix(in srgb, var(--primary-color) 85%, black);
         transform: translateY(-2px);
     }
     
@@ -473,7 +461,6 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         background: var(--primary-color);
     }
     
-    /* Ticket preview */
     .ticket-preview {
         background: white;
         border-radius: 16px;
@@ -526,7 +513,6 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         color: #64748b;
     }
     
-    /* Form styling */
     .form-group {
         margin-bottom: 1.25rem;
     }
@@ -539,7 +525,7 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
     }
     
     .form-label .required {
-        color: var(--danger-color);
+        color: #ef4444;
         margin-left: 0.25rem;
     }
     
@@ -573,7 +559,188 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         margin-top: 0.25rem;
     }
     
-    /* Action buttons */
+    /* ✅ STYLES POUR LA VISIBILITÉ ET GARDE - SIMPLIFIÉ */
+    .pharmacy-fields-wrapper {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 1.25rem 1.5rem;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+    }
+    
+    .pharmacy-fields-wrapper:hover {
+        border-color: var(--primary-color);
+    }
+    
+    .pharmacy-fields-title {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .pharmacy-fields-title i {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+    }
+    
+    .pharmacy-fields-title .badge-pharmacy {
+        background: var(--primary-color);
+        color: white;
+        font-size: 0.65rem;
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+    
+    .pharmacy-field-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .pharmacy-field-row:last-child {
+        border-bottom: none;
+    }
+    
+    .pharmacy-field-label {
+        min-width: 140px;
+        font-weight: 500;
+        color: #475569;
+        font-size: 0.9rem;
+    }
+    
+    /* ✅ TOGGLE SWITCH SIMPLIFIÉ ET FONCTIONNEL */
+    .toggle-container-simple {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .toggle-simple {
+        position: relative;
+        width: 52px;
+        height: 28px;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+    
+    .toggle-simple input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        position: absolute;
+    }
+    
+    .toggle-simple .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #cbd5e1;
+        transition: 0.3s;
+        border-radius: 34px;
+    }
+    
+    .toggle-simple .slider::before {
+        content: \"\";
+        position: absolute;
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background: white;
+        transition: 0.3s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .toggle-simple input:checked + .slider {
+        background: var(--primary-color);
+    }
+    
+    .toggle-simple input:checked + .slider::before {
+        transform: translateX(24px);
+    }
+    
+    .toggle-status-simple {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .toggle-status-simple .visible {
+        color: #22c55e;
+    }
+    
+    .toggle-status-simple .hidden {
+        color: #94a3b8;
+    }
+    
+    .guard-periods-compact {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .guard-periods-compact .period-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        padding: 0.25rem 0.8rem;
+        border-radius: 20px;
+        border: 1px solid #e5e7eb;
+        margin: 0.2rem 0.3rem 0.2rem 0;
+        font-size: 0.8rem;
+    }
+    
+    .guard-periods-compact .period-item .day {
+        font-weight: 600;
+        color: #1e293b;
+    }
+    
+    .guard-periods-compact .period-item .time {
+        color: #475569;
+        font-family: monospace;
+        font-size: 0.75rem;
+    }
+    
+    .guard-periods-compact .empty {
+        color: #94a3b8;
+        font-size: 0.85rem;
+        font-style: italic;
+    }
+    
+    .btn-guard-edit {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.25rem 1rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    
+    .btn-guard-edit:hover {
+        background: color-mix(in srgb, var(--primary-color) 85%, black);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 40%, transparent);
+        color: white;
+    }
+    
     .action-buttons {
         position: sticky;
         bottom: 1.5rem;
@@ -608,8 +775,8 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
     }
     
     .btn-primary:hover {
-        background: var(--primary-dark);
-        border-color: var(--primary-dark);
+        background: color-mix(in srgb, var(--primary-color) 85%, black);
+        border-color: color-mix(in srgb, var(--primary-color) 85%, black);
         box-shadow: 0 8px 25px color-mix(in srgb, var(--primary-color) 40%, transparent);
     }
     
@@ -633,98 +800,74 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         background: #e5e7eb;
     }
     
-    /* Animations */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .modal-content {
+        border-radius: 24px;
+        border: none;
+        overflow: hidden;
     }
     
-    /* Responsive */
+    .modal-header {
+        border-bottom: none;
+        padding: 1.5rem 2rem;
+    }
+    
+    .modal-body {
+        padding: 1.5rem 2rem;
+    }
+    
+    .modal-footer {
+        border-top: none;
+        padding: 1rem 2rem 1.5rem;
+    }
+    
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+        opacity: 0.7;
+    }
+    
+    .modal-header .btn-close:hover {
+        opacity: 1;
+    }
+    
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
     @media (max-width: 992px) {
-        .settings-hero {
-            padding: 1.5rem;
-        }
-        .settings-hero h1 {
-            font-size: 1.5rem;
-        }
-        .settings-section {
-            padding: 1.25rem;
-        }
-        .settings-tab {
-            padding: 0.5rem 1rem;
-            font-size: 0.8rem;
-        }
+        .settings-hero { padding: 1.5rem; }
+        .settings-hero h1 { font-size: 1.5rem; }
+        .settings-section { padding: 1.25rem; }
+        .settings-tab { padding: 0.5rem 1rem; font-size: 0.8rem; }
         .action-buttons {
             flex-direction: column;
             gap: 1rem;
             border-radius: 24px;
             padding: 1rem;
         }
-        .action-buttons .btn {
-            width: 100%;
-            justify-content: center;
-        }
-        .action-buttons div {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .color-palette {
-            gap: 0.5rem;
-        }
-        .color-swatch {
-            width: 30px;
-            height: 30px;
-        }
-        .logo-preview {
-            flex-direction: column;
-            text-align: center;
-        }
+        .action-buttons .btn { width: 100%; justify-content: center; }
+        .action-buttons div { width: 100%; display: flex; flex-direction: column; gap: 0.5rem; }
+        .color-palette { gap: 0.5rem; }
+        .color-swatch { width: 30px; height: 30px; }
+        .logo-preview { flex-direction: column; text-align: center; }
+        .pharmacy-field-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+        .pharmacy-field-label { min-width: auto; }
+        .guard-periods-compact { width: 100%; }
     }
     
     @media (max-width: 576px) {
-        .settings-hero {
-            padding: 1rem;
-        }
-        .settings-hero h1 {
-            font-size: 1.2rem;
-        }
-        .settings-section {
-            padding: 1rem;
-        }
-        .settings-tabs {
-            flex-direction: column;
-        }
-        .settings-tab {
-            width: 100%;
-            text-align: center;
-        }
-        .color-palette {
-            justify-content: center;
-        }
-        .color-palette-label {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .ticket-preview {
-            max-width: 100%;
-        }
-        .color-picker-custom input[type=\"color\"] {
-            width: 30px;
-            height: 30px;
-        }
-        .color-hex-display {
-            font-size: 0.75rem;
-            padding: 0.2rem 0.5rem;
-            min-width: 60px;
-        }
+        .settings-hero { padding: 1rem; }
+        .settings-hero h1 { font-size: 1.2rem; }
+        .settings-section { padding: 1rem; }
+        .settings-tabs { flex-direction: column; }
+        .settings-tab { width: 100%; text-align: center; }
+        .color-palette { justify-content: center; }
+        .color-palette-label { flex-direction: column; align-items: flex-start; }
+        .ticket-preview { max-width: 100%; }
+        .color-picker-custom input[type=\"color\"] { width: 30px; height: 30px; }
+        .color-hex-display { font-size: 0.75rem; padding: 0.2rem 0.5rem; min-width: 60px; }
+        .pharmacy-fields-wrapper { padding: 0.75rem 1rem; }
+        .btn-guard-edit { font-size: 0.7rem; padding: 0.2rem 0.8rem; }
     }
 </style>
 ";
@@ -737,7 +880,7 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         yield from [];
     }
 
-    // line 626
+    // line 773
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -750,10 +893,9 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 627
+        // line 774
         yield "<div class=\"container-fluid settings-container py-4\">
     
-    <!-- Hero Section -->
     <div class=\"settings-hero\">
         <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3\">
             <div>
@@ -770,7 +912,6 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         </div>
     </div>
     
-    <!-- Onglets -->
     <div class=\"settings-tabs\" id=\"settingsTabs\">
         <button class=\"settings-tab active\" data-section=\"general\">
             <i class=\"fas fa-building\"></i> Général
@@ -790,21 +931,20 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
     </div>
     
     ";
-        // line 665
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 665, $this->source); })()), 'form_start', ["attr" => ["id" => "companySettingsForm", "class" => "settings-form"]]);
+        // line 810
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 810, $this->source); })()), 'form_start', ["attr" => ["id" => "companySettingsForm", "class" => "settings-form"]]);
         yield "
     
-    ";
-        // line 668
-        yield "    <input type=\"hidden\" name=\"primary_color\" id=\"primary_color\" value=\"";
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("primaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["primaryColor"]) || array_key_exists("primaryColor", $context) ? $context["primaryColor"] : (function () { throw new RuntimeError('Variable "primaryColor" does not exist.', 668, $this->source); })()), "#0463f1")) : ("#0463f1")), "html", null, true);
+    <input type=\"hidden\" name=\"primary_color\" id=\"primary_color\" value=\"";
+        // line 812
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("primaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["primaryColor"]) || array_key_exists("primaryColor", $context) ? $context["primaryColor"] : (function () { throw new RuntimeError('Variable "primaryColor" does not exist.', 812, $this->source); })()), "#0463f1")) : ("#0463f1")), "html", null, true);
         yield "\">
     <input type=\"hidden\" name=\"secondary_color\" id=\"secondary_color\" value=\"";
-        // line 669
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("secondaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["secondaryColor"]) || array_key_exists("secondaryColor", $context) ? $context["secondaryColor"] : (function () { throw new RuntimeError('Variable "secondaryColor" does not exist.', 669, $this->source); })()), "#8b5cf6")) : ("#8b5cf6")), "html", null, true);
+        // line 813
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("secondaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["secondaryColor"]) || array_key_exists("secondaryColor", $context) ? $context["secondaryColor"] : (function () { throw new RuntimeError('Variable "secondaryColor" does not exist.', 813, $this->source); })()), "#8b5cf6")) : ("#8b5cf6")), "html", null, true);
         yield "\">
     
-    <!-- Section 1: Général -->
+    <!-- Section Général -->
     <div id=\"section-general\" class=\"settings-section\">
         <div class=\"section-header\">
             <div class=\"section-icon\">
@@ -820,12 +960,12 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
             <div class=\"col-md-6\">
                 <div class=\"form-group\">
                     ";
-        // line 686
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 686, $this->source); })()), "companyName", [], "any", false, false, false, 686), 'label', ["label" => "Nom de l'entreprise"]);
+        // line 830
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 830, $this->source); })()), "companyName", [], "any", false, false, false, 830), 'label', ["label" => "Nom de l'entreprise"]);
         yield "
                     ";
-        // line 687
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 687, $this->source); })()), "companyName", [], "any", false, false, false, 687), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Ex: Restaurant Le Gourmet"]]);
+        // line 831
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 831, $this->source); })()), "companyName", [], "any", false, false, false, 831), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Ex: Restaurant Le Gourmet"]]);
         yield "
                     <small class=\"text-muted\">Apparaît dans le header, les factures et les tickets</small>
                 </div>
@@ -833,25 +973,159 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
             <div class=\"col-md-6\">
                 <div class=\"form-group\">
                     ";
-        // line 693
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 693, $this->source); })()), "slogan", [], "any", false, false, false, 693), 'label', ["label" => "Slogan"]);
+        // line 837
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 837, $this->source); })()), "slogan", [], "any", false, false, false, 837), 'label', ["label" => "Slogan"]);
         yield "
                     ";
-        // line 694
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 694, $this->source); })()), "slogan", [], "any", false, false, false, 694), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Ex: La qualité fait la différence"]]);
+        // line 838
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 838, $this->source); })()), "slogan", [], "any", false, false, false, 838), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Ex: La qualité fait la différence"]]);
         yield "
                     <small class=\"text-muted\">Optionnel - Apparaît sous le nom</small>
                 </div>
             </div>
+            
+            <!-- ✅ CHAMPS PHARMACIE SIMPLIFIÉS -->
+            ";
+        // line 844
+        $context["companyType"] = ((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "type", [], "any", true, true, false, 844)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 844, $this->source); })()), "type", [], "any", false, false, false, 844), "")) : (""));
+        // line 845
+        yield "            ";
+        if (((isset($context["companyType"]) || array_key_exists("companyType", $context) ? $context["companyType"] : (function () { throw new RuntimeError('Variable "companyType" does not exist.', 845, $this->source); })()) == "pharmacy")) {
+            // line 846
+            yield "            <div class=\"col-12\">
+                <div class=\"pharmacy-fields-wrapper\">
+                    <div class=\"pharmacy-fields-title\">
+                        <i class=\"fas fa-hospital\"></i>
+                        Paramètres pharmacie
+                        <span class=\"badge-pharmacy\">Pharmacie</span>
+                    </div>
+                    
+                    <!-- Ligne 1: Visibilité - avec toggle SIMPLE -->
+                    <div class=\"pharmacy-field-row\">
+                        <div class=\"pharmacy-field-label\">
+                            <i class=\"fas fa-eye me-1\"></i> Visibilité
+                        </div>
+                        <div class=\"toggle-container-simple\">
+                            <label class=\"toggle-simple\">
+                                <input type=\"checkbox\" id=\"company_public\" name=\"company_public\" 
+                                       ";
+            // line 862
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 862, $this->source); })()), "companyPublic", [], "any", false, false, false, 862)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                yield "checked";
+            }
+            yield ">
+                                <span class=\"slider\"></span>
+                            </label>
+                            <span class=\"toggle-status-simple\" id=\"visibilityStatus\">
+                                <span class=\"";
+            // line 866
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 866, $this->source); })()), "companyPublic", [], "any", false, false, false, 866)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                yield "visible";
+            } else {
+                yield "hidden";
+            }
+            yield "\" id=\"visibilityText\">
+                                    ";
+            // line 867
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 867, $this->source); })()), "companyPublic", [], "any", false, false, false, 867)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 868
+                yield "                                        <i class=\"fas fa-eye me-1\"></i> Visible
+                                    ";
+            } else {
+                // line 870
+                yield "                                        <i class=\"fas fa-eye-slash me-1\"></i> Masquée
+                                    ";
+            }
+            // line 872
+            yield "                                </span>
+                            </span>
+                        </div>
+                        <small class=\"text-muted\" id=\"visibilityHelp\">
+                            ";
+            // line 876
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 876, $this->source); })()), "companyPublic", [], "any", false, false, false, 876)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 877
+                yield "                                Produits visibles sur le marketplace
+                            ";
+            } else {
+                // line 879
+                yield "                                Produits masqués sur le marketplace
+                            ";
+            }
+            // line 881
+            yield "                        </small>
+                    </div>
+                    
+                    <!-- Ligne 2: Périodes de garde -->
+                    <div class=\"pharmacy-field-row\">
+                        <div class=\"pharmacy-field-label\">
+                            <i class=\"fas fa-clock me-1\"></i> Périodes de garde
+                        </div>
+                        <div class=\"guard-periods-compact\" id=\"guardPeriodsDisplay\">
+                            ";
+            // line 890
+            $context["guardPeriods"] = ((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "guardPeriods", [], "any", true, true, false, 890)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 890, $this->source); })()), "guardPeriods", [], "any", false, false, false, 890), [])) : ([]));
+            // line 891
+            yield "                            ";
+            if (Twig\Extension\CoreExtension::testEmpty((isset($context["guardPeriods"]) || array_key_exists("guardPeriods", $context) ? $context["guardPeriods"] : (function () { throw new RuntimeError('Variable "guardPeriods" does not exist.', 891, $this->source); })()))) {
+                // line 892
+                yield "                                <span class=\"empty\">
+                                    <i class=\"fas fa-info-circle me-1\"></i>
+                                    Aucune période configurée
+                                </span>
+                            ";
+            } else {
+                // line 897
+                yield "                                ";
+                $context["daysMap"] = ["monday" => "Lun", "tuesday" => "Mar", "wednesday" => "Mer", "thursday" => "Jeu", "friday" => "Ven", "saturday" => "Sam", "sunday" => "Dim"];
+                // line 906
+                yield "                                ";
+                $context['_parent'] = $context;
+                $context['_seq'] = CoreExtension::ensureTraversable((isset($context["guardPeriods"]) || array_key_exists("guardPeriods", $context) ? $context["guardPeriods"] : (function () { throw new RuntimeError('Variable "guardPeriods" does not exist.', 906, $this->source); })()));
+                foreach ($context['_seq'] as $context["_key"] => $context["period"]) {
+                    // line 907
+                    yield "                                    <span class=\"period-item\">
+                                        <span class=\"day\">";
+                    // line 908
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["daysMap"] ?? null), CoreExtension::getAttribute($this->env, $this->source, $context["period"], "day", [], "any", false, false, false, 908), [], "array", true, true, false, 908)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["daysMap"]) || array_key_exists("daysMap", $context) ? $context["daysMap"] : (function () { throw new RuntimeError('Variable "daysMap" does not exist.', 908, $this->source); })()), CoreExtension::getAttribute($this->env, $this->source, $context["period"], "day", [], "any", false, false, false, 908), [], "array", false, false, false, 908), Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["period"], "day", [], "any", false, false, false, 908), 0, 3))) : (Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["period"], "day", [], "any", false, false, false, 908), 0, 3))), "html", null, true);
+                    yield "</span>
+                                        <span class=\"time\">";
+                    // line 909
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["period"], "start", [], "any", false, false, false, 909), "html", null, true);
+                    yield " - ";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["period"], "end", [], "any", false, false, false, 909), "html", null, true);
+                    yield "</span>
+                                    </span>
+                                ";
+                }
+                $_parent = $context['_parent'];
+                unset($context['_seq'], $context['_key'], $context['period'], $context['_parent']);
+                $context = array_intersect_key($context, $_parent) + $_parent;
+                // line 912
+                yield "                            ";
+            }
+            // line 913
+            yield "                        </div>
+                        <button type=\"button\" class=\"btn-guard-edit\" data-bs-toggle=\"modal\" data-bs-target=\"#guardPeriodsModal\">
+                            <i class=\"fas fa-edit\"></i>
+                            Modifier
+                        </button>
+                    </div>
+                </div>
+            </div>
+            ";
+        }
+        // line 922
+        yield "            
             <div class=\"col-12\">
                 <div class=\"form-group\">
                     ";
-        // line 700
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 700, $this->source); })()), "description", [], "any", false, false, false, 700), 'label', ["label" => "Description"]);
+        // line 925
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 925, $this->source); })()), "description", [], "any", false, false, false, 925), 'label', ["label" => "Description"]);
         yield "
                     ";
-        // line 701
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 701, $this->source); })()), "description", [], "any", false, false, false, 701), 'widget', ["attr" => ["class" => "form-control", "rows" => 3, "placeholder" => "Présentez votre activité..."]]);
+        // line 926
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 926, $this->source); })()), "description", [], "any", false, false, false, 926), 'widget', ["attr" => ["class" => "form-control", "rows" => 3, "placeholder" => "Présentez votre activité..."]]);
         yield "
                 </div>
             </div>
@@ -859,36 +1133,36 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         
         <div class=\"logo-preview\">
             ";
-        // line 707
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 707, $this->source); })()), "logo", [], "any", false, false, false, 707)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 708
+        // line 932
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 932, $this->source); })()), "logo", [], "any", false, false, false, 932)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 933
             yield "                <img src=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/logos/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 708, $this->source); })()), "logo", [], "any", false, false, false, 708))), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/logos/" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 933, $this->source); })()), "logo", [], "any", false, false, false, 933))), "html", null, true);
             yield "\" class=\"logo-preview-img\" alt=\"Logo\">
             ";
         } else {
-            // line 710
+            // line 935
             yield "                <div class=\"logo-preview-img d-flex align-items-center justify-content-center bg-light\">
                     <i class=\"fas fa-store fa-2x text-muted\"></i>
                 </div>
             ";
         }
-        // line 714
+        // line 939
         yield "            <div class=\"flex-grow-1\">
                 ";
-        // line 715
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 715, $this->source); })()), "logoFile", [], "any", false, false, false, 715), 'label', ["label" => "Logo de l'entreprise"]);
+        // line 940
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 940, $this->source); })()), "logoFile", [], "any", false, false, false, 940), 'label', ["label" => "Logo de l'entreprise"]);
         yield "
                 ";
-        // line 716
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 716, $this->source); })()), "logoFile", [], "any", false, false, false, 716), 'widget', ["attr" => ["class" => "form-control", "accept" => "image/*"]]);
+        // line 941
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 941, $this->source); })()), "logoFile", [], "any", false, false, false, 941), 'widget', ["attr" => ["class" => "form-control", "accept" => "image/*"]]);
         yield "
                 <small class=\"text-muted\">Format recommandé: PNG ou JPG, 200x200px</small>
             </div>
         </div>
     </div>
     
-    <!-- Section 2: Apparence -->
+    <!-- Section Apparence -->
     <div id=\"section-branding\" class=\"settings-section\" style=\"display: none;\">
         <div class=\"section-header\">
             <div class=\"section-icon\">
@@ -901,45 +1175,43 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         </div>
         
         <div class=\"row g-4\">
-            <!-- Couleur principale -->
             <div class=\"col-md-6\">
                 <div class=\"color-palette-group\">
                     <div class=\"color-palette-label\">
                         <i class=\"fas fa-circle\" style=\"color: var(--primary-color);\"></i>
                         Couleur principale
                         <span class=\"color-hex-display\" id=\"primaryColorHexDisplay\">";
-        // line 741
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("primaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["primaryColor"]) || array_key_exists("primaryColor", $context) ? $context["primaryColor"] : (function () { throw new RuntimeError('Variable "primaryColor" does not exist.', 741, $this->source); })()), "#0463f1")) : ("#0463f1")), "html", null, true);
+        // line 965
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("primaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["primaryColor"]) || array_key_exists("primaryColor", $context) ? $context["primaryColor"] : (function () { throw new RuntimeError('Variable "primaryColor" does not exist.', 965, $this->source); })()), "#0463f1")) : ("#0463f1")), "html", null, true);
         yield "</span>
                         <div class=\"color-picker-custom\">
                             <input type=\"color\" id=\"primaryColorPickerCustom\" value=\"";
-        // line 743
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("primaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["primaryColor"]) || array_key_exists("primaryColor", $context) ? $context["primaryColor"] : (function () { throw new RuntimeError('Variable "primaryColor" does not exist.', 743, $this->source); })()), "#0463f1")) : ("#0463f1")), "html", null, true);
-        yield "\" title=\"Choisir une couleur personnalisée\">
+        // line 967
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("primaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["primaryColor"]) || array_key_exists("primaryColor", $context) ? $context["primaryColor"] : (function () { throw new RuntimeError('Variable "primaryColor" does not exist.', 967, $this->source); })()), "#0463f1")) : ("#0463f1")), "html", null, true);
+        yield "\">
                         </div>
                     </div>
                     <div class=\"color-palette\" id=\"primaryPalette\">
                         ";
-        // line 748
-        yield "                        ";
+        // line 971
         $context["primaryColors"] = ["#0463f1", "#dc2626", "#16a34a", "#ea580c", "#8b5cf6", "#db2777", "#0891b2", "#4f46e5", "#ca8a04", "#6b7280"];
-        // line 749
+        // line 972
         yield "                        ";
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["primaryColors"]) || array_key_exists("primaryColors", $context) ? $context["primaryColors"] : (function () { throw new RuntimeError('Variable "primaryColors" does not exist.', 749, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["primaryColors"]) || array_key_exists("primaryColors", $context) ? $context["primaryColors"] : (function () { throw new RuntimeError('Variable "primaryColors" does not exist.', 972, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["color"]) {
-            // line 750
+            // line 973
             yield "                            <div class=\"color-swatch ";
-            if (($context["color"] == ((array_key_exists("primaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["primaryColor"]) || array_key_exists("primaryColor", $context) ? $context["primaryColor"] : (function () { throw new RuntimeError('Variable "primaryColor" does not exist.', 750, $this->source); })()), "#0463f1")) : ("#0463f1")))) {
+            if (($context["color"] == ((array_key_exists("primaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["primaryColor"]) || array_key_exists("primaryColor", $context) ? $context["primaryColor"] : (function () { throw new RuntimeError('Variable "primaryColor" does not exist.', 973, $this->source); })()), "#0463f1")) : ("#0463f1")))) {
                 yield "active";
             }
             yield "\" 
                                  style=\"background: ";
-            // line 751
+            // line 974
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["color"], "html", null, true);
             yield ";\" 
                                  data-color=\"";
-            // line 752
+            // line 975
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["color"], "html", null, true);
             yield "\"
                                  data-target=\"primary\"></div>
@@ -948,54 +1220,48 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['color'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 755
+        // line 978
         yield "                    </div>
-                    <div class=\"color-helper-text mt-2\">
-                        <i class=\"fas fa-info-circle me-1\"></i>
-                        Cliquez sur une couleur pour la sélectionner ou utilisez le sélecteur personnalisé
-                    </div>
                 </div>
             </div>
             
-            <!-- Couleur secondaire -->
             <div class=\"col-md-6\">
                 <div class=\"color-palette-group\">
                     <div class=\"color-palette-label\">
                         <i class=\"fas fa-circle\" style=\"color: var(--secondary-color);\"></i>
                         Couleur secondaire
                         <span class=\"color-hex-display\" id=\"secondaryColorHexDisplay\">";
-        // line 769
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("secondaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["secondaryColor"]) || array_key_exists("secondaryColor", $context) ? $context["secondaryColor"] : (function () { throw new RuntimeError('Variable "secondaryColor" does not exist.', 769, $this->source); })()), "#8b5cf6")) : ("#8b5cf6")), "html", null, true);
+        // line 987
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("secondaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["secondaryColor"]) || array_key_exists("secondaryColor", $context) ? $context["secondaryColor"] : (function () { throw new RuntimeError('Variable "secondaryColor" does not exist.', 987, $this->source); })()), "#8b5cf6")) : ("#8b5cf6")), "html", null, true);
         yield "</span>
                         <div class=\"color-picker-custom\">
                             <input type=\"color\" id=\"secondaryColorPickerCustom\" value=\"";
-        // line 771
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("secondaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["secondaryColor"]) || array_key_exists("secondaryColor", $context) ? $context["secondaryColor"] : (function () { throw new RuntimeError('Variable "secondaryColor" does not exist.', 771, $this->source); })()), "#8b5cf6")) : ("#8b5cf6")), "html", null, true);
-        yield "\" title=\"Choisir une couleur personnalisée\">
+        // line 989
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("secondaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["secondaryColor"]) || array_key_exists("secondaryColor", $context) ? $context["secondaryColor"] : (function () { throw new RuntimeError('Variable "secondaryColor" does not exist.', 989, $this->source); })()), "#8b5cf6")) : ("#8b5cf6")), "html", null, true);
+        yield "\">
                         </div>
                     </div>
                     <div class=\"color-palette\" id=\"secondaryPalette\">
                         ";
-        // line 776
-        yield "                        ";
+        // line 993
         $context["secondaryColors"] = ["#8b5cf6", "#3b82f6", "#06b6d4", "#22c55e", "#eab308", "#f97316", "#ef4444", "#ec4899", "#14b8a6", "#64748b"];
-        // line 777
+        // line 994
         yield "                        ";
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["secondaryColors"]) || array_key_exists("secondaryColors", $context) ? $context["secondaryColors"] : (function () { throw new RuntimeError('Variable "secondaryColors" does not exist.', 777, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["secondaryColors"]) || array_key_exists("secondaryColors", $context) ? $context["secondaryColors"] : (function () { throw new RuntimeError('Variable "secondaryColors" does not exist.', 994, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["color"]) {
-            // line 778
+            // line 995
             yield "                            <div class=\"color-swatch ";
-            if (($context["color"] == ((array_key_exists("secondaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["secondaryColor"]) || array_key_exists("secondaryColor", $context) ? $context["secondaryColor"] : (function () { throw new RuntimeError('Variable "secondaryColor" does not exist.', 778, $this->source); })()), "#8b5cf6")) : ("#8b5cf6")))) {
+            if (($context["color"] == ((array_key_exists("secondaryColor", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["secondaryColor"]) || array_key_exists("secondaryColor", $context) ? $context["secondaryColor"] : (function () { throw new RuntimeError('Variable "secondaryColor" does not exist.', 995, $this->source); })()), "#8b5cf6")) : ("#8b5cf6")))) {
                 yield "active";
             }
             yield "\" 
                                  style=\"background: ";
-            // line 779
+            // line 996
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["color"], "html", null, true);
             yield ";\" 
                                  data-color=\"";
-            // line 780
+            // line 997
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["color"], "html", null, true);
             yield "\"
                                  data-target=\"secondary\"></div>
@@ -1004,17 +1270,12 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['color'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 783
+        // line 1000
         yield "                    </div>
-                    <div class=\"color-helper-text mt-2\">
-                        <i class=\"fas fa-info-circle me-1\"></i>
-                        Cliquez sur une couleur pour la sélectionner ou utilisez le sélecteur personnalisé
-                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Aperçu des couleurs en action -->
         <div class=\"color-preview-demo\">
             <span class=\"fw-bold me-2\">Aperçu :</span>
             <button class=\"demo-btn demo-btn-primary\">
@@ -1029,7 +1290,7 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
         </div>
     </div>
     
-    <!-- Section 3: Contact -->
+    <!-- Section Contact -->
     <div id=\"section-contact\" class=\"settings-section\" style=\"display: none;\">
         <div class=\"section-header\">
             <div class=\"section-icon\">
@@ -1045,12 +1306,12 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
             <div class=\"col-md-6\">
                 <div class=\"form-group\">
                     ";
-        // line 822
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 822, $this->source); })()), "email", [], "any", false, false, false, 822), 'label', ["label" => "Email"]);
+        // line 1034
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1034, $this->source); })()), "email", [], "any", false, false, false, 1034), 'label', ["label" => "Email"]);
         yield "
                     ";
-        // line 823
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 823, $this->source); })()), "email", [], "any", false, false, false, 823), 'widget', ["attr" => ["class" => "form-control", "readonly" => "readonly", "disabled" => "disabled"]]);
+        // line 1035
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1035, $this->source); })()), "email", [], "any", false, false, false, 1035), 'widget', ["attr" => ["class" => "form-control", "readonly" => "readonly", "disabled" => "disabled"]]);
         yield "
                     <small class=\"text-muted\">L'email ne peut pas être modifié. Contactez le support en cas de besoin.</small>
                 </div>
@@ -1058,67 +1319,67 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
             <div class=\"col-md-6\">
                 <div class=\"form-group\">
                     ";
-        // line 829
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 829, $this->source); })()), "phone", [], "any", false, false, false, 829), 'label', ["label" => "Téléphone"]);
+        // line 1041
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1041, $this->source); })()), "phone", [], "any", false, false, false, 1041), 'label', ["label" => "Téléphone"]);
         yield "
                     ";
-        // line 830
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 830, $this->source); })()), "phone", [], "any", false, false, false, 830), 'widget', ["attr" => ["class" => "form-control"]]);
+        // line 1042
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1042, $this->source); })()), "phone", [], "any", false, false, false, 1042), 'widget', ["attr" => ["class" => "form-control"]]);
         yield "
                 </div>
             </div>
             <div class=\"col-12\">
                 <div class=\"form-group\">
                     ";
-        // line 835
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 835, $this->source); })()), "address", [], "any", false, false, false, 835), 'label', ["label" => "Adresse"]);
+        // line 1047
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1047, $this->source); })()), "address", [], "any", false, false, false, 1047), 'label', ["label" => "Adresse"]);
         yield "
                     ";
-        // line 836
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 836, $this->source); })()), "address", [], "any", false, false, false, 836), 'widget', ["attr" => ["class" => "form-control"]]);
-        yield "
-                </div>
-            </div>
-            <div class=\"col-md-4\">
-                <div class=\"form-group\">
-                    ";
-        // line 841
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 841, $this->source); })()), "city", [], "any", false, false, false, 841), 'label', ["label" => "Ville"]);
-        yield "
-                    ";
-        // line 842
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 842, $this->source); })()), "city", [], "any", false, false, false, 842), 'widget', ["attr" => ["class" => "form-control"]]);
+        // line 1048
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1048, $this->source); })()), "address", [], "any", false, false, false, 1048), 'widget', ["attr" => ["class" => "form-control"]]);
         yield "
                 </div>
             </div>
             <div class=\"col-md-4\">
                 <div class=\"form-group\">
                     ";
-        // line 847
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 847, $this->source); })()), "country", [], "any", false, false, false, 847), 'label', ["label" => "Pays"]);
+        // line 1053
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1053, $this->source); })()), "city", [], "any", false, false, false, 1053), 'label', ["label" => "Ville"]);
         yield "
                     ";
-        // line 848
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 848, $this->source); })()), "country", [], "any", false, false, false, 848), 'widget', ["attr" => ["class" => "form-select"]]);
+        // line 1054
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1054, $this->source); })()), "city", [], "any", false, false, false, 1054), 'widget', ["attr" => ["class" => "form-control"]]);
         yield "
                 </div>
             </div>
             <div class=\"col-md-4\">
                 <div class=\"form-group\">
                     ";
-        // line 853
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 853, $this->source); })()), "website", [], "any", false, false, false, 853), 'label', ["label" => "Site web"]);
+        // line 1059
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1059, $this->source); })()), "country", [], "any", false, false, false, 1059), 'label', ["label" => "Pays"]);
         yield "
                     ";
-        // line 854
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 854, $this->source); })()), "website", [], "any", false, false, false, 854), 'widget', ["attr" => ["class" => "form-control", "type" => "url"]]);
+        // line 1060
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1060, $this->source); })()), "country", [], "any", false, false, false, 1060), 'widget', ["attr" => ["class" => "form-select"]]);
+        yield "
+                </div>
+            </div>
+            <div class=\"col-md-4\">
+                <div class=\"form-group\">
+                    ";
+        // line 1065
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1065, $this->source); })()), "website", [], "any", false, false, false, 1065), 'label', ["label" => "Site web"]);
+        yield "
+                    ";
+        // line 1066
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1066, $this->source); })()), "website", [], "any", false, false, false, 1066), 'widget', ["attr" => ["class" => "form-control", "type" => "url"]]);
         yield "
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Section 4: Ticket de caisse -->
+    <!-- Section Ticket -->
     <div id=\"section-receipt\" class=\"settings-section\" style=\"display: none;\">
         <div class=\"section-header\">
             <div class=\"section-icon\">
@@ -1134,12 +1395,12 @@ class __TwigTemplate_2e069cdc93856754f7469b360d7b7fde extends Template
             <div class=\"col-md-6\">
                 <div class=\"form-group\">
                     ";
-        // line 875
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 875, $this->source); })()), "receiptHeader", [], "any", false, false, false, 875), 'label', ["label" => "En-tête du ticket"]);
+        // line 1087
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1087, $this->source); })()), "receiptHeader", [], "any", false, false, false, 1087), 'label', ["label" => "En-tête du ticket"]);
         yield "
                     ";
-        // line 876
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 876, $this->source); })()), "receiptHeader", [], "any", false, false, false, 876), 'widget', ["attr" => ["class" => "form-control", "rows" => 3, "placeholder" => "Merci de votre visite !
+        // line 1088
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1088, $this->source); })()), "receiptHeader", [], "any", false, false, false, 1088), 'widget', ["attr" => ["class" => "form-control", "rows" => 3, "placeholder" => "Merci de votre visite !
 Bonne journée"]]);
         yield "
                 </div>
@@ -1147,19 +1408,18 @@ Bonne journée"]]);
             <div class=\"col-md-6\">
                 <div class=\"form-group\">
                     ";
-        // line 881
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 881, $this->source); })()), "receiptFooter", [], "any", false, false, false, 881), 'label', ["label" => "Pied de page"]);
+        // line 1093
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1093, $this->source); })()), "receiptFooter", [], "any", false, false, false, 1093), 'label', ["label" => "Pied de page"]);
         yield "
                     ";
-        // line 882
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 882, $this->source); })()), "receiptFooter", [], "any", false, false, false, 882), 'widget', ["attr" => ["class" => "form-control", "rows" => 3, "placeholder" => "Suivez-nous sur Instagram
+        // line 1094
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1094, $this->source); })()), "receiptFooter", [], "any", false, false, false, 1094), 'widget', ["attr" => ["class" => "form-control", "rows" => 3, "placeholder" => "Suivez-nous sur Instagram
 @votrepage"]]);
         yield "
                 </div>
             </div>
         </div>
         
-        <!-- Aperçu du ticket -->
         <div class=\"row\">
             <div class=\"col-md-6\">
                 <div class=\"mt-2\">
@@ -1170,26 +1430,26 @@ Bonne journée"]]);
                 <div class=\"ticket-preview\">
                     <div class=\"ticket-header\">
                         <strong>";
-        // line 897
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 897, $this->source); })()), "companyName", [], "any", false, false, false, 897), "html", null, true);
+        // line 1108
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 1108, $this->source); })()), "companyName", [], "any", false, false, false, 1108), "html", null, true);
         yield "</strong>
                         ";
-        // line 898
-        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 898, $this->source); })()), "slogan", [], "any", false, false, false, 898)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 899
+        // line 1109
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 1109, $this->source); })()), "slogan", [], "any", false, false, false, 1109)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 1110
             yield "                            <br><small>";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 899, $this->source); })()), "slogan", [], "any", false, false, false, 899), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 1110, $this->source); })()), "slogan", [], "any", false, false, false, 1110), "html", null, true);
             yield "</small>
                         ";
         }
-        // line 901
+        // line 1112
         yield "                        <br><small class=\"text-muted\">";
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 901, $this->source); })()), "address", [], "any", false, false, false, 901)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 901, $this->source); })()), "address", [], "any", false, false, false, 901) . " - "), "html", null, true)) : (""));
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 901, $this->source); })()), "city", [], "any", false, false, false, 901), "html", null, true);
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 1112, $this->source); })()), "address", [], "any", false, false, false, 1112)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 1112, $this->source); })()), "address", [], "any", false, false, false, 1112) . " - "), "html", null, true)) : (""));
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 1112, $this->source); })()), "city", [], "any", false, false, false, 1112), "html", null, true);
         yield "</small>
                         <br><small>Tél: ";
-        // line 902
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 902, $this->source); })()), "phone", [], "any", false, false, false, 902), "html", null, true);
+        // line 1113
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 1113, $this->source); })()), "phone", [], "any", false, false, false, 1113), "html", null, true);
         yield "</small>
                     </div>
                     <div class=\"ticket-items\">
@@ -1208,13 +1468,13 @@ Bonne journée"]]);
                     </div>
                     <div class=\"ticket-footer\" id=\"ticketPreviewFooter\">
                         ";
-        // line 919
-        yield ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 919, $this->source); })()), "receiptHeader", [], "any", false, false, false, 919), "vars", [], "any", false, false, false, 919), "value", [], "any", false, false, false, 919)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 919, $this->source); })()), "receiptHeader", [], "any", false, false, false, 919), "vars", [], "any", false, false, false, 919), "value", [], "any", false, false, false, 919), "html", null, true)) : ("Merci de votre visite !"));
+        // line 1130
+        yield ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1130, $this->source); })()), "receiptHeader", [], "any", false, false, false, 1130), "vars", [], "any", false, false, false, 1130), "value", [], "any", false, false, false, 1130)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1130, $this->source); })()), "receiptHeader", [], "any", false, false, false, 1130), "vars", [], "any", false, false, false, 1130), "value", [], "any", false, false, false, 1130), "html", null, true)) : ("Merci de votre visite !"));
         yield "
                         <br>
                         ";
-        // line 921
-        yield ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 921, $this->source); })()), "receiptFooter", [], "any", false, false, false, 921), "vars", [], "any", false, false, false, 921), "value", [], "any", false, false, false, 921)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 921, $this->source); })()), "receiptFooter", [], "any", false, false, false, 921), "vars", [], "any", false, false, false, 921), "value", [], "any", false, false, false, 921), "html", null, true)) : ("À bientôt !"));
+        // line 1132
+        yield ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1132, $this->source); })()), "receiptFooter", [], "any", false, false, false, 1132), "vars", [], "any", false, false, false, 1132), "value", [], "any", false, false, false, 1132)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1132, $this->source); })()), "receiptFooter", [], "any", false, false, false, 1132), "vars", [], "any", false, false, false, 1132), "value", [], "any", false, false, false, 1132), "html", null, true)) : ("À bientôt !"));
         yield "
                     </div>
                 </div>
@@ -1232,7 +1492,7 @@ Bonne journée"]]);
         </div>
     </div>
     
-    <!-- Section 5: Taxes -->
+    <!-- Section Taxes -->
     <div id=\"section-taxes\" class=\"settings-section\" style=\"display: none;\">
         <div class=\"section-header\">
             <div class=\"section-icon\">
@@ -1248,12 +1508,12 @@ Bonne journée"]]);
             <div class=\"col-md-4\">
                 <div class=\"form-group\">
                     ";
-        // line 953
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 953, $this->source); })()), "defaultTaxRate", [], "any", false, false, false, 953), 'label', ["label" => "Taux de TVA par défaut (%)"]);
+        // line 1164
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1164, $this->source); })()), "defaultTaxRate", [], "any", false, false, false, 1164), 'label', ["label" => "Taux de TVA par défaut (%)"]);
         yield "
                     ";
-        // line 954
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 954, $this->source); })()), "defaultTaxRate", [], "any", false, false, false, 954), 'widget', ["attr" => ["class" => "form-control", "step" => "0.1"]]);
+        // line 1165
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1165, $this->source); })()), "defaultTaxRate", [], "any", false, false, false, 1165), 'widget', ["attr" => ["class" => "form-control", "step" => "0.1"]]);
         yield "
                 </div>
             </div>
@@ -1265,15 +1525,15 @@ Bonne journée"]]);
                     <div>
                         <strong>Devise actuelle :</strong> 
                         ";
-        // line 964
-        $context["country"] = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 964, $this->source); })()), "country", [], "any", false, false, false, 964);
-        // line 965
+        // line 1175
+        $context["country"] = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 1175, $this->source); })()), "country", [], "any", false, false, false, 1175);
+        // line 1176
         yield "                        ";
-        $context["currency"] = (((CoreExtension::getAttribute($this->env, $this->source, ["CM" => "XAF", "CI" => "XOF", "SN" => "XOF", "FR" => "EUR", "US" => "USD", "BJ" => "FCFA", "TG" => "XOF", "ML" => "XOF", "BF" => "XOF", "NE" => "XOF", "GA" => "XAF", "CG" => "XAF", "CD" => "CDF", "MA" => "MAD", "TN" => "TND", "DZ" => "DZD"],         // line 970
-(isset($context["country"]) || array_key_exists("country", $context) ? $context["country"] : (function () { throw new RuntimeError('Variable "country" does not exist.', 970, $this->source); })()), [], "array", true, true, false, 966) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, ["CM" => "XAF", "CI" => "XOF", "SN" => "XOF", "FR" => "EUR", "US" => "USD", "BJ" => "FCFA", "TG" => "XOF", "ML" => "XOF", "BF" => "XOF", "NE" => "XOF", "GA" => "XAF", "CG" => "XAF", "CD" => "CDF", "MA" => "MAD", "TN" => "TND", "DZ" => "DZD"], (isset($context["country"]) || array_key_exists("country", $context) ? $context["country"] : (function () { throw new RuntimeError('Variable "country" does not exist.', 970, $this->source); })()), [], "array", false, false, false, 966)))) ? (CoreExtension::getAttribute($this->env, $this->source, ["CM" => "XAF", "CI" => "XOF", "SN" => "XOF", "FR" => "EUR", "US" => "USD", "BJ" => "FCFA", "TG" => "XOF", "ML" => "XOF", "BF" => "XOF", "NE" => "XOF", "GA" => "XAF", "CG" => "XAF", "CD" => "CDF", "MA" => "MAD", "TN" => "TND", "DZ" => "DZD"], (isset($context["country"]) || array_key_exists("country", $context) ? $context["country"] : (function () { throw new RuntimeError('Variable "country" does not exist.', 970, $this->source); })()), [], "array", false, false, false, 966)) : ("FCFA"));
-        // line 971
+        $context["currency"] = (((CoreExtension::getAttribute($this->env, $this->source, ["CM" => "XAF", "CI" => "XOF", "SN" => "XOF", "FR" => "EUR", "US" => "USD", "BJ" => "FCFA", "TG" => "XOF", "ML" => "XOF", "BF" => "XOF", "NE" => "XOF", "GA" => "XAF", "CG" => "XAF", "CD" => "CDF", "MA" => "MAD", "TN" => "TND", "DZ" => "DZD"],         // line 1181
+(isset($context["country"]) || array_key_exists("country", $context) ? $context["country"] : (function () { throw new RuntimeError('Variable "country" does not exist.', 1181, $this->source); })()), [], "array", true, true, false, 1177) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, ["CM" => "XAF", "CI" => "XOF", "SN" => "XOF", "FR" => "EUR", "US" => "USD", "BJ" => "FCFA", "TG" => "XOF", "ML" => "XOF", "BF" => "XOF", "NE" => "XOF", "GA" => "XAF", "CG" => "XAF", "CD" => "CDF", "MA" => "MAD", "TN" => "TND", "DZ" => "DZD"], (isset($context["country"]) || array_key_exists("country", $context) ? $context["country"] : (function () { throw new RuntimeError('Variable "country" does not exist.', 1181, $this->source); })()), [], "array", false, false, false, 1177)))) ? (CoreExtension::getAttribute($this->env, $this->source, ["CM" => "XAF", "CI" => "XOF", "SN" => "XOF", "FR" => "EUR", "US" => "USD", "BJ" => "FCFA", "TG" => "XOF", "ML" => "XOF", "BF" => "XOF", "NE" => "XOF", "GA" => "XAF", "CG" => "XAF", "CD" => "CDF", "MA" => "MAD", "TN" => "TND", "DZ" => "DZD"], (isset($context["country"]) || array_key_exists("country", $context) ? $context["country"] : (function () { throw new RuntimeError('Variable "country" does not exist.', 1181, $this->source); })()), [], "array", false, false, false, 1177)) : ("FCFA"));
+        // line 1182
         yield "                        <span class=\"fw-bold text-primary\">";
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["currency"]) || array_key_exists("currency", $context) ? $context["currency"] : (function () { throw new RuntimeError('Variable "currency" does not exist.', 971, $this->source); })()), "html", null, true);
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["currency"]) || array_key_exists("currency", $context) ? $context["currency"] : (function () { throw new RuntimeError('Variable "currency" does not exist.', 1182, $this->source); })()), "html", null, true);
         yield "</span>
                         <span class=\"text-muted ms-2\">(Basée sur le pays sélectionné)</span>
                     </div>
@@ -1282,10 +1542,9 @@ Bonne journée"]]);
         </div>
     </div>
     
-    <!-- Boutons d'action sticky -->
     <div class=\"action-buttons\">
         <a href=\"";
-        // line 981
+        // line 1191
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_dashboard");
         yield "\" class=\"btn btn-outline-secondary\">
             <i class=\"fas fa-arrow-left me-2\"></i> Annuler
@@ -1301,14 +1560,190 @@ Bonne journée"]]);
     </div>
     
     ";
-        // line 994
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 994, $this->source); })()), 'form_end');
+        // line 1204
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1204, $this->source); })()), 'form_end');
         yield "
 </div>
 
+<!-- ✅ MODAL PÉRIODES DE GARDE -->
+<div class=\"modal fade\" id=\"guardPeriodsModal\" tabindex=\"-1\" aria-hidden=\"true\">
+    <div class=\"modal-dialog modal-dialog-centered modal-lg\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header\" style=\"background: var(--primary-color); color: white;\">
+                <h5 class=\"modal-title\">
+                    <i class=\"fas fa-clock-history me-2\"></i>
+                    Modifier les périodes de garde
+                </h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <form method=\"post\" action=\"";
+        // line 1218
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_company_settings_guard_periods");
+        yield "\">
+                <div class=\"modal-body\">
+                    <input type=\"hidden\" name=\"_token\" value=\"";
+        // line 1220
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken("guard_periods"), "html", null, true);
+        yield "\">
+                    
+                    <p class=\"text-muted mb-3\">
+                        <i class=\"fas fa-info-circle me-1\"></i>
+                        Définissez les jours et horaires de garde pour votre pharmacie.
+                    </p>
+                    
+                    <div id=\"guardPeriodsContainer\">
+                        ";
+        // line 1228
+        $context["guardPeriods"] = ((CoreExtension::getAttribute($this->env, $this->source, ($context["company"] ?? null), "guardPeriods", [], "any", true, true, false, 1228)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 1228, $this->source); })()), "guardPeriods", [], "any", false, false, false, 1228), [])) : ([]));
+        // line 1229
+        yield "                        
+                        ";
+        // line 1230
+        if (Twig\Extension\CoreExtension::testEmpty((isset($context["guardPeriods"]) || array_key_exists("guardPeriods", $context) ? $context["guardPeriods"] : (function () { throw new RuntimeError('Variable "guardPeriods" does not exist.', 1230, $this->source); })()))) {
+            // line 1231
+            yield "                            <div class=\"text-center text-muted py-3\">
+                                <i class=\"fas fa-clock fs-3 d-block mb-2\"></i>
+                                Aucune période de garde configurée
+                            </div>
+                            <div class=\"guard-period-row d-flex gap-2 align-items-center mb-2\">
+                                <select name=\"guard_periods[0][day]\" class=\"form-select\" style=\"flex: 1;\">
+                                    <option value=\"\">Choisir un jour</option>
+                                    <option value=\"monday\">Lundi</option>
+                                    <option value=\"tuesday\">Mardi</option>
+                                    <option value=\"wednesday\">Mercredi</option>
+                                    <option value=\"thursday\">Jeudi</option>
+                                    <option value=\"friday\">Vendredi</option>
+                                    <option value=\"saturday\">Samedi</option>
+                                    <option value=\"sunday\">Dimanche</option>
+                                </select>
+                                <input type=\"time\" name=\"guard_periods[0][start]\" class=\"form-control\" style=\"width: 120px;\" placeholder=\"Début\">
+                                <input type=\"time\" name=\"guard_periods[0][end]\" class=\"form-control\" style=\"width: 120px;\" placeholder=\"Fin\">
+                                <button type=\"button\" class=\"btn btn-danger remove-guard-period\" disabled>
+                                    <i class=\"fas fa-trash\"></i>
+                                </button>
+                            </div>
+                        ";
+        } else {
+            // line 1253
+            yield "                            ";
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["guardPeriods"]) || array_key_exists("guardPeriods", $context) ? $context["guardPeriods"] : (function () { throw new RuntimeError('Variable "guardPeriods" does not exist.', 1253, $this->source); })()));
+            $context['loop'] = [
+              'parent' => $context['_parent'],
+              'index0' => 0,
+              'index'  => 1,
+              'first'  => true,
+            ];
+            if (is_array($context['_seq']) || (is_object($context['_seq']) && $context['_seq'] instanceof \Countable)) {
+                $length = count($context['_seq']);
+                $context['loop']['revindex0'] = $length - 1;
+                $context['loop']['revindex'] = $length;
+                $context['loop']['length'] = $length;
+                $context['loop']['last'] = 1 === $length;
+            }
+            foreach ($context['_seq'] as $context["_key"] => $context["period"]) {
+                // line 1254
+                yield "                                <div class=\"guard-period-row d-flex gap-2 align-items-center mb-2\">
+                                    <select name=\"guard_periods[";
+                // line 1255
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["loop"], "index0", [], "any", false, false, false, 1255), "html", null, true);
+                yield "][day]\" class=\"form-select\" style=\"flex: 1;\">
+                                        <option value=\"\">Choisir un jour</option>
+                                        <option value=\"monday\" ";
+                // line 1257
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["period"], "day", [], "any", false, false, false, 1257) == "monday")) {
+                    yield "selected";
+                }
+                yield ">Lundi</option>
+                                        <option value=\"tuesday\" ";
+                // line 1258
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["period"], "day", [], "any", false, false, false, 1258) == "tuesday")) {
+                    yield "selected";
+                }
+                yield ">Mardi</option>
+                                        <option value=\"wednesday\" ";
+                // line 1259
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["period"], "day", [], "any", false, false, false, 1259) == "wednesday")) {
+                    yield "selected";
+                }
+                yield ">Mercredi</option>
+                                        <option value=\"thursday\" ";
+                // line 1260
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["period"], "day", [], "any", false, false, false, 1260) == "thursday")) {
+                    yield "selected";
+                }
+                yield ">Jeudi</option>
+                                        <option value=\"friday\" ";
+                // line 1261
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["period"], "day", [], "any", false, false, false, 1261) == "friday")) {
+                    yield "selected";
+                }
+                yield ">Vendredi</option>
+                                        <option value=\"saturday\" ";
+                // line 1262
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["period"], "day", [], "any", false, false, false, 1262) == "saturday")) {
+                    yield "selected";
+                }
+                yield ">Samedi</option>
+                                        <option value=\"sunday\" ";
+                // line 1263
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["period"], "day", [], "any", false, false, false, 1263) == "sunday")) {
+                    yield "selected";
+                }
+                yield ">Dimanche</option>
+                                    </select>
+                                    <input type=\"time\" name=\"guard_periods[";
+                // line 1265
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["loop"], "index0", [], "any", false, false, false, 1265), "html", null, true);
+                yield "][start]\" class=\"form-control\" style=\"width: 120px;\" value=\"";
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["period"], "start", [], "any", true, true, false, 1265) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, $context["period"], "start", [], "any", false, false, false, 1265)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["period"], "start", [], "any", false, false, false, 1265), "html", null, true)) : (""));
+                yield "\">
+                                    <input type=\"time\" name=\"guard_periods[";
+                // line 1266
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["loop"], "index0", [], "any", false, false, false, 1266), "html", null, true);
+                yield "][end]\" class=\"form-control\" style=\"width: 120px;\" value=\"";
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["period"], "end", [], "any", true, true, false, 1266) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, $context["period"], "end", [], "any", false, false, false, 1266)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["period"], "end", [], "any", false, false, false, 1266), "html", null, true)) : (""));
+                yield "\">
+                                    <button type=\"button\" class=\"btn btn-danger remove-guard-period\">
+                                        <i class=\"fas fa-trash\"></i>
+                                    </button>
+                                </div>
+                            ";
+                ++$context['loop']['index0'];
+                ++$context['loop']['index'];
+                $context['loop']['first'] = false;
+                if (isset($context['loop']['revindex0'], $context['loop']['revindex'])) {
+                    --$context['loop']['revindex0'];
+                    --$context['loop']['revindex'];
+                    $context['loop']['last'] = 0 === $context['loop']['revindex0'];
+                }
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_key'], $context['period'], $context['_parent'], $context['loop']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 1272
+            yield "                        ";
+        }
+        // line 1273
+        yield "                    </div>
+                    
+                    <button type=\"button\" class=\"btn btn-outline-primary btn-sm mt-2\" id=\"addGuardPeriod\">
+                        <i class=\"fas fa-plus-circle me-1\"></i>
+                        Ajouter une période
+                    </button>
+                </div>
+                <div class=\"modal-footer\">
+                    <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
+                    <button type=\"submit\" class=\"btn\" style=\"background: var(--primary-color); color: white;\">
+                        <i class=\"fas fa-save me-2\"></i>
+                        Enregistrer les périodes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 ";
-        // line 997
-        yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
 
@@ -1318,6 +1753,7 @@ Bonne journée"]]);
         yield from [];
     }
 
+    // line 1293
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -1330,7 +1766,7 @@ Bonne journée"]]);
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 998
+        // line 1294
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
@@ -1361,28 +1797,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // ==================== TOGGLE VISIBILITÉ SIMPLIFIÉ ====================
+    const visibilityToggle = document.getElementById('company_public');
+    const visibilityText = document.getElementById('visibilityText');
+    const visibilityHelp = document.getElementById('visibilityHelp');
+    
+    function updateVisibility() {
+        if (!visibilityToggle) return;
+        
+        if (visibilityToggle.checked) {
+            if (visibilityText) {
+                visibilityText.innerHTML = '<i class=\"fas fa-eye me-1\"></i> Visible';
+                visibilityText.className = 'visible';
+            }
+            if (visibilityHelp) {
+                visibilityHelp.textContent = 'Produits visibles sur le marketplace';
+            }
+        } else {
+            if (visibilityText) {
+                visibilityText.innerHTML = '<i class=\"fas fa-eye-slash me-1\"></i> Masquée';
+                visibilityText.className = 'hidden';
+            }
+            if (visibilityHelp) {
+                visibilityHelp.textContent = 'Produits masqués sur le marketplace';
+            }
+        }
+    }
+    
+    if (visibilityToggle) {
+        visibilityToggle.addEventListener('change', updateVisibility);
+        updateVisibility();
+    }
+    
     // ==================== PALETTE DE COULEURS ====================
     const primaryHexDisplay = document.getElementById('primaryColorHexDisplay');
     const secondaryHexDisplay = document.getElementById('secondaryColorHexDisplay');
     const primaryPickerCustom = document.getElementById('primaryColorPickerCustom');
     const secondaryPickerCustom = document.getElementById('secondaryColorPickerCustom');
     
-    // ✅ Récupération des champs cachés
     const hiddenPrimary = document.getElementById('primary_color');
     const hiddenSecondary = document.getElementById('secondary_color');
     
-    // Fonction pour mettre à jour l'affichage et le formulaire
     function updatePrimaryColor(color) {
-        // ✅ Mettre à jour le champ caché
         if (hiddenPrimary) hiddenPrimary.value = color;
-        
-        // Mettre à jour le picker personnalisé
         if (primaryPickerCustom) primaryPickerCustom.value = color;
-        // Mettre à jour l'affichage hex
         if (primaryHexDisplay) primaryHexDisplay.textContent = color;
-        // Mettre à jour le CSS
         document.documentElement.style.setProperty('--primary-color', color);
-        // Mettre à jour les démos
+        
         document.querySelectorAll('.demo-btn-primary').forEach(btn => {
             btn.style.background = color;
         });
@@ -1392,19 +1853,32 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.section-icon').forEach(icon => {
             icon.style.background = color;
         });
-        // Marquer la swatch active
         document.querySelectorAll('#primaryPalette .color-swatch').forEach(sw => {
             sw.classList.toggle('active', sw.dataset.color === color);
         });
-        // Mettre à jour le label de la palette
-        const labelIcon = document.querySelector('.color-palette-label i');
-        if (labelIcon) labelIcon.style.color = color;
+        document.querySelectorAll('#guardPeriodsModal .modal-header').forEach(header => {
+            header.style.background = color;
+        });
+        document.querySelectorAll('.settings-hero').forEach(hero => {
+            hero.style.background = `linear-gradient(135deg, \${color}, color-mix(in srgb, \${color} 85%, black))`;
+        });
+        document.querySelectorAll('.badge-pharmacy').forEach(badge => {
+            badge.style.background = color;
+        });
+        document.querySelectorAll('.btn-guard-edit').forEach(btn => {
+            btn.style.background = color;
+        });
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.style.background = color;
+            btn.style.borderColor = color;
+        });
+        document.querySelectorAll('.toggle-simple input:checked + .slider').forEach(el => {
+            el.style.background = color;
+        });
     }
     
     function updateSecondaryColor(color) {
-        // ✅ Mettre à jour le champ caché
         if (hiddenSecondary) hiddenSecondary.value = color;
-        
         if (secondaryPickerCustom) secondaryPickerCustom.value = color;
         if (secondaryHexDisplay) secondaryHexDisplay.textContent = color;
         document.documentElement.style.setProperty('--secondary-color', color);
@@ -1414,11 +1888,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('#secondaryPalette .color-swatch').forEach(sw => {
             sw.classList.toggle('active', sw.dataset.color === color);
         });
-        const labelIcon = document.querySelectorAll('.color-palette-label i')[1];
-        if (labelIcon) labelIcon.style.color = color;
     }
     
-    // Gestion des clics sur les swatches
     document.querySelectorAll('.color-swatch').forEach(swatch => {
         swatch.addEventListener('click', function() {
             const color = this.dataset.color;
@@ -1431,7 +1902,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Gestion des pickers personnalisés
     if (primaryPickerCustom) {
         primaryPickerCustom.addEventListener('input', function() {
             updatePrimaryColor(this.value);
@@ -1446,12 +1916,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ==================== APERÇU DU TICKET ====================
     const receiptHeaderInput = document.querySelector('#";
-        // line 1111
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1111, $this->source); })()), "receiptHeader", [], "any", false, false, false, 1111), "vars", [], "any", false, false, false, 1111), "id", [], "any", false, false, false, 1111), "html", null, true);
+        // line 1441
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1441, $this->source); })()), "receiptHeader", [], "any", false, false, false, 1441), "vars", [], "any", false, false, false, 1441), "id", [], "any", false, false, false, 1441), "html", null, true);
         yield "');
     const receiptFooterInput = document.querySelector('#";
-        // line 1112
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1112, $this->source); })()), "receiptFooter", [], "any", false, false, false, 1112), "vars", [], "any", false, false, false, 1112), "id", [], "any", false, false, false, 1112), "html", null, true);
+        // line 1442
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 1442, $this->source); })()), "receiptFooter", [], "any", false, false, false, 1442), "vars", [], "any", false, false, false, 1442), "id", [], "any", false, false, false, 1442), "html", null, true);
         yield "');
     const ticketFooter = document.getElementById('ticketPreviewFooter');
     
@@ -1466,6 +1936,69 @@ document.addEventListener('DOMContentLoaded', function() {
     if (receiptHeaderInput) receiptHeaderInput.addEventListener('input', updateTicketPreview);
     if (receiptFooterInput) receiptFooterInput.addEventListener('input', updateTicketPreview);
     
+    // ==================== PÉRIODES DE GARDE ====================
+    const container = document.getElementById('guardPeriodsContainer');
+    const addBtn = document.getElementById('addGuardPeriod');
+    
+    if (container && addBtn) {
+        let periodIndex = container.querySelectorAll('.guard-period-row').length || 0;
+        
+        function resetRow(row) {
+            row.querySelectorAll('select, input').forEach(el => el.value = '');
+        }
+        
+        function createRow(index) {
+            const row = document.createElement('div');
+            row.className = 'guard-period-row d-flex gap-2 align-items-center mb-2';
+            row.innerHTML = `
+                <select name=\"guard_periods[\${index}][day]\" class=\"form-select\" style=\"flex: 1;\">
+                    <option value=\"\">Choisir un jour</option>
+                    <option value=\"monday\">Lundi</option>
+                    <option value=\"tuesday\">Mardi</option>
+                    <option value=\"wednesday\">Mercredi</option>
+                    <option value=\"thursday\">Jeudi</option>
+                    <option value=\"friday\">Vendredi</option>
+                    <option value=\"saturday\">Samedi</option>
+                    <option value=\"sunday\">Dimanche</option>
+                </select>
+                <input type=\"time\" name=\"guard_periods[\${index}][start]\" class=\"form-control\" style=\"width: 120px;\" placeholder=\"Début\">
+                <input type=\"time\" name=\"guard_periods[\${index}][end]\" class=\"form-control\" style=\"width: 120px;\" placeholder=\"Fin\">
+                <button type=\"button\" class=\"btn btn-danger remove-guard-period\">
+                    <i class=\"fas fa-trash\"></i>
+                </button>
+            `;
+            return row;
+        }
+        
+        addBtn.addEventListener('click', function() {
+            const row = createRow(periodIndex);
+            container.appendChild(row);
+            const removeBtn = row.querySelector('.remove-guard-period');
+            removeBtn.addEventListener('click', function() {
+                const rows = container.querySelectorAll('.guard-period-row');
+                if (rows.length > 1) {
+                    row.remove();
+                } else {
+                    resetRow(row);
+                }
+            });
+            periodIndex++;
+        });
+        
+        container.addEventListener('click', function(e) {
+            const removeBtn = e.target.closest('.remove-guard-period');
+            if (removeBtn) {
+                const row = removeBtn.closest('.guard-period-row');
+                const rows = container.querySelectorAll('.guard-period-row');
+                if (rows.length > 1) {
+                    row.remove();
+                } else {
+                    resetRow(row);
+                }
+            }
+        });
+    }
+    
     // ==================== RÉINITIALISATION ====================
     window.resetForm = function() {
         if (confirm('Êtes-vous sûr de vouloir réinitialiser tous les paramètres ?')) {
@@ -1474,6 +2007,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePrimaryColor('#0463f1');
                 updateSecondaryColor('#8b5cf6');
                 updateTicketPreview();
+                if (visibilityToggle) {
+                    visibilityToggle.checked = ";
+        // line 1528
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["company"]) || array_key_exists("company", $context) ? $context["company"] : (function () { throw new RuntimeError('Variable "company" does not exist.', 1528, $this->source); })()), "companyPublic", [], "any", false, false, false, 1528)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("true") : ("false"));
+        yield ";
+                    updateVisibility();
+                }
                 showNotification('Formulaire réinitialisé', 'info');
             }, 100);
         }
@@ -1491,13 +2031,12 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => notification.remove(), 3000);
     }
     
-    // Afficher notification si flash message
     ";
-        // line 1152
+        // line 1548
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1152, $this->source); })()), "flashes", ["success"], "method", false, false, false, 1152));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 1548, $this->source); })()), "flashes", ["success"], "method", false, false, false, 1548));
         foreach ($context['_seq'] as $context["_key"] => $context["flash"]) {
-            // line 1153
+            // line 1549
             yield "        showNotification('";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["flash"], "html", null, true);
             yield "', 'success');
@@ -1506,7 +2045,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['flash'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 1155
+        // line 1551
         yield "});
 </script>
 ";
@@ -1540,7 +2079,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  1510 => 1155,  1501 => 1153,  1497 => 1152,  1454 => 1112,  1450 => 1111,  1334 => 998,  1311 => 997,  1305 => 994,  1289 => 981,  1275 => 971,  1273 => 970,  1271 => 965,  1269 => 964,  1256 => 954,  1252 => 953,  1217 => 921,  1212 => 919,  1192 => 902,  1186 => 901,  1180 => 899,  1178 => 898,  1174 => 897,  1155 => 882,  1151 => 881,  1142 => 876,  1138 => 875,  1114 => 854,  1110 => 853,  1102 => 848,  1098 => 847,  1090 => 842,  1086 => 841,  1078 => 836,  1074 => 835,  1066 => 830,  1062 => 829,  1053 => 823,  1049 => 822,  1008 => 783,  999 => 780,  995 => 779,  988 => 778,  983 => 777,  980 => 776,  973 => 771,  968 => 769,  952 => 755,  943 => 752,  939 => 751,  932 => 750,  927 => 749,  924 => 748,  917 => 743,  912 => 741,  884 => 716,  880 => 715,  877 => 714,  871 => 710,  865 => 708,  863 => 707,  854 => 701,  850 => 700,  841 => 694,  837 => 693,  828 => 687,  824 => 686,  804 => 669,  799 => 668,  794 => 665,  754 => 627,  741 => 626,  119 => 14,  115 => 13,  111 => 12,  108 => 11,  103 => 8,  90 => 7,  66 => 5,  43 => 3,);
+        return array (  2049 => 1551,  2040 => 1549,  2036 => 1548,  2013 => 1528,  1924 => 1442,  1920 => 1441,  1770 => 1294,  1757 => 1293,  1728 => 1273,  1725 => 1272,  1703 => 1266,  1697 => 1265,  1690 => 1263,  1684 => 1262,  1678 => 1261,  1672 => 1260,  1666 => 1259,  1660 => 1258,  1654 => 1257,  1649 => 1255,  1646 => 1254,  1628 => 1253,  1604 => 1231,  1602 => 1230,  1599 => 1229,  1597 => 1228,  1586 => 1220,  1581 => 1218,  1564 => 1204,  1548 => 1191,  1535 => 1182,  1533 => 1181,  1531 => 1176,  1529 => 1175,  1516 => 1165,  1512 => 1164,  1477 => 1132,  1472 => 1130,  1452 => 1113,  1446 => 1112,  1440 => 1110,  1438 => 1109,  1434 => 1108,  1416 => 1094,  1412 => 1093,  1403 => 1088,  1399 => 1087,  1375 => 1066,  1371 => 1065,  1363 => 1060,  1359 => 1059,  1351 => 1054,  1347 => 1053,  1339 => 1048,  1335 => 1047,  1327 => 1042,  1323 => 1041,  1314 => 1035,  1310 => 1034,  1274 => 1000,  1265 => 997,  1261 => 996,  1254 => 995,  1249 => 994,  1247 => 993,  1240 => 989,  1235 => 987,  1224 => 978,  1215 => 975,  1211 => 974,  1204 => 973,  1199 => 972,  1197 => 971,  1190 => 967,  1185 => 965,  1158 => 941,  1154 => 940,  1151 => 939,  1145 => 935,  1139 => 933,  1137 => 932,  1128 => 926,  1124 => 925,  1119 => 922,  1108 => 913,  1105 => 912,  1094 => 909,  1090 => 908,  1087 => 907,  1082 => 906,  1079 => 897,  1072 => 892,  1069 => 891,  1067 => 890,  1056 => 881,  1052 => 879,  1048 => 877,  1046 => 876,  1040 => 872,  1036 => 870,  1032 => 868,  1030 => 867,  1022 => 866,  1013 => 862,  995 => 846,  992 => 845,  990 => 844,  981 => 838,  977 => 837,  968 => 831,  964 => 830,  944 => 813,  940 => 812,  935 => 810,  897 => 774,  884 => 773,  113 => 12,  109 => 11,  103 => 8,  90 => 7,  66 => 5,  43 => 3,);
     }
 
     public function getSourceContext(): Source
@@ -1554,10 +2093,8 @@ document.addEventListener('DOMContentLoaded', function() {
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    {# ✅ UTILISER LES VARIABLES PASSÉES PAR LE CONTRÔLEUR #}
     :root {
         --primary-color: {{ primaryColor|default('#0463f1') }};
-        --primary-dark: {{ primaryColor|default('#0463f1')|color_darken(15) }};
         --secondary-color: {{ secondaryColor|default('#8b5cf6') }};
     }
     
@@ -1566,9 +2103,8 @@ document.addEventListener('DOMContentLoaded', function() {
         margin: 0 auto;
     }
     
-    /* Hero Header */
     .settings-hero {
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        background: linear-gradient(135deg, var(--primary-color), color-mix(in srgb, var(--primary-color) 85%, black));
         border-radius: 24px;
         padding: 2rem 2.5rem;
         margin-bottom: 2rem;
@@ -1619,7 +2155,6 @@ document.addEventListener('DOMContentLoaded', function() {
         position: relative;
     }
     
-    /* Navigation par onglets */
     .settings-tabs {
         display: flex;
         gap: 0.5rem;
@@ -1659,7 +2194,6 @@ document.addEventListener('DOMContentLoaded', function() {
         box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 40%, transparent);
     }
     
-    /* Sections */
     .settings-section {
         background: white;
         border-radius: 24px;
@@ -1715,7 +2249,6 @@ document.addEventListener('DOMContentLoaded', function() {
         margin-bottom: 0;
     }
     
-    /* Logo preview */
     .logo-preview {
         display: flex;
         align-items: center;
@@ -1730,7 +2263,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     .logo-preview:hover {
         border-color: var(--primary-color);
-        background: #f0f7ff;
+        background: color-mix(in srgb, var(--primary-color) 5%, #f8fafc);
     }
     
     .logo-preview-img {
@@ -1749,7 +2282,6 @@ document.addEventListener('DOMContentLoaded', function() {
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
-    /* ===== PALETTE DE COULEURS ===== */
     .color-palette-group {
         background: #f8fafc;
         border-radius: 16px;
@@ -1863,7 +2395,6 @@ document.addEventListener('DOMContentLoaded', function() {
         border: none;
     }
     
-    /* Preview des couleurs en action */
     .color-preview-demo {
         display: flex;
         gap: 1rem;
@@ -1891,7 +2422,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     .color-preview-demo .demo-btn-primary:hover {
-        background: var(--primary-dark);
+        background: color-mix(in srgb, var(--primary-color) 85%, black);
         transform: translateY(-2px);
     }
     
@@ -1914,7 +2445,6 @@ document.addEventListener('DOMContentLoaded', function() {
         background: var(--primary-color);
     }
     
-    /* Ticket preview */
     .ticket-preview {
         background: white;
         border-radius: 16px;
@@ -1967,7 +2497,6 @@ document.addEventListener('DOMContentLoaded', function() {
         color: #64748b;
     }
     
-    /* Form styling */
     .form-group {
         margin-bottom: 1.25rem;
     }
@@ -1980,7 +2509,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     .form-label .required {
-        color: var(--danger-color);
+        color: #ef4444;
         margin-left: 0.25rem;
     }
     
@@ -2014,7 +2543,188 @@ document.addEventListener('DOMContentLoaded', function() {
         margin-top: 0.25rem;
     }
     
-    /* Action buttons */
+    /* ✅ STYLES POUR LA VISIBILITÉ ET GARDE - SIMPLIFIÉ */
+    .pharmacy-fields-wrapper {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 1.25rem 1.5rem;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+    }
+    
+    .pharmacy-fields-wrapper:hover {
+        border-color: var(--primary-color);
+    }
+    
+    .pharmacy-fields-title {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .pharmacy-fields-title i {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+    }
+    
+    .pharmacy-fields-title .badge-pharmacy {
+        background: var(--primary-color);
+        color: white;
+        font-size: 0.65rem;
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+    
+    .pharmacy-field-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .pharmacy-field-row:last-child {
+        border-bottom: none;
+    }
+    
+    .pharmacy-field-label {
+        min-width: 140px;
+        font-weight: 500;
+        color: #475569;
+        font-size: 0.9rem;
+    }
+    
+    /* ✅ TOGGLE SWITCH SIMPLIFIÉ ET FONCTIONNEL */
+    .toggle-container-simple {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .toggle-simple {
+        position: relative;
+        width: 52px;
+        height: 28px;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+    
+    .toggle-simple input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        position: absolute;
+    }
+    
+    .toggle-simple .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #cbd5e1;
+        transition: 0.3s;
+        border-radius: 34px;
+    }
+    
+    .toggle-simple .slider::before {
+        content: \"\";
+        position: absolute;
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background: white;
+        transition: 0.3s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .toggle-simple input:checked + .slider {
+        background: var(--primary-color);
+    }
+    
+    .toggle-simple input:checked + .slider::before {
+        transform: translateX(24px);
+    }
+    
+    .toggle-status-simple {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .toggle-status-simple .visible {
+        color: #22c55e;
+    }
+    
+    .toggle-status-simple .hidden {
+        color: #94a3b8;
+    }
+    
+    .guard-periods-compact {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .guard-periods-compact .period-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        padding: 0.25rem 0.8rem;
+        border-radius: 20px;
+        border: 1px solid #e5e7eb;
+        margin: 0.2rem 0.3rem 0.2rem 0;
+        font-size: 0.8rem;
+    }
+    
+    .guard-periods-compact .period-item .day {
+        font-weight: 600;
+        color: #1e293b;
+    }
+    
+    .guard-periods-compact .period-item .time {
+        color: #475569;
+        font-family: monospace;
+        font-size: 0.75rem;
+    }
+    
+    .guard-periods-compact .empty {
+        color: #94a3b8;
+        font-size: 0.85rem;
+        font-style: italic;
+    }
+    
+    .btn-guard-edit {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.25rem 1rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    
+    .btn-guard-edit:hover {
+        background: color-mix(in srgb, var(--primary-color) 85%, black);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 40%, transparent);
+        color: white;
+    }
+    
     .action-buttons {
         position: sticky;
         bottom: 1.5rem;
@@ -2049,8 +2759,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     .btn-primary:hover {
-        background: var(--primary-dark);
-        border-color: var(--primary-dark);
+        background: color-mix(in srgb, var(--primary-color) 85%, black);
+        border-color: color-mix(in srgb, var(--primary-color) 85%, black);
         box-shadow: 0 8px 25px color-mix(in srgb, var(--primary-color) 40%, transparent);
     }
     
@@ -2074,98 +2784,74 @@ document.addEventListener('DOMContentLoaded', function() {
         background: #e5e7eb;
     }
     
-    /* Animations */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .modal-content {
+        border-radius: 24px;
+        border: none;
+        overflow: hidden;
     }
     
-    /* Responsive */
+    .modal-header {
+        border-bottom: none;
+        padding: 1.5rem 2rem;
+    }
+    
+    .modal-body {
+        padding: 1.5rem 2rem;
+    }
+    
+    .modal-footer {
+        border-top: none;
+        padding: 1rem 2rem 1.5rem;
+    }
+    
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+        opacity: 0.7;
+    }
+    
+    .modal-header .btn-close:hover {
+        opacity: 1;
+    }
+    
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
     @media (max-width: 992px) {
-        .settings-hero {
-            padding: 1.5rem;
-        }
-        .settings-hero h1 {
-            font-size: 1.5rem;
-        }
-        .settings-section {
-            padding: 1.25rem;
-        }
-        .settings-tab {
-            padding: 0.5rem 1rem;
-            font-size: 0.8rem;
-        }
+        .settings-hero { padding: 1.5rem; }
+        .settings-hero h1 { font-size: 1.5rem; }
+        .settings-section { padding: 1.25rem; }
+        .settings-tab { padding: 0.5rem 1rem; font-size: 0.8rem; }
         .action-buttons {
             flex-direction: column;
             gap: 1rem;
             border-radius: 24px;
             padding: 1rem;
         }
-        .action-buttons .btn {
-            width: 100%;
-            justify-content: center;
-        }
-        .action-buttons div {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .color-palette {
-            gap: 0.5rem;
-        }
-        .color-swatch {
-            width: 30px;
-            height: 30px;
-        }
-        .logo-preview {
-            flex-direction: column;
-            text-align: center;
-        }
+        .action-buttons .btn { width: 100%; justify-content: center; }
+        .action-buttons div { width: 100%; display: flex; flex-direction: column; gap: 0.5rem; }
+        .color-palette { gap: 0.5rem; }
+        .color-swatch { width: 30px; height: 30px; }
+        .logo-preview { flex-direction: column; text-align: center; }
+        .pharmacy-field-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+        .pharmacy-field-label { min-width: auto; }
+        .guard-periods-compact { width: 100%; }
     }
     
     @media (max-width: 576px) {
-        .settings-hero {
-            padding: 1rem;
-        }
-        .settings-hero h1 {
-            font-size: 1.2rem;
-        }
-        .settings-section {
-            padding: 1rem;
-        }
-        .settings-tabs {
-            flex-direction: column;
-        }
-        .settings-tab {
-            width: 100%;
-            text-align: center;
-        }
-        .color-palette {
-            justify-content: center;
-        }
-        .color-palette-label {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .ticket-preview {
-            max-width: 100%;
-        }
-        .color-picker-custom input[type=\"color\"] {
-            width: 30px;
-            height: 30px;
-        }
-        .color-hex-display {
-            font-size: 0.75rem;
-            padding: 0.2rem 0.5rem;
-            min-width: 60px;
-        }
+        .settings-hero { padding: 1rem; }
+        .settings-hero h1 { font-size: 1.2rem; }
+        .settings-section { padding: 1rem; }
+        .settings-tabs { flex-direction: column; }
+        .settings-tab { width: 100%; text-align: center; }
+        .color-palette { justify-content: center; }
+        .color-palette-label { flex-direction: column; align-items: flex-start; }
+        .ticket-preview { max-width: 100%; }
+        .color-picker-custom input[type=\"color\"] { width: 30px; height: 30px; }
+        .color-hex-display { font-size: 0.75rem; padding: 0.2rem 0.5rem; min-width: 60px; }
+        .pharmacy-fields-wrapper { padding: 0.75rem 1rem; }
+        .btn-guard-edit { font-size: 0.7rem; padding: 0.2rem 0.8rem; }
     }
 </style>
 {% endblock %}
@@ -2173,7 +2859,6 @@ document.addEventListener('DOMContentLoaded', function() {
 {% block body %}
 <div class=\"container-fluid settings-container py-4\">
     
-    <!-- Hero Section -->
     <div class=\"settings-hero\">
         <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-3\">
             <div>
@@ -2190,7 +2875,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
     
-    <!-- Onglets -->
     <div class=\"settings-tabs\" id=\"settingsTabs\">
         <button class=\"settings-tab active\" data-section=\"general\">
             <i class=\"fas fa-building\"></i> Général
@@ -2211,11 +2895,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     {{ form_start(form, {'attr': {'id': 'companySettingsForm', 'class': 'settings-form'}}) }}
     
-    {# ✅ CHAMPS CACHÉS POUR LES COULEURS - CECI EST CRUCIAL #}
     <input type=\"hidden\" name=\"primary_color\" id=\"primary_color\" value=\"{{ primaryColor|default('#0463f1') }}\">
     <input type=\"hidden\" name=\"secondary_color\" id=\"secondary_color\" value=\"{{ secondaryColor|default('#8b5cf6') }}\">
     
-    <!-- Section 1: Général -->
+    <!-- Section Général -->
     <div id=\"section-general\" class=\"settings-section\">
         <div class=\"section-header\">
             <div class=\"section-icon\">
@@ -2242,6 +2925,87 @@ document.addEventListener('DOMContentLoaded', function() {
                     <small class=\"text-muted\">Optionnel - Apparaît sous le nom</small>
                 </div>
             </div>
+            
+            <!-- ✅ CHAMPS PHARMACIE SIMPLIFIÉS -->
+            {% set companyType = company.type|default('') %}
+            {% if companyType == 'pharmacy' %}
+            <div class=\"col-12\">
+                <div class=\"pharmacy-fields-wrapper\">
+                    <div class=\"pharmacy-fields-title\">
+                        <i class=\"fas fa-hospital\"></i>
+                        Paramètres pharmacie
+                        <span class=\"badge-pharmacy\">Pharmacie</span>
+                    </div>
+                    
+                    <!-- Ligne 1: Visibilité - avec toggle SIMPLE -->
+                    <div class=\"pharmacy-field-row\">
+                        <div class=\"pharmacy-field-label\">
+                            <i class=\"fas fa-eye me-1\"></i> Visibilité
+                        </div>
+                        <div class=\"toggle-container-simple\">
+                            <label class=\"toggle-simple\">
+                                <input type=\"checkbox\" id=\"company_public\" name=\"company_public\" 
+                                       {% if company.companyPublic %}checked{% endif %}>
+                                <span class=\"slider\"></span>
+                            </label>
+                            <span class=\"toggle-status-simple\" id=\"visibilityStatus\">
+                                <span class=\"{% if company.companyPublic %}visible{% else %}hidden{% endif %}\" id=\"visibilityText\">
+                                    {% if company.companyPublic %}
+                                        <i class=\"fas fa-eye me-1\"></i> Visible
+                                    {% else %}
+                                        <i class=\"fas fa-eye-slash me-1\"></i> Masquée
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </div>
+                        <small class=\"text-muted\" id=\"visibilityHelp\">
+                            {% if company.companyPublic %}
+                                Produits visibles sur le marketplace
+                            {% else %}
+                                Produits masqués sur le marketplace
+                            {% endif %}
+                        </small>
+                    </div>
+                    
+                    <!-- Ligne 2: Périodes de garde -->
+                    <div class=\"pharmacy-field-row\">
+                        <div class=\"pharmacy-field-label\">
+                            <i class=\"fas fa-clock me-1\"></i> Périodes de garde
+                        </div>
+                        <div class=\"guard-periods-compact\" id=\"guardPeriodsDisplay\">
+                            {% set guardPeriods = company.guardPeriods|default([]) %}
+                            {% if guardPeriods is empty %}
+                                <span class=\"empty\">
+                                    <i class=\"fas fa-info-circle me-1\"></i>
+                                    Aucune période configurée
+                                </span>
+                            {% else %}
+                                {% set daysMap = {
+                                    'monday': 'Lun',
+                                    'tuesday': 'Mar',
+                                    'wednesday': 'Mer',
+                                    'thursday': 'Jeu',
+                                    'friday': 'Ven',
+                                    'saturday': 'Sam',
+                                    'sunday': 'Dim'
+                                } %}
+                                {% for period in guardPeriods %}
+                                    <span class=\"period-item\">
+                                        <span class=\"day\">{{ daysMap[period.day]|default(period.day|slice(0,3)) }}</span>
+                                        <span class=\"time\">{{ period.start }} - {{ period.end }}</span>
+                                    </span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <button type=\"button\" class=\"btn-guard-edit\" data-bs-toggle=\"modal\" data-bs-target=\"#guardPeriodsModal\">
+                            <i class=\"fas fa-edit\"></i>
+                            Modifier
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
             <div class=\"col-12\">
                 <div class=\"form-group\">
                     {{ form_label(form.description, 'Description') }}
@@ -2266,7 +3030,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
     
-    <!-- Section 2: Apparence -->
+    <!-- Section Apparence -->
     <div id=\"section-branding\" class=\"settings-section\" style=\"display: none;\">
         <div class=\"section-header\">
             <div class=\"section-icon\">
@@ -2279,7 +3043,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
         
         <div class=\"row g-4\">
-            <!-- Couleur principale -->
             <div class=\"col-md-6\">
                 <div class=\"color-palette-group\">
                     <div class=\"color-palette-label\">
@@ -2287,11 +3050,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         Couleur principale
                         <span class=\"color-hex-display\" id=\"primaryColorHexDisplay\">{{ primaryColor|default('#0463f1') }}</span>
                         <div class=\"color-picker-custom\">
-                            <input type=\"color\" id=\"primaryColorPickerCustom\" value=\"{{ primaryColor|default('#0463f1') }}\" title=\"Choisir une couleur personnalisée\">
+                            <input type=\"color\" id=\"primaryColorPickerCustom\" value=\"{{ primaryColor|default('#0463f1') }}\">
                         </div>
                     </div>
                     <div class=\"color-palette\" id=\"primaryPalette\">
-                        {# 10 couleurs prédéfinies #}
                         {% set primaryColors = ['#0463f1', '#dc2626', '#16a34a', '#ea580c', '#8b5cf6', '#db2777', '#0891b2', '#4f46e5', '#ca8a04', '#6b7280'] %}
                         {% for color in primaryColors %}
                             <div class=\"color-swatch {% if color == primaryColor|default('#0463f1') %}active{% endif %}\" 
@@ -2300,14 +3062,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                  data-target=\"primary\"></div>
                         {% endfor %}
                     </div>
-                    <div class=\"color-helper-text mt-2\">
-                        <i class=\"fas fa-info-circle me-1\"></i>
-                        Cliquez sur une couleur pour la sélectionner ou utilisez le sélecteur personnalisé
-                    </div>
                 </div>
             </div>
             
-            <!-- Couleur secondaire -->
             <div class=\"col-md-6\">
                 <div class=\"color-palette-group\">
                     <div class=\"color-palette-label\">
@@ -2315,11 +3072,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         Couleur secondaire
                         <span class=\"color-hex-display\" id=\"secondaryColorHexDisplay\">{{ secondaryColor|default('#8b5cf6') }}</span>
                         <div class=\"color-picker-custom\">
-                            <input type=\"color\" id=\"secondaryColorPickerCustom\" value=\"{{ secondaryColor|default('#8b5cf6') }}\" title=\"Choisir une couleur personnalisée\">
+                            <input type=\"color\" id=\"secondaryColorPickerCustom\" value=\"{{ secondaryColor|default('#8b5cf6') }}\">
                         </div>
                     </div>
                     <div class=\"color-palette\" id=\"secondaryPalette\">
-                        {# 10 couleurs prédéfinies #}
                         {% set secondaryColors = ['#8b5cf6', '#3b82f6', '#06b6d4', '#22c55e', '#eab308', '#f97316', '#ef4444', '#ec4899', '#14b8a6', '#64748b'] %}
                         {% for color in secondaryColors %}
                             <div class=\"color-swatch {% if color == secondaryColor|default('#8b5cf6') %}active{% endif %}\" 
@@ -2328,15 +3084,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                  data-target=\"secondary\"></div>
                         {% endfor %}
                     </div>
-                    <div class=\"color-helper-text mt-2\">
-                        <i class=\"fas fa-info-circle me-1\"></i>
-                        Cliquez sur une couleur pour la sélectionner ou utilisez le sélecteur personnalisé
-                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Aperçu des couleurs en action -->
         <div class=\"color-preview-demo\">
             <span class=\"fw-bold me-2\">Aperçu :</span>
             <button class=\"demo-btn demo-btn-primary\">
@@ -2351,7 +3102,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
     
-    <!-- Section 3: Contact -->
+    <!-- Section Contact -->
     <div id=\"section-contact\" class=\"settings-section\" style=\"display: none;\">
         <div class=\"section-header\">
             <div class=\"section-icon\">
@@ -2404,7 +3155,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
     
-    <!-- Section 4: Ticket de caisse -->
+    <!-- Section Ticket -->
     <div id=\"section-receipt\" class=\"settings-section\" style=\"display: none;\">
         <div class=\"section-header\">
             <div class=\"section-icon\">
@@ -2431,7 +3182,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
         
-        <!-- Aperçu du ticket -->
         <div class=\"row\">
             <div class=\"col-md-6\">
                 <div class=\"mt-2\">
@@ -2482,7 +3232,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
     
-    <!-- Section 5: Taxes -->
+    <!-- Section Taxes -->
     <div id=\"section-taxes\" class=\"settings-section\" style=\"display: none;\">
         <div class=\"section-header\">
             <div class=\"section-icon\">
@@ -2523,7 +3273,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
     
-    <!-- Boutons d'action sticky -->
     <div class=\"action-buttons\">
         <a href=\"{{ path('app_dashboard') }}\" class=\"btn btn-outline-secondary\">
             <i class=\"fas fa-arrow-left me-2\"></i> Annuler
@@ -2540,6 +3289,92 @@ document.addEventListener('DOMContentLoaded', function() {
     
     {{ form_end(form) }}
 </div>
+
+<!-- ✅ MODAL PÉRIODES DE GARDE -->
+<div class=\"modal fade\" id=\"guardPeriodsModal\" tabindex=\"-1\" aria-hidden=\"true\">
+    <div class=\"modal-dialog modal-dialog-centered modal-lg\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header\" style=\"background: var(--primary-color); color: white;\">
+                <h5 class=\"modal-title\">
+                    <i class=\"fas fa-clock-history me-2\"></i>
+                    Modifier les périodes de garde
+                </h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <form method=\"post\" action=\"{{ path('app_company_settings_guard_periods') }}\">
+                <div class=\"modal-body\">
+                    <input type=\"hidden\" name=\"_token\" value=\"{{ csrf_token('guard_periods') }}\">
+                    
+                    <p class=\"text-muted mb-3\">
+                        <i class=\"fas fa-info-circle me-1\"></i>
+                        Définissez les jours et horaires de garde pour votre pharmacie.
+                    </p>
+                    
+                    <div id=\"guardPeriodsContainer\">
+                        {% set guardPeriods = company.guardPeriods|default([]) %}
+                        
+                        {% if guardPeriods is empty %}
+                            <div class=\"text-center text-muted py-3\">
+                                <i class=\"fas fa-clock fs-3 d-block mb-2\"></i>
+                                Aucune période de garde configurée
+                            </div>
+                            <div class=\"guard-period-row d-flex gap-2 align-items-center mb-2\">
+                                <select name=\"guard_periods[0][day]\" class=\"form-select\" style=\"flex: 1;\">
+                                    <option value=\"\">Choisir un jour</option>
+                                    <option value=\"monday\">Lundi</option>
+                                    <option value=\"tuesday\">Mardi</option>
+                                    <option value=\"wednesday\">Mercredi</option>
+                                    <option value=\"thursday\">Jeudi</option>
+                                    <option value=\"friday\">Vendredi</option>
+                                    <option value=\"saturday\">Samedi</option>
+                                    <option value=\"sunday\">Dimanche</option>
+                                </select>
+                                <input type=\"time\" name=\"guard_periods[0][start]\" class=\"form-control\" style=\"width: 120px;\" placeholder=\"Début\">
+                                <input type=\"time\" name=\"guard_periods[0][end]\" class=\"form-control\" style=\"width: 120px;\" placeholder=\"Fin\">
+                                <button type=\"button\" class=\"btn btn-danger remove-guard-period\" disabled>
+                                    <i class=\"fas fa-trash\"></i>
+                                </button>
+                            </div>
+                        {% else %}
+                            {% for period in guardPeriods %}
+                                <div class=\"guard-period-row d-flex gap-2 align-items-center mb-2\">
+                                    <select name=\"guard_periods[{{ loop.index0 }}][day]\" class=\"form-select\" style=\"flex: 1;\">
+                                        <option value=\"\">Choisir un jour</option>
+                                        <option value=\"monday\" {% if period.day == 'monday' %}selected{% endif %}>Lundi</option>
+                                        <option value=\"tuesday\" {% if period.day == 'tuesday' %}selected{% endif %}>Mardi</option>
+                                        <option value=\"wednesday\" {% if period.day == 'wednesday' %}selected{% endif %}>Mercredi</option>
+                                        <option value=\"thursday\" {% if period.day == 'thursday' %}selected{% endif %}>Jeudi</option>
+                                        <option value=\"friday\" {% if period.day == 'friday' %}selected{% endif %}>Vendredi</option>
+                                        <option value=\"saturday\" {% if period.day == 'saturday' %}selected{% endif %}>Samedi</option>
+                                        <option value=\"sunday\" {% if period.day == 'sunday' %}selected{% endif %}>Dimanche</option>
+                                    </select>
+                                    <input type=\"time\" name=\"guard_periods[{{ loop.index0 }}][start]\" class=\"form-control\" style=\"width: 120px;\" value=\"{{ period.start ?? '' }}\">
+                                    <input type=\"time\" name=\"guard_periods[{{ loop.index0 }}][end]\" class=\"form-control\" style=\"width: 120px;\" value=\"{{ period.end ?? '' }}\">
+                                    <button type=\"button\" class=\"btn btn-danger remove-guard-period\">
+                                        <i class=\"fas fa-trash\"></i>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <button type=\"button\" class=\"btn btn-outline-primary btn-sm mt-2\" id=\"addGuardPeriod\">
+                        <i class=\"fas fa-plus-circle me-1\"></i>
+                        Ajouter une période
+                    </button>
+                </div>
+                <div class=\"modal-footer\">
+                    <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
+                    <button type=\"submit\" class=\"btn\" style=\"background: var(--primary-color); color: white;\">
+                        <i class=\"fas fa-save me-2\"></i>
+                        Enregistrer les périodes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
@@ -2571,28 +3406,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // ==================== TOGGLE VISIBILITÉ SIMPLIFIÉ ====================
+    const visibilityToggle = document.getElementById('company_public');
+    const visibilityText = document.getElementById('visibilityText');
+    const visibilityHelp = document.getElementById('visibilityHelp');
+    
+    function updateVisibility() {
+        if (!visibilityToggle) return;
+        
+        if (visibilityToggle.checked) {
+            if (visibilityText) {
+                visibilityText.innerHTML = '<i class=\"fas fa-eye me-1\"></i> Visible';
+                visibilityText.className = 'visible';
+            }
+            if (visibilityHelp) {
+                visibilityHelp.textContent = 'Produits visibles sur le marketplace';
+            }
+        } else {
+            if (visibilityText) {
+                visibilityText.innerHTML = '<i class=\"fas fa-eye-slash me-1\"></i> Masquée';
+                visibilityText.className = 'hidden';
+            }
+            if (visibilityHelp) {
+                visibilityHelp.textContent = 'Produits masqués sur le marketplace';
+            }
+        }
+    }
+    
+    if (visibilityToggle) {
+        visibilityToggle.addEventListener('change', updateVisibility);
+        updateVisibility();
+    }
+    
     // ==================== PALETTE DE COULEURS ====================
     const primaryHexDisplay = document.getElementById('primaryColorHexDisplay');
     const secondaryHexDisplay = document.getElementById('secondaryColorHexDisplay');
     const primaryPickerCustom = document.getElementById('primaryColorPickerCustom');
     const secondaryPickerCustom = document.getElementById('secondaryColorPickerCustom');
     
-    // ✅ Récupération des champs cachés
     const hiddenPrimary = document.getElementById('primary_color');
     const hiddenSecondary = document.getElementById('secondary_color');
     
-    // Fonction pour mettre à jour l'affichage et le formulaire
     function updatePrimaryColor(color) {
-        // ✅ Mettre à jour le champ caché
         if (hiddenPrimary) hiddenPrimary.value = color;
-        
-        // Mettre à jour le picker personnalisé
         if (primaryPickerCustom) primaryPickerCustom.value = color;
-        // Mettre à jour l'affichage hex
         if (primaryHexDisplay) primaryHexDisplay.textContent = color;
-        // Mettre à jour le CSS
         document.documentElement.style.setProperty('--primary-color', color);
-        // Mettre à jour les démos
+        
         document.querySelectorAll('.demo-btn-primary').forEach(btn => {
             btn.style.background = color;
         });
@@ -2602,19 +3462,32 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.section-icon').forEach(icon => {
             icon.style.background = color;
         });
-        // Marquer la swatch active
         document.querySelectorAll('#primaryPalette .color-swatch').forEach(sw => {
             sw.classList.toggle('active', sw.dataset.color === color);
         });
-        // Mettre à jour le label de la palette
-        const labelIcon = document.querySelector('.color-palette-label i');
-        if (labelIcon) labelIcon.style.color = color;
+        document.querySelectorAll('#guardPeriodsModal .modal-header').forEach(header => {
+            header.style.background = color;
+        });
+        document.querySelectorAll('.settings-hero').forEach(hero => {
+            hero.style.background = `linear-gradient(135deg, \${color}, color-mix(in srgb, \${color} 85%, black))`;
+        });
+        document.querySelectorAll('.badge-pharmacy').forEach(badge => {
+            badge.style.background = color;
+        });
+        document.querySelectorAll('.btn-guard-edit').forEach(btn => {
+            btn.style.background = color;
+        });
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.style.background = color;
+            btn.style.borderColor = color;
+        });
+        document.querySelectorAll('.toggle-simple input:checked + .slider').forEach(el => {
+            el.style.background = color;
+        });
     }
     
     function updateSecondaryColor(color) {
-        // ✅ Mettre à jour le champ caché
         if (hiddenSecondary) hiddenSecondary.value = color;
-        
         if (secondaryPickerCustom) secondaryPickerCustom.value = color;
         if (secondaryHexDisplay) secondaryHexDisplay.textContent = color;
         document.documentElement.style.setProperty('--secondary-color', color);
@@ -2624,11 +3497,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('#secondaryPalette .color-swatch').forEach(sw => {
             sw.classList.toggle('active', sw.dataset.color === color);
         });
-        const labelIcon = document.querySelectorAll('.color-palette-label i')[1];
-        if (labelIcon) labelIcon.style.color = color;
     }
     
-    // Gestion des clics sur les swatches
     document.querySelectorAll('.color-swatch').forEach(swatch => {
         swatch.addEventListener('click', function() {
             const color = this.dataset.color;
@@ -2641,7 +3511,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Gestion des pickers personnalisés
     if (primaryPickerCustom) {
         primaryPickerCustom.addEventListener('input', function() {
             updatePrimaryColor(this.value);
@@ -2670,6 +3539,69 @@ document.addEventListener('DOMContentLoaded', function() {
     if (receiptHeaderInput) receiptHeaderInput.addEventListener('input', updateTicketPreview);
     if (receiptFooterInput) receiptFooterInput.addEventListener('input', updateTicketPreview);
     
+    // ==================== PÉRIODES DE GARDE ====================
+    const container = document.getElementById('guardPeriodsContainer');
+    const addBtn = document.getElementById('addGuardPeriod');
+    
+    if (container && addBtn) {
+        let periodIndex = container.querySelectorAll('.guard-period-row').length || 0;
+        
+        function resetRow(row) {
+            row.querySelectorAll('select, input').forEach(el => el.value = '');
+        }
+        
+        function createRow(index) {
+            const row = document.createElement('div');
+            row.className = 'guard-period-row d-flex gap-2 align-items-center mb-2';
+            row.innerHTML = `
+                <select name=\"guard_periods[\${index}][day]\" class=\"form-select\" style=\"flex: 1;\">
+                    <option value=\"\">Choisir un jour</option>
+                    <option value=\"monday\">Lundi</option>
+                    <option value=\"tuesday\">Mardi</option>
+                    <option value=\"wednesday\">Mercredi</option>
+                    <option value=\"thursday\">Jeudi</option>
+                    <option value=\"friday\">Vendredi</option>
+                    <option value=\"saturday\">Samedi</option>
+                    <option value=\"sunday\">Dimanche</option>
+                </select>
+                <input type=\"time\" name=\"guard_periods[\${index}][start]\" class=\"form-control\" style=\"width: 120px;\" placeholder=\"Début\">
+                <input type=\"time\" name=\"guard_periods[\${index}][end]\" class=\"form-control\" style=\"width: 120px;\" placeholder=\"Fin\">
+                <button type=\"button\" class=\"btn btn-danger remove-guard-period\">
+                    <i class=\"fas fa-trash\"></i>
+                </button>
+            `;
+            return row;
+        }
+        
+        addBtn.addEventListener('click', function() {
+            const row = createRow(periodIndex);
+            container.appendChild(row);
+            const removeBtn = row.querySelector('.remove-guard-period');
+            removeBtn.addEventListener('click', function() {
+                const rows = container.querySelectorAll('.guard-period-row');
+                if (rows.length > 1) {
+                    row.remove();
+                } else {
+                    resetRow(row);
+                }
+            });
+            periodIndex++;
+        });
+        
+        container.addEventListener('click', function(e) {
+            const removeBtn = e.target.closest('.remove-guard-period');
+            if (removeBtn) {
+                const row = removeBtn.closest('.guard-period-row');
+                const rows = container.querySelectorAll('.guard-period-row');
+                if (rows.length > 1) {
+                    row.remove();
+                } else {
+                    resetRow(row);
+                }
+            }
+        });
+    }
+    
     // ==================== RÉINITIALISATION ====================
     window.resetForm = function() {
         if (confirm('Êtes-vous sûr de vouloir réinitialiser tous les paramètres ?')) {
@@ -2678,6 +3610,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePrimaryColor('#0463f1');
                 updateSecondaryColor('#8b5cf6');
                 updateTicketPreview();
+                if (visibilityToggle) {
+                    visibilityToggle.checked = {{ company.companyPublic ? 'true' : 'false' }};
+                    updateVisibility();
+                }
                 showNotification('Formulaire réinitialisé', 'info');
             }, 100);
         }
@@ -2695,13 +3631,11 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => notification.remove(), 3000);
     }
     
-    // Afficher notification si flash message
     {% for flash in app.flashes('success') %}
         showNotification('{{ flash }}', 'success');
     {% endfor %}
 });
 </script>
-{% endblock %}
 {% endblock %}", "company/settings/index.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\company\\settings\\index.html.twig");
     }
 }
