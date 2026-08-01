@@ -3,17 +3,6 @@
     ATTENTION: Ce template n'est plus utilisé directement pour afficher une liste.
     Les produits sont maintenant affichés dans un Select2 dans _product_mode.html.twig.
     Ce template est conservé pour compatibilité mais n'est plus utilisé.
-    
-    Variables attendues:
-    - products: array
-    - selectedPharmacy: string
-    - selectedCountry: string
-    - selectedCity: string
-    - searchProduct: string|null
-    - selectedCategory: string|null
-    - selectedForm: string|null
-    - selectedDosage: string|null
-    - prescriptionRequired: string|null
 #}
 
 <style>
@@ -33,12 +22,37 @@
         cursor: pointer;
         height: 100%;
         position: relative;
+        overflow: hidden;
     }
 
     .product-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 20px rgba(0,0,0,0.06);
         border-color: var(--primary-color);
+    }
+
+    .product-card .product-image-wrapper {
+        width: 100%;
+        height: 140px;
+        overflow: hidden;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-card .product-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-card .product-image-wrapper .placeholder-icon {
+        font-size: 3rem;
+        color: #cbd5e1;
     }
 
     .product-card .product-name {
@@ -179,6 +193,7 @@
         .product-grid { grid-template-columns: 1fr; }
         .product-card .product-footer { flex-direction: column; align-items: flex-start; }
         .product-results-header { flex-direction: column; align-items: flex-start; }
+        .product-card .product-image-wrapper { height: 100px; }
     }
 </style>
 
@@ -202,11 +217,16 @@
 </div>
 
 {# ============================================================ #}
-{# 2. GRILLE DES PRODUITS                                       #}
+{# 2. GRILLE DES PRODUITS AVEC IMAGES                           #}
 {# ============================================================ #}
 {% if products|length > 0 %}
     <div class="product-grid">
         {% for product in products %}
+            {% set imagePath = '' %}
+            {% if product.image and product.image != 'default-product.png' %}
+                {% set imagePath = asset('public/uploads/products/' ~ product.image) %}
+            {% endif %}
+            
             <div class="product-card" 
                  data-product='{{ {
                      id: product.id,
@@ -220,9 +240,21 @@
                      unit: product.unit,
                      description: product.description,
                      barcode: product.barcode,
-                     hmaService: product.hmaService
+                     hmaService: product.hmaService,
+                     image: imagePath
                  }|json_encode|e('html_attr') }}'
                  onclick="showProductDetail(this)">
+                
+                {# ✅ Image du produit #}
+                <div class="product-image-wrapper">
+                    {% if imagePath %}
+                        <img src="{{ imagePath }}" alt="{{ product.name }}" loading="lazy" onerror="this.style.display='none';this.parentElement.querySelector('.placeholder-icon').style.display='block';">
+                    {% endif %}
+                    <div class="placeholder-icon" {% if imagePath %}style="display:none;"{% endif %}>
+                        <i class="fas fa-box"></i>
+                    </div>
+                </div>
+                
                 <div class="product-name">{{ product.name }}</div>
                 
                 <div class="product-category">
@@ -259,9 +291,6 @@
                         {% if currentStock > 0 %}
                             <span class="product-status in-stock">
                                 <i class="fas fa-check-circle"></i> Disponible
-                            </span>
-                            <span class="stock-info">
-                                ({{ currentStock }} en stock)
                             </span>
                         {% else %}
                             <span class="product-status out-of-stock">
@@ -311,7 +340,7 @@
 {% endif %}
 
 {# ============================================================ #}
-{# 4. MODAL DÉTAIL PRODUIT                                      #}
+{# 4. MODAL DÉTAIL PRODUIT AVEC IMAGE                           #}
 {# ============================================================ #}
 <div class="modal fade product-detail-modal" id="productDetailModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -335,7 +364,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // ============================================================ #
-    // 1. AFFICHER LE DÉTAIL D'UN PRODUIT                          #
+    // 1. AFFICHER LE DÉTAIL D'UN PRODUIT AVEC IMAGE              #
     // ============================================================ #
     window.showProductDetail = function(element) {
         try {
@@ -354,9 +383,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const statusText = stock > 0 ? 'Disponible' : 'Non disponible';
             const statusIcon = stock > 0 ? 'fa-check-circle' : 'fa-times-circle';
             
+            // ✅ Image du produit
+            let imageHtml = '';
+            if (product.image) {
+                imageHtml = `<img src="${product.image}" alt="${product.name}" loading="lazy" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px;" onerror="this.style.display='none';this.parentElement.querySelector('.placeholder-icon').style.display='block';">`;
+                imageHtml += `<div class="placeholder-icon" style="display:none;"><i class="fas fa-box" style="font-size: 4rem; color: #cbd5e1;"></i></div>`;
+            } else {
+                imageHtml = `<div class="placeholder-icon"><i class="fas fa-box" style="font-size: 4rem; color: #cbd5e1;"></i></div>`;
+            }
+            
             body.innerHTML = `
                 <div class="container-fluid p-0">
                     <div class="row">
+                        <div class="col-md-5">
+                            <div style="background: #f8fafc; border-radius: 12px; padding: 1rem; text-align: center; border: 1px solid #e5e7eb; min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                                ${imageHtml}
+                            </div>
+                        </div>
                         <div class="col-md-7">
                             <div class="mb-3">
                                 <h6 class="text-muted"><i class="fas fa-tag me-1"></i> Catégorie</h6>
@@ -396,39 +439,37 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <p class="mb-0" style="font-family: monospace;">${product.barcode}</p>
                                 </div>
                             ` : ''}
-                        </div>
-
-                        <div class="col-md-5">
-                            <div class="card bg-light p-3">
+                            
+                            ${product.prescriptionRequired ? `
                                 <div class="mb-3">
-                                    <h6 class="text-muted">Prix</h6>
-                                    <p class="h3 text-primary mb-0">
-                                        ${product.salePrice ? product.salePrice + ' €' : 'Prix non défini'}
-                                    </p>
-                                </div>
-
-                                <div class="mb-3">
-                                    <h6 class="text-muted">Disponibilité</h6>
-                                    ${stock > 0 ? `
-                                        <span class="product-status in-stock">
-                                            <i class="fas fa-check-circle"></i> Disponible
-                                            <span class="text-muted" style="font-weight: 400; font-size: 0.75rem;">(${stock} en stock)</span>
-                                        </span>
-                                    ` : `
-                                        <span class="product-status out-of-stock">
-                                            <i class="fas fa-times-circle"></i> Non disponible
-                                        </span>
-                                    `}
-                                </div>
-
-                                ${product.prescriptionRequired ? `
-                                    <div>
-                                        <h6 class="text-muted">Prescription</h6>
+                                    <h6 class="text-muted"><i class="fas fa-prescription-bottle me-1"></i> Prescription</h6>
+                                    <p class="mb-0">
                                         <span class="prescription-badge">
                                             <i class="fas fa-prescription-bottle"></i> Ordonnance requise
                                         </span>
+                                    </p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="card bg-light p-3">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted">Prix</h6>
+                                        <p class="h3 text-primary mb-0">
+                                            ${product.salePrice ? product.salePrice + ' FCFA' : 'Prix non défini'}
+                                        </p>
                                     </div>
-                                ` : ''}
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted">Disponibilité</h6>
+                                        <span class="product-status ${statusClass}">
+                                            <i class="fas ${statusIcon}"></i> ${statusText}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

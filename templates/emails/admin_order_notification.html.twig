@@ -1,0 +1,347 @@
+{# templates/emails/admin_order_notification.html.twig #}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 Nouveau paiement - Commande #{{ order.orderNumber }}</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #f8fafc; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+        
+        <!-- Header -->
+        <div style="text-align: center; padding-bottom: 30px; border-bottom: 2px solid #f1f5f9;">
+            <div style="margin-bottom: 15px;">
+                <img src="{{ appUrl ~ asset('images/logo.png') }}" alt="{{ appName }}" style="max-height: 60px;">
+            </div>
+            <div style="display: inline-block; padding: 6px 20px; border-radius: 50px; background: #dcfce7; color: #166534; font-weight: 700; font-size: 14px; margin-bottom: 10px;">
+                💰 NOUVEAU PAIEMENT
+            </div>
+            <h1 style="color: #0f172a; font-size: 24px; margin: 0;">
+                Commande #{{ order.orderNumber }}
+            </h1>
+            <p style="color: #64748b; font-size: 14px; margin-top: 5px;">
+                Paiement confirmé le {{ "now"|date('d/m/Y à H:i') }}
+            </p>
+        </div>
+
+        <!-- Badge Admin -->
+        <div style="text-align: center; margin: 15px 0 20px 0;">
+            <span style="display: inline-block; padding: 4px 16px; border-radius: 50px; background: #fef3c7; color: #92400e; font-weight: 600; font-size: 12px;">
+                🔐 Notification administrateur - Action requise
+            </span>
+        </div>
+
+        <!-- ⚠️ ALERTE RUPTURE DE STOCK -->
+        {% if stockIssues is defined and stockIssues is not empty %}
+        <div style="background: #fef2f2; border-radius: 12px; padding: 20px; margin: 20px 0; border: 2px solid #dc2626;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                <span style="font-size: 2rem;">🚨</span>
+                <div>
+                    <h2 style="color: #991b1b; font-size: 18px; margin: 0; font-weight: 800;">
+                        RUPTURE DE STOCK DÉTECTÉE
+                    </h2>
+                    <p style="color: #64748b; font-size: 13px; margin: 5px 0 0 0;">
+                        {{ stockIssues|length }} produit(s) en rupture de stock dans cette commande
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Liste des produits en rupture -->
+            <div style="margin-top: 10px;">
+                {% for issue in stockIssues %}
+                <div style="display: flex; align-items: center; padding: 12px 16px; background: #fee2e2; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #dc2626;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; color: #991b1b; font-size: 14px;">
+                            {{ issue.product_name }}
+                            {% if issue.product_id %}
+                                <span style="color: #94a3b8; font-size: 11px; font-weight: 400;">
+                                    (ID: {{ issue.product_id }})
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div style="display: flex; gap: 20px; margin-top: 4px;">
+                            <div>
+                                <span style="color: #64748b; font-size: 11px;">Quantité commandée</span>
+                                <div style="font-weight: 700; color: #dc2626; font-size: 15px;">
+                                    {{ issue.quantity_requested }} {{ issue.unit|default('pièce(s)') }}
+                                </div>
+                            </div>
+                            <div>
+                                <span style="color: #64748b; font-size: 11px;">Stock disponible</span>
+                                <div style="font-weight: 700; color: #dc2626; font-size: 15px;">
+                                    {% if issue.available_stock is defined %}
+                                        {{ issue.available_stock }} {{ issue.unit|default('pièce(s)') }}
+                                    {% else %}
+                                        0 {{ issue.unit|default('pièce(s)') }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if issue.error %}
+                            <div>
+                                <span style="color: #64748b; font-size: 11px;">Erreur</span>
+                                <div style="font-weight: 600; color: #dc2626; font-size: 12px;">
+                                    {{ issue.error }}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="display: inline-block; padding: 2px 12px; background: #dc2626; color: white; border-radius: 50px; font-size: 11px; font-weight: 700;">
+                            RUPTURE
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Message d'action -->
+            <div style="background: #fef3c7; border-radius: 8px; padding: 12px 16px; margin-top: 12px;">
+                <p style="color: #92400e; font-size: 13px; margin: 0;">
+                    <strong>📋 Action recommandée :</strong> 
+                    Contacter le fournisseur pour commander les produits en rupture et informer le client du délai supplémentaire.
+                </p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Informations client -->
+        <div style="background: #f0f7ff; border-radius: 12px; padding: 20px; margin: 20px 0; border-left: 4px solid #0463f1;">
+            <h3 style="font-size: 14px; color: #0f172a; margin: 0 0 12px 0;">
+                👤 Informations client
+            </h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div>
+                    <p style="color: #64748b; font-size: 12px; margin: 0;">Nom complet</p>
+                    <p style="color: #0f172a; font-weight: 600; font-size: 14px; margin: 2px 0;">
+                        {{ order.customerName }}
+                    </p>
+                </div>
+                <div>
+                    <p style="color: #64748b; font-size: 12px; margin: 0;">Téléphone</p>
+                    <p style="color: #0f172a; font-weight: 600; font-size: 14px; margin: 2px 0;">
+                        {{ order.customerPhone }}
+                    </p>
+                </div>
+                <div>
+                    <p style="color: #64748b; font-size: 12px; margin: 0;">Email</p>
+                    <p style="color: #0463f1; font-weight: 600; font-size: 14px; margin: 2px 0;">
+                        {{ order.customerEmail }}
+                    </p>
+                </div>
+                <div>
+                    <p style="color: #64748b; font-size: 12px; margin: 0;">Méthode de paiement</p>
+                    <p style="color: #0f172a; font-weight: 600; font-size: 14px; margin: 2px 0;">
+                        {% if order.paymentMethod == 'feda_pay' %}
+                            💳 FedaPay
+                        {% else %}
+                            {{ order.paymentMethod|capitalize }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e5e7eb;">
+                <p style="color: #64748b; font-size: 12px; margin: 0;">Statut du paiement</p>
+                <span style="display: inline-block; padding: 4px 16px; border-radius: 50px; background: #dcfce7; color: #166534; font-weight: 700; font-size: 14px; margin-top: 4px;">
+                    ✅ PAYÉ
+                </span>
+                {% if order.status == 'pending' and stockIssues is defined and stockIssues is not empty %}
+                <span style="display: inline-block; padding: 4px 16px; border-radius: 50px; background: #fef3c7; color: #92400e; font-weight: 700; font-size: 14px; margin-top: 4px; margin-left: 8px;">
+                    ⚠️ EN ATTENTE (rupture)
+                </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Résumé de la commande avec indicateur de rupture -->
+        <div style="margin: 25px 0;">
+            <h3 style="font-size: 16px; color: #0f172a; margin: 0 0 15px 0;">
+                📦 Articles commandés
+            </h3>
+            
+            {% for item in order.orderItems %}
+                {% set isOutOfStock = false %}
+                {% if stockIssues is defined and stockIssues is not empty %}
+                    {% for issue in stockIssues %}
+                        {% if issue.product_id == item.productId or issue.product_name == item.productName %}
+                            {% set isOutOfStock = true %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                
+                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; {% if isOutOfStock %}background: #fef2f2; padding-left: 12px; border-radius: 6px;{% endif %}">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: #0f172a; font-size: 14px;">
+                            {{ item.productName }}
+                            {% if item.productId %}
+                                <span style="color: #94a3b8; font-size: 11px; font-weight: 400;">
+                                    (ID: {{ item.productId }})
+                                </span>
+                            {% endif %}
+                            {% if isOutOfStock %}
+                                <span style="display: inline-block; margin-left: 8px; padding: 0 8px; background: #dc2626; color: white; border-radius: 50px; font-size: 10px; font-weight: 700;">
+                                    RUPTURE
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div style="color: #94a3b8; font-size: 12px; margin-top: 2px;">
+                            Quantité: {{ item.quantity }}
+                            {% if item.promotionName %}
+                                <span style="display: inline-block; margin-left: 8px; padding: 0 8px; background: #dcfce7; color: #16a34a; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                                    🎯 {{ item.promotionName }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        {% if item.notes %}
+                            <div style="color: #64748b; font-size: 12px; margin-top: 4px; font-style: italic;">
+                                📝 {{ item.notes }}
+                            </div>
+                        {% endif %}
+                        {% if isOutOfStock %}
+                            <div style="color: #dc2626; font-size: 11px; margin-top: 4px; font-weight: 600;">
+                                ⚠️ Produit en rupture de stock - Commande en attente
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 700; color: #0f172a; font-size: 15px;">
+                            {{ item.totalPrice|number_format(0, ',', ' ') }} FCFA
+                        </div>
+                        <div style="color: #94a3b8; font-size: 11px;">
+                            {{ item.unitPrice|number_format(0, ',', ' ') }} FCFA/unité
+                        </div>
+                        {% if item.discountAmountValue > 0 %}
+                            <div style="color: #16a34a; font-size: 11px;">
+                                - {{ item.discountAmountValue|number_format(0, ',', ' ') }} FCFA (remise)
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Récapitulatif des totaux (détaillé) -->
+        <div style="background: #f8fafc; border-radius: 12px; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                <span style="color: #64748b;">Sous-total</span>
+                <span style="color: #475569; font-weight: 600;">{{ order.subtotal|number_format(0, ',', ' ') }} FCFA</span>
+            </div>
+            {% if order.discountTotal > 0 %}
+                <div style="display: flex; justify-content: space-between; padding: 6px 0; color: #16a34a;">
+                    <span>🎯 Remise totale</span>
+                    <span style="font-weight: 600;">- {{ order.discountTotal|number_format(0, ',', ' ') }} FCFA</span>
+                </div>
+            {% endif %}
+            <div style="display: flex; justify-content: space-between; padding: 6px 0; border-top: 2px solid #e5e7eb; margin-top: 8px; padding-top: 12px;">
+                <span style="font-weight: 700; color: #0f172a; font-size: 18px;">💰 Total payé</span>
+                <span style="font-weight: 700; color: #16a34a; font-size: 20px;">
+                    {{ order.totalAmount|number_format(0, ',', ' ') }} FCFA
+                </span>
+            </div>
+        </div>
+
+        <!-- Adresse de livraison -->
+        {% if order.deliveryAddress %}
+            <div style="margin: 25px 0; background: #f8fafc; border-radius: 12px; padding: 20px;">
+                <h3 style="font-size: 14px; color: #0f172a; margin: 0 0 10px 0;">
+                    📍 Adresse de livraison
+                </h3>
+                <p style="color: #475569; font-size: 14px; margin: 0; line-height: 1.6;">
+                    <strong>{{ order.customerName }}</strong><br>
+                    {{ order.deliveryAddress }}<br>
+                    {% if order.deliveryCity %}{{ order.deliveryCity }}{% endif %}
+                    {% if order.deliveryZipcode %} - {{ order.deliveryZipcode }}{% endif %}
+                    <br>{{ order.deliveryCountry|default('Bénin') }}
+                </p>
+                <p style="color: #64748b; font-size: 13px; margin-top: 10px;">
+                    📞 {{ order.customerPhone }}
+                </p>
+                {% if order.deliveryLatitude and order.deliveryLongitude %}
+                    <p style="color: #94a3b8; font-size: 12px; margin-top: 5px;">
+                        📍 Coordonnées GPS: {{ order.deliveryLatitude }}, {{ order.deliveryLongitude }}
+                    </p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <!-- Dates importantes -->
+        <div style="background: #f8fafc; border-radius: 12px; padding: 15px; margin: 20px 0;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <p style="color: #94a3b8; font-size: 11px; margin: 0;">Date de commande</p>
+                    <p style="color: #0f172a; font-weight: 600; font-size: 13px; margin: 2px 0;">
+                        {{ order.createdAt|date('d/m/Y H:i') }}
+                    </p>
+                </div>
+                <div>
+                    <p style="color: #94a3b8; font-size: 11px; margin: 0;">Paiement confirmé</p>
+                    <p style="color: #16a34a; font-weight: 600; font-size: 13px; margin: 2px 0;">
+                        {{ "now"|date('d/m/Y H:i') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ BOUTONS D'ACTION POUR LE SUPER ADMIN -->
+        <div style="text-align: center; margin-top: 30px; background: {% if stockIssues is defined and stockIssues is not empty %}#fef2f2{% else %}#f0f7ff{% endif %}; border-radius: 12px; padding: 25px;">
+            <p style="color: #475569; font-size: 14px; margin: 0 0 15px 0; font-weight: 600;">
+                {% if stockIssues is defined and stockIssues is not empty %}
+                    🚨 Action urgente : Rupture de stock détectée
+                {% else %}
+                    🔔 Action requise : Traitez cette commande
+                {% endif %}
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                <a href="{{ absolute_url(path('app_orders_show', {id: order.id})) }}" 
+                   style="display: inline-block; background: {% if stockIssues is defined and stockIssues is not empty %}#dc2626{% else %}#0463f1{% endif %}; color: white; padding: 14px 45px; 
+                          border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;
+                          box-shadow: 0 4px 12px rgba(4, 99, 241, 0.3);">
+                    🔗 Voir la commande dans l'admin
+                </a>
+                <a href="{{ absolute_url(path('app_orders_index')) }}" 
+                   style="display: inline-block; color: #0463f1; text-decoration: none; font-weight: 600; font-size: 14px;">
+                    📊 Accéder à la liste des commandes
+                </a>
+                <a href="{{ absolute_url(path('app_dashboard')) }}" 
+                   style="display: inline-block; color: #64748b; text-decoration: none; font-size: 13px;">
+                    🏠 Tableau de bord
+                </a>
+            </div>
+        </div>
+
+        <!-- Résumé rapide avec statut -->
+        <div style="background: {% if stockIssues is defined and stockIssues is not empty %}#fef2f2{% else %}#fef3c7{% endif %}; border-radius: 12px; padding: 15px; margin: 20px 0; border-left: 4px solid {% if stockIssues is defined and stockIssues is not empty %}#dc2626{% else %}#f59e0b{% endif %};">
+            <p style="color: {% if stockIssues is defined and stockIssues is not empty %}#991b1b{% else %}#92400e{% endif %}; font-size: 13px; margin: 0; text-align: center;">
+                {% if stockIssues is defined and stockIssues is not empty %}
+                    🚨 <strong>Action urgente :</strong> 
+                    {{ stockIssues|length }} produit(s) en rupture de stock. 
+                    Contactez le fournisseur et informez le client.
+                {% else %}
+                    ⚡ <strong>Action rapide :</strong> 
+                    Connectez-vous au back-office pour valider l'expédition de la commande #{{ order.orderNumber }}.
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; padding-top: 30px; border-top: 2px solid #f1f5f9; color: #94a3b8; font-size: 12px;">
+            <p style="margin: 0; font-weight: 600; color: #475569;">
+                {{ appName }} - Notification administrateur
+            </p>
+            <p style="margin: 5px 0;">
+                Cet email est envoyé automatiquement lors d'un nouveau paiement.
+            </p>
+            <p style="margin: 5px 0;">
+                <a href="#" style="color: #94a3b8; text-decoration: none;">Gérer les notifications</a>
+                &nbsp;•&nbsp;
+                <a href="#" style="color: #94a3b8; text-decoration: none;">Centre d'aide</a>
+            </p>
+            <p style="margin: 10px 0 0 0; font-size: 11px; color: #d1d5db;">
+                Commande #{{ order.orderNumber }} | {{ "now"|date('d/m/Y H:i') }}
+            </p>
+        </div>
+    </div>
+</body>
+</html>

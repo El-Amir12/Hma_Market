@@ -1,4 +1,11 @@
+# config/packages/twig.yaml
 twig:
+    default_path: '%kernel.project_dir%/templates'
+    globals:
+        # ✅ Variables globales pour les compteurs
+        favorites_count: '@App\Twig\GlobalVariables'
+        cart_count: '@App\Twig\GlobalVariables'
+    
     file_name_pattern: '*.twig'
 
 when@test:

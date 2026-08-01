@@ -16,11 +16,10 @@
         --gray-300: #cbd5e1;
         --gray-200: #e5e7eb;
         --gray-100: #f1f5f9;
+        --success-color: #16a34a;
     }
 
-    body {
-        background: #f8fafc;
-    }
+    body { background: #f8fafc; }
 
     .page-header {
         background: linear-gradient(135deg, #0463f1 0%, #667eea 100%);
@@ -31,23 +30,8 @@
         box-shadow: 0 4px 20px rgba(4, 99, 241, 0.3);
     }
 
-    .page-header h1 {
-        font-weight: 800;
-        font-size: 2rem;
-    }
-
-    .page-header p {
-        opacity: 0.9;
-        margin-bottom: 0;
-    }
-
-    .search-card {
-        background: white;
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        border: 1px solid #e5e7eb;
-    }
+    .page-header h1 { font-weight: 800; font-size: 2rem; }
+    .page-header p { opacity: 0.9; margin-bottom: 0; }
 
     .mode-tabs {
         display: flex;
@@ -82,22 +66,10 @@
         transform: translateY(-2px);
     }
 
-    .mode-tab i {
-        margin-right: 0.5rem;
-    }
+    .mode-tab i { margin-right: 0.5rem; }
 
-    /* ============================================================ */
-    /* STYLES SELECT2 - Version complète et fiable                   */
-    /* ============================================================ */
-    
-    /* Conteneur principal */
-    .select2-container {
-        display: block !important;
-        width: 100% !important;
-        z-index: 1050 !important;
-    }
-
-    /* Sélection unique */
+    /* Select2 Styles */
+    .select2-container { display: block !important; width: 100% !important; z-index: 1050 !important; }
     .select2-container--default .select2-selection--single {
         display: block !important;
         height: 48px !important;
@@ -105,20 +77,13 @@
         border: 2px solid #e5e7eb !important;
         border-radius: 12px !important;
         background-color: white !important;
-        background-clip: padding-box !important;
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
     }
-
-    .select2-container--default .select2-selection--single:hover {
-        border-color: var(--primary-color) !important;
-    }
-
+    .select2-container--default .select2-selection--single:hover { border-color: var(--primary-color) !important; }
     .select2-container--default.select2-container--open .select2-selection--single {
         border-color: var(--primary-color) !important;
         box-shadow: 0 0 0 3px rgba(4, 99, 241, 0.08) !important;
     }
-
-    /* Texte rendu */
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         display: block !important;
         line-height: 44px !important;
@@ -130,13 +95,7 @@
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
     }
-
-    /* Placeholder */
-    .select2-container--default .select2-selection--single .select2-selection__placeholder {
-        color: #94a3b8 !important;
-    }
-
-    /* Flèche */
+    .select2-container--default .select2-selection--single .select2-selection__placeholder { color: #94a3b8 !important; }
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         display: block !important;
         height: 44px !important;
@@ -146,7 +105,6 @@
         top: 0 !important;
         bottom: 0 !important;
     }
-
     .select2-container--default .select2-selection--single .select2-selection__arrow b {
         border-color: #64748b transparent transparent transparent !important;
         border-style: solid !important;
@@ -159,13 +117,10 @@
         top: 50% !important;
         width: 0 !important;
     }
-
     .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
         border-color: transparent transparent #64748b transparent !important;
         border-width: 0 4px 5px 4px !important;
     }
-
-    /* Dropdown */
     .select2-dropdown {
         display: block !important;
         border: 2px solid #e5e7eb !important;
@@ -176,8 +131,6 @@
         margin-top: 4px !important;
         box-shadow: 0 4px 20px rgba(0,0,0,0.1) !important;
     }
-
-    /* Options */
     .select2-results__option {
         display: block !important;
         padding: 0.6rem 1rem !important;
@@ -185,153 +138,65 @@
         font-size: 0.95rem !important;
         transition: background-color 0.15s ease !important;
     }
-
     .select2-results__option--highlighted {
         background-color: var(--primary-color) !important;
         color: white !important;
     }
-
     .select2-results__option[aria-selected="true"] {
         background-color: var(--primary-light) !important;
         color: var(--primary-color) !important;
     }
 
-    .select2-results__option .text-muted {
-        color: #94a3b8 !important;
-        font-size: 0.8rem !important;
+    /* Filters */
+    .filters-container {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid var(--gray-200);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
-    .select2-results__option--highlighted .text-muted {
-        color: rgba(255,255,255,0.8) !important;
+    .filters-container .filter-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-end;
     }
 
-    /* Recherche dans la dropdown */
-    .select2-search--dropdown {
-        padding: 0.5rem !important;
+    .filters-container .filter-item { flex: 1; min-width: 180px; }
+
+    .filter-item label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+        display: block;
+        color: var(--dark-color);
     }
 
-    .select2-search--dropdown .select2-search__field {
-        border: 2px solid #e5e7eb !important;
-        border-radius: 8px !important;
-        padding: 0.5rem 1rem !important;
-        font-size: 0.95rem !important;
-        height: 40px !important;
+    .filter-item label i { color: var(--primary-color); }
+
+    .filter-item .form-select,
+    .filter-item .form-control {
+        border-radius: 12px;
+        border: 2px solid var(--gray-200);
+        padding: 0.6rem 1rem;
+        height: 48px;
+        transition: all 0.3s ease;
+        background-color: white;
     }
 
-    .select2-search--dropdown .select2-search__field:focus {
-        border-color: var(--primary-color) !important;
-        box-shadow: 0 0 0 3px rgba(4, 99, 241, 0.08) !important;
-        outline: none !important;
+    .filter-item .form-control:focus,
+    .filter-item .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(4, 99, 241, 0.08);
+        outline: none;
     }
 
-    /* États désactivés */
-    .select2-container--default .select2-selection--single[aria-disabled="true"] {
-        background-color: #f1f5f9 !important;
-        opacity: 0.6 !important;
-        cursor: not-allowed !important;
-    }
-
-    /* Effacement */
-    .select2-container--default .select2-selection--single .select2-selection__clear {
-        display: none !important;
-    }
-
-    /* Forcer l'affichage des selects originaux */
-    select.form-select {
-        display: block !important;
-        width: 100% !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-
-    /* Styles spécifiques pour les conteneurs de filtres */
-    .filter-item .select2-container--default .select2-selection--single {
-        height: 48px !important;
-        border-radius: 12px !important;
-        border: 2px solid var(--gray-200) !important;
-    }
-
-    .filter-item .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 44px !important;
-    }
-
-    .filter-item .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 44px !important;
-    }
-
-    /* Styles pour les produits */
-    .product-select-container .select2-container--default .select2-selection--single {
-        height: 52px !important;
-        border-radius: 12px !important;
-        border: 2px solid var(--gray-200) !important;
-    }
-
-    .product-select-container .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 48px !important;
-        font-size: 1rem !important;
-    }
-
-    .product-select-container .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 48px !important;
-    }
-
-    /* Options des produits dans Select2 */
-    .product-info {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        width: 100% !important;
-        padding: 2px 0 !important;
-    }
-
-    .product-info .product-name {
-        font-weight: 500 !important;
-    }
-
-    .product-info .product-price {
-        color: var(--primary-color) !important;
-        font-weight: 600 !important;
-        font-size: 0.9rem !important;
-    }
-
-    .product-info .product-stock {
-        font-size: 0.7rem !important;
-        padding: 0.1rem 0.5rem !important;
-        border-radius: 50px !important;
-        margin-left: 0.5rem !important;
-    }
-
-    .product-info .product-stock.in-stock {
-        background: #dcfce7 !important;
-        color: #16a34a !important;
-    }
-
-    .product-info .product-stock.out-of-stock {
-        background: #fee2e2 !important;
-        color: #dc2626 !important;
-    }
-
-    .product-info .product-meta {
-        font-size: 0.75rem !important;
-        color: var(--gray-500) !important;
-        margin-left: 0.5rem !important;
-    }
-
-    .product-info .prescription-badge {
-        font-size: 0.65rem !important;
-        padding: 0.1rem 0.5rem !important;
-        border-radius: 50px !important;
-        background: #fef3c7 !important;
-        color: #92400e !important;
-        margin-left: 0.5rem !important;
-    }
-
-    /* Autres styles */
     .filter-actions {
         display: flex;
         gap: 0.75rem;
-        align-items: flex-end;
-        margin-top: 0.5rem;
+        align-items: center;
+        flex-wrap: wrap;
     }
 
     .filter-actions .btn {
@@ -343,6 +208,7 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        justify-content: center;
     }
 
     .filter-actions .btn-primary {
@@ -370,6 +236,16 @@
         transform: translateY(-2px);
     }
 
+    .pharmacy-select-container {
+        display: none;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--gray-200);
+    }
+
+    .pharmacy-select-container.visible { display: block; }
+
+    /* Empty State */
     .empty-state {
         text-align: center;
         padding: 4rem 2rem;
@@ -378,21 +254,190 @@
         border: 2px dashed #e5e7eb;
     }
 
-    .empty-state i {
-        font-size: 4rem;
-        color: #cbd5e1;
-        margin-bottom: 1rem;
+    .empty-state i { font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem; }
+    .empty-state h4 { color: var(--dark-color); font-weight: 700; }
+    .empty-state .text-muted { color: var(--gray-500); }
+
+    /* Guard Badge */
+    .guard-badge {
+        background: #dcfce7;
+        color: #16a34a;
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
     }
 
-    .empty-state h4 {
+    .guard-badge.active {
+        animation: pulse-guard 2s infinite;
+    }
+
+    .guard-badge.inactive {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    @keyframes pulse-guard {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(0.98); }
+    }
+
+    /* Pharmacy Grid */
+    .pharmacy-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .pharmacy-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid var(--gray-200);
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .pharmacy-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--success-color), #22c55e);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .pharmacy-card:hover::before { opacity: 1; }
+    .pharmacy-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        border-color: var(--success-color);
+    }
+
+    .pharmacy-card .pharmacy-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        background: #dcfce7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--success-color);
+        flex-shrink: 0;
+    }
+
+    .pharmacy-card .pharmacy-name {
+        font-weight: 700;
+        font-size: 1.1rem;
         color: var(--dark-color);
+        margin-bottom: 0.25rem;
+    }
+
+    .pharmacy-card .pharmacy-address {
+        font-size: 0.85rem;
+        color: var(--gray-500);
+        margin-bottom: 0.2rem;
+    }
+
+    .pharmacy-card .pharmacy-address i { width: 18px; color: #94a3b8; }
+
+    .pharmacy-card .pharmacy-actions {
+        margin-top: 0.75rem;
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .pharmacy-card .pharmacy-actions .btn-sm {
+        border-radius: 50px;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .section-title .badge-count {
+        background: #dcfce7;
+        color: var(--success-color);
+        font-weight: 600;
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+    }
+
+    .section-title i { color: var(--success-color); }
+
+    /* Pagination */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2rem;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .pagination-container .page-link {
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--gray-200);
+        color: var(--dark-color);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        min-width: 40px;
+        justify-content: center;
+    }
+
+    .pagination-container .page-link:hover {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    .pagination-container .page-link.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
         font-weight: 700;
     }
 
-    .empty-state .text-muted {
-        color: var(--gray-500);
+    .pagination-container .page-link.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
     }
 
+    .pagination-container .page-info {
+        color: var(--gray-500);
+        font-size: 0.85rem;
+        padding: 0 0.5rem;
+    }
+
+    /* Pharmacy Detail */
     .pharmacy-selected-info {
         background: var(--primary-light);
         border-radius: 12px;
@@ -411,41 +456,395 @@
         color: var(--dark-color);
     }
 
-    .pharmacy-selected-info .pharmacy-name i {
-        color: var(--primary-color);
+    .pharmacy-selected-info .pharmacy-name i { color: var(--primary-color); }
+
+    /* Product Filters */
+    .product-filters-container {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid var(--gray-200);
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
-    .guard-badge {
-        background: #dcfce7;
-        color: #16a34a;
-        padding: 0.2rem 0.8rem;
-        border-radius: 50px;
-        font-size: 0.7rem;
+    .product-filters-container .filter-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .product-filters-container .filter-item { flex: 1; min-width: 180px; }
+
+    .product-filters-container .filter-item label {
         font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+        display: block;
+        color: var(--dark-color);
+    }
+
+    .product-filters-container .filter-item label i { color: var(--primary-color); }
+
+    .product-filters-container .filter-item .form-select,
+    .product-filters-container .filter-item .form-control {
+        border-radius: 12px;
+        border: 2px solid var(--gray-200);
+        padding: 0.6rem 1rem;
+        height: 48px;
+        transition: all 0.3s ease;
+        background-color: white;
+    }
+
+    .prescription-check {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding-top: 0.5rem;
+        height: 48px;
+    }
+
+    .prescription-check input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--primary-color);
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .prescription-check label {
+        cursor: pointer;
+        font-weight: 500;
+        margin-bottom: 0;
+        color: var(--dark-color);
+    }
+
+    .product-select-container {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid var(--gray-200);
+        margin-top: 1.5rem;
+    }
+
+    .product-select-container .form-label { font-size: 1rem; }
+    .product-select-container .badge { font-size: 0.8rem; padding: 0.25rem 0.75rem; }
+
+    .product-status {
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
         display: inline-flex;
         align-items: center;
-        gap: 0.3rem;
+        gap: 0.5rem;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
+    .product-status.in-stock {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .product-status.out-of-stock {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .prescription-badge {
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
+        background: #fef3c7;
+        color: #92400e;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .product-info {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        padding: 2px 0 !important;
+    }
+
+    .product-info .product-name { font-weight: 500 !important; }
+    .product-info .product-price {
+        color: var(--primary-color) !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+    }
+
+    .active-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--gray-200);
+    }
+
+    .active-filters .filter-tag {
+        background: var(--primary-light);
+        color: var(--primary-color);
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .active-filters .filter-tag .remove-filter {
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .active-filters .filter-tag .remove-filter:hover { opacity: 1; }
+
+    .filter-status {
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--gray-500);
+    }
+
+    .filter-status .applied {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    /* ============================================================ */
+    /* ✅ RESPONSIVE - CORRECTIONS POUR MOBILE                       */
+    /* ============================================================ */
+    @media (max-width: 992px) {
         .page-header { padding: 1.5rem; }
+        .page-header h1 { font-size: 1.8rem; }
+    }
+
+    @media (max-width: 768px) {
+        .page-header { padding: 1.25rem; }
         .page-header h1 { font-size: 1.5rem; }
-        .mode-tab { padding: 0.5rem 1rem; font-size: 0.85rem; }
-        .search-card { padding: 1rem; }
-        .mode-tabs { flex-direction: column; }
-        .filter-actions { flex-direction: column; width: 100%; }
-        .filter-actions .btn { width: 100%; justify-content: center; }
+        .page-header p { font-size: 0.9rem; }
         
+        .mode-tabs { flex-direction: column; }
+        .mode-tab { 
+            padding: 0.6rem 1rem; 
+            font-size: 0.85rem;
+            width: 100%;
+        }
+
+        /* ✅ FILTRES - Centrage et alignement sur mobile */
+        .filters-container { padding: 1rem; }
+        
+        .filters-container .filter-group {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+        }
+
+        .filters-container .filter-item {
+            min-width: 100%;
+            width: 100%;
+        }
+
+        .filters-container .filter-item label {
+            font-size: 0.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .filters-container .filter-item .form-select,
+        .filters-container .filter-item .form-control {
+            height: 44px;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.75rem;
+            width: 100%;
+        }
+
+        /* ✅ SELECT2 sur mobile */
         .select2-container--default .select2-selection--single {
-            height: 48px !important;
+            height: 44px !important;
         }
         .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 44px !important;
-            font-size: 0.95rem !important;
+            line-height: 40px !important;
+            font-size: 0.9rem !important;
         }
         .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 44px !important;
+            height: 40px !important;
+        }
+
+        /* ✅ BOUTONS - Centrage et pleine largeur */
+        .filter-actions {
+            flex-direction: column;
+            width: 100%;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .filter-actions .btn {
+            width: 100%;
+            justify-content: center;
+            height: 44px;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+
+        /* ✅ SELECTEUR PHARMACIE */
+        .pharmacy-select-container {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+        }
+
+        .pharmacy-select-container .filter-group {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        /* ✅ GRILLE PHARMACIES */
+        .pharmacy-grid { 
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .pharmacy-card { padding: 1rem; }
+        .pharmacy-card .pharmacy-name { font-size: 1rem; }
+        .pharmacy-card .pharmacy-address { font-size: 0.8rem; }
+        .pharmacy-card .pharmacy-actions { 
+            flex-direction: column;
+            width: 100%;
+        }
+        .pharmacy-card .pharmacy-actions .btn-sm { 
+            width: 100%; 
+            text-align: center;
+            justify-content: center;
+        }
+
+        /* ✅ PAGINATION */
+        .pagination-container .page-link { 
+            padding: 0.4rem 0.8rem; 
+            font-size: 0.85rem;
+            min-width: 35px;
+        }
+
+        /* ✅ PRODUCT FILTERS */
+        .product-filters-container { padding: 1rem; }
+        .product-filters-container .filter-group {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .product-filters-container .filter-item {
+            min-width: 100%;
+            width: 100%;
+        }
+        .product-filters-container .filter-item .form-select,
+        .product-filters-container .filter-item .form-control {
+            height: 44px;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.75rem;
+            width: 100%;
+        }
+
+        .prescription-check {
+            height: auto;
+            padding-top: 0;
+            padding-bottom: 0.5rem;
+        }
+
+        .prescription-check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ✅ PHARMACY SELECTED INFO */
+        .pharmacy-selected-info { 
+            flex-direction: column; 
+            align-items: flex-start;
+            padding: 0.75rem 1rem;
+            gap: 0.75rem;
+        }
+        .pharmacy-selected-info .d-flex {
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .pharmacy-selected-info .btn-sm {
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+        }
+
+        /* ✅ PRODUCT SELECT */
+        .product-select-container { padding: 1rem; }
+        .product-select-container .form-label { font-size: 0.9rem; }
+
+        /* ✅ ACTIVE FILTERS */
+        .active-filters {
+            gap: 0.3rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+        }
+        .active-filters .filter-tag {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.6rem;
+        }
+
+        /* ✅ EMPTY STATE */
+        .empty-state { padding: 2rem 1rem; }
+        .empty-state i { font-size: 3rem; }
+        .empty-state h4 { font-size: 1.2rem; }
+
+        /* ✅ SECTION TITLE */
+        .section-title { font-size: 1rem; }
+        .section-title .badge-count { font-size: 0.75rem; }
+    }
+
+    @media (max-width: 480px) {
+        .page-header { padding: 1rem; }
+        .page-header h1 { font-size: 1.2rem; }
+        .page-header p { font-size: 0.8rem; }
+        
+        .mode-tab { 
+            padding: 0.5rem 0.75rem; 
+            font-size: 0.75rem;
+        }
+
+        .filters-container { padding: 0.75rem; }
+        .filters-container .filter-item .form-select,
+        .filters-container .filter-item .form-control {
+            height: 40px;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.6rem;
+        }
+
+        .filter-actions .btn {
+            height: 40px;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.75rem;
+        }
+
+        .guard-badge { font-size: 0.6rem; padding: 0.15rem 0.6rem; }
+        
+        .pharmacy-card .pharmacy-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+        .pharmacy-card .pharmacy-actions .btn-sm {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+        }
+
+        .product-filters-container { padding: 0.75rem; }
+        .product-filters-container .filter-item .form-select,
+        .product-filters-container .filter-item .form-control {
+            height: 40px;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.6rem;
         }
     }
 </style>
@@ -455,11 +854,13 @@
 <div class="page-header">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h1><i class="fas fa-hospital me-3"></i>Pharmacies</h1>
-            <p>Trouvez une pharmacie de garde ou recherchez un produit.</p>
+            <h1><i class="fas fa-{{ mode == 'pharmacy' ? 'shield-alt' : 'box' }} me-3"></i>
+                {{ mode == 'pharmacy' ? 'Pharmacies de garde' : 'Rechercher un produit' }}
+            </h1>
+            <p>{{ mode == 'pharmacy' ? 'Trouvez une pharmacie de garde près de chez vous.' : 'Recherchez un produit dans une pharmacie de garde.' }}</p>
         </div>
         <div class="col-md-4 text-end d-none d-md-block">
-            <i class="fas fa-search-location" style="font-size: 3.5rem; opacity: 0.3;"></i>
+            <i class="fas fa-{{ mode == 'pharmacy' ? 'clock' : 'search-location' }}" style="font-size: 3.5rem; opacity: 0.3;"></i>
         </div>
     </div>
 </div>
@@ -468,7 +869,7 @@
     <a href="{{ path('marketplace_pharmacy_search', {mode: 'pharmacy'}) }}" 
        class="mode-tab {{ mode == 'pharmacy' ? 'active' : '' }}" 
        data-mode="pharmacy">
-        <i class="fas fa-clock"></i> Pharmacies de garde
+        <i class="fas fa-shield-alt"></i> Pharmacies de garde
     </a>
     <a href="{{ path('marketplace_pharmacy_search', {mode: 'product'}) }}" 
        class="mode-tab {{ mode == 'product' ? 'active' : '' }}" 
@@ -477,45 +878,546 @@
     </a>
 </div>
 
-{# Filtres communs #}
-{{ include('marketplace/pharmacy/_filters.html.twig', {
-    mode: mode,
-    selectedCountry: selectedCountry,
-    selectedCity: selectedCity,
-    selectedPharmacy: selectedPharmacy,
-    pharmacies: pharmacies,
-    searchPharmacy: searchPharmacy|default('')
-}) }}
+{# ============================================================ #}
+{# FILTRES COMMUNS (Pays et Ville)                              #}
+{# ============================================================ #}
+<div class="filters-container">
+    <form method="get" id="filterForm" class="filter-group">
+        <input type="hidden" name="mode" value="{{ mode }}">
+        
+        <div class="filter-item">
+            <label for="countrySelect">
+                <i class="fas fa-globe text-primary me-1"></i> Pays
+            </label>
+            <select id="countrySelect" class="form-select">
+                <option value="">-- Sélectionnez un pays --</option>
+            </select>
+        </div>
+        
+        <div class="filter-item">
+            <label for="citySelect">
+                <i class="fas fa-city text-primary me-1"></i> Ville
+            </label>
+            <select id="citySelect" class="form-select" disabled>
+                <option value="">-- Sélectionnez une ville --</option>
+            </select>
+        </div>
 
-{# Résultats #}
+        {# ✅ MODE PHARMACIE : Champ de recherche supplémentaire #}
+        {% if mode == 'pharmacy' %}
+        <div class="filter-item">
+            <label for="searchPharmacyInput">
+                <i class="fas fa-search text-primary me-1"></i> Rechercher
+            </label>
+            <input type="text" id="searchPharmacyInput" class="form-control" 
+                   placeholder="Nom de la pharmacie..." 
+                   value="{{ searchPharmacy|default('') }}">
+        </div>
+        {% endif %}
+
+        <div class="filter-actions">
+            <button type="button" id="applyFiltersBtn" class="btn btn-primary">
+                <i class="fas fa-check"></i> Appliquer
+            </button>
+            <button type="button" id="clearFiltersBtn" class="btn btn-outline-secondary">
+                <i class="fas fa-eraser"></i> Effacer
+            </button>
+        </div>
+    </form>
+
+    {# ✅ MODE PRODUIT : Sélecteur de pharmacie #}
+    <div id="pharmacySelector" class="pharmacy-select-container {% if mode == 'product' and selectedCity %}visible{% endif %}">
+        <div class="filter-group" style="margin-top: 0;">
+            <div class="filter-item" style="flex: 1;">
+                <label for="pharmacySelect">
+                    <i class="fas fa-store text-primary me-1"></i> Pharmacie
+                </label>
+                <select id="pharmacySelect" class="form-select" {% if not selectedCity %}disabled{% endif %}>
+                    <option value="">-- Sélectionnez une pharmacie --</option>
+                    {% if pharmacies|length > 0 %}
+                        {% for pharmacy in pharmacies %}
+                            <option value="{{ pharmacy.id }}" {% if selectedPharmacy == pharmacy.id %}selected{% endif %}>
+                                {{ pharmacy.name }}
+                            </option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ============================================================ #}
+{# RÉSULTATS                                                     #}
+{# ============================================================ #}
 <div id="resultsContainer" class="mt-4">
     {% if mode == 'pharmacy' %}
-        {{ include('marketplace/pharmacy/_pharmacy_mode.html.twig', {
-            selectedPharmacyData: selectedPharmacyData,
-            selectedCountry: selectedCountry,
-            selectedCity: selectedCity,
-            pharmacies: pharmacies,
-            searchPharmacy: searchPharmacy|default(''),
-            currentPage: currentPage,
-            totalPages: totalPages,
-            totalPharmacies: totalPharmacies,
-        }) }}
+        {# ============================================================ #}
+        {# MODE PHARMACIE DE GARDE                                       #}
+        {# ============================================================ #}
+        {% if selectedPharmacyData %}
+            {# Détail d'une pharmacie #}
+            {{ include('marketplace/pharmacy/_pharmacy_detail.html.twig', {
+                selectedPharmacyData: selectedPharmacyData,
+                selectedCountry: selectedCountry,
+                selectedCity: selectedCity,
+                searchPharmacy: searchPharmacy|default('')
+            }) }}
+        {% elseif selectedCountry and selectedCity %}
+            {# Liste des pharmacies DE GARDE #}
+            {% if pharmacies|length > 0 %}
+                <div class="section-title">
+                    <i class="fas fa-clock me-2"></i>
+                    Pharmacies de garde à <span class="text-primary">{{ selectedCity }}</span>
+                    <span class="badge-count">
+                        <i class="fas fa-check-circle me-1"></i>
+                        {{ totalPharmacies }} pharmacie(s) de garde
+                    </span>
+                </div>
+
+                <div class="pharmacy-grid">
+                    {% for pharmacy in pharmacies %}
+                        <div class="pharmacy-card">
+                            <div class="d-flex gap-3 align-items-start">
+                                <div class="pharmacy-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="pharmacy-name">{{ pharmacy.name }}</div>
+                                    <div class="pharmacy-address">
+                                        <i class="fas fa-map-marker-alt"></i> {{ pharmacy.address }}, {{ pharmacy.city }}
+                                    </div>
+                                    {% if pharmacy.phone %}
+                                        <div class="pharmacy-address">
+                                            <i class="fas fa-phone"></i> {{ pharmacy.phone }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="mt-2">
+                                        <span class="guard-badge active">
+                                            <i class="fas fa-clock"></i> En garde maintenant
+                                        </span>
+                                        {% if pharmacy.guardDays is defined and pharmacy.guardDays|length > 0 %}
+                                            <span class="text-muted ms-2" style="font-size: 0.75rem;">
+                                                {% set daysList = [] %}
+                                                {% for dayKey, dayData in pharmacy.guardDays %}
+                                                    {% set daysList = daysList|merge([dayData.day ~ ' (' ~ dayData.start ~ '-' ~ dayData.end ~ ')']) %}
+                                                {% endfor %}
+                                                {{ daysList|join(', ') }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="pharmacy-actions">
+                                        <a href="{{ path('marketplace_pharmacy_search', {
+                                            mode: 'pharmacy', 
+                                            country: selectedCountry, 
+                                            city: selectedCity, 
+                                            pharmacy: pharmacy.id,
+                                            search_pharmacy: searchPharmacy|default('')
+                                        }) }}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-info-circle me-1"></i> Détails
+                                        </a>
+                                        <a href="{{ path('marketplace_pharmacy_search', {
+                                            mode: 'product', 
+                                            country: selectedCountry, 
+                                            city: selectedCity, 
+                                            pharmacy: pharmacy.id
+                                        }) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-box me-1"></i> Voir produits
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {# Pagination #}
+                {% if totalPages > 1 %}
+                    <div class="pagination-container">
+                        {% if currentPage > 1 %}
+                            <a href="{{ path('marketplace_pharmacy_search', {
+                                mode: 'pharmacy', 
+                                country: selectedCountry, 
+                                city: selectedCity, 
+                                page: currentPage - 1, 
+                                search_pharmacy: searchPharmacy|default('')
+                            }) }}" class="page-link">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        {% else %}
+                            <span class="page-link disabled"><i class="fas fa-chevron-left"></i></span>
+                        {% endif %}
+
+                        {% set startPage = max(1, currentPage - 2) %}
+                        {% set endPage = min(totalPages, currentPage + 2) %}
+                        
+                        {% if startPage > 1 %}
+                            <a href="{{ path('marketplace_pharmacy_search', {
+                                mode: 'pharmacy', 
+                                country: selectedCountry, 
+                                city: selectedCity, 
+                                page: 1, 
+                                search_pharmacy: searchPharmacy|default('')
+                            }) }}" class="page-link">1</a>
+                            {% if startPage > 2 %}
+                                <span class="page-link disabled">…</span>
+                            {% endif %}
+                        {% endif %}
+
+                        {% for page in startPage..endPage %}
+                            <a href="{{ path('marketplace_pharmacy_search', {
+                                mode: 'pharmacy', 
+                                country: selectedCountry, 
+                                city: selectedCity, 
+                                page: page, 
+                                search_pharmacy: searchPharmacy|default('')
+                            }) }}" class="page-link {{ page == currentPage ? 'active' : '' }}">
+                                {{ page }}
+                            </a>
+                        {% endfor %}
+
+                        {% if endPage < totalPages %}
+                            {% if endPage < totalPages - 1 %}
+                                <span class="page-link disabled">…</span>
+                            {% endif %}
+                            <a href="{{ path('marketplace_pharmacy_search', {
+                                mode: 'pharmacy', 
+                                country: selectedCountry, 
+                                city: selectedCity, 
+                                page: totalPages, 
+                                search_pharmacy: searchPharmacy|default('')
+                            }) }}" class="page-link">{{ totalPages }}</a>
+                        {% endif %}
+
+                        {% if currentPage < totalPages %}
+                            <a href="{{ path('marketplace_pharmacy_search', {
+                                mode: 'pharmacy', 
+                                country: selectedCountry, 
+                                city: selectedCity, 
+                                page: currentPage + 1, 
+                                search_pharmacy: searchPharmacy|default('')
+                            }) }}" class="page-link">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        {% else %}
+                            <span class="page-link disabled"><i class="fas fa-chevron-right"></i></span>
+                        {% endif %}
+
+                        <span class="page-info">Page {{ currentPage }} sur {{ totalPages }}</span>
+                    </div>
+                {% endif %}
+
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-clock" style="color: #f59e0b;"></i>
+                    <h4>Aucune pharmacie de garde trouvée</h4>
+                    <p class="text-muted">
+                        {% if searchPharmacy|default('') %}
+                            Aucune pharmacie de garde ne correspond à "{{ searchPharmacy }}" dans cette ville.
+                        {% else %}
+                            Aucune pharmacie de garde disponible dans cette ville pour le moment.
+                        {% endif %}
+                    </p>
+                    <div class="mt-3">
+                        <small class="text-muted d-block mb-2">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Les pharmacies de garde sont affichées automatiquement en fonction de l'heure actuelle.
+                        </small>
+                        {% if searchPharmacy|default('') %}
+                            <a href="{{ path('marketplace_pharmacy_search', {
+                                mode: 'pharmacy', 
+                                country: selectedCountry, 
+                                city: selectedCity
+                            }) }}" class="btn btn-primary mt-2">
+                                <i class="fas fa-undo me-1"></i> Voir toutes les pharmacies de garde
+                            </a>
+                        {% else %}
+                            <a href="{{ path('marketplace_pharmacy_search', {mode: 'pharmacy'}) }}" class="btn btn-primary mt-2">
+                                <i class="fas fa-undo me-1"></i> Nouvelle recherche
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-search-location"></i>
+                <h4>Sélectionnez un pays et une ville</h4>
+                <p class="text-muted">Choisissez un pays puis une ville pour voir les pharmacies de garde disponibles.</p>
+            </div>
+        {% endif %}
+
     {% else %}
-        {{ include('marketplace/pharmacy/_product_mode.html.twig', {
-            selectedPharmacyData: selectedPharmacyData,
-            selectedCountry: selectedCountry,
-            selectedCity: selectedCity,
-            selectedPharmacy: selectedPharmacy,
-            categories: categories,
-            products: products,
-            forms: forms,
-            selectedCategory: selectedCategory,
-            selectedForm: selectedForm,
-            selectedDosage: selectedDosage,
-            prescriptionRequired: prescriptionRequired,
-            filterApplied: filterApplied,
-        }) }}
+        {# ============================================================ #}
+        {# MODE RECHERCHE DE PRODUIT                                     #}
+        {# ============================================================ #}
+        {% if selectedPharmacyData %}
+            {# Pharmacie sélectionnée #}
+            <div class="pharmacy-selected-info">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="fas fa-store" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                    <div>
+                        <span class="pharmacy-name">
+                            <i class="fas fa-hospital me-1"></i>
+                            {{ selectedPharmacyData.companyName }}
+                        </span>
+                        <span class="text-muted ms-2">- {{ selectedPharmacyData.city }}</span>
+                        
+                        {# ✅ Vérifier les périodes de garde #}
+                        {% set guardPeriods = selectedPharmacyData.guardPeriods|default([]) %}
+                        {% if guardPeriods is iterable and guardPeriods|length > 0 %}
+                            {% set isOnGuard = false %}
+                            {% set now = date() %}
+                            {% set currentDay = now|date('l')|lower %}
+                            {% set currentTime = now|date('H:i') %}
+                            {% for period in guardPeriods %}
+                                {% if period.day|default('') == currentDay and period.start|default('') <= currentTime and period.end|default('') >= currentTime %}
+                                    {% set isOnGuard = true %}
+                                {% endif %}
+                            {% endfor %}
+                            <span class="guard-badge {{ isOnGuard ? 'active' : 'inactive' }} ms-2" style="{{ isOnGuard ? 'background:#dcfce7;color:#16a34a;' : 'background:#fee2e2;color:#dc2626;' }}">
+                                <i class="fas fa-clock"></i> 
+                                {{ isOnGuard ? 'En garde' : 'Pas de garde' }}
+                            </span>
+                        {% else %}
+                            {# ✅ Pas de période de garde configurée #}
+                            <span class="guard-badge inactive ms-2" style="background:#fee2e2;color:#dc2626;">
+                                <i class="fas fa-clock"></i> 
+                                Pas de garde
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                <a href="{{ path('marketplace_pharmacy_search', {
+                    mode: 'product', 
+                    country: selectedCountry, 
+                    city: selectedCity
+                }) }}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-undo"></i> Changer de pharmacie
+                </a>
+            </div>
+
+            {# Filtres produits #}
+            <div class="product-filters-container">
+                <form method="get" id="productFilterForm" class="filter-group">
+                    <input type="hidden" name="mode" value="product">
+                    <input type="hidden" name="country" value="{{ selectedCountry }}">
+                    <input type="hidden" name="city" value="{{ selectedCity }}">
+                    <input type="hidden" name="pharmacy" value="{{ selectedPharmacy }}">
+                    <input type="hidden" name="filter_applied" value="1">
+
+                    <div class="filter-item">
+                        <label for="categorySelect"><i class="fas fa-tags text-primary me-1"></i> Catégorie</label>
+                        <select name="category" id="categorySelect" class="form-select">
+                            <option value="">Toutes les catégories</option>
+                            {% if categories|length > 0 %}
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if category.id == selectedCategory %}selected{% endif %}>
+                                        {% for i in 0..category.level %}&nbsp;&nbsp;{% endfor %}
+                                        {% if category.level > 0 %}↳{% endif %}
+                                        {{ category.name }}
+                                        <span class="text-muted">({{ category.productCount }})</span>
+                                    </option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <div class="filter-item">
+                        <label for="formSelect"><i class="fas fa-capsules text-primary me-1"></i> Forme</label>
+                        <select name="form" id="formSelect" class="form-select">
+                            <option value="">Toutes les formes</option>
+                            {% if forms|default([])|length > 0 %}
+                                {% for form in forms %}
+                                    <option value="{{ form }}" {% if selectedForm == form %}selected{% endif %}>{{ form }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <div class="filter-item">
+                        <label for="dosageInput"><i class="fas fa-weight text-primary me-1"></i> Dosage</label>
+                        <input type="text" name="dosage" id="dosageInput" class="form-control" 
+                               placeholder="ex: 500mg, 10ml..." value="{{ selectedDosage|default('') }}">
+                    </div>
+
+                    <div class="filter-item" style="min-width: 150px; flex: 0.5;">
+                        <div class="prescription-check">
+                            <input type="checkbox" name="prescription_required" id="prescriptionCheck" 
+                                   value="1" {{ prescriptionRequired == '1' ? 'checked' : '' }}>
+                            <label for="prescriptionCheck">
+                                <i class="fas fa-prescription-bottle"></i> Ordonnance
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter"></i> Filtrer
+                        </button>
+                        <a href="{{ path('marketplace_pharmacy_search', {
+                            mode: 'product', 
+                            country: selectedCountry, 
+                            city: selectedCity, 
+                            pharmacy: selectedPharmacy
+                        }) }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-eraser"></i> Effacer
+                        </a>
+                    </div>
+                </form>
+
+                <div class="filter-status">
+                    {% if filterApplied|default(false) %}
+                        <span class="applied"><i class="fas fa-check-circle"></i> Filtres appliqués</span>
+                    {% else %}
+                        <span><i class="fas fa-info-circle"></i> Tous les produits sont affichés</span>
+                    {% endif %}
+                </div>
+
+                {% set hasActiveFilters = selectedCategory or selectedForm or selectedDosage or prescriptionRequired is not null %}
+                {% if hasActiveFilters %}
+                    <div class="active-filters">
+                        <span class="text-muted" style="font-size: 0.85rem; font-weight: 500;">Filtres actifs :</span>
+                        {% if selectedCategory %}
+                            {% set categoryName = '' %}
+                            {% for cat in categories %}
+                                {% if cat.id == selectedCategory %}{% set categoryName = cat.name %}{% endif %}
+                            {% endfor %}
+                            <span class="filter-tag">
+                                <i class="fas fa-tag"></i> {{ categoryName }}
+                                <a href="{{ path('marketplace_pharmacy_search', {
+                                    mode: 'product', 
+                                    country: selectedCountry, 
+                                    city: selectedCity, 
+                                    pharmacy: selectedPharmacy,
+                                    form: selectedForm,
+                                    dosage: selectedDosage,
+                                    prescription_required: prescriptionRequired,
+                                    filter_applied: 1
+                                }) }}" class="remove-filter"><i class="fas fa-times"></i></a>
+                            </span>
+                        {% endif %}
+                        {% if selectedForm %}
+                            <span class="filter-tag">
+                                <i class="fas fa-capsules"></i> {{ selectedForm }}
+                                <a href="{{ path('marketplace_pharmacy_search', {
+                                    mode: 'product', 
+                                    country: selectedCountry, 
+                                    city: selectedCity, 
+                                    pharmacy: selectedPharmacy,
+                                    category: selectedCategory,
+                                    dosage: selectedDosage,
+                                    prescription_required: prescriptionRequired,
+                                    filter_applied: 1
+                                }) }}" class="remove-filter"><i class="fas fa-times"></i></a>
+                            </span>
+                        {% endif %}
+                        {% if selectedDosage %}
+                            <span class="filter-tag">
+                                <i class="fas fa-weight"></i> {{ selectedDosage }}
+                                <a href="{{ path('marketplace_pharmacy_search', {
+                                    mode: 'product', 
+                                    country: selectedCountry, 
+                                    city: selectedCity, 
+                                    pharmacy: selectedPharmacy,
+                                    category: selectedCategory,
+                                    form: selectedForm,
+                                    prescription_required: prescriptionRequired,
+                                    filter_applied: 1
+                                }) }}" class="remove-filter"><i class="fas fa-times"></i></a>
+                            </span>
+                        {% endif %}
+                        {% if prescriptionRequired == '1' %}
+                            <span class="filter-tag">
+                                <i class="fas fa-prescription-bottle"></i> Ordonnance requise
+                                <a href="{{ path('marketplace_pharmacy_search', {
+                                    mode: 'product', 
+                                    country: selectedCountry, 
+                                    city: selectedCity, 
+                                    pharmacy: selectedPharmacy,
+                                    category: selectedCategory,
+                                    form: selectedForm,
+                                    dosage: selectedDosage,
+                                    filter_applied: 1
+                                }) }}" class="remove-filter"><i class="fas fa-times"></i></a>
+                            </span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+
+            {# Sélecteur de produit #}
+            <div class="product-select-container">
+                <label class="form-label fw-semibold">
+                    <i class="fas fa-box text-primary me-1"></i> Produits disponibles
+                    <span class="badge bg-primary ms-2">{{ products|length }}</span>
+                </label>
+                
+                {% if products|length > 0 %}
+                    <select id="productSelect" class="form-control">
+                        <option value="">-- Sélectionnez un produit --</option>
+                        {% for product in products %}
+                            <option value="{{ product.id }}" 
+                                    data-name="{{ product.name }}"
+                                    data-category="{{ product.category ? product.category.name : 'Non catégorisé' }}"
+                                    data-price="{{ product.salePrice|number_format(0, ',', ' ') }} FCFA"
+                                    data-stock="{{ product.stockQuantity|default(0) }}"
+                                    data-prescription="{{ product.prescriptionRequired ? 'true' : 'false' }}"
+                                    data-form="{{ product.form|default('') }}"
+                                    data-dosage="{{ product.dosage|default('') }}"
+                                    data-unit="{{ product.unit|default('') }}"
+                                    data-description="{{ product.description|default('') }}"
+                                    data-barcode="{{ product.barcode|default('') }}">
+                                {{ product.name }} 
+                                {% if product.form %} - {{ product.form }}{% endif %}
+                                {% if product.dosage %} ({{ product.dosage }}){% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-box-open" style="font-size: 2rem; color: var(--gray-300); display: block; margin-bottom: 0.5rem;"></i>
+                        <p class="text-muted">Aucun produit disponible dans cette pharmacie.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        {% elseif selectedCountry and selectedCity %}
+            <div class="empty-state">
+                <i class="fas fa-store"></i>
+                <h4>Sélectionnez une pharmacie</h4>
+                <p class="text-muted">Pour rechercher des produits, veuillez sélectionner une pharmacie dans la liste ci-dessus.</p>
+                <a href="{{ path('marketplace_pharmacy_search', {mode: 'product', country: selectedCountry, city: selectedCity}) }}" class="btn btn-primary mt-3">
+                    <i class="fas fa-undo me-1"></i> Actualiser
+                </a>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-search-location"></i>
+                <h4>Sélectionnez un pays et une ville</h4>
+                <p class="text-muted">Pour rechercher des produits, veuillez d'abord sélectionner un pays, une ville, puis une pharmacie.</p>
+            </div>
+        {% endif %}
     {% endif %}
+</div>
+
+<!-- Modal Détail Produit -->
+<div class="modal fade" id="productDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productDetailTitle">Détail du produit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="productDetailBody">
+                <div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -523,7 +1425,6 @@
 {{ parent() }}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -533,90 +1434,73 @@ $(document).ready(function() {
     let selectedCity = '{{ selectedCity }}';
     let selectedPharmacy = '{{ selectedPharmacy }}';
 
-    console.log('=== VÉRIFICATION DES LIBRAIRIES ===');
-    console.log('✅ jQuery chargé:', typeof jQuery !== 'undefined');
-    console.log('✅ Select2 disponible:', typeof jQuery.fn.select2 !== 'undefined');
-    console.log('✅ Bootstrap disponible:', typeof bootstrap !== 'undefined');
-
-    console.log('=== INITIALISATION ===');
+    console.log('=== 🚀 INITIALISATION ===');
     console.log('Mode:', currentMode);
-    console.log('Pays:', selectedCountry);
-    console.log('Ville:', selectedCity);
-    console.log('Pharmacie:', selectedPharmacy);
+    console.log('Pays sélectionné:', selectedCountry);
+    console.log('Ville sélectionnée:', selectedCity);
+    console.log('Pharmacie sélectionnée:', selectedPharmacy);
 
     // ============================================================ //
-    // 1. INITIALISATION DE SELECT2 POUR TOUS LES SELECTS           //
+    // 1. INITIALISATION SELECT2                                     //
     // ============================================================ //
-    function initSelect2(selector, options) {
+    function initSelect2(selector) {
         const $select = $(selector);
-        if (!$select.length) {
-            console.warn('⚠️ Selecteur non trouvé:', selector);
+        if (!$select.length || typeof $.fn.select2 === 'undefined') {
+            console.warn('⚠️ Select2 non disponible ou sélecteur non trouvé:', selector);
             return;
         }
-        
-        // Détruire l'instance existante
         if ($select.data('select2')) {
             $select.select2('destroy');
             console.log('🔄 Select2 détruit pour:', selector);
         }
         
-        // Options par défaut
-        const defaultOptions = {
+        $select.select2({
             theme: 'default',
             width: '100%',
-            placeholder: '-- Sélectionnez --',
+            placeholder: $select.find('option:first').text() || '-- Sélectionnez --',
             allowClear: true,
             language: 'fr'
-        };
+        });
         
-        // Fusionner les options
-        const finalOptions = $.extend({}, defaultOptions, options || {});
-        
-        // Initialiser Select2
-        $select.select2(finalOptions);
-        
-        // Forcer l'affichage du conteneur
         setTimeout(function() {
             const container = $select.next('.select2-container');
             if (container.length) {
                 container.css({
                     'display': 'block',
-                    'width': '100%'
+                    'width': '100%',
+                    'visibility': 'visible',
+                    'opacity': '1'
                 });
             }
         }, 50);
         
         console.log('✅ Select2 initialisé pour:', selector);
-        return $select;
     }
 
     // ============================================================ //
     // 2. CHARGER LES PAYS                                          //
     // ============================================================ //
     function loadCountries() {
+        console.log('🌍 Chargement des pays...');
         $.ajax({
             url: '/marketplace/pharmacies/api/countries',
             method: 'GET',
+            dataType: 'json',
             success: function(data) {
                 const select = $('#countrySelect');
                 select.empty().append('<option value="">-- Sélectionnez un pays --</option>');
                 data.forEach(function(country) {
-                    const selected = selectedCountry === country.code ? 'selected' : '';
-                    select.append(`<option value="${country.code}" ${selected}>${country.name}</option>`);
+                    select.append(`<option value="${country.code}" ${selectedCountry === country.code ? 'selected' : ''}>${country.name}</option>`);
                 });
-                
-                // Réinitialiser Select2
                 initSelect2('#countrySelect');
-                
-                // Si un pays est sélectionné, charger les villes
                 if (selectedCountry) {
                     select.val(selectedCountry).trigger('change');
+                    console.log('✅ Pays sélectionné:', selectedCountry);
                 }
-                
                 console.log('✅ Pays chargés:', data.length);
             },
-            error: function() {
-                console.error('❌ Erreur lors du chargement des pays');
+            error: function(xhr, status, error) {
+                console.error('❌ Erreur lors du chargement des pays:', error);
             }
         });
     }
@@ -625,57 +1509,60 @@ $(document).ready(function() {
     // 3. CHARGER LES VILLES                                        //
     // ============================================================ //
     function loadCities(country) {
+        console.log('🏙️ Chargement des villes pour:', country);
         const select = $('#citySelect');
         select.prop('disabled', true).empty().append('<option value="">Chargement...</option>');
 
         $.ajax({
             url: `/marketplace/pharmacies/api/cities?country=${country}`,
             method: 'GET',
+            dataType: 'json',
             success: function(data) {
                 select.empty().append('<option value="">-- Sélectionnez une ville --</option>');
-                if (Array.isArray(data) && data.length > 0) {
+                if (data && data.length > 0) {
                     data.forEach(function(city) {
-                        const selected = selectedCity === city ? 'selected' : '';
-                        select.append(`<option value="${city}" ${selected}>${city}</option>`);
+                        select.append(`<option value="${city}" ${selectedCity === city ? 'selected' : ''}>${city}</option>`);
                     });
                     select.prop('disabled', false);
                     console.log('✅ Villes chargées:', data.length);
                 } else {
                     select.append('<option value="">Aucune ville trouvée</option>');
+                    select.prop('disabled', true);
                 }
-                
-                // Réinitialiser Select2
                 initSelect2('#citySelect');
-                
-                // Si une ville est sélectionnée et on est en mode product, charger les pharmacies
-                if (selectedCity && currentMode === 'product') {
+                if (selectedCity) {
                     select.val(selectedCity).trigger('change');
+                    console.log('✅ Ville sélectionnée:', selectedCity);
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error('❌ Erreur lors du chargement des villes:', error);
                 select.empty().append('<option value="">Erreur de chargement</option>');
+                select.prop('disabled', true);
                 initSelect2('#citySelect');
             }
         });
     }
 
     // ============================================================ //
-    // 4. CHARGER LES PHARMACIES                                    //
+    // 4. CHARGER LES PHARMACIES (MODE PRODUIT)                     //
     // ============================================================ //
     function loadPharmacies(city) {
+        console.log('🏪 Chargement des pharmacies pour:', city);
         const select = $('#pharmacySelect');
-        const pharmacySelector = $('#pharmacySelector');
+        const container = $('#pharmacySelector');
         
         if (currentMode === 'product' && city) {
-            pharmacySelector.addClass('visible').show();
-            select.prop('disabled', true).empty().append('<option value="">Chargement...</option>');
+            container.addClass('visible').show();
+            select.prop('disabled', true).empty().append('<option value="">Chargement des pharmacies...</option>');
 
             $.ajax({
                 url: `/marketplace/pharmacies/api/pharmacies?city=${city}`,
                 method: 'GET',
+                dataType: 'json',
                 success: function(data) {
                     select.empty().append('<option value="">-- Sélectionnez une pharmacie --</option>');
-                    if (Array.isArray(data) && data.length > 0) {
+                    if (data && data.length > 0) {
                         data.forEach(function(pharmacy) {
                             const selected = selectedPharmacy == pharmacy.id ? 'selected' : '';
                             select.append(`<option value="${pharmacy.id}" ${selected}>${pharmacy.name}</option>`);
@@ -684,18 +1571,33 @@ $(document).ready(function() {
                         console.log('✅ Pharmacies chargées:', data.length);
                     } else {
                         select.append('<option value="">Aucune pharmacie trouvée</option>');
+                        select.prop('disabled', true);
+                        console.log('⚠️ Aucune pharmacie trouvée pour cette ville');
                     }
                     
-                    // Réinitialiser Select2
-                    initSelect2('#pharmacySelect');
+                    // ✅ Réinitialiser Select2 APRÈS avoir rempli les options
+                    setTimeout(function() {
+                        initSelect2('#pharmacySelect');
+                        // Si une pharmacie est pré-sélectionnée
+                        if (selectedPharmacy) {
+                            $('#pharmacySelect').val(selectedPharmacy).trigger('change');
+                            console.log('✅ Pharmacie pré-sélectionnée:', selectedPharmacy);
+                        }
+                    }, 200);
                 },
-                error: function() {
+                error: function(xhr, status, error) {
+                    console.error('❌ Erreur lors du chargement des pharmacies:', error);
                     select.empty().append('<option value="">Erreur de chargement</option>');
+                    select.prop('disabled', true);
                     initSelect2('#pharmacySelect');
                 }
             });
         } else {
-            pharmacySelector.removeClass('visible').hide();
+            container.removeClass('visible').hide();
+            select.empty().append('<option value="">-- Sélectionnez une ville d\'abord --</option>');
+            select.prop('disabled', true);
+            initSelect2('#pharmacySelect');
+            console.log('ℹ️ Mode non product ou pas de ville');
         }
     }
 
@@ -706,6 +1608,8 @@ $(document).ready(function() {
         const country = $('#countrySelect').val();
         const city = $('#citySelect').val();
         const pharmacy = $('#pharmacySelect').val();
+        
+        console.log('🔍 Application des filtres:', { country, city, pharmacy });
         
         let params = {
             mode: currentMode,
@@ -722,32 +1626,21 @@ $(document).ready(function() {
         redirectTo(params);
     }
 
-    // ============================================================ //
-    // 6. EFFACER LES FILTRES                                       //
-    // ============================================================ //
     function clearFilters() {
+        console.log('🧹 Effacement des filtres');
         $('#countrySelect').val('').trigger('change');
         $('#citySelect').val('').prop('disabled', true).trigger('change');
         $('#pharmacySelect').val('').prop('disabled', true).trigger('change');
         $('#searchPharmacyInput').val('');
         $('#pharmacySelector').removeClass('visible').hide();
         
-        // Réinitialiser les Select2
         initSelect2('#countrySelect');
         initSelect2('#citySelect');
         initSelect2('#pharmacySelect');
         
-        redirectTo({
-            mode: currentMode,
-            country: '',
-            city: '',
-            pharmacy: ''
-        });
+        redirectTo({ mode: currentMode, country: '', city: '', pharmacy: '' });
     }
 
-    // ============================================================ //
-    // 7. REDIRECTION                                               //
-    // ============================================================ //
     function redirectTo(params) {
         const url = new URL(window.location.href);
         Object.keys(params).forEach(key => {
@@ -757,19 +1650,21 @@ $(document).ready(function() {
                 url.searchParams.delete(key);
             }
         });
+        console.log('🔄 Redirection vers:', url.toString());
         window.location.href = url.toString();
     }
 
     // ============================================================ //
-    // 8. ÉVÉNEMENTS                                                //
+    // 6. ÉVÉNEMENTS                                                //
     // ============================================================ //
     $('#countrySelect').on('change', function() {
         const country = this.value;
+        console.log('🌍 Pays sélectionné:', country);
         if (country) {
             loadCities(country);
         } else {
             $('#citySelect').empty().append('<option value="">-- Sélectionnez une ville --</option>').prop('disabled', true);
-            $('#pharmacySelect').empty().append('<option value="">-- Sélectionnez une pharmacie --</option>').prop('disabled', true);
+            $('#pharmacySelect').empty().append('<option value="">-- Sélectionnez une ville d\'abord --</option>').prop('disabled', true);
             $('#pharmacySelector').removeClass('visible').hide();
             initSelect2('#citySelect');
             initSelect2('#pharmacySelect');
@@ -778,12 +1673,24 @@ $(document).ready(function() {
 
     $('#citySelect').on('change', function() {
         const city = this.value;
+        console.log('🏙️ Ville sélectionnée:', city);
+        console.log('📌 Mode actuel:', currentMode);
+        
         if (city && currentMode === 'product') {
             loadPharmacies(city);
         } else {
-            $('#pharmacySelect').empty().append('<option value="">-- Sélectionnez une pharmacie --</option>').prop('disabled', true);
+            $('#pharmacySelect').empty().append('<option value="">-- Sélectionnez une ville d\'abord --</option>').prop('disabled', true);
             $('#pharmacySelector').removeClass('visible').hide();
             initSelect2('#pharmacySelect');
+        }
+    });
+
+    // ✅ Événement sur le sélecteur de pharmacie
+    $('#pharmacySelect').on('change', function() {
+        const pharmacyId = this.value;
+        console.log('🏪 Pharmacie sélectionnée:', pharmacyId);
+        if (pharmacyId) {
+            applyFilters();
         }
     });
 
@@ -805,31 +1712,174 @@ $(document).ready(function() {
     });
 
     // ============================================================ //
-    // 9. INITIALISATION                                            //
+    // 7. PRODUIT SELECT2 INIT                                      //
     // ============================================================ //
-    
-    // Initialiser les Select2
+    {% if products|length > 0 %}
+    const productSelect = document.getElementById('productSelect');
+    if (productSelect && typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
+        console.log('📦 Initialisation du select2 produit avec', {{ products|length }}, 'produits');
+        
+        $(productSelect).select2({
+            theme: 'default',
+            width: '100%',
+            placeholder: '-- Sélectionnez un produit --',
+            allowClear: true,
+            language: 'fr',
+            templateResult: function(option) {
+                if (!option.id) return option.text;
+                const el = option.element;
+                if (!el) return option.text;
+                
+                const name = el.getAttribute('data-name') || option.text;
+                const price = el.getAttribute('data-price') || 'Prix non défini';
+                const prescription = el.getAttribute('data-prescription') === 'true';
+                const form = el.getAttribute('data-form') || '';
+                const dosage = el.getAttribute('data-dosage') || '';
+                
+                let meta = [];
+                if (form) meta.push(form);
+                if (dosage) meta.push(dosage);
+                
+                return $(`
+                    <div class="product-info">
+                        <div>
+                            <span class="product-name">${name}</span>
+                            ${meta.length > 0 ? `<span class="product-meta" style="font-size:0.75rem;color:#94a3b8;margin-left:0.5rem;">${meta.join(' · ')}</span>` : ''}
+                            ${prescription ? `<span class="prescription-badge" style="font-size:0.65rem;padding:0.1rem 0.5rem;border-radius:50px;background:#fef3c7;color:#92400e;margin-left:0.5rem;"><i class="fas fa-prescription-bottle"></i> Ordonnance</span>` : ''}
+                        </div>
+                        <span class="product-price">${price}</span>
+                    </div>
+                `);
+            },
+            templateSelection: function(option) {
+                if (!option.id) return option.text;
+                const el = option.element;
+                if (!el) return option.text;
+                
+                const name = el.getAttribute('data-name') || option.text;
+                const price = el.getAttribute('data-price') || '';
+                const prescription = el.getAttribute('data-prescription') === 'true';
+                
+                return $(`
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <span><i class="fas fa-box me-2 text-primary"></i> ${name}${prescription ? ' <span class="badge bg-warning ms-1"><i class="fas fa-prescription-bottle"></i></span>' : ''}</span>
+                        <span class="text-primary fw-bold">${price}</span>
+                    </div>
+                `);
+            }
+        });
+        
+        console.log('✅ Product Select2 initialisé');
+        
+        $(productSelect).on('select2:select', function(e) {
+            const data = e.params.data;
+            if (data && data.element) {
+                console.log('🖱️ Produit sélectionné:', data.text);
+                
+                const body = document.getElementById('productDetailBody');
+                const title = document.getElementById('productDetailTitle');
+                if (!body || !title) return;
+                
+                const product = {
+                    id: data.element.value,
+                    name: data.element.getAttribute('data-name') || data.text,
+                    category: data.element.getAttribute('data-category') || 'Non catégorisé',
+                    price: data.element.getAttribute('data-price') || 'Prix non défini',
+                    stock: parseInt(data.element.getAttribute('data-stock') || 0),
+                    prescription: data.element.getAttribute('data-prescription') === 'true',
+                    form: data.element.getAttribute('data-form') || '',
+                    dosage: data.element.getAttribute('data-dosage') || '',
+                    unit: data.element.getAttribute('data-unit') || '',
+                    description: data.element.getAttribute('data-description') || '',
+                    barcode: data.element.getAttribute('data-barcode') || ''
+                };
+                
+                title.textContent = product.name || 'Détail du produit';
+                const isInStock = product.stock > 0;
+                
+                body.innerHTML = `
+                    <div class="container-fluid p-0">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="mb-3">
+                                    <h6 class="text-muted"><i class="fas fa-tag me-1"></i> Catégorie</h6>
+                                    <p class="mb-0">${product.category || 'Non catégorisé'}</p>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <h6 class="text-muted"><i class="fas fa-capsules me-1"></i> Forme</h6>
+                                            <p class="mb-0">${product.form || 'Non spécifiée'}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <h6 class="text-muted"><i class="fas fa-weight me-1"></i> Dosage</h6>
+                                            <p class="mb-0">${product.dosage || 'Non spécifié'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                ${product.unit ? `<div class="mb-3"><h6 class="text-muted"><i class="fas fa-ruler me-1"></i> Unité</h6><p class="mb-0">${product.unit}</p></div>` : ''}
+                                ${product.description ? `<div class="mb-3"><h6 class="text-muted"><i class="fas fa-align-left me-1"></i> Description</h6><p class="mb-0">${product.description}</p></div>` : ''}
+                                ${product.barcode ? `<div class="mb-3"><h6 class="text-muted"><i class="fas fa-barcode me-1"></i> Code-barres</h6><p class="mb-0" style="font-family:monospace;">${product.barcode}</p></div>` : ''}
+                            </div>
+                            <div class="col-md-5">
+                                <div class="card bg-light p-3">
+                                    <div class="mb-3">
+                                        <h6 class="text-muted">Prix</h6>
+                                        <p class="h3 text-primary mb-0">${product.price}</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <h6 class="text-muted">Disponibilité</h6>
+                                        <span class="product-status ${isInStock ? 'in-stock' : 'out-of-stock'}">
+                                            <i class="fas ${isInStock ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                                            ${isInStock ? `Disponible${product.stock > 0 ? ` (${product.stock} en stock)` : ''}` : 'Non disponible'}
+                                        </span>
+                                    </div>
+                                    ${product.prescription ? `
+                                        <div>
+                                            <h6 class="text-muted">Prescription</h6>
+                                            <span class="prescription-badge"><i class="fas fa-prescription-bottle"></i> Ordonnance requise</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                new bootstrap.Modal(document.getElementById('productDetailModal')).show();
+            }
+        });
+    }
+    {% endif %}
+
+    // ============================================================ //
+    // 8. INITIALISATION                                            //
+    // ============================================================ //
     initSelect2('#countrySelect');
     initSelect2('#citySelect');
     initSelect2('#pharmacySelect');
-    
-    // Charger les pays
     loadCountries();
 
-    // Si en mode product et une ville est sélectionnée, charger les pharmacies
     if (currentMode === 'product' && selectedCity) {
+        console.log('🔄 Mode product avec ville pré-sélectionnée:', selectedCity);
         $('#pharmacySelector').addClass('visible').show();
         if (!selectedPharmacy) {
             loadPharmacies(selectedCity);
         } else {
-            // Si une pharmacie est déjà sélectionnée
+            // Si une pharmacie est déjà sélectionnée, on la met en valeur
             setTimeout(function() {
-                initSelect2('#pharmacySelect');
-            }, 500);
+                $('#pharmacySelect').val(selectedPharmacy).trigger('change');
+                console.log('✅ Pharmacie pré-sélectionnée:', selectedPharmacy);
+            }, 600);
         }
     } else {
         $('#pharmacySelector').removeClass('visible').hide();
+        console.log('ℹ️ Mode pharmacy ou pas de ville sélectionnée');
     }
+
+    console.log('=== ✅ INITIALISATION TERMINÉE ===');
 });
 </script>
 {% endblock %}

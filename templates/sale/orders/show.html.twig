@@ -1,4 +1,5 @@
 {# templates/sale/orders/show.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Détails de la commande #{{ order.orderNumber }}{% endblock %}
@@ -41,10 +42,6 @@
         font-size: 0.75rem;
         font-weight: 600;
     }
-    .status-completed { background: #dcfce7; color: #16a34a; }
-    .status-cancelled { background: #fee2e2; color: #dc2626; }
-    .status-refunded { background: #fef3c7; color: #d97706; }
-    
     .return-card {
         background: #fffbeb;
         border-left: 4px solid #f59e0b;
@@ -126,7 +123,6 @@
             </p>
         </div>
         <div class="d-flex gap-2">
-            <!-- Bouton d'impression rapide -->
             <button type="button" class="btn btn-outline-success quick-print" 
                     data-order-id="{{ order.id }}" 
                     data-print-type="customer" 
@@ -134,7 +130,6 @@
                 <i class="fas fa-print me-1"></i> <i class="fas fa-bolt fa-xs"></i> Imprimer
             </button>
             
-            <!-- Menu déroulant -->
             <div class="btn-group">
                 <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
                     <i class="fas fa-print me-1"></i> Autres tickets
@@ -145,7 +140,6 @@
                             <i class="fas fa-receipt me-2"></i> Ticket client
                         </a>
                     </li>
-                    
                     {% if isRestaurant %}
                     <li><hr class="dropdown-divider"></li>
                     <li>
@@ -159,7 +153,6 @@
                         </a>
                     </li>
                     {% endif %}
-                    
                     <li><hr class="dropdown-divider"></li>
                     <li>
                         <a class="dropdown-item print-cash" href="#" data-order-id="{{ order.id }}" data-print-type="cash">
@@ -182,20 +175,20 @@
                 <div class="card-header">
                     <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Informations commande</h5>
                 </div>
+                
+                <!-- Statut -->
                 <div class="info-item">
                     <div class="info-label">Statut</div>
                     <div class="info-value">
-                        {% if order.status == 'completed' %}
-                            <span class="status-badge status-completed">✅ Complétée</span>
-                        {% elseif order.status == 'cancelled' %}
-                            <span class="status-badge status-cancelled">❌ Annulée</span>
-                        {% elseif order.status == 'refunded' %}
-                            <span class="status-badge status-refunded">🔄 Remboursée</span>
-                        {% else %}
-                            <span class="status-badge status-completed">✅ Complétée</span>
-                        {% endif %}
+                        {% set statusColors = order.getStatusColors() %}
+                        {% set statusLabels = order.getStatusLabels() %}
+                        
+                        <span class="status-badge bg-{{ statusColors[order.status]|default('secondary') }} text-white">
+                            {{ statusLabels[order.status]|default(order.status) }}
+                        </span>
                     </div>
                 </div>
+                
                 <div class="info-item">
                     <div class="info-label">Client</div>
                     <div class="info-value">{{ order.customerName ?: 'Non renseigné' }}</div>
@@ -232,6 +225,10 @@
                             <i class="fas fa-credit-card text-primary me-1"></i> Carte bancaire
                         {% elseif order.paymentMethod == 'mobile_money' %}
                             <i class="fas fa-mobile-alt text-info me-1"></i> Mobile Money
+                        {% elseif order.paymentMethod == 'feda_pay' %}
+                            <i class="fas fa-credit-card text-primary me-1"></i> FedaPay
+                        {% else %}
+                            {{ order.paymentMethod|capitalize }}
                         {% endif %}
                     </div>
                 </div>
@@ -261,6 +258,64 @@
                 </div>
                 {% endif %}
             </div>
+
+            <!-- ==================== SECTION MODIFICATION STATUT ==================== -->
+            {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') %}
+            <div class="order-card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-edit me-2 text-primary"></i>
+                        Modifier le statut
+                    </h5>
+                </div>
+                <div class="p-3">
+                    {% if order.status == 'completed' and order.customerEmail is empty %}
+                        <div class="alert alert-info mb-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Cette commande est une <strong>vente en caisse</strong> et est déjà terminée.
+                        </div>
+                    {% endif %}
+                    
+                    <form method="POST" action="{{ path('app_orders_update_status', {id: order.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('update_order_status') }}">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-bold small">Nouveau statut</label>
+                                <select name="status" class="form-select form-select-lg">
+                                    {% for statusKey, statusLabel in order.getStatusLabels() %}
+                                        <option value="{{ statusKey }}" {% if order.status == statusKey %}selected{% endif %}>
+                                            {{ statusLabel }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary w-100 py-2" 
+                                        {% if order.status == 'completed' and order.customerEmail is empty %}disabled{% endif %}>
+                                    <i class="fas fa-save me-2"></i> Mettre à jour le statut
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="text-muted small mt-3">
+                        <i class="fas fa-info-circle me-1"></i>
+                        {% if order.customerEmail %}
+                            Le client recevra une notification par email lors du changement de statut.
+                        {% else %}
+                            <span class="text-warning">⚠️ Aucun email client disponible pour cette commande (vente en caisse).</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-2">
+                        <span class="badge bg-light text-dark">
+                            <i class="fas fa-clock me-1"></i>
+                            Dernière mise à jour : {{ order.updatedAt|date('d/m/Y H:i') }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
 
         <!-- Colonne droite - Articles et retours -->
@@ -466,13 +521,10 @@
             </div>
             {% endif %}
 
-            <!-- Bouton Nouveau retour - Condition simple -->
+            <!-- Bouton Nouveau retour -->
             {% set hasRemainingItems = false %}
-
-            {# Récupérer les quantités déjà retournées #}
             {% set returnedQuantities = totalReturnedQuantities|default([]) %}
 
-            {# Parcourir les articles de la commande #}
             {% for item in order.orderItems %}
                 {% set alreadyReturned = returnedQuantities[item.id]|default(0) %}
                 {% set remaining = item.quantity - alreadyReturned %}
@@ -481,7 +533,6 @@
                 {% endif %}
             {% endfor %}
 
-            {# Afficher le bouton seulement s'il reste des articles à retourner #}
             {% if hasRemainingItems %}
                 <div class="action-buttons">
                     <a href="{{ path('returns_new', {'orderId': order.id}) }}" class="btn btn-primary btn-lg">
@@ -528,7 +579,6 @@ $(document).ready(function() {
     const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
     const receiptContent = document.getElementById('receiptContent');
     
-    // Impression du reçu
     $('#printReceiptBtn').click(function() {
         loadReceipt();
     });

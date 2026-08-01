@@ -1,5 +1,7 @@
 <?php
+
 // src/Controller/Marketplace/AuthController.php
+
 namespace App\Controller\Marketplace;
 
 use App\Entity\Customer;
@@ -15,17 +17,28 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Psr\Log\LoggerInterface;
 
 #[Route('/marketplace')]
 class AuthController extends AbstractController
 {
+    public function __construct(
+        private LoggerInterface $logger
+    ) {}
+
     #[Route('/login', name: 'marketplace_login')]
-    public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
-    {
+    public function login(
+        AuthenticationUtils $authenticationUtils, 
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
         $user = $this->getUser();
         
         // ✅ Si l'utilisateur est déjà connecté
         if ($user instanceof Customer) {
+            // ✅ CRÉER LE PANIER SI INEXISTANT AVANT LA REDIRECTION
+            $this->ensureCartExists($user, $entityManager);
+            
             // ✅ Si l'utilisateur doit changer son mot de passe
             if ($user->isMustChangePassword()) {
                 $this->addFlash('warning', '🔒 Pour des raisons de sécurité, vous devez changer votre mot de passe temporaire avant de continuer.');
@@ -85,13 +98,21 @@ class AuthController extends AbstractController
             
             $verificationToken = $customer->generateVerificationToken();
 
+            // ✅ Créer le panier
             $cart = new Cart();
             $cart->setCustomer($customer);
             $customer->setCart($cart);
 
-            $entityManager->persist($customer);
+            // ✅ Persister dans le bon ordre
             $entityManager->persist($cart);
+            $entityManager->persist($customer);
             $entityManager->flush();
+
+            $this->logger->info('✅ Compte et panier créés avec succès', [
+                'customer_id' => $customer->getId(),
+                'email' => $customer->getEmail(),
+                'cart_id' => $cart->getId()
+            ]);
 
             $this->sendVerificationEmail($customer, $verificationToken, $randomPassword, $mailer);
 
@@ -123,6 +144,9 @@ class AuthController extends AbstractController
 
         $customer->activateAccount();
         $entityManager->flush();
+
+        // ✅ Vérifier et créer le panier si inexistant
+        $this->ensureCartExists($customer, $entityManager);
 
         $this->addFlash('success', '✅ Votre compte a été activé avec succès ! Vous pouvez maintenant vous connecter avec le mot de passe reçu par email.');
 
@@ -166,6 +190,39 @@ class AuthController extends AbstractController
 
         $this->addFlash('success', 'Un nouvel email de vérification a été envoyé avec un nouveau mot de passe.');
         return $this->redirectToRoute('marketplace_login');
+    }
+
+    /**
+     * ✅ Vérifie et crée un panier si inexistant pour un customer
+     */
+    private function ensureCartExists(Customer $customer, EntityManagerInterface $entityManager): void
+    {
+        // Vérifier si le customer a déjà un panier
+        $cart = $entityManager->getRepository(Cart::class)->findOneBy(['customer' => $customer]);
+        
+        if (!$cart) {
+            $this->logger->warning('⚠️ Panier inexistant pour le customer, création automatique', [
+                'customer_id' => $customer->getId(),
+                'email' => $customer->getEmail()
+            ]);
+            
+            $cart = new Cart();
+            $cart->setCustomer($customer);
+            $customer->setCart($cart);
+            
+            $entityManager->persist($cart);
+            $entityManager->flush();
+            
+            $this->logger->info('✅ Panier créé automatiquement', [
+                'customer_id' => $customer->getId(),
+                'cart_id' => $cart->getId()
+            ]);
+        } else {
+            $this->logger->debug('✅ Panier existant pour le customer', [
+                'customer_id' => $customer->getId(),
+                'cart_id' => $cart->getId()
+            ]);
+        }
     }
 
     private function generateRandomPassword(int $length = 12): string

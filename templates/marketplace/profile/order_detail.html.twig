@@ -1,0 +1,485 @@
+{# templates/marketplace/profile/order_detail.html.twig #}
+
+{% extends 'base_marketplace.html.twig' %}
+
+{% block title %}Détail de la commande #{{ order.orderNumber }} - HMA Marketplace{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #0463f1 0%, #667eea 100%);
+        --card-radius: 16px;
+        --card-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    }
+
+    .order-detail-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .order-detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .order-detail-header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .order-detail-header h1 .order-number {
+        color: var(--primary-color);
+    }
+
+    .order-detail-card {
+        background: white;
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #f1f5f9;
+    }
+
+    .order-detail-card .card-title {
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .order-detail-card .card-title i {
+        color: var(--primary-color);
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+
+    .info-grid .info-item {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .info-grid .info-item .label {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-grid .info-item .value {
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 0.95rem;
+    }
+
+    .order-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 1rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .order-status-badge.paid {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .order-status-badge.pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .order-status-badge.completed {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .order-status-badge.cancelled {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .order-items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .order-item-detail {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem;
+        background: #f8fafc;
+        border-radius: 12px;
+        transition: background 0.2s ease;
+    }
+
+    .order-item-detail:hover {
+        background: #f1f5f9;
+    }
+
+    .order-item-detail .item-image {
+        width: 70px;
+        height: 70px;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #f1f5f9;
+        flex-shrink: 0;
+    }
+
+    .order-item-detail .item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .order-item-detail .item-image .placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 1.5rem;
+        background: #f1f5f9;
+    }
+
+    .order-item-detail .item-info {
+        flex: 1;
+    }
+
+    .order-item-detail .item-info .item-name {
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 0.95rem;
+    }
+
+    .order-item-detail .item-info .item-meta {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .order-item-detail .item-info .item-meta .badge-promo {
+        background: #dcfce7;
+        color: #16a34a;
+        padding: 0.05rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.65rem;
+        font-weight: 600;
+    }
+
+    .order-item-detail .item-info .item-notes {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        font-style: italic;
+        margin-top: 0.2rem;
+    }
+
+    .order-item-detail .item-price {
+        text-align: right;
+        flex-shrink: 0;
+    }
+
+    .order-item-detail .item-price .unit-price {
+        font-size: 0.75rem;
+        color: #94a3b8;
+    }
+
+    .order-item-detail .item-price .total-price {
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 1.05rem;
+    }
+
+    .order-totals {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1rem;
+    }
+
+    .order-totals .total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.4rem 0;
+        font-size: 0.9rem;
+        color: #475569;
+    }
+
+    .order-totals .total-row.grand-total {
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 1.1rem;
+        border-top: 2px solid #e5e7eb;
+        padding-top: 0.75rem;
+        margin-top: 0.5rem;
+    }
+
+    .order-totals .total-row.discount-row {
+        color: #16a34a;
+    }
+
+    .delivery-address {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1rem;
+        line-height: 1.6;
+    }
+
+    .delivery-address .address-line {
+        color: #475569;
+        font-size: 0.9rem;
+    }
+
+    .delivery-address .address-label {
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-back-orders {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.5rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 50px;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-back-orders:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background: #f8fafc;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .order-item-detail {
+            flex-wrap: wrap;
+            padding: 0.5rem;
+        }
+
+        .order-item-detail .item-image {
+            width: 60px;
+            height: 60px;
+        }
+
+        .order-item-detail .item-price {
+            text-align: left;
+            width: 100%;
+            padding-left: 0;
+            margin-left: 0;
+        }
+
+        .order-detail-header h1 {
+            font-size: 1.2rem;
+        }
+
+        .order-detail-card {
+            padding: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .order-item-detail .item-image {
+            width: 50px;
+            height: 50px;
+        }
+
+        .order-item-detail .item-info .item-name {
+            font-size: 0.85rem;
+        }
+
+        .order-item-detail .item-price .total-price {
+            font-size: 0.95rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="order-detail-container">
+    <div class="order-detail-header">
+        <h1>
+            Commande #<span class="order-number">{{ order.orderNumber }}</span>
+        </h1>
+        <a href="{{ path('marketplace_orders') }}" class="btn-back-orders">
+            <i class="fas fa-arrow-left"></i>
+            Mes commandes
+        </a>
+    </div>
+
+    <!-- ==================== STATUT ET INFOS GÉNÉRALES ==================== -->
+    <div class="order-detail-card">
+        <div class="card-title">
+            <i class="fas fa-info-circle"></i>
+            Informations générales
+        </div>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="label">Statut du paiement</div>
+                <div class="value">
+                    <span class="order-status-badge {{ order.paymentStatus == 'paid' ? 'paid' : 'pending' }}">
+                        <i class="fas {{ order.paymentStatus == 'paid' ? 'fa-check-circle' : 'fa-clock' }}"></i>
+                        {{ order.paymentStatus == 'paid' ? 'Payée' : 'En attente' }}
+                    </span>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="label">Statut de la commande</div>
+                <div class="value">
+                    <span class="order-status-badge {{ order.status == 'completed' ? 'completed' : 'pending' }}">
+                        <i class="fas {{ order.status == 'completed' ? 'fa-check' : 'fa-hourglass-half' }}"></i>
+                        {{ order.status == 'completed' ? 'Livrée' : 'En cours' }}
+                    </span>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="label">Date de la commande</div>
+                <div class="value">{{ order.createdAt|date('d/m/Y à H:i') }}</div>
+            </div>
+            <div class="info-item">
+                <div class="label">Méthode de paiement</div>
+                <div class="value">
+                    <i class="fas fa-credit-card me-1"></i>
+                    {{ order.paymentMethod|capitalize }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ADRESSE DE LIVRAISON ==================== -->
+    <div class="order-detail-card">
+        <div class="card-title">
+            <i class="fas fa-map-marker-alt"></i>
+            Adresse de livraison
+        </div>
+        <div class="delivery-address">
+            <div class="address-label">Destinataire</div>
+            <div class="address-line"><strong>{{ order.customerName }}</strong></div>
+            <div class="address-line">{{ order.customerPhone }}</div>
+            <div class="address-line">{{ order.deliveryAddress }}</div>
+            {% if order.deliveryCity %}
+                <div class="address-line">{{ order.deliveryCity }}{% if order.deliveryZipcode %} - {{ order.deliveryZipcode }}{% endif %}</div>
+            {% endif %}
+            <div class="address-line">{{ order.deliveryCountry|default('Bénin') }}</div>
+        </div>
+    </div>
+
+    <!-- ==================== ARTICLES ==================== -->
+    <div class="order-detail-card">
+        <div class="card-title">
+            <i class="fas fa-box"></i>
+            Articles ({{ order.orderItems|length }})
+        </div>
+        <div class="order-items-list">
+            {% for item in order.orderItems %}
+                <div class="order-item-detail">
+                    <div class="item-image">
+                        {% set productImage = null %}
+                        {% if item.productId %}
+                            {% for product in products %}
+                                {% if product.id == item.productId and product.image %}
+                                    {% set productImage = product.image %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if productImage %}
+                            <img src="{{ asset('uploads/products/' ~ productImage) }}" alt="{{ item.productName }}">
+                        {% else %}
+                            <div class="placeholder">
+                                <i class="fas fa-box"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="item-info">
+                        <div class="item-name">{{ item.productName }}</div>
+                        <div class="item-meta">
+                            <span>Quantité: {{ item.quantity }}</span>
+                            {% if item.promotionName %}
+                                <span class="badge-promo">
+                                    <i class="fas fa-tag me-1"></i>{{ item.promotionName }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        {% if item.notes %}
+                            <div class="item-notes">
+                                <i class="fas fa-pencil-alt me-1"></i>{{ item.notes }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="item-price">
+                        <div class="unit-price">{{ item.unitPrice|number_format(0, ',', ' ') }} FCFA / unité</div>
+                        <div class="total-price">{{ item.totalPrice|number_format(0, ',', ' ') }} FCFA</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ==================== TOTAUX ==================== -->
+    <div class="order-detail-card">
+        <div class="card-title">
+            <i class="fas fa-calculator"></i>
+            Récapitulatif
+        </div>
+        <div class="order-totals">
+            <div class="total-row">
+                <span>Sous-total</span>
+                <span>{{ order.subtotal|default(order.totalAmount)|number_format(0, ',', ' ') }} FCFA</span>
+            </div>
+            {% if order.discountTotal > 0 %}
+                <div class="total-row discount-row">
+                    <span>Remise</span>
+                    <span>- {{ order.discountTotal|number_format(0, ',', ' ') }} FCFA</span>
+                </div>
+            {% endif %}
+            <div class="total-row grand-total">
+                <span>Total</span>
+                <span>{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ Order detail page loaded');
+});
+</script>
+{% endblock %}

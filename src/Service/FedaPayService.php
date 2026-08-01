@@ -27,18 +27,29 @@ class FedaPayService
 
     public function createPayment(array $data): string
     {
-        $this->logger->info('FedaPay createPayment', [
-            'amount' => $data['amount'],
+        // ✅ Vérification du montant
+        $amount = (int) $data['amount'];
+        $currency = $data['currency'] ?? 'XOF';
+        
+        $this->logger->info('🔑 FedaPay createPayment', [
+            'amount' => $amount,
+            'currency' => $currency,
             'description' => $data['description'],
             'customer_email' => $data['customer_email'],
-            'reference' => $data['reference']
+            'reference' => $data['reference'],
+            'callback_url' => $data['callback_url']
         ]);
+
+        // ✅ Validation du montant
+        if ($amount <= 0) {
+            throw new \Exception('Le montant doit être supérieur à 0');
+        }
 
         try {
             $transaction = Transaction::create([
-                'amount' => (int) $data['amount'],
+                'amount' => $amount, // ✅ Montant en FCFA (pas de multiplication)
                 'description' => $data['description'],
-                'currency' => ['iso' => $data['currency'] ?? 'XOF'],
+                'currency' => ['iso' => $currency],
                 'callback_url' => $data['callback_url'],
                 'customer' => [
                     'email' => $data['customer_email'],
@@ -46,10 +57,9 @@ class FedaPayService
                     'lastname' => '',
                 ],
                 'reference' => (string) $data['reference'],
-                // ✅ Ajout de custom_metadata pour stocker le numéro de demande
                 'custom_metadata' => [
                     'request_number' => (string) $data['reference'],
-                    'type' => 'analysis_payment'
+                    'type' => 'order_payment'
                 ]
             ]);
 
@@ -57,18 +67,22 @@ class FedaPayService
 
             $this->lastTransactionId = $transaction->id;
 
-            $this->logger->info('Transaction créée', [
+            $this->logger->info('✅ Transaction créée avec succès', [
                 'id' => $transaction->id,
                 'reference' => $transaction->reference,
+                'amount' => $transaction->amount,
+                'currency' => $transaction->currency,
                 'payment_url' => $transaction->payment_url
             ]);
 
             return $transaction->payment_url;
 
         } catch (\Exception $e) {
-            $this->logger->error('Erreur FedaPay', [
+            $this->logger->error('❌ Erreur FedaPay createPayment', [
                 'type' => get_class($e),
                 'message' => $e->getMessage(),
+                'amount' => $amount,
+                'currency' => $currency,
                 'trace' => $e->getTraceAsString()
             ]);
 
@@ -89,14 +103,13 @@ class FedaPayService
     public function verifyPayment(string $transactionId): array
     {
         try {
-            $this->logger->info('Vérification transaction FedaPay', ['id' => $transactionId]);
+            $this->logger->info('🔍 Vérification transaction FedaPay', ['id' => $transactionId]);
             
             $transaction = Transaction::retrieve($transactionId);
             
-            // ✅ Récupérer toutes les données de la transaction
             $result = $transaction->__toArray();
             
-            // ✅ Ajouter les informations importantes manuellement si disponibles
+            // ✅ Ajouter les champs importants manuellement
             if (isset($transaction->id)) {
                 $result['id'] = $transaction->id;
             }
@@ -109,23 +122,21 @@ class FedaPayService
             if (isset($transaction->amount)) {
                 $result['amount'] = $transaction->amount;
             }
-            
-            // ✅ Récupérer custom_metadata si disponible
             if (isset($transaction->custom_metadata)) {
                 $result['custom_metadata'] = $transaction->custom_metadata;
             }
             
-            $this->logger->info('Transaction vérifiée', [
+            $this->logger->info('✅ Transaction vérifiée', [
                 'id' => $transactionId,
                 'status' => $result['status'] ?? 'unknown',
-                'reference' => $result['reference'] ?? null,
-                'has_custom_metadata' => isset($result['custom_metadata'])
+                'amount' => $result['amount'] ?? null,
+                'reference' => $result['reference'] ?? null
             ]);
             
             return $result;
             
         } catch (\Exception $e) {
-            $this->logger->error('Erreur vérification FedaPay', [
+            $this->logger->error('❌ Erreur vérification FedaPay', [
                 'id' => $transactionId,
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()

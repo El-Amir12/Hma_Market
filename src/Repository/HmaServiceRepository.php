@@ -207,4 +207,59 @@ class HmaServiceRepository extends ServiceEntityRepository
             'Cache-Control' => 'max-age=0',
         ]);
     }
+
+    /**
+     * Récupère les pharmacies d'une ville avec leurs périodes de garde
+     */
+    public function findPharmaciesByCityWithGuardPeriods(string $city, ?string $search = null, int $page = 1, int $limit = 12): array
+    {
+        $qb = $this->createQueryBuilder('h')
+            ->where('h.city = :city')
+            ->andWhere('h.companyType = :type')
+            ->andWhere('h.isActive = :isActive')
+            ->andWhere('h.isPublic = :isPublic')
+            ->andWhere('h.company_public = :companyPublic')
+            ->setParameter('city', $city)
+            ->setParameter('type', 'pharmacy')
+            ->setParameter('isActive', true)
+            ->setParameter('isPublic', true)
+            ->setParameter('companyPublic', true);
+
+        if ($search) {
+            $qb->andWhere('h.companyName LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        $qb->orderBy('h.companyName', 'ASC')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Compte les pharmacies d'une ville
+     */
+    public function countPharmaciesByCity(string $city, ?string $search = null): int
+    {
+        $qb = $this->createQueryBuilder('h')
+            ->select('COUNT(h.id)')
+            ->where('h.city = :city')
+            ->andWhere('h.companyType = :type')
+            ->andWhere('h.isActive = :isActive')
+            ->andWhere('h.isPublic = :isPublic')
+            ->andWhere('h.company_public = :companyPublic')
+            ->setParameter('city', $city)
+            ->setParameter('type', 'pharmacy')
+            ->setParameter('isActive', true)
+            ->setParameter('isPublic', true)
+            ->setParameter('companyPublic', true);
+
+        if ($search) {
+            $qb->andWhere('h.companyName LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
 }

@@ -26,9 +26,12 @@
     {% endif %}
 {% endfor %}
 
+{# Vérifier si le produit est déjà dans le panier (uniquement si connecté) #}
+{% set isInCart = app.user and is_customer(app.user) and product.id in cartProductIds|default([]) %}
+
 {# ==================== CARTE PRODUIT ==================== #}
 <div class="product-card {% if hasActivePromotion %}has-promotion{% endif %}">
-    <div class="product-image">
+    <div class="product-image" onclick="window.location.href='{{ path('marketplace_product_show', {id: product.id}) }}'">
         {% if product.image %}
             <img src="{{ asset('uploads/products/' ~ product.image) }}" alt="{{ product.name }}" loading="lazy">
         {% else %}
@@ -49,18 +52,24 @@
             <span class="product-badge promo-label">🔥 PROMO</span>
         {% endif %}
         
-        {# BOUTON FAVORIS #}
+        {# BOUTON FAVORIS - UNIQUEMENT si connecté en tant que Customer #}
         {% if app.user and is_customer(app.user) %}
             <button class="favorite-btn {% if product.id in favoriteIds %}active{% endif %}" 
-                    onclick="toggleFavorite(this, {{ product.id }})"
+                    onclick="event.stopPropagation(); toggleFavorite(this, {{ product.id }})"
                     data-product-id="{{ product.id }}">
                 <i class="{% if product.id in favoriteIds %}fas{% else %}far{% endif %} fa-heart"></i>
             </button>
         {% endif %}
     </div>
     
-    <div class="product-body">
-        <span class="product-category">{{ product.category.name }}</span>
+    <div class="product-body" onclick="window.location.href='{{ path('marketplace_product_show', {id: product.id}) }}'">
+        {# Affichage sécurisé de la catégorie #}
+        {% if product.category %}
+            <span class="product-category">{{ product.category.name }}</span>
+        {% else %}
+            <span class="product-category">Non catégorisé</span>
+        {% endif %}
+        
         <h5 class="product-name">{{ product.name }}</h5>
         
         {# ==================== PRIX ==================== #}
@@ -115,16 +124,32 @@
             <span class="rating-text">(<strong>{{ product.ratingsCount|default(0) }}</strong>)</span>
         </div>
         
-        {# BOUTONS D'ACTION #}
-        <div class="action-buttons">
-            <a href="{{ path('marketplace_product_show', {id: product.id}) }}" class="btn-view">
-                <i class="fas fa-eye"></i> Voir
-            </a>
-            <button class="add-to-cart" 
-                    data-product-id="{{ product.id }}"
-                    {% if product.currentStock <= 0 %}disabled{% endif %}>
-                <i class="fas fa-cart-plus"></i> Ajouter
-            </button>
+        {# BOUTON AJOUTER AU PANIER #}
+        <div class="action-buttons" onclick="event.stopPropagation();">
+            {% if app.user and is_customer(app.user) %}
+                {# Utilisateur connecté - afficher le bouton normal #}
+                {% if isInCart %}
+                    <button class="add-to-cart already-in-cart" 
+                            data-product-id="{{ product.id }}"
+                            data-product-name="{{ product.name }}"
+                            disabled>
+                        <i class="fas fa-check me-1"></i> Dans le panier
+                    </button>
+                {% else %}
+                    <button class="add-to-cart" 
+                            data-product-id="{{ product.id }}"
+                            data-product-name="{{ product.name }}">
+                        <i class="fas fa-cart-plus"></i> Ajouter au panier
+                    </button>
+                {% endif %}
+            {% else %}
+                {# Utilisateur non connecté - afficher un bouton de connexion #}
+                <a href="{{ path('marketplace_login') }}" 
+                   class="add-to-cart btn-login-to-add"
+                   onclick="event.stopPropagation();">
+                    <i class="fas fa-cart-plus"></i> Ajouter au panier
+                </a>
+            {% endif %}
         </div>
     </div>
 </div>

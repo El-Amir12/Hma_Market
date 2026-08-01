@@ -1,0 +1,200 @@
+{# templates/emails/order_status_update_admin.html.twig #}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mise à jour de statut - Commande #{{ order.orderNumber }}</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #f8fafc; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+        
+        <!-- Header -->
+        <div style="text-align: center; padding-bottom: 30px; border-bottom: 2px solid #f1f5f9;">
+            <div style="margin-bottom: 15px;">
+                <img src="{{ appUrl ~ asset('images/logo.png') }}" alt="{{ appName }}" style="max-height: 60px;">
+            </div>
+            <h1 style="color: #0f172a; font-size: 24px; margin: 0;">
+                📦 Mise à jour de statut
+            </h1>
+            <p style="color: #64748b; font-size: 14px; margin-top: 5px;">
+                Commande #{{ order.orderNumber }}
+            </p>
+            <p style="color: #94a3b8; font-size: 12px; margin-top: 5px;">
+                Modifiée le {{ "now"|date('d/m/Y à H:i') }}
+            </p>
+        </div>
+
+        <!-- Badge Admin -->
+        <div style="text-align: center; margin: 10px 0 20px 0;">
+            <span style="display: inline-block; padding: 4px 16px; border-radius: 50px; background: #f3f4f6; color: #374151; font-weight: 600; font-size: 12px;">
+                🔐 Notification administrateur
+            </span>
+        </div>
+
+        <!-- Informations client -->
+        <div style="background: #f0f7ff; border-radius: 12px; padding: 20px; margin: 20px 0; border-left: 4px solid #0463f1;">
+            <h3 style="font-size: 14px; color: #0f172a; margin: 0 0 10px 0;">
+                👤 Informations client
+            </h3>
+            <p style="color: #475569; font-size: 14px; margin: 5px 0;">
+                <strong>Nom :</strong> {{ order.customerName }}
+            </p>
+            <p style="color: #475569; font-size: 14px; margin: 5px 0;">
+                <strong>Téléphone :</strong> {{ order.customerPhone }}
+            </p>
+            <p style="color: #475569; font-size: 14px; margin: 5px 0;">
+                <strong>Email :</strong> {{ order.customerEmail }}
+            </p>
+            <p style="color: #475569; font-size: 14px; margin: 5px 0;">
+                <strong>Méthode de paiement :</strong> 
+                {% if order.paymentMethod == 'feda_pay' %}
+                    FedaPay
+                {% else %}
+                    {{ order.paymentMethod|capitalize }}
+                {% endif %}
+            </p>
+            <p style="color: #475569; font-size: 14px; margin: 5px 0;">
+                <strong>Statut du paiement :</strong> 
+                <span style="display: inline-block; padding: 2px 12px; border-radius: 50px; background: {% if order.paymentStatus == 'paid' %}#dcfce7{% else %}#fef3c7{% endif %}; color: {% if order.paymentStatus == 'paid' %}#16a34a{% else %}#92400e{% endif %}; font-weight: 600; font-size: 12px;">
+                    {% if order.paymentStatus == 'paid' %}✅ Payé{% else %}⏳ En attente{% endif %}
+                </span>
+            </p>
+        </div>
+
+        <!-- Changement de statut -->
+        <div style="text-align: center; padding: 20px 0; background: #f8fafc; border-radius: 12px;">
+            <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <div>
+                    <span style="color: #94a3b8; font-size: 12px;">Ancien statut</span>
+                    <div style="font-weight: 600; color: #64748b; text-decoration: line-through;">
+                        {{ oldStatusLabel }}
+                    </div>
+                </div>
+                <div style="font-size: 24px; color: #94a3b8;">→</div>
+                <div>
+                    <span style="color: #94a3b8; font-size: 12px;">Nouveau statut</span>
+                    <div style="display: inline-block; padding: 8px 24px; border-radius: 50px; 
+                                background: {% if newStatus == 'pending' %}#fef3c7{% elseif newStatus == 'processing' %}#dbeafe{% elseif newStatus == 'shipped' %}#dbeafe{% elseif newStatus == 'delivered' %}#dcfce7{% elseif newStatus == 'completed' %}#dcfce7{% elseif newStatus == 'cancelled' %}#fee2e2{% elseif newStatus == 'refunded' %}#f3f4f6{% endif %};
+                                color: {% if newStatus == 'pending' %}#92400e{% elseif newStatus == 'processing' %}#1d4ed8{% elseif newStatus == 'shipped' %}#1d4ed8{% elseif newStatus == 'delivered' %}#16a34a{% elseif newStatus == 'completed' %}#16a34a{% elseif newStatus == 'cancelled' %}#dc2626{% elseif newStatus == 'refunded' %}#374151{% endif %};
+                                font-weight: 700; font-size: 16px;">
+                        {{ newStatusLabel }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Articles commandés (version admin avec plus de détails) -->
+        <div style="margin: 25px 0;">
+            <h3 style="font-size: 16px; color: #0f172a; margin: 0 0 15px 0;">
+                📦 Articles commandés
+            </h3>
+            
+            {% for item in order.orderItems %}
+                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: #0f172a; font-size: 14px;">
+                            {{ item.productName }}
+                        </div>
+                        <div style="color: #94a3b8; font-size: 12px;">
+                            Quantité: {{ item.quantity }}
+                            {% if item.productId %}
+                                <span style="margin-left: 8px;">ID: {{ item.productId }}</span>
+                            {% endif %}
+                            {% if item.promotionName %}
+                                <span style="display: inline-block; margin-left: 8px; padding: 0 8px; background: #dcfce7; color: #16a34a; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                                    {{ item.promotionName }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        {% if item.notes %}
+                            <div style="color: #64748b; font-size: 12px; margin-top: 4px;">
+                                📝 {{ item.notes }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; color: #0f172a; font-size: 15px;">
+                            {{ item.totalPrice|number_format(0, ',', ' ') }} FCFA
+                        </div>
+                        <div style="color: #94a3b8; font-size: 11px;">
+                            {{ item.unitPrice|number_format(0, ',', ' ') }} FCFA/unité
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Totaux -->
+        <div style="background: #f8fafc; border-radius: 12px; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                <span style="color: #64748b;">Sous-total</span>
+                <span style="color: #475569;">{{ order.subtotal|number_format(0, ',', ' ') }} FCFA</span>
+            </div>
+            {% if order.discountTotal > 0 %}
+                <div style="display: flex; justify-content: space-between; padding: 6px 0; color: #16a34a;">
+                    <span>Remise</span>
+                    <span>- {{ order.discountTotal|number_format(0, ',', ' ') }} FCFA</span>
+                </div>
+            {% endif %}
+            <div style="display: flex; justify-content: space-between; padding: 6px 0; border-top: 2px solid #e5e7eb; margin-top: 6px; padding-top: 12px;">
+                <span style="font-weight: 700; color: #0f172a; font-size: 16px;">Total</span>
+                <span style="font-weight: 700; color: #0463f1; font-size: 18px;">
+                    {{ order.totalAmount|number_format(0, ',', ' ') }} FCFA
+                </span>
+            </div>
+        </div>
+
+        <!-- Adresse de livraison -->
+        {% if order.deliveryAddress %}
+            <div style="margin: 25px 0; background: #f8fafc; border-radius: 12px; padding: 20px;">
+                <h3 style="font-size: 14px; color: #0f172a; margin: 0 0 10px 0;">
+                    📍 Adresse de livraison
+                </h3>
+                <p style="color: #475569; font-size: 14px; margin: 0; line-height: 1.6;">
+                    {{ order.customerName }}<br>
+                    {{ order.deliveryAddress }}<br>
+                    {% if order.deliveryCity %}{{ order.deliveryCity }}{% endif %}
+                    {% if order.deliveryZipcode %} - {{ order.deliveryZipcode }}{% endif %}
+                    <br>{{ order.deliveryCountry|default('Bénin') }}
+                </p>
+                {% if order.deliveryLatitude and order.deliveryLongitude %}
+                    <p style="color: #94a3b8; font-size: 12px; margin-top: 5px;">
+                        📍 Coordonnées GPS: {{ order.deliveryLatitude }}, {{ order.deliveryLongitude }}
+                    </p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <!-- ✅ BOUTON POUR LE SUPER ADMIN -->
+        <div style="text-align: center; margin-top: 30px; background: #f0f7ff; border-radius: 12px; padding: 20px;">
+            <p style="color: #475569; font-size: 14px; margin: 0 0 15px 0;">
+                <strong>🔔 Action requise :</strong> Gérez cette commande depuis le back-office.
+            </p>
+            <a href="{{ absolute_url(path('app_orders_show', {id: order.id})) }}" 
+               style="display: inline-block; background: #0463f1; color: white; padding: 12px 40px; 
+                      border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-eye" style="margin-right: 8px;"></i>
+                Voir la commande dans l'admin
+            </a>
+            <br>
+            <a href="{{ absolute_url(path('app_dashboard')) }}" 
+               style="display: inline-block; color: #0463f1; text-decoration: none; font-weight: 600; font-size: 14px; margin-top: 15px;">
+                Accéder au tableau de bord
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; padding-top: 30px; border-top: 2px solid #f1f5f9; color: #94a3b8; font-size: 12px;">
+            <p style="margin: 0;">{{ appName }} - Notification administrateur</p>
+            <p style="margin: 5px 0;">
+                Cet email est envoyé automatiquement lors d'une mise à jour de statut.
+            </p>
+            <p style="margin: 10px 0 0 0; font-size: 11px; color: #d1d5db;">
+                Commande #{{ order.orderNumber }} | {{ "now"|date('d/m/Y H:i') }}
+            </p>
+        </div>
+    </div>
+</body>
+</html>

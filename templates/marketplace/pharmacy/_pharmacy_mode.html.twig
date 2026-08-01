@@ -10,22 +10,187 @@
     }) }}
 
 {% elseif selectedCountry and selectedCity %}
-    {# Liste des pharmacies #}
-    {{ include('marketplace/pharmacy/_pharmacy_list.html.twig', {
-        pharmacies: pharmacies,
-        selectedCountry: selectedCountry,
-        selectedCity: selectedCity,
-        searchPharmacy: searchPharmacy|default(''),
-        currentPage: currentPage,
-        totalPages: totalPages,
-        totalPharmacies: totalPharmacies
-    }) }}
+    {# Liste des pharmacies DE GARDE UNIQUEMENT #}
+    {% if pharmacies|length > 0 %}
+        <div class="section-title">
+            <i class="fas fa-clock me-2" style="color: var(--success-color);"></i>
+            Pharmacies de garde à <span class="text-primary">{{ selectedCity }}</span>
+            <span class="badge-count" style="background: #dcfce7; color: #16a34a;">
+                <i class="fas fa-check-circle me-1"></i>
+                {{ totalPharmacies }} pharmacie(s) de garde
+            </span>
+        </div>
+
+        <div class="pharmacy-grid">
+            {% for pharmacy in pharmacies %}
+                <div class="pharmacy-card">
+                    <div class="d-flex gap-3 align-items-start">
+                        <div class="pharmacy-icon" style="background: #dcfce7; color: #16a34a;">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="pharmacy-name">{{ pharmacy.name }}</div>
+                            <div class="pharmacy-address">
+                                <i class="fas fa-map-marker-alt"></i> {{ pharmacy.address }}, {{ pharmacy.city }}
+                            </div>
+                            {% if pharmacy.phone %}
+                                <div class="pharmacy-address">
+                                    <i class="fas fa-phone"></i> {{ pharmacy.phone }}
+                                </div>
+                            {% endif %}
+                            <div class="mt-2">
+                                <span class="guard-badge active" style="background: #dcfce7; color: #16a34a; animation: pulse-guard 2s infinite;">
+                                    <i class="fas fa-clock"></i> En garde maintenant
+                                </span>
+                                {% if pharmacy.guardDays is defined and pharmacy.guardDays|length > 0 %}
+                                    <span class="text-muted ms-2" style="font-size: 0.75rem;">
+                                        {% set daysList = [] %}
+                                        {% for dayKey, dayData in pharmacy.guardDays %}
+                                            {% set daysList = daysList|merge([dayData.day ~ ' (' ~ dayData.start ~ '-' ~ dayData.end ~ ')']) %}
+                                        {% endfor %}
+                                        {{ daysList|join(', ') }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <div class="pharmacy-actions">
+                                <a href="{{ path('marketplace_pharmacy_search', {
+                                    mode: 'pharmacy', 
+                                    country: selectedCountry, 
+                                    city: selectedCity, 
+                                    pharmacy: pharmacy.id,
+                                    search_pharmacy: searchPharmacy|default('')
+                                }) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-info-circle me-1"></i> Détails
+                                </a>
+                                <a href="{{ path('marketplace_pharmacy_search', {
+                                    mode: 'product', 
+                                    country: selectedCountry, 
+                                    city: selectedCity, 
+                                    pharmacy: pharmacy.id
+                                }) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-box me-1"></i> Voir produits
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {# Pagination #}
+        {% if totalPages > 1 %}
+            <div class="pagination-container">
+                {% if currentPage > 1 %}
+                    <a href="{{ path('marketplace_pharmacy_search', {
+                        mode: 'pharmacy', 
+                        country: selectedCountry, 
+                        city: selectedCity, 
+                        page: currentPage - 1, 
+                        search_pharmacy: searchPharmacy|default('')
+                    }) }}" class="page-link">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                {% else %}
+                    <span class="page-link disabled"><i class="fas fa-chevron-left"></i></span>
+                {% endif %}
+
+                {% set startPage = max(1, currentPage - 2) %}
+                {% set endPage = min(totalPages, currentPage + 2) %}
+                
+                {% if startPage > 1 %}
+                    <a href="{{ path('marketplace_pharmacy_search', {
+                        mode: 'pharmacy', 
+                        country: selectedCountry, 
+                        city: selectedCity, 
+                        page: 1, 
+                        search_pharmacy: searchPharmacy|default('')
+                    }) }}" class="page-link">1</a>
+                    {% if startPage > 2 %}
+                        <span class="page-link disabled">…</span>
+                    {% endif %}
+                {% endif %}
+
+                {% for page in startPage..endPage %}
+                    <a href="{{ path('marketplace_pharmacy_search', {
+                        mode: 'pharmacy', 
+                        country: selectedCountry, 
+                        city: selectedCity, 
+                        page: page, 
+                        search_pharmacy: searchPharmacy|default('')
+                    }) }}" class="page-link {{ page == currentPage ? 'active' : '' }}">
+                        {{ page }}
+                    </a>
+                {% endfor %}
+
+                {% if endPage < totalPages %}
+                    {% if endPage < totalPages - 1 %}
+                        <span class="page-link disabled">…</span>
+                    {% endif %}
+                    <a href="{{ path('marketplace_pharmacy_search', {
+                        mode: 'pharmacy', 
+                        country: selectedCountry, 
+                        city: selectedCity, 
+                        page: totalPages, 
+                        search_pharmacy: searchPharmacy|default('')
+                    }) }}" class="page-link">{{ totalPages }}</a>
+                {% endif %}
+
+                {% if currentPage < totalPages %}
+                    <a href="{{ path('marketplace_pharmacy_search', {
+                        mode: 'pharmacy', 
+                        country: selectedCountry, 
+                        city: selectedCity, 
+                        page: currentPage + 1, 
+                        search_pharmacy: searchPharmacy|default('')
+                    }) }}" class="page-link">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                {% else %}
+                    <span class="page-link disabled"><i class="fas fa-chevron-right"></i></span>
+                {% endif %}
+
+                <span class="page-info">Page {{ currentPage }} sur {{ totalPages }}</span>
+            </div>
+        {% endif %}
+
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-clock" style="color: #f59e0b;"></i>
+            <h4>Aucune pharmacie de garde trouvée</h4>
+            <p class="text-muted">
+                {% if searchPharmacy|default('') %}
+                    Aucune pharmacie de garde ne correspond à "{{ searchPharmacy }}" dans cette ville.
+                {% else %}
+                    Aucune pharmacie de garde disponible dans cette ville pour le moment.
+                {% endif %}
+            </p>
+            <div class="mt-3">
+                <small class="text-muted d-block mb-2">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Les pharmacies de garde sont affichées automatiquement en fonction de l'heure actuelle.
+                </small>
+                {% if searchPharmacy|default('') %}
+                    <a href="{{ path('marketplace_pharmacy_search', {
+                        mode: 'pharmacy', 
+                        country: selectedCountry, 
+                        city: selectedCity
+                    }) }}" class="btn btn-primary mt-2">
+                        <i class="fas fa-undo me-1"></i> Voir toutes les pharmacies de garde
+                    </a>
+                {% else %}
+                    <a href="{{ path('marketplace_pharmacy_search', {mode: 'pharmacy'}) }}" class="btn btn-primary mt-2">
+                        <i class="fas fa-undo me-1"></i> Nouvelle recherche
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
 
 {% else %}
     {# Aucune sélection #}
     <div class="empty-state">
         <i class="fas fa-search-location"></i>
         <h4>Sélectionnez un pays et une ville</h4>
-        <p class="text-muted">Choisissez un pays puis une ville pour voir les pharmacies disponibles.</p>
+        <p class="text-muted">Choisissez un pays puis une ville pour voir les pharmacies de garde disponibles.</p>
     </div>
 {% endif %}

@@ -826,6 +826,7 @@
     <service id="App\Controller\Marketplace\AuthController" class="App\Controller\Marketplace\AuthController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
+      <argument type="service" id="monolog.logger"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.siKanuc.App\Controller\Marketplace\AuthController"/>
       </call>
@@ -836,6 +837,12 @@
       <argument type="service" id="App\Repository\CartRepository"/>
       <argument type="service" id="App\Repository\ProductRepository"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Sale\PromotionCalculator"/>
+      <argument type="service" id="App\Service\FedaPayService"/>
+      <argument type="service" id="App\Service\OrderService"/>
+      <argument type="service" id="mailer.mailer"/>
+      <argument type="service" id="twig"/>
+      <argument type="service" id="monolog.logger"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.siKanuc.App\Controller\Marketplace\CartController"/>
       </call>
@@ -868,6 +875,7 @@
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Sale\SaleService"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.siKanuc.App\Controller\Marketplace\HomeController"/>
       </call>
@@ -898,6 +906,8 @@
     <service id="App\Controller\Marketplace\ProductController" class="App\Controller\Marketplace\ProductController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Sale\SaleService"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.siKanuc.App\Controller\Marketplace\ProductController"/>
       </call>
@@ -906,6 +916,7 @@
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="monolog.logger"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.siKanuc.App\Controller\Marketplace\ProfileController"/>
       </call>
@@ -1198,6 +1209,12 @@
       <tag name="container.hot_path"/>
       <argument type="service" id="security.token_storage"/>
       <argument type="service" id="router.default"/>
+    </service>
+    <service id="App\EventListener\CustomerTargetPathListener" class="App\EventListener\CustomerTargetPathListener" autowire="true" autoconfigure="true">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="monolog.logger"/>
     </service>
     <service id="App\EventListener\LoginListener" class="App\EventListener\LoginListener" autowire="true" autoconfigure="true">
       <tag name="kernel.event_subscriber"/>
@@ -1570,7 +1587,7 @@
     <service id="App\Security\CustomerAuthenticator" class="App\Security\CustomerAuthenticator" autowire="true" autoconfigure="true">
       <argument type="service" id="router.default"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
-      <argument type="service" id="request_stack"/>
+      <argument type="service" id="monolog.logger"/>
     </service>
     <service id="App\Security\CustomerLoginSuccessHandler" class="App\Security\CustomerLoginSuccessHandler" autowire="true" autoconfigure="true">
       <argument type="service" id="router.default"/>
@@ -1671,6 +1688,14 @@
       <argument>%env(APP_URL)%</argument>
       <argument>true</argument>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
+    <service id="App\Service\OrderService" class="App\Service\OrderService" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Sale\PromotionCalculator"/>
+      <argument type="service" id="App\Service\Sale\StockDeductionService"/>
+      <argument type="service" id="mailer.mailer"/>
+      <argument type="service" id="twig"/>
+      <argument type="service" id="monolog.logger"/>
     </service>
     <service id="App\Service\Payment\SubscriptionPaymentService" class="App\Service\Payment\SubscriptionPaymentService" public="true" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
@@ -1834,6 +1859,12 @@
     <service id="App\Service\UnitConverter" class="App\Service\UnitConverter" autowire="true" autoconfigure="true"/>
     <service id="App\Twig\AppExtension" class="App\Twig\AppExtension" autowire="true" autoconfigure="true">
       <tag name="twig.extension"/>
+      <argument type="service" id="security.helper"/>
+      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="App\Repository\FavoriteRepository"/>
+      <argument type="service" id="App\Repository\CartRepository"/>
+      <argument type="service" id="monolog.logger"/>
+      <argument type="service" id="App\Repository\OrderItemRepository"/>
     </service>
     <service id="App\Twig\ArrayExtension" class="App\Twig\ArrayExtension" autowire="true" autoconfigure="true">
       <tag name="twig.extension"/>
@@ -1846,8 +1877,18 @@
       <tag name="twig.extension"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
+    <service id="App\Twig\CountryExtension" class="App\Twig\CountryExtension" autowire="true" autoconfigure="true">
+      <tag name="twig.extension"/>
+    </service>
     <service id="App\Twig\FcfaExtension" class="App\Twig\FcfaExtension" autowire="true" autoconfigure="true">
       <tag name="twig.extension"/>
+    </service>
+    <service id="App\Twig\GlobalVariables" class="App\Twig\GlobalVariables" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="security.helper"/>
+      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="App\Repository\FavoriteRepository"/>
+      <argument type="service" id="App\Repository\CartRepository"/>
+      <argument type="service" id="monolog.logger"/>
     </service>
     <service id="App\Twig\MarketplaceExtension" class="App\Twig\MarketplaceExtension" autowire="true" autoconfigure="true">
       <tag name="twig.extension"/>
@@ -1860,6 +1901,10 @@
     <service id="App\Twig\MenuExtension" class="App\Twig\MenuExtension" autowire="true" autoconfigure="true">
       <tag name="twig.extension"/>
       <argument type="service" id="App\Service\MenuBuilder"/>
+    </service>
+    <service id="App\Twig\RatingExtension" class="App\Twig\RatingExtension" autowire="true" autoconfigure="true">
+      <tag name="twig.extension"/>
+      <argument type="service" id="App\Repository\OrderItemRepository"/>
     </service>
     <service id="App\Twig\RoleExtension" class="App\Twig\RoleExtension" autowire="true" autoconfigure="true">
       <tag name="twig.extension"/>
@@ -1899,7 +1944,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.bAGZyp2"/>
+      <argument type="service" id=".service_locator.pG6eWfC"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -4478,6 +4523,14 @@
         <argument>0</argument>
       </call>
       <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\CustomerTargetPathListener"/>
+          <argument>onKernelRequest</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
         <argument>security.interactive_login</argument>
         <argument type="collection">
           <argument type="service_closure" id="App\EventListener\LoginListener"/>
@@ -5099,7 +5152,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.bAGZyp2"/>
+      <argument type="service" id=".service_locator.pG6eWfC"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -7531,6 +7584,9 @@
         <argument type="service" id="App\Twig\CompanyExtension"/>
       </call>
       <call method="addExtension">
+        <argument type="service" id="App\Twig\CountryExtension"/>
+      </call>
+      <call method="addExtension">
         <argument type="service" id="App\Twig\FcfaExtension"/>
       </call>
       <call method="addExtension">
@@ -7538,6 +7594,9 @@
       </call>
       <call method="addExtension">
         <argument type="service" id="App\Twig\MenuExtension"/>
+      </call>
+      <call method="addExtension">
+        <argument type="service" id="App\Twig\RatingExtension"/>
       </call>
       <call method="addExtension">
         <argument type="service" id="App\Twig\RoleExtension"/>
@@ -7578,6 +7637,14 @@
       </call>
       <call method="addRuntimeLoader">
         <argument type="service" id="twig.runtime_loader"/>
+      </call>
+      <call method="addGlobal">
+        <argument>favorites_count</argument>
+        <argument type="service" id="App\Twig\GlobalVariables"/>
+      </call>
+      <call method="addGlobal">
+        <argument>cart_count</argument>
+        <argument type="service" id="App\Twig\GlobalVariables"/>
       </call>
       <call method="registerUndefinedFilterCallback">
         <argument type="collection">
@@ -10864,6 +10931,8 @@
     <service id=".abstract.instanceof.App\EventListener\ActivityListener" class="App\EventListener\ActivityListener" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\CustomerLoginListener" class="App\EventListener\CustomerLoginListener" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\EventListener\CustomerLoginListener" class="App\EventListener\CustomerLoginListener" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\CustomerTargetPathListener" class="App\EventListener\CustomerTargetPathListener" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\EventListener\CustomerTargetPathListener" class="App\EventListener\CustomerTargetPathListener" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\LoginListener" class="App\EventListener\LoginListener" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\EventListener\LoginListener" class="App\EventListener\LoginListener" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\LogoutListener" class="App\EventListener\LogoutListener" autowire="true" abstract="true"/>
@@ -11078,12 +11147,16 @@
     <service id=".abstract.instanceof.App\Twig\ColorExtension" class="App\Twig\ColorExtension" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\CompanyExtension" class="App\Twig\CompanyExtension" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Twig\CompanyExtension" class="App\Twig\CompanyExtension" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\CountryExtension" class="App\Twig\CountryExtension" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Twig\CountryExtension" class="App\Twig\CountryExtension" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\FcfaExtension" class="App\Twig\FcfaExtension" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Twig\FcfaExtension" class="App\Twig\FcfaExtension" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\MarketplaceExtension" class="App\Twig\MarketplaceExtension" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Twig\MarketplaceExtension" class="App\Twig\MarketplaceExtension" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\MenuExtension" class="App\Twig\MenuExtension" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Twig\MenuExtension" class="App\Twig\MenuExtension" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\RatingExtension" class="App\Twig\RatingExtension" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Twig\RatingExtension" class="App\Twig\RatingExtension" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\RoleExtension" class="App\Twig\RoleExtension" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Twig\RoleExtension" class="App\Twig\RoleExtension" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\SubscriptionExtension" class="App\Twig\SubscriptionExtension" autowire="true" abstract="true"/>
@@ -11952,10 +12025,11 @@
         <argument key="fileUploader" type="service_closure" id="App\Service\FileUploader"/>
       </argument>
     </service>
-    <service id=".service_locator.rSTd.nA" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.oku_pKx" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="authenticationUtils" type="service_closure" id="security.authentication_utils"/>
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
       </argument>
     </service>
     <service id=".service_locator.QXGh66F" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -11987,13 +12061,14 @@
         <argument key="passwordHasher" type="service_closure" id="security.user_password_hasher"/>
       </argument>
     </service>
-    <service id=".service_locator..PYR5fe" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.lqBJX8d" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="cartRepository" type="service_closure" id="App\Repository\CartRepository"/>
         <argument key="categoryRepository" type="service_closure" id="App\Repository\CategoryRepository"/>
         <argument key="favoriteRepository" type="service_closure" id="App\Repository\FavoriteRepository"/>
         <argument key="productRepository" type="service_closure" id="App\Repository\ProductRepository"/>
+        <argument key="promotionRepository" type="service_closure" id="App\Repository\PromotionRepository"/>
       </argument>
     </service>
     <service id=".service_locator.6CwtK4S" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -12022,14 +12097,37 @@
         <argument key="categoryRepository" type="service_closure" id="App\Repository\CategoryRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.8fS6y4d" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator..PYR5fe" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="cartRepository" type="service_closure" id="App\Repository\CartRepository"/>
         <argument key="categoryRepository" type="service_closure" id="App\Repository\CategoryRepository"/>
-        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="favoriteRepository" type="service_closure" id="App\Repository\FavoriteRepository"/>
         <argument key="productRepository" type="service_closure" id="App\Repository\ProductRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.kF6svHu" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="cartRepository" type="service_closure" id="App\Repository\CartRepository"/>
+        <argument key="categoryRepository" type="service_closure" id="App\Repository\CategoryRepository"/>
+        <argument key="favoriteRepository" type="service_closure" id="App\Repository\FavoriteRepository"/>
+        <argument key="orderItemRepository" type="service_closure" id="App\Repository\OrderItemRepository"/>
+        <argument key="productRepository" type="service_closure" id="App\Repository\ProductRepository"/>
+        <argument key="ratingRepository" type="service_closure" id="App\Repository\RatingRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.Abrjd3p" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="orderItemRepository" type="service_closure" id="App\Repository\OrderItemRepository"/>
+        <argument key="ratingRepository" type="service_closure" id="App\Repository\RatingRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.4n4ylFv" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="orderRepository" type="service_closure" id="App\Repository\OrderRepository"/>
       </argument>
     </service>
     <service id=".service_locator.VKFpB.W" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -12037,6 +12135,13 @@
       <argument type="collection">
         <argument key="passwordHasher" type="service_closure" id="security.user_password_hasher"/>
         <argument key="tokenStorage" type="service_closure" id="security.token_storage"/>
+      </argument>
+    </service>
+    <service id=".service_locator.HnfdAlw" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="orderRepository" type="service_closure" id="App\Repository\OrderRepository"/>
+        <argument key="productRepository" type="service_closure" id="App\Repository\ProductRepository"/>
       </argument>
     </service>
     <service id=".service_locator.Pf3dv.D" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -12089,6 +12194,12 @@
         <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="fileUploader" type="service_closure" id="App\Service\FileUploader"/>
         <argument key="passwordHasher" type="service_closure" id="security.user_password_hasher"/>
+      </argument>
+    </service>
+    <service id=".service_locator.rSTd.nA" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="authenticationUtils" type="service_closure" id="security.authentication_utils"/>
       </argument>
     </service>
     <service id=".service_locator.EE0.cm9" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -12146,10 +12257,13 @@
         <argument key="returnOrderRepository" type="service_closure" id="App\Repository\ReturnOrderRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.4n4ylFv" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.cN9Cpp." class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="orderRepository" type="service_closure" id="App\Repository\OrderRepository"/>
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="mailer" type="service_closure" id="mailer.mailer"/>
+        <argument key="order" type="service_closure" id=".errored..service_locator.cN9Cpp..App\Entity\Order"/>
+        <argument key="twig" type="service_closure" id="twig"/>
       </argument>
     </service>
     <service id=".service_locator.PpHMfds" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -12325,7 +12439,7 @@
         <argument key="tokenRepository" type="service_closure" id="App\Repository\SupplierCreditNoteTokenRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.bAGZyp2" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.pG6eWfC" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Admin\CartController::receiveCart" type="service_closure" id=".service_locator.nnTODkK"/>
@@ -12474,7 +12588,7 @@
         <argument key="App\Controller\Dashboard\HmaServiceProfileController::showDetails" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Manager\TeamController::edit" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Manager\TeamController::show" type="service_closure" id=".service_locator.Hz5btge"/>
-        <argument key="App\Controller\Marketplace\AuthController::login" type="service_closure" id=".service_locator.rSTd.nA"/>
+        <argument key="App\Controller\Marketplace\AuthController::login" type="service_closure" id=".service_locator.oku_pKx"/>
         <argument key="App\Controller\Marketplace\AuthController::register" type="service_closure" id=".service_locator.QXGh66F"/>
         <argument key="App\Controller\Marketplace\AuthController::resendVerification" type="service_closure" id=".service_locator.QXGh66F"/>
         <argument key="App\Controller\Marketplace\AuthController::verifyEmail" type="service_closure" id=".service_locator.CsMkqUa"/>
@@ -12483,8 +12597,10 @@
         <argument key="App\Controller\Marketplace\ForgotPasswordController::resetPassword" type="service_closure" id=".service_locator.qrNhk2c"/>
         <argument key="App\Controller\Marketplace\HomeController::addToCart" type="service_closure" id=".service_locator.drC7Dr_"/>
         <argument key="App\Controller\Marketplace\HomeController::getCartCount" type="service_closure" id=".service_locator.drC7Dr_"/>
+        <argument key="App\Controller\Marketplace\HomeController::getCartItems" type="service_closure" id=".service_locator.drC7Dr_"/>
+        <argument key="App\Controller\Marketplace\HomeController::getCartStatus" type="service_closure" id=".service_locator.drC7Dr_"/>
         <argument key="App\Controller\Marketplace\HomeController::getFavoritesCount" type="service_closure" id=".service_locator.6CwtK4S"/>
-        <argument key="App\Controller\Marketplace\HomeController::index" type="service_closure" id=".service_locator..PYR5fe"/>
+        <argument key="App\Controller\Marketplace\HomeController::index" type="service_closure" id=".service_locator.lqBJX8d"/>
         <argument key="App\Controller\Marketplace\HomeController::toggleFavorite" type="service_closure" id=".service_locator.6CwtK4S"/>
         <argument key="App\Controller\Marketplace\PharmacyController::search" type="service_closure" id=".service_locator.V8HB.cV"/>
         <argument key="App\Controller\Marketplace\PharmacySearchController::getCities" type="service_closure" id=".service_locator.V8HB.cV"/>
@@ -12494,11 +12610,17 @@
         <argument key="App\Controller\Marketplace\PharmacySearchController::getPharmacyForms" type="service_closure" id=".service_locator.DZowHzb"/>
         <argument key="App\Controller\Marketplace\PharmacySearchController::getProducts" type="service_closure" id=".service_locator.DZowHzb"/>
         <argument key="App\Controller\Marketplace\PharmacySearchController::search" type="service_closure" id=".service_locator.UfPg3UC"/>
-        <argument key="App\Controller\Marketplace\ProductController::detail" type="service_closure" id=".service_locator.N7dcDh9"/>
-        <argument key="App\Controller\Marketplace\ProductController::index" type="service_closure" id=".service_locator.8fS6y4d"/>
-        <argument key="App\Controller\Marketplace\ProductController::show" type="service_closure" id=".service_locator.N7dcDh9"/>
-        <argument key="App\Controller\Marketplace\ProductController::showWithSlug" type="service_closure" id=".service_locator.N7dcDh9"/>
+        <argument key="App\Controller\Marketplace\ProductController::getRatings" type="service_closure" id=".service_locator.Abrjd3p"/>
+        <argument key="App\Controller\Marketplace\ProductController::list" type="service_closure" id=".service_locator..PYR5fe"/>
+        <argument key="App\Controller\Marketplace\ProductController::rateProduct" type="service_closure" id=".service_locator.Abrjd3p"/>
+        <argument key="App\Controller\Marketplace\ProductController::show" type="service_closure" id=".service_locator.kF6svHu"/>
         <argument key="App\Controller\Marketplace\ProfileController::changePassword" type="service_closure" id=".service_locator.VKFpB.W"/>
+        <argument key="App\Controller\Marketplace\ProfileController::getStatsData" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Marketplace\ProfileController::index" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Marketplace\ProfileController::orderDetail" type="service_closure" id=".service_locator.HnfdAlw"/>
+        <argument key="App\Controller\Marketplace\ProfileController::orders" type="service_closure" id=".service_locator.HnfdAlw"/>
+        <argument key="App\Controller\Marketplace\ProfileController::searchOrders" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Marketplace\ProfileController::updateOrderStatus" type="service_closure" id=".service_locator.4n4ylFv"/>
         <argument key="App\Controller\Marketplace\RegistrationController::register" type="service_closure" id=".service_locator.Pf3dv.D"/>
         <argument key="App\Controller\PaymentController::alreadyProcessed" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\PaymentController::callback" type="service_closure" id=".service_locator.t9ibSgq"/>
@@ -12532,6 +12654,7 @@
         <argument key="App\Controller\Sale\OrderController::searchCustomer" type="service_closure" id=".service_locator.4n4ylFv"/>
         <argument key="App\Controller\Sale\OrderController::show" type="service_closure" id=".service_locator.TI3ct.P"/>
         <argument key="App\Controller\Sale\OrderController::toggle" type="service_closure" id=".service_locator.WlzNspm"/>
+        <argument key="App\Controller\Sale\OrderController::updateStatus" type="service_closure" id=".service_locator.cN9Cpp."/>
         <argument key="App\Controller\Sale\RestaurantSaleController::receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\Sale\RetailSaleController::receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\SecurityController::login" type="service_closure" id=".service_locator.rSTd.nA"/>
@@ -12739,7 +12862,7 @@
         <argument key="App\Controller\Dashboard\HmaServiceProfileController:showDetails" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\Manager\TeamController:edit" type="service_closure" id=".service_locator.Hz5btge"/>
         <argument key="App\Controller\Manager\TeamController:show" type="service_closure" id=".service_locator.Hz5btge"/>
-        <argument key="App\Controller\Marketplace\AuthController:login" type="service_closure" id=".service_locator.rSTd.nA"/>
+        <argument key="App\Controller\Marketplace\AuthController:login" type="service_closure" id=".service_locator.oku_pKx"/>
         <argument key="App\Controller\Marketplace\AuthController:register" type="service_closure" id=".service_locator.QXGh66F"/>
         <argument key="App\Controller\Marketplace\AuthController:resendVerification" type="service_closure" id=".service_locator.QXGh66F"/>
         <argument key="App\Controller\Marketplace\AuthController:verifyEmail" type="service_closure" id=".service_locator.CsMkqUa"/>
@@ -12748,8 +12871,10 @@
         <argument key="App\Controller\Marketplace\ForgotPasswordController:resetPassword" type="service_closure" id=".service_locator.qrNhk2c"/>
         <argument key="App\Controller\Marketplace\HomeController:addToCart" type="service_closure" id=".service_locator.drC7Dr_"/>
         <argument key="App\Controller\Marketplace\HomeController:getCartCount" type="service_closure" id=".service_locator.drC7Dr_"/>
+        <argument key="App\Controller\Marketplace\HomeController:getCartItems" type="service_closure" id=".service_locator.drC7Dr_"/>
+        <argument key="App\Controller\Marketplace\HomeController:getCartStatus" type="service_closure" id=".service_locator.drC7Dr_"/>
         <argument key="App\Controller\Marketplace\HomeController:getFavoritesCount" type="service_closure" id=".service_locator.6CwtK4S"/>
-        <argument key="App\Controller\Marketplace\HomeController:index" type="service_closure" id=".service_locator..PYR5fe"/>
+        <argument key="App\Controller\Marketplace\HomeController:index" type="service_closure" id=".service_locator.lqBJX8d"/>
         <argument key="App\Controller\Marketplace\HomeController:toggleFavorite" type="service_closure" id=".service_locator.6CwtK4S"/>
         <argument key="App\Controller\Marketplace\PharmacyController:search" type="service_closure" id=".service_locator.V8HB.cV"/>
         <argument key="App\Controller\Marketplace\PharmacySearchController:getCities" type="service_closure" id=".service_locator.V8HB.cV"/>
@@ -12759,11 +12884,17 @@
         <argument key="App\Controller\Marketplace\PharmacySearchController:getPharmacyForms" type="service_closure" id=".service_locator.DZowHzb"/>
         <argument key="App\Controller\Marketplace\PharmacySearchController:getProducts" type="service_closure" id=".service_locator.DZowHzb"/>
         <argument key="App\Controller\Marketplace\PharmacySearchController:search" type="service_closure" id=".service_locator.UfPg3UC"/>
-        <argument key="App\Controller\Marketplace\ProductController:detail" type="service_closure" id=".service_locator.N7dcDh9"/>
-        <argument key="App\Controller\Marketplace\ProductController:index" type="service_closure" id=".service_locator.8fS6y4d"/>
-        <argument key="App\Controller\Marketplace\ProductController:show" type="service_closure" id=".service_locator.N7dcDh9"/>
-        <argument key="App\Controller\Marketplace\ProductController:showWithSlug" type="service_closure" id=".service_locator.N7dcDh9"/>
+        <argument key="App\Controller\Marketplace\ProductController:getRatings" type="service_closure" id=".service_locator.Abrjd3p"/>
+        <argument key="App\Controller\Marketplace\ProductController:list" type="service_closure" id=".service_locator..PYR5fe"/>
+        <argument key="App\Controller\Marketplace\ProductController:rateProduct" type="service_closure" id=".service_locator.Abrjd3p"/>
+        <argument key="App\Controller\Marketplace\ProductController:show" type="service_closure" id=".service_locator.kF6svHu"/>
         <argument key="App\Controller\Marketplace\ProfileController:changePassword" type="service_closure" id=".service_locator.VKFpB.W"/>
+        <argument key="App\Controller\Marketplace\ProfileController:getStatsData" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Marketplace\ProfileController:index" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Marketplace\ProfileController:orderDetail" type="service_closure" id=".service_locator.HnfdAlw"/>
+        <argument key="App\Controller\Marketplace\ProfileController:orders" type="service_closure" id=".service_locator.HnfdAlw"/>
+        <argument key="App\Controller\Marketplace\ProfileController:searchOrders" type="service_closure" id=".service_locator.4n4ylFv"/>
+        <argument key="App\Controller\Marketplace\ProfileController:updateOrderStatus" type="service_closure" id=".service_locator.4n4ylFv"/>
         <argument key="App\Controller\Marketplace\RegistrationController:register" type="service_closure" id=".service_locator.Pf3dv.D"/>
         <argument key="App\Controller\PaymentController:alreadyProcessed" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\PaymentController:callback" type="service_closure" id=".service_locator.t9ibSgq"/>
@@ -12797,6 +12928,7 @@
         <argument key="App\Controller\Sale\OrderController:searchCustomer" type="service_closure" id=".service_locator.4n4ylFv"/>
         <argument key="App\Controller\Sale\OrderController:show" type="service_closure" id=".service_locator.TI3ct.P"/>
         <argument key="App\Controller\Sale\OrderController:toggle" type="service_closure" id=".service_locator.WlzNspm"/>
+        <argument key="App\Controller\Sale\OrderController:updateStatus" type="service_closure" id=".service_locator.cN9Cpp."/>
         <argument key="App\Controller\Sale\RestaurantSaleController:receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\Sale\RetailSaleController:receipt" type="service_closure" id=".service_locator.ruxHxcA"/>
         <argument key="App\Controller\SecurityController:login" type="service_closure" id=".service_locator.rSTd.nA"/>
@@ -14821,6 +14953,9 @@
     <service id=".errored..service_locator.TI3ct.P.App\Entity\Order" class="App\Entity\Order">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.TI3ct.P&quot;: it needs an instance of &quot;App\Entity\Order&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
+    <service id=".errored..service_locator.cN9Cpp..App\Entity\Order" class="App\Entity\Order">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.cN9Cpp.&quot;: it needs an instance of &quot;App\Entity\Order&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
     <service id=".errored..service_locator.Sy9ktqY.App\Entity\Inventory" class="App\Entity\Inventory">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.Sy9ktqY&quot;: it needs an instance of &quot;App\Entity\Inventory&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
@@ -16195,7 +16330,7 @@
     <service id="Knp\Bundle\TimeBundle\DateTimeFormatter" alias="time.datetime_formatter"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.bAGZyp2"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.pG6eWfC"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -16260,9 +16395,11 @@
     <service id=".service_locator.pAJqyge" alias=".service_locator.X6B4nAg"/>
     <service id=".service_locator.6ctAMOZ" alias=".service_locator.3fvOxJk"/>
     <service id=".service_locator.i69vAbp" alias=".service_locator.QXGh66F"/>
-    <service id=".service_locator.hacDiu6" alias=".service_locator..PYR5fe"/>
+    <service id=".service_locator.spQ5i4A" alias=".service_locator.lqBJX8d"/>
     <service id=".service_locator.6icJU7u" alias=".service_locator.UfPg3UC"/>
-    <service id=".service_locator.NM1mDEX" alias=".service_locator.8fS6y4d"/>
+    <service id=".service_locator.hacDiu6" alias=".service_locator..PYR5fe"/>
+    <service id=".service_locator.WrRbDwd" alias=".service_locator.kF6svHu"/>
+    <service id=".service_locator.mkKH6sG" alias=".service_locator.Abrjd3p"/>
     <service id=".service_locator.P8A6VsN" alias=".service_locator.Pf3dv.D"/>
     <service id=".service_locator.EYumDST" alias=".service_locator.t9ibSgq"/>
     <service id=".service_locator.Dw2Fmdi" alias=".service_locator.XTjzo4w"/>
@@ -16271,6 +16408,7 @@
     <service id=".service_locator.9Bn7ebq" alias=".service_locator.gQbEjC7"/>
     <service id=".service_locator.tNTcPoI" alias=".service_locator.TFDMK8M"/>
     <service id=".service_locator.FOXgEKi" alias=".service_locator.WlzNspm"/>
+    <service id=".service_locator.apfk7aU" alias=".service_locator.cN9Cpp."/>
     <service id=".service_locator.VDGhXYh" alias=".service_locator.7876JS0"/>
     <service id=".service_locator.w64.HFj" alias=".service_locator.pZ9vOm3"/>
     <service id=".service_locator.ArEfX0p" alias=".service_locator.i8zDIA5"/>
@@ -16278,7 +16416,7 @@
     <service id=".service_locator.GS1F4er" alias=".service_locator.CqWJ9w6"/>
     <service id=".service_locator.3oRQWcw" alias=".service_locator.jMmnFRa"/>
     <service id=".service_locator.zgOrgxD" alias=".service_locator.t.B26rY"/>
-    <service id=".service_locator.ajo9FNh" alias=".service_locator.bAGZyp2"/>
+    <service id=".service_locator.HoPXE7L" alias=".service_locator.pG6eWfC"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
     <service id=".service_locator.P2VNMyQ" alias=".service_locator.KWhUj2s"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>
@@ -16372,18 +16510,22 @@
     <service id=".service_locator.W47vLMj" alias=".service_locator.Mhqdd2r"/>
     <service id=".service_locator.bacGJr1" alias=".service_locator.SpqV6qx"/>
     <service id=".service_locator.J4v_dgx" alias=".service_locator.fNvIwJr"/>
-    <service id=".service_locator.7NIAq8D" alias=".service_locator.rSTd.nA"/>
+    <service id=".service_locator.gcjlrIe" alias=".service_locator.oku_pKx"/>
     <service id=".service_locator.6pA19GC" alias=".service_locator.QXGh66F"/>
     <service id=".service_locator.BAMJP9h" alias=".service_locator.0CRkV7m"/>
     <service id=".service_locator.hOuXX4M" alias=".service_locator.WZeIXfO"/>
     <service id=".service_locator.GEFQPA3" alias=".service_locator.qrNhk2c"/>
-    <service id=".service_locator.stML88r" alias=".service_locator..PYR5fe"/>
+    <service id=".service_locator.SNBtHk7" alias=".service_locator.lqBJX8d"/>
     <service id=".service_locator.msBE5BU" alias=".service_locator.6CwtK4S"/>
     <service id=".service_locator.A5KqKaj" alias=".service_locator.drC7Dr_"/>
     <service id=".service_locator.O.Rvpvh" alias=".service_locator.UfPg3UC"/>
     <service id=".service_locator.js1hwUF" alias=".service_locator.3opkxl5"/>
-    <service id=".service_locator.SnhG6w_" alias=".service_locator.8fS6y4d"/>
+    <service id=".service_locator.stML88r" alias=".service_locator..PYR5fe"/>
+    <service id=".service_locator.fzMeHBx" alias=".service_locator.kF6svHu"/>
+    <service id=".service_locator.v5qvNNK" alias=".service_locator.Abrjd3p"/>
+    <service id=".service_locator.BvvBT9K" alias=".service_locator.4n4ylFv"/>
     <service id=".service_locator.e3wnPcz" alias=".service_locator.VKFpB.W"/>
+    <service id=".service_locator.u_Oo93H" alias=".service_locator.HnfdAlw"/>
     <service id=".service_locator.aKO3ZCT" alias=".service_locator.Pf3dv.D"/>
     <service id=".service_locator.U3zF2sy" alias=".service_locator.t9ibSgq"/>
     <service id=".service_locator.qDoK7Nx" alias=".service_locator.ruxHxcA"/>
@@ -16391,6 +16533,7 @@
     <service id=".service_locator.qcDUZnU" alias=".service_locator.dC4Tbs0"/>
     <service id=".service_locator.WvsB0MA" alias=".service_locator.GBRGGXk"/>
     <service id=".service_locator.1Bj4zw5" alias=".service_locator.6LV_x97"/>
+    <service id=".service_locator.7NIAq8D" alias=".service_locator.rSTd.nA"/>
     <service id=".service_locator.ostNlSn" alias=".service_locator.EE0.cm9"/>
     <service id=".service_locator.uPguXMt" alias=".service_locator.Z9ydiC1"/>
     <service id=".service_locator.qV9.XYI" alias=".service_locator.UMxr_M5"/>
@@ -16399,7 +16542,7 @@
     <service id=".service_locator.1.9tujA" alias=".service_locator.TFDMK8M"/>
     <service id=".service_locator.gtgK4ct" alias=".service_locator.WlzNspm"/>
     <service id=".service_locator.P897ZZy" alias=".service_locator.TI3ct.P"/>
-    <service id=".service_locator.BvvBT9K" alias=".service_locator.4n4ylFv"/>
+    <service id=".service_locator.9B5.A4w" alias=".service_locator.cN9Cpp."/>
     <service id=".service_locator.6lDFlAY" alias=".service_locator.PpHMfds"/>
     <service id=".service_locator.xKSXQLV" alias=".service_locator.Sy9ktqY"/>
     <service id=".service_locator.Ju50Upb" alias=".service_locator.1lR5OUa"/>

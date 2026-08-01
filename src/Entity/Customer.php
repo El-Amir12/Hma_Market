@@ -1,5 +1,6 @@
 <?php
 // src/Entity/Customer.php
+
 namespace App\Entity;
 
 use App\Repository\CustomerRepository;
@@ -55,23 +56,18 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $bio = null;
 
-    // ✅ CHAMP IS_ACTIVE - Par défaut false (compte inactif jusqu'à validation)
     #[ORM\Column(options: ['default' => false])]
     private ?bool $is_active = false;
 
-    // ✅ CHAMP IS_VERIFIED - Email vérifié
     #[ORM\Column(options: ['default' => false])]
     private ?bool $is_verified = false;
 
-    // ✅ CHAMP MUST_CHANGE_PASSWORD - Obligation de changer le mot de passe à la première connexion
     #[ORM\Column(options: ['default' => true])]
     private ?bool $must_change_password = true;
 
-    // ✅ TOKEN DE VÉRIFICATION
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $verification_token = null;
 
-    // ✅ DATE D'EXPIRATION DU TOKEN
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $verification_token_expires_at = null;
 
@@ -99,7 +95,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTime $resetPasswordTokenExpiresAt = null;
 
-    // Propriété pour le mot de passe en clair (non persistée)
     private ?string $plainPassword = null;
 
     #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
@@ -401,7 +396,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
         $this->failedLoginAttempts = ($this->failedLoginAttempts ?? 0) + 1;
         $this->lastFailedAttemptAt = new \DateTime();
         
-        // Bloquer après 5 tentatives
         if ($this->failedLoginAttempts >= 5) {
             $this->lockedUntil = new \DateTime('+15 minutes');
         }
@@ -487,7 +481,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // Ajouter une méthode pour vérifier si le client est supprimé
     public function isDeleted(): bool
     {
         return $this->deleted_at !== null;
@@ -539,9 +532,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
         return $lastActivity > $threshold;
     }
 
-    /**
-     * Génère un token de vérification unique
-     */
     public function generateVerificationToken(): string
     {
         $token = bin2hex(random_bytes(32));
@@ -550,9 +540,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
         return $token;
     }
 
-    /**
-     * Vérifie si le token de vérification est valide
-     */
     public function isValidVerificationToken(string $token): bool
     {
         return $this->verification_token === $token 
@@ -560,14 +547,40 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
             && $this->verification_token_expires_at > new \DateTimeImmutable();
     }
 
-    /**
-     * Active le compte après vérification
-     */
     public function activateAccount(): void
     {
         $this->is_active = true;
         $this->is_verified = true;
         $this->verification_token = null;
         $this->verification_token_expires_at = null;
+    }
+
+    // ==================== RELATION ORDERS ====================
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setCustomer($this);
+        }
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            if ($order->getCustomer() === $this) {
+                $order->setCustomer(null);
+            }
+        }
+        return $this;
     }
 }

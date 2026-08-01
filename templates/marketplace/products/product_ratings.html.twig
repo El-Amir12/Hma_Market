@@ -1,0 +1,986 @@
+{# templates/marketplace/products/product_ratings.html.twig #}
+
+{% extends 'base_marketplace.html.twig' %}
+
+{% block title %}Avis sur {{ product.name }} - HMA Marketplace{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #0463f1 0%, #667eea 100%);
+        --card-radius: 20px;
+        --card-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        --card-shadow-hover: 0 12px 35px rgba(0,0,0,0.12);
+    }
+
+    /* ==================== BREADCRUMB ==================== */
+    .breadcrumb-custom {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 1.5rem;
+    }
+    .breadcrumb-custom .breadcrumb-item a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    .breadcrumb-custom .breadcrumb-item a:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+    }
+    .breadcrumb-custom .breadcrumb-item.active {
+        color: #64748b;
+    }
+    .breadcrumb-custom .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        font-size: 1.2rem;
+        font-weight: 300;
+        color: #94a3b8;
+    }
+
+    /* ==================== RATING SUMMARY ==================== */
+    .rating-summary-card {
+        background: white;
+        border-radius: var(--card-radius);
+        padding: 2rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: var(--card-shadow);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .rating-summary-card:hover {
+        box-shadow: var(--card-shadow-hover);
+        transform: translateY(-2px);
+    }
+
+    .rating-summary-card .big-number {
+        font-size: 4rem;
+        font-weight: 900;
+        color: #f59e0b;
+        line-height: 1;
+        letter-spacing: -2px;
+    }
+
+    .rating-summary-card .stars-big {
+        font-size: 1.8rem;
+        margin: 0.5rem 0;
+    }
+
+    .rating-summary-card .rating-count {
+        color: #64748b;
+        font-size: 0.95rem;
+    }
+    .rating-summary-card .rating-count strong {
+        color: #0f172a;
+    }
+
+    /* ==================== DISTRIBUTION BARS ==================== */
+    .distribution-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.25rem 0;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    .distribution-bar:hover {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding-left: 0.5rem;
+    }
+    .distribution-bar .star-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #475569;
+        min-width: 30px;
+        text-align: right;
+    }
+    .distribution-bar .bar-track {
+        flex: 1;
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+    }
+    .distribution-bar .bar-track .bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        border-radius: 4px;
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 0%;
+    }
+    .distribution-bar .bar-count {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        min-width: 35px;
+        font-weight: 500;
+    }
+
+    /* ==================== RATING FORM ==================== */
+    .rating-form-card {
+        background: white;
+        border-radius: var(--card-radius);
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+    }
+    .rating-form-card:hover {
+        box-shadow: var(--card-shadow-hover);
+    }
+    .rating-form-card .form-title {
+        font-weight: 700;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .rating-form-card .form-title i {
+        color: var(--primary-color);
+    }
+
+    .rating-stars-input {
+        display: flex;
+        gap: 0.3rem;
+        margin: 0.5rem 0 1rem;
+    }
+    .rating-stars-input .star-btn {
+        font-size: 2rem;
+        padding: 0;
+        border: none;
+        background: none;
+        color: #d1d5db;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .rating-stars-input .star-btn:hover {
+        transform: scale(1.2);
+        color: #f59e0b;
+    }
+    .rating-stars-input .star-btn.active {
+        color: #f59e0b;
+    }
+
+    /* ==================== USER RATING CARD ==================== */
+    .user-rating-card {
+        background: #f0f7ff;
+        border: 2px solid var(--primary-color);
+        border-radius: var(--card-radius);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+    .user-rating-card .badge-mine {
+        position: absolute;
+        top: -10px;
+        right: 15px;
+        background: var(--primary-gradient);
+        color: white;
+        padding: 0.2rem 1rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .user-rating-card .edit-hint {
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+
+    /* ==================== RATING ITEM ==================== */
+    .rating-item {
+        background: white;
+        border-radius: var(--card-radius);
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    .rating-item:hover {
+        box-shadow: var(--card-shadow-hover);
+        border-color: var(--primary-color);
+    }
+    .rating-item .rating-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .rating-item .rating-header .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    /* ✅ AVATAR AMÉLIORÉ */
+    .rating-item .rating-header .user-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        text-transform: uppercase;
+    }
+    
+    /* Couleurs d'avatar variées */
+    .rating-item .rating-header .user-avatar.color-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .rating-item .rating-header .user-avatar.color-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .rating-item .rating-header .user-avatar.color-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .rating-item .rating-header .user-avatar.color-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+    .rating-item .rating-header .user-avatar.color-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+    .rating-item .rating-header .user-avatar.color-6 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+    .rating-item .rating-header .user-avatar.color-7 { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
+    .rating-item .rating-header .user-avatar.color-8 { background: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%); }
+    
+    /* Avatar pour "Mon avis" */
+    .user-rating-card .user-avatar-mine {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--primary-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        text-transform: uppercase;
+        box-shadow: 0 4px 12px rgba(4, 99, 241, 0.3);
+    }
+
+    .rating-item .rating-header .user-name {
+        font-weight: 600;
+        color: #0f172a;
+    }
+    .rating-item .rating-header .rating-date {
+        font-size: 0.8rem;
+        color: #94a3b8;
+    }
+    .rating-item .rating-stars {
+        font-size: 1rem;
+        margin: 0.3rem 0;
+    }
+    .rating-item .rating-comment {
+        color: #475569;
+        line-height: 1.7;
+        margin-top: 0.5rem;
+    }
+    .rating-item .rating-comment:empty {
+        display: none;
+    }
+    .rating-item .rating-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.7rem;
+        padding: 0.15rem 0.6rem;
+        border-radius: 50px;
+        background: #fef3c7;
+        color: #92400e;
+        font-weight: 600;
+    }
+    .rating-item .rating-badge.verified {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+    .rating-item .rating-badge.is-mine {
+        background: var(--primary-gradient);
+        color: white;
+    }
+
+    /* ==================== PAGINATION ==================== */
+    .pagination-modern {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.4rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+    .pagination-modern .page-item {
+        list-style: none;
+    }
+    .pagination-modern .page-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        border: 2px solid #e5e7eb;
+        color: #475569;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        background: white;
+        cursor: pointer;
+    }
+    .pagination-modern .page-link:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background: #f8fafc;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .pagination-modern .page-item.active .page-link {
+        background: var(--primary-gradient);
+        border-color: var(--primary-color);
+        color: white;
+        box-shadow: 0 4px 12px rgba(4, 99, 241, 0.25);
+    }
+    .pagination-modern .page-item.disabled .page-link {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+    .pagination-modern .page-info {
+        color: #94a3b8;
+        font-size: 0.85rem;
+        padding: 0 0.5rem;
+        font-weight: 500;
+    }
+
+    /* ==================== EMPTY STATE ==================== */
+    .empty-state-ratings {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: white;
+        border-radius: var(--card-radius);
+        border: 2px dashed #e5e7eb;
+    }
+    .empty-state-ratings .icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background: #fef3c7;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+    }
+    .empty-state-ratings .icon-wrapper i {
+        font-size: 2.5rem;
+        color: #f59e0b;
+    }
+    .empty-state-ratings h5 {
+        color: #0f172a;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    .empty-state-ratings p {
+        color: #94a3b8;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    /* ==================== BACK BUTTON ==================== */
+    .btn-back-product {
+        border-radius: 50px;
+        padding: 0.6rem 2rem;
+        border: 2px solid #e5e7eb;
+        color: #64748b;
+        background: transparent;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+    }
+    .btn-back-product:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background: #f8fafc;
+        transform: translateX(-4px);
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 992px) {
+        .rating-summary-card .big-number { font-size: 3.5rem; }
+        .rating-summary-card .stars-big { font-size: 1.5rem; }
+    }
+
+    @media (max-width: 768px) {
+        .rating-summary-card { padding: 1.5rem; }
+        .rating-summary-card .big-number { font-size: 3rem; }
+        .rating-summary-card .stars-big { font-size: 1.3rem; }
+        .rating-item .rating-header { flex-direction: column; align-items: flex-start; }
+        .rating-item .rating-header .rating-date { margin-top: 0.2rem; }
+        .rating-form-card { padding: 1rem; }
+        .rating-stars-input .star-btn { font-size: 1.6rem; }
+        .pagination-modern .page-link { min-width: 36px; height: 36px; font-size: 0.8rem; }
+        .distribution-bar .star-label { font-size: 0.75rem; min-width: 25px; }
+        .distribution-bar .bar-count { font-size: 0.7rem; min-width: 30px; }
+        .user-rating-card { padding: 1rem; }
+        .user-rating-card .badge-mine { position: relative; top: 0; right: 0; display: inline-block; margin-bottom: 0.5rem; }
+        .rating-item .rating-header .user-avatar { width: 38px; height: 38px; font-size: 0.9rem; }
+        .user-rating-card .user-avatar-mine { width: 38px; height: 38px; font-size: 0.9rem; }
+    }
+
+    @media (max-width: 480px) {
+        .rating-summary-card .big-number { font-size: 2.5rem; }
+        .rating-summary-card .stars-big { font-size: 1.1rem; }
+        .rating-stars-input .star-btn { font-size: 1.4rem; }
+        .rating-item { padding: 1rem; }
+        .rating-item .rating-header .user-avatar { width: 32px; height: 32px; font-size: 0.8rem; }
+        .user-rating-card .user-avatar-mine { width: 32px; height: 32px; font-size: 0.8rem; }
+        .rating-item .rating-stars { font-size: 0.8rem; }
+        .rating-item .rating-comment { font-size: 0.85rem; }
+        .pagination-modern .page-link { min-width: 32px; height: 32px; font-size: 0.75rem; border-radius: 8px; }
+        .distribution-bar { gap: 0.4rem; }
+        .btn-back-product { font-size: 0.85rem; padding: 0.4rem 1.2rem; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <!-- ==================== BREADCRUMB ==================== -->
+    <nav aria-label="breadcrumb" class="breadcrumb-custom">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ path('marketplace_home') }}">
+                    <i class="fas fa-home me-1"></i>Accueil
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ path('marketplace_product_show', {id: product.id}) }}">
+                    {{ product.name|u.truncate(30, '...') }}
+                </a>
+            </li>
+            <li class="breadcrumb-item active">Avis</li>
+        </ol>
+    </nav>
+
+    <!-- ==================== TITRE ==================== -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <h1 class="h3 fw-bold mb-0" style="color: #0f172a;">
+            <i class="fas fa-star text-warning me-2"></i>
+            Avis sur <span class="text-primary">{{ product.name }}</span>
+        </h1>
+        <a href="{{ path('marketplace_product_show', {id: product.id}) }}" class="btn-back-product">
+            <i class="fas fa-arrow-left me-1"></i> Retour au produit
+        </a>
+    </div>
+
+    <!-- ==================== CONTENU PRINCIPAL ==================== -->
+    <div class="row g-4 align-items-stretch">
+        <!-- ==================== COLONNE GAUCHE : RÉSUMÉ ==================== -->
+        <div class="col-lg-4 d-flex flex-column">
+            <!-- Carte Résumé -->
+            <div class="rating-summary-card">
+                <div class="big-number">{{ averageRating|number_format(1, ',', ' ') }}</div>
+                <div class="stars-big">
+                    {% for i in 1..5 %}
+                        {% if i <= averageRating %}
+                            <i class="fas fa-star text-warning star"></i>
+                        {% elseif i - 0.5 <= averageRating %}
+                            <i class="fas fa-star-half-alt text-warning star"></i>
+                        {% else %}
+                            <i class="far fa-star text-secondary star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p class="rating-count">
+                    <strong>{{ totalRatings }}</strong> avis
+                </p>
+
+                <!-- Distribution des notes -->
+                <div class="mt-3 pt-3 border-top">
+                    {% set distribution = ratingDistribution|default({1:0, 2:0, 3:0, 4:0, 5:0}) %}
+                    {% set maxCount = maxCount|default(1) %}
+                    
+                    {% for score in 5..1 %}
+                        {% set count = distribution[score]|default(0) %}
+                        {% set percentage = maxCount > 0 ? (count / maxCount * 100)|round : 0 %}
+                        <div class="distribution-bar">
+                            <span class="star-label">{{ score }}</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: {{ percentage }}%;"></div>
+                            </div>
+                            <span class="bar-count">{{ count }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Espaceur pour pousser le formulaire vers le bas -->
+            <div class="flex-grow-1"></div>
+
+            <!-- ==================== FORMULAIRE D'AVIS ==================== -->
+            {% if app.user and is_customer(app.user) %}
+                {% if hasPurchased %}
+                    <!-- Client a acheté le produit -->
+                    <div class="rating-form-card mt-3">
+                        <h6 class="form-title">
+                            <i class="fas fa-pen"></i> 
+                            {% if userRating %}
+                                Modifier mon avis
+                            {% else %}
+                                Donner mon avis
+                            {% endif %}
+                        </h6>
+                        <p class="text-muted small">
+                            {% if userRating %}
+                                Vous avez déjà laissé un avis sur ce produit. Modifiez-le ci-dessous.
+                            {% else %}
+                                Vous avez acheté ce produit, partagez votre expérience !
+                            {% endif %}
+                        </p>
+                        
+                        <form id="ratingForm">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Note</label>
+                                <div class="rating-stars-input" id="ratingStarsInput">
+                                    {% for i in 1..5 %}
+                                        <button type="button" class="star-btn {% if userRating and i <= userRating.score %}active{% endif %}" data-score="{{ i }}">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                    {% endfor %}
+                                </div>
+                                <input type="hidden" name="score" id="ratingScore" value="{{ userRating ? userRating.score : 0 }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Commentaire</label>
+                                <textarea name="comment" id="ratingComment" class="form-control" rows="3" 
+                                          placeholder="Partagez votre expérience avec ce produit...">{{ userRating ? userRating.comment : '' }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                {% if userRating %}
+                                    Modifier mon avis
+                                {% else %}
+                                    Envoyer mon avis
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                {% else %}
+                    <!-- Client n'a pas acheté le produit -->
+                    <div class="rating-form-card mt-3" style="background: #f8fafc; border-color: #e5e7eb;">
+                        <div class="text-center py-3">
+                            <i class="fas fa-shopping-bag fa-2x text-muted mb-2" style="color: #94a3b8;"></i>
+                            <h6 class="fw-bold" style="color: #475569;">Achetez d'abord ce produit</h6>
+                            <p class="text-muted small mb-0">
+                                Vous devez avoir acheté ce produit pour pouvoir laisser un avis.
+                            </p>
+                            <a href="{{ path('marketplace_product_show', {id: product.id}) }}" class="btn btn-outline-primary btn-sm mt-2">
+                                <i class="fas fa-eye me-1"></i> Voir le produit
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <!-- Utilisateur non connecté ou non client -->
+                <div class="rating-form-card mt-3" style="background: #f8fafc; border-color: #e5e7eb;">
+                    <div class="text-center py-3">
+                        <i class="fas fa-user-lock fa-2x text-muted mb-2" style="color: #94a3b8;"></i>
+                        <h6 class="fw-bold" style="color: #475569;">Connectez-vous pour donner votre avis</h6>
+                        <p class="text-muted small mb-0">
+                            Vous devez être connecté et avoir acheté ce produit pour laisser un avis.
+                        </p>
+                        <a href="{{ path('marketplace_login') }}" class="btn btn-primary btn-sm mt-2">
+                            <i class="fas fa-sign-in-alt me-1"></i> Se connecter
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- ==================== COLONNE DROITE : LISTE DES AVIS ==================== -->
+        <div class="col-lg-8 d-flex flex-column">
+            <!-- En-tête -->
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h4 class="fw-bold mb-0" style="color: #0f172a;">
+                    <i class="fas fa-star text-warning me-2"></i>
+                    Tous les avis
+                    <span class="badge bg-light text-dark ms-2">{{ totalRatings }}</span>
+                </h4>
+                <span class="text-muted small">
+                    <i class="fas fa-clock me-1"></i> Les plus récents d'abord
+                </span>
+            </div>
+
+            <!-- ==================== AVIS DE L'UTILISATEUR ==================== -->
+            {% if app.user and is_customer(app.user) and userRating %}
+                <div class="user-rating-card">
+                    <span class="badge-mine"><i class="fas fa-user me-1"></i> Mon avis</span>
+                    <div class="rating-header">
+                        <div class="user-info">
+                            <div class="user-avatar-mine">
+                                {{ app.user.fullName|first|upper }}
+                            </div>
+                            <div>
+                                <div class="user-name">
+                                    {{ app.user.fullName }}
+                                    <span class="rating-badge is-mine ms-1">
+                                        <i class="fas fa-user"></i> Vous
+                                    </span>
+                                    <span class="rating-badge verified ms-1">
+                                        <i class="fas fa-check-circle"></i> Achat vérifié
+                                    </span>
+                                </div>
+                                <div class="rating-stars">
+                                    {% for i in 1..5 %}
+                                        {% if i <= userRating.score %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% else %}
+                                            <i class="far fa-star text-secondary"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <span class="rating-date">
+                            <i class="far fa-calendar-alt me-1"></i>
+                            {{ userRating.createdAt|date('d/m/Y') }}
+                            {% if userRating.updatedAt and userRating.updatedAt != userRating.createdAt %}
+                                <span class="text-muted ms-1">(modifié)</span>
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    {% if userRating.comment %}
+                        <div class="rating-comment">{{ userRating.comment|nl2br }}</div>
+                    {% endif %}
+                    
+                    <div class="mt-2">
+                        <span class="edit-hint">
+                            <i class="fas fa-edit me-1"></i> 
+                            Vous pouvez modifier votre avis dans le formulaire ci-contre
+                        </span>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- ==================== LISTE DES AVIS DES AUTRES ==================== -->
+            {% set otherRatings = ratings|filter(r => not userRating or r.id != userRating.id) %}
+            
+            {% if otherRatings|length > 0 %}
+                <!-- Avis des autres utilisateurs -->
+                {% for rating in otherRatings %}
+                    {% set colorIndex = loop.index % 8 + 1 %}
+                    <div class="rating-item">
+                        <div class="rating-header">
+                            <div class="user-info">
+                                <div class="user-avatar color-{{ colorIndex }}">
+                                    {{ rating.customer ? rating.customer.fullName|first|upper : '?' }}
+                                </div>
+                                <div>
+                                    <div class="user-name">
+                                        {{ rating.customer ? rating.customer.fullName : 'Client anonyme' }}
+                                        <span class="rating-badge verified ms-1">
+                                            <i class="fas fa-check-circle"></i> Achat vérifié
+                                        </span>
+                                    </div>
+                                    <div class="rating-stars">
+                                        {% for i in 1..5 %}
+                                            {% if i <= rating.score %}
+                                                <i class="fas fa-star text-warning"></i>
+                                            {% else %}
+                                                <i class="far fa-star text-secondary"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="rating-date">
+                                <i class="far fa-calendar-alt me-1"></i>
+                                {{ rating.createdAt|date('d/m/Y') }}
+                            </span>
+                        </div>
+
+                        {% if rating.comment %}
+                            <div class="rating-comment">{{ rating.comment|nl2br }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <!-- Pagination -->
+                {% if totalPages > 1 %}
+                    <div class="mt-auto">
+                        <nav class="pagination-modern" aria-label="Pagination des avis">
+                            <ul class="pagination">
+                                {% if currentPage > 1 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ path('marketplace_product_ratings', {id: product.id, page: currentPage - 1}) }}">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+                                    </li>
+                                {% endif %}
+
+                                {% set startPage = max(1, currentPage - 2) %}
+                                {% set endPage = min(totalPages, currentPage + 2) %}
+
+                                {% if startPage > 1 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ path('marketplace_product_ratings', {id: product.id, page: 1}) }}">1</a>
+                                    </li>
+                                    {% if startPage > 2 %}
+                                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% for page in startPage..endPage %}
+                                    <li class="page-item {% if page == currentPage %}active{% endif %}">
+                                        <a class="page-link" href="{{ path('marketplace_product_ratings', {id: product.id, page: page}) }}">
+                                            {{ page }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+
+                                {% if endPage < totalPages %}
+                                    {% if endPage < totalPages - 1 %}
+                                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                                    {% endif %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ path('marketplace_product_ratings', {id: product.id, page: totalPages}) }}">{{ totalPages }}</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if currentPage < totalPages %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ path('marketplace_product_ratings', {id: product.id, page: currentPage + 1}) }}">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                            <span class="page-info">
+                                Page {{ currentPage }} sur {{ totalPages }}
+                            </span>
+                        </nav>
+                    </div>
+                {% endif %}
+            {% else %}
+                <!-- Empty State -->
+                <div class="empty-state-ratings">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h5>Aucun avis pour le moment</h5>
+                    <p>
+                        {% if app.user and is_customer(app.user) and hasPurchased %}
+                            Soyez le premier à donner votre avis sur ce produit !
+                        {% else %}
+                            Les premiers avis apparaîtront ici. Si vous avez acheté ce produit, vous pouvez laisser votre avis ci-contre.
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ==================== GESTION DES ÉTOILES ====================
+    const starBtns = document.querySelectorAll('#ratingStarsInput .star-btn');
+    const ratingScore = document.getElementById('ratingScore');
+    let selectedScore = parseInt(ratingScore.value) || 0;
+
+    // Initialiser les étoiles
+    starBtns.forEach(btn => {
+        const score = parseInt(btn.dataset.score);
+        if (score <= selectedScore) {
+            btn.classList.add('active');
+        }
+    });
+
+    starBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const score = parseInt(this.dataset.score);
+            selectedScore = score;
+            ratingScore.value = score;
+
+            starBtns.forEach(b => {
+                const s = parseInt(b.dataset.score);
+                if (s <= score) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
+            });
+
+            this.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+
+        btn.addEventListener('mouseenter', function() {
+            const score = parseInt(this.dataset.score);
+            starBtns.forEach(b => {
+                const s = parseInt(b.dataset.score);
+                if (s <= score) {
+                    b.style.transform = 'scale(1.1)';
+                    b.style.color = '#f59e0b';
+                }
+            });
+        });
+
+        btn.addEventListener('mouseleave', function() {
+            starBtns.forEach(b => {
+                b.style.transform = 'scale(1)';
+                const s = parseInt(b.dataset.score);
+                if (s <= selectedScore) {
+                    b.style.color = '#f59e0b';
+                } else {
+                    b.style.color = '#d1d5db';
+                }
+            });
+        });
+    });
+
+    // ==================== GESTION DU FORMULAIRE ====================
+    const ratingForm = document.getElementById('ratingForm');
+    if (ratingForm) {
+        ratingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const score = parseInt(ratingScore.value);
+            if (score === 0) {
+                showNotification('Veuillez sélectionner une note', 'warning');
+                document.getElementById('ratingStarsInput').style.animation = 'shake 0.5s ease';
+                setTimeout(() => {
+                    document.getElementById('ratingStarsInput').style.animation = '';
+                }, 500);
+                return;
+            }
+
+            const comment = document.getElementById('ratingComment').value.trim();
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Envoi en cours...';
+            submitBtn.disabled = true;
+
+            fetch('{{ path('marketplace_product_rate', {id: product.id}) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ score: score, comment: comment })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Erreur serveur');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showNotification('✓ Votre avis a été enregistré avec succès !', 'success');
+                    submitBtn.innerHTML = '<i class="fas fa-check me-2"></i> Envoyé !';
+                    submitBtn.classList.add('btn-success');
+                    submitBtn.classList.remove('btn-primary');
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showNotification(data.error || 'Erreur lors de l\'envoi', 'error');
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                showNotification(error.message || 'Erreur de connexion', 'error');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+
+    // ==================== ANIMATION DES BARRES DE DISTRIBUTION ====================
+    const barFills = document.querySelectorAll('.bar-fill');
+    barFills.forEach((bar, index) => {
+        setTimeout(() => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 100 + index * 100);
+        }, 300);
+    });
+
+    // ==================== SHAKE ANIMATION ====================
+    const styleShake = document.createElement('style');
+    styleShake.textContent = `
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+        }
+    `;
+    document.head.appendChild(styleShake);
+
+    // ==================== NOTIFICATIONS ====================
+    function showNotification(message, type = 'info') {
+        const colors = {
+            success: 'bg-success',
+            error: 'bg-danger',
+            info: 'bg-primary',
+            warning: 'bg-warning'
+        };
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            info: 'fa-info-circle',
+            warning: 'fa-exclamation-triangle'
+        };
+
+        const notification = document.createElement('div');
+        notification.className = `position-fixed bottom-0 end-0 p-3 m-3 ${colors[type] || colors.info} text-white rounded-4 shadow-lg`;
+        notification.style.zIndex = '9999';
+        notification.style.animation = 'slideUp 0.3s ease';
+        notification.style.maxWidth = '400px';
+        notification.style.boxShadow = '0 10px 40px rgba(0,0,0,0.15)';
+        notification.innerHTML = `
+            <div class="d-flex align-items-center gap-2">
+                <i class="fas ${icons[type] || icons.info} fa-lg"></i>
+                <span class="fw-medium">${message}</span>
+                <button type="button" class="btn-close btn-close-white ms-2" onclick="this.closest('.position-fixed').remove()" style="opacity: 0.6;"></button>
+            </div>
+        `;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.animation = 'slideDown 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 4000);
+    }
+});
+</script>
+{% endblock %}

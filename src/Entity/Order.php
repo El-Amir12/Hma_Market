@@ -1,4 +1,5 @@
 <?php
+// src/Entity/Order.php
 
 namespace App\Entity;
 
@@ -12,6 +13,83 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`order`')]
 class Order
 {
+    // ==================== CONSTANTES DES STATUTS ====================
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_PROCESSING = 'processing';
+    public const STATUS_SHIPPED = 'shipped';
+    public const STATUS_DELIVERED = 'delivered';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_CANCELLED = 'cancelled';
+    public const STATUS_REFUNDED = 'refunded';
+
+    /**
+     * Retourne tous les statuts disponibles avec leurs libellés
+     */
+    public static function getStatusLabels(): array
+    {
+        return [
+            self::STATUS_PENDING => '⏳ En attente',
+            self::STATUS_PROCESSING => '⚙️ En traitement',
+            self::STATUS_SHIPPED => '📦 Expédiée',
+            self::STATUS_DELIVERED => '✅ Livrée',
+            self::STATUS_COMPLETED => '✅ Terminée',
+            self::STATUS_CANCELLED => '❌ Annulée',
+            self::STATUS_REFUNDED => '🔄 Remboursée',
+        ];
+    }
+
+    /**
+     * Retourne les couleurs Bootstrap pour chaque statut
+     */
+    public static function getStatusColors(): array
+    {
+        return [
+            self::STATUS_PENDING => 'warning',
+            self::STATUS_PROCESSING => 'info',
+            self::STATUS_SHIPPED => 'primary',
+            self::STATUS_DELIVERED => 'success',
+            self::STATUS_COMPLETED => 'success',
+            self::STATUS_CANCELLED => 'danger',
+            self::STATUS_REFUNDED => 'secondary',
+        ];
+    }
+
+    /**
+     * Vérifie si la commande est une vente en caisse
+     */
+    public function isDirectSale(): bool
+    {
+        return empty($this->customer_email) && $this->status === self::STATUS_COMPLETED;
+    }
+
+    /**
+     * Vérifie si la commande est une commande marketplace
+     */
+    public function isMarketplaceOrder(): bool
+    {
+        return !empty($this->customer_email);
+    }
+
+    /**
+     * Retourne le libellé du statut actuel
+     */
+    public function getStatusLabel(): string
+    {
+        $labels = self::getStatusLabels();
+        return $labels[$this->status] ?? $this->status ?? 'Inconnu';
+    }
+
+    /**
+     * Retourne la couleur du statut actuel
+     */
+    public function getStatusColor(): string
+    {
+        $colors = self::getStatusColors();
+        return $colors[$this->status] ?? 'secondary';
+    }
+
+    // ==================== PROPRIÉTÉS ====================
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -47,6 +125,27 @@ class Order
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $delivery_address = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $delivery_city = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $delivery_zipcode = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $delivery_country = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $delivery_latitude = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $delivery_longitude = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $customer_email = null;
+
     #[ORM\Column]
     private ?\DateTime $created_at = null;
 
@@ -73,10 +172,12 @@ class Order
     #[ORM\JoinColumn(nullable: false)]
     private ?HmaService $hma_service = null;
 
-    // ❌ SUPPRIMER cette relation
-    // #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'orders')]
-    // #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id', nullable: true)]
-    // private ?Customer $customer = null;
+    // ✅ NOUVELLE RELATION : Customer (nullable)
+    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'orders')]
+    #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id', nullable: true)]
+    private ?Customer $customer = null;
+
+    // ==================== CONSTRUCTEUR ====================
 
     public function __construct()
     {
@@ -204,6 +305,83 @@ class Order
         return $this;
     }
 
+    public function getDeliveryAddress(): ?string
+    {
+        return $this->delivery_address;
+    }
+
+    public function setDeliveryAddress(?string $delivery_address): static
+    {
+        $this->delivery_address = $delivery_address;
+        return $this;
+    }
+
+    public function getDeliveryCity(): ?string
+    {
+        return $this->delivery_city;
+    }
+
+    public function setDeliveryCity(?string $delivery_city): static
+    {
+        $this->delivery_city = $delivery_city;
+        return $this;
+    }
+
+    public function getDeliveryZipcode(): ?string
+    {
+        return $this->delivery_zipcode;
+    }
+
+    public function setDeliveryZipcode(?string $delivery_zipcode): static
+    {
+        $this->delivery_zipcode = $delivery_zipcode;
+        return $this;
+    }
+
+    public function getDeliveryCountry(): ?string
+    {
+        return $this->delivery_country;
+    }
+
+    public function setDeliveryCountry(?string $delivery_country): static
+    {
+        $this->delivery_country = $delivery_country;
+        return $this;
+    }
+
+    public function getDeliveryLatitude(): ?float
+    {
+        return $this->delivery_latitude;
+    }
+
+    public function setDeliveryLatitude(?float $delivery_latitude): static
+    {
+        $this->delivery_latitude = $delivery_latitude;
+        return $this;
+    }
+
+    public function getDeliveryLongitude(): ?float
+    {
+        return $this->delivery_longitude;
+    }
+
+    public function setDeliveryLongitude(?float $delivery_longitude): static
+    {
+        $this->delivery_longitude = $delivery_longitude;
+        return $this;
+    }
+
+    public function getCustomerEmail(): ?string
+    {
+        return $this->customer_email;
+    }
+
+    public function setCustomerEmail(?string $customer_email): static
+    {
+        $this->customer_email = $customer_email;
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTime
     {
         return $this->created_at;
@@ -297,17 +475,18 @@ class Order
         return $this;
     }
 
-    // ❌ SUPPRIMER les méthodes getCustomer() et setCustomer()
-    // public function getCustomer(): ?Customer
-    // {
-    //     return $this->customer;
-    // }
+    // ==================== GETTERS & SETTERS CUSTOMER ====================
 
-    // public function setCustomer(?Customer $customer): static
-    // {
-    //     $this->customer = $customer;
-    //     return $this;
-    // }
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): static
+    {
+        $this->customer = $customer;
+        return $this;
+    }
 
     // ==================== MÉTHODES DE CALCUL ====================
 

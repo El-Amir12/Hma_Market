@@ -21,8 +21,11 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Twig\Environment;
 
 #[Route('/orders')]
 class OrderController extends AbstractController
@@ -30,7 +33,7 @@ class OrderController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private LoggerInterface $logger,
-        private PromotionCalculator $promotionCalculator  // Ajout de PromotionCalculator
+        private PromotionCalculator $promotionCalculator
     ) {
     }
 
@@ -64,13 +67,11 @@ class OrderController extends AbstractController
             throw new AccessDeniedException('Aucun service associé');
         }
         
-        // Récupérer les prix actifs pour les analyses
         $analysisPrices = $priceRepository->findBy(
             ['is_active' => true], 
             ['display_order' => 'ASC']
         );
         
-        // Récupérer le Super Admin (is_hma_owner = true)
         $superAdmin = $this->entityManager->getRepository(User::class)
             ->createQueryBuilder('u')
             ->where('u.is_hma_owner = :isOwner')
@@ -81,7 +82,6 @@ class OrderController extends AbstractController
             ->getQuery()
             ->getOneOrNullResult();
         
-        // Si pas de Super Admin spécifique, prendre un Super Admin global
         if (!$superAdmin) {
             $superAdmin = $this->entityManager->getRepository(User::class)
                 ->createQueryBuilder('u')
@@ -98,7 +98,7 @@ class OrderController extends AbstractController
         return $this->render('sale/orders/contact.html.twig', [
             'superAdmin' => $superAdmin,
             'whatsappUrl' => $whatsappUrl,
-            'analysisPrices' => $analysisPrices,  // ← AJOUT DES PRIX DYNAMIQUES
+            'analysisPrices' => $analysisPrices,
         ]);
     }
 
@@ -141,7 +141,7 @@ class OrderController extends AbstractController
         Request $request,
         OrderRepository $orderRepository,
         UserRepository $userRepository,
-        ReturnOrderRepository $returnOrderRepository // Ajouter ce paramètre
+        ReturnOrderRepository $returnOrderRepository
     ): Response {
         $this->checkAccess();
         $hmaService = $this->getCurrentHmaService();
@@ -152,7 +152,6 @@ class OrderController extends AbstractController
         $companyType = $hmaService->getType();
         $isRestaurant = $companyType === 'restaurant';
 
-        // Récupérer les filtres
         $filters = [
             'status' => $request->query->get('status', ''),
             'payment_method' => $request->query->get('payment_method', ''),
@@ -167,7 +166,6 @@ class OrderController extends AbstractController
             'direction' => $request->query->get('direction', 'desc'),
         ];
 
-        // Traiter le preset de date
         $dateFrom = null;
         $dateTo = null;
         if ($filters['date_preset']) {
@@ -232,10 +230,8 @@ class OrderController extends AbstractController
             }
         }
 
-        // Récupérer les utilisateurs (caissiers) pour le filtre
         $users = $userRepository->findBy(['hma_service_id' => $hmaService]);
 
-        // Récupérer les ventes paginées
         $page = $request->query->getInt('page', 1);
         $limit = 15;
         
@@ -262,16 +258,13 @@ class OrderController extends AbstractController
         
         $orders = $query->getResult();
 
-        // Calculer les statistiques des ventes
         $stats = $orderRepository->getStats($hmaService, $dateFrom, $dateTo);
-        
-        // 🔥 AJOUTER LES STATISTIQUES DES RETOURS
         $returnStats = $returnOrderRepository->getReturnStats($hmaService, $dateFrom, $dateTo);
 
         return $this->render('sale/orders/index.html.twig', [
             'orders' => $orders,
             'stats' => $stats,
-            'returnStats' => $returnStats, // ← AJOUTER CETTE LIGNE
+            'returnStats' => $returnStats,
             'filters' => $filters,
             'users' => $users,
             'currentPage' => $page,
@@ -360,7 +353,6 @@ class OrderController extends AbstractController
 
         $isRestaurant = $hmaService->getType() === 'restaurant';
         
-        // Récupérer les retours associés à cette commande
         $returns = $returnOrderRepository->findBy(['original_order' => $order], ['created_at' => 'DESC']);
 
         $hmaService = $this->getCurrentHmaService();
@@ -433,7 +425,6 @@ class OrderController extends AbstractController
             return $this->json(['found' => false]);
         }
         
-        // Rechercher le dernier client avec ce numéro
         $lastOrder = $orderRepository->createQueryBuilder('o')
             ->where('o.customer_phone = :phone')
             ->andWhere('o.customer_name IS NOT NULL')
@@ -476,7 +467,6 @@ class OrderController extends AbstractController
             ]);
         }
         
-        // Récupérer le plan et ses limites
         $plan = $hmaService->getCurrentPlan();
         $limits = HmaService::PLAN_LIMITS[$plan] ?? HmaService::PLAN_LIMITS[HmaService::PLAN_FREEMIUM];
         
@@ -502,7 +492,6 @@ class OrderController extends AbstractController
         $remaining = $isUnlimited ? 'Illimité' : max(0, $maxOrdersPerDay - $ordersToday);
         $percentage = $isUnlimited ? 100 : min(100, round(($ordersToday / $maxOrdersPerDay) * 100));
         
-        // Récupérer le numéro WhatsApp du super admin
         $superAdmin = $this->entityManager->getRepository(User::class)
             ->createQueryBuilder('u')
             ->where('u.is_hma_owner = :isOwner')
@@ -546,7 +535,6 @@ class OrderController extends AbstractController
             ], 200);
         }
         
-        // Récupérer le plan et ses limites depuis HmaService
         $plan = $hmaService->getCurrentPlan();
         $limits = HmaService::PLAN_LIMITS[$plan] ?? HmaService::PLAN_LIMITS[HmaService::PLAN_FREEMIUM];
         
@@ -604,7 +592,6 @@ class OrderController extends AbstractController
             throw $this->createNotFoundException('Aucun service associé');
         }
         
-        // Récupérer l'administrateur principal (propriétaire)
         $admin = $this->entityManager->getRepository(User::class)
             ->createQueryBuilder('u')
             ->where('u.is_hma_owner = :isOwner')
@@ -616,7 +603,6 @@ class OrderController extends AbstractController
             ->getOneOrNullResult();
         
         if (!$admin) {
-            // Récupérer le premier admin du service
             $admin = $this->entityManager->getRepository(User::class)
                 ->createQueryBuilder('u')
                 ->where('u.hma_service = :hmaService')
@@ -633,14 +619,12 @@ class OrderController extends AbstractController
             return $this->redirectToRoute('restaurant_sale_index');
         }
         
-        // Récupérer les stats quotidiennes
         $dailyStats = $this->getDailyStatsForContact($hmaService);
         
         $phone = $admin->getPhone();
         $whatsappUrl = $phone ? 'https://wa.me/' . preg_replace('/[^0-9]/', '', $phone) : null;
         $email = $admin->getEmail();
         
-        // CORRECTION: Utiliser getCompanyName() qui existe
         $companyName = $hmaService->getCompanyName() ?? $hmaService->getEmail() ?? 'Votre entreprise';
         
         return $this->render('sale/orders/contact_admin.html.twig', [
@@ -652,9 +636,7 @@ class OrderController extends AbstractController
             'dailyStats' => $dailyStats
         ]);
     }
-    /**
-     * Récupère les statistiques quotidiennes pour la page de contact
-     */
+
     private function getDailyStatsForContact(HmaService $hmaService): array
     {
         $plan = $hmaService->getCurrentPlan();
@@ -706,6 +688,158 @@ class OrderController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}/update-status', name: 'app_orders_update_status', methods: ['POST'])]
+    public function updateStatus(
+        Request $request, 
+        Order $order, 
+        EntityManagerInterface $em,
+        MailerInterface $mailer,
+        Environment $twig
+    ): Response
+    {
+        $this->checkAccess();
+        
+        if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException('Seul l\'administrateur peut modifier le statut des commandes.');
+        }
+        
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService || $order->getHmaService()->getId() !== $hmaService->getId()) {
+            throw new AccessDeniedException('Accès non autorisé');
+        }
+        
+        $newStatus = $request->request->get('status');
+        
+        // ✅ Utiliser les constantes et méthodes de l'entité
+        $availableStatuses = array_keys(Order::getStatusLabels());
+        if (!in_array($newStatus, $availableStatuses)) {
+            $this->addFlash('error', 'Statut invalide.');
+            return $this->redirectToRoute('app_orders_show', ['id' => $order->getId()]);
+        }
+        
+        // ✅ Vérifier si on peut modifier le statut
+        if ($order->getStatus() === Order::STATUS_COMPLETED && $newStatus === Order::STATUS_PENDING) {
+            $this->addFlash('error', 'Impossible de passer une commande terminée en "En attente".');
+            return $this->redirectToRoute('app_orders_show', ['id' => $order->getId()]);
+        }
+        
+        if (!$this->isCsrfTokenValid('update_order_status', $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token CSRF invalide.');
+            return $this->redirectToRoute('app_orders_show', ['id' => $order->getId()]);
+        }
+        
+        $oldStatus = $order->getStatus();
+        
+        // ✅ Mettre à jour le statut
+        $order->setStatus($newStatus);
+        $order->setUpdatedAt(new \DateTime());
+        
+        // ✅ Si le statut passe à 'completed', le paiement est considéré comme payé
+        if ($newStatus === Order::STATUS_COMPLETED) {
+            $order->setPaymentStatus('paid');
+        }
+        
+        $em->flush();
+        
+        // ✅ Récupérer l'utilisateur connecté pour déterminer le rôle
+        $currentUser = $this->getUser();
+        $isAdmin = $currentUser && (
+            in_array('ROLE_SUPER_ADMIN', $currentUser->getRoles()) || 
+            in_array('ROLE_ADMIN', $currentUser->getRoles())
+        );
+        
+        // ✅ Envoyer l'email si changement et si email client existe
+        if ($order->getCustomerEmail() && $oldStatus !== $newStatus) {
+            $this->sendStatusUpdateEmail($order, $oldStatus, $newStatus, $mailer, $twig, $isAdmin);
+        }
+        
+        $this->addFlash('success', sprintf(
+            'Statut de la commande #%s mis à jour : %s → %s',
+            $order->getOrderNumber(),
+            Order::getStatusLabels()[$oldStatus] ?? $oldStatus,
+            Order::getStatusLabels()[$newStatus] ?? $newStatus
+        ));
+        
+        return $this->redirectToRoute('app_orders_show', ['id' => $order->getId()]);
+    }
+
+    private function sendStatusUpdateEmail(
+        Order $order, 
+        string $oldStatus, 
+        string $newStatus, 
+        MailerInterface $mailer, 
+        Environment $twig,
+        bool $isAdmin = false
+    ): void
+    {
+        try {
+            $appName = $_ENV['APP_NAME'] ?? 'HMA Market';
+            $appUrl = $_ENV['APP_URL'] ?? 'http://localhost:8000';
+            $fromEmail = $_ENV['MAILER_FROM_EMAIL'] ?? 'noreply@hma-marketplace.com';
+            $fromName = $_ENV['MAILER_FROM_NAME'] ?? 'HMA Market';
+
+            // ✅ Template POUR LE CLIENT
+            $customerHtml = $twig->render('emails/order_status_update_customer.html.twig', [
+                'order' => $order,
+                'oldStatus' => $oldStatus,
+                'newStatus' => $newStatus,
+                'oldStatusLabel' => Order::getStatusLabels()[$oldStatus] ?? $oldStatus,
+                'newStatusLabel' => Order::getStatusLabels()[$newStatus] ?? $newStatus,
+                'appName' => $appName,
+                'appUrl' => $appUrl,
+            ]);
+
+            // ✅ Template POUR LE SUPER ADMIN
+            $adminHtml = $twig->render('emails/order_status_update_admin.html.twig', [
+                'order' => $order,
+                'oldStatus' => $oldStatus,
+                'newStatus' => $newStatus,
+                'oldStatusLabel' => Order::getStatusLabels()[$oldStatus] ?? $oldStatus,
+                'newStatusLabel' => Order::getStatusLabels()[$newStatus] ?? $newStatus,
+                'appName' => $appName,
+                'appUrl' => $appUrl,
+            ]);
+
+            // ✅ Email au client
+            if (!empty($order->getCustomerEmail())) {
+                $clientEmail = (new Email())
+                    ->from(new \Symfony\Component\Mime\Address($fromEmail, $fromName))
+                    ->to($order->getCustomerEmail())
+                    ->subject('Mise à jour de votre commande #' . $order->getOrderNumber())
+                    ->html($customerHtml);
+
+                $mailer->send($clientEmail);
+                $this->logger->info('✅ Email de mise à jour de statut envoyé au client', [
+                    'order_id' => $order->getId(),
+                    'old_status' => $oldStatus,
+                    'new_status' => $newStatus,
+                    'email' => $order->getCustomerEmail()
+                ]);
+            }
+
+            // ✅ Email au super admin
+            $superAdminEmail = $_ENV['SUPER_ADMIN_EMAIL'] ?? $_ENV['ADMIN_EMAIL'] ?? 'admin@hma-marketplace.com';
+            $adminEmail = (new Email())
+                ->from(new \Symfony\Component\Mime\Address($fromEmail, $fromName))
+                ->to($superAdminEmail)
+                ->subject('📦 Commande #' . $order->getOrderNumber() . ' - Statut mis à jour')
+                ->html($adminHtml);
+
+            $mailer->send($adminEmail);
+            $this->logger->info('✅ Email de mise à jour de statut envoyé au super admin', [
+                'order_id' => $order->getId(),
+                'email' => $superAdminEmail
+            ]);
+
+        } catch (\Exception $e) {
+            $this->logger->error('❌ Erreur lors de l\'envoi des emails de mise à jour de statut', [
+                'order_id' => $order->getId(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+    }
+
     #[Route('/{id}/download-pdf', name: 'app_orders_download_pdf', methods: ['GET'])]
     public function downloadPdf(int $id, OrderRepository $orderRepository): Response
     {
@@ -734,13 +868,9 @@ class OrderController extends AbstractController
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
         
-        // ✅ FORCER UNE SEULE PAGE - Hauteur automatique très grande
-        // Largeur 80mm = 226.77 points
         $width = 226.77;
-        // Hauteur très grande pour que tout tienne sur une page
         $height = 800;
         
-        // Définir le papier avec une hauteur fixe suffisante
         $dompdf->setPaper([0, 0, $width, $height], 'portrait');
         $dompdf->render();
         
@@ -753,8 +883,6 @@ class OrderController extends AbstractController
             ]
         );
     }
-
-    // ==================== MÉTHODES PRIVÉES ====================
 
     private function getFiltersFromRequest(Request $request): array
     {

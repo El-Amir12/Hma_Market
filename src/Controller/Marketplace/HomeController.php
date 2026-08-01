@@ -12,18 +12,20 @@ use App\Repository\ProductRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\FavoriteRepository;
 use App\Repository\CartRepository;
+use App\Repository\PromotionRepository;
+use App\Service\Sale\SaleService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class HomeController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private SaleService $saleService
     ) {}
 
     #[Route('/marketplace', name: 'marketplace_home')]
@@ -32,117 +34,163 @@ class HomeController extends AbstractController
         ProductRepository $productRepository,
         CategoryRepository $categoryRepository,
         FavoriteRepository $favoriteRepository,
-        CartRepository $cartRepository
+        CartRepository $cartRepository,
+        PromotionRepository $promotionRepository
     ): Response {
-        // Initialiser les variables
-        $products = [];
-        $categories = [];
-        $featuredProducts = [];
-        $totalProducts = 0;
-        $page = 1;
-        $totalPages = 1;
-        $search = null;
-        $categoryId = null;
-        $sort = 'latest';
-        $favoritesCount = 0;
-        $cartItemsCount = 0;
-        $favoriteIds = [];
-
-        // Récupérer l'entreprise du Super Admin
-        $myCompany = $this->entityManager->createQueryBuilder()
-            ->select('h')
-            ->from(HmaService::class, 'h')
-            ->join('h.users', 'u')
+        // Récupérer le Super Admin
+        $superAdmin = $this->entityManager->createQueryBuilder()
+            ->select('u')
+            ->from(\App\Entity\User::class, 'u')
             ->andWhere('u.is_super_admin = true')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
 
-        if ($myCompany) {
-            // Récupérer les catégories
-            $categories = $categoryRepository->createQueryBuilder('c')
-                ->where('c.hma_service = :company')
-                ->andWhere('c.is_public = true')
-                ->andWhere('c.is_active = true')
-                ->andWhere('c.subscription_active = true')
-                ->setParameter('company', $myCompany)
-                ->orderBy('c.name', 'ASC')
-                ->getQuery()
-                ->getResult();
+        // Récupérer l'entreprise du Super Admin
+        $myCompany = null;
+        if ($superAdmin) {
+            $myCompany = $superAdmin->getHmaServiceId();
+        }
 
-            // Produits en vedette
-            $featuredProducts = $productRepository->createQueryBuilder('p')
-                ->where('p.hma_service = :company')
-                ->andWhere('p.is_public = true')
-                ->andWhere('p.is_active = true')
-                ->andWhere('p.subscription_active = true')
-                ->setParameter('company', $myCompany)
-                ->orderBy('p.created_at', 'DESC')
-                ->setMaxResults(12)
-                ->getQuery()
-                ->getResult();
+        // Si pas d'entreprise, on affiche une page vide
+        if (!$myCompany) {
+            return $this->render('marketplace/index.html.twig', [
+                'products' => [],
+                'featuredProducts' => [],
+                'categories' => [],
+                'company' => null,
+                'totalProducts' => 0,
+                'totalCategories' => 0,
+                'currentPage' => 1,
+                'totalPages' => 1,
+                'search' => null,
+                'selectedCategory' => null,
+                'selectedSort' => 'latest',
+                'favoriteIds' => [],
+                'favoritesCount' => 0,
+                'cartItemsCount' => 0,
+                'isCustomer' => false,
+                'cartProductIds' => [],
+            ]);
+        }
 
-            // Paramètres de requête
-            $page = max(1, $request->query->getInt('page', 1));
-            $limit = 20;
-            $offset = ($page - 1) * $limit;
-            $search = $request->query->get('search');
-            $categoryId = $request->query->get('category');
-            $sort = $request->query->get('sort', 'latest');
+        // Récupérer TOUTES les catégories du Super Admin
+        $categories = $categoryRepository->createQueryBuilder('c')
+            ->where('c.hma_service = :company')
+            ->andWhere('c.is_active = true')
+            ->andWhere('c.subscription_active = true')
+            ->setParameter('company', $myCompany)
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
 
-            $queryBuilder = $productRepository->createQueryBuilder('p')
-                ->where('p.hma_service = :company')
-                ->andWhere('p.is_public = true')
-                ->andWhere('p.is_active = true')
-                ->andWhere('p.subscription_active = true')
-                ->setParameter('company', $myCompany);
+        $totalCategories = count($categories);
 
-            if ($search) {
-                $queryBuilder->andWhere('p.name LIKE :search OR p.description LIKE :search')
-                    ->setParameter('search', '%' . $search . '%');
-            }
+        // Produits en vedette du Super Admin
+        $featuredProducts = $productRepository->createQueryBuilder('p')
+            ->where('p.hma_service = :company')
+            ->andWhere('p.is_active = true')
+            ->andWhere('p.subscription_active = true')
+            ->setParameter('company', $myCompany)
+            ->orderBy('p.created_at', 'DESC')
+            ->setMaxResults(12)
+            ->getQuery()
+            ->getResult();
 
-            if ($categoryId) {
-                $queryBuilder->andWhere('p.category = :categoryId')
-                    ->setParameter('categoryId', $categoryId);
-            }
+        // Ajouter le stock pour les produits en vedette
+        foreach ($featuredProducts as $product) {
+            $product->currentStock = $this->saleService->getProductTotalStock($product);
+            $product->promotionInfo = $this->getBestPromotionForProduct($product, $promotionRepository);
+            $product->averageRating = $product->getAverageRating();
+            $product->ratingsCount = $product->getRatingsCount();
+        }
 
-            switch ($sort) {
-                case 'price_asc':
-                    $queryBuilder->orderBy('p.sale_price', 'ASC');
-                    break;
-                case 'price_desc':
-                    $queryBuilder->orderBy('p.sale_price', 'DESC');
-                    break;
-                case 'name':
-                    $queryBuilder->orderBy('p.name', 'ASC');
-                    break;
-                default:
-                    $queryBuilder->orderBy('p.created_at', 'DESC');
-            }
+        // Paramètres de requête
+        $page = max(1, $request->query->getInt('page', 1));
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
+        $search = $request->query->get('search');
+        $categoryId = $request->query->get('category');
+        $sort = $request->query->get('sort', 'latest');
 
-            $totalProducts = $queryBuilder->select('COUNT(p.id)')
-                ->getQuery()
-                ->getSingleScalarResult();
+        // Requête produits du Super Admin
+        $queryBuilder = $productRepository->createQueryBuilder('p')
+            ->where('p.hma_service = :company')
+            ->andWhere('p.is_active = true')
+            ->andWhere('p.subscription_active = true')
+            ->setParameter('company', $myCompany);
 
-            $products = $queryBuilder->select('p')
-                ->addSelect('c')
-                ->leftJoin('p.category', 'c')
-                ->leftJoin('p.promotionProducts', 'pp')
-                ->leftJoin('pp.promotion', 'promo')
-                ->setMaxResults($limit)
-                ->setFirstResult($offset)
-                ->getQuery()
-                ->getResult();
+        if ($search) {
+            $queryBuilder->andWhere('p.name LIKE :search OR p.description LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
 
-            $totalPages = ceil($totalProducts / $limit);
+        if ($categoryId) {
+            $queryBuilder->andWhere('p.category = :categoryId')
+                ->setParameter('categoryId', $categoryId);
+        }
 
-            // ✅ Vérification CORRECTE pour les Customers
-            $user = $this->getUser();
-            if ($user && $this->isCustomer($user)) {
-                $favoriteIds = $favoriteRepository->findFavoriteProductIds($user);
-                $favoritesCount = $favoriteRepository->countByCustomer($user);
-                $cartItemsCount = $cartRepository->getCartItemsCount($user);
+        switch ($sort) {
+            case 'price_asc':
+                $queryBuilder->orderBy('p.sale_price', 'ASC');
+                break;
+            case 'price_desc':
+                $queryBuilder->orderBy('p.sale_price', 'DESC');
+                break;
+            case 'name':
+                $queryBuilder->orderBy('p.name', 'ASC');
+                break;
+            default:
+                $queryBuilder->orderBy('p.created_at', 'DESC');
+        }
+
+        // Compter le total des produits
+        $totalProducts = (int) $queryBuilder->select('COUNT(p.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Récupérer les produits
+        $products = $queryBuilder->select('p')
+            ->addSelect('c')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('p.promotionProducts', 'pp')
+            ->leftJoin('pp.promotion', 'promo')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult();
+
+        // Ajouter le stock pour chaque produit
+        foreach ($products as $product) {
+            $product->currentStock = $this->saleService->getProductTotalStock($product);
+            $product->promotionInfo = $this->getBestPromotionForProduct($product, $promotionRepository);
+            $product->averageRating = $product->getAverageRating();
+            $product->ratingsCount = $product->getRatingsCount();
+        }
+
+        $totalPages = ceil($totalProducts / $limit);
+
+        // Vérifier si l'utilisateur est un Customer
+        $user = $this->getUser();
+        $isCustomer = $user && $this->isCustomer($user);
+        
+        $favoriteIds = [];
+        $favoritesCount = 0;
+        $cartItemsCount = 0;
+        $cartProductIds = [];
+
+        // Si Customer, récupérer ses favoris, son panier et les produits dans le panier
+        if ($isCustomer) {
+            $favoriteIds = $favoriteRepository->findFavoriteProductIds($user);
+            $favoritesCount = $favoriteRepository->countByCustomer($user);
+            $cartItemsCount = $cartRepository->getCartItemsCount($user);
+            
+            // Récupérer les IDs des produits dans le panier
+            $cart = $cartRepository->getCartForCustomer($user);
+            if ($cart) {
+                foreach ($cart->getItems() as $item) {
+                    $cartProductIds[] = $item->getProduct()->getId();
+                }
             }
         }
 
@@ -152,6 +200,7 @@ class HomeController extends AbstractController
             'categories' => $categories,
             'company' => $myCompany,
             'totalProducts' => $totalProducts,
+            'totalCategories' => $totalCategories,
             'currentPage' => $page,
             'totalPages' => $totalPages,
             'search' => $search,
@@ -160,11 +209,73 @@ class HomeController extends AbstractController
             'favoriteIds' => $favoriteIds,
             'favoritesCount' => $favoritesCount,
             'cartItemsCount' => $cartItemsCount,
+            'isCustomer' => $isCustomer,
+            'cartProductIds' => $cartProductIds,
         ]);
     }
 
     /**
-     * ✅ Vérifie si l'utilisateur est un Customer
+     * Récupère la meilleure promotion active pour un produit
+     */
+    private function getBestPromotionForProduct(Product $product, PromotionRepository $promotionRepository): ?array
+    {
+        $promotionProducts = $product->getPromotionProducts();
+        
+        if ($promotionProducts->isEmpty()) {
+            return null;
+        }
+
+        $bestPromotion = null;
+        $bestDiscount = 0;
+        $originalPrice = (float) ($product->getSalePrice() ?: $product->getPurchasePrice());
+
+        foreach ($promotionProducts as $promotionProduct) {
+            $promotion = $promotionProduct->getPromotion();
+            
+            if (!$promotion || !$promotion->isCurrentlyActive()) {
+                continue;
+            }
+
+            $typePromotion = $promotion->getTypePromotion();
+            if (!$typePromotion) {
+                continue;
+            }
+
+            $typeName = strtolower(trim($typePromotion->getName()));
+            $value = (float) $promotion->getValue();
+            $discount = 0;
+
+            if ($typeName === 'pourcentage' || $typeName === 'percentage' || $typeName === '%') {
+                $discount = $originalPrice * ($value / 100);
+            } elseif ($typeName === 'montant fixe' || $typeName === 'fixed' || $typeName === 'fixe') {
+                $discount = min($value, $originalPrice);
+            }
+
+            if ($discount > $bestDiscount) {
+                $bestDiscount = $discount;
+                $bestPromotion = $promotion;
+            }
+        }
+
+        if (!$bestPromotion) {
+            return null;
+        }
+
+        $finalPrice = $originalPrice - $bestDiscount;
+
+        return [
+            'promotion' => $bestPromotion,
+            'original_price' => $originalPrice,
+            'final_price' => max(0, $finalPrice),
+            'discount_amount' => $bestDiscount,
+            'discount_percentage' => $originalPrice > 0 ? round(($bestDiscount / $originalPrice) * 100, 1) : 0,
+            'has_promotion' => true,
+            'formatted_discount' => $bestPromotion->getFormattedDiscount(),
+        ];
+    }
+
+    /**
+     * Vérifie si l'utilisateur est un Customer
      */
     private function isCustomer($user): bool
     {
@@ -172,19 +283,17 @@ class HomeController extends AbstractController
     }
 
     /**
-     * ✅ Route pour les favoris
+     * Route pour les favoris
      */
     #[Route('/marketplace/favorite/toggle', name: 'marketplace_favorite_toggle', methods: ['POST'])]
-    #[IsGranted('ROLE_CUSTOMER')]
     public function toggleFavorite(Request $request, FavoriteRepository $favoriteRepository): JsonResponse
     {
         $user = $this->getUser();
         
-        // ✅ Vérification que c'est bien un Customer
         if (!$user || !$this->isCustomer($user)) {
             return $this->json([
                 'success' => false,
-                'error' => 'Vous devez être connecté en tant que client'
+                'error' => 'Vous devez être connecté en tant que client pour ajouter des favoris'
             ], 401);
         }
 
@@ -206,19 +315,17 @@ class HomeController extends AbstractController
             ], 404);
         }
 
-        // ✅ RECHERCHE EXISTANT
         $existing = $favoriteRepository->findOneBy([
             'customer' => $user,
             'product' => $product
         ]);
 
         if ($existing) {
-            // ❌ Décoche : on supprime
             $this->entityManager->remove($existing);
             $this->entityManager->flush();
             $isFavorite = false;
+            $message = 'Retiré des favoris';
         } else {
-            // ❤️ Coche : on ajoute
             $favorite = new Favorite();
             $favorite->setCustomer($user)
                      ->setProduct($product)
@@ -226,6 +333,7 @@ class HomeController extends AbstractController
             $this->entityManager->persist($favorite);
             $this->entityManager->flush();
             $isFavorite = true;
+            $message = 'Ajouté aux favoris';
         }
 
         $count = $favoriteRepository->countByCustomer($user);
@@ -233,12 +341,12 @@ class HomeController extends AbstractController
         return $this->json([
             'success' => true,
             'isFavorite' => $isFavorite,
-            'count' => $count
+            'count' => $count,
+            'message' => $message
         ]);
     }
 
     #[Route('/marketplace/favorites/count', name: 'marketplace_favorites_count', methods: ['GET'])]
-    #[IsGranted('ROLE_CUSTOMER')]
     public function getFavoritesCount(FavoriteRepository $favoriteRepository): JsonResponse
     {
         $user = $this->getUser();
@@ -251,7 +359,6 @@ class HomeController extends AbstractController
     }
 
     #[Route('/marketplace/cart/count', name: 'marketplace_cart_count', methods: ['GET'])]
-    #[IsGranted('ROLE_CUSTOMER')]
     public function getCartCount(CartRepository $cartRepository): JsonResponse
     {
         $user = $this->getUser();
@@ -263,8 +370,29 @@ class HomeController extends AbstractController
         return $this->json(['count' => $cartRepository->getCartItemsCount($user)]);
     }
 
+    #[Route('/marketplace/cart/items', name: 'marketplace_cart_items', methods: ['GET'])]
+    public function getCartItems(CartRepository $cartRepository): JsonResponse
+    {
+        $user = $this->getUser();
+        
+        if (!$user || !$this->isCustomer($user)) {
+            return $this->json(['items' => []]);
+        }
+
+        $cart = $cartRepository->getCartForCustomer($user);
+        if (!$cart) {
+            return $this->json(['items' => []]);
+        }
+
+        $items = [];
+        foreach ($cart->getItems() as $item) {
+            $items[] = $item->getProduct()->getId();
+        }
+
+        return $this->json(['items' => $items]);
+    }
+
     #[Route('/marketplace/cart/add', name: 'marketplace_cart_add', methods: ['POST'])]
-    #[IsGranted('ROLE_CUSTOMER')]
     public function addToCart(Request $request, CartRepository $cartRepository): JsonResponse
     {
         $user = $this->getUser();
@@ -272,7 +400,7 @@ class HomeController extends AbstractController
         if (!$user || !$this->isCustomer($user)) {
             return $this->json([
                 'success' => false,
-                'error' => 'Connectez-vous pour ajouter au panier'
+                'error' => 'Connectez-vous en tant que client pour ajouter au panier'
             ], 401);
         }
 
@@ -295,7 +423,20 @@ class HomeController extends AbstractController
             ], 404);
         }
 
-        $currentStock = $product->getCurrentStock();
+        // Vérifier si le produit est déjà dans le panier
+        $cart = $cartRepository->getCartForCustomer($user);
+        if ($cart) {
+            foreach ($cart->getItems() as $item) {
+                if ($item->getProduct()->getId() === $product->getId()) {
+                    return $this->json([
+                        'success' => false,
+                        'error' => 'Ce produit est déjà dans votre panier'
+                    ], 400);
+                }
+            }
+        }
+
+        $currentStock = $this->saleService->getProductTotalStock($product);
         if ($currentStock <= 0) {
             return $this->json([
                 'success' => false,
@@ -303,7 +444,13 @@ class HomeController extends AbstractController
             ], 400);
         }
 
-        $cart = $cartRepository->getCartForCustomer($user);
+        if ($quantity > $currentStock) {
+            return $this->json([
+                'success' => false,
+                'error' => 'Stock insuffisant. Seulement ' . $currentStock . ' unités disponibles.'
+            ], 400);
+        }
+
         if (!$cart) {
             $cart = new Cart();
             $cart->setCustomer($user);
@@ -311,43 +458,46 @@ class HomeController extends AbstractController
             $this->entityManager->flush();
         }
 
-        $existingItem = null;
-        foreach ($cart->getItems() as $item) {
-            if ($item->getProduct()->getId() === $product->getId()) {
-                $existingItem = $item;
-                break;
-            }
-        }
-
-        if ($existingItem) {
-            $newQuantity = $existingItem->getQuantity() + $quantity;
-            if ($newQuantity > $currentStock) {
-                return $this->json([
-                    'success' => false,
-                    'error' => 'Stock insuffisant'
-                ], 400);
-            }
-            $existingItem->setQuantity($newQuantity);
-        } else {
-            if ($quantity > $currentStock) {
-                return $this->json([
-                    'success' => false,
-                    'error' => 'Stock insuffisant'
-                ], 400);
-            }
-            $cartItem = new CartItem();
-            $cartItem->setCart($cart)
-                     ->setProduct($product)
-                     ->setQuantity($quantity);
-            $this->entityManager->persist($cartItem);
-        }
-
+        $cartItem = new CartItem();
+        $cartItem->setCart($cart)
+                 ->setProduct($product)
+                 ->setQuantity($quantity);
+        $this->entityManager->persist($cartItem);
         $this->entityManager->flush();
 
         return $this->json([
             'success' => true,
             'cartCount' => $cartRepository->getCartItemsCount($user),
             'message' => 'Ajouté au panier'
+        ]);
+    }
+    
+    #[Route('/marketplace/cart/status', name: 'marketplace_cart_status', methods: ['GET'])]
+    public function getCartStatus(CartRepository $cartRepository): JsonResponse
+    {
+        $user = $this->getUser();
+        
+        if (!$user || !$this->isCustomer($user)) {
+            return $this->json([
+                'items_count' => 0,
+                'product_ids' => []
+            ]);
+        }
+
+        $cart = $cartRepository->getCartForCustomer($user);
+        $productIds = [];
+        $itemsCount = 0;
+        
+        if ($cart) {
+            $itemsCount = $cart->getItemsCount();
+            foreach ($cart->getItems() as $item) {
+                $productIds[] = $item->getProduct()->getId();
+            }
+        }
+
+        return $this->json([
+            'items_count' => $itemsCount,
+            'product_ids' => $productIds
         ]);
     }
 }

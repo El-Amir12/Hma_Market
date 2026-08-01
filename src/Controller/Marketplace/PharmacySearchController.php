@@ -36,6 +36,17 @@ class PharmacySearchController extends AbstractController
         'LU' => 'Luxembourg',
     ];
 
+    // Jours de la semaine pour l'affichage
+    private const DAYS_MAP = [
+        'monday' => 'Lundi',
+        'tuesday' => 'Mardi',
+        'wednesday' => 'Mercredi',
+        'thursday' => 'Jeudi',
+        'friday' => 'Vendredi',
+        'saturday' => 'Samedi',
+        'sunday' => 'Dimanche',
+    ];
+
     #[Route('/search', name: 'marketplace_pharmacy_search')]
     public function search(
         Request $request,
@@ -184,40 +195,102 @@ class PharmacySearchController extends AbstractController
         }
 
         // ============================================================ //
-        // 2. CHARGEMENT DES PHARMACIES POUR LA VILLE                   //
-        // ✅ isActive = true                                            //
-        // ✅ isPublic = true (géré par l'abonnement)                   //
-        // ✅ company_public = true (géré par l'utilisateur)           //
+        // 2. CHARGEMENT DES PHARMACIES SELON LE MODE                    //
         // ============================================================ //
         if ($city) {
-            $qb = $hmaServiceRepository->createQueryBuilder('h')
-                ->where('h.city = :city')
-                ->andWhere('h.companyType = :type')
-                ->andWhere('h.isActive = :isActive')
-                ->andWhere('h.isPublic = :isPublic')
-                ->andWhere('h.company_public = :companyPublic')
-                ->setParameter('city', $city)
-                ->setParameter('type', 'pharmacy')
-                ->setParameter('isActive', true)
-                ->setParameter('isPublic', true)
-                ->setParameter('companyPublic', true);
+            if ($mode === 'pharmacy') {
+                // ============================================================ //
+                // 2.1 MODE PHARMACIE : UNIQUEMENT LES PHARMACIES DE GARDE      //
+                // ============================================================ //
+                $allPharmacies = $hmaServiceRepository->createQueryBuilder('h')
+                    ->where('h.city = :city')
+                    ->andWhere('h.companyType = :type')
+                    ->andWhere('h.isActive = :isActive')
+                    ->andWhere('h.isPublic = :isPublic')
+                    ->andWhere('h.company_public = :companyPublic')
+                    ->setParameter('city', $city)
+                    ->setParameter('type', 'pharmacy')
+                    ->setParameter('isActive', true)
+                    ->setParameter('isPublic', true)
+                    ->setParameter('companyPublic', true);
 
-            if ($searchPharmacy) {
-                $qb->andWhere('h.companyName LIKE :search')
-                   ->setParameter('search', '%' . $searchPharmacy . '%');
+                if ($searchPharmacy) {
+                    $allPharmacies->andWhere('h.companyName LIKE :search')
+                        ->setParameter('search', '%' . $searchPharmacy . '%');
+                }
+
+                $allPharmacies = $allPharmacies->orderBy('h.companyName', 'ASC')
+                    ->getQuery()
+                    ->getResult();
+
+                // ✅ Filtrer UNIQUEMENT les pharmacies de garde
+                $now = new \DateTime();
+                $currentDay = strtolower($now->format('l'));
+                $currentTime = $now->format('H:i');
+
+                $guardPharmacies = [];
+                foreach ($allPharmacies as $pharmacy) {
+                    $guardPeriods = $pharmacy->getGuardPeriods() ?? [];
+                    if (is_string($guardPeriods)) {
+                        $guardPeriods = json_decode($guardPeriods, true) ?? [];
+                    }
+
+                    $isOnGuard = false;
+                    foreach ($guardPeriods as $period) {
+                        if (isset($period['day']) && isset($period['start']) && isset($period['end'])) {
+                            if (strtolower($period['day']) === $currentDay) {
+                                if ($currentTime >= $period['start'] && $currentTime <= $period['end']) {
+                                    $isOnGuard = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    // ✅ On garde UNIQUEMENT les pharmacies de garde
+                    if ($isOnGuard) {
+                        $guardPharmacies[] = [
+                            'id' => $pharmacy->getId(),
+                            'name' => $pharmacy->getCompanyName(),
+                            'address' => $pharmacy->getAddress(),
+                            'phone' => $pharmacy->getPhone(),
+                            'city' => $pharmacy->getCity(),
+                            'email' => $pharmacy->getEmail(),
+                            'latitude' => $pharmacy->getLatitude(),
+                            'longitude' => $pharmacy->getLongitude(),
+                            'guardPeriods' => $guardPeriods,
+                            'isOnGuard' => true,
+                            'guardDays' => $this->getGuardDays($guardPeriods),
+                        ];
+                    }
+                }
+
+                $totalPharmacies = count($guardPharmacies);
+                $pharmacies = array_slice($guardPharmacies, ($page - 1) * $limit, $limit);
+
+            } else {
+                // ============================================================ //
+                // 2.2 MODE PRODUIT : TOUTES LES PHARMACIES DE LA VILLE         //
+                // ============================================================ //
+                $qbPharmacies = $hmaServiceRepository->createQueryBuilder('h')
+                    ->select('h.id', 'h.companyName as name', 'h.address', 'h.phone', 'h.city', 'h.email')
+                    ->where('h.city = :city')
+                    ->andWhere('h.companyType = :type')
+                    ->andWhere('h.isActive = :isActive')
+                    ->andWhere('h.isPublic = :isPublic')
+                    ->andWhere('h.company_public = :companyPublic')
+                    ->setParameter('city', $city)
+                    ->setParameter('type', 'pharmacy')
+                    ->setParameter('isActive', true)
+                    ->setParameter('isPublic', true)
+                    ->setParameter('companyPublic', true)
+                    ->orderBy('h.companyName', 'ASC');
+
+                $pharmacies = $qbPharmacies->getQuery()->getResult();
+                
+                // Ne pas paginer les pharmacies en mode product
+                $totalPharmacies = count($pharmacies);
             }
-
-            $countQb = clone $qb;
-            $totalPharmacies = $countQb->select('COUNT(h.id)')
-                ->getQuery()
-                ->getSingleScalarResult();
-
-            $pharmacies = $qb->select('h.id', 'h.companyName as name', 'h.address', 'h.phone', 'h.city', 'h.email', 'h.latitude', 'h.longitude')
-                ->orderBy('h.companyName', 'ASC')
-                ->setFirstResult(($page - 1) * $limit)
-                ->setMaxResults($limit)
-                ->getQuery()
-                ->getResult();
         }
 
         // Récupérer les valeurs des filtres pour les afficher
@@ -239,14 +312,63 @@ class PharmacySearchController extends AbstractController
             'currentPage' => $page,
             'totalPharmacies' => $totalPharmacies,
             'limit' => $limit,
-            'totalPages' => ceil($totalPharmacies / $limit),
+            'totalPages' => $mode === 'product' ? 1 : ($totalPharmacies > 0 ? ceil($totalPharmacies / $limit) : 1),
             'searchPharmacy' => $searchPharmacy,
             'selectedCategory' => $selectedCategory,
             'selectedForm' => $selectedForm,
             'selectedDosage' => $selectedDosage,
             'prescriptionRequired' => $prescriptionRequired,
             'filterApplied' => $filterApplied,
+            'daysMap' => self::DAYS_MAP,
         ]);
+    }
+
+    /**
+     * Vérifie si la pharmacie est actuellement de garde
+     */
+    private function isOnGuard(array $guardPeriods): bool
+    {
+        if (empty($guardPeriods)) {
+            return false;
+        }
+
+        $now = new \DateTime();
+        $currentDay = strtolower($now->format('l'));
+        $currentTime = $now->format('H:i');
+
+        foreach ($guardPeriods as $period) {
+            if (isset($period['day']) && isset($period['start']) && isset($period['end'])) {
+                if (strtolower($period['day']) === $currentDay) {
+                    if ($currentTime >= $period['start'] && $currentTime <= $period['end']) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Récupère les jours de garde pour affichage
+     */
+    private function getGuardDays(array $guardPeriods): array
+    {
+        if (empty($guardPeriods)) {
+            return [];
+        }
+
+        $days = [];
+        foreach ($guardPeriods as $period) {
+            if (isset($period['day']) && isset($period['start']) && isset($period['end'])) {
+                $dayKey = strtolower($period['day']);
+                $days[$dayKey] = [
+                    'day' => self::DAYS_MAP[$dayKey] ?? ucfirst($dayKey),
+                    'start' => $period['start'],
+                    'end' => $period['end'],
+                ];
+            }
+        }
+        return $days;
     }
 
     // ============================================================ //

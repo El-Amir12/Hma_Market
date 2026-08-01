@@ -1,0 +1,162 @@
+{# templates/emails/order_status_update_customer.html.twig #}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mise à jour de votre commande</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #f8fafc; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+        
+        <!-- Header -->
+        <div style="text-align: center; padding-bottom: 30px; border-bottom: 2px solid #f1f5f9;">
+            <div style="margin-bottom: 15px;">
+                <img src="{{ appUrl ~ asset('images/logo.png') }}" alt="{{ appName }}" style="max-height: 60px;">
+            </div>
+            <h1 style="color: #0f172a; font-size: 24px; margin: 0;">
+                🔔 Mise à jour de votre commande
+            </h1>
+            <p style="color: #64748b; font-size: 14px; margin-top: 5px;">
+                Commande #{{ order.orderNumber }}
+            </p>
+        </div>
+
+        <!-- Message personnalisé selon le statut -->
+        <div style="text-align: center; padding: 20px 0;">
+            <p style="color: #475569; font-size: 16px; margin: 0;">
+                Bonjour <strong>{{ order.customerName }}</strong>,
+            </p>
+            <p style="color: #64748b; font-size: 14px; margin-top: 10px;">
+                {% if newStatus == 'pending' %}
+                    Votre commande est en attente de validation.
+                {% elseif newStatus == 'processing' %}
+                    Votre commande est en cours de préparation.
+                {% elseif newStatus == 'shipped' %}
+                    Votre commande a été expédiée !
+                {% elseif newStatus == 'delivered' %}
+                    Votre commande a été livrée avec succès.
+                {% elseif newStatus == 'completed' %}
+                    Votre commande est terminée. Merci pour votre achat !
+                {% elseif newStatus == 'cancelled' %}
+                    Votre commande a été annulée.
+                {% elseif newStatus == 'refunded' %}
+                    Votre commande a été remboursée.
+                {% else %}
+                    Le statut de votre commande a été mis à jour.
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Statut -->
+        <div style="text-align: center; padding: 20px 0;">
+            <div style="display: inline-block; padding: 10px 30px; border-radius: 50px; 
+                        background: {% if newStatus == 'pending' %}#fef3c7{% elseif newStatus == 'processing' %}#dbeafe{% elseif newStatus == 'shipped' %}#dbeafe{% elseif newStatus == 'delivered' %}#dcfce7{% elseif newStatus == 'completed' %}#dcfce7{% elseif newStatus == 'cancelled' %}#fee2e2{% elseif newStatus == 'refunded' %}#f3f4f6{% endif %};
+                        color: {% if newStatus == 'pending' %}#92400e{% elseif newStatus == 'processing' %}#1d4ed8{% elseif newStatus == 'shipped' %}#1d4ed8{% elseif newStatus == 'delivered' %}#16a34a{% elseif newStatus == 'completed' %}#16a34a{% elseif newStatus == 'cancelled' %}#dc2626{% elseif newStatus == 'refunded' %}#374151{% endif %};
+                        font-weight: 700; font-size: 18px;">
+                {{ newStatusLabel }}
+            </div>
+            <p style="color: #94a3b8; font-size: 14px; margin-top: 10px;">
+                Ancien statut : <span style="text-decoration: line-through;">{{ oldStatusLabel }}</span>
+            </p>
+        </div>
+
+        <!-- Articles commandés -->
+        <div style="margin: 25px 0;">
+            <h3 style="font-size: 16px; color: #0f172a; margin: 0 0 15px 0;">
+                📦 Articles commandés
+            </h3>
+            
+            {% for item in order.orderItems %}
+                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: #0f172a; font-size: 14px;">
+                            {{ item.productName }}
+                        </div>
+                        <div style="color: #94a3b8; font-size: 12px;">
+                            Quantité: {{ item.quantity }}
+                            {% if item.promotionName %}
+                                <span style="display: inline-block; margin-left: 8px; padding: 0 8px; background: #dcfce7; color: #16a34a; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                                    {{ item.promotionName }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div style="font-weight: 600; color: #0f172a; font-size: 15px;">
+                        {{ item.totalPrice|number_format(0, ',', ' ') }} FCFA
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Récapitulatif des totaux -->
+        <div style="background: #f8fafc; border-radius: 12px; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                <span style="color: #64748b;">Sous-total</span>
+                <span style="color: #475569;">{{ order.subtotal|number_format(0, ',', ' ') }} FCFA</span>
+            </div>
+            {% if order.discountTotal > 0 %}
+                <div style="display: flex; justify-content: space-between; padding: 6px 0; color: #16a34a;">
+                    <span>Remise</span>
+                    <span>- {{ order.discountTotal|number_format(0, ',', ' ') }} FCFA</span>
+                </div>
+            {% endif %}
+            <div style="display: flex; justify-content: space-between; padding: 6px 0; border-top: 2px solid #e5e7eb; margin-top: 6px; padding-top: 12px;">
+                <span style="font-weight: 700; color: #0f172a; font-size: 16px;">Total</span>
+                <span style="font-weight: 700; color: #0463f1; font-size: 18px;">
+                    {{ order.totalAmount|number_format(0, ',', ' ') }} FCFA
+                </span>
+            </div>
+        </div>
+
+        <!-- Adresse de livraison -->
+        {% if order.deliveryAddress %}
+            <div style="margin: 25px 0; background: #f8fafc; border-radius: 12px; padding: 20px;">
+                <h3 style="font-size: 14px; color: #0f172a; margin: 0 0 10px 0;">
+                    📍 Adresse de livraison
+                </h3>
+                <p style="color: #475569; font-size: 14px; margin: 0; line-height: 1.6;">
+                    {{ order.customerName }}<br>
+                    {{ order.deliveryAddress }}<br>
+                    {% if order.deliveryCity %}{{ order.deliveryCity }}{% endif %}
+                    {% if order.deliveryZipcode %} - {{ order.deliveryZipcode }}{% endif %}
+                    <br>{{ order.deliveryCountry|default('Bénin') }}
+                </p>
+                <p style="color: #64748b; font-size: 13px; margin-top: 10px;">
+                    📞 {{ order.customerPhone }}
+                </p>
+            </div>
+        {% endif %}
+
+        <!-- ✅ BOUTON POUR LE CLIENT -->
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{{ absolute_url(path('marketplace_order_detail', {id: order.id})) }}" 
+               style="display: inline-block; background: #0463f1; color: white; padding: 12px 40px; 
+                      border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-eye" style="margin-right: 8px;"></i>
+                Voir ma commande
+            </a>
+            <br>
+            <a href="{{ absolute_url(path('marketplace_products')) }}" 
+               style="display: inline-block; color: #0463f1; text-decoration: none; font-weight: 600; font-size: 14px; margin-top: 15px;">
+                Continuer mes achats
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; padding-top: 30px; border-top: 2px solid #f1f5f9; color: #94a3b8; font-size: 12px;">
+            <p style="margin: 0;">{{ appName }} - Votre marketplace de confiance</p>
+            <p style="margin: 5px 0;">
+                <a href="#" style="color: #94a3b8; text-decoration: none;">Conditions générales</a>
+                &nbsp;•&nbsp;
+                <a href="#" style="color: #94a3b8; text-decoration: none;">Contact</a>
+            </p>
+            <p style="margin: 10px 0 0 0; font-size: 11px;">
+                Cet email a été envoyé à {{ order.customerEmail }}. 
+                Si vous n'êtes pas à l'origine de cette commande, ignorez cet email.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

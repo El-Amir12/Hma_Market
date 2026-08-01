@@ -19,7 +19,7 @@ class Cart
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'cart')]
+    #[ORM\OneToOne(inversedBy: 'cart', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
 
@@ -109,15 +109,26 @@ class Cart
         $this->updated_at = new \DateTimeImmutable();
     }
 
+    /**
+     * Calcule le total du panier
+     * ✅ CORRIGÉ : Utilise le prix du produit * quantité
+     */
     public function getTotal(): float
     {
         $total = 0;
         foreach ($this->items as $item) {
-            $total += (float) $item->getTotalPrice();
+            $product = $item->getProduct();
+            if ($product) {
+                $price = (float) ($product->getSalePrice() ?: $product->getPurchasePrice() ?: 0);
+                $total += $price * $item->getQuantity();
+            }
         }
         return $total;
     }
 
+    /**
+     * Calcule le nombre total d'articles dans le panier
+     */
     public function getItemsCount(): int
     {
         $count = 0;

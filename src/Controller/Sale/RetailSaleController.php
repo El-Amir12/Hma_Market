@@ -173,7 +173,7 @@ class RetailSaleController extends BaseSaleController
     }
 
     /**
-     * ✅ RECHERCHE CLIENT : D'abord dans Order, puis dans Customer
+     * ✅ RECHERCHE CLIENT : D'abord dans Order (par téléphone), puis dans Customer
      */
     #[Route('/search-customer', name: 'retail_sale_search_customer', methods: ['GET'])]
     public function searchCustomer(Request $request): JsonResponse
@@ -192,10 +192,18 @@ class RetailSaleController extends BaseSaleController
         
         try {
             $hmaService = $this->getCurrentHmaService();
+            if (!$hmaService) {
+                return $this->json([
+                    'found' => false,
+                    'error' => 'Aucune entreprise associée'
+                ], 400);
+            }
+            
             $customer = null;
             $orderInfo = null;
+            $cleanPhone = null;
             
-            // 🔍 1. D'ABORD, rechercher dans les commandes (Order)
+            // 🔍 1. D'ABORD, rechercher dans les commandes (Order) par téléphone
             if ($phone) {
                 $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
                 
@@ -224,7 +232,7 @@ class RetailSaleController extends BaseSaleController
                         'last_order_amount' => (float) $order->getTotalAmount()
                     ];
                     
-                    // Essayer de trouver le Customer correspondant
+                    // Essayer de trouver le Customer correspondant dans la table Customer
                     $customer = $this->entityManager->getRepository(Customer::class)
                         ->createQueryBuilder('c')
                         ->where('c.phone LIKE :phone1')
@@ -237,7 +245,6 @@ class RetailSaleController extends BaseSaleController
                     
                     // Si pas de Customer, on crée un objet virtuel avec les données de la commande
                     if (!$customer) {
-                        // Utiliser les données de la commande
                         $customerData = [
                             'id' => null,
                             'full_name' => $order->getCustomerName(),
@@ -262,7 +269,7 @@ class RetailSaleController extends BaseSaleController
                                 'last_order_amount' => $orderInfo['last_order_amount']
                             ],
                             'recent_orders' => $this->getRecentOrdersByPhone($cleanPhone, $hmaService),
-                            'source' => 'orders' // Indique que le client vient des commandes
+                            'source' => 'orders'
                         ]);
                     }
                 }
@@ -290,36 +297,57 @@ class RetailSaleController extends BaseSaleController
             
             // 🔍 3. Si trouvé dans Customer, récupérer ses commandes
             if ($customer) {
-                $orders = $this->entityManager->getRepository(Order::class)
-                    ->createQueryBuilder('o')
-                    ->where('o.customer = :customer')
-                    ->andWhere('o.hma_service = :hmaService')
-                    ->setParameter('customer', $customer)
-                    ->setParameter('hmaService', $hmaService)
-                    ->orderBy('o.created_at', 'DESC')
-                    ->setMaxResults(10)
-                    ->getQuery()
-                    ->getResult();
+                // Récupérer le téléphone du customer
+                $customerPhone = $customer->getPhone();
+                $customerCleanPhone = $customerPhone ? preg_replace('/[^0-9]/', '', $customerPhone) : null;
                 
-                $totalOrders = $this->entityManager->getRepository(Order::class)
-                    ->createQueryBuilder('o')
-                    ->select('COUNT(o.id)')
-                    ->where('o.customer = :customer')
-                    ->setParameter('customer', $customer)
-                    ->getQuery()
-                    ->getSingleScalarResult();
+                $orders = [];
+                $totalOrders = 0;
+                $totalSpent = 0;
                 
-                $totalSpent = $this->entityManager->getRepository(Order::class)
-                    ->createQueryBuilder('o')
-                    ->select('SUM(o.total_amount)')
-                    ->where('o.customer = :customer')
-                    ->andWhere('o.status = :status')
-                    ->setParameter('customer', $customer)
-                    ->setParameter('status', 'completed')
-                    ->getQuery()
-                    ->getSingleScalarResult() ?? 0;
+                if ($customerCleanPhone) {
+                    // Récupérer les commandes par téléphone
+                    $orders = $this->entityManager->getRepository(Order::class)
+                        ->createQueryBuilder('o')
+                        ->where('o.customer_phone LIKE :phone1')
+                        ->orWhere('o.customer_phone LIKE :phone2')
+                        ->andWhere('o.hma_service = :hmaService')
+                        ->setParameter('phone1', '%' . $customerCleanPhone)
+                        ->setParameter('phone2', $customerCleanPhone . '%')
+                        ->setParameter('hmaService', $hmaService)
+                        ->orderBy('o.created_at', 'DESC')
+                        ->setMaxResults(10)
+                        ->getQuery()
+                        ->getResult();
+                    
+                    $totalOrders = $this->entityManager->getRepository(Order::class)
+                        ->createQueryBuilder('o')
+                        ->select('COUNT(o.id)')
+                        ->where('o.customer_phone LIKE :phone1')
+                        ->orWhere('o.customer_phone LIKE :phone2')
+                        ->andWhere('o.hma_service = :hmaService')
+                        ->setParameter('phone1', '%' . $customerCleanPhone)
+                        ->setParameter('phone2', $customerCleanPhone . '%')
+                        ->setParameter('hmaService', $hmaService)
+                        ->getQuery()
+                        ->getSingleScalarResult() ?? 0;
+                    
+                    $totalSpent = $this->entityManager->getRepository(Order::class)
+                        ->createQueryBuilder('o')
+                        ->select('SUM(o.total_amount)')
+                        ->where('o.customer_phone LIKE :phone1')
+                        ->orWhere('o.customer_phone LIKE :phone2')
+                        ->andWhere('o.hma_service = :hmaService')
+                        ->andWhere('o.status = :status')
+                        ->setParameter('phone1', '%' . $customerCleanPhone)
+                        ->setParameter('phone2', $customerCleanPhone . '%')
+                        ->setParameter('hmaService', $hmaService)
+                        ->setParameter('status', 'completed')
+                        ->getQuery()
+                        ->getSingleScalarResult() ?? 0;
+                }
                 
-                $lastOrder = $orders[0] ?? null;
+                $lastOrder = !empty($orders) ? $orders[0] : null;
                 
                 return $this->json([
                     'found' => true,
@@ -337,7 +365,7 @@ class RetailSaleController extends BaseSaleController
                         'from_order' => false
                     ],
                     'stats' => [
-                        'total_orders' => $totalOrders,
+                        'total_orders' => (int) $totalOrders,
                         'total_spent' => (float) $totalSpent,
                         'last_order_date' => $lastOrder ? $lastOrder->getCreatedAt()->format('Y-m-d H:i:s') : null,
                         'last_order_amount' => $lastOrder ? (float) $lastOrder->getTotalAmount() : 0,
@@ -352,7 +380,7 @@ class RetailSaleController extends BaseSaleController
                             'payment_method' => $order->getPaymentMethod(),
                         ];
                     }, $orders),
-                    'source' => 'customer' // Indique que le client vient de Customer
+                    'source' => 'customer'
                 ]);
             }
             
@@ -366,12 +394,13 @@ class RetailSaleController extends BaseSaleController
             $this->logger->error('Erreur recherche client', [
                 'phone' => $phone,
                 'email' => $email,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
             
             return $this->json([
                 'found' => false,
-                'error' => 'Erreur lors de la recherche du client'
+                'error' => 'Erreur lors de la recherche du client: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -381,15 +410,29 @@ class RetailSaleController extends BaseSaleController
      */
     private function countOrdersByPhone(string $phone, HmaService $hmaService): int
     {
-        return (int) $this->entityManager->getRepository(Order::class)
-            ->createQueryBuilder('o')
-            ->select('COUNT(o.id)')
-            ->where('o.customer_phone LIKE :phone')
-            ->andWhere('o.hma_service = :hmaService')
-            ->setParameter('phone', '%' . $phone)
-            ->setParameter('hmaService', $hmaService)
-            ->getQuery()
-            ->getSingleScalarResult();
+        try {
+            $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
+            
+            $count = $this->entityManager->getRepository(Order::class)
+                ->createQueryBuilder('o')
+                ->select('COUNT(o.id)')
+                ->where('o.customer_phone LIKE :phone1')
+                ->orWhere('o.customer_phone LIKE :phone2')
+                ->andWhere('o.hma_service = :hmaService')
+                ->setParameter('phone1', '%' . $cleanPhone)
+                ->setParameter('phone2', $cleanPhone . '%')
+                ->setParameter('hmaService', $hmaService)
+                ->getQuery()
+                ->getSingleScalarResult() ?? 0;
+            
+            return (int) $count;
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur countOrdersByPhone', [
+                'phone' => $phone,
+                'error' => $e->getMessage()
+            ]);
+            return 0;
+        }
     }
 
     /**
@@ -397,17 +440,31 @@ class RetailSaleController extends BaseSaleController
      */
     private function sumOrdersByPhone(string $phone, HmaService $hmaService): float
     {
-        return (float) $this->entityManager->getRepository(Order::class)
-            ->createQueryBuilder('o')
-            ->select('SUM(o.total_amount)')
-            ->where('o.customer_phone LIKE :phone')
-            ->andWhere('o.hma_service = :hmaService')
-            ->andWhere('o.status = :status')
-            ->setParameter('phone', '%' . $phone)
-            ->setParameter('hmaService', $hmaService)
-            ->setParameter('status', 'completed')
-            ->getQuery()
-            ->getSingleScalarResult() ?? 0;
+        try {
+            $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
+            
+            $sum = $this->entityManager->getRepository(Order::class)
+                ->createQueryBuilder('o')
+                ->select('SUM(o.total_amount)')
+                ->where('o.customer_phone LIKE :phone1')
+                ->orWhere('o.customer_phone LIKE :phone2')
+                ->andWhere('o.hma_service = :hmaService')
+                ->andWhere('o.status = :status')
+                ->setParameter('phone1', '%' . $cleanPhone)
+                ->setParameter('phone2', $cleanPhone . '%')
+                ->setParameter('hmaService', $hmaService)
+                ->setParameter('status', 'completed')
+                ->getQuery()
+                ->getSingleScalarResult() ?? 0;
+            
+            return (float) $sum;
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur sumOrdersByPhone', [
+                'phone' => $phone,
+                'error' => $e->getMessage()
+            ]);
+            return 0;
+        }
     }
 
     /**
@@ -415,28 +472,40 @@ class RetailSaleController extends BaseSaleController
      */
     private function getRecentOrdersByPhone(string $phone, HmaService $hmaService): array
     {
-        $orders = $this->entityManager->getRepository(Order::class)
-            ->createQueryBuilder('o')
-            ->where('o.customer_phone LIKE :phone')
-            ->andWhere('o.hma_service = :hmaService')
-            ->setParameter('phone', '%' . $phone)
-            ->setParameter('hmaService', $hmaService)
-            ->orderBy('o.created_at', 'DESC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult();
+        try {
+            $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
+            
+            $orders = $this->entityManager->getRepository(Order::class)
+                ->createQueryBuilder('o')
+                ->where('o.customer_phone LIKE :phone1')
+                ->orWhere('o.customer_phone LIKE :phone2')
+                ->andWhere('o.hma_service = :hmaService')
+                ->setParameter('phone1', '%' . $cleanPhone)
+                ->setParameter('phone2', $cleanPhone . '%')
+                ->setParameter('hmaService', $hmaService)
+                ->orderBy('o.created_at', 'DESC')
+                ->setMaxResults(10)
+                ->getQuery()
+                ->getResult();
 
-        return array_map(function($order) {
-            return [
-                'id' => $order->getId(),
-                'order_number' => $order->getOrderNumber(),
-                'total_amount' => (float) $order->getTotalAmount(),
-                'created_at' => $order->getCreatedAt()->format('Y-m-d H:i:s'),
-                'status' => $order->getStatus(),
-                'payment_method' => $order->getPaymentMethod(),
-                'customer_name' => $order->getCustomerName()
-            ];
-        }, $orders);
+            return array_map(function($order) {
+                return [
+                    'id' => $order->getId(),
+                    'order_number' => $order->getOrderNumber(),
+                    'total_amount' => (float) $order->getTotalAmount(),
+                    'created_at' => $order->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'status' => $order->getStatus(),
+                    'payment_method' => $order->getPaymentMethod(),
+                    'customer_name' => $order->getCustomerName()
+                ];
+            }, $orders);
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur getRecentOrdersByPhone', [
+                'phone' => $phone,
+                'error' => $e->getMessage()
+            ]);
+            return [];
+        }
     }
 
     /**

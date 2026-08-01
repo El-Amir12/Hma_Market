@@ -1,0 +1,187 @@
+{# templates/marketplace/cart/payment_status.html.twig #}
+
+{% extends 'base_marketplace.html.twig' %}
+
+{% block title %}Statut du paiement - HMA Marketplace{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .payment-status-container {
+        max-width: 600px;
+        margin: 4rem auto;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .status-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .status-icon.success {
+        color: #16a34a;
+    }
+
+    .status-icon.pending {
+        color: #f59e0b;
+    }
+
+    .status-icon.error {
+        color: #ef4444;
+    }
+
+    .status-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    .status-card .status-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .status-card .status-message {
+        color: #64748b;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .status-card .order-info {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 1.5rem 0;
+        text-align: left;
+    }
+
+    .status-card .order-info .row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.4rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .status-card .order-info .row:last-child {
+        border-bottom: none;
+    }
+
+    .status-card .order-info .label {
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+
+    .status-card .order-info .value {
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 0.9rem;
+    }
+
+    .btn-return {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.7rem 2rem;
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .btn-return:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(4, 99, 241, 0.3);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="payment-status-container">
+    <div class="status-card">
+        {% if status == 'approved' or status == 'success' %}
+            <div class="status-icon success">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="status-title" style="color: #16a34a;">Paiement confirmé !</h2>
+            <p class="status-message">
+                Votre paiement a été effectué avec succès. Votre commande est maintenant en cours de traitement.
+            </p>
+        {% elseif status == 'pending' %}
+            <div class="status-icon pending">
+                <i class="fas fa-clock"></i>
+            </div>
+            <h2 class="status-title" style="color: #f59e0b;">Paiement en attente</h2>
+            <p class="status-message">
+                Votre paiement est en cours de validation. Vous recevrez une confirmation par email dès qu'il sera approuvé.
+            </p>
+        {% elseif status == 'error' %}
+            <div class="status-icon error">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h2 class="status-title" style="color: #ef4444;">Erreur de paiement</h2>
+            <p class="status-message">
+                {{ message|default('Une erreur est survenue lors du traitement de votre paiement. Veuillez réessayer.') }}
+            </p>
+        {% else %}
+            <div class="status-icon pending">
+                <i class="fas fa-hourglass-half"></i>
+            </div>
+            <h2 class="status-title" style="color: #64748b;">Statut inconnu</h2>
+            <p class="status-message">
+                Nous n'avons pas pu déterminer le statut de votre paiement. Veuillez contacter le support.
+            </p>
+        {% endif %}
+
+        {% if order %}
+            <div class="order-info">
+                <div class="row">
+                    <span class="label">Commande</span>
+                    <span class="value">#{{ order.orderNumber }}</span>
+                </div>
+                <div class="row">
+                    <span class="label">Total</span>
+                    <span class="value">{{ order.totalAmount|number_format(0, ',', ' ') }} FCFA</span>
+                </div>
+                <div class="row">
+                    <span class="label">Statut</span>
+                    <span class="value">
+                        {% if order.paymentStatus == 'paid' %}
+                            <span style="color: #16a34a;">Payé</span>
+                        {% else %}
+                            <span style="color: #f59e0b;">En attente</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="row">
+                    <span class="label">Date</span>
+                    <span class="value">{{ order.createdAt|date('d/m/Y H:i') }}</span>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if transaction_id %}
+            <p class="text-muted small" style="margin-top: 1rem;">
+                Référence de transaction: {{ transaction_id }}
+            </p>
+        {% endif %}
+
+        <a href="{{ path('marketplace_orders') }}" class="btn-return">
+            <i class="fas fa-list"></i>
+            Voir mes commandes
+        </a>
+        <br>
+        <a href="{{ path('marketplace_home') }}" class="btn-return" style="background: #e5e7eb; color: #475569; margin-top: 0.5rem;">
+            <i class="fas fa-home"></i>
+            Retour à l'accueil
+        </a>
+    </div>
+</div>
+{% endblock %}

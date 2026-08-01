@@ -1,10 +1,11 @@
 <?php
 // src/Form/CustomerProfileType.php
+
 namespace App\Form;
 
 use App\Entity\Customer;
+use App\Form\Type\CountryType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -19,6 +20,14 @@ class CustomerProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('email', EmailType::class, [
+                'label' => 'Email',
+                'disabled' => true,
+                'attr' => [
+                    'class' => 'form-control form-control-lg',
+                    'readonly' => true,
+                ],
+            ])
             ->add('full_name', TextType::class, [
                 'label' => 'Nom complet *',
                 'attr' => [
@@ -33,18 +42,6 @@ class CustomerProfileType extends AbstractType
                         'max' => 100,
                         'maxMessage' => 'Le nom ne doit pas dépasser {{ limit }} caractères.'
                     ]),
-                ]
-            ])
-            ->add('email', EmailType::class, [
-                'label' => 'Email *',
-                'attr' => [
-                    'class' => 'form-control form-control-lg',
-                    'placeholder' => 'votre@email.com',
-                    'readonly' => true, // L'email ne peut pas être modifié
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'L\'email est obligatoire.']),
-                    new Email(['message' => 'Veuillez saisir un email valide.']),
                 ]
             ])
             ->add('phone', TextType::class, [
@@ -81,7 +78,7 @@ class CustomerProfileType extends AbstractType
                 'label' => 'Pays',
                 'required' => false,
                 'attr' => [
-                    'class' => 'form-select form-select-lg',
+                    'class' => 'form-select form-select-lg select2-country',
                     'data-placeholder' => 'Sélectionnez votre pays'
                 ]
             ])
@@ -89,9 +86,9 @@ class CustomerProfileType extends AbstractType
                 'label' => 'Bio',
                 'required' => false,
                 'attr' => [
-                    'class' => 'form-control',
-                    'rows' => 4,
-                    'placeholder' => 'Présentez-vous...'
+                    'class' => 'form-control form-control-lg',
+                    'placeholder' => 'Parlez-nous un peu de vous...',
+                    'rows' => 4
                 ]
             ]);
     }
@@ -100,9 +97,6 @@ class CustomerProfileType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Customer::class,
-            'csrf_protection' => true,
-            'csrf_field_name' => '_csrf_token',
-            'csrf_token_id' => 'customer_profile',
         ]);
     }
 }

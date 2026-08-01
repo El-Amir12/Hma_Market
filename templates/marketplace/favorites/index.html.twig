@@ -1,57 +1,833 @@
 {# templates/marketplace/favorites/index.html.twig #}
+
 {% extends 'base_marketplace.html.twig' %}
 
 {% block title %}Mes favoris - HMA Market{% endblock %}
 
-{% block body %}
-<div class="row">
-    <div class="col-12">
-        <h1 class="h2 fw-bold mb-4">
-            <i class="fas fa-heart text-danger me-2"></i>
-            Mes favoris
-        </h1>
-    </div>
-</div>
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    :root {
+        --card-radius: 16px;
+        --card-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        --card-shadow-hover: 0 12px 35px rgba(0,0,0,0.12);
+        --primary-gradient: linear-gradient(135deg, #0463f1 0%, #667eea 100%);
+    }
 
-{% if favorites|length > 0 %}
-    <div class="row g-4">
-        {% for favorite in favorites %}
-            <div class="col-md-3 col-6">
-                <div class="product-card">
+    /* ==================== PAGE HEADER ==================== */
+    .page-header-favorites {
+        margin-bottom: 2rem;
+        padding: 1.5rem 2rem;
+        background: white;
+        border-radius: var(--card-radius);
+        border: 1px solid #e5e7eb;
+        box-shadow: var(--card-shadow);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .page-header-favorites .header-left h1 {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 0.1rem;
+    }
+
+    .page-header-favorites .header-left h1 i {
+        color: #ef4444;
+        margin-right: 0.5rem;
+    }
+
+    .page-header-favorites .header-left .subtitle {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .page-header-favorites .header-right .stat-badge {
+        background: #fef2f2;
+        color: #dc2626;
+        padding: 0.4rem 1.2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px solid #fecaca;
+    }
+
+    /* ==================== PRODUCT CARD ==================== */
+    .favorite-card {
+        background: white;
+        border-radius: var(--card-radius);
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--card-shadow);
+        cursor: pointer;
+    }
+
+    .favorite-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--card-shadow-hover);
+        border-color: #ef4444;
+    }
+
+    /* ==================== PRODUCT IMAGE ==================== */
+    .favorite-card .product-image {
+        height: 200px;
+        background: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .favorite-card .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .favorite-card:hover .product-image img {
+        transform: scale(1.05);
+    }
+
+    .favorite-card .product-image .placeholder {
+        font-size: 4rem;
+        color: #cbd5e1;
+    }
+
+    /* ==================== FAVORITE BUTTON ==================== */
+    .favorite-card .favorite-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.95);
+        border: none;
+        color: #ef4444;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+        z-index: 3;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        font-size: 1rem;
+    }
+
+    .favorite-card .favorite-btn:hover {
+        background: white;
+        transform: scale(1.1);
+        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
+    }
+
+    /* ==================== PRODUCT BODY ==================== */
+    .favorite-card .product-body {
+        padding: 1rem 1.2rem 1.2rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .favorite-card .product-category {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+    }
+
+    .favorite-card .product-name {
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.4;
+        color: #0f172a;
+        flex: 1;
+        min-height: 44px;
+    }
+
+    .favorite-card .product-price {
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    /* ==================== FAVORITE METADATA ==================== */
+    .favorite-card .favorite-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.7rem;
+        color: #94a3b8;
+        margin-top: 0.25rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .favorite-card .favorite-meta i {
+        font-size: 0.6rem;
+    }
+
+    .favorite-card .favorite-meta .date {
+        color: #64748b;
+    }
+
+    /* ==================== VIEW DETAILS BUTTON ==================== */
+    .favorite-card .view-details-btn {
+        width: 100%;
+        border-radius: 10px;
+        padding: 0.5rem;
+        border: 2px solid #e5e7eb;
+        background: transparent;
+        color: #64748b;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        margin-top: 0.5rem;
+    }
+
+    .favorite-card .view-details-btn:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background: #f8fafc;
+    }
+
+    /* ==================== PRODUCTS GRID ==================== */
+    .favorites-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    /* ==================== MODAL ==================== */
+    .favorite-modal .modal-content {
+        border-radius: var(--card-radius);
+        border: none;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        overflow: hidden;
+    }
+
+    .favorite-modal .modal-header {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 1.2rem 1.5rem;
+        border-bottom: none;
+    }
+
+    .favorite-modal .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+        opacity: 0.7;
+    }
+
+    .favorite-modal .modal-header .btn-close:hover {
+        opacity: 1;
+    }
+
+    .favorite-modal .modal-body {
+        padding: 1.5rem;
+    }
+
+    .favorite-modal .modal-footer {
+        border-top: none;
+        padding: 1rem 1.5rem 1.5rem;
+    }
+
+    /* ==================== MODAL PRODUCT INFO ==================== */
+    .modal-product-image {
+        width: 100%;
+        max-height: 250px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: #f8fafc;
+        padding: 0.5rem;
+        border: 1px solid #e5e7eb;
+    }
+
+    .modal-product-image-placeholder {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8fafc;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        font-size: 4rem;
+        color: #cbd5e1;
+    }
+
+    .modal-info-row {
+        display: flex;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .modal-info-row:last-child {
+        border-bottom: none;
+    }
+
+    .modal-info-label {
+        font-weight: 600;
+        color: #64748b;
+        min-width: 120px;
+        font-size: 0.85rem;
+    }
+
+    .modal-info-value {
+        color: #0f172a;
+        font-size: 0.9rem;
+    }
+
+    .modal-info-value .badge-category {
+        background: #e8f0fe;
+        color: var(--primary-color);
+        padding: 0.2rem 0.7rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .modal-info-value .badge-favorite {
+        background: #fef2f2;
+        color: #dc2626;
+        padding: 0.2rem 0.7rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    /* ==================== EMPTY STATE ==================== */
+    .empty-state-favorites {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: var(--card-radius);
+        border: 2px dashed #e5e7eb;
+    }
+
+    .empty-state-favorites .icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background: #fef2f2;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+    }
+
+    .empty-state-favorites .icon-wrapper i {
+        font-size: 2.5rem;
+        color: #ef4444;
+    }
+
+    .empty-state-favorites h4 {
+        color: #0f172a;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-favorites p {
+        color: #94a3b8;
+        max-width: 450px;
+        margin: 0 auto 1.5rem;
+    }
+
+    .empty-state-favorites .btn-primary {
+        border-radius: 50px;
+        padding: 0.6rem 2rem;
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state-favorites .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(4, 99, 241, 0.3);
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 992px) {
+        .favorites-grid {
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        .favorite-card .product-image {
+            height: 160px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .page-header-favorites {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 1rem 1.25rem;
+        }
+        .page-header-favorites .header-left h1 {
+            font-size: 1.3rem;
+        }
+        .page-header-favorites .header-right {
+            width: 100%;
+        }
+        .page-header-favorites .header-right .stat-badge {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .favorites-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        .favorite-card .product-image {
+            height: 140px;
+        }
+        .favorite-card .product-name {
+            font-size: 0.9rem;
+            min-height: 38px;
+        }
+        .favorite-card .product-price {
+            font-size: 1rem;
+        }
+
+        .modal-product-image {
+            max-height: 180px;
+        }
+        .modal-info-row {
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        .modal-info-label {
+            min-width: auto;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .favorites-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+        .favorite-card .product-image {
+            height: 120px;
+        }
+        .favorite-card .product-body {
+            padding: 0.75rem 0.8rem 1rem;
+        }
+        .favorite-card .product-name {
+            font-size: 0.8rem;
+            min-height: 34px;
+        }
+        .favorite-card .product-price {
+            font-size: 0.9rem;
+        }
+        .favorite-card .favorite-btn {
+            width: 30px;
+            height: 30px;
+            font-size: 0.8rem;
+            top: 8px;
+            right: 8px;
+        }
+        .favorite-card .view-details-btn {
+            font-size: 0.7rem;
+            padding: 0.3rem;
+        }
+        .favorite-card .favorite-meta {
+            font-size: 0.6rem;
+        }
+        .page-header-favorites .header-left h1 {
+            font-size: 1.1rem;
+        }
+        .empty-state-favorites {
+            padding: 2rem 1rem;
+        }
+        .empty-state-favorites .icon-wrapper {
+            width: 60px;
+            height: 60px;
+        }
+        .empty-state-favorites .icon-wrapper i {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <!-- ==================== PAGE HEADER ==================== -->
+    <div class="page-header-favorites">
+        <div class="header-left">
+            <h1>
+                <i class="fas fa-heart"></i>
+                Mes favoris
+            </h1>
+            <p class="subtitle">
+                Retrouvez tous vos produits préférés en un seul endroit
+            </p>
+        </div>
+        <div class="header-right">
+            <span class="stat-badge">
+                <i class="fas fa-heart"></i>
+                {{ favorites|length }} produit(s)
+            </span>
+        </div>
+    </div>
+
+    <!-- ==================== FAVORITES GRID ==================== -->
+    {% if favorites|length > 0 %}
+        <div class="favorites-grid">
+            {% for favorite in favorites %}
+                <div class="favorite-card" onclick="openFavoriteModal({{ favorite.id }})" data-favorite-id="{{ favorite.id }}">
                     <div class="product-image">
-                        {% if favorite.product.image %}
-                            <img src="{{ asset('uploads/products/' ~ favorite.product.image) }}" alt="{{ favorite.product.name }}">
+                        {% if favorite.product.image and favorite.product.image != 'default-product.png' %}
+                            <img src="{{ asset('uploads/products/' ~ favorite.product.image) }}" 
+                                 alt="{{ favorite.product.name }}" 
+                                 loading="lazy">
                         {% else %}
                             <div class="placeholder">
                                 <i class="fas fa-box"></i>
                             </div>
                         {% endif %}
-                        <button class="favorite-btn active" onclick="toggleFavorite(this, {{ favorite.product.id }})">
+                        <button class="favorite-btn" 
+                                onclick="event.stopPropagation(); toggleFavorite(this, {{ favorite.product.id }})"
+                                data-product-id="{{ favorite.product.id }}">
                             <i class="fas fa-heart"></i>
                         </button>
                     </div>
+                    
                     <div class="product-body">
-                        <div class="product-category">{{ favorite.product.category ? favorite.product.category.name : 'Non catégorisé' }}</div>
-                        <h6 class="product-name">{{ favorite.product.name }}</h6>
-                        <div class="product-price">
-                            {{ favorite.product.salePrice|number_format(0, ',', ' ') }} FCFA
+                        <div class="product-category">
+                            {{ favorite.product.category ? favorite.product.category.name : 'Non catégorisé' }}
                         </div>
-                        <button class="add-to-cart mt-2" data-product-id="{{ favorite.product.id }}">
-                            <i class="fas fa-cart-plus me-1"></i>Ajouter au panier
+                        
+                        <h6 class="product-name">{{ favorite.product.name }}</h6>
+                        
+                        <div class="product-price">
+                            {{ favorite.product.salePrice|price_with_currency(favorite.product.hmaService) }}
+                        </div>
+                        
+                        <div class="favorite-meta">
+                            <i class="fas fa-calendar-plus"></i>
+                            <span class="date">Ajouté le {{ favorite.createdAt|date('d/m/Y') }}</span>
+                        </div>
+                        
+                        <button class="view-details-btn" onclick="event.stopPropagation(); openFavoriteModal({{ favorite.id }})">
+                            <i class="fas fa-eye"></i> Voir les détails
                         </button>
                     </div>
                 </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- ==================== EMPTY STATE ==================== -->
+        <div class="empty-state-favorites">
+            <div class="icon-wrapper">
+                <i class="fas fa-heart"></i>
             </div>
-        {% endfor %}
+            <h4>Aucun favori</h4>
+            <p>
+                Vous n'avez pas encore ajouté de produits à vos favoris.
+                <br>Commencez à explorer notre catalogue et cliquez sur le cœur ❤️ pour ajouter vos produits préférés.
+            </p>
+            <a href="{{ path('marketplace_products') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-left me-2"></i> Découvrir les produits
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<!-- ==================== MODAL DÉTAIL FAVORI ==================== -->
+<div class="modal fade favorite-modal" id="favoriteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="favoriteModalTitle">
+                    <i class="fas fa-heart me-2"></i> Détail du favori
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <div id="favoriteModalContent">
+                    <div class="text-center py-4">
+                        <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                        <p class="mt-2 text-muted">Chargement...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Fermer
+                </button>
+                <a href="#" id="viewProductBtn" class="btn btn-primary">
+                    <i class="fas fa-eye me-1"></i> Voir le produit
+                </a>
+            </div>
+        </div>
     </div>
-{% else %}
-    <div class="text-center py-5">
-        <i class="fas fa-heart fa-4x text-muted mb-3"></i>
-        <h4 class="text-muted">Aucun favori</h4>
-        <p class="text-muted">Ajoutez vos produits préférés en cliquant sur le cœur ❤️</p>
-        <a href="{{ path('marketplace_products') }}" class="btn btn-primary">
-            <i class="fas fa-arrow-left me-2"></i>Découvrir les produits
-        </a>
-    </div>
-{% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ==================== STOCKER LES DONNÉES DES FAVORIS ====================
+    window.favoritesData = {};
+    {% for favorite in favorites %}
+        window.favoritesData[{{ favorite.id }}] = {
+            id: {{ favorite.id }},
+            productId: {{ favorite.product.id }},
+            productName: "{{ favorite.product.name|e('js') }}",
+            productCategory: "{{ favorite.product.category ? favorite.product.category.name|e('js') : 'Non catégorisé' }}",
+            productPrice: "{{ favorite.product.salePrice|price_with_currency(favorite.product.hmaService)|e('js') }}",
+            productImage: "{{ favorite.product.image and favorite.product.image != 'default-product.png' ? asset('uploads/products/' ~ favorite.product.image) : '' }}",
+            createdAt: "{{ favorite.createdAt|date('d/m/Y à H:i') }}",
+            productDescription: "{{ favorite.product.description|default('Aucune description')|e('js') }}",
+            productStock: {{ favorite.product.stockQuantity|default(0) }},
+            productUnit: "{{ favorite.product.unit|default('pièce') }}",
+            productBarcode: "{{ favorite.product.barcode|default('') }}",
+            productPrescription: {{ favorite.product.prescriptionRequired ? 'true' : 'false' }},
+            productForm: "{{ favorite.product.form|default('') }}",
+            productDosage: "{{ favorite.product.dosage|default('') }}"
+        };
+    {% endfor %}
+
+    // ==================== OUVRIRE LE MODAL ====================
+    window.openFavoriteModal = function(favoriteId) {
+        const data = window.favoritesData[favoriteId];
+        if (!data) {
+            showNotification('Erreur : favori non trouvé', 'error');
+            return;
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('favoriteModal'));
+        const content = document.getElementById('favoriteModalContent');
+        const title = document.getElementById('favoriteModalTitle');
+        const viewBtn = document.getElementById('viewProductBtn');
+
+        title.innerHTML = '<i class="fas fa-heart text-danger me-2"></i> ' + data.productName;
+        viewBtn.href = '/marketplace/product/' + data.productId;
+
+        const isInStock = data.productStock > 0;
+
+        content.innerHTML = `
+            <div class="row g-4">
+                <div class="col-md-5">
+                    ${data.productImage ? `
+                        <img src="${data.productImage}" alt="${data.productName}" class="modal-product-image">
+                    ` : `
+                        <div class="modal-product-image-placeholder">
+                            <i class="fas fa-box"></i>
+                        </div>
+                    `}
+                </div>
+                <div class="col-md-7">
+                    <div class="modal-info-row">
+                        <span class="modal-info-label"><i class="fas fa-tag me-2"></i>Catégorie</span>
+                        <span class="modal-info-value">
+                            <span class="badge-category">${data.productCategory}</span>
+                        </span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-info-label"><i class="fas fa-credit-card me-2"></i>Prix</span>
+                        <span class="modal-info-value fw-bold text-primary">${data.productPrice}</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-info-label"><i class="fas fa-box me-2"></i>Stock</span>
+                        <span class="modal-info-value">
+                            ${isInStock ? `
+                                <span class="text-success"><i class="fas fa-check-circle me-1"></i> Disponible (${data.productStock} ${data.productUnit})</span>
+                            ` : `
+                                <span class="text-danger"><i class="fas fa-times-circle me-1"></i> Indisponible</span>
+                            `}
+                        </span>
+                    </div>
+                    ${data.productBarcode ? `
+                    <div class="modal-info-row">
+                        <span class="modal-info-label"><i class="fas fa-barcode me-2"></i>Code-barres</span>
+                        <span class="modal-info-value" style="font-family: monospace;">${data.productBarcode}</span>
+                    </div>
+                    ` : ''}
+                    ${data.productForm ? `
+                    <div class="modal-info-row">
+                        <span class="modal-info-label"><i class="fas fa-capsules me-2"></i>Forme</span>
+                        <span class="modal-info-value">${data.productForm}</span>
+                    </div>
+                    ` : ''}
+                    ${data.productDosage ? `
+                    <div class="modal-info-row">
+                        <span class="modal-info-label"><i class="fas fa-weight me-2"></i>Dosage</span>
+                        <span class="modal-info-value">${data.productDosage}</span>
+                    </div>
+                    ` : ''}
+                    ${data.productPrescription ? `
+                    <div class="modal-info-row">
+                        <span class="modal-info-label"><i class="fas fa-prescription-bottle me-2"></i>Prescription</span>
+                        <span class="modal-info-value">
+                            <span class="badge bg-warning text-dark"><i class="fas fa-prescription-bottle me-1"></i> Obligatoire</span>
+                        </span>
+                    </div>
+                    ` : ''}
+                    <div class="modal-info-row">
+                        <span class="modal-info-label"><i class="fas fa-calendar-plus me-2"></i>Ajouté le</span>
+                        <span class="modal-info-value">${data.createdAt}</span>
+                    </div>
+                    ${data.productDescription ? `
+                    <div class="modal-info-row">
+                        <span class="modal-info-label"><i class="fas fa-align-left me-2"></i>Description</span>
+                        <span class="modal-info-value" style="font-size: 0.85rem;">${data.productDescription}</span>
+                    </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+
+        modal.show();
+    };
+
+    // ==================== TOGGLE FAVORI ====================
+    window.toggleFavorite = function(btn, productId) {
+        const icon = btn.querySelector('i');
+        const card = btn.closest('.favorite-card');
+        
+        btn.disabled = true;
+        icon.className = 'fas fa-spinner fa-spin';
+        
+        fetch('{{ path('marketplace_favorite_toggle') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ productId: productId })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Erreur serveur');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                if (data.isFavorite) {
+                    icon.className = 'fas fa-heart';
+                    btn.style.color = '#ef4444';
+                    showNotification('✓ Ajouté aux favoris', 'success');
+                } else {
+                    icon.className = 'far fa-heart';
+                    btn.style.color = '#94a3b8';
+                    if (card) {
+                        card.style.opacity = '0.5';
+                        setTimeout(() => {
+                            card.remove();
+                            // Mettre à jour le compteur
+                            updateFavoritesCount();
+                            // Recharger la page si plus de favoris
+                            const remaining = document.querySelectorAll('.favorite-card').length;
+                            if (remaining === 0) {
+                                location.reload();
+                            }
+                        }, 300);
+                    }
+                    showNotification('Retiré des favoris', 'info');
+                }
+                updateFavoritesCount();
+            } else {
+                icon.className = 'fas fa-heart';
+                btn.style.color = '#ef4444';
+                showNotification(data.error || 'Erreur', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            icon.className = 'fas fa-heart';
+            btn.style.color = '#ef4444';
+            showNotification(error.message || 'Erreur de connexion', 'error');
+        })
+        .finally(() => {
+            btn.disabled = false;
+        });
+    };
+
+    // ==================== MISE À JOUR DES COMPTEURS ====================
+    window.updateFavoritesCount = function() {
+        const badge = document.getElementById('favoritesCount');
+        if (badge) {
+            fetch('{{ path('marketplace_favorites_count') }}')
+                .then(r => r.json())
+                .then(data => {
+                    badge.textContent = data.count || 0;
+                    badge.style.display = data.count > 0 ? 'block' : 'none';
+                })
+                .catch(() => {});
+        }
+    };
+
+    // ==================== NOTIFICATIONS ====================
+    function showNotification(message, type = 'info') {
+        const colors = {
+            success: 'bg-success',
+            error: 'bg-danger',
+            info: 'bg-primary',
+            warning: 'bg-warning'
+        };
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            info: 'fa-info-circle',
+            warning: 'fa-exclamation-triangle'
+        };
+        
+        const notification = document.createElement('div');
+        notification.className = `position-fixed bottom-0 end-0 p-3 m-3 ${colors[type] || colors.info} text-white rounded-4 shadow-lg`;
+        notification.style.zIndex = '9999';
+        notification.style.animation = 'slideUp 0.3s ease';
+        notification.style.maxWidth = '400px';
+        notification.style.boxShadow = '0 10px 40px rgba(0,0,0,0.15)';
+        notification.innerHTML = `
+            <div class="d-flex align-items-center gap-2">
+                <i class="fas ${icons[type] || icons.info} fa-lg"></i>
+                <span class="fw-medium">${message}</span>
+                <button type="button" class="btn-close btn-close-white ms-2" onclick="this.closest('.position-fixed').remove()" style="opacity: 0.6;"></button>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideDown 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 4000);
+    }
+});
+</script>
 {% endblock %}

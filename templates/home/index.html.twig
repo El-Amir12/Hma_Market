@@ -421,23 +421,24 @@
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
                     
-                    {# ✅ MARKETPLACE AVEC BADGE NOUVEAU #}
+                    {# ✅ VERSION FINALE RECOMMANDÉE - s'ouvre dans le même onglet #}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('marketplace_home') }}" 
-                        target="_blank"
-                        style="color: var(--primary); font-weight: 600; position: relative;">
-                            <i class="bi bi-shop me-1"></i>Marketplace
-                            <span class="badge bg-danger ms-1" style="font-size: 0.55rem; vertical-align: middle; animation: pulse 2s infinite;">
-                                🆕
-                            </span>
+                        style="color: var(--primary); font-weight: 600; position: relative; display: flex; align-items: center;">
+                            <i class="fas fa-store me-1"></i> 
+                            Marketplace
                         </a>
                     </li>
                     
                     <li class="nav-item ms-2">
-                        <a href="{{ path('app_login') }}" class="btn btn-outline-gradient">Connexion</a>
+                        <a href="{{ path('app_login') }}" class="btn btn-outline-gradient">
+                            <i class="fas fa-sign-in-alt me-2"></i>Connexion
+                        </a>
                     </li>
                     <li class="nav-item ms-2">
-                        <a href="{{ path('app_register') }}" class="btn btn-gradient">Inscription</a>
+                        <a href="{{ path('app_register') }}" class="btn btn-gradient">
+                            <i class="fas fa-user-plus me-2"></i>Inscription
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -475,9 +476,9 @@
                     </div>
                 </div>
                 <div class="col-lg-6 animate__animated animate__fadeInRight">
-                    <img src="https://cdn.dribbble.com/users/642793/screenshots/15624822/media/78dd7daf7b4722f980ee60d341abeb35.png?compress=1&resize=800x600" 
-                         alt="Dashboard HMA Market" 
-                         class="img-fluid hero-image">
+                    <img src="{{ asset('uploads/logos/logo.png') }}" 
+                        alt="Dashboard HMA Market" 
+                        class="img-fluid hero-image">
                 </div>
             </div>
         </div>

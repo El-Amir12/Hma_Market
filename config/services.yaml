@@ -73,11 +73,10 @@ services:
             - '../src/Tests/'
 
     # ==================== CONTROLEURS ====================
-    # Le chargement automatique des contrôleurs ne doit pas inclure la classe abstraite
     App\Controller\:
         resource: '../src/Controller/'
         exclude:
-            - '../src/Controller/Sale/BaseSaleController.php'  # Exclure la classe abstraite
+            - '../src/Controller/Sale/BaseSaleController.php'
         tags: ['controller.service_arguments']
 
     # ==================== EXTENSIONS TWIG ====================
@@ -86,13 +85,20 @@ services:
         public: false
 
     App\Twig\AppExtension:
+        arguments:
+            $security: '@Symfony\Bundle\SecurityBundle\Security'
+            $favoriteRepository: '@App\Repository\FavoriteRepository'
+            $cartRepository: '@App\Repository\CartRepository'
+            $orderItemRepository: '@App\Repository\OrderItemRepository'
         tags: ['twig.extension']
-        public: false
 
     App\Twig\ColorExtension:
         tags: ['twig.extension']
 
     App\Twig\CompanyExtension:
+        tags: ['twig.extension']
+
+    App\Twig\CountryExtension:
         tags: ['twig.extension']
 
     App\Twig\MarketplaceExtension:
@@ -103,6 +109,19 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@security.helper'
             - '@App\Service\MarketplaceDataService'
+
+    App\Twig\RatingExtension:
+        arguments:
+            $orderItemRepository: '@App\Repository\OrderItemRepository'
+        tags:
+            - { name: twig.extension }
+
+    App\Twig\GlobalVariables:
+        arguments:
+            $security: '@security.helper'
+            $favoriteRepository: '@App\Repository\FavoriteRepository'
+            $cartRepository: '@App\Repository\CartRepository'
+        public: true
 
     # ==================== SERVICES PDF ====================
     Dompdf\Dompdf:
@@ -174,6 +193,7 @@ services:
         arguments:
             $apiKey: '%env(FEDAPAY_API_KEY)%'
             $environment: '%env(FEDAPAY_ENVIRONMENT)%'
+            $logger: '@monolog.logger'
 
     App\Service\UnitConverter:
         public: false
@@ -232,7 +252,7 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $orderRepository: '@App\Repository\OrderRepository'
-            $salesExportsDirectory: '%sales_exports_directory%'  # ← Changé de $exportDirectory à $salesExportsDirectory
+            $salesExportsDirectory: '%sales_exports_directory%'
         public: true
 
     # ==================== SERVICES DE GESTION DES STOCKS ====================
@@ -307,6 +327,13 @@ services:
         arguments:
             - '@security.token_storage'
             - '@router'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    App\EventListener\CustomerTargetPathListener:
+        arguments:
+            $tokenStorage: '@security.token_storage'
+            $logger: '@monolog.logger'
         tags:
             - { name: kernel.event_subscriber }
 
@@ -388,6 +415,16 @@ services:
             $entityManager: '@doctrine.orm.entity_manager'
             $fedaPayService: '@App\Service\FedaPayService'
             $notificationService: '@App\Service\NotificationService'
+            $logger: '@monolog.logger'
+        public: true
+
+    # ==================== NOUVEAU SERVICE ORDER ====================
+    App\Service\OrderService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $promotionCalculator: '@App\Service\Sale\PromotionCalculator'
+            $mailer: '@mailer.mailer'
+            $twig: '@twig'
             $logger: '@monolog.logger'
         public: true
 
@@ -483,5 +520,3 @@ services:
             - '@security.helper'
             - '@App\Repository\FavoriteRepository'
             - '@App\Repository\CartRepository'
-
-    
