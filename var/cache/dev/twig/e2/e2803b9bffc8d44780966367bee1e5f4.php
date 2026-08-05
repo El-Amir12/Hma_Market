@@ -649,7 +649,7 @@ class __TwigTemplate_97b462f1b7b41d9529e45bf636dbdf9b extends Template
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_home");
         yield "\" class=\"navbar-brand-custom\">
                     <i class=\"fas fa-store\"></i>
-                    HMA Market
+                    HMA SERVICE
                     <span class=\"brand-dot\"></span>
                 </a>
                 
@@ -1926,7 +1926,7 @@ class __TwigTemplate_97b462f1b7b41d9529e45bf636dbdf9b extends Template
                 <!-- Logo -->
                 <a href=\"{{ path('marketplace_home') }}\" class=\"navbar-brand-custom\">
                     <i class=\"fas fa-store\"></i>
-                    HMA Market
+                    HMA SERVICE
                     <span class=\"brand-dot\"></span>
                 </a>
                 

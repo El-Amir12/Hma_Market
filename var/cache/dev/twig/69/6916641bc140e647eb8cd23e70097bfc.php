@@ -552,6 +552,8 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
         // line 426
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_home");
         yield "\" 
+                        target=\"_blank\" 
+                        rel=\"noopener noreferrer\"
                         style=\"color: var(--primary); font-weight: 600; position: relative; display: flex; align-items: center;\">
                             <i class=\"fas fa-store me-1\"></i> 
                             Marketplace
@@ -559,20 +561,20 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                     </li>
                     
                     <li class=\"nav-item ms-2\">
-                        <a href=\"";
-        // line 434
+                        <div class=\"d-flex flex-wrap gap-2\" style=\"row-gap: 0.5rem;\">
+                            <a href=\"";
+        // line 437
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_login");
         yield "\" class=\"btn btn-outline-gradient\">
-                            <i class=\"fas fa-sign-in-alt me-2\"></i>Connexion
-                        </a>
-                    </li>
-                    <li class=\"nav-item ms-2\">
-                        <a href=\"";
-        // line 439
+                                <i class=\"fas fa-sign-in-alt me-2\"></i>Connexion
+                            </a>
+                            <a href=\"";
+        // line 440
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
         yield "\" class=\"btn btn-gradient\">
-                            <i class=\"fas fa-user-plus me-2\"></i>Inscription
-                        </a>
+                                <i class=\"fas fa-user-plus me-2\"></i>Inscription
+                            </a>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -611,7 +613,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                 </div>
                 <div class=\"col-lg-6 animate__animated animate__fadeInRight\">
                     <img src=\"";
-        // line 479
+        // line 481
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("uploads/logos/logo.png"), "html", null, true);
         yield "\" 
                         alt=\"Dashboard HMA Market\" 
@@ -762,13 +764,13 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                     
                     <div class=\"mt-4\">
                         <a href=\"";
-        // line 627
+        // line 629
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_home");
         yield "\" class=\"btn btn-gradient btn-lg\">
                             <i class=\"bi bi-arrow-right me-2\"></i>Découvrir la Marketplace
                         </a>
                         <a href=\"";
-        // line 630
+        // line 632
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_pharmacy_search");
         yield "\" class=\"btn btn-outline-gradient btn-lg ms-2\">
                             <i class=\"bi bi-search me-2\"></i>Rechercher
@@ -839,7 +841,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                             <li class=\"text-muted\"><i class=\"bi bi-x-circle-fill text-danger me-2\"></i>API d'intégration</li>
                         </ul>
                         <a href=\"";
-        // line 698
+        // line 700
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
         yield "\" class=\"btn btn-outline-gradient w-100\">Commencer</a>
                     </div>
@@ -860,7 +862,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                             <li><i class=\"bi bi-check-circle-fill\"></i>API d'intégration</li>
                         </ul>
                         <a href=\"";
-        // line 716
+        // line 718
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
         yield "\" class=\"btn btn-gradient w-100\">Choisir Pro</a>
                     </div>
@@ -972,7 +974,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             <div class=\"row\">
                 <div class=\"col-md-6\">
                     <p class=\"mb-0\">&copy; ";
-        // line 825
+        // line 827
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate("now", "Y"), "html", null, true);
         yield " HMA Service. Tous droits réservés.</p>
                 </div>
@@ -995,7 +997,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
         yield from [];
     }
 
-    // line 838
+    // line 840
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -1008,7 +1010,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 839
+        // line 841
         yield "    ";
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
@@ -1089,7 +1091,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  1012 => 839,  999 => 838,  976 => 825,  864 => 716,  843 => 698,  772 => 630,  766 => 627,  615 => 479,  572 => 439,  564 => 434,  553 => 426,  550 => 425,  523 => 400,  519 => 399,  514 => 396,  501 => 395,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  1014 => 841,  1001 => 840,  978 => 827,  866 => 718,  845 => 700,  774 => 632,  768 => 629,  617 => 481,  573 => 440,  567 => 437,  553 => 426,  550 => 425,  523 => 400,  519 => 399,  514 => 396,  501 => 395,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1517,9 +1519,11 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         <a class=\"nav-link\" href=\"#contact\">Contact</a>
                     </li>
                     
-                    {# ✅ VERSION FINALE RECOMMANDÉE - s'ouvre dans le même onglet #}
+                    {# ✅ VERSION FINALE - S'ouvre dans un nouvel onglet #}
                     <li class=\"nav-item\">
                         <a class=\"nav-link\" href=\"{{ path('marketplace_home') }}\" 
+                        target=\"_blank\" 
+                        rel=\"noopener noreferrer\"
                         style=\"color: var(--primary); font-weight: 600; position: relative; display: flex; align-items: center;\">
                             <i class=\"fas fa-store me-1\"></i> 
                             Marketplace
@@ -1527,14 +1531,14 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                     </li>
                     
                     <li class=\"nav-item ms-2\">
-                        <a href=\"{{ path('app_login') }}\" class=\"btn btn-outline-gradient\">
-                            <i class=\"fas fa-sign-in-alt me-2\"></i>Connexion
-                        </a>
-                    </li>
-                    <li class=\"nav-item ms-2\">
-                        <a href=\"{{ path('app_register') }}\" class=\"btn btn-gradient\">
-                            <i class=\"fas fa-user-plus me-2\"></i>Inscription
-                        </a>
+                        <div class=\"d-flex flex-wrap gap-2\" style=\"row-gap: 0.5rem;\">
+                            <a href=\"{{ path('app_login') }}\" class=\"btn btn-outline-gradient\">
+                                <i class=\"fas fa-sign-in-alt me-2\"></i>Connexion
+                            </a>
+                            <a href=\"{{ path('app_register') }}\" class=\"btn btn-gradient\">
+                                <i class=\"fas fa-user-plus me-2\"></i>Inscription
+                            </a>
+                        </div>
                     </li>
                 </ul>
             </div>

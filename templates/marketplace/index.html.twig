@@ -1088,12 +1088,18 @@
             </div>
             <div class="hero-stats">
                 <div class="hero-stat">
-                    <span class="number">{{ totalProducts > 0 ? totalProducts|number_format(0, ',', ' ') : '+' ~ '0' }}</span>
-                    <span class="label">Produits</span>
+                    <span class="number" style="color: #0f172a;">
+                        <i class="fas fa-box me-2"></i>
+                        +1000
+                    </span>
+                    <span class="label" style="color: #0f172a;">Produits disponibles</span>
                 </div>
                 <div class="hero-stat">
-                    <span class="number">{{ totalCategories > 0 ? totalCategories|number_format(0, ',', ' ') : '+' ~ '0' }}</span>
-                    <span class="label">Catégories</span>
+                    <span class="number" style="color: #ffffff;">
+                        <i class="fas fa-tags me-2"></i>
+                        +500
+                    </span>
+                    <span class="label" style="color: #ffffff;">Catégories</span>
                 </div>
                 <div class="hero-stat">
                     <span class="number">24/7</span>

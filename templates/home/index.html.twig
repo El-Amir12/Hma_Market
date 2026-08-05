@@ -421,9 +421,11 @@
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
                     
-                    {# ✅ VERSION FINALE RECOMMANDÉE - s'ouvre dans le même onglet #}
+                    {# ✅ VERSION FINALE - S'ouvre dans un nouvel onglet #}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('marketplace_home') }}" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
                         style="color: var(--primary); font-weight: 600; position: relative; display: flex; align-items: center;">
                             <i class="fas fa-store me-1"></i> 
                             Marketplace
@@ -431,14 +433,14 @@
                     </li>
                     
                     <li class="nav-item ms-2">
-                        <a href="{{ path('app_login') }}" class="btn btn-outline-gradient">
-                            <i class="fas fa-sign-in-alt me-2"></i>Connexion
-                        </a>
-                    </li>
-                    <li class="nav-item ms-2">
-                        <a href="{{ path('app_register') }}" class="btn btn-gradient">
-                            <i class="fas fa-user-plus me-2"></i>Inscription
-                        </a>
+                        <div class="d-flex flex-wrap gap-2" style="row-gap: 0.5rem;">
+                            <a href="{{ path('app_login') }}" class="btn btn-outline-gradient">
+                                <i class="fas fa-sign-in-alt me-2"></i>Connexion
+                            </a>
+                            <a href="{{ path('app_register') }}" class="btn btn-gradient">
+                                <i class="fas fa-user-plus me-2"></i>Inscription
+                            </a>
+                        </div>
                     </li>
                 </ul>
             </div>
