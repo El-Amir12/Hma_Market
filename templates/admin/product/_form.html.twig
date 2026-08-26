@@ -1,39 +1,39 @@
 {# templates/admin/product/_form.html.twig #}
 
 {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
-<div class="row g-4">
+<div class="row g-3 g-md-4">
     <!-- Carte Image -->
-    <div class="col-lg-4">
+    <div class="col-12 col-lg-4">
         <div class="card shadow-lg border-0 h-100 card-hover">
-            <div class="card-header bg-gradient-primary text-white py-3">
-                <h5 class="card-title mb-0">
+            <div class="card-header bg-gradient-primary text-white py-2 py-md-3">
+                <h5 class="card-title mb-0 fs-6 fs-md-5">
                     <i class="fas fa-image me-2"></i>Image du produit
                 </h5>
             </div>
-            <div class="card-body text-center d-flex flex-column">
+            <div class="card-body text-center d-flex flex-column p-3 p-md-4">
                 <!-- Preview de l'image -->
-                <div class="product-image-preview mb-4 flex-grow-1 d-flex flex-column justify-content-center">
+                <div class="product-image-preview mb-3 mb-md-4 flex-grow-1 d-flex flex-column justify-content-center">
                     {% if product.image and product.image != 'default-product.png' %}
-                        <div class="position-relative mx-auto" style="width: 200px; height: 200px;">
+                        <div class="position-relative mx-auto" style="width: 150px; height: 150px;">
                             <img src="{{ asset('uploads/products/' ~ product.image) }}" 
                                  alt="{{ product.name }}" 
                                  class="img-fluid rounded shadow-lg product-preview"
-                                 style="width: 100%; height: 100%; object-fit: cover; border: 5px solid #f8f9fa;">
+                                 style="width: 100%; height: 100%; object-fit: cover; border: 4px solid #f8f9fa;">
                             {% if product.id is defined and product.id is not null %}
                                 <button type="button" 
                                         class="btn btn-danger btn-sm position-absolute rounded-circle shadow"
-                                        style="bottom: 10px; right: 10px; width: 36px; height: 36px;"
+                                        style="bottom: 5px; right: 5px; width: 30px; height: 30px;"
                                         data-bs-toggle="modal" 
                                         data-bs-target="#deleteImageModal"
                                         title="Supprimer l'image">
-                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-trash" style="font-size: 0.7rem;"></i>
                                 </button>
                             {% endif %}
                         </div>
                     {% else %}
                         <div class="product-placeholder rounded d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg"
-                             style="width: 200px; height: 200px; border: 5px solid #f8f9fa;">
-                            <i class="fas fa-box fa-5x"></i>
+                             style="width: 150px; height: 150px; border: 4px solid #f8f9fa;">
+                            <i class="fas fa-box fa-4x"></i>
                         </div>
                     {% endif %}
                 </div>
@@ -42,13 +42,13 @@
                 <div class="mt-auto">
                     <div class="file-upload-wrapper">
                         {{ form_widget(form.image, {'attr': {
-                            'class': 'form-control', 
+                            'class': 'form-control form-control-sm', 
                             'onchange': 'previewProductImage(this)',
                             'accept': 'image/*'
                         }}) }}
-                        <div class="form-text mt-2">
+                        <div class="form-text mt-1 small">
                             <i class="fas fa-info-circle me-1"></i>
-                            Formats acceptés : JPG, PNG, GIF, WebP. Taille max : 5M
+                            JPG, PNG, GIF, WebP. Max 5M
                         </div>
                         <div class="invalid-feedback d-block">
                             {{ form_errors(form.image) }}
@@ -56,10 +56,10 @@
                     </div>
                     
                     <!-- Bouton de sélection stylé -->
-                    <div class="mt-3">
-                        <label for="{{ form.image.vars.id }}" class="btn btn-outline-primary w-100">
+                    <div class="mt-2">
+                        <label for="{{ form.image.vars.id }}" class="btn btn-outline-primary w-100 btn-sm">
                             <i class="fas fa-cloud-upload-alt me-2"></i>
-                            {{ product.image and product.image != 'default-product.png' ? 'Changer l\'image' : 'Choisir une image' }}
+                            {{ product.image and product.image != 'default-product.png' ? 'Changer' : 'Choisir' }}
                         </label>
                     </div>
                 </div>
@@ -68,10 +68,10 @@
     </div>
     
     <!-- Carte Informations du produit -->
-    <div class="col-lg-8">
+    <div class="col-12 col-lg-8">
         <div class="card shadow-lg border-0 h-100 card-hover">
-            <div class="card-header bg-gradient-primary text-white py-3">
-                <h5 class="card-title mb-0">
+            <div class="card-header bg-gradient-primary text-white py-2 py-md-3">
+                <h5 class="card-title mb-0 fs-6 fs-md-5">
                     <i class="fas fa-box-open me-2"></i>
                     {% if product.id is defined and product.id is not null %}
                         Modifier le produit
@@ -80,11 +80,11 @@
                     {% endif %}
                 </h5>
             </div>
-            <div class="card-body">
+            <div class="card-body p-3 p-md-4">
                 <!-- Informations de base -->
-                <div class="row g-3">
+                <div class="row g-2 g-md-3">
                     <!-- Nom du produit -->
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <div class="form-floating">
                             {{ form_widget(form.name, {'attr': {
                                 'class': 'form-control',
@@ -101,7 +101,7 @@
                     </div>
                     
                     <!-- Code-barres avec scanner -->
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <div class="form-floating">
                             <div class="input-group">
                                 {{ form_widget(form.barcode, {'attr': {
@@ -111,13 +111,13 @@
                                     'id': 'product-barcode'
                                 }}) }}
                                 <button type="button" 
-                                        class="btn btn-outline-primary border-start-0" 
+                                        class="btn btn-outline-primary border-start-0 btn-sm" 
                                         id="scan-barcode-btn-form"
                                         title="Scanner un code-barres">
                                     <i class="fas fa-barcode"></i>
                                 </button>
                                 <button type="button" 
-                                        class="btn btn-outline-secondary" 
+                                        class="btn btn-outline-secondary btn-sm" 
                                         id="generate-barcode-btn-form"
                                         title="Générer un code-barres automatique">
                                     <i class="fas fa-sync-alt"></i>
@@ -126,7 +126,7 @@
                             <label for="product-barcode">
                                 <i class="fas fa-barcode me-1"></i> Code-barres
                             </label>
-                            <div class="form-text">
+                            <div class="form-text small">
                                 <i class="fas fa-info-circle me-1"></i>
                                 Laissez vide pour générer automatiquement
                             </div>
@@ -138,8 +138,8 @@
                 </div>
                 
                 <!-- Catégorie -->
-                <div class="row g-3 mt-3">
-                    <div class="col-md-12">
+                <div class="row g-2 g-md-3 mt-2 mt-md-3">
+                    <div class="col-12">
                         <div class="form-floating">
                             {{ form_widget(form.category, {'attr': {
                                 'class': 'form-control select2-category',
@@ -156,8 +156,8 @@
                 </div>
                 
                 <!-- Unité de mesure -->
-                <div class="row g-3 mt-3">
-                    <div class="col-md-12">
+                <div class="row g-2 g-md-3 mt-2 mt-md-3">
+                    <div class="col-12">
                         <div class="form-floating">
                             {{ form_widget(form.unit, {'attr': {
                                 'class': 'form-select select2-unit',  
@@ -167,7 +167,7 @@
                             <label for="{{ form.unit.vars.id }}">
                                 <i class="fas fa-weight-hanging me-1"></i> Unité de mesure
                             </label>
-                            <div class="form-text">
+                            <div class="form-text small">
                                 <i class="fas fa-info-circle me-1"></i>
                                 Si aucune unité n'est sélectionnée, "Pièce" sera utilisé par défaut.
                             </div>
@@ -179,8 +179,8 @@
                 </div>
                                 
                 <!-- Prix -->
-                <div class="row g-3 mt-3">
-                    <div class="col-md-{{ companyType == 'restaurant' ? '12' : '6' }}">
+                <div class="row g-2 g-md-3 mt-2 mt-md-3">
+                    <div class="col-12 col-md-{{ companyType == 'restaurant' ? '12' : '6' }}">
                         <div class="form-floating">
                             {{ form_widget(form.purchase_price, {'attr': {
                                 'class': 'form-control',
@@ -197,7 +197,7 @@
                         </div>
                     </div>
                     {% if companyType != 'restaurant' %}
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <div class="form-floating">
                             {{ form_widget(form.sale_price, {'attr': {
                                 'class': 'form-control',
@@ -218,16 +218,16 @@
                 
                 <!-- Marge calculée -->
                 {% if companyType != 'restaurant' %}
-                <div class="row g-3 mt-2">
-                    <div class="col-md-12">
+                <div class="row g-2 g-md-3 mt-2">
+                    <div class="col-12">
                         <div class="card border-0 bg-light">
-                            <div class="card-body py-2">
-                                <div class="d-flex justify-content-between align-items-center">
+                            <div class="card-body py-2 px-3">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
                                     <small class="text-muted">
                                         <i class="fas fa-chart-line me-1"></i> Marge
                                     </small>
                                     <div>
-                                        <span id="margin-amount" class="fw-bold">0 FCFA</span>
+                                        <span id="margin-amount" class="fw-bold small">0 FCFA</span>
                                         <span id="margin-percentage" class="badge ms-2">0%</span>
                                     </div>
                                 </div>
@@ -238,8 +238,8 @@
                 {% endif %}
 
                 <!-- Stock -->
-                <div class="row g-3 mt-3">
-                    <div class="col-md-6">
+                <div class="row g-2 g-md-3 mt-2 mt-md-3">
+                    <div class="col-6 col-md-6">
                         <div class="form-floating">
                             {{ form_widget(form.stock_quantity, {'attr': {
                                 'class': 'form-control' ~ (canEditStock is defined and not canEditStock ? ' bg-light' : ''),
@@ -253,10 +253,10 @@
                             <div class="invalid-feedback d-block">
                                 {{ form_errors(form.stock_quantity) }}
                             </div>
-                            <small class="text-muted" id="stock_unit_help">Unité : {{ product.unit ?: 'pièce' }}</small>
+                            <small class="text-muted small" id="stock_unit_help">Unité : {{ product.unit ?: 'pièce' }}</small>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-6 col-md-6">
                         <div class="form-floating">
                             {{ form_widget(form.min_quantity, {'attr': {
                                 'class': 'form-control',
@@ -269,7 +269,7 @@
                             <div class="invalid-feedback d-block">
                                 {{ form_errors(form.min_quantity) }}
                             </div>
-                            <small class="text-muted" id="min_quantity_unit_help">Alerte en {{ product.unit ?: 'pièce' }}</small>
+                            <small class="text-muted small" id="min_quantity_unit_help">Alerte en {{ product.unit ?: 'pièce' }}</small>
                         </div>
                     </div>
                 </div>
@@ -278,33 +278,33 @@
                 {% if canEditStock is defined and not canEditStock %}
                 <div class="row mt-2">
                     <div class="col-12">
-                        <div class="alert alert-warning py-2 px-3">
+                        <div class="alert alert-warning py-2 px-3 small">
                             <i class="fas fa-info-circle me-2"></i>
-                            <small>Le stock est géré automatiquement via les achats et les ventes. Seul un administrateur peut modifier cette valeur manuellement.</small>
+                            Le stock est géré automatiquement via les achats et les ventes. Seul un administrateur peut modifier cette valeur manuellement.
                         </div>
                     </div>
                 </div>
                 {% elseif canEditStock is defined and canEditStock %}
                 <div class="row mt-2">
                     <div class="col-12">
-                        <div class="alert alert-info py-2 px-3">
+                        <div class="alert alert-info py-2 px-3 small">
                             <i class="fas fa-history me-2"></i>
-                            <small>La modification du stock sera tracée (qui et quand).</small>
+                            La modification du stock sera tracée (qui et quand).
                         </div>
                     </div>
                 </div>
                 {% endif %}
                 
                 <!-- Switches pour Statut et Date critique -->
-                <div class="row g-3 mt-3">
+                <div class="row g-2 g-md-3 mt-2 mt-md-3">
                     <!-- Switch Statut Actif/Inactif -->
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <div class="card border-0 bg-light h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="card-body p-3 p-md-4">
+                                <div class="d-flex flex-wrap align-items-center justify-content-between mb-2 gap-2">
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-toggle-on me-2 text-primary"></i>
-                                        <span class="fw-bold">Statut du produit</span>
+                                        <span class="fw-bold small">Statut du produit</span>
                                     </div>
                                     <span class="badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }}" id="status-badge">
                                         {{ form.is_active.vars.data ? 'ACTIF' : 'INACTIF' }}
@@ -315,11 +315,11 @@
                                         'class': 'form-check-input',
                                         'role': 'switch'
                                     }}) }}
-                                    <label class="form-check-label" for="{{ form.is_active.vars.id }}" id="status-label">
+                                    <label class="form-check-label small" for="{{ form.is_active.vars.id }}" id="status-label">
                                         {{ form.is_active.vars.data ? 'Produit actif' : 'Produit inactif' }}
                                     </label>
                                 </div>
-                                <small class="text-muted mt-1 d-block">
+                                <small class="text-muted mt-1 d-block small">
                                     <i class="fas fa-info-circle me-1"></i>
                                     Les produits inactifs ne seront pas visibles
                                 </small>
@@ -331,13 +331,13 @@
                     </div>
                     
                     <!-- Switch Date critique -->
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <div class="card border-0 bg-light h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="card-body p-3 p-md-4">
+                                <div class="d-flex flex-wrap align-items-center justify-content-between mb-2 gap-2">
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-calendar-alt me-2 text-warning"></i>
-                                        <span class="fw-bold">Date critique</span>
+                                        <span class="fw-bold small">Date critique</span>
                                     </div>
                                     <span class="badge {{ form.has_expiry_date.vars.data ? 'bg-warning text-dark' : 'bg-secondary' }}" id="date-badge">
                                         {{ form.has_expiry_date.vars.data ? 'AVEC DATE' : 'SANS DATE' }}
@@ -348,11 +348,11 @@
                                         'class': 'form-check-input',
                                         'role': 'switch'
                                     }}) }}
-                                    <label class="form-check-label" for="{{ form.has_expiry_date.vars.id }}" id="date-label">
+                                    <label class="form-check-label small" for="{{ form.has_expiry_date.vars.id }}" id="date-label">
                                         {{ form.has_expiry_date.vars.data ? 'Produit périssable' : 'Produit non périssable' }}
                                     </label>
                                 </div>
-                                <small class="text-muted mt-1 d-block">
+                                <small class="text-muted mt-1 d-block small">
                                     <i class="fas fa-info-circle me-1"></i>
                                     Requiert date d'expiration lors des achats
                                 </small>
@@ -365,13 +365,13 @@
                 </div>
                 
                 <!-- Description -->
-                <div class="row g-3 mt-3">
-                    <div class="col-md-12">
+                <div class="row g-2 g-md-3 mt-2 mt-md-3">
+                    <div class="col-12">
                         <div class="form-floating">
                             {{ form_widget(form.description, {'attr': {
                                 'class': 'form-control',
                                 'placeholder': ' ',
-                                'style': 'height: 100px'
+                                'style': 'height: 80px'
                             }}) }}
                             <label for="{{ form.description.vars.id }}">
                                 <i class="fas fa-align-left me-1"></i> Description
@@ -385,16 +385,16 @@
             </div> <!-- fin card-body -->
 
             <!-- Bouton Autres informations -->
-            <div class="row g-3 mt-3 px-3">
+            <div class="row g-2 g-md-3 mt-2 px-3">
                 <div class="col-12">
                     <div class="card border-0 bg-light">
-                        <div class="card-body py-2">
+                        <div class="card-body py-2 px-3">
                             <div class="form-check form-switch">
                                 {{ form_widget(form.show_extra, {'attr': {
                                     'class': 'form-check-input',
                                     'role': 'switch'
                                 }}) }}
-                                <label class="form-check-label fw-bold" for="{{ form.show_extra.vars.id }}">
+                                <label class="form-check-label fw-bold small" for="{{ form.show_extra.vars.id }}">
                                     <i class="fas fa-ellipsis-h me-2"></i>Autre information
                                 </label>
                             </div>
@@ -405,45 +405,45 @@
 
             <!-- Champs supplémentaires (cachés par défaut) -->
             <div id="extraFields" style="display: none;" class="px-3">
-                <div class="row g-3 mt-3">
-                    <div class="col-md-6">
+                <div class="row g-2 g-md-3 mt-2 mt-md-3">
+                    <div class="col-12 col-md-6">
                         <div class="form-floating">
                             {{ form_widget(form.dosage, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
                             <label for="{{ form.dosage.vars.id }}">Dosage</label>
                             <div class="invalid-feedback d-block">{{ form_errors(form.dosage) }}</div>
-                            <small class="text-muted mt-1 d-block">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    EX : 500 mg
+                            <small class="text-muted mt-1 d-block small">
+                                <i class="fas fa-info-circle me-1"></i>
+                                EX : 500 mg
                             </small>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <div class="form-floating">
                             {{ form_widget(form.form, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
                             <label for="{{ form.form.vars.id }}">Forme</label>
                             <div class="invalid-feedback d-block">{{ form_errors(form.form) }}</div>
-                            <small class="text-muted mt-1 d-block">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    EX : Comprimé
-                                </small>
+                            <small class="text-muted mt-1 d-block small">
+                                <i class="fas fa-info-circle me-1"></i>
+                                EX : Comprimé
+                            </small>
                         </div>
                     </div>
                 </div>
 
                 {# ✅ Champs spécifiques aux pharmacies #}
                 {% if companyType == 'pharmacy' %}
-                <div class="row g-3 mt-3">
-                    <div class="col-md-6">
+                <div class="row g-2 g-md-3 mt-2 mt-md-3">
+                    <div class="col-12 col-md-6">
                         <div class="card border-0 bg-light">
-                            <div class="card-body">
+                            <div class="card-body p-3 p-md-4">
                                 <div class="form-check form-switch">
                                     {{ form_widget(form.prescription_required, {'attr': {'class': 'form-check-input'}}) }}
-                                    <label class="form-check-label" for="{{ form.prescription_required.vars.id }}">
+                                    <label class="form-check-label small" for="{{ form.prescription_required.vars.id }}">
                                         <i class="fas fa-prescription me-2 text-danger"></i>
                                         Prescription obligatoire
                                     </label>
                                     <div class="invalid-feedback d-block">{{ form_errors(form.prescription_required) }}</div>
-                                    <small class="text-muted mt-1 d-block">
+                                    <small class="text-muted mt-1 d-block small">
                                         <i class="fas fa-info-circle me-1"></i>
                                         Requiert une ordonnance à la vente
                                     </small>
@@ -453,21 +453,21 @@
                     </div>
                     
                     {# ✅ AJOUT : Visibilité sur le marketplace #}
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <div class="card border-0 bg-light">
-                            <div class="card-body">
+                            <div class="card-body p-3 p-md-4">
                                 <div class="form-check form-switch">
                                     {{ form_widget(form.company_public, {'attr': {'class': 'form-check-input'}}) }}
-                                    <label class="form-check-label" for="{{ form.company_public.vars.id }}">
+                                    <label class="form-check-label small" for="{{ form.company_public.vars.id }}">
                                         <i class="fas fa-globe me-2 text-primary"></i>
                                         Visible sur le marketplace
                                     </label>
                                     <div class="invalid-feedback d-block">{{ form_errors(form.company_public) }}</div>
-                                    <small class="text-muted mt-1 d-block">
+                                    <small class="text-muted mt-1 d-block small">
                                         <i class="fas fa-info-circle me-1"></i>
                                         Décochez pour masquer ce produit sur le marketplace
                                     </small>
-                                    <small class="text-muted mt-1 d-block">
+                                    <small class="text-muted mt-1 d-block small">
                                         <i class="fas fa-eye-slash me-1"></i>
                                         Il restera visible dans votre back-office
                                     </small>
@@ -480,19 +480,19 @@
             </div>
 
             {% if companyType == 'restaurant' %}
-                <div class="row g-3 mt-3">
-                    <div class="col-md-12">
+                <div class="row g-2 g-md-3 mt-2 mt-md-3 px-3">
+                    <div class="col-12">
                         <div class="card border-0 bg-light">
-                            <div class="card-body">
+                            <div class="card-body p-3 p-md-4">
                                 <div class="form-check form-switch">
                                     {{ form_widget(form.is_storable, {'attr': {
                                         'class': 'form-check-input',
                                         'role': 'switch'
                                     }}) }}
-                                    <label class="form-check-label fw-bold" for="{{ form.is_storable.vars.id }}">
+                                    <label class="form-check-label fw-bold small" for="{{ form.is_storable.vars.id }}">
                                         <i class="fas fa-boxes me-2"></i>Produit stockable
                                     </label>
-                                    <div class="form-text mt-2">
+                                    <div class="form-text mt-2 small">
                                         <i class="fas fa-info-circle me-1 text-info"></i>
                                         <strong>À quoi sert cette option ?</strong>
                                         <ul class="mt-1 mb-0 ps-3">
@@ -516,20 +516,20 @@
             {% endif %}
             
             <!-- Footer avec boutons d'action -->
-            <div class="card-footer bg-light py-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="{{ path('app_admin_product_index') }}" class="btn btn-outline-secondary">
+            <div class="card-footer bg-light py-2 py-md-3">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 gap-sm-3">
+                    <a href="{{ path('app_admin_product_index') }}" class="btn btn-outline-secondary w-100 w-sm-auto order-2 order-sm-1 btn-sm">
                         <i class="fas fa-times me-2"></i> Annuler
                     </a>
                     
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-primary btn-lg px-4">
+                    <div class="d-flex gap-2 w-100 w-sm-auto order-1 order-sm-2">
+                        <button type="submit" class="btn btn-primary flex-fill flex-sm-grow-0 btn-sm">
                             <i class="fas fa-save me-2"></i> 
-                            {{ button_label|default('Enregistrer le produit') }}
+                            {{ button_label|default('Enregistrer') }}
                         </button>
                         
                         {% if product.id is defined and product.id is not null %}
-                            <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="btn btn-info btn-lg">
+                            <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="btn btn-info flex-fill flex-sm-grow-0 btn-sm">
                                 <i class="fas fa-eye me-2"></i> Voir
                             </a>
                         {% endif %}
@@ -544,35 +544,35 @@
 <!-- Modals -->
 {% if product.id is defined and product.id is not null and product.image and product.image != 'default-product.png' %}
 <div class="modal fade" id="deleteImageModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header border-0">
-                <h5 class="modal-title text-danger">
+                <h5 class="modal-title text-danger fs-6">
                     <i class="fas fa-exclamation-triangle me-2"></i> Supprimer l'image
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-center py-4">
-                <div class="mb-4">
-                    <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
-                    <h5>Êtes-vous sûr de vouloir supprimer cette image ?</h5>
-                    <p class="text-muted">Cette action ne peut pas être annulée.</p>
+            <div class="modal-body text-center py-3 py-md-4">
+                <div class="mb-3 mb-md-4">
+                    <i class="fas fa-trash-alt fa-3x fa-md-4 text-danger mb-3"></i>
+                    <h5 class="fs-6">Êtes-vous sûr de vouloir supprimer cette image ?</h5>
+                    <p class="text-muted small">Cette action ne peut pas être annulée.</p>
                 </div>
                 <div class="mb-3">
                     <img src="{{ asset('uploads/products/' ~ product.image) }}" 
                          alt="{{ product.name }}" 
                          class="rounded shadow-lg"
-                         style="width: 150px; height: 150px; object-fit: cover;">
+                         style="width: 100px; height: 100px; object-fit: cover;">
                 </div>
             </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <div class="modal-footer border-0 py-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">
                     <i class="fas fa-times me-2"></i> Annuler
                 </button>
                 <form action="{{ path('app_admin_product_delete_image', {'id': product.id}) }}" method="post" class="d-inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete-image' ~ product.id) }}">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash me-2"></i> Supprimer l'image
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash me-2"></i> Supprimer
                     </button>
                 </form>
             </div>
@@ -583,38 +583,38 @@
 
 <!-- Scanner Modal -->
 <div class="modal fade" id="scannerModalForm" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">
+                <h5 class="modal-title fs-6">
                     <i class="fas fa-barcode me-2"></i> Scanner un code-barres
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div class="text-center mb-4">
-                    <i class="fas fa-barcode fa-4x text-primary mb-3"></i>
-                    <p class="text-muted">Scannez ou saisissez un code-barres</p>
+                <div class="text-center mb-3 mb-md-4">
+                    <i class="fas fa-barcode fa-3x fa-md-4 text-primary mb-3"></i>
+                    <p class="text-muted small">Scannez ou saisissez un code-barres</p>
                 </div>
                 
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Code-barres :</label>
+                    <label class="form-label fw-bold small">Code-barres :</label>
                     <input type="text" 
                            id="barcode-scanner-input" 
-                           class="form-control form-control-lg text-center"
+                           class="form-control form-control-sm text-center"
                            placeholder="Saisissez ou scannez..."
                            autofocus
                            style="letter-spacing: 2px; font-family: 'Courier New', monospace;">
-                    <div class="form-text mt-2">
+                    <div class="form-text mt-2 small">
                         <i class="fas fa-info-circle me-1"></i>
                         Tapez directement ou utilisez votre scanner USB
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary" id="use-scanned-barcode">
-                    <i class="fas fa-check me-1"></i> Utiliser ce code
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary btn-sm" id="use-scanned-barcode">
+                    <i class="fas fa-check me-1"></i> Utiliser
                 </button>
             </div>
         </div>
@@ -636,7 +636,7 @@ function previewProductImage(input) {
                 const img = document.createElement('img');
                 img.src = e.target.result;
                 img.className = 'img-fluid rounded shadow-lg product-preview';
-                img.style = 'width: 200px; height: 200px; object-fit: cover; border: 5px solid #f8f9fa;';
+                img.style = 'width: 150px; height: 150px; object-fit: cover; border: 4px solid #f8f9fa;';
                 preview.parentNode.replaceChild(img, preview);
             } else if (preview) {
                 // Mettre à jour l'image existante
@@ -734,7 +734,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 width: "100%",
                 placeholder: "Sélectionnez une catégorie...",
                 allowClear: false,
-                minimumInputLength: 0
+                minimumInputLength: 0,
+                dropdownAutoWidth: true
             });
         }
         
@@ -749,7 +750,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 language: "fr",
                 width: "100%",
                 placeholder: "-- Choisir une unité --",
-                allowClear: true
+                allowClear: true,
+                dropdownAutoWidth: true
             });
         }
     } else {
@@ -918,51 +920,55 @@ document.addEventListener('DOMContentLoaded', function() {
 <style>
 .card-hover {
     transition: all 0.3s ease;
-    border-radius: 15px;
+    border-radius: 12px;
     overflow: hidden;
 }
 .card-hover:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
 }
 .bg-gradient-primary {
     background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
 }
 .form-floating > label {
     padding-left: 2.5rem;
+    font-size: 0.85rem;
 }
 .form-floating > .form-control,
 .form-floating > .form-select {
-    height: calc(3.5rem + 2px);
+    height: calc(3.2rem + 2px);
     line-height: 1.25;
-    padding: 1rem 0.75rem 0.5rem 2.5rem;
+    padding: 0.8rem 0.75rem 0.4rem 2.5rem;
+    font-size: 0.9rem;
 }
 .form-floating > .form-control:focus ~ label,
 .form-floating > .form-control:not(:placeholder-shown) ~ label,
 .form-floating > .form-select:focus ~ label,
 .form-floating > .form-select:not([value=""]):not(:placeholder-shown) ~ label {
-    transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
+    transform: scale(.85) translateY(-0.7rem) translateX(0.15rem);
     color: #667eea;
+    font-size: 0.75rem;
 }
 .form-floating > .form-control,
 .form-floating > .form-select {
-    border-radius: 10px;
+    border-radius: 8px;
     border: 2px solid #e0e0e0;
 }
 .form-floating > .form-control:focus,
 .form-floating > .form-select:focus {
     border-color: #667eea;
-    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.2);
 }
 .select2-container--bootstrap-5 .select2-selection {
     border: 2px solid #e0e0e0;
-    border-radius: 10px !important;
-    min-height: calc(3.5rem + 2px);
-    padding: 1rem 0.75rem 0.5rem 2.5rem;
+    border-radius: 8px !important;
+    min-height: calc(3.2rem + 2px);
+    padding: 0.8rem 0.75rem 0.4rem 2.5rem;
 }
 .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
     line-height: 1.5;
     padding-left: 0;
+    font-size: 0.9rem;
 }
 .btn-primary {
     background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
@@ -971,7 +977,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 .btn-info {
     background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
@@ -982,14 +988,15 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 .product-preview:hover {
     transform: scale(1.05);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 .input-group .btn {
-    border-radius: 0 10px 10px 0;
+    border-radius: 0 8px 8px 0;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 0.85rem;
 }
 .input-group .btn-outline-primary {
     border-left: none;
@@ -1008,32 +1015,132 @@ document.addEventListener('DOMContentLoaded', function() {
     transition: all 0.3s ease;
 }
 .form-switch .form-check-input {
-    width: 3.5em;
-    height: 1.8em;
+    width: 2.8em;
+    height: 1.5em;
     cursor: pointer;
-    margin-top: 0.25rem;
+    margin-top: 0.2rem;
 }
 .form-check-input:checked {
     background-color: #198754;
     border-color: #198754;
 }
 .form-check-input:focus {
-    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.2);
 }
 #{{ form.has_expiry_date.vars.id }}:checked {
     background-color: #ffc107;
     border-color: #ffc107;
 }
 #{{ form.has_expiry_date.vars.id }}:focus {
-    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.2);
 }
 .bg-light {
     background-color: #f8f9fa !important;
 }
+
+/* ✅ RESPONSIVE */
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    
+    .card-body {
+        padding: 0.75rem !important;
+    }
+    
+    .card-header {
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: calc(3rem + 2px);
+        padding: 0.6rem 0.5rem 0.3rem 2rem;
+        font-size: 0.85rem;
+    }
+    
+    .form-floating > label {
+        padding-left: 2rem;
+        font-size: 0.8rem;
+    }
+    
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label,
+    .form-floating > .form-select:focus ~ label,
+    .form-floating > .form-select:not([value=""]):not(:placeholder-shown) ~ label {
+        transform: scale(.85) translateY(-0.6rem) translateX(0.1rem);
+        font-size: 0.7rem;
+    }
+    
+    .select2-container--bootstrap-5 .select2-selection {
+        min-height: calc(3rem + 2px);
+        padding: 0.6rem 0.5rem 0.3rem 2rem;
+    }
+    
+    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+        font-size: 0.85rem;
+    }
+    
+    .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .product-preview,
+    .product-placeholder {
+        width: 120px !important;
+        height: 120px !important;
+    }
+    
+    .product-placeholder i {
+        font-size: 3rem !important;
+    }
+    
+    .badge {
+        font-size: 0.6rem;
+        padding: 0.15rem 0.3rem;
+    }
+    
+    .small {
+        font-size: 0.7rem !important;
+    }
+    
+    .modal .modal-body {
+        padding: 0.75rem !important;
+    }
+    
+    .modal .modal-footer {
+        padding: 0.5rem !important;
+    }
+    
+    .modal .modal-header {
+        padding: 0.5rem 0.75rem !important;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    .card-body {
+        padding: 1rem !important;
+    }
+    
+    .product-preview,
+    .product-placeholder {
+        width: 140px !important;
+        height: 140px !important;
+    }
+}
+
+/* Désactiver hover sur mobile */
 @media (max-width: 768px) {
-    .form-switch .form-check-input {
-        width: 3em;
-        height: 1.5em;
+    .card-hover:hover {
+        transform: none !important;
+    }
+    .btn-primary:hover {
+        transform: none !important;
+    }
+    .product-preview:hover {
+        transform: none !important;
     }
 }
 </style>

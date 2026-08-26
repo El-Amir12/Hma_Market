@@ -1944,7 +1944,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.pG6eWfC"/>
+      <argument type="service" id=".service_locator.rngS9XY"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -5152,7 +5152,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.pG6eWfC"/>
+      <argument type="service" id=".service_locator.rngS9XY"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -12439,7 +12439,7 @@
         <argument key="tokenRepository" type="service_closure" id="App\Repository\SupplierCreditNoteTokenRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.pG6eWfC" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.rngS9XY" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Admin\CartController::receiveCart" type="service_closure" id=".service_locator.nnTODkK"/>
@@ -12483,6 +12483,7 @@
         <argument key="App\Controller\Admin\ProductController::printSheet" type="service_closure" id=".service_locator.TxLdxz8"/>
         <argument key="App\Controller\Admin\ProductController::show" type="service_closure" id=".service_locator.TxLdxz8"/>
         <argument key="App\Controller\Admin\ProductController::stockBatches" type="service_closure" id=".service_locator.TxLdxz8"/>
+        <argument key="App\Controller\Admin\ProductController::stockMovements" type="service_closure" id=".service_locator.N7dcDh9"/>
         <argument key="App\Controller\Admin\ProductController::toggleStatus" type="service_closure" id=".service_locator.N7dcDh9"/>
         <argument key="App\Controller\Admin\PromotionController::categoryDelete" type="service_closure" id=".service_locator.Brzkho4"/>
         <argument key="App\Controller\Admin\PromotionController::categoryIndex" type="service_closure" id=".service_locator.9kKwU2t"/>
@@ -12757,6 +12758,7 @@
         <argument key="App\Controller\Admin\ProductController:printSheet" type="service_closure" id=".service_locator.TxLdxz8"/>
         <argument key="App\Controller\Admin\ProductController:show" type="service_closure" id=".service_locator.TxLdxz8"/>
         <argument key="App\Controller\Admin\ProductController:stockBatches" type="service_closure" id=".service_locator.TxLdxz8"/>
+        <argument key="App\Controller\Admin\ProductController:stockMovements" type="service_closure" id=".service_locator.N7dcDh9"/>
         <argument key="App\Controller\Admin\ProductController:toggleStatus" type="service_closure" id=".service_locator.N7dcDh9"/>
         <argument key="App\Controller\Admin\PromotionController:categoryDelete" type="service_closure" id=".service_locator.Brzkho4"/>
         <argument key="App\Controller\Admin\PromotionController:categoryIndex" type="service_closure" id=".service_locator.9kKwU2t"/>
@@ -16330,7 +16332,7 @@
     <service id="Knp\Bundle\TimeBundle\DateTimeFormatter" alias="time.datetime_formatter"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.pG6eWfC"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.rngS9XY"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -16416,7 +16418,7 @@
     <service id=".service_locator.GS1F4er" alias=".service_locator.CqWJ9w6"/>
     <service id=".service_locator.3oRQWcw" alias=".service_locator.jMmnFRa"/>
     <service id=".service_locator.zgOrgxD" alias=".service_locator.t.B26rY"/>
-    <service id=".service_locator.HoPXE7L" alias=".service_locator.pG6eWfC"/>
+    <service id=".service_locator.vhZtr.g" alias=".service_locator.rngS9XY"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
     <service id=".service_locator.P2VNMyQ" alias=".service_locator.KWhUj2s"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>

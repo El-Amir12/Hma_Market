@@ -2,22 +2,22 @@
 
 {% form_theme form 'bootstrap_5_layout.html.twig' %}
 
-<div class="container-fluid px-4">
+<div class="container-fluid px-2 px-md-4">
     {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
 
-    <div class="row g-4">
-        <!-- Carte Image -->
-        <div class="col-lg-4">
+    <div class="row g-2 g-md-4">
+        <!-- Carte Image - 100% sur mobile, 4 sur desktop -->
+        <div class="col-12 col-lg-4">
             <div class="card shadow-lg border-0 h-100 card-hover">
-                <div class="card-header bg-gradient-primary text-white py-3">
-                    <h5 class="card-title mb-0">
+                <div class="card-header bg-gradient-primary text-white py-2 py-md-3">
+                    <h5 class="card-title mb-0 fs-6 fs-md-5">
                         <i class="fas fa-image me-2"></i>Image de la promotion
                     </h5>
                 </div>
-                <div class="card-body text-center d-flex flex-column">
-                    <div class="promo-image-preview mb-4 flex-grow-1 d-flex flex-column justify-content-center">
+                <div class="card-body text-center d-flex flex-column p-2 p-md-4">
+                    <div class="promo-image-preview mb-3 mb-md-4 flex-grow-1 d-flex flex-column justify-content-center">
                         {% if promotion.image %}
-                            <div class="position-relative mx-auto" style="width: 200px; height: 200px;">
+                            <div class="position-relative mx-auto" style="width: 150px; height: 150px;">
                                 <img src="{{ asset('uploads/promotions/' ~ promotion.image) }}"
                                      alt="{{ promotion.name }}"
                                      class="img-fluid rounded shadow-lg promo-preview"
@@ -25,7 +25,7 @@
                                 {% if promotion.id is defined and promotion.id is not null %}
                                     <button type="button"
                                             class="btn btn-danger btn-sm position-absolute rounded-circle shadow"
-                                            style="bottom: 10px; right: 10px; width: 36px; height: 36px;"
+                                            style="bottom: 5px; right: 5px; width: 30px; height: 30px; font-size:0.7rem; padding:0;"
                                             data-bs-toggle="modal"
                                             data-bs-target="#deleteImageModal"
                                             title="Supprimer l'image">
@@ -35,8 +35,8 @@
                             </div>
                         {% else %}
                             <div class="promo-placeholder rounded d-flex align-items-center justify-content-center mx-auto bg-gradient-primary text-white shadow-lg"
-                                 style="width: 200px; height: 200px; border: 5px solid #f8f9fa;">
-                                <i class="fas fa-tag fa-5x"></i>
+                                 style="width: 150px; height: 150px; border: 5px solid #f8f9fa;">
+                                <i class="fas fa-tag fa-4x"></i>
                             </div>
                         {% endif %}
                     </div>
@@ -44,23 +44,24 @@
                     <div class="mt-auto">
                         <div class="file-upload-wrapper">
                             {{ form_widget(form.image, {'attr': {
-                                'class': 'form-control',
+                                'class': 'form-control form-control-sm',
                                 'onchange': 'previewPromoImage(this)',
-                                'accept': 'image/*'
+                                'accept': 'image/*',
+                                'style': 'font-size:0.7rem; padding:0.2rem 0.4rem;'
                             }}) }}
-                            <div class="form-text mt-2">
+                            <div class="form-text mt-1 small" style="font-size:0.6rem;">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Formats acceptés : JPG, PNG, GIF, WebP. Taille max : 5M
+                                Formats : JPG, PNG, GIF, WebP. Max : 5M
                             </div>
                             <div class="invalid-feedback d-block">
                                 {{ form_errors(form.image) }}
                             </div>
                         </div>
 
-                        <div class="mt-3">
-                            <label for="{{ form.image.vars.id }}" class="btn btn-outline-primary w-100">
+                        <div class="mt-2">
+                            <label for="{{ form.image.vars.id }}" class="btn btn-outline-primary btn-sm w-100" style="font-size:0.7rem; padding:0.2rem 0.4rem;">
                                 <i class="fas fa-cloud-upload-alt me-2"></i>
-                                {{ promotion.image ? 'Changer l\'image' : 'Choisir une image' }}
+                                {{ promotion.image ? 'Changer' : 'Choisir une image' }}
                             </label>
                         </div>
                     </div>
@@ -68,11 +69,11 @@
             </div>
         </div>
 
-        <!-- Carte Informations de la promotion -->
-        <div class="col-lg-8">
+        <!-- Carte Informations de la promotion - 100% sur mobile, 8 sur desktop -->
+        <div class="col-12 col-lg-8">
             <div class="card shadow-lg border-0 h-100 card-hover">
-                <div class="card-header bg-gradient-primary text-white py-3">
-                    <h5 class="card-title mb-0">
+                <div class="card-header bg-gradient-primary text-white py-2 py-md-3">
+                    <h5 class="card-title mb-0 fs-6 fs-md-5">
                         <i class="fas fa-percent me-2"></i>
                         {% if promotion.id is defined and promotion.id is not null %}
                             Modifier la promotion
@@ -81,17 +82,18 @@
                         {% endif %}
                     </h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-2 p-md-4">
                     <!-- Informations de base -->
-                    <div class="row g-3">
-                        <div class="col-md-12">
+                    <div class="row g-2 g-md-3">
+                        <div class="col-12 col-md-12">
                             <div class="form-floating">
                                 {{ form_widget(form.name, {'attr': {
                                     'class': 'form-control',
                                     'placeholder': ' ',
-                                    'autocomplete': 'off'
+                                    'autocomplete': 'off',
+                                    'style': 'font-size:0.85rem;'
                                 }}) }}
-                                <label for="{{ form.name.vars.id }}">
+                                <label for="{{ form.name.vars.id }}" style="font-size:0.85rem;">
                                     <i class="fas fa-tag me-1"></i> Nom de la promotion *
                                 </label>
                                 <div class="invalid-feedback d-block">
@@ -101,15 +103,15 @@
                         </div>
                     </div>
 
-                    <div class="row g-3 mt-3">
-                        <div class="col-md-12">
+                    <div class="row g-2 g-md-3 mt-2 mt-md-3">
+                        <div class="col-12 col-md-12">
                             <div class="form-floating">
                                 {{ form_widget(form.description, {'attr': {
                                     'class': 'form-control',
                                     'placeholder': ' ',
-                                    'style': 'height: 120px'
+                                    'style': 'height: 80px; min-height:80px; font-size:0.85rem;'
                                 }}) }}
-                                <label for="{{ form.description.vars.id }}">
+                                <label for="{{ form.description.vars.id }}" style="font-size:0.85rem;">
                                     <i class="fas fa-align-left me-1"></i> Description
                                 </label>
                                 <div class="invalid-feedback d-block">
@@ -119,14 +121,15 @@
                         </div>
                     </div>
 
-                    <div class="row g-3 mt-3">
-                        <div class="col-md-6">
+                    <div class="row g-2 g-md-3 mt-2 mt-md-3">
+                        <div class="col-12 col-md-6">
                             <div class="form-floating">
                                 {{ form_widget(form.typePromotion, {'attr': {
                                     'class': 'form-select',
-                                    'placeholder': ' '
+                                    'placeholder': ' ',
+                                    'style': 'font-size:0.85rem;'
                                 }}) }}
-                                <label for="{{ form.typePromotion.vars.id }}">
+                                <label for="{{ form.typePromotion.vars.id }}" style="font-size:0.85rem;">
                                     <i class="fas fa-layer-group me-1"></i> Type de promotion *
                                 </label>
                                 <div class="invalid-feedback d-block">
@@ -134,14 +137,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-12 col-md-6">
                             <div class="form-floating">
                                 {{ form_widget(form.value, {'attr': {
                                     'class': 'form-control',
                                     'placeholder': ' ',
-                                    'autocomplete': 'off'
+                                    'autocomplete': 'off',
+                                    'style': 'font-size:0.85rem;'
                                 }}) }}
-                                <label for="{{ form.value.vars.id }}">
+                                <label for="{{ form.value.vars.id }}" style="font-size:0.85rem;">
                                     <i class="fas fa-calculator me-1"></i> Valeur de réduction *
                                 </label>
                                 <div class="invalid-feedback d-block">
@@ -151,14 +155,15 @@
                         </div>
                     </div>
 
-                    <div class="row g-3 mt-3">
-                        <div class="col-md-6">
+                    <div class="row g-2 g-md-3 mt-2 mt-md-3">
+                        <div class="col-12 col-md-6">
                             <div class="form-floating">
                                 {{ form_widget(form.startDate, {'attr': {
                                     'class': 'form-control',
-                                    'placeholder': ' '
+                                    'placeholder': ' ',
+                                    'style': 'font-size:0.85rem;'
                                 }}) }}
-                                <label for="{{ form.startDate.vars.id }}">
+                                <label for="{{ form.startDate.vars.id }}" style="font-size:0.85rem;">
                                     <i class="fas fa-calendar-alt me-1"></i> Date de début *
                                 </label>
                                 <div class="invalid-feedback d-block">
@@ -166,13 +171,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-12 col-md-6">
                             <div class="form-floating">
                                 {{ form_widget(form.endDate, {'attr': {
                                     'class': 'form-control',
-                                    'placeholder': ' '
+                                    'placeholder': ' ',
+                                    'style': 'font-size:0.85rem;'
                                 }}) }}
-                                <label for="{{ form.endDate.vars.id }}">
+                                <label for="{{ form.endDate.vars.id }}" style="font-size:0.85rem;">
                                     <i class="fas fa-calendar-check me-1"></i> Date de fin
                                 </label>
                                 <div class="invalid-feedback d-block">
@@ -182,17 +188,17 @@
                         </div>
                     </div>
 
-                    <hr class="my-4">
+                    <hr class="my-3 my-md-4">
 
                     <!-- Statut -->
                     <div class="card border-0 bg-light">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="card-body p-2 p-md-3">
+                            <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between mb-2 gap-2">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-toggle-on me-2 text-primary"></i>
-                                    <span class="fw-bold">Statut de la promotion</span>
+                                    <span class="fw-bold small">Statut de la promotion</span>
                                 </div>
-                                <span class="badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }}" id="status-badge">
+                                <span class="badge {{ form.is_active.vars.data ? 'bg-success' : 'bg-danger' }} px-3 py-2" id="status-badge" style="font-size:0.7rem;">
                                     {{ form.is_active.vars.data ? 'ACTIVE' : 'INACTIVE' }}
                                 </span>
                             </div>
@@ -201,11 +207,11 @@
                                     'class': 'form-check-input',
                                     'role': 'switch'
                                 }}) }}
-                                <label class="form-check-label" for="{{ form.is_active.vars.id }}" id="status-label">
+                                <label class="form-check-label small" for="{{ form.is_active.vars.id }}" id="status-label">
                                     {{ form.is_active.vars.data ? 'Promotion active' : 'Promotion inactive' }}
                                 </label>
                             </div>
-                            <small class="text-muted mt-1 d-block">
+                            <small class="text-muted mt-1 d-block" style="font-size:0.6rem;">
                                 <i class="fas fa-info-circle me-1"></i>
                                 Les promotions inactives ne seront pas appliquées
                             </small>
@@ -215,51 +221,51 @@
                     <!-- ========================================== -->
                     <!-- SECTION EXPLICATION PERMANENTE -->
                     <!-- ========================================== -->
-                    <div class="card border-0 bg-info bg-opacity-10 mt-4">
-                        <div class="card-body p-4">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0">
-                                    <div class="rounded-circle bg-white bg-opacity-25 p-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                        <i class="fas fa-info-circle fa-xl text-white"></i>
+                    <div class="card border-0 bg-info bg-opacity-10 mt-3 mt-md-4">
+                        <div class="card-body p-2 p-md-4">
+                            <div class="d-flex flex-column flex-md-row">
+                                <div class="flex-shrink-0 text-center text-md-start mb-2 mb-md-0">
+                                    <div class="rounded-circle bg-white bg-opacity-25 p-2 p-md-3 d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-info-circle fa-lg text-white"></i>
                                     </div>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="fw-bold mb-3 text-white">
+                                <div class="flex-grow-1 ms-md-3">
+                                    <h6 class="fw-bold mb-2 text-white fs-6 fs-md-5">
                                         <i class="fas fa-question-circle text-white me-2"></i>Comment s'applique cette promotion ?
                                     </h6>
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="row g-1 g-md-2">
+                                        <div class="col-12 col-md-6">
                                             <ul class="mb-0 small" style="list-style: none; padding-left: 0;">
-                                                <li class="mb-2">
-                                                    <span class="badge bg-secondary me-2 px-2 py-1">Cas 1</span>
-                                                    <span class="text-white">Aucune sélection → <strong class="text-white fw-bold">TOUS les {% if companyType == 'restaurant' %}plats{% else %}produits{% endif %}</strong></span>
+                                                <li class="mb-1">
+                                                    <span class="badge bg-secondary me-1 px-2 py-1" style="font-size:0.5rem;">Cas 1</span>
+                                                    <span class="text-white" style="font-size:0.65rem;">Aucune sélection → <strong class="text-white">TOUS</strong></span>
                                                 </li>
-                                                <li class="mb-2">
-                                                    <span class="badge bg-success me-2 px-2 py-1">Cas 2</span>
-                                                    <span class="text-white">Catégories uniquement → <strong class="text-white fw-bold">tous les {% if companyType == 'restaurant' %}plats{% else %}produits{% endif %}</strong> des catégories sélectionnées</span>
+                                                <li class="mb-1">
+                                                    <span class="badge bg-success me-1 px-2 py-1" style="font-size:0.5rem;">Cas 2</span>
+                                                    <span class="text-white" style="font-size:0.65rem;">Catégories uniquement → <strong class="text-white">tous</strong> des catégories</span>
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-12 col-md-6">
                                             <ul class="mb-0 small" style="list-style: none; padding-left: 0;">
-                                                <li class="mb-2">
-                                                    <span class="badge bg-primary me-2 px-2 py-1">Cas 3</span>
-                                                    <span class="text-white">{% if companyType == 'restaurant' %}Plats{% else %}Produits{% endif %} uniquement → <strong class="text-white fw-bold">ces {% if companyType == 'restaurant' %}plats{% else %}produits{% endif %} uniquement</strong></span>
+                                                <li class="mb-1">
+                                                    <span class="badge bg-primary me-1 px-2 py-1" style="font-size:0.5rem;">Cas 3</span>
+                                                    <span class="text-white" style="font-size:0.65rem;">Produits uniquement → <strong class="text-white">ces produits</strong></span>
                                                 </li>
-                                                <li class="mb-2">
-                                                    <span class="badge bg-warning text-dark me-2 px-2 py-1">Cas 4</span>
-                                                    <span class="text-white">Catégories + {% if companyType == 'restaurant' %}Plats{% else %}Produits{% endif %} → <strong class="text-white fw-bold">l'ensemble</strong> (union des deux)</span>
+                                                <li class="mb-1">
+                                                    <span class="badge bg-warning text-dark me-1 px-2 py-1" style="font-size:0.5rem;">Cas 4</span>
+                                                    <span class="text-white" style="font-size:0.65rem;">Catégories + Produits → <strong class="text-white">l'ensemble</strong></span>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="mt-3 pt-2 border-top border-white border-opacity-25">
+                                    <div class="mt-2 pt-2 border-top border-white border-opacity-25">
                                         <div class="d-flex align-items-start">
-                                            <i class="fas fa-lightbulb text-warning me-2 mt-1"></i>
-                                            <span class="small text-white">
+                                            <i class="fas fa-lightbulb text-warning me-2 mt-1" style="font-size:0.7rem;"></i>
+                                            <span class="small text-white" style="font-size:0.6rem;">
                                                 <strong class="text-warning">Astuce :</strong> 
-                                                Si un {% if companyType == 'restaurant' %}plat{% else %}produit{% endif %} est déjà inclus via une catégorie, 
-                                                <strong class="text-white fw-bold">il n'est pas dupliqué</strong>. La promotion s'applique une seule fois.
+                                                Si un produit est déjà inclus via une catégorie, 
+                                                <strong class="text-white">il n'est pas dupliqué</strong>.
                                             </span>
                                         </div>
                                     </div>
@@ -269,29 +275,29 @@
                     </div>
 
                     <!-- ========================================== -->
-                    <!-- SECTIONS DES ASSOCIATIONS AVEC COLLECTIONTYPE -->
+                    <!-- SECTIONS DES ASSOCIATIONS -->
                     <!-- ========================================== -->
                     {% if companyType == 'restaurant' %}
                         <!-- SECTION CATÉGORIES DE PLATS -->
-                        <div class="card border-0 bg-light mt-4">
-                            <div class="card-header bg-white border-0">
-                                <h5 class="mb-0">
+                        <div class="card border-0 bg-light mt-3 mt-md-4">
+                            <div class="card-header bg-white border-0 py-2">
+                                <h5 class="mb-0 fs-6 fs-md-5">
                                     <i class="fas fa-utensils me-2 text-primary"></i>Catégories de plats concernées
                                 </h5>
-                                <p class="text-muted small mb-0">Sélectionnez les catégories de plats concernées par cette promotion (optionnel)</p>
+                                <p class="text-muted small mb-0" style="font-size:0.65rem;">Sélectionnez les catégories de plats concernées (optionnel)</p>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-2 p-md-3">
                                 <div id="promotion-category-recipes-collection" 
                                      class="collection-wrapper"
                                      data-prototype="{{ form_widget(form.promotionCategoryRecipes.vars.prototype)|e('html_attr') }}"
                                      data-index="{{ form.promotionCategoryRecipes|length }}">
                                     {% for promoCategoryRecipe in form.promotionCategoryRecipes %}
-                                        <div class="collection-item row g-2 mb-2">
-                                            <div class="col-md-10">
-                                                {{ form_widget(promoCategoryRecipe.categoryRecipe, {'attr': {'class': 'form-select select2-category-recipe'}}) }}
+                                        <div class="collection-item row g-1 g-md-2 mb-2 p-2">
+                                            <div class="col-10 col-md-10">
+                                                {{ form_widget(promoCategoryRecipe.categoryRecipe, {'attr': {'class': 'form-select form-select-sm select2-category-recipe', 'style': 'font-size:0.7rem;'}}) }}
                                             </div>
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-danger remove-collection-item w-100">
+                                            <div class="col-2 col-md-2">
+                                                <button type="button" class="btn btn-danger btn-sm remove-collection-item w-100" style="font-size:0.6rem; padding:0.15rem 0.2rem;">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
@@ -299,32 +305,32 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                                <button type="button" class="btn btn-primary mt-2 add-collection-item" data-collection="promotion-category-recipes-collection">
-                                    <i class="fas fa-plus-circle me-2"></i>Ajouter une catégorie
+                                <button type="button" class="btn btn-primary btn-sm mt-2 add-collection-item" data-collection="promotion-category-recipes-collection" style="font-size:0.7rem; padding:0.2rem 0.4rem;">
+                                    <i class="fas fa-plus-circle me-1"></i>Ajouter une catégorie
                                 </button>
                             </div>
                         </div>
 
                         <!-- SECTION PLATS -->
-                        <div class="card border-0 bg-light mt-4">
-                            <div class="card-header bg-white border-0">
-                                <h5 class="mb-0">
+                        <div class="card border-0 bg-light mt-3 mt-md-4">
+                            <div class="card-header bg-white border-0 py-2">
+                                <h5 class="mb-0 fs-6 fs-md-5">
                                     <i class="fas fa-hamburger me-2 text-primary"></i>Plats concernés
                                 </h5>
-                                <p class="text-muted small mb-0">Sélectionnez les plats spécifiques concernés par cette promotion (optionnel)</p>
+                                <p class="text-muted small mb-0" style="font-size:0.65rem;">Sélectionnez les plats spécifiques concernés (optionnel)</p>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-2 p-md-3">
                                 <div id="promotion-recipes-collection" 
                                      class="collection-wrapper"
                                      data-prototype="{{ form_widget(form.promotionRecipes.vars.prototype)|e('html_attr') }}"
                                      data-index="{{ form.promotionRecipes|length }}">
                                     {% for promoRecipe in form.promotionRecipes %}
-                                        <div class="collection-item row g-2 mb-2">
-                                            <div class="col-md-10">
-                                                {{ form_widget(promoRecipe.recipe, {'attr': {'class': 'form-select select2-recipe'}}) }}
+                                        <div class="collection-item row g-1 g-md-2 mb-2 p-2">
+                                            <div class="col-10 col-md-10">
+                                                {{ form_widget(promoRecipe.recipe, {'attr': {'class': 'form-select form-select-sm select2-recipe', 'style': 'font-size:0.7rem;'}}) }}
                                             </div>
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-danger remove-collection-item w-100">
+                                            <div class="col-2 col-md-2">
+                                                <button type="button" class="btn btn-danger btn-sm remove-collection-item w-100" style="font-size:0.6rem; padding:0.15rem 0.2rem;">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
@@ -332,32 +338,32 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                                <button type="button" class="btn btn-primary mt-2 add-collection-item" data-collection="promotion-recipes-collection">
-                                    <i class="fas fa-plus-circle me-2"></i>Ajouter un plat
+                                <button type="button" class="btn btn-primary btn-sm mt-2 add-collection-item" data-collection="promotion-recipes-collection" style="font-size:0.7rem; padding:0.2rem 0.4rem;">
+                                    <i class="fas fa-plus-circle me-1"></i>Ajouter un plat
                                 </button>
                             </div>
                         </div>
                     {% else %}
                         <!-- SECTION CATÉGORIES (MARKET/PHARMACY) -->
-                        <div class="card border-0 bg-light mt-4">
-                            <div class="card-header bg-white border-0">
-                                <h5 class="mb-0">
+                        <div class="card border-0 bg-light mt-3 mt-md-4">
+                            <div class="card-header bg-white border-0 py-2">
+                                <h5 class="mb-0 fs-6 fs-md-5">
                                     <i class="fas fa-folder-tree me-2 text-primary"></i>Catégories concernées
                                 </h5>
-                                <p class="text-muted small mb-0">Sélectionnez les catégories de produits concernées par cette promotion (optionnel)</p>
+                                <p class="text-muted small mb-0" style="font-size:0.65rem;">Sélectionnez les catégories de produits concernées (optionnel)</p>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-2 p-md-3">
                                 <div id="promotion-categories-collection" 
                                      class="collection-wrapper"
                                      data-prototype="{{ form_widget(form.promotionCategories.vars.prototype)|e('html_attr') }}"
                                      data-index="{{ form.promotionCategories|length }}">
                                     {% for promoCategory in form.promotionCategories %}
-                                        <div class="collection-item row g-2 mb-2">
-                                            <div class="col-md-10">
-                                                {{ form_widget(promoCategory.category, {'attr': {'class': 'form-select select2-category'}}) }}
+                                        <div class="collection-item row g-1 g-md-2 mb-2 p-2">
+                                            <div class="col-10 col-md-10">
+                                                {{ form_widget(promoCategory.category, {'attr': {'class': 'form-select form-select-sm select2-category', 'style': 'font-size:0.7rem;'}}) }}
                                             </div>
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-danger remove-collection-item w-100">
+                                            <div class="col-2 col-md-2">
+                                                <button type="button" class="btn btn-danger btn-sm remove-collection-item w-100" style="font-size:0.6rem; padding:0.15rem 0.2rem;">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
@@ -365,32 +371,32 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                                <button type="button" class="btn btn-primary mt-2 add-collection-item" data-collection="promotion-categories-collection">
-                                    <i class="fas fa-plus-circle me-2"></i>Ajouter une catégorie
+                                <button type="button" class="btn btn-primary btn-sm mt-2 add-collection-item" data-collection="promotion-categories-collection" style="font-size:0.7rem; padding:0.2rem 0.4rem;">
+                                    <i class="fas fa-plus-circle me-1"></i>Ajouter une catégorie
                                 </button>
                             </div>
                         </div>
 
                         <!-- SECTION PRODUITS (MARKET/PHARMACY) -->
-                        <div class="card border-0 bg-light mt-4">
-                            <div class="card-header bg-white border-0">
-                                <h5 class="mb-0">
+                        <div class="card border-0 bg-light mt-3 mt-md-4">
+                            <div class="card-header bg-white border-0 py-2">
+                                <h5 class="mb-0 fs-6 fs-md-5">
                                     <i class="fas fa-boxes me-2 text-primary"></i>Produits concernés
                                 </h5>
-                                <p class="text-muted small mb-0">Sélectionnez les produits spécifiques concernés par cette promotion (optionnel)</p>
+                                <p class="text-muted small mb-0" style="font-size:0.65rem;">Sélectionnez les produits spécifiques concernés (optionnel)</p>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-2 p-md-3">
                                 <div id="promotion-products-collection" 
                                      class="collection-wrapper"
                                      data-prototype="{{ form_widget(form.promotionProducts.vars.prototype)|e('html_attr') }}"
                                      data-index="{{ form.promotionProducts|length }}">
                                     {% for promoProduct in form.promotionProducts %}
-                                        <div class="collection-item row g-2 mb-2">
-                                            <div class="col-md-10">
-                                                {{ form_widget(promoProduct.product, {'attr': {'class': 'form-select select2-product'}}) }}
+                                        <div class="collection-item row g-1 g-md-2 mb-2 p-2">
+                                            <div class="col-10 col-md-10">
+                                                {{ form_widget(promoProduct.product, {'attr': {'class': 'form-select form-select-sm select2-product', 'style': 'font-size:0.7rem;'}}) }}
                                             </div>
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-danger remove-collection-item w-100">
+                                            <div class="col-2 col-md-2">
+                                                <button type="button" class="btn btn-danger btn-sm remove-collection-item w-100" style="font-size:0.6rem; padding:0.15rem 0.2rem;">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
@@ -398,8 +404,8 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                                <button type="button" class="btn btn-primary mt-2 add-collection-item" data-collection="promotion-products-collection">
-                                    <i class="fas fa-plus-circle me-2"></i>Ajouter un produit
+                                <button type="button" class="btn btn-primary btn-sm mt-2 add-collection-item" data-collection="promotion-products-collection" style="font-size:0.7rem; padding:0.2rem 0.4rem;">
+                                    <i class="fas fa-plus-circle me-1"></i>Ajouter un produit
                                 </button>
                             </div>
                         </div>
@@ -407,19 +413,19 @@
                 </div>
 
                 <!-- Footer avec boutons d'action -->
-                <div class="card-footer bg-light py-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <a href="{{ path('app_admin_promotion_index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-times me-2"></i> Annuler
+                <div class="card-footer bg-light py-2 py-md-3">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+                        <a href="{{ path('app_admin_promotion_index') }}" class="btn btn-outline-secondary btn-sm w-100 w-sm-auto" style="font-size:0.7rem; padding:0.25rem 0.5rem;">
+                            <i class="fas fa-times me-1"></i> Annuler
                         </a>
-                        <div class="btn-group">
-                            <button type="submit" class="btn btn-primary btn-lg px-4">
-                                <i class="fas fa-save me-2"></i>
-                                {{ button_label|default('Enregistrer la promotion') }}
+                        <div class="d-flex gap-1 gap-md-2 w-100 w-sm-auto">
+                            <button type="submit" class="btn btn-primary btn-sm flex-grow-1" style="font-size:0.7rem; padding:0.25rem 0.5rem;">
+                                <i class="fas fa-save me-1"></i>
+                                {{ button_label|default('Enregistrer') }}
                             </button>
                             {% if promotion.id is defined and promotion.id is not null %}
-                                <a href="{{ path('app_admin_promotion_show', {'id': promotion.id}) }}" class="btn btn-info btn-lg">
-                                    <i class="fas fa-eye me-2"></i> Voir
+                                <a href="{{ path('app_admin_promotion_show', {'id': promotion.id}) }}" class="btn btn-info btn-sm flex-grow-1" style="font-size:0.7rem; padding:0.25rem 0.5rem;">
+                                    <i class="fas fa-eye me-1"></i> Voir
                                 </a>
                             {% endif %}
                         </div>
@@ -434,25 +440,25 @@
 
 <!-- Modal de confirmation pour suppression d'élément de collection -->
 <div class="modal fade" id="confirmRemoveModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title text-danger">
-                    <i class="fas fa-exclamation-triangle me-2"></i> Confirmer la suppression
+            <div class="modal-header border-0 py-2">
+                <h5 class="modal-title text-danger fs-6">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Confirmer
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-center py-4">
-                <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
-                <h5>Êtes-vous sûr de vouloir supprimer cet élément ?</h5>
-                <p class="text-muted">Cette action est irréversible.</p>
-                <div class="alert alert-warning mt-2" id="itemToRemoveInfo">
+            <div class="modal-body text-center py-3">
+                <i class="fas fa-trash-alt fa-3x text-danger mb-2"></i>
+                <h6 class="fs-6">Supprimer cet élément ?</h6>
+                <p class="text-muted small">Cette action est irréversible.</p>
+                <div class="alert alert-warning mt-2 p-2 small" id="itemToRemoveInfo">
                     <span id="itemToRemoveName"></span>
                 </div>
             </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-danger" id="confirmRemoveItemBtn">Supprimer</button>
+            <div class="modal-footer border-0 py-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger btn-sm" id="confirmRemoveItemBtn">Supprimer</button>
             </div>
         </div>
     </div>
@@ -461,35 +467,35 @@
 <!-- Modal pour supprimer l'image -->
 {% if promotion.id is defined and promotion.id is not null and promotion.image %}
 <div class="modal fade" id="deleteImageModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title text-danger">
-                    <i class="fas fa-exclamation-triangle me-2"></i> Supprimer l'image
+            <div class="modal-header border-0 py-2">
+                <h5 class="modal-title text-danger fs-6">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Supprimer
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-center py-4">
-                <div class="mb-4">
-                    <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
-                    <h5>Êtes-vous sûr de vouloir supprimer cette image ?</h5>
-                    <p class="text-muted">Cette action ne peut pas être annulée.</p>
+            <div class="modal-body text-center py-3">
+                <div class="mb-3">
+                    <i class="fas fa-trash-alt fa-3x text-danger mb-2"></i>
+                    <h6 class="fs-6">Supprimer cette image ?</h6>
+                    <p class="text-muted small">Cette action est irréversible.</p>
                 </div>
                 <div class="mb-3">
                     <img src="{{ asset('uploads/promotions/' ~ promotion.image) }}"
                          alt="{{ promotion.name }}"
                          class="rounded shadow-lg"
-                         style="width: 150px; height: 150px; object-fit: cover;">
+                         style="width: 100px; height: 100px; object-fit: cover;">
                 </div>
             </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-2"></i> Annuler
+            <div class="modal-footer border-0 py-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Annuler
                 </button>
                 <form action="{{ path('app_admin_promotion_delete_image', {'id': promotion.id}) }}" method="post" class="d-inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete-image' ~ promotion.id) }}">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash me-2"></i> Supprimer l'image
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash me-1"></i> Supprimer
                     </button>
                 </form>
             </div>
@@ -513,7 +519,7 @@ function previewPromoImage(input) {
                 const img = document.createElement('img');
                 img.src = e.target.result;
                 img.className = 'img-fluid rounded shadow-lg promo-preview';
-                img.style = 'width: 200px; height: 200px; object-fit: cover; border: 5px solid #f8f9fa;';
+                img.style = 'width: 150px; height: 150px; object-fit: cover; border: 5px solid #f8f9fa;';
                 preview.parentNode.replaceChild(img, preview);
             } else if (preview) {
                 preview.src = e.target.result;
@@ -535,6 +541,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 placeholder: 'Rechercher...',
                 allowClear: true,
                 width: '100%',
+                dropdownAutoWidth: true,
                 language: {
                     noResults: function() { return 'Aucun résultat trouvé'; }
                 }
@@ -551,7 +558,8 @@ document.addEventListener('DOMContentLoaded', function() {
         activeSwitch.addEventListener('change', function() {
             const isActive = this.checked;
             statusBadge.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
-            statusBadge.className = isActive ? 'badge bg-success' : 'badge bg-danger';
+            statusBadge.className = isActive ? 'badge bg-success px-3 py-2' : 'badge bg-danger px-3 py-2';
+            statusBadge.style.fontSize = '0.7rem';
             statusLabel.textContent = isActive ? 'Promotion active' : 'Promotion inactive';
         });
     }
@@ -575,7 +583,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ========== GESTION DES COLLECTIONS ==========
     
-    // Fonction pour initialiser Select2 sur un élément
     function initSelect2OnElement(element) {
         if (typeof $ !== 'undefined') {
             const select = element.querySelector('select');
@@ -584,20 +591,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     theme: 'bootstrap-5',
                     placeholder: 'Rechercher...',
                     allowClear: true,
-                    width: '100%'
+                    width: '100%',
+                    dropdownAutoWidth: true
                 });
             }
         }
     }
     
-    // Fonction pour attacher l'événement de suppression à un bouton
     function attachRemoveEvent(button) {
-        // Supprimer l'ancien événement pour éviter les doublons
         button.removeEventListener('click', handleRemoveClick);
         button.addEventListener('click', handleRemoveClick);
     }
     
-    // Gestionnaire de clic pour suppression avec modal
     function handleRemoveClick(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -605,7 +610,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const item = button.closest('.collection-item');
         
         if (item) {
-            // Récupérer le nom de l'élément à supprimer (peut être vide)
             const select = item.querySelector('select');
             let itemName = '';
             if (select && select.options && select.options[select.selectedIndex]) {
@@ -615,7 +619,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            // Si aucun élément sélectionné, afficher un message générique
             if (!itemName) {
                 itemName = 'ce bloc vide';
             }
@@ -631,26 +634,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Fonction pour créer un nouvel élément de collection
     function createCollectionItem(prototype, index) {
         const div = document.createElement('div');
-        div.className = 'collection-item row g-2 mb-2';
+        div.className = 'collection-item row g-1 g-md-2 mb-2 p-2';
         let html = prototype.replace(/__name__/g, index);
-        
-        // Ajouter la structure HTML correcte
-        // Chercher où placer le bouton supprimer
-        if (html.includes('select')) {
-            // Remplacer la structure existante
-            html = html.replace(/<div class="col-md-10">/, '<div class="col-md-10">');
-            html = html.replace(/<\/div>\s*$/, '');
-            html += '</div><div class="col-md-2"><button type="button" class="btn btn-danger remove-collection-item w-100"><i class="fas fa-trash"></i></button></div>';
-        }
-        
+        html = html.replace(/<div class="col-md-10">/, '<div class="col-10 col-md-10">');
+        html = html.replace(/<\/div>\s*$/, '');
+        html += '</div><div class="col-2 col-md-2"><button type="button" class="btn btn-danger btn-sm remove-collection-item w-100" style="font-size:0.6rem; padding:0.15rem 0.2rem;"><i class="fas fa-trash"></i></button></div>';
         div.innerHTML = html;
         return div;
     }
     
-    // Fonction pour ajouter un élément à une collection
     function addCollectionItem(collectionId) {
         const collection = document.getElementById(collectionId);
         if (!collection) return;
@@ -658,24 +652,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const prototype = collection.dataset.prototype;
         let index = parseInt(collection.dataset.index);
         
-        // Créer le nouvel élément
         const newItem = createCollectionItem(prototype, index);
-        
-        // Ajouter à la collection
         collection.appendChild(newItem);
         collection.dataset.index = index + 1;
         
-        // Initialiser Select2 sur le nouveau select
         initSelect2OnElement(newItem);
         
-        // Attacher l'événement de suppression sur le nouveau bouton
         const removeBtn = newItem.querySelector('.remove-collection-item');
         if (removeBtn) {
             attachRemoveEvent(removeBtn);
         }
     }
     
-    // Gestionnaire de clic pour ajout
     function handleAddCollection(e) {
         const button = e.currentTarget;
         const collectionId = button.dataset.collection;
@@ -684,18 +672,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Attacher les événements d'ajout
     document.querySelectorAll('.add-collection-item').forEach(button => {
         button.removeEventListener('click', handleAddCollection);
         button.addEventListener('click', handleAddCollection);
     });
     
-    // Attacher les événements de suppression sur les éléments existants (pour l'édition)
     document.querySelectorAll('.remove-collection-item').forEach(button => {
         attachRemoveEvent(button);
     });
     
-    // Confirmation de suppression
     const confirmRemoveBtn = document.getElementById('confirmRemoveItemBtn');
     if (confirmRemoveBtn) {
         confirmRemoveBtn.removeEventListener('click', handleConfirmRemove);
@@ -711,7 +696,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Nettoyer pendingRemoveItem quand le modal est fermé
     const confirmModal = document.getElementById('confirmRemoveModal');
     if (confirmModal) {
         confirmModal.addEventListener('hidden.bs.modal', function() {
@@ -758,12 +742,21 @@ function escapeHtml(text) {
 }
 .form-floating > label {
     padding-left: 2.5rem;
+    font-size: 0.85rem;
 }
 .form-floating > .form-control,
 .form-floating > .form-select {
     height: calc(3.5rem + 2px);
     line-height: 1.25;
     padding: 1rem 0.75rem 0.5rem 2.5rem;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    font-size: 0.85rem;
+}
+.form-floating > .form-control:focus,
+.form-floating > .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
 }
 .form-floating > .form-control:focus ~ label,
 .form-floating > .form-control:not(:placeholder-shown) ~ label,
@@ -772,21 +765,12 @@ function escapeHtml(text) {
     transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
     color: #667eea;
 }
-.form-floating > .form-control,
-.form-floating > .form-select {
-    border-radius: 10px;
-    border: 2px solid #e0e0e0;
-}
-.form-floating > .form-control:focus,
-.form-floating > .form-select:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
-}
 .select2-container--bootstrap-5 .select2-selection {
     border: 2px solid #e0e0e0;
     border-radius: 10px !important;
     min-height: calc(3.5rem + 2px);
     padding: 1rem 0.75rem 0.5rem 2.5rem;
+    font-size: 0.85rem;
 }
 .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
     line-height: 1.5;
@@ -824,17 +808,145 @@ function escapeHtml(text) {
 }
 .collection-item {
     background: #f8f9fa;
-    padding: 10px;
     border-radius: 8px;
-    margin-bottom: 10px;
 }
 .bg-light {
     background-color: #f8f9fa !important;
 }
-@media (max-width: 768px) {
+
+/* ========================================
+   RESPONSIVE - MOBILE (< 576px)
+======================================== */
+@media (max-width: 576px) {
+    .card-hover:hover {
+        transform: none !important;
+    }
+    
+    .card-header {
+        padding: 0.5rem 0.75rem !important;
+    }
+    .card-body {
+        padding: 0.5rem 0.75rem !important;
+    }
+    .card-footer {
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    .form-floating > label {
+        font-size: 0.7rem;
+        padding-left: 2rem;
+    }
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: calc(3rem + 2px);
+        padding: 0.75rem 0.5rem 0.35rem 2rem;
+        font-size: 0.75rem;
+        border-radius: 8px;
+    }
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label,
+    .form-floating > .form-select:focus ~ label,
+    .form-floating > .form-select:not([value=""]):not(:placeholder-shown) ~ label {
+        transform: scale(.8) translateY(-0.6rem) translateX(0.15rem);
+    }
+    
     .form-switch .form-check-input {
-        width: 3em;
-        height: 1.5em;
+        width: 2.8em;
+        height: 1.4em;
+    }
+    
+    .select2-container--bootstrap-5 .select2-selection {
+        min-height: calc(3rem + 2px);
+        padding: 0.75rem 0.5rem 0.35rem 2rem;
+        font-size: 0.75rem;
+    }
+    
+    .btn {
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.4rem !important;
+    }
+    .btn i {
+        font-size: 0.7rem !important;
+    }
+    
+    .badge {
+        font-size: 0.6rem !important;
+        padding: 0.2rem 0.5rem !important;
+    }
+    
+    .text-muted {
+        font-size: 0.6rem !important;
+    }
+    
+    .promo-preview {
+        width: 120px !important;
+        height: 120px !important;
+    }
+    .promo-placeholder {
+        width: 120px !important;
+        height: 120px !important;
+    }
+    .promo-placeholder i {
+        font-size: 3rem !important;
+    }
+    
+    .collection-item {
+        padding: 0.5rem !important;
+    }
+    .collection-item .btn {
+        font-size: 0.55rem !important;
+        padding: 0.1rem 0.15rem !important;
+    }
+    
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    .modal-content {
+        border-radius: 12px !important;
+    }
+    .modal-body {
+        padding: 0.5rem !important;
+    }
+    .modal-footer {
+        padding: 0.5rem !important;
+        flex-wrap: wrap;
+    }
+    .modal-footer .btn {
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.5rem !important;
+    }
+    .modal-header {
+        padding: 0.5rem 0.75rem !important;
+    }
+    .modal-title {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* ========================================
+   TABLETTE (576px - 768px)
+======================================== */
+@media (min-width: 577px) and (max-width: 768px) {
+    .card-body {
+        padding: 1rem !important;
+    }
+    .card-header {
+        padding: 0.75rem 1rem !important;
+    }
+    .card-footer {
+        padding: 0.75rem 1rem !important;
+    }
+    
+    .form-floating > label {
+        font-size: 0.8rem;
+    }
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        font-size: 0.8rem;
+    }
+    
+    .btn {
+        font-size: 0.75rem !important;
     }
 }
 </style>

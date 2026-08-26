@@ -178,11 +178,12 @@
                             ">
                                 <td>
                                     <strong>{{ batch.batchNumber }}</strong>
-                                    {% if batch.purchaseItem %}
+                                    {# ✅ CORRECTION : Utilisation de purchaseItemId uniquement #}
+                                    {% if batch.purchaseItemId %}
                                         <br>
                                         <small class="text-muted">
                                             <i class="fas fa-receipt me-1"></i>
-                                            N° {{ batch.purchaseItem.purchase.purchaseNumber }}
+                                            Achat #{{ batch.purchaseItemId }}
                                         </small>
                                     {% endif %}
                                 </td>

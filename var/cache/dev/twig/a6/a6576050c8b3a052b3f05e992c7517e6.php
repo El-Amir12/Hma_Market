@@ -1230,11 +1230,11 @@ class __TwigTemplate_4ed161b65da191755b080d1120e107f1 extends Template
         yield "            </div>
             <div class=\"hero-stats\">
                 <div class=\"hero-stat\">
-                    <span class=\"number\" style=\"color: #0f172a;\">
+                    <span class=\"number\" style=\"color: #ffffff;\">
                         <i class=\"fas fa-box me-2\"></i>
                         +1000
                     </span>
-                    <span class=\"label\" style=\"color: #0f172a;\">Produits disponibles</span>
+                    <span class=\"label\" style=\"color: #ffffff;\">Produits disponibles</span>
                 </div>
                 <div class=\"hero-stat\">
                     <span class=\"number\" style=\"color: #ffffff;\">
@@ -3463,11 +3463,11 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class=\"hero-stats\">
                 <div class=\"hero-stat\">
-                    <span class=\"number\" style=\"color: #0f172a;\">
+                    <span class=\"number\" style=\"color: #ffffff;\">
                         <i class=\"fas fa-box me-2\"></i>
                         +1000
                     </span>
-                    <span class=\"label\" style=\"color: #0f172a;\">Produits disponibles</span>
+                    <span class=\"label\" style=\"color: #ffffff;\">Produits disponibles</span>
                 </div>
                 <div class=\"hero-stat\">
                     <span class=\"number\" style=\"color: #ffffff;\">

@@ -134,7 +134,6 @@
         overflow-x: auto;
     }
     
-    /* Hauteur égale pour les containers côte à côte */
     .row-equal-height {
         display: flex;
         flex-wrap: wrap;
@@ -265,17 +264,114 @@
         background: var(--primary);
         color: white;
     }
+
+    /* ========================================
+       RESPONSIVE - FILTRES
+    ======================================== */
+    .filter-col {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .filter-col-half {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .filter-select {
+        width: 100% !important;
+        font-size: 0.7rem !important;
+    }
+    .filter-input {
+        font-size: 0.7rem !important;
+    }
+
+    /* ========================================
+       RESPONSIVE - MEDIA QUERIES
+    ======================================== */
     
-    @media (max-width: 768px) {
+    /* Mobile (< 576px) */
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+        
+        .kpi-value { font-size: 1.1rem; }
+        .kpi-card { padding: 0.75rem; }
+        .kpi-label { font-size: 0.55rem; }
+        .kpi-trend { font-size: 0.55rem; }
+        .kpi-icon {
+            width: 32px;
+            height: 32px;
+            font-size: 1rem;
+        }
+        
+        .chart-container { height: 180px; }
+        .chart-card { padding: 0.75rem; margin-bottom: 0.75rem; }
+        .chart-title { font-size: 0.75rem; }
+        .chart-title .btn-group .btn { font-size: 0.55rem; padding: 0.1rem 0.3rem; }
+        
+        .filters-section { padding: 0.75rem; }
+        .filter-label { font-size: 0.55rem; }
+        .filter-group { margin-bottom: 0.5rem; }
+        
+        .data-table { font-size: 0.6rem; }
+        .data-table th, .data-table td { padding: 0.2rem 0.3rem; }
+        
+        .payment-badge { font-size: 0.5rem; padding: 0.1rem 0.3rem; }
+        .badge { font-size: 0.5rem !important; padding: 0.15rem 0.3rem !important; }
+        
+        .action-buttons .btn {
+            font-size: 0.6rem !important;
+            padding: 0.15rem 0.3rem !important;
+        }
+        
+        .filter-col, .filter-col-half {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        
+        .h1 { font-size: 1.2rem !important; }
+        .h2 { font-size: 1rem !important; }
+        .h3 { font-size: 0.9rem !important; }
+        .text-muted { font-size: 0.6rem !important; }
+        
+        .breadcrumb { font-size: 0.55rem !important; }
+        
+        .modal-dialog { margin: 0.5rem; }
+        .modal-content { border-radius: 12px !important; }
+        
+        .progress-custom { height: 4px; }
+        
+        .cashier-avatar { width: 28px; height: 28px; font-size: 0.65rem; }
+        .cashier-info { gap: 0.4rem; }
+        
+        #activeFilters .badge { font-size: 0.5rem !important; padding: 0.15rem 0.4rem !important; }
+    }
+
+    /* Tablette (576px - 768px) */
+    @media (min-width: 577px) and (max-width: 768px) {
+        .container-fluid {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+        
         .kpi-value { font-size: 1.3rem; }
         .chart-container { height: 220px; }
         .kpi-card { padding: 1rem; }
-        .data-table { font-size: 0.75rem; }
-        .data-table th, .data-table td { padding: 0.4rem 0.5rem; }
+        .data-table { font-size: 0.7rem; }
+        .data-table th, .data-table td { padding: 0.3rem 0.4rem; }
         .cashier-avatar { width: 32px; height: 32px; }
-        .cashier-info { gap: 0.5rem; }
+        
+        .filter-col-half {
+            flex: 0 0 50% !important;
+            max-width: 50% !important;
+            width: 50% !important;
+        }
     }
-    
+
     @media print {
         .no-print, .filters-section, .action-buttons, .btn, nav {
             display: none !important;
@@ -304,20 +400,20 @@
 {% endblock %}
 
 {% block body %}
-<div class="sales-dashboard py-3">
-    <div class="container-fluid px-3 px-md-4">
+<div class="sales-dashboard py-2 py-md-3">
+    <div class="container-fluid px-2 px-md-4">
         
         <!-- En-tête -->
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-            <div>
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 mb-md-4 flex-wrap gap-2">
+            <div class="w-100 w-sm-auto">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1">
-                        <li class="breadcrumb-item">
+                        <li class="breadcrumb-item small">
                             <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
                                 <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
                             </a>
                         </li>
-                        <li class="breadcrumb-item active">
+                        <li class="breadcrumb-item active small">
                             <i class="fas fa-chart-line me-1"></i> Rapport des Ventes
                         </li>
                     </ol>
@@ -326,7 +422,7 @@
                     <i class="fas fa-chart-line text-primary me-2"></i>
                     Rapport des Ventes
                 </h1>
-                <p class="text-muted small mb-0">
+                <p class="text-muted small mb-0 d-none d-sm-block">
                     <i class="fas fa-info-circle me-1"></i>
                     {% if is_restaurant %}
                         Analyse détaillée des ventes de votre restaurant
@@ -334,18 +430,21 @@
                         Analyse détaillée des ventes de votre commerce
                     {% endif %}
                 </p>
+                <p class="text-muted small mb-0 d-block d-sm-none">
+                    {% if is_restaurant %}Ventes restaurant{% else %}Ventes commerce{% endif %}
+                </p>
             </div>
-            <div class="action-buttons d-flex gap-2">
-                <button class="btn btn-primary btn-sm" onclick="applyFilters()" id="applyBtn">
-                    <i class="fas fa-search me-1"></i> Appliquer
+            <div class="action-buttons d-flex gap-1 gap-sm-2 flex-wrap w-100 w-sm-auto">
+                <button class="btn btn-primary btn-sm flex-grow-1 flex-sm-grow-0" onclick="applyFilters()" id="applyBtn">
+                    <i class="fas fa-search me-1"></i> <span class="d-none d-sm-inline">Appliquer</span>
                 </button>
-                <button class="btn btn-outline-secondary btn-sm" onclick="refreshData()" title="Actualiser">
+                <button class="btn btn-outline-secondary btn-sm flex-grow-1 flex-sm-grow-0" onclick="refreshData()" title="Actualiser">
                     <i class="fas fa-sync-alt"></i>
                 </button>
-                <button class="btn btn-outline-success btn-sm" onclick="exportData()" title="Exporter CSV">
-                    <i class="fas fa-download"></i>
+                <button class="btn btn-outline-success btn-sm flex-grow-1 flex-sm-grow-0" onclick="exportData()" title="Exporter CSV">
+                    <i class="fas fa-download"></i> <span class="d-none d-sm-inline">Exporter</span>
                 </button>
-                <button class="btn btn-outline-secondary btn-sm d-print-none" onclick="window.print()" title="Imprimer">
+                <button class="btn btn-outline-secondary btn-sm flex-grow-1 flex-sm-grow-0 d-print-none" onclick="window.print()" title="Imprimer">
                     <i class="fas fa-print"></i>
                 </button>
             </div>
@@ -353,13 +452,13 @@
 
         <!-- Section Filtres -->
         <div class="filters-section">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-3">
+            <div class="row g-2 g-md-3 align-items-end">
+                <div class="col-12 col-md-3 filter-col">
                     <div class="filter-group">
                         <label class="filter-label">
                             <i class="fas fa-calendar-alt"></i> Période prédéfinie
                         </label>
-                        <select id="datePreset" class="form-select form-select-sm">
+                        <select id="datePreset" class="form-select form-select-sm filter-select">
                             <option value="">Personnalisée</option>
                             {% for key, label in date_presets %}
                                 <option value="{{ key }}" {{ filters.date_preset == key ? 'selected' }}>
@@ -369,30 +468,30 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3 filter-col-half">
                     <div class="filter-group">
                         <label class="filter-label">
                             <i class="fas fa-calendar-day"></i> Date du
                         </label>
-                        <input type="date" id="dateFrom" class="form-control form-control-sm" 
+                        <input type="date" id="dateFrom" class="form-control form-control-sm filter-input" 
                                value="{{ filters.date_from }}">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3 filter-col-half">
                     <div class="filter-group">
                         <label class="filter-label">
                             <i class="fas fa-calendar-day"></i> Date au
                         </label>
-                        <input type="date" id="dateTo" class="form-control form-control-sm" 
+                        <input type="date" id="dateTo" class="form-control form-control-sm filter-input" 
                                value="{{ filters.date_to }}">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-3 filter-col">
                     <div class="filter-group">
                         <label class="filter-label">
                             <i class="fas fa-credit-card"></i> Mode de paiement
                         </label>
-                        <select id="paymentMethod" class="form-select form-select-sm">
+                        <select id="paymentMethod" class="form-select form-select-sm filter-select">
                             <option value="">Tous</option>
                             <option value="cash">Espèces</option>
                             <option value="card">Carte bancaire</option>
@@ -402,22 +501,23 @@
                 </div>
             </div>
             
-            <div id="activeFilters" class="d-flex gap-2 flex-wrap mt-3 pt-2 border-top"></div>
+            <div id="activeFilters" class="d-flex gap-1 gap-md-2 flex-wrap mt-2 mt-md-3 pt-2 pt-md-3 border-top"></div>
         </div>
 
         <!-- Cartes KPI -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-6 col-lg-3">
+        <div class="row g-2 g-md-3 mb-3 mb-md-4">
+            <div class="col-6 col-md-6 col-lg-3">
                 <div class="kpi-card primary">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="kpi-label">
-                                <i class="fas fa-chart-line me-1"></i> Chiffre d'affaires
+                                <i class="fas fa-chart-line me-1"></i> <span class="d-none d-sm-inline">Chiffre d'affaires</span>
+                                <span class="d-inline d-sm-none">CA</span>
                             </div>
                             <div class="kpi-value" id="kpiRevenue">
                                 {{ kpis.revenue|default(0)|number_format(0, ',', ' ') }}
                             </div>
-                            <div class="kpi-trend up">
+                            <div class="kpi-trend up d-none d-sm-block">
                                 {{ currency }}
                             </div>
                         </div>
@@ -428,17 +528,18 @@
                 </div>
             </div>
             
-            <div class="col-md-6 col-lg-3">
+            <div class="col-6 col-md-6 col-lg-3">
                 <div class="kpi-card success">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="kpi-label">
-                                <i class="fas fa-shopping-cart me-1"></i> Nombre de ventes
+                                <i class="fas fa-shopping-cart me-1"></i> <span class="d-none d-sm-inline">Nombre de ventes</span>
+                                <span class="d-inline d-sm-none">Ventes</span>
                             </div>
                             <div class="kpi-value" id="kpiOrders">
                                 {{ kpis.total_orders|default(0)|number_format(0, ',', ' ') }}
                             </div>
-                            <div class="kpi-trend up">
+                            <div class="kpi-trend up d-none d-sm-block">
                                 commandes
                             </div>
                         </div>
@@ -449,17 +550,18 @@
                 </div>
             </div>
             
-            <div class="col-md-6 col-lg-3">
+            <div class="col-6 col-md-6 col-lg-3">
                 <div class="kpi-card warning">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="kpi-label">
-                                <i class="fas fa-wallet me-1"></i> Panier moyen
+                                <i class="fas fa-wallet me-1"></i> <span class="d-none d-sm-inline">Panier moyen</span>
+                                <span class="d-inline d-sm-none">Panier</span>
                             </div>
                             <div class="kpi-value" id="kpiAverageBasket">
                                 {{ kpis.average_basket|default(0)|number_format(0, ',', ' ') }}
                             </div>
-                            <div class="kpi-trend up">
+                            <div class="kpi-trend up d-none d-sm-block">
                                 {{ currency }}
                             </div>
                         </div>
@@ -470,17 +572,18 @@
                 </div>
             </div>
             
-            <div class="col-md-6 col-lg-3">
+            <div class="col-6 col-md-6 col-lg-3">
                 <div class="kpi-card info">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="kpi-label">
-                                <i class="fas fa-percent me-1"></i> Remises accordées
+                                <i class="fas fa-percent me-1"></i> <span class="d-none d-sm-inline">Remises accordées</span>
+                                <span class="d-inline d-sm-none">Remises</span>
                             </div>
                             <div class="kpi-value" id="kpiDiscounts">
                                 {{ kpis.total_discount|default(0)|number_format(0, ',', ' ') }}
                             </div>
-                            <div class="kpi-trend up">
+                            <div class="kpi-trend up d-none d-sm-block">
                                 {{ currency }}
                             </div>
                         </div>
@@ -493,33 +596,35 @@
         </div>
 
         <!-- Graphiques principaux -->
-        <div class="row g-3 mb-4">
-            <div class="col-lg-8">
+        <div class="row g-2 g-md-3 mb-3 mb-md-4">
+            <div class="col-12 col-lg-8">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <div>
                             <i class="fas fa-chart-line"></i>
-                            Évolution des ventes
+                            <span class="d-none d-sm-inline">Évolution des ventes</span>
+                            <span class="d-inline d-sm-none">Évolution</span>
                         </div>
                         <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" class="btn btn-outline-secondary" onclick="changeChartType('revenue')">CA</button>
-                            <button type="button" class="btn btn-outline-secondary" onclick="changeChartType('orders')">Commandes</button>
-                            <button type="button" class="btn btn-outline-secondary" onclick="changeChartType('items')">Articles</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="changeChartType('revenue')">CA</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="changeChartType('orders')">Cmd</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="changeChartType('items')">Art</button>
                         </div>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 200px;">
                         <canvas id="timelineChart"></canvas>
                     </div>
                 </div>
             </div>
             
-            <div class="col-lg-4">
+            <div class="col-12 col-lg-4">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-chart-pie"></i>
-                        Paiements
+                        <span class="d-none d-sm-inline">Paiements</span>
+                        <span class="d-inline d-sm-none">Paiements</span>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 200px;">
                         <canvas id="paymentChart"></canvas>
                     </div>
                 </div>
@@ -527,70 +632,70 @@
         </div>
 
         <!-- Section Promotions -->
-        <div class="row g-3 mb-4">
+        <div class="row g-2 g-md-3 mb-3 mb-md-4">
             <div class="col-12">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-percent"></i>
                         Impact des promotions
                     </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="text-center p-3">
-                                <div class="small text-muted">Ventes avec promo</div>
-                                <div class="h2 fw-bold text-primary" id="ordersWithPromo">
+                    <div class="row g-2 g-md-3">
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-2 p-md-3">
+                                <div class="small text-muted" style="font-size:0.55rem;">Ventes avec promo</div>
+                                <div class="h2 fw-bold text-primary fs-4 fs-md-2" id="ordersWithPromo">
                                     {{ promotion_impact.orders_with_promo|default(0)|number_format(0, ',', ' ') }}
                                 </div>
-                                <div class="small">({{ promotion_impact.percentage_with_promo|default(0) }}% des ventes)</div>
+                                <div class="small" style="font-size:0.5rem;">({{ promotion_impact.percentage_with_promo|default(0) }}%)</div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="text-center p-3">
-                                <div class="small text-muted">Ventes sans promo</div>
-                                <div class="h2 fw-bold text-secondary" id="ordersWithoutPromo">
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-2 p-md-3">
+                                <div class="small text-muted" style="font-size:0.55rem;">Ventes sans promo</div>
+                                <div class="h2 fw-bold text-secondary fs-4 fs-md-2" id="ordersWithoutPromo">
                                     {{ promotion_impact.orders_without_promo|default(0)|number_format(0, ',', ' ') }}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="text-center p-3">
-                                <div class="small text-muted">CA avec promotions</div>
-                                <div class="h2 fw-bold text-success" id="revenueWithPromo">
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-2 p-md-3">
+                                <div class="small text-muted" style="font-size:0.55rem;">CA avec promotions</div>
+                                <div class="h2 fw-bold text-success fs-4 fs-md-2" id="revenueWithPromo">
                                     {{ promotion_impact.revenue_with_promo|default(0)|number_format(0, ',', ' ') }}
                                 </div>
-                                <div class="small">{{ currency }}</div>
+                                <div class="small" style="font-size:0.5rem;">{{ currency }}</div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="text-center p-3">
-                                <div class="small text-muted">Remises totales</div>
-                                <div class="h2 fw-bold text-danger" id="totalDiscountGiven">
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-2 p-md-3">
+                                <div class="small text-muted" style="font-size:0.55rem;">Remises totales</div>
+                                <div class="h2 fw-bold text-danger fs-4 fs-md-2" id="totalDiscountGiven">
                                     {{ promotion_impact.total_discount_given|default(0)|number_format(0, ',', ' ') }}
                                 </div>
-                                <div class="small">{{ currency }}</div>
+                                <div class="small" style="font-size:0.5rem;">{{ currency }}</div>
                             </div>
                         </div>
                     </div>
                     
                     {% if promotion_impact.top_promotions|default([])|length > 0 %}
                     <hr>
-                    <div class="mt-3">
-                        <strong class="small">Top promotions utilisées :</strong>
+                    <div class="mt-2 mt-md-3">
+                        <strong class="small" style="font-size:0.65rem;">Top promotions utilisées :</strong>
                         <div class="table-responsive mt-2">
                             <table class="data-table">
                                 <thead>
                                     <tr>
                                         <th>Promotion</th>
-                                        <th class="text-end">Utilisations</th>
-                                        <th class="text-end">Remise totale</th>
+                                        <th class="text-end d-none d-sm-table-cell">Utilisations</th>
+                                        <th class="text-end">Remise</th>
                                     </tr>
                                 </thead>
                                 <tbody id="topPromotionsList">
-                                    {% for promo in promotion_impact.top_promotions %}
+                                    {% for promo in promotion_impact.top_promotions|slice(0, 5) %}
                                         <tr>
-                                            <td>{{ promo.name }}</div>
-                                            <td class="text-end">{{ promo.usage_count|number_format(0, ',', ' ') }}</div>
-                                            <td class="text-end text-danger">{{ promo.total_discount|number_format(0, ',', ' ') }} {{ currency }}</div>
+                                            <td>{{ promo.name|slice(0, 20) }}{% if promo.name|length > 20 %}...{% endif %}</td>
+                                            <td class="text-end d-none d-sm-table-cell">{{ promo.usage_count|number_format(0, ',', ' ') }}</td>
+                                            <td class="text-end text-danger">{{ promo.total_discount|number_format(0, ',', ' ') }}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
@@ -603,10 +708,10 @@
         </div>
 
         <!-- Top ventes et répartition par heure - MÊME HAUTEUR -->
-        <div class="row g-3 mb-4 row-equal-height">
-            <div class="col-lg-6">
+        <div class="row g-2 g-md-3 mb-3 mb-md-4 row-equal-height">
+            <div class="col-12 col-lg-6">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-trophy"></i>
                         Top {% if is_restaurant %}recettes{% else %}produits{% endif %}
                     </div>
@@ -616,31 +721,31 @@
                                 <tr>
                                     <th>#</th>
                                     <th>{% if is_restaurant %}Recette{% else %}Produit{% endif %}</th>
-                                    <th class="text-end">Quantité</th>
-                                    <th class="text-end">CA ({{ currency }})</th>
-                                    <th class="text-end">Remises</th>
+                                    <th class="text-end d-none d-sm-table-cell">Qté</th>
+                                    <th class="text-end">CA</th>
+                                    <th class="text-end d-none d-md-table-cell">Remises</th>
                                 </tr>
                             </thead>
                             <tbody id="topSellingList">
-                                {% for item in top_selling %}
+                                {% for item in top_selling|slice(0, 5) %}
                                     <tr>
-                                        <td>{{ loop.index }}</div>
+                                        <td>{{ loop.index }}</td>
                                         <td>
-                                            {{ item.name }}
+                                            {{ item.name|slice(0, 18) }}{% if item.name|length > 18 %}...{% endif %}
                                             {% if item.recipe_name %}
-                                                <small class="text-muted d-block">{{ item.recipe_name }}</small>
+                                                <small class="text-muted d-block" style="font-size:0.5rem;">{{ item.recipe_name|slice(0, 12) }}</small>
                                             {% endif %}
-                                         </div>
-                                        <td class="text-end">{{ item.total_quantity|number_format(0, ',', ' ') }}</div>
-                                        <td class="text-end fw-semibold">{{ item.total_revenue|number_format(0, ',', ' ') }}</div>
-                                        <td class="text-end text-danger">{{ item.total_discount|number_format(0, ',', ' ') }}</div>
+                                        </td>
+                                        <td class="text-end d-none d-sm-table-cell">{{ item.total_quantity|number_format(0, ',', ' ') }}</td>
+                                        <td class="text-end fw-semibold">{{ item.total_revenue|number_format(0, ',', ' ') }}</td>
+                                        <td class="text-end text-danger d-none d-md-table-cell">{{ item.total_discount|number_format(0, ',', ' ') }}</td>
                                     </tr>
                                 {% else %}
                                     <tr>
                                         <td colspan="5" class="text-center py-4 text-muted">
                                             <i class="fas fa-chart-line fa-2x mb-2 d-block"></i>
                                             Aucune donnée disponible
-                                         </div>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -649,13 +754,14 @@
                 </div>
             </div>
             
-            <div class="col-lg-6">
+            <div class="col-12 col-lg-6">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-chart-bar"></i>
-                        Répartition par heure
+                        <span class="d-none d-sm-inline">Répartition par heure</span>
+                        <span class="d-inline d-sm-none">Par heure</span>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 200px;">
                         <canvas id="hourlyChart"></canvas>
                     </div>
                 </div>
@@ -663,37 +769,39 @@
         </div>
 
         <!-- Répartition par jour et par catégorie - MÊME HAUTEUR -->
-        <div class="row g-3 mb-4 row-equal-height">
-            <div class="col-lg-6">
+        <div class="row g-2 g-md-3 mb-3 mb-md-4 row-equal-height">
+            <div class="col-12 col-lg-6">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-calendar-week"></i>
-                        Ventes par jour de semaine
+                        <span class="d-none d-sm-inline">Ventes par jour</span>
+                        <span class="d-inline d-sm-none">Par jour</span>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 200px;">
                         <canvas id="dailyChart"></canvas>
                     </div>
                 </div>
             </div>
             
-            <div class="col-lg-6">
+            <div class="col-12 col-lg-6">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-chart-pie"></i>
-                        Répartition par catégorie
+                        <span class="d-none d-sm-inline">Par catégorie</span>
+                        <span class="d-inline d-sm-none">Catégories</span>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 200px;">
                         <canvas id="categoryChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Performance par caissier - AVEC PHOTOS -->
-        <div class="row g-3 mb-4">
+        <!-- Performance par caissier -->
+        <div class="row g-2 g-md-3 mb-3 mb-md-4">
             <div class="col-12">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-users"></i>
                         Performance par utilisateur
                     </div>
@@ -702,11 +810,11 @@
                             <thead>
                                 <tr>
                                     <th>Utilisateur</th>
-                                    <th class="text-end">Ventes</th>
-                                    <th class="text-end">Articles</th>
-                                    <th class="text-end">CA ({{ currency }})</th>
-                                    <th class="text-end">Panier moyen</th>
-                                    <th class="text-end">% du CA</th>
+                                    <th class="text-end d-none d-sm-table-cell">Ventes</th>
+                                    <th class="text-end d-none d-md-table-cell">Articles</th>
+                                    <th class="text-end">CA</th>
+                                    <th class="text-end d-none d-lg-table-cell">Panier</th>
+                                    <th class="text-end">%</th>
                                 </tr>
                             </thead>
                             <tbody id="cashierList">
@@ -726,32 +834,32 @@
                                                     </div>
                                                 {% endif %}
                                                 <div>
-                                                    <strong>{{ cashier.cashier_name }}</strong>
+                                                    <strong class="small">{{ cashier.cashier_name|slice(0, 12) }}{% if cashier.cashier_name|length > 12 %}...{% endif %}</strong>
                                                     {% if cashier.role %}
-                                                        <br><small class="text-muted">{{ cashier.role }}</small>
+                                                        <br><small class="text-muted" style="font-size:0.5rem;">{{ cashier.role|slice(0, 10) }}</small>
                                                     {% endif %}
                                                 </div>
                                             </div>
-                                         </div>
-                                        <td class="text-end">{{ cashier.orders_count|number_format(0, ',', ' ') }}</div>
-                                        <td class="text-end">{{ cashier.total_items|number_format(0, ',', ' ') }}</div>
-                                        <td class="text-end fw-semibold">{{ cashier.total_revenue|number_format(0, ',', ' ') }}</div>
-                                        <td class="text-end">{{ cashier.average_basket|number_format(0, ',', ' ') }}</div>
+                                        </td>
+                                        <td class="text-end d-none d-sm-table-cell">{{ cashier.orders_count|number_format(0, ',', ' ') }}</td>
+                                        <td class="text-end d-none d-md-table-cell">{{ cashier.total_items|number_format(0, ',', ' ') }}</td>
+                                        <td class="text-end fw-semibold">{{ cashier.total_revenue|number_format(0, ',', ' ') }}</td>
+                                        <td class="text-end d-none d-lg-table-cell">{{ cashier.average_basket|number_format(0, ',', ' ') }}</td>
                                         <td class="text-end">
-                                            <div class="d-flex align-items-center justify-content-end gap-2">
-                                                <span>{{ cashier.percentage }}%</span>
-                                                <div class="progress-custom" style="width: 80px;">
+                                            <div class="d-flex align-items-center justify-content-end gap-1">
+                                                <span style="font-size:0.55rem;">{{ cashier.percentage }}%</span>
+                                                <div class="progress-custom" style="width: 40px;">
                                                     <div class="progress-bar-custom bg-primary" style="width: {{ cashier.percentage }}%"></div>
                                                 </div>
                                             </div>
-                                         </div>
+                                        </td>
                                     </tr>
                                 {% else %}
                                     <tr>
                                         <td colspan="6" class="text-center py-4 text-muted">
                                             <i class="fas fa-users fa-2x mb-2 d-block"></i>
                                             Aucune donnée disponible
-                                         </div>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -836,11 +944,11 @@ function initTimelineChart() {
                 data: data,
                 borderColor: borderColor,
                 backgroundColor: backgroundColor,
-                borderWidth: 3,
+                borderWidth: 2,
                 fill: true,
                 tension: 0.4,
-                pointRadius: 4,
-                pointHoverRadius: 6,
+                pointRadius: 3,
+                pointHoverRadius: 5,
                 pointBackgroundColor: borderColor,
                 pointBorderColor: 'white'
             }]
@@ -860,13 +968,14 @@ function initTimelineChart() {
                         }
                     }
                 },
-                legend: { position: 'top' }
+                legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } }
             },
             scales: {
                 y: {
                     beginAtZero: true,
-                    grid: { display: true },
+                    grid: { display: true, drawBorder: false },
                     ticks: {
+                        font: { size: 9 },
                         callback: function(value) {
                             if (currentChartType !== 'orders') {
                                 return new Intl.NumberFormat('fr-FR').format(value) + ' {{ currency }}';
@@ -875,7 +984,10 @@ function initTimelineChart() {
                         }
                     }
                 },
-                x: { grid: { display: false } }
+                x: { 
+                    grid: { display: false },
+                    ticks: { font: { size: 8 } }
+                }
             }
         }
     });
@@ -910,7 +1022,10 @@ function initPaymentChart() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'bottom' },
+                legend: { 
+                    position: 'bottom',
+                    labels: { boxWidth: 10, font: { size: 9 }, padding: 8 }
+                },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -946,7 +1061,7 @@ function initHourlyChart() {
                 backgroundColor: 'rgba(4, 99, 241, 0.7)',
                 borderColor: '#0463f1',
                 borderWidth: 1,
-                borderRadius: 8
+                borderRadius: 4
             }]
         },
         options: {
@@ -960,15 +1075,24 @@ function initHourlyChart() {
                         }
                     }
                 },
-                legend: { position: 'top' }
+                legend: { 
+                    position: 'top',
+                    labels: { boxWidth: 10, font: { size: 9 } }
+                }
             },
             scales: {
                 y: {
                     beginAtZero: true,
-                    title: { display: true, text: 'Nombre de ventes' },
-                    ticks: { stepSize: 1 }
+                    title: { display: true, text: 'Ventes', font: { size: 9 } },
+                    ticks: { 
+                        stepSize: 1,
+                        font: { size: 8 }
+                    }
                 },
-                x: { title: { display: true, text: 'Heure' } }
+                x: { 
+                    title: { display: true, text: 'Heure', font: { size: 9 } },
+                    ticks: { font: { size: 8 } }
+                }
             }
         }
     });
@@ -994,7 +1118,7 @@ function initDailyChart() {
                 backgroundColor: 'rgba(16, 185, 129, 0.7)',
                 borderColor: '#10b981',
                 borderWidth: 1,
-                borderRadius: 8
+                borderRadius: 4
             }]
         },
         options: {
@@ -1008,15 +1132,24 @@ function initDailyChart() {
                         }
                     }
                 },
-                legend: { position: 'top' }
+                legend: { 
+                    position: 'top',
+                    labels: { boxWidth: 10, font: { size: 9 } }
+                }
             },
             scales: {
                 y: {
                     beginAtZero: true,
-                    title: { display: true, text: 'Nombre de ventes' },
-                    ticks: { stepSize: 1 }
+                    title: { display: true, text: 'Ventes', font: { size: 9 } },
+                    ticks: { 
+                        stepSize: 1,
+                        font: { size: 8 }
+                    }
                 },
-                x: { title: { display: true, text: 'Jour' } }
+                x: { 
+                    title: { display: true, text: 'Jour', font: { size: 9 } },
+                    ticks: { font: { size: 8 } }
+                }
             }
         }
     });
@@ -1047,7 +1180,10 @@ function initCategoryChart() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'right' },
+                    legend: { 
+                        position: 'right',
+                        labels: { boxWidth: 10, font: { size: 9 }, padding: 6 }
+                    },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
@@ -1099,7 +1235,6 @@ async function applyFilters() {
 }
 
 function updateDashboard(data) {
-    // Mettre à jour les KPI
     if (data.kpis) {
         const kpiRevenue = document.getElementById('kpiRevenue');
         if (kpiRevenue) kpiRevenue.textContent = new Intl.NumberFormat('fr-FR').format(data.kpis.revenue || 0);
@@ -1114,7 +1249,6 @@ function updateDashboard(data) {
         if (kpiDiscounts) kpiDiscounts.textContent = new Intl.NumberFormat('fr-FR').format(data.kpis.total_discount || 0);
     }
     
-    // Mettre à jour les graphiques
     if (data.timeline && data.timeline.length > 0) {
         timelineData = data.timeline;
         initTimelineChart();
@@ -1139,17 +1273,14 @@ function updateDashboard(data) {
         }
     }
     
-    // Mettre à jour les tops ventes
     if (data.top_selling) {
         updateTopSelling(data.top_selling);
     }
     
-    // Mettre à jour les promotions
     if (data.promotion_impact) {
         updatePromotionImpact(data.promotion_impact);
     }
     
-    // Mettre à jour les caissiers
     if (data.cashier_performance) {
         updateCashierPerformance(data.cashier_performance);
     }
@@ -1165,23 +1296,23 @@ function updateTopSelling(items) {
                 <td colspan="5" class="text-center py-4 text-muted">
                     <i class="fas fa-chart-line fa-2x mb-2 d-block"></i>
                     Aucune donnée disponible
-                 </div>
-             </>
+                </td>
+            </tr>
         `;
         return;
     }
     
-    container.innerHTML = items.map((item, index) => `
+    container.innerHTML = items.slice(0, 5).map((item, index) => `
         <tr>
-            <td>${index + 1}</div>
+            <td>${index + 1}</td>
             <td>
-                ${escapeHtml(item.name || '')}
-                ${item.recipe_name ? `<small class="text-muted d-block">${escapeHtml(item.recipe_name)}</small>` : ''}
-             </div>
-            <td class="text-end">${new Intl.NumberFormat('fr-FR').format(item.total_quantity || 0)}</div>
-            <td class="text-end fw-semibold">${new Intl.NumberFormat('fr-FR').format(item.total_revenue || 0)}</div>
-            <td class="text-end text-danger">${new Intl.NumberFormat('fr-FR').format(item.total_discount || 0)}</div>
-         </>
+                ${escapeHtml(item.name || '').slice(0, 18)}
+                ${item.recipe_name ? `<small class="text-muted d-block" style="font-size:0.5rem;">${escapeHtml(item.recipe_name).slice(0, 12)}</small>` : ''}
+            </td>
+            <td class="text-end d-none d-sm-table-cell">${new Intl.NumberFormat('fr-FR').format(item.total_quantity || 0)}</td>
+            <td class="text-end fw-semibold">${new Intl.NumberFormat('fr-FR').format(item.total_revenue || 0)}</td>
+            <td class="text-end text-danger d-none d-md-table-cell">${new Intl.NumberFormat('fr-FR').format(item.total_discount || 0)}</td>
+        </tr>
     `).join('');
 }
 
@@ -1211,8 +1342,8 @@ function updateCashierPerformance(cashiers) {
                 <td colspan="6" class="text-center py-4 text-muted">
                     <i class="fas fa-users fa-2x mb-2 d-block"></i>
                     Aucune donnée disponible
-                 </div>
-             </>
+                </td>
+            </tr>
         `;
         return;
     }
@@ -1232,24 +1363,24 @@ function updateCashierPerformance(cashiers) {
                         </div>`
                     }
                     <div>
-                        <strong>${escapeHtml(cashier.cashier_name)}</strong>
-                        ${cashier.role ? `<br><small class="text-muted">${escapeHtml(cashier.role)}</small>` : ''}
+                        <strong class="small">${escapeHtml(cashier.cashier_name).slice(0, 12)}</strong>
+                        ${cashier.role ? `<br><small class="text-muted" style="font-size:0.5rem;">${escapeHtml(cashier.role).slice(0, 10)}</small>` : ''}
                     </div>
                 </div>
-             </div>
-            <td class="text-end">${new Intl.NumberFormat('fr-FR').format(cashier.orders_count || 0)}</div>
-            <td class="text-end">${new Intl.NumberFormat('fr-FR').format(cashier.total_items || 0)}</div>
-            <td class="text-end fw-semibold">${new Intl.NumberFormat('fr-FR').format(cashier.total_revenue || 0)}</div>
-            <td class="text-end">${new Intl.NumberFormat('fr-FR').format(cashier.average_basket || 0)}</div>
+            </td>
+            <td class="text-end d-none d-sm-table-cell">${new Intl.NumberFormat('fr-FR').format(cashier.orders_count || 0)}</td>
+            <td class="text-end d-none d-md-table-cell">${new Intl.NumberFormat('fr-FR').format(cashier.total_items || 0)}</td>
+            <td class="text-end fw-semibold">${new Intl.NumberFormat('fr-FR').format(cashier.total_revenue || 0)}</td>
+            <td class="text-end d-none d-lg-table-cell">${new Intl.NumberFormat('fr-FR').format(cashier.average_basket || 0)}</td>
             <td class="text-end">
-                <div class="d-flex align-items-center justify-content-end gap-2">
-                    <span>${cashier.percentage || 0}%</span>
-                    <div class="progress-custom" style="width: 80px;">
+                <div class="d-flex align-items-center justify-content-end gap-1">
+                    <span style="font-size:0.55rem;">${cashier.percentage || 0}%</span>
+                    <div class="progress-custom" style="width: 40px;">
                         <div class="progress-bar-custom bg-primary" style="width: ${cashier.percentage || 0}%"></div>
                     </div>
                 </div>
-             </div>
-         </>
+            </td>
+        </tr>
     `).join('');
 }
 
@@ -1284,7 +1415,7 @@ function updateActiveFilters() {
     }
     
     container.innerHTML = activeFilters.map(filter => `
-        <span class="badge bg-secondary d-inline-flex align-items-center gap-2 py-2 px-3" style="cursor: pointer;" onclick="removeFilter('${filter.key}')">
+        <span class="badge bg-secondary d-inline-flex align-items-center gap-1 gap-sm-2 py-1 py-sm-2 px-2 px-sm-3" style="cursor: pointer; font-size:0.55rem;" onclick="removeFilter('${filter.key}')">
             <i class="fas fa-filter"></i>
             ${filter.label}
             <i class="fas fa-times ms-1"></i>
@@ -1300,8 +1431,6 @@ function removeFilter(key) {
         if (datePreset) datePreset.value = '';
         if (dateFrom) dateFrom.value = '';
         if (dateTo) dateTo.value = '';
-        if (dateFrom) dateFrom.disabled = false;
-        if (dateTo) dateTo.disabled = false;
     } else if (key === 'payment') {
         const paymentMethod = document.getElementById('paymentMethod');
         if (paymentMethod) paymentMethod.value = '';
@@ -1337,8 +1466,9 @@ function exportData() {
 
 function showNotification(message, type) {
     const notification = document.createElement('div');
-    notification.className = `position-fixed bottom-0 end-0 p-3 m-3 bg-${type === 'error' ? 'danger' : 'success'} text-white rounded shadow`;
+    notification.className = `position-fixed bottom-0 end-0 p-2 p-md-3 m-2 m-md-3 bg-${type === 'error' ? 'danger' : 'success'} text-white rounded shadow`;
     notification.style.zIndex = '9999';
+    notification.style.fontSize = '0.7rem';
     notification.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'} me-2"></i>${message}`;
     document.body.appendChild(notification);
     setTimeout(() => notification.remove(), 3000);

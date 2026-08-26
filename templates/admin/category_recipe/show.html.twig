@@ -6,38 +6,39 @@
 {% block body %}
 <div class="container-fluid px-4">
     <!-- En-tête avec navigation et actions -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <div class="w-100 w-md-auto">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ path('app_admin_category_recipe_index') }}" class="text-decoration-none">
-                            <i class="fas fa-utensils me-1"></i> Catégories de plats
+                            <i class="fas fa-utensils me-1"></i> <span class="d-none d-sm-inline">Catégories de plats</span>
+                            <span class="d-inline d-sm-none">Catégories</span>
                         </a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ category.name|u.truncate(20, '...') }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ category.name|u.truncate(15, '...') }}</li>
                 </ol>
             </nav>
             
-            <div class="d-flex align-items-center">
-                <a href="{{ path('app_admin_category_recipe_index') }}" class="btn btn-outline-secondary me-3 btn-hover-scale">
-                    <i class="fas fa-arrow-left me-1"></i> Retour
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <a href="{{ path('app_admin_category_recipe_index') }}" class="btn btn-outline-secondary btn-sm btn-hover-scale">
+                    <i class="fas fa-arrow-left me-1"></i> <span class="d-none d-sm-inline">Retour</span>
                 </a>
-                <h1 class="h3 mb-0 text-gray-800 slide-in-left">
-                    <i class="fas fa-utensils me-2"></i> {{ category.name }}
+                <h1 class="h4 h3-sm mb-0 text-gray-800 slide-in-left">
+                    <i class="fas fa-utensils me-2"></i> {{ category.name|u.truncate(20) }}
                 </h1>
             </div>
-            <p class="text-muted mt-2">Détails de la catégorie de plats</p>
+            <p class="text-muted mt-2 d-none d-sm-block">Détails de la catégorie de plats</p>
         </div>
-        <div class="btn-group float-up">
-            <a href="{{ path('app_admin_category_recipe_edit', {'id': category.id}) }}" class="btn btn-warning btn-hover-lift">
-                <i class="fas fa-edit me-2"></i> Modifier
+        <div class="btn-group float-up w-100 w-md-auto">
+            <a href="{{ path('app_admin_category_recipe_edit', {'id': category.id}) }}" class="btn btn-warning btn-sm btn-hover-lift flex-fill">
+                <i class="fas fa-edit me-1"></i> <span class="d-none d-sm-inline">Modifier</span>
             </a>
             <button type="button" 
-                    class="btn btn-danger btn-hover-lift"
+                    class="btn btn-danger btn-sm btn-hover-lift flex-fill"
                     data-bs-toggle="modal" 
                     data-bs-target="#deleteCategoryModal">
-                <i class="fas fa-trash me-2"></i> Supprimer
+                <i class="fas fa-trash me-1"></i> <span class="d-none d-sm-inline">Supprimer</span>
             </button>
         </div>
     </div>
@@ -57,36 +58,37 @@
         </div>
     {% endfor %}
 
-    <div class="row">
+    <div class="row g-3 g-md-4">
         <!-- Carte principale des informations -->
-        <div class="col-lg-8">
+        <div class="col-12 col-lg-8">
             <div class="card shadow-lg border-0 mb-4 card-hover">
-                <div class="card-header bg-gradient-primary text-white py-3">
+                <div class="card-header bg-gradient-primary text-white py-2 py-md-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-info-circle me-2"></i> Informations de la catégorie
+                        <h5 class="card-title mb-0 small">
+                            <i class="fas fa-info-circle me-2"></i> <span class="d-none d-sm-inline">Informations de la catégorie</span>
+                            <span class="d-inline d-sm-none">Infos</span>
                         </h5>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="row">
                         <!-- Image de la catégorie -->
-                        <div class="col-md-4 mb-4 mb-md-0">
+                        <div class="col-12 col-md-4 mb-3 mb-md-0">
                             <div class="text-center">
                                 {% if category.image %}
                                     <img src="{{ asset('uploads/categories_plats/' ~ category.image) }}" 
                                          alt="{{ category.name }}"
                                          class="img-fluid rounded shadow-lg mb-3 category-image"
-                                         style="max-height: 200px; object-fit: cover;">
+                                         style="max-height: 150px; max-width: 100%; object-fit: cover;">
                                 {% else %}
                                     <div class="bg-gradient-primary rounded d-flex align-items-center justify-content-center mb-3 category-placeholder"
-                                         style="height: 200px;">
-                                        <i class="fas fa-utensils fa-5x text-white"></i>
+                                         style="height: 150px;">
+                                        <i class="fas fa-utensils fa-4x text-white"></i>
                                     </div>
                                 {% endif %}
                                 
                                 <!-- Statut -->
-                                <div class="mb-3">
+                                <div class="mb-2">
                                     {% if category.isActive %}
                                         <span class="badge bg-success rounded-pill px-3 py-2">
                                             <i class="fas fa-toggle-on me-1"></i> Active
@@ -101,35 +103,35 @@
                         </div>
 
                         <!-- Détails -->
-                        <div class="col-md-8">
+                        <div class="col-12 col-md-8">
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <div class="info-label">
+                                    <div class="info-label small">
                                         <i class="fas fa-tag text-primary me-2"></i> Nom
                                     </div>
                                     <div class="info-value">{{ category.name }}</div>
                                 </div>
                                 
                                 <div class="info-item">
-                                    <div class="info-label">
+                                    <div class="info-label small">
                                         <i class="fas fa-link text-primary me-2"></i> Slug
                                     </div>
                                     <div class="info-value">
-                                        <code class="bg-light p-2 rounded">{{ category.slug }}</code>
+                                        <code class="bg-light p-1 rounded small">{{ category.slug }}</code>
                                     </div>
                                 </div>
                                 
                                 <div class="info-item">
-                                    <div class="info-label">
+                                    <div class="info-label small">
                                         <i class="fas fa-align-left text-primary me-2"></i> Description
                                     </div>
-                                    <div class="info-value">
+                                    <div class="info-value small">
                                         {{ category.description|default('Aucune description')|nl2br }}
                                     </div>
                                 </div>
                                 
                                 <div class="info-item">
-                                    <div class="info-label">
+                                    <div class="info-label small">
                                         <i class="fas fa-sitemap text-primary me-2"></i> Catégorie parente
                                     </div>
                                     <div class="info-value">
@@ -140,33 +142,33 @@
                                             </a>
                                         {% else %}
                                             <span class="badge bg-secondary">
-                                                <i class="fas fa-folder me-1"></i> Catégorie principale
+                                                <i class="fas fa-folder me-1"></i> Principale
                                             </span>
                                         {% endif %}
                                     </div>
                                 </div>
                                 
-                                <div class="info-item">
-                                    <div class="info-label">
+                                <div class="info-item d-none d-sm-block">
+                                    <div class="info-label small">
                                         <i class="fas fa-user text-primary me-2"></i> Créateur
                                     </div>
-                                    <div class="info-value">{{ category.user.email }}</div>
+                                    <div class="info-value small">{{ category.user.email }}</div>
                                 </div>
                                 
                                 <div class="info-item">
-                                    <div class="info-label">
+                                    <div class="info-label small">
                                         <i class="fas fa-calendar-plus text-primary me-2"></i> Créée le
                                     </div>
-                                    <div class="info-value">
+                                    <div class="info-value small">
                                         {{ category.createdAt|date('d/m/Y à H:i') }}
                                     </div>
                                 </div>
                                 
                                 <div class="info-item">
-                                    <div class="info-label">
+                                    <div class="info-label small">
                                         <i class="fas fa-calendar-edit text-primary me-2"></i> Modifiée le
                                     </div>
-                                    <div class="info-value">
+                                    <div class="info-value small">
                                         {% if category.updatedAt %}
                                             {{ category.updatedAt|date('d/m/Y à H:i') }}
                                         {% else %}
@@ -182,20 +184,20 @@
         </div>
 
         <!-- Carte des statistiques -->
-        <div class="col-lg-4">
-            <div class="card shadow-lg border-0 mb-4 card-hover">
-                <div class="card-header bg-gradient-info text-white py-3">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-chart-bar me-2"></i> Statistiques
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-lg border-0 mb-3 mb-md-4 card-hover">
+                <div class="card-header bg-gradient-info text-white py-2 py-md-3">
+                    <h5 class="card-title mb-0 small">
+                        <i class="fas fa-chart-bar me-2"></i> <span class="d-none d-sm-inline">Statistiques</span>
                     </h5>
                 </div>
-                <div class="card-body">
-                    <div class="text-center mb-4">
-                        <div class="display-4 text-primary mb-1">{{ category.recipes|length }}</div>
-                        <div class="text-muted">Plats dans cette catégorie</div>
+                <div class="card-body p-2 p-md-3">
+                    <div class="text-center mb-3">
+                        <div class="display-5 text-primary mb-1">{{ category.recipes|length }}</div>
+                        <div class="text-muted small">Plats dans cette catégorie</div>
                     </div>
                     
-                    <hr class="my-4">
+                    <hr class="my-3">
                     
                     <div class="stats-grid">
                         <div class="stat-item">
@@ -249,42 +251,42 @@
             
             <!-- Carte actions rapides -->
             <div class="card shadow-lg border-0 card-hover">
-                <div class="card-header bg-gradient-success text-white py-3">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-bolt me-2"></i> Actions rapides
+                <div class="card-header bg-gradient-success text-white py-2 py-md-3">
+                    <h5 class="card-title mb-0 small">
+                        <i class="fas fa-bolt me-2"></i> <span class="d-none d-sm-inline">Actions rapides</span>
                     </h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-grid gap-2">
                         <a href="{{ path('app_admin_category_recipe_edit', {'id': category.id}) }}" 
-                           class="btn btn-warning btn-lg">
-                            <i class="fas fa-edit me-2"></i> Modifier
+                           class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit me-1"></i> Modifier
                         </a>
 
                         {% if companyType == 'restaurant' %}
                             <a href="{{ path('app_restaurant_category_recipe_promotions', {'id': category.id}) }}" 
-                                class="btn btn-warning btn-lg">
+                                class="btn btn-warning btn-sm">
                                 <i class="fas fa-percent me-1"></i> Promotions
                             </a>
                         {% endif %}
                         
                         {% if category.children|length > 0 %}
                             <a href="{{ path('app_admin_category_recipe_index') }}?parent={{ category.id }}" 
-                               class="btn btn-info btn-lg">
-                                <i class="fas fa-eye me-2"></i> Voir les sous-catégories
+                               class="btn btn-info btn-sm">
+                                <i class="fas fa-eye me-1"></i> Voir les sous-catégories
                             </a>
                         {% endif %}
                         
                         {% if category.parent %}
                             <a href="{{ path('app_admin_category_recipe_show', {'id': category.parent.id}) }}" 
-                               class="btn btn-secondary btn-lg">
-                                <i class="fas fa-level-up-alt me-2"></i> Voir la catégorie parente
+                               class="btn btn-secondary btn-sm">
+                                <i class="fas fa-level-up-alt me-1"></i> Voir la catégorie parente
                             </a>
                         {% endif %}
                         
                         <a href="{{ path('app_admin_recipe_new') }}?category={{ category.id }}" 
-                           class="btn btn-primary btn-lg">
-                            <i class="fas fa-plus me-2"></i> Ajouter un plat
+                           class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus me-1"></i> Ajouter un plat
                         </a>
                     </div>
                 </div>
@@ -294,58 +296,66 @@
 
     <!-- Liste des plats dans cette catégorie -->
     <div class="card shadow-lg border-0 mb-4 card-hover">
-        <div class="card-header bg-gradient-primary text-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">
+        <div class="card-header bg-gradient-primary text-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="card-title mb-0 small">
                 <i class="fas fa-utensils me-2"></i> 
-                Plats dans cette catégorie 
+                <span class="d-none d-sm-inline">Plats dans cette catégorie</span>
+                <span class="d-inline d-sm-none">Plats</span>
                 <span class="badge bg-light text-dark ms-2">{{ category.recipes|length }}</span>
             </h5>
-            <a href="{{ path('app_admin_recipe_new') }}?category={{ category.id }}" class="btn btn-light btn-sm">
-                <i class="fas fa-plus me-1"></i> Ajouter un plat
+            <a href="{{ path('app_admin_recipe_new') }}?category={{ category.id }}" class="btn btn-light btn-sm flex-grow-1 flex-md-grow-0">
+                <i class="fas fa-plus me-1"></i> <span class="d-none d-sm-inline">Ajouter un plat</span>
             </a>
         </div>
         
-        <div class="card-body">
+        <div class="card-body p-0 p-md-3">
             {% if category.recipes|length > 0 %}
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                              <tr>
-                                <th width="80">Image</th>
+                                <th width="60" class="d-none d-sm-table-cell">Image</th>
                                 <th>Nom</th>
-                                <th>Description</th>
-                                <th>Prix de vente</th>
-                                <th>Statut</th>
-                                <th class="text-end">Actions</th>
+                                <th class="d-none d-md-table-cell">Description</th>
+                                <th class="text-center">Prix</th>
+                                <th class="text-center d-none d-sm-table-cell">Statut</th>
+                                <th class="text-center">Actions</th>
                              </tr>
                         </thead>
                         <tbody>
                             {% for recipe in category.recipes %}
                                 <tr class="recipe-row">
-                                    <td>
+                                    <td class="d-none d-sm-table-cell">
                                         {% if recipe.image %}
                                             <img src="{{ asset('uploads/images_plats/' ~ recipe.image) }}" 
                                                  alt="{{ recipe.name }}"
                                                  class="img-thumbnail" 
-                                                 style="width: 60px; height: 60px; object-fit: cover;">
+                                                 style="width: 50px; height: 50px; object-fit: cover;">
                                         {% else %}
                                             <div class="bg-light d-flex align-items-center justify-content-center" 
-                                                 style="width: 60px; height: 60px;">
+                                                 style="width: 50px; height: 50px;">
                                                 <i class="fas fa-utensils text-muted"></i>
                                             </div>
                                         {% endif %}
                                     </td>
-                                    <td><strong>{{ recipe.name }}</strong></td>
-                                    <td>{{ recipe.description|u.truncate(50, '...') }}</td>
-                                    <td><span class="fw-bold text-primary">{{ recipe.sellingPrice|number_format(0, ',', ' ') }} FCFA</span></td>
                                     <td>
+                                        <strong>{{ recipe.name|u.truncate(20) }}</strong>
+                                        <div class="d-sm-none">
+                                            <span class="badge {% if recipe.isActive %}bg-success{% else %}bg-danger{% endif %}">
+                                                {{ recipe.isActive ? 'Actif' : 'Inactif' }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="d-none d-md-table-cell">{{ recipe.description|u.truncate(40, '...') }}</td>
+                                    <td class="text-center"><span class="fw-bold text-primary">{{ recipe.sellingPrice|number_format(0, ',', ' ') }}</span></td>
+                                    <td class="text-center d-none d-sm-table-cell">
                                         {% if recipe.isActive %}
                                             <span class="badge bg-success">Actif</span>
                                         {% else %}
                                             <span class="badge bg-danger">Inactif</span>
                                         {% endif %}
                                     </td>
-                                    <td class="text-end">
+                                    <td class="text-center">
                                         <div class="btn-group btn-group-sm">
                                             <a href="{{ path('app_admin_recipe_show', {'id': recipe.id}) }}" 
                                                class="btn btn-outline-info" title="Voir">
@@ -363,11 +373,11 @@
                     </table>
                 </div>
             {% else %}
-                <div class="text-center py-5">
-                    <i class="fas fa-utensils fa-4x text-muted mb-3"></i>
+                <div class="text-center py-4 py-md-5">
+                    <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
                     <h5 class="text-muted">Aucun plat dans cette catégorie</h5>
-                    <p class="text-muted mb-4">Commencez par ajouter des plats à cette catégorie</p>
-                    <a href="{{ path('app_admin_recipe_new') }}?category={{ category.id }}" class="btn btn-primary">
+                    <p class="text-muted small mb-3">Commencez par ajouter des plats à cette catégorie</p>
+                    <a href="{{ path('app_admin_recipe_new') }}?category={{ category.id }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus me-1"></i> Ajouter un plat
                     </a>
                 </div>
@@ -378,52 +388,53 @@
     <!-- Liste des sous-catégories -->
     {% if category.children|length > 0 %}
     <div class="card shadow-lg border-0 card-hover">
-        <div class="card-header bg-gradient-info text-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">
+        <div class="card-header bg-gradient-info text-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="card-title mb-0 small">
                 <i class="fas fa-sitemap me-2"></i> 
-                Sous-catégories 
+                <span class="d-none d-sm-inline">Sous-catégories</span>
+                <span class="d-inline d-sm-none">Sous-catég.</span>
                 <span class="badge bg-light text-dark ms-2">{{ category.children|length }}</span>
             </h5>
-            <a href="{{ path('app_admin_category_recipe_new') }}?parent={{ category.id }}" class="btn btn-light btn-sm">
-                <i class="fas fa-plus me-1"></i> Ajouter une sous-catégorie
+            <a href="{{ path('app_admin_category_recipe_new') }}?parent={{ category.id }}" class="btn btn-light btn-sm flex-grow-1 flex-md-grow-0">
+                <i class="fas fa-plus me-1"></i> <span class="d-none d-sm-inline">Ajouter une sous-catégorie</span>
             </a>
         </div>
         
-        <div class="card-body">
-            <div class="row">
+        <div class="card-body p-2 p-md-3">
+            <div class="row g-2 g-md-3">
                 {% for child in category.children %}
-                <div class="col-md-6 col-lg-4 mb-3">
+                <div class="col-12 col-sm-6 col-lg-4">
                     <div class="card border-0 bg-light h-100 card-hover-sm">
-                        <div class="card-body">
+                        <div class="card-body p-2 p-md-3">
                             <div class="d-flex align-items-start">
                                 {% if child.image %}
                                     <img src="{{ asset('uploads/categories_plats/' ~ child.image) }}" 
                                          alt="{{ child.name }}"
-                                         class="rounded me-3"
-                                         style="width: 60px; height: 60px; object-fit: cover;">
+                                         class="rounded me-2 me-md-3"
+                                         style="width: 50px; height: 50px; object-fit: cover;">
                                 {% else %}
-                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center me-3"
-                                         style="width: 60px; height: 60px;">
+                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center me-2 me-md-3"
+                                         style="width: 50px; height: 50px;">
                                         <i class="fas fa-folder text-white"></i>
                                     </div>
                                 {% endif %}
                                 <div class="flex-grow-1">
-                                    <h6 class="mb-1">{{ child.name }}</h6>
-                                    <div class="d-flex align-items-center mb-2">
+                                    <h6 class="mb-1 small">{{ child.name|u.truncate(18) }}</h6>
+                                    <div class="d-flex align-items-center flex-wrap gap-1 mb-1">
                                         {% if child.isActive %}
-                                            <span class="badge bg-success me-2">Active</span>
+                                            <span class="badge bg-success" style="font-size: 8px;">Active</span>
                                         {% else %}
-                                            <span class="badge bg-danger me-2">Inactive</span>
+                                            <span class="badge bg-danger" style="font-size: 8px;">Inactive</span>
                                         {% endif %}
-                                        <span class="badge bg-primary">{{ child.recipes|length }} plats</span>
+                                        <span class="badge bg-primary" style="font-size: 8px;">{{ child.recipes|length }} plats</span>
                                     </div>
                                     <div class="btn-group btn-group-sm">
                                         <a href="{{ path('app_admin_category_recipe_show', {'id': child.id}) }}" 
-                                           class="btn btn-outline-info btn-sm">
+                                           class="btn btn-outline-info btn-sm" style="font-size: 0.6rem; padding: 0.1rem 0.3rem;">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <a href="{{ path('app_admin_category_recipe_edit', {'id': child.id}) }}" 
-                                           class="btn btn-outline-warning btn-sm">
+                                           class="btn btn-outline-warning btn-sm" style="font-size: 0.6rem; padding: 0.1rem 0.3rem;">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     </div>
@@ -443,23 +454,23 @@
 <div class="modal fade" id="deleteCategoryModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-exclamation-triangle me-2"></i> Confirmation de suppression
+            <div class="modal-header bg-danger text-white py-2">
+                <h5 class="modal-title small">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Confirmation
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-3">
                 <div id="deleteCategoryModalContent"></div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <div class="modal-footer flex-wrap gap-2">
+                <button type="button" class="btn btn-outline-secondary flex-grow-1 flex-md-grow-0 btn-sm" data-bs-dismiss="modal">
                     <i class="fas fa-times me-2"></i> Annuler
                 </button>
                 <form id="deleteCategoryForm" method="post" action="">
                     <input type="hidden" name="_token" id="deleteCategoryToken" value="">
-                    <button type="submit" class="btn btn-danger" id="deleteCategoryConfirmBtn">
-                        <i class="fas fa-trash me-2"></i> Supprimer définitivement
+                    <button type="submit" class="btn btn-danger flex-grow-1 flex-md-grow-0 btn-sm" id="deleteCategoryConfirmBtn">
+                        <i class="fas fa-trash me-2"></i> Supprimer
                     </button>
                 </form>
             </div>
@@ -522,10 +533,10 @@
 }
 .info-grid {
     display: grid;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 .info-item {
-    padding-bottom: 1rem;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid #f0f0f0;
 }
 .info-item:last-child {
@@ -534,24 +545,25 @@
 .info-label {
     font-weight: 600;
     color: #495057;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.15rem;
     display: flex;
     align-items: center;
+    font-size: 0.75rem;
 }
 .info-value {
     color: #212529;
-    font-size: 1rem;
+    font-size: 0.85rem;
 }
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 0.5rem;
 }
 .stat-item {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 0.75rem;
+    gap: 0.5rem;
+    padding: 0.5rem;
     background: #f8f9fa;
     border-radius: 10px;
     transition: all 0.3s ease;
@@ -561,27 +573,29 @@
     transform: translateY(-2px);
 }
 .stat-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
+    flex-shrink: 0;
 }
 .stat-content {
     flex: 1;
+    min-width: 0;
 }
 .stat-number {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #212529;
     line-height: 1;
 }
 .stat-label {
-    font-size: 0.85rem;
+    font-size: 0.6rem;
     color: #6c757d;
-    margin-top: 0.25rem;
+    margin-top: 0.1rem;
 }
 .recipe-row:hover {
     background-color: rgba(102, 126, 234, 0.05);
@@ -592,9 +606,11 @@
     color: #495057;
     background-color: #f8f9fa;
     border-bottom: 2px solid #dee2e6;
+    font-size: 0.75rem;
 }
 .table td {
     vertical-align: middle;
+    font-size: 0.8rem;
 }
 .badge {
     font-weight: 500;
@@ -619,6 +635,7 @@
     background-color: transparent;
     padding-left: 0;
     margin-bottom: 0.5rem;
+    font-size: 0.8rem;
 }
 .breadcrumb-item a {
     color: #667eea;
@@ -631,23 +648,171 @@
 .breadcrumb-item.active {
     color: #6c757d;
 }
+
+/* ✅ RESPONSIVE */
+@media (max-width: 992px) {
+    .container-fluid {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+}
+
 @media (max-width: 768px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
+    .container-fluid {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
     }
-    .info-item {
-        padding: 0.5rem 0;
-    }
-    .card-header .btn-sm {
-        margin-top: 0.5rem;
-        width: 100%;
-    }
-    .btn-group {
+    
+    .d-flex.justify-content-between.align-items-center {
         flex-direction: column;
-        gap: 0.5rem;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+    }
+    
+    .btn-group {
+        flex-direction: row;
+        width: 100%;
     }
     .btn-group .btn {
-        width: 100%;
+        flex: 1;
+        font-size: 0.75rem;
+        padding: 0.3rem 0.5rem;
+    }
+    
+    .h4.h3-sm {
+        font-size: 1rem !important;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.35rem;
+    }
+    
+    .stat-item {
+        padding: 0.35rem;
+    }
+    .stat-number {
+        font-size: 0.9rem;
+    }
+    .stat-label {
+        font-size: 0.5rem;
+    }
+    .stat-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+    
+    .display-5 {
+        font-size: 2rem !important;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .table th, .table td {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.4rem;
+    }
+    
+    .table .btn-group .btn {
+        padding: 0.1rem 0.25rem;
+        font-size: 0.6rem;
+    }
+    
+    .card-header .btn-sm {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .modal .btn-sm {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container-fluid {
+        padding-left: 0.25rem !important;
+        padding-right: 0.25rem !important;
+    }
+    
+    .btn-group .btn {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.3rem;
+    }
+    
+    .h4.h3-sm {
+        font-size: 0.85rem !important;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.25rem;
+    }
+    
+    .stat-item {
+        padding: 0.25rem;
+    }
+    .stat-number {
+        font-size: 0.8rem;
+    }
+    .stat-label {
+        font-size: 0.45rem;
+    }
+    .stat-icon {
+        width: 24px;
+        height: 24px;
+        font-size: 0.6rem;
+    }
+    
+    .display-5 {
+        font-size: 1.5rem !important;
+    }
+    
+    .table th, .table td {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.25rem;
+    }
+    
+    .table .btn-group .btn {
+        padding: 0.05rem 0.15rem;
+        font-size: 0.5rem;
+    }
+    
+    .category-image-placeholder {
+        height: 120px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .col-12.col-sm-6.col-lg-4 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+/* Désactiver hover sur mobile */
+@media (max-width: 768px) {
+    .card-hover:hover {
+        transform: none !important;
+    }
+    .card-hover-sm:hover {
+        transform: none !important;
+    }
+    .btn-hover-scale:hover {
+        transform: none !important;
+    }
+    .btn-hover-lift:hover {
+        transform: none !important;
+    }
+    .float-up {
+        animation: none !important;
+    }
+    .category-image:hover {
+        transform: none !important;
     }
 }
 </style>
@@ -685,13 +850,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 message += ` Pour confirmer la suppression, saisissez exactement le nom "${name}".`;
                 modalContent.innerHTML = `
-                    <div class="alert alert-warning">
+                    <div class="alert alert-warning small">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         ${message}
                     </div>
                     <div class="input-group mt-3">
                         <span class="input-group-text"><i class="fas fa-tag"></i></span>
-                        <input type="text" id="confirmCategoryName" class="form-control" placeholder="Saisissez le nom de la catégorie pour confirmer">
+                        <input type="text" id="confirmCategoryName" class="form-control form-control-sm" placeholder="Saisissez le nom de la catégorie">
                     </div>
                 `;
                 deleteConfirmBtn.disabled = true;
@@ -705,7 +870,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 modalContent.innerHTML = `
                     <p>Êtes-vous sûr de vouloir supprimer la catégorie <strong>"${name}"</strong> ?</p>
-                    <p class="text-danger"><i class="fas fa-exclamation-circle me-1"></i>Cette action est irréversible.</p>
+                    <p class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i>Cette action est irréversible.</p>
                 `;
                 deleteConfirmBtn.disabled = false;
             }

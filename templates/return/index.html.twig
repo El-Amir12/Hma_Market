@@ -14,34 +14,71 @@
         border-radius: 16px;
         transition: transform 0.2s, box-shadow 0.2s;
         cursor: pointer;
+        height: 100%;
     }
     .stats-card:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
     .stats-card .card-body {
-        padding: 1rem;
+        padding: 0.75rem;
     }
-    .stats-card i {
-        opacity: 0.9;
-        color: #0463f1;
-    }
-    .stats-card .text-warning i {
-        color: #f59e0b;
-    }
-    .stats-card .text-primary i {
-        color: #0463f1;
-    }
-    .stats-card .text-success i {
-        color: #10b981;
+    @media (min-width: 768px) {
+        .stats-card .card-body {
+            padding: 1rem;
+        }
     }
     
+    /* ✅ Icônes en blanc avec fond coloré */
+    .stats-card .icon-wrapper {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    @media (min-width: 768px) {
+        .stats-card .icon-wrapper {
+            width: 50px;
+            height: 50px;
+        }
+    }
+    .stats-card .icon-wrapper i {
+        color: white !important;
+        font-size: 1.1rem;
+    }
+    @media (min-width: 768px) {
+        .stats-card .icon-wrapper i {
+            font-size: 1.5rem;
+        }
+    }
+    
+    .icon-wrapper-warning { background: #f59e0b; }
+    .icon-wrapper-primary { background: #0463f1; }
+    .icon-wrapper-success { background: #10b981; }
+    .icon-wrapper-danger { background: #dc2626; }
+    .icon-wrapper-secondary { background: #6c757d; }
+    .icon-wrapper-info { background: #0ea5e9; }
+    
+    .stats-card .text-warning { color: #f59e0b !important; }
+    .stats-card .text-primary { color: #0463f1 !important; }
+    .stats-card .text-success { color: #10b981 !important; }
+    .stats-card .text-danger { color: #dc2626 !important; }
+    
     .status-badge {
-        padding: 0.25rem 0.75rem;
+        padding: 0.2rem 0.5rem;
         border-radius: 20px;
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         font-weight: 600;
         display: inline-block;
+    }
+    @media (min-width: 768px) {
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+        }
     }
     .status-pending { background: #fef3c7; color: #d97706; }
     .status-approved { background: #dbeafe; color: #2563eb; }
@@ -51,23 +88,36 @@
     .reason-badge {
         background: #f3f4f6;
         color: #4b5563;
-        padding: 0.25rem 0.75rem;
+        padding: 0.15rem 0.5rem;
         border-radius: 20px;
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         font-weight: 500;
         display: inline-block;
         white-space: normal;
         word-break: break-word;
-        max-width: 150px;
-        line-height: 1.3;
+        max-width: 100px;
+        line-height: 1.2;
+    }
+    @media (min-width: 768px) {
+        .reason-badge {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            max-width: 150px;
+        }
     }
     
     .filter-section {
         background: white;
         border-radius: 16px;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
         border: 1px solid #e5e7eb;
+    }
+    @media (min-width: 768px) {
+        .filter-section {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
     }
     .return-row {
         cursor: pointer;
@@ -108,8 +158,8 @@
     }
     
     .confirm-modal-icon {
-        width: 70px;
-        height: 70px;
+        width: 60px;
+        height: 60px;
         background: #e8f4fd;
         border-radius: 50%;
         display: flex;
@@ -117,9 +167,20 @@
         justify-content: center;
         margin: 0 auto 1rem;
     }
+    @media (min-width: 768px) {
+        .confirm-modal-icon {
+            width: 70px;
+            height: 70px;
+        }
+    }
     .confirm-modal-icon i {
-        font-size: 2rem;
+        font-size: 1.5rem;
         color: #0463f1;
+    }
+    @media (min-width: 768px) {
+        .confirm-modal-icon i {
+            font-size: 2rem;
+        }
     }
     .confirm-modal-icon.warning {
         background: #fef3c7;
@@ -141,32 +202,26 @@
     }
 
     .returns-table {
-        min-width: 1000px;
+        min-width: 800px;
+    }
+    @media (min-width: 1200px) {
+        .returns-table {
+            min-width: 1000px;
+        }
     }
     .returns-table th,
     .returns-table td {
         vertical-align: middle;
+        padding: 0.4rem 0.4rem;
+        font-size: 0.75rem;
     }
-    .returns-table th:nth-child(1),
-    .returns-table td:nth-child(1) { min-width: 40px; }
-    .returns-table th:nth-child(2),
-    .returns-table td:nth-child(2) { min-width: 130px; }
-    .returns-table th:nth-child(3),
-    .returns-table td:nth-child(3) { min-width: 160px; }
-    .returns-table th:nth-child(4),
-    .returns-table td:nth-child(4) { min-width: 180px; }
-    .returns-table th:nth-child(5),
-    .returns-table td:nth-child(5) { min-width: 100px; }
-    .returns-table th:nth-child(6),
-    .returns-table td:nth-child(6) { min-width: 140px; }
-    .returns-table th:nth-child(7),
-    .returns-table td:nth-child(7) { min-width: 150px; }
-    .returns-table th:nth-child(8),
-    .returns-table td:nth-child(8) { min-width: 160px; }
-    .returns-table th:nth-child(9),
-    .returns-table td:nth-child(9) { min-width: 110px; }
-    .returns-table th:nth-child(10),
-    .returns-table td:nth-child(10) { min-width: 150px; }
+    @media (min-width: 768px) {
+        .returns-table th,
+        .returns-table td {
+            padding: 0.6rem 0.75rem;
+            font-size: 0.85rem;
+        }
+    }
 
     .customer-info {
         white-space: normal;
@@ -175,160 +230,297 @@
     .customer-name {
         font-weight: 500;
         margin-bottom: 0.25rem;
+        font-size: 0.75rem;
+    }
+    @media (min-width: 768px) {
+        .customer-name {
+            font-size: 0.9rem;
+        }
     }
     .customer-phone {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
         color: #6c757d;
     }
+    @media (min-width: 768px) {
+        .customer-phone {
+            font-size: 0.7rem;
+        }
+    }
     .customer-phone i {
-        font-size: 0.65rem;
+        font-size: 0.55rem;
+    }
+    @media (min-width: 768px) {
+        .customer-phone i {
+            font-size: 0.65rem;
+        }
     }
 
     .btn-group {
         display: flex;
-        gap: 0.25rem;
+        gap: 0.15rem;
+        flex-wrap: wrap;
+    }
+    @media (min-width: 768px) {
+        .btn-group {
+            gap: 0.25rem;
+        }
     }
     .btn-group .btn {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
+        padding: 0.15rem 0.3rem;
+        font-size: 0.6rem;
+    }
+    @media (min-width: 768px) {
+        .btn-group .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+    }
+    .btn-group .btn i {
+        font-size: 0.7rem;
+    }
+    @media (min-width: 768px) {
+        .btn-group .btn i {
+            font-size: 0.9rem;
+        }
     }
     
-    /* Style pour la colonne checkbox */
     .checkbox-col {
         cursor: pointer;
     }
     .select-all-checkbox, .return-checkbox {
-        width: 18px;
-        height: 18px;
+        width: 14px;
+        height: 14px;
         cursor: pointer;
     }
-
-    /* À ajouter dans les styles de index.html.twig */
-    .returns-table {
-        white-space: nowrap;  /* Empêche le retour à la ligne dans les cellules */
+    @media (min-width: 768px) {
+        .select-all-checkbox, .return-checkbox {
+            width: 18px;
+            height: 18px;
+        }
     }
+
     .returns-table td,
     .returns-table th {
-        white-space: nowrap;  /* Force le texte à rester sur une ligne */
+        white-space: nowrap;
     }
     .returns-table .customer-info {
-        white-space: normal;  /* Exception pour le nom du client qui peut être long */
-        min-width: 180px;
-        max-width: 200px;
-    }
-    .returns-table .reason-badge {
-        white-space: normal;  /* Exception pour le motif qui peut être long */
+        white-space: normal;
+        min-width: 120px;
         max-width: 150px;
     }
-    
-    /* Toolbar d'actions */
-    .actions-toolbar {
-        display: flex;
-        gap: 10px;
-        align-items: center;
+    @media (min-width: 768px) {
+        .returns-table .customer-info {
+            min-width: 180px;
+            max-width: 200px;
+        }
+    }
+    .returns-table .reason-badge {
+        white-space: normal;
+        max-width: 80px;
+    }
+    @media (min-width: 768px) {
+        .returns-table .reason-badge {
+            max-width: 150px;
+        }
     }
     
-    @media (max-width: 1200px) {
-        .table-responsive {
-            overflow-x: auto;
+    .actions-toolbar {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    @media (min-width: 768px) {
+        .actions-toolbar {
+            gap: 10px;
+        }
+    }
+
+    /* Responsive container */
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+        }
+        .card-body {
+            padding: 0.5rem !important;
+        }
+        .h2 {
+            font-size: 1.3rem !important;
+        }
+        .h3 {
+            font-size: 1.1rem !important;
+        }
+        .h6 {
+            font-size: 0.7rem !important;
+        }
+        .btn {
+            font-size: 0.65rem !important;
+            padding: 0.2rem 0.5rem !important;
+        }
+        .btn i {
+            font-size: 0.7rem !important;
+        }
+        .form-control, .form-select {
+            font-size: 0.75rem !important;
+            padding: 0.2rem 0.5rem !important;
+        }
+        .form-label {
+            font-size: 0.65rem !important;
+        }
+        .modal-body {
+            padding: 0.75rem !important;
+        }
+        .modal-footer {
+            padding: 0.5rem !important;
+        }
+        .modal-header {
+            padding: 0.5rem 0.75rem !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .stats-card .card-body {
+            padding: 0.5rem !important;
+        }
+        .stats-card .icon-wrapper {
+            width: 32px;
+            height: 32px;
+        }
+        .stats-card .icon-wrapper i {
+            font-size: 0.9rem !important;
+        }
+        .stats-card h3 {
+            font-size: 1.1rem !important;
+        }
+        .stats-card h6 {
+            font-size: 0.6rem !important;
+        }
+    }
+
+    /* Modal responsive */
+    @media (max-width: 576px) {
+        .modal-dialog {
+            margin: 0.5rem;
+        }
+        .modal-content {
+            border-radius: 12px !important;
+        }
+    }
+
+    /* Pagination responsive */
+    @media (max-width: 576px) {
+        .pagination .page-link {
+            padding: 0.15rem 0.3rem;
+            font-size: 0.65rem;
         }
     }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
+<div class="container-fluid px-2 px-md-4 py-3 py-md-4">
     <!-- En-tête -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 mb-md-4 flex-wrap gap-2">
         <div>
-            <h1 class="h2 mb-1">
+            <h1 class="h4 h-md-2 mb-1">
                 <i class="fas fa-undo-alt text-primary me-2"></i>
                 Retours & Avoirs
             </h1>
-            <p class="text-muted">Gérez les demandes de retour et les avoirs clients</p>
+            <p class="text-muted small d-none d-sm-block">Gérez les demandes de retour et les avoirs clients</p>
         </div>
         <div class="actions-toolbar">
-            <button type="button" class="btn btn-outline-warning quick-filter-btn" id="filterPendingBtn">
-                <i class="fas fa-clock me-1"></i> En attente
+            <button type="button" class="btn btn-outline-warning btn-sm quick-filter-btn" id="filterPendingBtn">
+                <i class="fas fa-clock me-1"></i> <span class="d-none d-sm-inline">En attente</span>
             </button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectOrderModal">
-                <i class="fas fa-plus-circle me-1"></i> Nouveau retour
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#selectOrderModal">
+                <i class="fas fa-plus-circle me-1"></i> <span class="d-none d-sm-inline">Nouveau retour</span>
             </button>
-            <button type="button" id="printSelectedBtn" class="btn btn-outline-info" disabled>
-                <i class="fas fa-print me-1"></i> Imprimer sélection
+            <button type="button" id="printSelectedBtn" class="btn btn-outline-info btn-sm" disabled>
+                <i class="fas fa-print me-1"></i> <span class="d-none d-sm-inline">Imprimer</span>
             </button>
-            <a href="{{ path('returns_export_pdf', app.request.query.all) }}" class="btn btn-outline-secondary" target="_blank">
-                <i class="fas fa-file-pdf me-1"></i> Exporter PDF
+            <a href="{{ path('returns_export_pdf', app.request.query.all) }}" class="btn btn-outline-secondary btn-sm" target="_blank">
+                <i class="fas fa-file-pdf me-1"></i> <span class="d-none d-sm-inline">PDF</span>
             </a>
         </div>
     </div>
 
-    <!-- Cartes statistiques -->
-    <div class="mb-4">
-        <div class="row g-3 mb-3">
-            <div class="col-md-3 col-sm-6">
+    <!-- Cartes statistiques avec icônes en blanc -->
+    <div class="mb-3 mb-md-4">
+        <div class="row g-2 g-md-3 mb-3">
+            <div class="col-6 col-md-3">
                 <div class="stats-card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h6 class="text-muted mb-1">En attente</h6>
-                                <h3 class="mb-0 text-warning">{{ stats.pending|default(0)|number_format(0, ',', ' ') }}</h3>
+                                <h6 class="text-muted mb-1 small">En attente</h6>
+                                <h3 class="mb-0 text-warning fs-5 fs-md-4">{{ stats.pending|default(0)|number_format(0, ',', ' ') }}</h3>
                             </div>
-                            <i class="fas fa-clock fa-2x text-warning"></i>
+                            <div class="icon-wrapper icon-wrapper-warning">
+                                <i class="fas fa-clock"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-6 col-md-3">
                 <div class="stats-card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h6 class="text-muted mb-1">Approuvés</h6>
-                                <h3 class="mb-0 text-primary">{{ stats.approved|default(0)|number_format(0, ',', ' ') }}</h3>
+                                <h6 class="text-muted mb-1 small">Approuvés</h6>
+                                <h3 class="mb-0 text-primary fs-5 fs-md-4">{{ stats.approved|default(0)|number_format(0, ',', ' ') }}</h3>
                             </div>
-                            <i class="fas fa-check-circle fa-2x text-primary"></i>
+                            <div class="icon-wrapper icon-wrapper-primary">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-6 col-md-3">
                 <div class="stats-card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h6 class="text-muted mb-1">Remboursés</h6>
-                                <h3 class="mb-0 text-success">{{ stats.completed|default(0)|number_format(0, ',', ' ') }}</h3>
+                                <h6 class="text-muted mb-1 small">Remboursés</h6>
+                                <h3 class="mb-0 text-success fs-5 fs-md-4">{{ stats.completed|default(0)|number_format(0, ',', ' ') }}</h3>
                             </div>
-                            <i class="fas fa-money-bill-wave fa-2x text-success"></i>
+                            <div class="icon-wrapper icon-wrapper-success">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-6 col-md-3">
                 <div class="stats-card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h6 class="text-muted mb-1">Rejetés</h6>
-                                <h3 class="mb-0 text-danger">{{ stats.rejected|default(0)|number_format(0, ',', ' ') }}</h3>
+                                <h6 class="text-muted mb-1 small">Rejetés</h6>
+                                <h3 class="mb-0 text-danger fs-5 fs-md-4">{{ stats.rejected|default(0)|number_format(0, ',', ' ') }}</h3>
                             </div>
-                            <i class="fas fa-ban fa-2x text-danger"></i>
+                            <div class="icon-wrapper icon-wrapper-danger">
+                                <i class="fas fa-ban"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row g-3">
+        <div class="row g-2 g-md-3">
             <div class="col-12">
                 <div class="stats-card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h6 class="text-muted mb-1">Total retours</h6>
-                                <h3 class="mb-0">{{ stats.total_returns|default(0)|number_format(0, ',', ' ') }}</h3>
+                                <h6 class="text-muted mb-1 small">Total retours</h6>
+                                <h3 class="mb-0 fs-5 fs-md-4">{{ stats.total_returns|default(0)|number_format(0, ',', ' ') }}</h3>
                             </div>
-                            <i class="fas fa-undo-alt fa-2x"></i>
+                            <div class="icon-wrapper icon-wrapper-secondary">
+                                <i class="fas fa-undo-alt"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -336,85 +528,82 @@
         </div>
     </div>
 
-    <!-- Section recherche et filtres avec ligne pointillée -->
+    <!-- Section recherche et filtres -->
     <div class="filter-section">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 pb-2" style="border-bottom: 2px dotted #e5e7eb;">
+        <!-- ✅ En-tête des filtres avec boutons en haut à droite -->
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center flex-wrap gap-2 mb-2 mb-md-3 pb-2" style="border-bottom: 2px dotted #e5e7eb;">
             <div>
                 <i class="fas fa-filter me-2 text-primary"></i>
-                <span class="fw-semibold">Filtres</span>
+                <span class="fw-semibold small">Filtres</span>
             </div>
-            <div class="d-flex gap-2">
+            <!-- ✅ Boutons toujours à droite sur desktop et mobile -->
+            <div class="d-flex gap-1 gap-md-2 ms-auto">
                 <button type="button" id="resetFiltersBtn" class="btn btn-outline-secondary btn-sm">
-                    <i class="fas fa-undo me-1"></i> Réinitialiser
+                    <i class="fas fa-undo me-1"></i> <span class="d-none d-sm-inline">Réinitialiser</span>
                 </button>
                 <button type="button" id="applyFiltersBtn" class="btn btn-primary btn-sm">
-                    <i class="fas fa-search me-1"></i> Appliquer les filtres
+                    <i class="fas fa-search me-1"></i> <span class="d-none d-sm-inline">Appliquer</span>
                 </button>
             </div>
         </div>
         
-        <div class="row g-3 align-items-end">
-            <div class="col-md-4">
+        <div class="row g-2 g-md-3 align-items-end">
+            <div class="col-12 col-sm-6 col-md-4">
                 <label class="form-label fw-bold small">🔍 Recherche</label>
-                <input type="text" id="searchInput" class="form-control" placeholder="N° retour, n° commande, client..." value="{{ filters.search }}">
+                <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="N° retour, n° commande..." value="{{ filters.search }}">
             </div>
-            <div class="col-md-2">
+            <div class="col-6 col-sm-6 col-md-2">
                 <label class="form-label fw-bold small">📊 Statut</label>
-                <select id="statusSelect" class="form-select">
-                    <option value="all" {% if filters.status == 'all' %}selected{% endif %}>Tous les statuts</option>
+                <select id="statusSelect" class="form-select form-select-sm">
+                    <option value="all" {% if filters.status == 'all' %}selected{% endif %}>Tous</option>
                     <option value="pending" {% if filters.status == 'pending' %}selected{% endif %}>⏳ En attente</option>
                     <option value="approved" {% if filters.status == 'approved' %}selected{% endif %}>✓ Approuvés</option>
                     <option value="completed" {% if filters.status == 'completed' %}selected{% endif %}>✅ Remboursés</option>
                     <option value="rejected" {% if filters.status == 'rejected' %}selected{% endif %}>❌ Rejetés</option>
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-6 col-sm-6 col-md-2">
                 <label class="form-label fw-bold small">👤 Enregistré par</label>
-                <select id="userSelect" class="form-select select2">
-                    <option value="">Tous les utilisateurs</option>
+                <select id="userSelect" class="form-select form-select-sm select2">
+                    <option value="">Tous</option>
                     {% for user in users %}
                         <option value="{{ user.id }}" {% if filters.user_id == user.id %}selected{% endif %}>
-                            {% if user.photo %}
-                                <img src="{{ asset('uploads/users/' ~ user.photo) }}" class="rounded-circle me-2" width="20" height="20">
-                            {% else %}
-                                <i class="fas fa-user-circle me-1"></i>
-                            {% endif %}
-                            {{ user.fullName }} ({{ user.email }})
+                            {{ user.fullName|u.truncate(15) }}
                         </option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-6 col-sm-6 col-md-2">
                 <label class="form-label fw-bold small">📅 Date début</label>
-                <input type="date" id="dateFrom" class="form-control" value="{{ filters.date_from }}">
+                <input type="date" id="dateFrom" class="form-control form-control-sm" value="{{ filters.date_from }}">
             </div>
-            <div class="col-md-2">
+            <div class="col-6 col-sm-6 col-md-2">
                 <label class="form-label fw-bold small">📅 Date fin</label>
-                <input type="date" id="dateTo" class="form-control" value="{{ filters.date_to }}">
+                <input type="date" id="dateTo" class="form-control form-control-sm" value="{{ filters.date_to }}">
             </div>
         </div>
     </div>
 
     <!-- Tableau des retours -->
-    <div class="card">
+    <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <form id="multiplePrintForm" action="{{ path('returns_print_multiple_receipts') }}" method="POST" target="_blank">
                     <table class="table table-hover mb-0 returns-table">
                         <thead class="table-light">
                             <tr>
-                                <th class="text-center">
+                                <th class="text-center" style="width:30px">
                                     <input type="checkbox" id="selectAllCheckbox" class="select-all-checkbox">
                                 </th>
-                                <th>N° Retour</th>
-                                <th>N° Commande</th>
-                                <th>Client</th>
-                                <th>Date</th>
-                                <th class="text-end">Montant</th>
-                                <th>Motif</th>
-                                <th>Enregistré par</th>
-                                <th>Statut</th>
-                                <th class="text-center">Actions</th>
+                                <th style="min-width:80px">N° Retour</th>
+                                <th style="min-width:90px" class="d-none d-sm-table-cell">N° Commande</th>
+                                <th style="min-width:120px">Client</th>
+                                <th style="min-width:80px" class="d-none d-md-table-cell">Date</th>
+                                <th style="min-width:80px" class="text-end">Montant</th>
+                                <th style="min-width:80px" class="d-none d-lg-table-cell">Motif</th>
+                                <th style="min-width:100px" class="d-none d-xl-table-cell">Enregistré par</th>
+                                <th style="min-width:80px">Statut</th>
+                                <th style="min-width:120px" class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -424,10 +613,10 @@
                                         <input type="checkbox" name="return_ids[]" value="{{ return.id }}" class="return-checkbox">
                                     </td>
                                     <td>
-                                        <strong class="text-primary">{{ return.returnNumber }}</strong>
+                                        <strong class="text-primary small">{{ return.returnNumber }}</strong>
                                     </td>
-                                    <td>
-                                        <code>{{ return.orderNumber }}</code>
+                                    <td class="d-none d-sm-table-cell">
+                                        <code class="small">{{ return.orderNumber }}</code>
                                     </td>
                                     <td>
                                         <div class="customer-info">
@@ -437,30 +626,30 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="d-none d-md-table-cell">
                                         {{ return.createdAt|date('d/m/Y') }}
                                         <br>
                                         <small class="text-muted">{{ return.createdAt|date('H:i') }}</small>
                                     </td>
                                     <td class="text-end">
-                                        <strong>{{ return.totalRefundAmount|number_format(0, ',', ' ') }} FCFA</strong>
+                                        <strong class="small">{{ return.totalRefundAmount|number_format(0, ',', ' ') }} FCFA</strong>
                                     </td>
-                                    <td>
+                                    <td class="d-none d-lg-table-cell">
                                         <span class="reason-badge">
-                                            {{ reasons[return.reason]|default(return.reason) }}
+                                            {{ reasons[return.reason]|default(return.reason)|u.truncate(12) }}
                                         </span>
                                     </td>
-                                    <td>
+                                    <td class="d-none d-xl-table-cell">
                                         <div class="d-flex align-items-center">
                                             {% if return.returnedBy.photo %}
-                                                <img src="{{ asset('uploads/users/' ~ return.returnedBy.photo) }}" class="rounded-circle me-2" width="30" height="30">
+                                                <img src="{{ asset('uploads/users/' ~ return.returnedBy.photo) }}" class="rounded-circle me-2" width="24" height="24">
                                             {% else %}
-                                                <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px;">
-                                                    <i class="fas fa-user text-secondary"></i>
+                                                <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px;">
+                                                    <i class="fas fa-user text-secondary small"></i>
                                                 </div>
                                             {% endif %}
                                             <div>
-                                                <small>{{ return.returnedBy.fullName }}</small>
+                                                <small>{{ return.returnedBy.fullName|u.truncate(12) }}</small>
                                             </div>
                                         </div>
                                     </td>
@@ -480,7 +669,7 @@
                                             <a href="{{ path('returns_show', {'id': return.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ path('returns_print_receipt', {'id': return.id}) }}" class="btn btn-sm btn-outline-info" title="Imprimer le reçu" target="_blank">
+                                            <a href="{{ path('returns_print_receipt', {'id': return.id}) }}" class="btn btn-sm btn-outline-info" title="Imprimer" target="_blank">
                                                 <i class="fas fa-print"></i>
                                             </a>
                                             {% if return.status == 'pending' and (is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER')) %}
@@ -504,9 +693,9 @@
                                 </tr>
                             {% else %}
                                 <tr>
-                                    <td colspan="10" class="text-center py-5">
-                                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                                        <p class="text-muted mb-0">Aucun retour trouvé</p>
+                                    <td colspan="10" class="text-center py-4 py-md-5">
+                                        <i class="fas fa-inbox fa-2x fa-md-3x text-muted mb-3"></i>
+                                        <p class="text-muted mb-0 small">Aucun retour trouvé</p>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -516,14 +705,39 @@
             </div>
         </div>
         {% if totalPages > 1 %}
-        <div class="card-footer bg-white">
+        <div class="card-footer bg-white py-2 py-md-3">
             <nav aria-label="Pagination">
-                <ul class="pagination justify-content-center mb-0">
-                    {% for i in 1..totalPages %}
+                <ul class="pagination pagination-sm justify-content-center mb-0">
+                    {% set maxVisible = 5 %}
+                    {% set startPage = max(1, currentPage - 2) %}
+                    {% set endPage = min(totalPages, startPage + maxVisible - 1) %}
+                    {% if endPage - startPage < maxVisible - 1 %}
+                        {% set startPage = max(1, endPage - maxVisible + 1) %}
+                    {% endif %}
+                    
+                    {% if startPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="#" data-page="1">1</a>
+                        </li>
+                        {% if startPage > 2 %}
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% for i in startPage..endPage %}
                         <li class="page-item {% if i == currentPage %}active{% endif %}">
                             <a class="page-link" href="#" data-page="{{ i }}">{{ i }}</a>
                         </li>
                     {% endfor %}
+                    
+                    {% if endPage < totalPages %}
+                        {% if endPage < totalPages - 1 %}
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        {% endif %}
+                        <li class="page-item">
+                            <a class="page-link" href="#" data-page="{{ totalPages }}">{{ totalPages }}</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
@@ -531,69 +745,68 @@
     </div>
 </div>
 
-<!-- Modal de sélection de commande pour nouveau retour -->
+<!-- Modal de sélection de commande -->
 <div class="modal fade" id="selectOrderModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">
+                <h5 class="modal-title fs-6 fs-md-5">
                     <i class="fas fa-search me-2"></i> Sélectionner une commande
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <!-- 🔥 MESSAGE INFORMATIF STYLISÉ -->
-                <div class="border-0 shadow-sm mb-3" style="background-color: #fef3c7; border-left: 4px solid #f59e0b;">
+                <div class="border-0 shadow-sm mb-3" style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 0.5rem 0.75rem; border-radius: 8px;">
                     <div class="d-flex">
-                        <div class="me-3">
-                            <i class="fas fa-info-circle fa-2x text-warning"></i>
+                        <div class="me-2">
+                            <i class="fas fa-info-circle fa-1x fa-md-2x text-warning"></i>
                         </div>
                         <div>
-                            <strong class="d-block">Retours multiples autorisés !</strong>
-                            <small>Les commandes avec un retour en cours peuvent encore être retournées s'il reste des quantités.<br>
-                            Recherchez la commande, vérifiez le badge <span class="badge bg-info">encore retournable(s)</span> et cliquez pour créer un nouveau retour.</small>
+                            <strong class="d-block small">Retours multiples autorisés !</strong>
+                            <small class="small">Les commandes avec un retour en cours peuvent encore être retournées s'il reste des quantités.</small>
                         </div>
                     </div>
                 </div>
                 
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Rechercher par numéro de commande ou téléphone client</label>
-                    <div class="input-group">
-                        <input type="text" id="orderSearchInput" class="form-control" placeholder="Ex: VENTE-20241215-ABC123 ou 691234567" autocomplete="off">
-                        <button class="btn btn-primary" id="searchOrderBtn">
+                    <label class="form-label fw-bold small">Rechercher par numéro de commande ou téléphone</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="orderSearchInput" class="form-control form-control-sm" placeholder="Ex: VENTE-20241215-ABC123 ou 691234567" autocomplete="off">
+                        <button class="btn btn-primary btn-sm" id="searchOrderBtn">
                             <i class="fas fa-search"></i> Rechercher
                         </button>
                     </div>
-                    <small class="text-muted mt-1 d-block">Saisissez au moins 3 caractères</small>
+                    <small class="text-muted mt-1 d-block small">Saisissez au moins 3 caractères</small>
                 </div>
                 <div id="orderSearchResults" style="max-height: 400px; overflow-y: auto;">
                     <div class="text-center text-muted py-4">
                         <i class="fas fa-search fa-2x mb-2"></i>
-                        <p>Recherchez une commande pour créer un retour</p>
+                        <p class="small">Recherchez une commande pour créer un retour</p>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fermer</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Modal Confirmer remboursement -->
 <div class="modal fade" id="confirmCompleteModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
-            <div class="modal-body text-center p-4">
+            <div class="modal-body text-center p-3 p-md-4">
                 <div class="confirm-modal-icon warning">
                     <i class="fas fa-money-bill-wave"></i>
                 </div>
-                <h4 class="mb-2">Confirmer le remboursement</h4>
-                <p class="text-muted mb-3">Êtes-vous sûr de vouloir confirmer le remboursement du retour <strong id="completeReturnNumber"></strong> ?</p>
-                <p class="small text-warning mb-0">⚠️ Attention : Cette action remettra les produits en stock.</p>
+                <h4 class="mb-2 fs-6 fs-md-5">Confirmer le remboursement</h4>
+                <p class="text-muted mb-3 small">Êtes-vous sûr de vouloir confirmer le remboursement du retour <strong id="completeReturnNumber"></strong> ?</p>
+                <p class="small text-warning mb-0">⚠️ Cette action remettra les produits en stock.</p>
             </div>
-            <div class="modal-footer justify-content-center border-0 pt-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-warning" id="confirmCompleteBtn">Confirmer le remboursement</button>
+            <div class="modal-footer justify-content-center border-0 pt-0 py-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-warning btn-sm" id="confirmCompleteBtn">Confirmer</button>
             </div>
         </div>
     </div>
@@ -609,7 +822,8 @@ $(document).ready(function() {
     $('.select2').select2({
         theme: 'bootstrap-5',
         language: 'fr',
-        width: '100%'
+        width: '100%',
+        dropdownAutoWidth: true
     });
 
     $('#filterPendingBtn').click(function() {
@@ -660,7 +874,7 @@ $(document).ready(function() {
             $('#orderSearchResults').html(`
                 <div class="text-center text-muted py-4">
                     <i class="fas fa-search fa-2x mb-2"></i>
-                    <p>Saisissez au moins 3 caractères pour rechercher</p>
+                    <p class="small">Saisissez au moins 3 caractères pour rechercher</p>
                 </div>
             `);
             return;
@@ -669,7 +883,7 @@ $(document).ready(function() {
         $('#orderSearchResults').html(`
             <div class="text-center py-4">
                 <div class="spinner-border text-primary"></div>
-                <p class="mt-2">Recherche en cours...</p>
+                <p class="mt-2 small">Recherche en cours...</p>
             </div>
         `);
         
@@ -681,8 +895,8 @@ $(document).ready(function() {
                     $('#orderSearchResults').html(`
                         <div class="text-center text-muted py-4">
                             <i class="fas fa-inbox fa-2x mb-2"></i>
-                            <p>Aucune commande trouvée</p>
-                            <small>Vérifiez le numéro ou essayez avec le téléphone du client</small>
+                            <p class="small">Aucune commande trouvée</p>
+                            <small class="small">Vérifiez le numéro ou essayez avec le téléphone</small>
                         </div>
                     `);
                     return;
@@ -690,19 +904,18 @@ $(document).ready(function() {
                 
                 let html = '<div class="list-group">';
                 orders.forEach(function(order) {
-                    // 🔥 MODIFICATION : Afficher les quantités retournées et restantes
                     let returnInfo = '';
                     if (order.has_return) {
                         returnInfo = `
                             <div class="mt-2">
-                                <span class="badge bg-warning me-1">
+                                <span class="badge bg-warning me-1 small">
                                     <i class="fas fa-undo-alt me-1"></i>Retour en cours
                                 </span>
                                 ${order.remaining_items > 0 ? 
-                                    `<span class="badge bg-info">
-                                        <i class="fas fa-boxes me-1"></i>${order.remaining_items} article(s) encore retournable(s)
+                                    `<span class="badge bg-info small">
+                                        <i class="fas fa-boxes me-1"></i>${order.remaining_items} article(s) retournable(s)
                                     </span>` : 
-                                    `<span class="badge bg-danger">
+                                    `<span class="badge bg-danger small">
                                         <i class="fas fa-ban me-1"></i>Plus rien à retourner
                                     </span>`
                                 }
@@ -717,14 +930,14 @@ $(document).ready(function() {
                         <a href="${returnUrl}" 
                         class="list-group-item list-group-item-action order-result-item ${order.has_return ? 'has-return' : ''}" 
                         ${isDisabled ? 'onclick="return false;" style="opacity:0.6; cursor:not-allowed;"' : ''}>
-                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center flex-wrap gap-2">
                                 <div class="flex-grow-1">
                                     <div>
-                                        <strong class="text-primary">${escapeHtml(order.order_number)}</strong>
+                                        <strong class="text-primary small">${escapeHtml(order.order_number)}</strong>
                                     </div>
                                     <div class="mt-1">
-                                        <i class="fas fa-user text-muted me-1"></i>
-                                        <strong>${escapeHtml(order.customer_name || 'Client non renseigné')}</strong>
+                                        <i class="fas fa-user text-muted me-1 small"></i>
+                                        <strong class="small">${escapeHtml(order.customer_name || 'Client non renseigné')}</strong>
                                         ${order.customer_phone ? '<br><small class="text-muted"><i class="fas fa-phone me-1"></i>' + escapeHtml(order.customer_phone) + '</small>' : ''}
                                     </div>
                                     ${returnInfo}
@@ -734,10 +947,10 @@ $(document).ready(function() {
                                         <i class="fas fa-calendar me-1"></i>${new Date(order.created_at).toLocaleDateString('fr-FR')}
                                     </div>
                                     <div class="mt-1">
-                                        <strong class="text-success fs-5">${order.total_amount.toLocaleString('fr-FR')} FCFA</strong>
+                                        <strong class="text-success fs-6">${order.total_amount.toLocaleString('fr-FR')} FCFA</strong>
                                     </div>
                                     ${order.already_returned_amount > 0 ? 
-                                        `<small class="text-warning">Déjà retourné: ${order.already_returned_amount.toLocaleString('fr-FR')} FCFA</small>` : ''
+                                        `<small class="text-warning small">Déjà retourné: ${order.already_returned_amount.toLocaleString('fr-FR')} FCFA</small>` : ''
                                     }
                                 </div>
                             </div>
@@ -747,7 +960,6 @@ $(document).ready(function() {
                 html += '</div>';
                 $('#orderSearchResults').html(html);
                 
-                // 🔥 MODIFICATION : Ne pas bloquer si des quantités restent
                 $('.order-result-item.has-return').click(function(e) {
                     let hasRemaining = $(this).find('.badge.bg-info').length > 0;
                     if (!hasRemaining) {
@@ -760,8 +972,8 @@ $(document).ready(function() {
                 $('#orderSearchResults').html(`
                     <div class="text-center text-danger py-4">
                         <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
-                        <p>Erreur lors de la recherche</p>
-                        <small>Veuillez réessayer</small>
+                        <p class="small">Erreur lors de la recherche</p>
+                        <small class="small">Veuillez réessayer</small>
                     </div>
                 `);
             }
@@ -781,7 +993,7 @@ $(document).ready(function() {
         $('#orderSearchResults').html(`
             <div class="text-center text-muted py-4">
                 <i class="fas fa-search fa-2x mb-2"></i>
-                <p>Recherchez une commande pour créer un retour</p>
+                <p class="small">Recherchez une commande pour créer un retour</p>
             </div>
         `);
     });
@@ -825,68 +1037,45 @@ $(document).ready(function() {
         }
     });
 
-    // === ACTIONS AVEC EFFET DE CHARGEMENT ===
+    // === ACTIONS ===
     let currentReturnId = null;
     let currentReturnNumber = null;
     let isProcessing = false;
-
-    $('#confirmApproveModal, #confirmRejectModal, #confirmCompleteModal').on('show.bs.modal', function(e) {
-        $(this).data('bs.modal')._config.backdrop = 'static';
-        $(this).data('bs.modal')._config.keyboard = false;
-    });
 
     $('.approve-return').click(function(e) {
         e.stopPropagation();
         currentReturnId = $(this).data('id');
         currentReturnNumber = $(this).data('number');
-        $('#approveReturnNumber').text(currentReturnNumber);
-        $('#confirmApproveBtn').prop('disabled', false).html('Approuver');
-        $('#confirmApproveModal').modal({backdrop: 'static', keyboard: false}).modal('show');
-    });
-
-    $('#confirmApproveBtn').click(function() {
-        if (isProcessing) return;
-        var $btn = $(this);
-        isProcessing = true;
-        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Traitement...');
-        
-        $.ajax({
-            url: '/returns/' + currentReturnId + '/approve',
-            method: 'POST',
-            success: function(response) {
-                if (response.success) location.reload();
-                else { alert(response.error); resetAndHide($btn, '#confirmApproveModal'); }
-            },
-            error: function() { alert('Erreur'); resetAndHide($btn, '#confirmApproveModal'); }
-        });
+        if (confirm('Approuver le retour ' + currentReturnNumber + ' ?')) {
+            $.ajax({
+                url: '/returns/' + currentReturnId + '/approve',
+                method: 'POST',
+                success: function(response) {
+                    if (response.success) location.reload();
+                    else alert(response.error || 'Erreur');
+                },
+                error: function() { alert('Erreur'); }
+            });
+        }
     });
 
     $('.reject-return').click(function(e) {
         e.stopPropagation();
         currentReturnId = $(this).data('id');
         currentReturnNumber = $(this).data('number');
-        $('#rejectReturnNumber').text(currentReturnNumber);
-        $('#rejectReason').val('');
-        $('#confirmRejectBtn').prop('disabled', false).html('Rejeter');
-        $('#confirmRejectModal').modal({backdrop: 'static', keyboard: false}).modal('show');
-    });
-
-    $('#confirmRejectBtn').click(function() {
-        if (isProcessing) return;
-        var $btn = $(this);
-        isProcessing = true;
-        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Traitement...');
-        
-        $.ajax({
-            url: '/returns/' + currentReturnId + '/reject',
-            method: 'POST',
-            data: { reason: $('#rejectReason').val() },
-            success: function(response) {
-                if (response.success) location.reload();
-                else { alert(response.error); resetAndHide($btn, '#confirmRejectModal'); }
-            },
-            error: function() { alert('Erreur'); resetAndHide($btn, '#confirmRejectModal'); }
-        });
+        let reason = prompt('Motif du rejet :');
+        if (reason !== null) {
+            $.ajax({
+                url: '/returns/' + currentReturnId + '/reject',
+                method: 'POST',
+                data: { reason: reason },
+                success: function(response) {
+                    if (response.success) location.reload();
+                    else alert(response.error || 'Erreur');
+                },
+                error: function() { alert('Erreur'); }
+            });
+        }
     });
 
     $('.complete-return').click(function(e) {
@@ -894,7 +1083,6 @@ $(document).ready(function() {
         currentReturnId = $(this).data('id');
         currentReturnNumber = $(this).data('number');
         $('#completeReturnNumber').text(currentReturnNumber);
-        $('#confirmCompleteBtn').prop('disabled', false).html('Confirmer');
         $('#confirmCompleteModal').modal({backdrop: 'static', keyboard: false}).modal('show');
     });
 
@@ -902,14 +1090,14 @@ $(document).ready(function() {
         if (isProcessing) return;
         var $btn = $(this);
         isProcessing = true;
-        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Traitement...');
+        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>');
         
         $.ajax({
             url: '/returns/' + currentReturnId + '/complete',
             method: 'POST',
             success: function(response) {
                 if (response.success) location.reload();
-                else { alert(response.error); resetAndHide($btn, '#confirmCompleteModal'); }
+                else { alert(response.error || 'Erreur'); resetAndHide($btn, '#confirmCompleteModal'); }
             },
             error: function() { alert('Erreur'); resetAndHide($btn, '#confirmCompleteModal'); }
         });
@@ -917,15 +1105,11 @@ $(document).ready(function() {
 
     function resetAndHide($btn, modalId) {
         isProcessing = false;
-        $btn.prop('disabled', false).html($btn.data('original-text') || $btn.text());
+        $btn.prop('disabled', false).html('Confirmer');
         $(modalId).modal('hide');
     }
     
-    $('#confirmApproveBtn, #confirmRejectBtn, #confirmCompleteBtn').each(function() {
-        $(this).data('original-text', $(this).html());
-    });
-    
-    $('#confirmApproveModal, #confirmRejectModal, #confirmCompleteModal').on('hidden.bs.modal', function() {
+    $('#confirmCompleteModal').on('hidden.bs.modal', function() {
         isProcessing = false;
     });
 });

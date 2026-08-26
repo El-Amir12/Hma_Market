@@ -1,0 +1,847 @@
+{# templates/admin/product/stock_movements.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Mouvements de stock - {{ product.name }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<style>
+    .stat-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 1rem;
+        background: white;
+        border: none;
+        height: 100%;
+    }
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 1rem;
+    }
+    @media (min-width: 768px) {
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+        }
+    }
+    .stat-value {
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 0;
+        line-height: 1.2;
+    }
+    @media (min-width: 768px) {
+        .stat-value {
+            font-size: 1.8rem;
+        }
+    }
+    .stat-label {
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    @media (min-width: 768px) {
+        .stat-label {
+            font-size: 0.7rem;
+        }
+    }
+    
+    .card-bg-primary {
+        background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%) !important;
+        color: white;
+    }
+    .card-bg-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        color: white;
+    }
+    .card-bg-danger {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+        color: white;
+    }
+    .card-bg-warning {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        color: white;
+    }
+    .card-bg-info {
+        background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+        color: white;
+    }
+    .card-bg-secondary {
+        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+        color: white;
+    }
+    
+    .card-bg-primary .stat-icon,
+    .card-bg-success .stat-icon,
+    .card-bg-danger .stat-icon,
+    .card-bg-warning .stat-icon,
+    .card-bg-info .stat-icon,
+    .card-bg-secondary .stat-icon {
+        background: rgba(255,255,255,0.2);
+    }
+    
+    .card-bg-primary .stat-value,
+    .card-bg-success .stat-value,
+    .card-bg-danger .stat-value,
+    .card-bg-warning .stat-value,
+    .card-bg-info .stat-value,
+    .card-bg-secondary .stat-value {
+        color: white;
+    }
+    
+    .movement-row-purchase {
+        border-left: 3px solid #28a745 !important;
+    }
+    .movement-row-sale {
+        border-left: 3px solid #dc3545 !important;
+    }
+    .movement-row-return {
+        border-left: 3px solid #007bff !important;
+    }
+    .movement-row-adjustment {
+        border-left: 3px solid #ffc107 !important;
+    }
+    .movement-row-transfer {
+        border-left: 3px solid #0ea5e9 !important;
+    }
+    
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #f0f0f0;
+    }
+    @media (min-width: 768px) {
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+        }
+    }
+    .select2-container--bootstrap-5 .select2-selection {
+        border-radius: 0.5rem;
+        border-color: #dee2e6;
+        min-height: 38px;
+    }
+    
+    .badge i {
+        color: white !important;
+    }
+    
+    /* Amélioration pour les boutons d'action */
+    .btn-action-dark {
+        background-color: #1a1a2e !important;
+        color: white !important;
+        border: none !important;
+        transition: all 0.2s ease;
+        border-radius: 0.5rem;
+    }
+    .btn-action-dark:hover {
+        background-color: #2d2d44 !important;
+        transform: scale(1.05);
+        color: white !important;
+    }
+    .btn-action-dark i {
+        color: white !important;
+    }
+    
+    .btn-back-dark {
+        background-color: #1a1a2e !important;
+        color: white !important;
+        border: none !important;
+        transition: all 0.2s ease;
+        border-radius: 0.5rem;
+        padding: 0.375rem 0.75rem;
+    }
+    .btn-back-dark:hover {
+        background-color: #2d2d44 !important;
+        transform: scale(1.05);
+        color: white !important;
+    }
+    .btn-back-dark i {
+        color: white !important;
+    }
+    
+    /* Amélioration de l'affichage des utilisateurs */
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .user-info .user-details {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+    }
+    .user-info .user-details .user-name {
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+    .user-info .user-details .user-email {
+        font-size: 0.6rem;
+        color: #6c757d;
+    }
+    .user-info .user-details .user-role {
+        font-size: 0.6rem;
+        color: #0d6efd;
+        font-weight: 500;
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    
+    /* Tablette et mobile */
+    @media (max-width: 768px) {
+        .table-responsive {
+            font-size: 0.75rem;
+        }
+        .table td, .table th {
+            padding: 0.3rem 0.2rem;
+        }
+        .badge {
+            font-size: 0.55rem !important;
+            padding: 0.15rem 0.3rem !important;
+        }
+        .btn-sm {
+            padding: 0.1rem 0.25rem;
+            font-size: 0.6rem;
+        }
+        .btn-sm i {
+            font-size: 0.6rem;
+        }
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+        }
+        .user-info .user-details .user-name {
+            font-size: 0.65rem;
+        }
+        .user-info .user-details .user-email {
+            font-size: 0.5rem;
+        }
+        .user-info .user-details .user-role {
+            font-size: 0.5rem;
+        }
+    }
+    
+    /* Mobile */
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding-left: 4px !important;
+            padding-right: 4px !important;
+        }
+        .card-header {
+            padding: 0.4rem 0.5rem !important;
+        }
+        .card-body {
+            padding: 0.4rem 0.5rem !important;
+        }
+        .stat-icon {
+            width: 28px;
+            height: 28px;
+        }
+        .stat-icon i {
+            font-size: 0.8rem;
+        }
+        .stat-value {
+            font-size: 0.9rem;
+        }
+        .stat-label {
+            font-size: 0.5rem;
+        }
+        .user-avatar {
+            width: 20px;
+            height: 20px;
+        }
+        .pagination-sm .page-link {
+            padding: 0.1rem 0.2rem;
+            font-size: 0.6rem;
+        }
+        
+        /* ✅ Correction : Tous les champs de filtre prennent 100% sur mobile */
+        .filter-select {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+            flex: 1 1 100% !important;
+            font-size: 0.7rem !important;
+            padding: 0.2rem 0.3rem !important;
+        }
+        .filter-label {
+            font-size: 0.6rem !important;
+            display: block !important;
+            width: 100% !important;
+        }
+        
+        /* ✅ Toutes les colonnes de filtre prennent 100% sur mobile */
+        .filter-col,
+        .filter-col-half,
+        .filter-col-fourth {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        
+        /* Boutons d'action plus visibles sur mobile */
+        .btn-action-dark {
+            padding: 0.2rem 0.35rem !important;
+            font-size: 0.6rem !important;
+            border-radius: 0.3rem !important;
+        }
+        .btn-action-dark i {
+            font-size: 0.7rem !important;
+        }
+        .btn-back-dark {
+            font-size: 0.7rem !important;
+            padding: 0.2rem 0.5rem !important;
+        }
+        .btn-back-dark i {
+            font-size: 0.7rem !important;
+        }
+    }
+    
+    /* Très petits écrans */
+    @media (max-width: 400px) {
+        .table-responsive {
+            font-size: 0.65rem;
+        }
+        .table td, .table th {
+            padding: 0.15rem 0.1rem;
+        }
+        .user-avatar {
+            width: 16px;
+            height: 16px;
+        }
+        .user-info .user-details .user-name {
+            font-size: 0.55rem;
+        }
+        .user-info .user-details .user-email {
+            font-size: 0.45rem;
+        }
+        .user-info .user-details .user-role {
+            font-size: 0.45rem;
+        }
+        .badge {
+            font-size: 0.45rem !important;
+            padding: 0.1rem 0.2rem !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-2 px-md-4 py-2 py-md-3">
+    <!-- En-tête -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 mb-md-4 flex-wrap gap-2">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item small">
+                        <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
+                            <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item small">
+                        <a href="{{ path('app_admin_product_index') }}" class="text-decoration-none">
+                            <i class="fas fa-boxes me-1"></i> Produits
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item small">
+                        <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="text-decoration-none">
+                            {{ product.name|u.truncate(20) }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active small">
+                        <i class="fas fa-exchange-alt me-1"></i> Mouvements de stock
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="h4 h-md-3 mb-0 fw-bold">
+                <i class="fas fa-exchange-alt me-2 text-primary"></i>
+                Mouvements de stock
+            </h1>
+            <div class="d-flex align-items-center mt-1 gap-2 flex-wrap">
+                <span class="badge bg-primary">{{ product.name }}</span>
+                <span class="text-muted small">
+                    <i class="fas fa-barcode me-1"></i>{{ product.barcode }}
+                </span>
+                <span class="text-muted small">
+                    <i class="fas fa-box me-1"></i>Stock: {{ product.currentStock }} {{ product.unit|default('pièce') }}
+                </span>
+            </div>
+        </div>
+        <div>
+            <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="btn btn-back-dark btn-sm">
+                <i class="fas fa-arrow-left me-1"></i> Retour au produit
+            </a>
+        </div>
+    </div>
+
+    <!-- Cartes statistiques générales - 2 par ligne sur mobile -->
+    <div class="row g-2 g-md-3 mb-3 mb-md-4">
+        <div class="col-6 col-md-3">
+            <div class="card stat-card card-bg-primary shadow-sm">
+                <div class="card-body p-2 p-md-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">Total mouvements</div>
+                            <div class="stat-value">{{ stats.total_movements|default(0)|number_format(0, ',', ' ') }}</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-exchange-alt fa-1x fa-md-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stat-card card-bg-success shadow-sm">
+                <div class="card-body p-2 p-md-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">Entrées</div>
+                            <div class="stat-value">{{ stats.total_in|default(0)|number_format(0, ',', ' ') }}</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-arrow-down fa-1x fa-md-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stat-card card-bg-danger shadow-sm">
+                <div class="card-body p-2 p-md-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">Sorties</div>
+                            <div class="stat-value">{{ stats.total_out|default(0)|number_format(0, ',', ' ') }}</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-arrow-up fa-1x fa-md-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stat-card card-bg-info shadow-sm">
+                <div class="card-body p-2 p-md-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">Stock actuel</div>
+                            <div class="stat-value">{{ product.currentStock|number_format(0, ',', ' ') }}</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-box fa-1x fa-md-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cartes par type de mouvement - 2 par ligne sur mobile -->
+    {% if movementTypeStats|length > 0 %}
+    <div class="row g-2 g-md-3 mb-3 mb-md-4">
+        <div class="col-6 col-md-4">
+            <div class="card stat-card card-bg-success shadow-sm">
+                <div class="card-body p-2 p-md-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">
+                                <i class="fas fa-shopping-cart me-1"></i> Achats
+                            </div>
+                            <div class="stat-value">
+                                {{ (movementTypeStats.purchase_in ?? 0)|number_format(0, ',', ' ') }}
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-cart-plus fa-1x fa-md-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4">
+            <div class="card stat-card card-bg-danger shadow-sm">
+                <div class="card-body p-2 p-md-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">
+                                <i class="fas fa-tag me-1"></i> Ventes
+                            </div>
+                            <div class="stat-value">
+                                {{ (movementTypeStats.sale_out ?? 0)|number_format(0, ',', ' ') }}
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign fa-1x fa-md-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4">
+            <div class="card stat-card card-bg-warning shadow-sm">
+                <div class="card-body p-2 p-md-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">
+                                <i class="fas fa-pencil-alt me-1"></i> Ajustements
+                            </div>
+                            <div class="stat-value">
+                                {{ ((movementTypeStats.adjustment_in ?? 0) + (movementTypeStats.adjustment_out ?? 0))|number_format(0, ',', ' ') }}
+                            </div>
+                            <div class="stat-sub mt-1 d-none d-sm-block small">
+                                <small>
+                                    ➕ Entrées: {{ (movementTypeStats.adjustment_in ?? 0)|number_format(0, ',', ' ') }} | 
+                                    ➖ Sorties: {{ (movementTypeStats.adjustment_out ?? 0)|number_format(0, ',', ' ') }}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-pencil-alt fa-1x fa-md-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4">
+            <div class="card stat-card card-bg-primary shadow-sm">
+                <div class="card-body p-2 p-md-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">
+                                <i class="fas fa-undo-alt me-1"></i> Retours clients
+                            </div>
+                            <div class="stat-value">
+                                {{ (movementTypeStats.return_in ?? 0)|number_format(0, ',', ' ') }}
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-undo-alt fa-1x fa-md-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4">
+            <div class="card stat-card card-bg-secondary shadow-sm">
+                <div class="card-body p-2 p-md-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">
+                                <i class="fas fa-truck-loading me-1"></i> Retours fournisseurs
+                            </div>
+                            <div class="stat-value">
+                                {{ (movementTypeStats.return_out ?? 0)|number_format(0, ',', ' ') }}
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-truck-loading fa-1x fa-md-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4">
+            <div class="card stat-card card-bg-info shadow-sm">
+                <div class="card-body p-2 p-md-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="stat-label">
+                                <i class="fas fa-exchange-alt me-1"></i> Transferts
+                            </div>
+                            <div class="stat-value">
+                                {{ ((movementTypeStats.transfer_in ?? 0) + (movementTypeStats.transfer_out ?? 0))|number_format(0, ',', ' ') }}
+                            </div>
+                            <div class="stat-sub mt-1 d-none d-sm-block small">
+                                <small>
+                                    ➕ Entrants: {{ (movementTypeStats.transfer_in ?? 0)|number_format(0, ',', ' ') }} | 
+                                    ➖ Sortants: {{ (movementTypeStats.transfer_out ?? 0)|number_format(0, ',', ' ') }}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-exchange-alt fa-1x fa-md-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Filtres -->
+    <div class="card border-0 shadow-sm mb-3 mb-md-4">
+        <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 fw-semibold fs-6 fs-md-5"><i class="fas fa-filter me-2 text-primary"></i> Filtres</h5>
+            <div class="d-flex gap-1 gap-md-2">
+                <a href="{{ path('app_admin_product_stock_movements', {'id': product.id}) }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-undo me-1"></i> <span class="d-none d-sm-inline">Effacer</span>
+                </a>
+                <button type="submit" form="filter-form" class="btn btn-primary btn-sm">
+                    <i class="fas fa-search me-1"></i> <span class="d-none d-sm-inline">Filtrer</span>
+                </button>
+            </div>
+        </div>
+        <div class="card-body bg-white p-2 p-md-3">
+            <form method="get" id="filter-form">
+                <div class="row g-2 g-md-3">
+                    <!-- Type de mouvement - 100% sur mobile -->
+                    <div class="col-12 col-md-4 filter-col">
+                        <label class="form-label fw-bold small filter-label">Type de mouvement</label>
+                        <select name="movement_type" class="form-select form-select-sm filter-select">
+                            <option value="">📋 Tous</option>
+                            {% for category, data in movementHierarchy %}
+                                <optgroup label="{{ category }}">
+                                    <option value="all_{{ category|lower }}" {{ filters.movement_type == 'all_' ~ category|lower ? 'selected' }}>
+                                        📌 Tous les {{ category|lower }}
+                                    </option>
+                                    {% for typeKey, typeData in data.children %}
+                                        <option value="{{ typeKey }}" {{ filters.movement_type == typeKey ? 'selected' }}>
+                                            {% if typeData.icon is defined %}
+                                                <i class="{{ typeData.icon }} me-1"></i>
+                                            {% endif %}
+                                            {{ typeData.label }}
+                                        </option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Date du - 50% sur mobile, 3 sur desktop -->
+                    <div class="col-6 col-md-3 filter-col-half">
+                        <label class="form-label fw-bold small filter-label">Date du</label>
+                        <input type="date" name="date_from" class="form-control form-control-sm filter-select" value="{{ filters.date_from|default('') }}">
+                    </div>
+                    
+                    <!-- Date au - 50% sur mobile, 3 sur desktop -->
+                    <div class="col-6 col-md-3 filter-col-half">
+                        <label class="form-label fw-bold small filter-label">Date au</label>
+                        <input type="date" name="date_to" class="form-control form-control-sm filter-select" value="{{ filters.date_to|default('') }}">
+                    </div>
+                    
+                    <!-- Ordre - 100% sur mobile, 2 sur desktop -->
+                    <div class="col-12 col-md-2 filter-col-fourth">
+                        <label class="form-label fw-bold small filter-label">Ordre</label>
+                        <select name="direction" class="form-select form-select-sm filter-select">
+                            <option value="desc" {{ filters.direction|default('desc') == 'desc' ? 'selected' }}>↓ Décroissant</option>
+                            <option value="asc" {{ filters.direction|default('desc') == 'asc' ? 'selected' }}>↑ Croissant</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tableau des mouvements -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 fw-semibold fs-6 fs-md-5"><i class="fas fa-list me-2"></i> Liste des mouvements</h5>
+            <span class="badge bg-secondary">{{ movements|length }}</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 table-sm">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Produit</th>
+                            <th class="d-none d-lg-table-cell">N° lot</th>
+                            <th class="text-end">Qté</th>
+                            <th>Utilisateur</th>
+                            <th class="d-none d-xl-table-cell">Raison / Notes</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for movement in movements %}
+                            {% set rowClass = movement.movementType|split('_')|first|lower %}
+                            <tr class="movement-row-{{ rowClass }}">
+                                <td>
+                                    <div class="fw-bold small">{{ movement.createdAt|date('d/m/Y') }}</div>
+                                    <small class="text-muted">{{ movement.createdAt|date('H:i:s') }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge {{ movement.movementTypeBadgeClass }} small" style="font-size:0.7rem; white-space:nowrap;">
+                                        <i class="{{ movement.movementTypeIcon }} me-1"></i>
+                                        {{ movement.movementTypeLabel|u.truncate(15) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if movement.stockBatch %}
+                                        <a href="{{ path('app_admin_product_show', {'id': movement.stockBatch.product.id}) }}" class="text-decoration-none small">
+                                            {{ movement.stockBatch.product.name|u.truncate(20) }}
+                                        </a>
+                                    {% elseif movement.product %}
+                                        <a href="{{ path('app_admin_product_show', {'id': movement.product.id}) }}" class="text-decoration-none small">
+                                            {{ movement.product.name|u.truncate(20) }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted small">—</span>
+                                    {% endif %}
+                                </td>
+                                <td class="d-none d-lg-table-cell">
+                                    {% if movement.stockBatch %}
+                                        <code class="small">{{ movement.stockBatch.batchNumber|u.truncate(12) }}</code>
+                                    {% else %}
+                                        <span class="text-muted small">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="text-end">
+                                        <span class="fw-bold small {{ movement.movementType in ['purchase_in', 'return_in', 'adjustment_in', 'transfer_in'] ? 'text-success' : 'text-danger' }}">
+                                            {{ movement.movementType in ['purchase_in', 'return_in', 'adjustment_in', 'transfer_in'] ? '+' : '-' }} {{ movement.quantity|number_format(0, ',', ' ') }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="user-info">
+                                        {% if movement.user %}
+                                            {% if movement.user.photo %}
+                                                <img src="{{ asset('uploads/users/' ~ movement.user.photo) }}" alt="{{ movement.user.fullName }}" class="user-avatar" loading="lazy">
+                                            {% else %}
+                                                <div class="user-avatar bg-light d-flex align-items-center justify-content-center">
+                                                    <i class="fas fa-user text-muted small"></i>
+                                                </div>
+                                            {% endif %}
+                                            <div class="user-details">
+                                                <span class="user-name">{{ movement.user.fullName ?: 'Utilisateur' }}</span>
+                                                <span class="user-email">{{ movement.user.email }}</span>
+                                                <span class="user-role">{{ movement.user.roleLabel }}</span>
+                                            </div>
+                                        {% else %}
+                                            <div class="user-avatar bg-light d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-robot text-muted small"></i>
+                                            </div>
+                                            <div class="user-details">
+                                                <span class="user-name">Système</span>
+                                                <span class="user-email">system@hma.com</span>
+                                                <span class="user-role">Automatique</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="d-none d-xl-table-cell">
+                                    <div>
+                                        {% if movement.notes %}
+                                            <small>{{ movement.notes|u.truncate(30) }}</small>
+                                        {% endif %}
+                                        {% if movement.referenceId %}
+                                            <br><small class="text-muted">#{{ movement.referenceId }}</small>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ path('app_admin_stock_movement_show', {'id': movement.id}) }}" class="btn btn-sm btn-action-dark" title="Voir le détail">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="8" class="text-center py-4 py-md-5">
+                                    <i class="fas fa-exchange-alt fa-2x fa-md-3x text-muted mb-3"></i>
+                                    <p class="text-muted mb-0 small">Aucun mouvement trouvé pour ce produit</p>
+                                    <p class="text-muted small">Modifiez vos filtres pour voir plus de résultats</p>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% if totalPages > 1 %}
+        <div class="card-footer bg-white py-2 py-md-3">
+            <nav>
+                <ul class="pagination pagination-sm justify-content-center mb-0 flex-wrap gap-1">
+                    {% if currentPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_admin_product_stock_movements', {'id': product.id, 'page': currentPage - 1}) }}">
+                                <i class="fas fa-chevron-left"></i> <span class="d-none d-sm-inline">Précédent</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% set maxVisible = 5 %}
+                    {% set startPage = max(1, currentPage - 2) %}
+                    {% set endPage = min(totalPages, startPage + maxVisible - 1) %}
+                    {% if endPage - startPage < maxVisible - 1 %}
+                        {% set startPage = max(1, endPage - maxVisible + 1) %}
+                    {% endif %}
+                    
+                    {% if startPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_admin_product_stock_movements', {'id': product.id, 'page': 1}) }}">1</a>
+                        </li>
+                        {% if startPage > 2 %}
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% for page in startPage..endPage %}
+                        <li class="page-item {{ page == currentPage ? 'active' : '' }}">
+                            <a class="page-link" href="{{ path('app_admin_product_stock_movements', {'id': product.id, 'page': page}) }}">{{ page }}</a>
+                        </li>
+                    {% endfor %}
+                    
+                    {% if endPage < totalPages %}
+                        {% if endPage < totalPages - 1 %}
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        {% endif %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_admin_product_stock_movements', {'id': product.id, 'page': totalPages}) }}">{{ totalPages }}</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% if currentPage < totalPages %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_admin_product_stock_movements', {'id': product.id, 'page': currentPage + 1}) }}">
+                                <span class="d-none d-sm-inline">Suivant</span> <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof $ !== 'undefined' && $.fn.select2) {
+        $('.select2-user').select2({
+            theme: 'bootstrap-5',
+            language: 'fr',
+            placeholder: '-- Tous --',
+            allowClear: true,
+            width: '100%',
+            dropdownAutoWidth: true
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -73,7 +73,7 @@ class __TwigTemplate_1ac39e3a45046a9397ec89bd70cec93c extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
 
-        yield "Connexion - HMA Market";
+        yield "Connexion - HMA Service";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
 
@@ -253,12 +253,12 @@ class __TwigTemplate_1ac39e3a45046a9397ec89bd70cec93c extends Template
         </div>
     </div>
     
-    <!-- Informations HMA Market -->
+    <!-- Informations HMA Service -->
     <div class=\"col-lg-6\">
         <div class=\"info-container\">
             <div class=\"text-center mb-5\">
                 <h3 class=\"fw-bold mb-3\">
-                    <i class=\"fas fa-store me-2\"></i>Pourquoi choisir HMA Market ?
+                    <i class=\"fas fa-store me-2\"></i>Pourquoi choisir HMA Service ?
                 </h3>
                 <p class=\"text-muted\">La solution complète pour la gestion de votre entreprise</p>
             </div>
@@ -327,7 +327,7 @@ class __TwigTemplate_1ac39e3a45046a9397ec89bd70cec93c extends Template
                 </div>
                 <p class=\"mb-0\">
                     <i class=\"fas fa-quote-left text-primary me-2\"></i>
-                    HMA Market a transformé notre gestion quotidienne. L'interface est intuitive et le support exceptionnel.
+                    HMA Service a transformé notre gestion quotidienne. L'interface est intuitive et le support exceptionnel.
                 </p>
             </div>
             
@@ -407,7 +407,7 @@ class __TwigTemplate_1ac39e3a45046a9397ec89bd70cec93c extends Template
         return new Source("{# templates/security/login.html.twig #}
 {% extends 'base-auth.html.twig' %}
 
-{% block title %}Connexion - HMA Market{% endblock %}
+{% block title %}Connexion - HMA Service{% endblock %}
 
 {% block body %}
 <div class=\"row g-4\">
@@ -521,12 +521,12 @@ class __TwigTemplate_1ac39e3a45046a9397ec89bd70cec93c extends Template
         </div>
     </div>
     
-    <!-- Informations HMA Market -->
+    <!-- Informations HMA Service -->
     <div class=\"col-lg-6\">
         <div class=\"info-container\">
             <div class=\"text-center mb-5\">
                 <h3 class=\"fw-bold mb-3\">
-                    <i class=\"fas fa-store me-2\"></i>Pourquoi choisir HMA Market ?
+                    <i class=\"fas fa-store me-2\"></i>Pourquoi choisir HMA Service ?
                 </h3>
                 <p class=\"text-muted\">La solution complète pour la gestion de votre entreprise</p>
             </div>
@@ -595,7 +595,7 @@ class __TwigTemplate_1ac39e3a45046a9397ec89bd70cec93c extends Template
                 </div>
                 <p class=\"mb-0\">
                     <i class=\"fas fa-quote-left text-primary me-2\"></i>
-                    HMA Market a transformé notre gestion quotidienne. L'interface est intuitive et le support exceptionnel.
+                    HMA Service a transformé notre gestion quotidienne. L'interface est intuitive et le support exceptionnel.
                 </p>
             </div>
             

@@ -8,15 +8,20 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style>
-    /* ✅ Utilisation des variables CSS de base.html.twig */
+    /* ✅ Variables CSS */
+    :root {
+        --card-radius: 1rem;
+        --transition-speed: 0.2s;
+    }
     
     /* Cartes statistiques */
     .stat-card {
-        transition: transform 0.2s, box-shadow 0.2s;
+        transition: transform var(--transition-speed), box-shadow var(--transition-speed);
         overflow: hidden;
-        border-radius: 1rem;
+        border-radius: var(--card-radius);
         background: white !important;
         border: 1px solid #e9ecef;
+        height: 100%;
     }
     .stat-card:hover {
         transform: translateY(-3px);
@@ -28,7 +33,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 1rem;
+        border-radius: var(--card-radius);
+        flex-shrink: 0;
     }
     .stat-value {
         font-size: 1.8rem;
@@ -49,23 +55,20 @@
     }
     
     .issue-badge {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.5rem;
-        margin-top: 0.25rem;
+        font-size: 0.65rem;
+        padding: 0.15rem 0.4rem;
+        margin-top: 0.15rem;
         display: inline-block;
     }
-    .table-hover tbody tr:hover {
-        background-color: rgba(var(--primary-rgb), 0.05);
-        cursor: pointer;
-    }
+    
     .progress {
         border-radius: 10px;
         overflow: hidden;
         height: 6px;
     }
     .card {
-        transition: transform 0.2s, box-shadow 0.2s;
-        border-radius: 1rem;
+        transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        border-radius: var(--card-radius);
     }
     .card:hover {
         transform: translateY(-2px);
@@ -92,23 +95,194 @@
     .select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
         height: 36px;
     }
-    @media (max-width: 768px) {
-        .btn-group { flex-direction: column; }
-        .btn-group .btn { margin: 1px 0; }
-        .stat-value { font-size: 1.3rem; }
-        .stat-icon { width: 40px; height: 40px; }
-        .stat-icon i { font-size: 1.3rem; }
-    }
-    .issue-critical {
-        background-color: var(--danger-color) !important;
-        color: white !important;
-    }
-    .issue-high {
-        background-color: #fd7e14 !important;
-        color: white !important;
+    
+    /* ✅ RESPONSIVE - TABLETTE ET MOBILE */
+    @media (max-width: 992px) {
+        .stat-value {
+            font-size: 1.5rem;
+        }
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+        }
+        .stat-icon i {
+            font-size: 1.3rem;
+        }
     }
     
-    /* ✅ Boutons avec couleurs dynamiques */
+    @media (max-width: 768px) {
+        .stat-value {
+            font-size: 1.2rem;
+        }
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+        }
+        .stat-icon i {
+            font-size: 1rem;
+        }
+        .stat-label {
+            font-size: 0.6rem;
+        }
+        
+        /* Boutons en colonne sur mobile */
+        .btn-group {
+            flex-direction: column;
+            width: 100%;
+        }
+        .btn-group .btn {
+            margin: 2px 0;
+            border-radius: 0.375rem !important;
+        }
+        .btn-group .btn:not(:last-child) {
+            border-radius: 0.375rem !important;
+        }
+        
+        .container-fluid {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+        
+        /* Header mobile */
+        .d-flex.justify-content-between.align-items-center {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 0.75rem !important;
+        }
+        
+        /* Cartes stats - 2 par ligne sur mobile */
+        .col-sm-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+        
+        /* Filtres en colonne */
+        .row.g-3 > [class*="col-"] {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Tableau - version carte mobile */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Version carte pour mobile */
+        .table-card-view .batch-card {
+            background: white;
+            border-radius: 0.75rem;
+            border: 1px solid #e9ecef;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .table-card-view .batch-card .batch-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 1rem;
+        }
+        .table-card-view .batch-card .batch-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .table-card-view .batch-card .batch-item .label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            color: #6c757d;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .table-card-view .batch-card .batch-item .value {
+            font-size: 0.85rem;
+            font-weight: 500;
+            word-break: break-word;
+        }
+        .table-card-view .batch-card .batch-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+        .table-card-view .batch-card .batch-actions .btn {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+        }
+        .table-card-view .batch-card .batch-checkbox-wrapper {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .table-card-view .batch-card .batch-checkbox-wrapper .form-check-input {
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+        .table-card-view .batch-card .batch-checkbox-wrapper .batch-number {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        /* Status colors sur mobile */
+        .batch-card.status-expired {
+            border-left: 4px solid #dc3545;
+        }
+        .batch-card.status-expiring {
+            border-left: 4px solid #ffc107;
+        }
+        .batch-card.status-low {
+            border-left: 4px solid #17a2b8;
+        }
+        .batch-card.status-issue {
+            border-left: 4px solid #6c757d;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .stat-value {
+            font-size: 1rem;
+        }
+        .stat-icon {
+            width: 30px;
+            height: 30px;
+        }
+        .stat-icon i {
+            font-size: 0.85rem;
+        }
+        .stat-label {
+            font-size: 0.55rem;
+        }
+        
+        .col-sm-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        
+        .table-card-view .batch-card .batch-row {
+            grid-template-columns: 1fr;
+            gap: 0.3rem;
+        }
+        
+        .table-card-view .batch-card .batch-actions .btn {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.4rem;
+        }
+        
+        h1.h3 {
+            font-size: 1.1rem !important;
+        }
+        
+        .breadcrumb {
+            font-size: 0.75rem;
+        }
+    }
+    
+    /* Couleurs dynamiques */
     .btn-primary {
         background: var(--primary-color) !important;
         border-color: var(--primary-color) !important;
@@ -141,6 +315,20 @@
     .bg-secondary.bg-opacity-10 {
         background: rgba(108, 117, 125, 0.1) !important;
     }
+    
+    /* Désactiver le hover sur mobile pour éviter les problèmes de toucher */
+    @media (max-width: 768px) {
+        .table-hover tbody tr:hover {
+            background-color: inherit !important;
+            cursor: default;
+        }
+        .card:hover {
+            transform: none !important;
+        }
+        .stat-card:hover {
+            transform: none !important;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -153,7 +341,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
-                            <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
+                            <i class="fas fa-tachometer-alt me-1"></i> <span class="d-none d-sm-inline">Tableau de bord</span>
                         </a>
                     </li>
                     <li class="breadcrumb-item active">
@@ -163,20 +351,21 @@
             </nav>
             <h1 class="h3 mb-0 fw-bold">
                 <i class="fas fa-cubes me-2 text-primary"></i>
-                Gestion globale des lots
+                <span class="d-none d-sm-inline">Gestion globale des lots</span>
+                <span class="d-inline d-sm-none">Lots</span>
             </h1>
-            <p class="text-muted mt-2">
+            <p class="text-muted mt-2 d-none d-md-block">
                 <i class="fas fa-info-circle me-1"></i>
                 Visualisez et gérez tous les lots de stock de votre entreprise
             </p>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{{ path('app_admin_location_index') }}" class="btn btn-outline-info">
-                <i class="fas fa-map-marker-alt me-2"></i> Emplacements
+        <div class="d-flex flex-wrap gap-2 w-100 w-md-auto">
+            <a href="{{ path('app_admin_location_index') }}" class="btn btn-outline-info btn-sm flex-grow-1 flex-md-grow-0">
+                <i class="fas fa-map-marker-alt me-1"></i> <span class="d-none d-sm-inline">Emplacements</span>
             </a>
-            <div class="btn-group">
-                <button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="fas fa-file-excel me-1"></i> Exporter
+            <div class="btn-group flex-grow-1 flex-md-grow-0">
+                <button type="button" class="btn btn-outline-success btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="fas fa-file-excel me-1"></i> <span class="d-none d-sm-inline">Exporter</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="{{ path('app_admin_stock_batch_export_excel', app.request.query.all) }}"><i class="fas fa-file-excel me-2 text-success"></i> Excel (.xlsx)</a></li>
@@ -185,70 +374,69 @@
                     <li><a class="dropdown-item" href="{{ path('app_admin_stock_batch_export_excel_template') }}"><i class="fas fa-download me-2"></i> Télécharger template</a></li>
                 </ul>
             </div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#printOptionsModal">
-                <i class="fas fa-print me-2"></i> Imprimer sélection
+            <button type="button" class="btn btn-primary btn-sm flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#printOptionsModal">
+                <i class="fas fa-print me-1"></i> <span class="d-none d-sm-inline">Imprimer</span>
             </button>
         </div>
     </div>
 
-    <!-- Cartes statistiques - 2 lignes (4 + 3 = 7 cartes) -->
-    <!-- Ligne 1 : 4 cartes -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3 col-sm-6">
+    <!-- Cartes statistiques -->
+    <div class="row g-2 g-md-3 mb-4">
+        <div class="col-6 col-sm-6 col-md-3">
             <div class="card stat-card shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-sm-3">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="flex-grow-1">
+                        <div class="flex-grow-1 me-2">
                             <div class="stat-label">Total lots</div>
                             <div class="stat-value text-primary">{{ stats.total_batches|default(0) }}</div>
                         </div>
                         <div class="stat-icon bg-primary bg-opacity-10">
-                            <i class="fas fa-boxes fa-2x text-primary"></i>
+                            <i class="fas fa-boxes text-primary"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
+        <div class="col-6 col-sm-6 col-md-3">
             <div class="card stat-card shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-sm-3">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="flex-grow-1">
+                        <div class="flex-grow-1 me-2">
                             <div class="stat-label">Lots actifs</div>
                             <div class="stat-value text-success">{{ stats.active_batches|default(0) }}</div>
                         </div>
                         <div class="stat-icon bg-success bg-opacity-10">
-                            <i class="fas fa-play-circle fa-2x text-success"></i>
+                            <i class="fas fa-play-circle text-success"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
+        <div class="col-6 col-sm-6 col-md-3">
             <div class="card stat-card shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-sm-3">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="flex-grow-1">
+                        <div class="flex-grow-1 me-2">
                             <div class="stat-label">Expire bientôt</div>
                             <div class="stat-value text-warning">{{ stats.expiring_soon_batches|default(0) }}</div>
                         </div>
                         <div class="stat-icon bg-warning bg-opacity-10">
-                            <i class="fas fa-hourglass-half fa-2x text-warning"></i>
+                            <i class="fas fa-hourglass-half text-warning"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
+        <div class="col-6 col-sm-6 col-md-3">
             <div class="card stat-card shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-sm-3">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="flex-grow-1">
+                        <div class="flex-grow-1 me-2">
                             <div class="stat-label">Unités en stock</div>
                             <div class="stat-value text-info">{{ stats.total_quantity|default(0)|number_format(0, ',', ' ') }}</div>
                         </div>
                         <div class="stat-icon bg-info bg-opacity-10">
-                            <i class="fas fa-chart-line fa-2x text-info"></i>
+                            <i class="fas fa-chart-line text-info"></i>
                         </div>
                     </div>
                 </div>
@@ -257,48 +445,48 @@
     </div>
 
     <!-- Ligne 2 : 3 cartes -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-4 col-sm-6">
+    <div class="row g-2 g-md-3 mb-4">
+        <div class="col-6 col-sm-6 col-md-4">
             <div class="card stat-card shadow-sm h-100">
-                <div class="card-body">
+                <div class="card-body p-2 p-sm-3">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="flex-grow-1">
+                        <div class="flex-grow-1 me-2">
                             <div class="stat-label">Lots expirés</div>
                             <div class="stat-value text-danger">{{ stats.expired_batches|default(0) }}</div>
                         </div>
                         <div class="stat-icon bg-danger bg-opacity-10">
-                            <i class="fas fa-calendar-times fa-2x text-danger"></i>
+                            <i class="fas fa-calendar-times text-danger"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 col-sm-6">
+        <div class="col-6 col-sm-6 col-md-4">
             <div class="card stat-card shadow-sm h-100">
-                <div class="card-body d-flex flex-column">
-                    <div class="d-flex align-items-center justify-content-between flex-grow-1">
-                        <div class="flex-grow-1">
+                <div class="card-body p-2 p-sm-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1 me-2">
                             <div class="stat-label">Avoirs ouverts</div>
                             <div class="stat-value text-secondary">{{ stats.open_issues|default(0) }}</div>
-                            <div class="stat-sub text-muted mt-1">{{ stats.total_issue_amount|default(0)|price_with_currency(hmaService) }}</div>
+                            <div class="stat-sub text-muted mt-1 d-none d-sm-block">{{ stats.total_issue_amount|default(0)|price_with_currency(hmaService) }}</div>
                         </div>
                         <div class="stat-icon bg-secondary bg-opacity-10">
-                            <i class="fas fa-file-invoice-dollar fa-2x text-secondary"></i>
+                            <i class="fas fa-file-invoice-dollar text-secondary"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 col-sm-12">
+        <div class="col-12 col-sm-6 col-md-4">
             <div class="card stat-card shadow-sm h-100">
-                <div class="card-body">
+                <div class="card-body p-2 p-sm-3">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="flex-grow-1">
+                        <div class="flex-grow-1 me-2">
                             <div class="stat-label">Stock faible</div>
                             <div class="stat-value text-warning">{{ stats.low_stock_batches|default(0) }}</div>
                         </div>
                         <div class="stat-icon bg-warning bg-opacity-10">
-                            <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                            <i class="fas fa-exclamation-triangle text-warning"></i>
                         </div>
                     </div>
                 </div>
@@ -308,82 +496,81 @@
 
     <!-- Filtres -->
     <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-semibold"><i class="fas fa-filter me-2 text-primary"></i> Filtres</h5>
+        <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 fw-semibold small"><i class="fas fa-filter me-2 text-primary"></i> Filtres</h5>
             <div class="d-flex gap-2">
                 <a href="{{ path('app_admin_stock_batch_all') }}" class="btn btn-outline-secondary btn-sm">
-                    <i class="fas fa-undo me-1"></i> Effacer
+                    <i class="fas fa-undo me-1"></i> <span class="d-none d-sm-inline">Effacer</span>
                 </a>
                 <button type="submit" form="filter-form" class="btn btn-primary btn-sm">
-                    <i class="fas fa-search me-1"></i> Filtrer
+                    <i class="fas fa-search me-1"></i> <span class="d-none d-sm-inline">Filtrer</span>
                 </button>
             </div>
         </div>
-        <div class="card-body bg-white">
+        <div class="card-body bg-white p-2 p-md-3">
             <form method="get" id="filter-form">
-                <!-- Première ligne -->
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold small">Recherche</label>
-                        <input type="text" name="search" class="form-control" placeholder="N° lot ou produit..." value="{{ filters.search|default('') }}">
+                <div class="row g-2 g-md-3">
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label class="form-label fw-bold small mb-1">Recherche</label>
+                        <input type="text" name="search" class="form-control form-control-sm" placeholder="N° lot ou produit..." value="{{ filters.search|default('') }}">
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold small">Produit</label>
-                        <select name="product_id" id="product-select" class="form-select select2-product">
-                            <option value="">-- Tous les produits --</option>
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label class="form-label fw-bold small mb-1">Produit</label>
+                        <select name="product_id" id="product-select" class="form-select form-select-sm select2-product">
+                            <option value="">-- Tous --</option>
                             {% for product in products %}
-                                <option value="{{ product.id }}" {{ filters.product_id|default('') == product.id ? 'selected' }}>{{ product.name }}</option>
+                                <option value="{{ product.id }}" {{ filters.product_id|default('') == product.id ? 'selected' }}>{{ product.name|u.truncate(30) }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold small">Emplacement</label>
-                        <select name="location" id="location-select" class="form-select select2-location">
-                            <option value="">-- Tous les emplacements --</option>
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label class="form-label fw-bold small mb-1">Emplacement</label>
+                        <select name="location" id="location-select" class="form-select form-select-sm select2-location">
+                            <option value="">-- Tous --</option>
                             {% for loc in all_locations|default([]) %}
-                                <option value="{{ loc }}" {{ filters.location|default('') == loc ? 'selected' }}>{{ loc }}</option>
+                                <option value="{{ loc }}" {{ filters.location|default('') == loc ? 'selected' }}>{{ loc|u.truncate(25) }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
 
                 <!-- Deuxième ligne -->
-                <div class="row g-3 mt-3">
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small">Statut lot</label>
-                        <select name="status" class="form-select">
+                <div class="row g-2 g-md-3 mt-1 mt-md-2">
+                    <div class="col-6 col-sm-4 col-md-2">
+                        <label class="form-label fw-bold small mb-1">Statut lot</label>
+                        <select name="status" class="form-select form-select-sm">
                             <option value="">Tous</option>
                             <option value="active" {{ filters.status|default('') == 'active' ? 'selected' }}>Actifs</option>
                             <option value="inactive" {{ filters.status|default('') == 'inactive' ? 'selected' }}>Inactifs</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold small">Expiration</label>
-                        <select name="expiry_status" class="form-select">
+                    <div class="col-6 col-sm-4 col-md-3">
+                        <label class="form-label fw-bold small mb-1">Expiration</label>
+                        <select name="expiry_status" class="form-select form-select-sm">
                             <option value="">Tous</option>
                             <option value="expired" {{ filters.expiry_status|default('') == 'expired' ? 'selected' }}>Expirés</option>
                             <option value="expiring_soon" {{ filters.expiry_status|default('') == 'expiring_soon' ? 'selected' }}>Expire bientôt</option>
                             <option value="not_expiring" {{ filters.expiry_status|default('') == 'not_expiring' ? 'selected' }}>Non expirés</option>
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small">Stock faible</label>
-                        <select name="low_stock" class="form-select">
+                    <div class="col-6 col-sm-4 col-md-2">
+                        <label class="form-label fw-bold small mb-1">Stock faible</label>
+                        <select name="low_stock" class="form-select form-select-sm">
                             <option value="">Tous</option>
                             <option value="yes" {{ filters.low_stock|default('') == 'yes' ? 'selected' }}>≤ 10 unités</option>
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small">Avoir</label>
-                        <select name="has_issue" class="form-select">
+                    <div class="col-6 col-sm-4 col-md-2">
+                        <label class="form-label fw-bold small mb-1">Avoir</label>
+                        <select name="has_issue" class="form-select form-select-sm">
                             <option value="">Tous</option>
-                            <option value="yes" {{ filters.has_issue|default('') == 'yes' ? 'selected' }}>Avec avoir</option>
-                            <option value="no" {{ filters.has_issue|default('') == 'no' ? 'selected' }}>Sans avoir</option>
+                            <option value="yes" {{ filters.has_issue|default('') == 'yes' ? 'selected' }}>Avec</option>
+                            <option value="no" {{ filters.has_issue|default('') == 'no' ? 'selected' }}>Sans</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold small">Statut avoir</label>
-                        <select name="issue_status" class="form-select">
+                    <div class="col-12 col-sm-4 col-md-3">
+                        <label class="form-label fw-bold small mb-1">Statut avoir</label>
+                        <select name="issue_status" class="form-select form-select-sm">
                             <option value="">Tous</option>
                             <option value="pending">En attente</option>
                             <option value="acknowledged">Accusé réception</option>
@@ -397,25 +584,31 @@
                 </div>
 
                 <!-- Troisième ligne -->
-                <div class="row g-3 mt-3">
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold small">Dates expiration</label>
-                        <div class="d-flex gap-2"><input type="date" name="date_from" class="form-control" placeholder="Du" value="{{ filters.date_from|default('') }}"><input type="date" name="date_to" class="form-control" placeholder="Au" value="{{ filters.date_to|default('') }}"></div>
+                <div class="row g-2 g-md-3 mt-1 mt-md-2">
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label class="form-label fw-bold small mb-1">Dates expiration</label>
+                        <div class="d-flex gap-2">
+                            <input type="date" name="date_from" class="form-control form-control-sm" placeholder="Du" value="{{ filters.date_from|default('') }}">
+                            <input type="date" name="date_to" class="form-control form-control-sm" placeholder="Au" value="{{ filters.date_to|default('') }}">
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold small">Trier par</label>
-                        <select name="sort" class="form-select">
+                    <div class="col-6 col-sm-3 col-md-4">
+                        <label class="form-label fw-bold small mb-1">Trier par</label>
+                        <select name="sort" class="form-select form-select-sm">
                             <option value="batch_number" {{ filters.sort|default('expiry_date') == 'batch_number' ? 'selected' }}>N° lot</option>
                             <option value="p.name" {{ filters.sort|default('expiry_date') == 'p.name' ? 'selected' }}>Produit</option>
-                            <option value="expiry_date" {{ filters.sort|default('expiry_date') == 'expiry_date' ? 'selected' }}>Date expiration</option>
+                            <option value="expiry_date" {{ filters.sort|default('expiry_date') == 'expiry_date' ? 'selected' }}>Expiration</option>
                             <option value="current_quantity" {{ filters.sort|default('expiry_date') == 'current_quantity' ? 'selected' }}>Quantité</option>
                             <option value="location" {{ filters.sort|default('expiry_date') == 'location' ? 'selected' }}>Emplacement</option>
                             <option value="issue_status" {{ filters.sort|default('expiry_date') == 'issue_status' ? 'selected' }}>Statut avoir</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold small">Ordre</label>
-                        <select name="direction" class="form-select"><option value="asc" {{ filters.direction|default('asc') == 'asc' ? 'selected' }}>Croissant ↑</option><option value="desc" {{ filters.direction|default('asc') == 'desc' ? 'selected' }}>Décroissant ↓</option></select>
+                    <div class="col-6 col-sm-3 col-md-4">
+                        <label class="form-label fw-bold small mb-1">Ordre</label>
+                        <select name="direction" class="form-select form-select-sm">
+                            <option value="asc" {{ filters.direction|default('asc') == 'asc' ? 'selected' }}>Croissant ↑</option>
+                            <option value="desc" {{ filters.direction|default('asc') == 'desc' ? 'selected' }}>Décroissant ↓</option>
+                        </select>
                     </div>
                 </div>
             </form>
@@ -424,15 +617,21 @@
 
     <!-- Tableau des lots -->
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-semibold"><i class="fas fa-list me-2"></i> Liste des lots</h5>
-            <div class="d-flex gap-2 align-items-center">
-                <span class="badge bg-secondary">{{ batches|length }} lot(s)</span>
-                <button type="button" class="btn btn-sm btn-outline-primary" id="selectAllBtn"><i class="fas fa-check-double me-1"></i> Tout sélectionner</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary" id="deselectAllBtn"><i class="fas fa-times me-1"></i> Désélectionner</button>
+        <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 fw-semibold small">
+                <i class="fas fa-list me-2"></i> 
+                <span class="d-none d-sm-inline">Liste des lots</span>
+                <span class="d-inline d-sm-none">Lots</span>
+            </h5>
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <span class="badge bg-secondary">{{ batches|length }}</span>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="selectAllBtn"><i class="fas fa-check-double me-1"></i> <span class="d-none d-sm-inline">Tout</span></button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="deselectAllBtn"><i class="fas fa-times me-1"></i> <span class="d-none d-sm-inline">Désélec.</span></button>
             </div>
         </div>
-        <div class="card-body p-0">
+        
+        <!-- Affichage tableau sur grand écran -->
+        <div class="card-body p-0 d-none d-md-block">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
@@ -442,10 +641,10 @@
                             <th>Produit</th>
                             <th>Emplacement</th>
                             <th>Quantité</th>
-                            <th>Prix unitaire</th>
+                            <th>Prix unit.</th>
                             <th>Expiration</th>
                             <th>Avoir</th>
-                            <th>Statut lot</th>
+                            <th>Statut</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -456,31 +655,20 @@
                             {% set isLowStock = batch.currentQuantity <= 10 %}
                             {% set hasIssue = batch.hasIssue %}
                             {% set locationDisplay = batch.locationEntity ? batch.locationEntity.displayName : (batch.location ?: '—') %}
-                            
-                            {# ✅ Vérifier si le signalement est autorisé #}
                             {% set canReport = false %}
                             {% if not hasIssue and batch.purchaseItemId %}
                                 {% if canReportIssue is defined and canReportIssue[batch.id] is defined %}
                                     {% set canReport = canReportIssue[batch.id] %}
                                 {% endif %}
                             {% endif %}
-                            
-                            {# ✅ Récupérer le PurchaseItem pour ce batch #}
                             {% set purchaseItem = purchaseItems[batch.id] is defined ? purchaseItems[batch.id] : null %}
                             
-                            <tr class="
-                                {% if isExpired %}table-danger
-                                {% elseif isExpiringSoon %}table-warning
-                                {% elseif isLowStock %}table-info
-                                {% elseif hasIssue %}table-light
-                                {% endif %}
-                            ">
+                            <tr class="{% if isExpired %}table-danger{% elseif isExpiringSoon %}table-warning{% elseif isLowStock %}table-info{% elseif hasIssue %}table-light{% endif %}">
                                 <td><input type="checkbox" class="form-check-input batch-checkbox" value="{{ batch.id }}"></td>
                                 <td>
                                     <div class="d-flex flex-column">
                                         <strong>{{ batch.batchNumber }}</strong>
                                         {% if batch.purchaseItemId %}
-                                            {# Numéro de commande #}
                                             <small class="text-muted">
                                                 <i class="fas fa-receipt me-1"></i> 
                                                 {% if purchaseMap is defined and purchaseMap[batch.purchaseItemId] is defined %}
@@ -489,8 +677,6 @@
                                                     ACHAT #{{ batch.purchaseItemId }}
                                                 {% endif %}
                                             </small>
-                                            
-                                            {# ✅ DATE D'ACHAT, FOURNISSEUR ET QUANTITÉ #}
                                             {% if purchaseItem and purchaseItem.purchase %}
                                                 <small class="text-muted">
                                                     <i class="fas fa-calendar-alt me-1"></i>
@@ -502,21 +688,17 @@
                                                         {{ purchaseItem.purchase.supplier.name|default('') }}
                                                     </small>
                                                 {% endif %}
-                                                <small class="text-muted">
-                                                    <i class="fas fa-box me-1"></i>
-                                                    {{ purchaseItem.quantity }} {{ batch.product.unit|default('pièce(s)') }}
-                                                </small>
                                             {% endif %}
                                         {% endif %}
                                     </div>
                                 </td>
                                 <td>
-                                    <a href="{{ path('app_admin_product_show', {'id': batch.product.id}) }}" class="text-decoration-none">{{ batch.product.name|u.truncate(35) }}</a>
+                                    <a href="{{ path('app_admin_product_show', {'id': batch.product.id}) }}" class="text-decoration-none">{{ batch.product.name|u.truncate(30) }}</a>
                                     <br><small class="text-muted"><i class="fas fa-barcode me-1"></i>{{ batch.product.barcode }}</small>
                                 </td>
                                 <td>
                                     {% if locationDisplay != '—' %}
-                                        <span class="badge bg-info text-dark"><i class="fas fa-map-marker-alt me-1"></i> {{ locationDisplay }}</span>
+                                        <span class="badge bg-info text-dark"><i class="fas fa-map-marker-alt me-1"></i> {{ locationDisplay|u.truncate(15) }}</span>
                                     {% else %}
                                         <span class="text-muted">—</span>
                                     {% endif %}
@@ -534,7 +716,7 @@
                                             </div>
                                         </div>
                                         {% if isLowStock %}
-                                            <br><span class="badge bg-warning text-dark mt-1">Stock faible</span>
+                                            <br><span class="badge bg-warning text-dark mt-1 issue-badge">Stock faible</span>
                                         {% endif %}
                                     </div>
                                 </td>
@@ -544,9 +726,9 @@
                                         <div>
                                             <span class="fw-bold">{{ batch.expiryDate|date('d/m/Y') }}</span>
                                             {% if isExpired %}
-                                                <br><span class="badge bg-danger mt-1">Expiré</span>
+                                                <br><span class="badge bg-danger mt-1 issue-badge">Expiré</span>
                                             {% elseif isExpiringSoon %}
-                                                <br><span class="badge bg-warning text-dark mt-1">J-{{ batch.expiryDate.diff(date()).days }}</span>
+                                                <br><span class="badge bg-warning text-dark mt-1 issue-badge">J-{{ batch.expiryDate.diff(date()).days }}</span>
                                             {% endif %}
                                         </div>
                                     {% else %}
@@ -557,9 +739,9 @@
                                     {% if hasIssue %}
                                         <span class="badge {{ batch.issueStatusBadgeClass }}">{{ batch.issueStatusLabel }}</span>
                                         {% if batch.issuePriority == 'critical' %}
-                                            <span class="badge bg-danger mt-1 d-block">Critique</span>
+                                            <span class="badge bg-danger mt-1 d-block issue-badge">Critique</span>
                                         {% elseif batch.issuePriority == 'high' %}
-                                            <span class="badge bg-warning text-dark mt-1 d-block">Haute</span>
+                                            <span class="badge bg-warning text-dark mt-1 d-block issue-badge">Haute</span>
                                         {% endif %}
                                         <small class="text-muted d-block">{{ batch.issueDeclaredAmount|price_with_currency(batch.hmaService) }}</small>
                                     {% else %}
@@ -572,50 +754,46 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-    <div class="btn-group" role="group">
-        <a href="{{ path('app_admin_stock_batch_print', {'id': batch.id}) }}" class="btn btn-sm btn-outline-secondary" title="Imprimer" target="_blank">
-            <i class="fas fa-print"></i>
-        </a>
-        <a href="{{ path('app_admin_stock_batch_show', {'id': batch.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
-            <i class="fas fa-eye"></i>
-        </a>
-        <a href="{{ path('app_admin_stock_batch_edit', {'id': batch.id}) }}" class="btn btn-sm btn-outline-warning" title="Modifier">
-            <i class="fas fa-map-marker-alt"></i>
-        </a>
-        
-        {# ✅ SIGNALER UN PROBLÈME - UNIQUEMENT SI AUTORISÉ #}
-        {% if canReport %}
-            <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-sm btn-outline-danger" title="Signaler un problème">
-                <i class="fas fa-exclamation-triangle"></i>
-            </a>
-        {% elseif hasIssue and supplierCreditNotes[batch.id] is defined %}
-            <a href="{{ path('app_supplier_credit_note_show', {'id': supplierCreditNotes[batch.id].id}) }}" class="btn btn-sm btn-outline-info" title="Voir l'avoir">
-                <i class="fas fa-file-invoice-dollar"></i>
-            </a>
-        {% else %}
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Signalement non disponible (délai de 30 jours dépassé)">
-                <i class="fas fa-exclamation-triangle text-muted"></i>
-            </button>
-        {% endif %}
-        
-        <button type="button" class="btn btn-sm btn-outline-info toggle-batch-btn" 
-                data-batch-id="{{ batch.id }}" 
-                data-is-active="{{ batch.isActive ? '1' : '0' }}" 
-                data-batch-number="{{ batch.batchNumber }}" 
-                data-token="{{ csrf_token('toggle-batch' ~ batch.id) }}">
-            <i class="fas {{ batch.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
-        </button>
-        
-        {% if is_granted('ROLE_ADMIN') and batch.stockMovements|length == 0 and not hasIssue %}
-            <button type="button" class="btn btn-sm btn-outline-danger delete-batch-btn" 
-                    data-batch-id="{{ batch.id }}" 
-                    data-batch-number="{{ batch.batchNumber }}" 
-                    data-token="{{ csrf_token('delete-batch' ~ batch.id) }}">
-                <i class="fas fa-trash"></i>
-            </button>
-        {% endif %}
-    </div>
-</td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ path('app_admin_stock_batch_print', {'id': batch.id}) }}" class="btn btn-sm btn-outline-secondary" title="Imprimer" target="_blank">
+                                            <i class="fas fa-print"></i>
+                                        </a>
+                                        <a href="{{ path('app_admin_stock_batch_show', {'id': batch.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ path('app_admin_stock_batch_edit', {'id': batch.id}) }}" class="btn btn-sm btn-outline-warning" title="Modifier">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </a>
+                                        {% if canReport %}
+                                            <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-sm btn-outline-danger" title="Signaler un problème">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </a>
+                                        {% elseif hasIssue and supplierCreditNotes[batch.id] is defined %}
+                                            <a href="{{ path('app_supplier_credit_note_show', {'id': supplierCreditNotes[batch.id].id}) }}" class="btn btn-sm btn-outline-info" title="Voir l'avoir">
+                                                <i class="fas fa-file-invoice-dollar"></i>
+                                            </a>
+                                        {% else %}
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Signalement non disponible">
+                                                <i class="fas fa-exclamation-triangle text-muted"></i>
+                                            </button>
+                                        {% endif %}
+                                        <button type="button" class="btn btn-sm btn-outline-info toggle-batch-btn" 
+                                                data-batch-id="{{ batch.id }}" 
+                                                data-is-active="{{ batch.isActive ? '1' : '0' }}" 
+                                                data-batch-number="{{ batch.batchNumber }}" 
+                                                data-token="{{ csrf_token('toggle-batch' ~ batch.id) }}">
+                                            <i class="fas {{ batch.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
+                                        </button>
+                                        {% if is_granted('ROLE_ADMIN') and batch.stockMovements|length == 0 and not hasIssue %}
+                                            <button type="button" class="btn btn-sm btn-outline-danger delete-batch-btn" 
+                                                    data-batch-id="{{ batch.id }}" 
+                                                    data-batch-number="{{ batch.batchNumber }}" 
+                                                    data-token="{{ csrf_token('delete-batch' ~ batch.id) }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
                             </tr>
                         {% else %}
                             <tr>
@@ -630,20 +808,296 @@
                 </table>
             </div>
         </div>
+
+        <!-- ✅ Affichage en cartes pour mobile (md et moins) -->
+        <div class="card-body p-2 p-sm-3 d-md-none table-card-view">
+            {% if batches|length > 0 %}
+                {% for batch in batches %}
+                    {% set isExpired = batch.expiryDate and batch.expiryDate < date() %}
+                    {% set isExpiringSoon = batch.expiryDate and batch.expiryDate >= date() and batch.expiryDate < date('+30 days') %}
+                    {% set isLowStock = batch.currentQuantity <= 10 %}
+                    {% set hasIssue = batch.hasIssue %}
+                    {% set locationDisplay = batch.locationEntity ? batch.locationEntity.displayName : (batch.location ?: '—') %}
+                    {% set canReport = false %}
+                    {% if not hasIssue and batch.purchaseItemId %}
+                        {% if canReportIssue is defined and canReportIssue[batch.id] is defined %}
+                            {% set canReport = canReportIssue[batch.id] %}
+                        {% endif %}
+                    {% endif %}
+                    {% set purchaseItem = purchaseItems[batch.id] is defined ? purchaseItems[batch.id] : null %}
+                    
+                    <div class="batch-card {% if isExpired %}status-expired{% elseif isExpiringSoon %}status-expiring{% elseif isLowStock %}status-low{% elseif hasIssue %}status-issue{% endif %}">
+                        <div class="batch-checkbox-wrapper">
+                            <input type="checkbox" class="form-check-input batch-checkbox" value="{{ batch.id }}" id="mobile-check-{{ batch.id }}">
+                            <label for="mobile-check-{{ batch.id }}" class="batch-number">{{ batch.batchNumber }}</label>
+                            {% if batch.isActive %}
+                                <span class="badge bg-success ms-auto">Actif</span>
+                            {% else %}
+                                <span class="badge bg-secondary ms-auto">Inactif</span>
+                            {% endif %}
+                        </div>
+                        <div class="batch-row">
+                            <div class="batch-item">
+                                <span class="label">Produit</span>
+                                <span class="value">
+                                    <a href="{{ path('app_admin_product_show', {'id': batch.product.id}) }}" class="text-decoration-none">{{ batch.product.name|u.truncate(25) }}</a>
+                                </span>
+                            </div>
+                            <div class="batch-item">
+                                <span class="label">Emplacement</span>
+                                <span class="value">
+                                    {% if locationDisplay != '—' %}
+                                        <span class="badge bg-info text-dark"><i class="fas fa-map-marker-alt me-1"></i> {{ locationDisplay|u.truncate(12) }}</span>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="batch-item">
+                                <span class="label">Quantité</span>
+                                <span class="value">
+                                    <span class="fw-bold">{{ batch.currentQuantity }}</span>
+                                    <small class="text-muted">/ {{ batch.initialQuantity }}</small>
+                                    <div class="progress mt-1" style="height:4px;max-width:80px;">
+                                        <div class="progress-bar 
+                                            {% if batch.currentQuantity/batch.initialQuantity*100 <= 10 %}bg-danger
+                                            {% elseif batch.currentQuantity/batch.initialQuantity*100 <= 30 %}bg-warning
+                                            {% else %}bg-success{% endif %}" 
+                                            style="width:{{ (batch.currentQuantity / batch.initialQuantity * 100)|round }}%">
+                                        </div>
+                                    </div>
+                                    {% if isLowStock %}
+                                        <span class="badge bg-warning text-dark mt-1 issue-badge d-block">Stock faible</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="batch-item">
+                                <span class="label">Prix unitaire</span>
+                                <span class="value">{{ batch.unitPrice|price_with_currency(batch.hmaService) }}</span>
+                            </div>
+                            <div class="batch-item">
+                                <span class="label">Expiration</span>
+                                <span class="value">
+                                    {% if batch.expiryDate %}
+                                        <span class="fw-bold">{{ batch.expiryDate|date('d/m/Y') }}</span>
+                                        {% if isExpired %}
+                                            <span class="badge bg-danger mt-1 issue-badge d-block">Expiré</span>
+                                        {% elseif isExpiringSoon %}
+                                            <span class="badge bg-warning text-dark mt-1 issue-badge d-block">J-{{ batch.expiryDate.diff(date()).days }}</span>
+                                        {% endif %}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="batch-item">
+                                <span class="label">Avoir</span>
+                                <span class="value">
+                                    {% if hasIssue %}
+                                        <span class="badge {{ batch.issueStatusBadgeClass }}">{{ batch.issueStatusLabel }}</span>
+                                        {% if batch.issuePriority == 'critical' %}
+                                            <span class="badge bg-danger mt-1 issue-badge d-block">Critique</span>
+                                        {% elseif batch.issuePriority == 'high' %}
+                                            <span class="badge bg-warning text-dark mt-1 issue-badge d-block">Haute</span>
+                                        {% endif %}
+                                        <small class="text-muted d-block">{{ batch.issueDeclaredAmount|price_with_currency(batch.hmaService) }}</small>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </span>
+                            </div>
+                            {% if batch.purchaseItemId %}
+                            <div class="batch-item" style="grid-column:1/-1;">
+                                <span class="label">Réf. achat</span>
+                                <span class="value small text-muted">
+                                    <i class="fas fa-receipt me-1"></i> 
+                                    {% if purchaseMap is defined and purchaseMap[batch.purchaseItemId] is defined %}
+                                        {{ purchaseMap[batch.purchaseItemId] }}
+                                    {% else %}
+                                        ACHAT #{{ batch.purchaseItemId }}
+                                    {% endif %}
+                                    {% if purchaseItem and purchaseItem.purchase %}
+                                        — {{ purchaseItem.purchase.createdAt|date('d/m/Y') }}
+                                        {% if purchaseItem.purchase.supplier %}
+                                            — {{ purchaseItem.purchase.supplier.name|default('') }}
+                                        {% endif %}
+                                    {% endif %}
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="batch-actions">
+                            <a href="{{ path('app_admin_stock_batch_print', {'id': batch.id}) }}" class="btn btn-sm btn-outline-secondary" title="Imprimer" target="_blank">
+                                <i class="fas fa-print"></i> Imprimer
+                            </a>
+                            <a href="{{ path('app_admin_stock_batch_show', {'id': batch.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
+                                <i class="fas fa-eye"></i> Voir
+                            </a>
+                            <a href="{{ path('app_admin_stock_batch_edit', {'id': batch.id}) }}" class="btn btn-sm btn-outline-warning" title="Modifier">
+                                <i class="fas fa-map-marker-alt"></i> Modifier
+                            </a>
+                            {% if canReport %}
+                                <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-sm btn-outline-danger" title="Signaler">
+                                    <i class="fas fa-exclamation-triangle"></i> Signaler
+                                </a>
+                            {% elseif hasIssue and supplierCreditNotes[batch.id] is defined %}
+                                <a href="{{ path('app_supplier_credit_note_show', {'id': supplierCreditNotes[batch.id].id}) }}" class="btn btn-sm btn-outline-info" title="Voir l'avoir">
+                                    <i class="fas fa-file-invoice-dollar"></i> Avoir
+                                </a>
+                            {% else %}
+                                <button type="button" class="btn btn-sm btn-outline-secondary" disabled>
+                                    <i class="fas fa-exclamation-triangle text-muted"></i>
+                                </button>
+                            {% endif %}
+                            <button type="button" class="btn btn-sm btn-outline-info toggle-batch-btn" 
+                                    data-batch-id="{{ batch.id }}" 
+                                    data-is-active="{{ batch.isActive ? '1' : '0' }}" 
+                                    data-batch-number="{{ batch.batchNumber }}" 
+                                    data-token="{{ csrf_token('toggle-batch' ~ batch.id) }}">
+                                <i class="fas {{ batch.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
+                            </button>
+                            {% if is_granted('ROLE_ADMIN') and batch.stockMovements|length == 0 and not hasIssue %}
+                                <button type="button" class="btn btn-sm btn-outline-danger delete-batch-btn" 
+                                        data-batch-id="{{ batch.id }}" 
+                                        data-batch-number="{{ batch.batchNumber }}" 
+                                        data-token="{{ csrf_token('delete-batch' ~ batch.id) }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                    <p class="text-muted mb-0">Aucun lot trouvé</p>
+                    <p class="text-muted small">Modifiez vos filtres</p>
+                </div>
+            {% endif %}
+        </div>
+
         {% if totalPages > 1 %}
-        <div class="card-footer bg-white"><nav><ul class="pagination justify-content-center mb-0">
-            {% if currentPage > 1 %}<li class="page-item"><a class="page-link" href="{{ path('app_admin_stock_batch_all', app.request.query.all|merge({'page': currentPage - 1})) }}"><i class="fas fa-chevron-left"></i> Précédent</a></li>{% endif %}
-            {% for page in 1..totalPages %}<li class="page-item {{ page == currentPage ? 'active' : '' }}"><a class="page-link" href="{{ path('app_admin_stock_batch_all', app.request.query.all|merge({'page': page})) }}">{{ page }}</a></li>{% endfor %}
-            {% if currentPage < totalPages %}<li class="page-item"><a class="page-link" href="{{ path('app_admin_stock_batch_all', app.request.query.all|merge({'page': currentPage + 1})) }}">Suivant <i class="fas fa-chevron-right"></i></a></li>{% endif %}
-        </ul></nav></div>{% endif %}
+        <div class="card-footer bg-white p-2 p-md-3">
+            <nav>
+                <ul class="pagination justify-content-center mb-0 flex-wrap">
+                    {% if currentPage > 1 %}
+                        <li class="page-item"><a class="page-link" href="{{ path('app_admin_stock_batch_all', app.request.query.all|merge({'page': currentPage - 1})) }}"><i class="fas fa-chevron-left"></i> <span class="d-none d-sm-inline">Précédent</span></a></li>
+                    {% endif %}
+                    {% for page in 1..totalPages %}
+                        <li class="page-item {{ page == currentPage ? 'active' : '' }} d-none d-sm-block">
+                            <a class="page-link" href="{{ path('app_admin_stock_batch_all', app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
+                        </li>
+                    {% endfor %}
+                    {# Version mobile avec moins de pages #}
+                    {% if totalPages > 5 %}
+                        <li class="page-item d-block d-sm-none">
+                            <span class="page-link">{{ currentPage }} / {{ totalPages }}</span>
+                        </li>
+                    {% endif %}
+                    {% if currentPage < totalPages %}
+                        <li class="page-item"><a class="page-link" href="{{ path('app_admin_stock_batch_all', app.request.query.all|merge({'page': currentPage + 1})) }}"><span class="d-none d-sm-inline">Suivant</span> <i class="fas fa-chevron-right"></i></a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
     </div>
 </div>
 
 <!-- Modales -->
-<div class="modal fade" id="printOptionsModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header" style="background: var(--primary-color); color: white;"><h5 class="modal-title"><i class="fas fa-print me-2"></i> Options d'impression</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="alert alert-info"><i class="fas fa-info-circle me-2"></i> <span id="selectedCount">0</span> lot(s) sélectionné(s)</div><div class="d-grid gap-2"><button type="button" class="btn btn-primary" id="print-selected"><i class="fas fa-print me-2"></i> Imprimer la sélection</button><button type="button" class="btn btn-outline-primary" id="print-all"><i class="fas fa-print me-2"></i> Imprimer tous les lots</button></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button></div></div></div></div>
-<div class="modal fade" id="importExcelModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header" style="background: var(--success-color); color: white;"><h5 class="modal-title"><i class="fas fa-file-excel me-2"></i> Importer des lots</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="alert alert-info"><i class="fas fa-info-circle me-2"></i> Utilisez l'export pour obtenir le template.</div><form method="post" action="{{ path('app_admin_stock_batch_import_excel') }}" enctype="multipart/form-data"><div class="mb-3"><label class="form-label fw-bold">Fichier Excel (.xlsx)</label><input type="file" name="excel_file" class="form-control" accept=".xlsx,.xls" required></div><div class="form-check mb-3"><input type="checkbox" name="update_only_location" class="form-check-input" id="updateOnlyLocation" checked><label class="form-check-label" for="updateOnlyLocation">Mettre à jour uniquement les emplacements</label></div><div class="d-grid"><button type="submit" class="btn" style="background: var(--success-color); color: white; border-color: var(--success-color);"><i class="fas fa-upload me-2"></i> Importer</button></div></form></div></div></div></div>
-<div class="modal fade" id="toggleBatchModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Confirmation</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p id="toggleBatchMessage"></p></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button><form id="toggleBatchForm" method="post"><input type="hidden" name="_token" id="toggleBatchToken"><button type="submit" class="btn" id="toggleBatchBtn"></button></form></div></div></div></div>
-<div class="modal fade" id="deleteBatchModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header" style="background: var(--danger-color); color: white;"><h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Supprimer le lot</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><p id="deleteBatchMessage"></p></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button><form id="deleteBatchForm" method="post"><input type="hidden" name="_token" id="deleteBatchToken"><button type="submit" class="btn" style="background: var(--danger-color); color: white; border-color: var(--danger-color);">Supprimer</button></form></div></div></div></div>
+<div class="modal fade" id="printOptionsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--primary-color); color: white;">
+                <h5 class="modal-title"><i class="fas fa-print me-2"></i> Options</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> <span id="selectedCount">0</span> lot(s) sélectionné(s)
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary" id="print-selected"><i class="fas fa-print me-2"></i> Imprimer sélection</button>
+                    <button type="button" class="btn btn-outline-primary" id="print-all"><i class="fas fa-print me-2"></i> Imprimer tous</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="importExcelModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--success-color); color: white;">
+                <h5 class="modal-title"><i class="fas fa-file-excel me-2"></i> Importer</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info small"><i class="fas fa-info-circle me-2"></i> Utilisez l'export pour obtenir le template.</div>
+                <form method="post" action="{{ path('app_admin_stock_batch_import_excel') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Fichier Excel (.xlsx)</label>
+                        <input type="file" name="excel_file" class="form-control form-control-sm" accept=".xlsx,.xls" required>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" name="update_only_location" class="form-check-input" id="updateOnlyLocation" checked>
+                        <label class="form-check-label small" for="updateOnlyLocation">Mettre à jour uniquement les emplacements</label>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn" style="background: var(--success-color); color: white; border-color: var(--success-color);">
+                            <i class="fas fa-upload me-2"></i> Importer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="toggleBatchModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="toggleBatchMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+                <form id="toggleBatchForm" method="post">
+                    <input type="hidden" name="_token" id="toggleBatchToken">
+                    <button type="submit" class="btn btn-sm" id="toggleBatchBtn"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteBatchModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--danger-color); color: white;">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Supprimer</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteBatchMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+                <form id="deleteBatchForm" method="post">
+                    <input type="hidden" name="_token" id="deleteBatchToken">
+                    <button type="submit" class="btn btn-sm" style="background: var(--danger-color); color: white; border-color: var(--danger-color);">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
@@ -653,34 +1107,106 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    $('#product-select, #location-select').select2({ theme: 'bootstrap-5', language: 'fr', allowClear: true, width: '100%' });
-    const selectAll = document.getElementById('select-all-checkbox'), checkboxes = document.querySelectorAll('.batch-checkbox'), countSpan = document.getElementById('selectedCount');
-    function updateCount() { const s = document.querySelectorAll('.batch-checkbox:checked').length; if(countSpan) countSpan.textContent = s; if(selectAll) selectAll.checked = checkboxes.length === s; }
-    if(selectAll) selectAll.addEventListener('change', function() { checkboxes.forEach(cb => cb.checked = selectAll.checked); updateCount(); });
-    document.getElementById('selectAllBtn')?.addEventListener('click', () => { checkboxes.forEach(cb => cb.checked = true); if(selectAll) selectAll.checked = true; updateCount(); });
-    document.getElementById('deselectAllBtn')?.addEventListener('click', () => { checkboxes.forEach(cb => cb.checked = false); if(selectAll) selectAll.checked = false; updateCount(); });
+    // Sélecteurs Select2
+    if (typeof $.fn.select2 !== 'undefined') {
+        $('#product-select, #location-select').select2({ 
+            theme: 'bootstrap-5', 
+            language: 'fr', 
+            allowClear: true, 
+            width: '100%',
+            dropdownParent: $('#product-select, #location-select').parent()
+        });
+    }
+
+    // Gestion des checkboxes
+    const selectAll = document.getElementById('select-all-checkbox');
+    const checkboxes = document.querySelectorAll('.batch-checkbox');
+    const countSpan = document.getElementById('selectedCount');
+
+    function updateCount() {
+        const selected = document.querySelectorAll('.batch-checkbox:checked').length;
+        if (countSpan) countSpan.textContent = selected;
+        if (selectAll) selectAll.checked = checkboxes.length === selected && checkboxes.length > 0;
+    }
+
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+            updateCount();
+        });
+    }
+
+    document.getElementById('selectAllBtn')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        checkboxes.forEach(cb => cb.checked = true);
+        if (selectAll) selectAll.checked = true;
+        updateCount();
+    });
+
+    document.getElementById('deselectAllBtn')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        checkboxes.forEach(cb => cb.checked = false);
+        if (selectAll) selectAll.checked = false;
+        updateCount();
+    });
+
     checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
     updateCount();
-    document.getElementById('print-selected')?.addEventListener('click', () => { const s = Array.from(document.querySelectorAll('.batch-checkbox:checked')).map(cb => cb.value); if(s.length) window.open('/admin/stock-batch/print-multiple?ids=' + s.join(','), '_blank'); else alert('Sélectionnez au moins un lot.'); });
-    document.getElementById('print-all')?.addEventListener('click', () => { const all = Array.from(document.querySelectorAll('.batch-checkbox')).map(cb => cb.value); if(all.length) window.open('/admin/stock-batch/print-multiple?ids=' + all.join(','), '_blank'); else alert('Aucun lot à imprimer.'); });
+
+    // Impression sélection
+    document.getElementById('print-selected')?.addEventListener('click', function() {
+        const selected = Array.from(document.querySelectorAll('.batch-checkbox:checked')).map(cb => cb.value);
+        if (selected.length) {
+            window.open('/admin/stock-batch/print-multiple?ids=' + selected.join(','), '_blank');
+        } else {
+            alert('Sélectionnez au moins un lot.');
+        }
+    });
+
+    document.getElementById('print-all')?.addEventListener('click', function() {
+        const all = Array.from(document.querySelectorAll('.batch-checkbox')).map(cb => cb.value);
+        if (all.length) {
+            window.open('/admin/stock-batch/print-multiple?ids=' + all.join(','), '_blank');
+        } else {
+            alert('Aucun lot à imprimer.');
+        }
+    });
+
+    // Toggle batch (activation/désactivation)
     const toggleModal = new bootstrap.Modal(document.getElementById('toggleBatchModal'));
-    document.querySelectorAll('.toggle-batch-btn').forEach(btn => btn.addEventListener('click', function() {
-        const id = this.dataset.batchId, isActive = this.dataset.isActive === '1', token = this.dataset.token, num = this.dataset.batchNumber;
-        document.getElementById('toggleBatchMessage').innerText = `Êtes-vous sûr de vouloir ${isActive ? 'désactiver' : 'activer'} le lot "${num}" ?`;
-        document.getElementById('toggleBatchForm').action = `/admin/stock-batch/${id}/toggle`;
-        document.getElementById('toggleBatchToken').value = token;
-        const btn2 = document.getElementById('toggleBatchBtn');
-        btn2.className = isActive ? 'btn btn-danger' : 'btn btn-success';
-        btn2.textContent = isActive ? 'Désactiver' : 'Activer';
-        toggleModal.show();
-    }));
+    document.querySelectorAll('.toggle-batch-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.batchId;
+            const isActive = this.dataset.isActive === '1';
+            const token = this.dataset.token;
+            const num = this.dataset.batchNumber;
+            
+            document.getElementById('toggleBatchMessage').innerText = 
+                `Êtes-vous sûr de vouloir ${isActive ? 'désactiver' : 'activer'} le lot "${num}" ?`;
+            document.getElementById('toggleBatchForm').action = `/admin/stock-batch/${id}/toggle`;
+            document.getElementById('toggleBatchToken').value = token;
+            
+            const btnSubmit = document.getElementById('toggleBatchBtn');
+            btnSubmit.className = isActive ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm';
+            btnSubmit.textContent = isActive ? 'Désactiver' : 'Activer';
+            
+            toggleModal.show();
+        });
+    });
+
+    // Suppression
     const deleteModal = new bootstrap.Modal(document.getElementById('deleteBatchModal'));
-    document.querySelectorAll('.delete-batch-btn:not([disabled])').forEach(btn => btn.addEventListener('click', function() {
-        document.getElementById('deleteBatchMessage').innerHTML = `<div class="alert alert-warning">⚠️ Cette action est irréversible.</div><p>Supprimer le lot <strong>${this.dataset.batchNumber}</strong> ?</p><p class="text-danger mb-0"><small>Cette suppression n'est possible que si aucun mouvement de stock n'est associé.</small></p>`;
-        document.getElementById('deleteBatchForm').action = '/admin/stock-batch/' + this.dataset.batchId + '/delete';
-        document.getElementById('deleteBatchToken').value = this.dataset.token;
-        deleteModal.show();
-    }));
+    document.querySelectorAll('.delete-batch-btn:not([disabled])').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.getElementById('deleteBatchMessage').innerHTML = 
+                `<div class="alert alert-warning small">⚠️ Cette action est irréversible.</div>
+                 <p>Supprimer le lot <strong>${this.dataset.batchNumber}</strong> ?</p>
+                 <p class="text-danger mb-0 small">Cette suppression n'est possible que si aucun mouvement de stock n'est associé.</p>`;
+            document.getElementById('deleteBatchForm').action = '/admin/stock-batch/' + this.dataset.batchId + '/delete';
+            document.getElementById('deleteBatchToken').value = this.dataset.token;
+            deleteModal.show();
+        });
+    });
 });
 </script>
 {% endblock %}

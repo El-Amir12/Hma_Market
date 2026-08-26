@@ -4,63 +4,63 @@
 {% block title %}Gestion des utilisateurs - HMA Market{% endblock %}
 
 {% block body %}
-<div class="container-fluid px-4">
+<div class="container-fluid px-2 px-md-4">
     <!-- Header moderne -->
-    <div class="row mb-4">
+    <div class="row mb-3 mb-md-4">
         <div class="col-12">
-            <div class="modern-header position-relative overflow-hidden rounded-4 shadow-lg">
+            <div class="modern-header position-relative overflow-hidden rounded-3 rounded-md-4 shadow-lg">
                 <div class="floating-shapes">
                     <div class="shape shape-1"></div>
                     <div class="shape shape-2"></div>
                     <div class="shape shape-3"></div>
                 </div>
-                <div class="position-relative p-5" style="z-index: 2;">
-                    <div class="row align-items-center">
-                        <div class="col-lg-8">
-                            <div class="d-flex align-items-center gap-4">
-                                <div class="icon-wrapper bg-white bg-opacity-20 rounded-4 p-4">
-                                    <i class="bi bi-people-fill text-white display-4"></i>
+                <div class="position-relative p-3 p-md-5" style="z-index: 2;">
+                    <div class="row align-items-center g-3">
+                        <div class="col-12 col-lg-8">
+                            <div class="d-flex align-items-center gap-3 gap-md-4">
+                                <div class="icon-wrapper bg-white bg-opacity-20 rounded-3 rounded-md-4 p-3 p-md-4">
+                                    <i class="bi bi-people-fill text-white display-6 display-md-4"></i>
                                 </div>
                                 <div>
-                                    <h1 class="display-5 fw-bold text-white mb-2">Gestion des utilisateurs</h1>
-                                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                                    <h1 class="h2 h-md-1 display-md-5 fw-bold text-white mb-1 mb-md-2">Gestion des utilisateurs</h1>
+                                    <div class="d-flex align-items-center gap-2 gap-md-3 flex-wrap">
                                         {% if is_super_admin %}
-                                            <span class="badge bg-white text-primary px-4 py-2 rounded-pill fs-6">
-                                                <i class="bi bi-shield-shaded me-2"></i>Super Administrateur
+                                            <span class="badge bg-white text-primary px-3 py-1 px-md-4 py-md-2 rounded-pill fs-6">
+                                                <i class="bi bi-shield-shaded me-1 me-md-2"></i>Super Admin
                                             </span>
-                                            <span class="text-white-50"><i class="bi bi-building me-1"></i>Toutes les entreprises</span>
+                                            <span class="text-white-50 small"><i class="bi bi-building me-1"></i>Toutes les entreprises</span>
                                         {% else %}
-                                            <span class="badge bg-white text-success px-4 py-2 rounded-pill fs-6">
-                                                <i class="bi bi-building me-2"></i>{{ app.user.companyDisplayName }}
+                                            <span class="badge bg-white text-success px-3 py-1 px-md-4 py-md-2 rounded-pill fs-6">
+                                                <i class="bi bi-building me-1 me-md-2"></i>{{ app.user.companyDisplayName|u.truncate(20, '...') }}
                                             </span>
                                         {% endif %}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-12 col-lg-4">
                             <div class="stats-grid">
-                                <div class="stat-card bg-white bg-opacity-10 rounded-3 p-3 text-center">
-                                    <div class="stat-value text-white h3 mb-0 fw-bold">{{ stats.total }}</div>
+                                <div class="stat-card bg-white bg-opacity-10 rounded-2 rounded-md-3 p-2 p-md-3 text-center">
+                                    <div class="stat-value text-white h5 h-md-3 mb-0 fw-bold">{{ stats.total }}</div>
                                     <div class="stat-label text-white-50 small">Total</div>
                                 </div>
-                                <div class="stat-card bg-white bg-opacity-10 rounded-3 p-3 text-center">
-                                    <div class="stat-value text-success h3 mb-0 fw-bold">{{ stats.active }}</div>
+                                <div class="stat-card bg-white bg-opacity-10 rounded-2 rounded-md-3 p-2 p-md-3 text-center">
+                                    <div class="stat-value text-success h5 h-md-3 mb-0 fw-bold">{{ stats.active }}</div>
                                     <div class="stat-label text-white-50 small">Actifs</div>
                                 </div>
-                                <div class="stat-card bg-white bg-opacity-10 rounded-3 p-3 text-center">
-                                    <div class="stat-value text-warning h3 mb-0 fw-bold">{{ stats.inactiveByAdmin }}</div>
+                                <div class="stat-card bg-white bg-opacity-10 rounded-2 rounded-md-3 p-2 p-md-3 text-center">
+                                    <div class="stat-value text-warning h5 h-md-3 mb-0 fw-bold">{{ stats.inactiveByAdmin }}</div>
                                     <div class="stat-label text-white-50 small">Inactifs</div>
                                 </div>
-                                <div class="stat-card bg-white bg-opacity-10 rounded-3 p-3 text-center">
-                                    <div class="stat-value text-danger h3 mb-0 fw-bold">{{ stats.outOfQuota }}</div>
+                                <div class="stat-card bg-white bg-opacity-10 rounded-2 rounded-md-3 p-2 p-md-3 text-center">
+                                    <div class="stat-value text-danger h5 h-md-3 mb-0 fw-bold">{{ stats.outOfQuota }}</div>
                                     <div class="stat-label text-white-50 small">Hors quota</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="wave-decoration">
+                <div class="wave-decoration d-none d-md-block">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
                         <path fill="#ffffff" fill-opacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
                     </svg>
@@ -69,78 +69,78 @@
         </div>
     </div>
 
-    <!-- Statistiques filtrées (pleine largeur) -->
-    <div class="row mb-4">
+    <!-- Statistiques filtrées -->
+    <div class="row mb-3 mb-md-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white py-3 d-flex align-items-center">
-                    <i class="bi bi-funnel me-2 text-primary fs-4"></i>
-                    <h5 class="mb-0 fw-bold">Statistiques selon les filtres</h5>
+                <div class="card-header bg-white py-2 py-md-3 d-flex align-items-center">
+                    <i class="bi bi-funnel me-2 text-primary fs-5 fs-md-4"></i>
+                    <h5 class="mb-0 fw-bold fs-6 fs-md-5">Statistiques selon les filtres</h5>
                 </div>
-                <div class="card-body">
-                    <div class="row g-3 row-cols-2 row-cols-md-4 {% if is_super_admin %}row-cols-xl-5{% else %}row-cols-xl-4{% endif %}">
+                <div class="card-body p-2 p-md-3">
+                    <div class="row g-2 g-md-3 row-cols-2 row-cols-md-4 {% if is_super_admin %}row-cols-xl-5{% else %}row-cols-xl-4{% endif %}">
                         <div class="col">
-                            <div class="stat-item p-3 bg-light rounded-3 h-100">
+                            <div class="stat-item p-2 p-md-3 bg-light rounded-2 rounded-md-3 h-100">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <span class="text-muted text-uppercase small fw-bold">Filtrés</span>
-                                        <h3 class="mb-0 fw-bold">{{ totalFiltered }}</h3>
+                                        <h3 class="mb-0 fw-bold fs-4 fs-md-3">{{ totalFiltered }}</h3>
                                     </div>
-                                    <div class="bg-primary bg-opacity-10 p-3 rounded-3">
-                                        <i class="bi bi-people text-white fs-2"></i>
+                                    <div class="bg-primary bg-opacity-10 p-2 p-md-3 rounded-2 rounded-md-3">
+                                        <i class="bi bi-people text-white fs-4 fs-md-2"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="stat-item p-3 bg-light rounded-3 h-100">
+                            <div class="stat-item p-2 p-md-3 bg-light rounded-2 rounded-md-3 h-100">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <span class="text-muted text-uppercase small fw-bold">Actifs</span>
-                                        <h3 class="mb-0 fw-bold text-success">{{ activeFiltered }}</h3>
+                                        <h3 class="mb-0 fw-bold text-success fs-4 fs-md-3">{{ activeFiltered }}</h3>
                                     </div>
-                                    <div class="bg-success bg-opacity-10 p-3 rounded-3">
-                                        <i class="bi bi-check-circle text-white fs-2"></i>
+                                    <div class="bg-success bg-opacity-10 p-2 p-md-3 rounded-2 rounded-md-3">
+                                        <i class="bi bi-check-circle text-white fs-4 fs-md-2"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="stat-item p-3 bg-light rounded-3 h-100">
+                            <div class="stat-item p-2 p-md-3 bg-light rounded-2 rounded-md-3 h-100">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <span class="text-muted text-uppercase small fw-bold">Inactifs</span>
-                                        <h3 class="mb-0 fw-bold text-danger">{{ inactiveFiltered }}</h3>
+                                        <h3 class="mb-0 fw-bold text-danger fs-4 fs-md-3">{{ inactiveFiltered }}</h3>
                                     </div>
-                                    <div class="bg-danger bg-opacity-10 p-3 rounded-3">
-                                        <i class="bi bi-pause-circle text-white fs-2"></i>
+                                    <div class="bg-danger bg-opacity-10 p-2 p-md-3 rounded-2 rounded-md-3">
+                                        <i class="bi bi-pause-circle text-white fs-4 fs-md-2"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="stat-item p-3 bg-light rounded-3 h-100">
+                            <div class="stat-item p-2 p-md-3 bg-light rounded-2 rounded-md-3 h-100">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <span class="text-muted text-uppercase small fw-bold">Hors quota</span>
-                                        <h3 class="mb-0 fw-bold text-warning">{{ outOfQuotaFiltered }}</h3>
+                                        <h3 class="mb-0 fw-bold text-warning fs-4 fs-md-3">{{ outOfQuotaFiltered }}</h3>
                                     </div>
-                                    <div class="bg-warning bg-opacity-10 p-3 rounded-3">
-                                        <i class="bi bi-exclamation-triangle text-white fs-2"></i>
+                                    <div class="bg-warning bg-opacity-10 p-2 p-md-3 rounded-2 rounded-md-3">
+                                        <i class="bi bi-exclamation-triangle text-white fs-4 fs-md-2"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         {% if is_super_admin %}
                         <div class="col">
-                            <div class="stat-item p-3 bg-light rounded-3 h-100">
+                            <div class="stat-item p-2 p-md-3 bg-light rounded-2 rounded-md-3 h-100">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <span class="text-muted text-uppercase small fw-bold">Bloqués</span>
-                                        <h3 class="mb-0 fw-bold text-dark">{{ blockedFiltered }}</h3>
+                                        <h3 class="mb-0 fw-bold text-dark fs-4 fs-md-3">{{ blockedFiltered }}</h3>
                                     </div>
-                                    <div class="bg-dark bg-opacity-10 p-3 rounded-3">
-                                        <i class="bi bi-lock text-white fs-2"></i>
+                                    <div class="bg-dark bg-opacity-10 p-2 p-md-3 rounded-2 rounded-md-3">
+                                        <i class="bi bi-lock text-white fs-4 fs-md-2"></i>
                                     </div>
                                 </div>
                             </div>
@@ -152,45 +152,45 @@
         </div>
     </div>
 
-    <!-- Filtres avancés (pleine largeur) -->
-    <div class="row mb-4">
+    <!-- Filtres avancés -->
+    <div class="row mb-3 mb-md-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
-                    <h5 class="mb-0 fw-bold"><i class="bi bi-sliders2 me-2"></i>Filtres avancés</h5>
-                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                        {# ✅ Boutons Filtrer et Effacer #}
-                        <a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary px-3">
-                            <i class="bi bi-arrow-counterclockwise me-1"></i>Effacer
+                <div class="card-header bg-white py-2 py-md-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <h5 class="mb-0 fw-bold fs-6 fs-md-5"><i class="bi bi-sliders2 me-2"></i>Filtres avancés</h5>
+                    <div class="d-flex align-items-center gap-1 gap-md-2 flex-wrap">
+                        {# Boutons Filtrer et Effacer #}
+                        <a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary btn-sm btn-md px-2 px-md-3">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i><span class="d-none d-sm-inline">Effacer</span>
                         </a>
-                        <button type="submit" form="userFilterForm" class="btn btn-primary px-4">
-                            <i class="bi bi-funnel me-1"></i>Filtrer
+                        <button type="submit" form="userFilterForm" class="btn btn-primary btn-sm btn-md px-3 px-md-4">
+                            <i class="bi bi-funnel me-1"></i><span class="d-none d-sm-inline">Filtrer</span>
                         </button>
                         
                         {# Bouton Nouvel utilisateur #}
                         {% if is_super_admin or can_add_user %}
-                            <a href="{{ path('app_user_new') }}" class="btn btn-success">
-                                <i class="bi bi-person-plus-fill me-1"></i>Nouvel utilisateur
+                            <a href="{{ path('app_user_new') }}" class="btn btn-success btn-sm btn-md">
+                                <i class="bi bi-person-plus-fill me-1"></i><span class="d-none d-sm-inline">Nouvel utilisateur</span>
                             </a>
                         {% else %}
-                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#quotaReachedModal">
-                                <i class="bi bi-person-plus-fill me-1"></i>Limite atteinte
+                            <button type="button" class="btn btn-warning btn-sm btn-md" data-bs-toggle="modal" data-bs-target="#quotaReachedModal">
+                                <i class="bi bi-person-plus-fill me-1"></i><span class="d-none d-sm-inline">Limite atteinte</span>
                             </button>
                         {% endif %}
                     </div>
                 </div>
-                <div class="card-body">
-                    <form method="get" action="{{ path('app_user_index') }}" class="row g-3" id="userFilterForm">
+                <div class="card-body p-2 p-md-3">
+                    <form method="get" action="{{ path('app_user_index') }}" class="row g-2 g-md-3" id="userFilterForm">
                         
-                        {# ✅ CAS 1: SUPER ADMIN - 4 filtres en 3,3,3,3 #}
+                        {# CAS 1: SUPER ADMIN - 4 filtres #}
                         {% if is_super_admin %}
                             
-                            {# 1. RECHERCHE - 3/12 (25%) #}
-                            <div class="col-12 col-md-3">
-                                <label for="search" class="form-label fw-bold">Rechercher</label>
+                            {# 1. RECHERCHE #}
+                            <div class="col-12 col-md-6 col-lg-3">
+                                <label for="search" class="form-label fw-bold small">Rechercher</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-                                    <input type="text" name="search" id="search" class="form-control bg-light border-0" placeholder="Nom, email, téléphone..." value="{{ search }}">
+                                    <input type="text" name="search" id="search" class="form-control bg-light border-0 form-control-sm" placeholder="Nom, email..." value="{{ search }}">
                                     {% if search %}
                                     <a href="{{ path('app_user_index', {page: currentPage, role: role, status: status, company: companyId}) }}" class="btn btn-outline-secondary border-0" title="Effacer">
                                         <i class="bi bi-x-circle"></i>
@@ -199,21 +199,21 @@
                                 </div>
                             </div>
                             
-                            {# 2. ENTREPRISE - 3/12 (25%) #}
-                            <div class="col-12 col-md-3">
-                                <label for="company" class="form-label fw-bold">Entreprise</label>
-                                <select name="company" id="company" class="form-select bg-light border-0">
+                            {# 2. ENTREPRISE #}
+                            <div class="col-12 col-md-6 col-lg-3">
+                                <label for="company" class="form-label fw-bold small">Entreprise</label>
+                                <select name="company" id="company" class="form-select bg-light border-0 form-select-sm">
                                     <option value="">Toutes</option>
                                     {% for company in companies %}
-                                    <option value="{{ company.id }}" {{ companyId == company.id ? 'selected' }}>{{ company.companyName }}</option>
+                                    <option value="{{ company.id }}" {{ companyId == company.id ? 'selected' }}>{{ company.companyName|u.truncate(25, '...') }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             
-                            {# 3. RÔLE - 3/12 (25%) #}
-                            <div class="col-12 col-md-3">
-                                <label for="role" class="form-label fw-bold">Rôle</label>
-                                <select name="role" id="role" class="form-select bg-light border-0">
+                            {# 3. RÔLE #}
+                            <div class="col-12 col-md-6 col-lg-3">
+                                <label for="role" class="form-label fw-bold small">Rôle</label>
+                                <select name="role" id="role" class="form-select bg-light border-0 form-select-sm">
                                     <option value="">Tous</option>
                                     <option value="ROLE_ADMIN" {{ role == 'ROLE_ADMIN' ? 'selected' }}>Administrateurs</option>
                                     <option value="ROLE_MANAGER" {{ role == 'ROLE_MANAGER' ? 'selected' }}>Gestionnaires</option>
@@ -222,10 +222,10 @@
                                 </select>
                             </div>
                             
-                            {# 4. STATUT - 3/12 (25%) #}
-                            <div class="col-12 col-md-3">
-                                <label for="status" class="form-label fw-bold">Statut</label>
-                                <select name="status" id="status" class="form-select bg-light border-0">
+                            {# 4. STATUT #}
+                            <div class="col-12 col-md-6 col-lg-3">
+                                <label for="status" class="form-label fw-bold small">Statut</label>
+                                <select name="status" id="status" class="form-select bg-light border-0 form-select-sm">
                                     <option value="">Tous</option>
                                     <option value="active" {{ status == 'active' ? 'selected' }}>Actifs</option>
                                     <option value="inactive" {{ status == 'inactive' ? 'selected' }}>Désactivés</option>
@@ -234,15 +234,15 @@
                                 </select>
                             </div>
                         
-                        {# ✅ CAS 2: ADMIN - 3 filtres en 4,4,4 #}
+                        {# CAS 2: ADMIN - 3 filtres #}
                         {% else %}
                             
-                            {# 1. RECHERCHE - 4/12 (33.33%) #}
-                            <div class="col-12 col-md-4">
-                                <label for="search" class="form-label fw-bold">Rechercher</label>
+                            {# 1. RECHERCHE #}
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <label for="search" class="form-label fw-bold small">Rechercher</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-                                    <input type="text" name="search" id="search" class="form-control bg-light border-0" placeholder="Nom, email, téléphone..." value="{{ search }}">
+                                    <input type="text" name="search" id="search" class="form-control bg-light border-0 form-control-sm" placeholder="Nom, email..." value="{{ search }}">
                                     {% if search %}
                                     <a href="{{ path('app_user_index', {page: currentPage, role: role, status: status, company: companyId}) }}" class="btn btn-outline-secondary border-0" title="Effacer">
                                         <i class="bi bi-x-circle"></i>
@@ -251,10 +251,10 @@
                                 </div>
                             </div>
                             
-                            {# 2. RÔLE - 4/12 (33.33%) #}
-                            <div class="col-12 col-md-4">
-                                <label for="role" class="form-label fw-bold">Rôle</label>
-                                <select name="role" id="role" class="form-select bg-light border-0">
+                            {# 2. RÔLE #}
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <label for="role" class="form-label fw-bold small">Rôle</label>
+                                <select name="role" id="role" class="form-select bg-light border-0 form-select-sm">
                                     <option value="">Tous</option>
                                     <option value="ROLE_ADMIN" {{ role == 'ROLE_ADMIN' ? 'selected' }}>Administrateurs</option>
                                     <option value="ROLE_MANAGER" {{ role == 'ROLE_MANAGER' ? 'selected' }}>Gestionnaires</option>
@@ -263,10 +263,10 @@
                                 </select>
                             </div>
                             
-                            {# 3. STATUT - 4/12 (33.33%) #}
-                            <div class="col-12 col-md-4">
-                                <label for="status" class="form-label fw-bold">Statut</label>
-                                <select name="status" id="status" class="form-select bg-light border-0">
+                            {# 3. STATUT #}
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <label for="status" class="form-label fw-bold small">Statut</label>
+                                <select name="status" id="status" class="form-select bg-light border-0 form-select-sm">
                                     <option value="">Tous</option>
                                     <option value="active" {{ status == 'active' ? 'selected' }}>Actifs</option>
                                     <option value="inactive" {{ status == 'inactive' ? 'selected' }}>Désactivés</option>
@@ -284,28 +284,28 @@
 
     <!-- Tableau des utilisateurs -->
     <div class="card border-0 shadow-lg">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-bold">
+        <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 fw-bold fs-6 fs-md-5">
                 <i class="bi bi-table me-2 text-primary"></i>
                 Liste des utilisateurs
                 <span class="badge bg-primary ms-2 rounded-pill">{{ totalItems }}</span>
             </h5>
-            <small class="text-muted"><i class="bi bi-mouse me-1"></i> Scrollez pour voir plus</small>
+            <small class="text-muted d-none d-sm-block"><i class="bi bi-mouse me-1"></i> Scrollez pour voir plus</small>
         </div>
         
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0 table-sm table-md">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4" style="width: 60px;"></th>
+                            <th class="ps-2 ps-md-4" style="width: 40px;"></th>
                             <th>Utilisateur</th>
-                            {% if is_super_admin %}<th>Entreprise</th>{% endif %}
-                            <th>Rôle</th>
+                            {% if is_super_admin %}<th class="d-none d-lg-table-cell">Entreprise</th>{% endif %}
+                            <th class="d-none d-sm-table-cell">Rôle</th>
                             <th>Statut</th>
-                            <th>Contact</th>
-                            <th>Date d'embauche</th>
-                            <th class="text-end pe-4">Actions</th>
+                            <th class="d-none d-md-table-cell">Contact</th>
+                            <th class="d-none d-xl-table-cell">Date d'embauche</th>
+                            <th class="text-end pe-2 pe-md-4">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -320,48 +320,48 @@
                             {% endif %}
                             
                             <tr class="align-middle {{ rowClass }}">
-                                <td class="ps-4">
+                                <td class="ps-2 ps-md-4">
                                     <div class="position-relative d-inline-block">
                                         {% if user.photo %}
-                                            <img src="{{ asset('uploads/users/' ~ user.photo) }}" alt="{{ user.fullName }}" class="rounded-circle" width="45" height="45" style="object-fit: cover;">
+                                            <img src="{{ asset('uploads/users/' ~ user.photo) }}" alt="{{ user.fullName }}" class="rounded-circle" width="35" height="35" style="object-fit: cover;">
                                         {% else %}
-                                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width:45px;height:45px;">
-                                                <span class="fw-bold fs-5">{{ user.fullName|first|upper }}</span>
+                                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width:35px;height:35px;">
+                                                <span class="fw-bold fs-6">{{ user.fullName|first|upper }}</span>
                                             </div>
                                         {% endif %}
                                         {% if user.isHmaOwner %}
-                                            <span class="position-absolute bottom-0 end-0 bg-warning rounded-circle p-1 border border-2 border-white" style="width:16px;height:16px;" data-bs-toggle="tooltip" title="Propriétaire">
-                                                <i class="bi bi-crown-fill text-white" style="font-size:10px;"></i>
+                                            <span class="position-absolute bottom-0 end-0 bg-warning rounded-circle p-1 border border-2 border-white" style="width:14px;height:14px;" data-bs-toggle="tooltip" title="Propriétaire">
+                                                <i class="bi bi-crown-fill text-white" style="font-size:8px;"></i>
                                             </span>
                                         {% endif %}
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="fw-semibold">{{ user.fullName }}</div>
+                                    <div class="fw-semibold small fs-md-6">{{ user.fullName|u.truncate(20, '...') }}</div>
                                 </td>
                                 {% if is_super_admin %}
-                                <td>
+                                <td class="d-none d-lg-table-cell">
                                     {% if user.hmaServiceId %}
-                                        <span class="badge bg-light text-dark p-2">
+                                        <span class="badge bg-light text-dark p-1 p-md-2 small">
                                             <i class="bi bi-building me-1"></i>
-                                            {{ user.hmaServiceId.companyName|u.truncate(20, '...') }}
+                                            {{ user.hmaServiceId.companyName|u.truncate(15, '...') }}
                                         </span>
                                     {% else %}
-                                        <span class="badge bg-secondary">Indépendant</span>
+                                        <span class="badge bg-secondary small">Indépendant</span>
                                     {% endif %}
                                 </td>
                                 {% endif %}
-                                <td>
-                                    <span class="badge rounded-pill {{ user.roleBadgeClass }} p-2">
+                                <td class="d-none d-sm-table-cell">
+                                    <span class="badge rounded-pill {{ user.roleBadgeClass }} p-1 p-md-2 small">
                                         <i class="bi {{ user.roleIcon }} me-1"></i>
-                                        {{ user.roleLabel }}
+                                        {{ user.roleLabel|u.truncate(10, '...') }}
                                     </span>
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column gap-1">
-                                        <span class="badge rounded-pill {{ user.statusBadgeClass }} p-2">
+                                        <span class="badge rounded-pill {{ user.statusBadgeClass }} p-1 p-md-2 small">
                                             <i class="bi {{ user.statusIcon }} me-1"></i>
-                                            {{ user.statusLabel }}
+                                            {{ user.statusLabel|u.truncate(8, '...') }}
                                         </span>
                                         {% if not user.passwordChanged and not user.isHmaOwner %}
                                             <span class="badge bg-warning-subtle text-warning-emphasis p-1 small" data-bs-toggle="tooltip" title="Première connexion en attente">
@@ -370,21 +370,21 @@
                                         {% endif %}
                                     </div>
                                 </td>
-                                <td>
+                                <td class="d-none d-md-table-cell">
                                     <div class="small">
-                                        <div><i class="bi bi-envelope me-1 text-muted"></i> <a href="mailto:{{ user.email }}" class="text-decoration-none text-dark">{{ user.email|u.truncate(20, '...') }}</a></div>
+                                        <div><i class="bi bi-envelope me-1 text-muted"></i> <a href="mailto:{{ user.email }}" class="text-decoration-none text-dark">{{ user.email|u.truncate(15, '...') }}</a></div>
                                         <div><i class="bi bi-telephone me-1 text-muted"></i> <a href="tel:{{ user.phone }}" class="text-decoration-none text-dark">{{ user.phone }}</a></div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="d-none d-xl-table-cell">
                                     {% if user.createdAt %}
                                         {{ user.createdAt|date('d/m/Y') }}
                                     {% else %}
                                         <span class="text-muted">-</span>
                                     {% endif %}
                                 </td>
-                                <td class="text-end pe-4">
-                                    <div class="d-flex gap-1 justify-content-end">
+                                <td class="text-end pe-2 pe-md-4">
+                                    <div class="d-flex gap-1 justify-content-end flex-wrap">
                                         <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="Voir">
                                             <i class="bi bi-eye"></i>
                                         </a>
@@ -419,13 +419,13 @@
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="{% if is_super_admin %}8{% else %}7{% endif %}" class="text-center py-5">
+                                <td colspan="{% if is_super_admin %}8{% else %}7{% endif %}" class="text-center py-4 py-md-5">
                                     <div class="empty-state">
-                                        <i class="bi bi-people display-1 text-muted mb-4 d-block"></i>
-                                        <h4 class="text-muted mb-3">Aucun utilisateur trouvé</h4>
-                                        <p class="text-muted mb-4">Commencez par créer votre premier utilisateur</p>
+                                        <i class="bi bi-people display-1 text-muted mb-3 mb-md-4 d-block"></i>
+                                        <h4 class="text-muted mb-2 mb-md-3">Aucun utilisateur trouvé</h4>
+                                        <p class="text-muted mb-3 mb-md-4">Commencez par créer votre premier utilisateur</p>
                                         {% if is_super_admin or can_add_user %}
-                                            <a href="{{ path('app_user_new') }}" class="btn btn-primary btn-lg px-5">
+                                            <a href="{{ path('app_user_new') }}" class="btn btn-primary btn-sm btn-lg-md px-4 px-md-5">
                                                 <i class="bi bi-person-plus me-2"></i>Créer un utilisateur
                                             </a>
                                         {% endif %}
@@ -440,45 +440,48 @@
               
         <!-- Pagination -->
         {% if totalPages > 1 %}
-        <div class="card-footer bg-white py-3 d-flex flex-wrap justify-content-between align-items-center">
+        <div class="card-footer bg-white py-2 py-md-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
             <div class="text-muted small">
-                Affichage de {{ ((currentPage - 1) * limit) + 1 }} à {{ min(currentPage * limit, totalItems) }} sur {{ totalItems }} utilisateurs
+                <span class="d-none d-sm-inline">Affichage de </span>
+                {{ ((currentPage - 1) * limit) + 1 }} à {{ min(currentPage * limit, totalItems) }} 
+                <span class="d-none d-sm-inline">sur {{ totalItems }} utilisateurs</span>
             </div>
             <nav aria-label="Pagination">
                 <ul class="pagination pagination-sm mb-0">
                     <li class="page-item {{ currentPage <= 1 ? 'disabled' }}">
                         <a class="page-link" href="{{ path('app_user_index', {page: currentPage - 1, search: search, role: role, status: status, company: companyId}) }}"><i class="bi bi-chevron-left"></i></a>
                     </li>
-                    {% for i in 1..totalPages %}
+                    {% set maxVisible = 5 %}
+                    {% set startPage = max(1, currentPage - 2) %}
+                    {% set endPage = min(totalPages, startPage + maxVisible - 1) %}
+                    {% if endPage - startPage < maxVisible - 1 %}
+                        {% set startPage = max(1, endPage - maxVisible + 1) %}
+                    {% endif %}
+                    
+                    {% if startPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_user_index', {page: 1, search: search, role: role, status: status, company: companyId}) }}">1</a>
+                        </li>
+                        {% if startPage > 2 %}
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% for i in startPage..endPage %}
                         <li class="page-item {{ i == currentPage ? 'active' }}">
                             <a class="page-link" href="{{ path('app_user_index', {page: i, search: search, role: role, status: status, company: companyId}) }}">{{ i }}</a>
                         </li>
                     {% endfor %}
-                    <li class="page-item {{ currentPage >= totalPages ? 'disabled' }}">
-                        <a class="page-link" href="{{ path('app_user_index', {page: currentPage + 1, search: search, role: role, status: status, company: companyId}) }}"><i class="bi bi-chevron-right"></i></a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        {% endif %}
-    </div>
-        
-        <!-- Pagination -->
-        {% if totalPages > 1 %}
-        <div class="card-footer bg-white py-3 d-flex flex-wrap justify-content-between align-items-center">
-            <div class="text-muted small">
-                Affichage de {{ ((currentPage - 1) * limit) + 1 }} à {{ min(currentPage * limit, totalItems) }} sur {{ totalItems }} utilisateurs
-            </div>
-            <nav aria-label="Pagination">
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item {{ currentPage <= 1 ? 'disabled' }}">
-                        <a class="page-link" href="{{ path('app_user_index', {page: currentPage - 1, search: search, role: role, status: status, company: companyId}) }}"><i class="bi bi-chevron-left"></i></a>
-                    </li>
-                    {% for i in 1..totalPages %}
-                        <li class="page-item {{ i == currentPage ? 'active' }}">
-                            <a class="page-link" href="{{ path('app_user_index', {page: i, search: search, role: role, status: status, company: companyId}) }}">{{ i }}</a>
+                    
+                    {% if endPage < totalPages %}
+                        {% if endPage < totalPages - 1 %}
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        {% endif %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_user_index', {page: totalPages, search: search, role: role, status: status, company: companyId}) }}">{{ totalPages }}</a>
                         </li>
-                    {% endfor %}
+                    {% endif %}
+                    
                     <li class="page-item {{ currentPage >= totalPages ? 'disabled' }}">
                         <a class="page-link" href="{{ path('app_user_index', {page: currentPage + 1, search: search, role: role, status: status, company: companyId}) }}"><i class="bi bi-chevron-right"></i></a>
                     </li>
@@ -491,22 +494,22 @@
 
 <!-- Modals -->
 <div class="modal fade" id="toggleStatusModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-warning text-white border-0">
-                <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Confirmation</h5>
+                <h5 class="modal-title fs-6"><i class="bi bi-exclamation-triangle me-2"></i>Confirmation</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-center py-4">
-                <i class="bi bi-question-circle text-warning" style="font-size: 4rem;"></i>
-                <h5 id="toggleStatusMessage" class="mt-3 mb-0"></h5>
-                <p class="text-muted small">Cette action peut être annulée à tout moment.</p>
+            <div class="modal-body text-center py-3 py-md-4">
+                <i class="bi bi-question-circle text-warning" style="font-size: 3rem;"></i>
+                <h5 id="toggleStatusMessage" class="mt-2 mt-md-3 mb-0 fs-6"></h5>
+                <p class="text-muted small mb-0">Cette action peut être annulée à tout moment.</p>
             </div>
-            <div class="modal-footer border-0 justify-content-center">
-                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal"><i class="bi bi-x me-2"></i>Annuler</button>
+            <div class="modal-footer border-0 justify-content-center py-2 py-md-3">
+                <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal"><i class="bi bi-x me-2"></i>Annuler</button>
                 <form id="toggleStatusForm" method="post" class="d-inline">
                     <input type="hidden" name="_token" id="toggleStatusToken">
-                    <button type="submit" class="btn btn-warning px-4"><i class="bi bi-check me-2"></i>Confirmer</button>
+                    <button type="submit" class="btn btn-warning btn-sm px-3"><i class="bi bi-check me-2"></i>Confirmer</button>
                 </form>
             </div>
         </div>
@@ -514,22 +517,22 @@
 </div>
 
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-danger text-white border-0">
-                <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Confirmation de suppression</h5>
+                <h5 class="modal-title fs-6"><i class="bi bi-exclamation-triangle me-2"></i>Confirmation de suppression</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-center py-4">
-                <i class="bi bi-trash3 text-danger" style="font-size: 4rem;"></i>
-                <h5 id="deleteMessage" class="mt-3 mb-0"></h5>
-                <p class="text-muted small">Cette action est irréversible.</p>
+            <div class="modal-body text-center py-3 py-md-4">
+                <i class="bi bi-trash3 text-danger" style="font-size: 3rem;"></i>
+                <h5 id="deleteMessage" class="mt-2 mt-md-3 mb-0 fs-6"></h5>
+                <p class="text-muted small mb-0">Cette action est irréversible.</p>
             </div>
-            <div class="modal-footer border-0 justify-content-center">
-                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal"><i class="bi bi-x me-2"></i>Annuler</button>
+            <div class="modal-footer border-0 justify-content-center py-2 py-md-3">
+                <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal"><i class="bi bi-x me-2"></i>Annuler</button>
                 <form id="deleteForm" method="post" class="d-inline">
                     <input type="hidden" name="_token" id="deleteToken">
-                    <button type="submit" class="btn btn-danger px-4"><i class="bi bi-trash me-2"></i>Supprimer</button>
+                    <button type="submit" class="btn btn-danger btn-sm px-3"><i class="bi bi-trash me-2"></i>Supprimer</button>
                 </form>
             </div>
         </div>
@@ -537,20 +540,20 @@
 </div>
 
 <div class="modal fade" id="quotaReachedModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-warning text-white border-0">
-                <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Limite d'utilisateurs atteinte</h5>
+                <h5 class="modal-title fs-6"><i class="bi bi-exclamation-triangle me-2"></i>Limite atteinte</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-center py-4">
-                <i class="bi bi-people-fill text-warning" style="font-size: 4rem;"></i>
-                <h5 class="mt-3">Vous avez atteint la limite d'utilisateurs pour votre plan.</h5>
-                <p class="text-muted">Pour ajouter de nouveaux utilisateurs, passez à un plan supérieur.</p>
+            <div class="modal-body text-center py-3 py-md-4">
+                <i class="bi bi-people-fill text-warning" style="font-size: 3rem;"></i>
+                <h5 class="mt-2 mt-md-3 fs-6">Limite d'utilisateurs atteinte</h5>
+                <p class="text-muted small mb-0">Passez à un plan supérieur pour ajouter des utilisateurs.</p>
             </div>
-            <div class="modal-footer border-0 justify-content-center">
-                <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-lg px-5"><i class="bi bi-arrow-up-circle me-2"></i>Voir les offres</a>
-                <button type="button" class="btn btn-outline-secondary btn-lg px-5" data-bs-dismiss="modal">Annuler</button>
+            <div class="modal-footer border-0 justify-content-center py-2 py-md-3">
+                <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-sm px-3"><i class="bi bi-arrow-up-circle me-2"></i>Voir les offres</a>
+                <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">Annuler</button>
             </div>
         </div>
     </div>
@@ -579,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentStatus = this.dataset.currentStatus;
             const csrfToken = this.dataset.csrfToken;
             const action = currentStatus === 'active' ? 'désactiver' : 'activer';
-            toggleMessage.innerHTML = `Êtes-vous sûr de vouloir <strong class="text-${currentStatus === 'active' ? 'danger' : 'success'}">${action}</strong> l'utilisateur <strong>${userName}</strong> ?`;
+            toggleMessage.innerHTML = `Êtes-vous sûr de vouloir <strong class="text-${currentStatus === 'active' ? 'danger' : 'success'}">${action}</strong> <strong>${userName}</strong> ?`;
             toggleForm.action = `/admin/user/${userId}/toggle-status`;
             toggleToken.value = csrfToken;
             toggleModal.show();
@@ -624,7 +627,12 @@ document.addEventListener('DOMContentLoaded', function() {
 .modern-header {
     background: var(--primary-gradient);
     position: relative;
-    min-height: 200px;
+    min-height: 150px;
+}
+@media (min-width: 768px) {
+    .modern-header {
+        min-height: 200px;
+    }
 }
 .floating-shapes {
     position: absolute;
@@ -641,29 +649,50 @@ document.addEventListener('DOMContentLoaded', function() {
     border-radius: 50%;
 }
 .shape-1 {
-    width: 300px;
-    height: 300px;
-    top: -150px;
+    width: 200px;
+    height: 200px;
+    top: -100px;
     right: -50px;
     animation: float 8s ease-in-out infinite;
 }
+@media (min-width: 768px) {
+    .shape-1 {
+        width: 300px;
+        height: 300px;
+        top: -150px;
+    }
+}
 .shape-2 {
-    width: 200px;
-    height: 200px;
-    bottom: -80px;
+    width: 120px;
+    height: 120px;
+    bottom: -60px;
     left: -30px;
     animation: float 12s ease-in-out infinite reverse;
 }
+@media (min-width: 768px) {
+    .shape-2 {
+        width: 200px;
+        height: 200px;
+        bottom: -80px;
+    }
+}
 .shape-3 {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     top: 50%;
-    left: 30%;
+    left: 20%;
     animation: float 10s ease-in-out infinite;
+}
+@media (min-width: 768px) {
+    .shape-3 {
+        width: 150px;
+        height: 150px;
+        left: 30%;
+    }
 }
 @keyframes float {
     0%,100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(10deg); }
+    50% { transform: translateY(-15px) rotate(10deg); }
 }
 .icon-wrapper {
     transition: transform 0.3s ease;
@@ -674,7 +703,12 @@ document.addEventListener('DOMContentLoaded', function() {
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 6px;
+}
+@media (min-width: 576px) {
+    .stats-grid {
+        gap: 10px;
+    }
 }
 .stat-card {
     backdrop-filter: blur(10px);
@@ -682,7 +716,7 @@ document.addEventListener('DOMContentLoaded', function() {
     border: 1px solid rgba(255,255,255,0.1);
 }
 .stat-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     background-color: rgba(255,255,255,0.15) !important;
 }
 .wave-decoration {
@@ -695,7 +729,12 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 .wave-decoration svg {
     width: 100%;
-    height: 50px;
+    height: 30px;
+}
+@media (min-width: 768px) {
+    .wave-decoration svg {
+        height: 50px;
+    }
 }
 
 /* Statistiques */
@@ -740,19 +779,53 @@ document.addEventListener('DOMContentLoaded', function() {
 .pagination-sm .page-link {
     border-radius: 0.25rem;
     margin: 0 2px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+@media (min-width: 576px) {
+    .pagination-sm .page-link {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+    }
 }
 
 /* Empty state */
 .empty-state {
-    padding: 3rem;
+    padding: 2rem;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 20px;
+    border-radius: 16px;
+}
+@media (min-width: 768px) {
+    .empty-state {
+        padding: 3rem;
+        border-radius: 20px;
+    }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+/* Responsive table */
+@media (max-width: 576px) {
+    .table-sm td, .table-sm th {
+        padding: 0.3rem 0.4rem;
+        font-size: 0.75rem;
+    }
+    .btn-sm {
+        padding: 0.15rem 0.3rem;
+        font-size: 0.7rem;
+    }
+    .btn-sm i {
+        font-size: 0.8rem;
+    }
+    .badge {
+        font-size: 0.6rem !important;
+        padding: 0.2rem 0.4rem !important;
+    }
+}
+
+/* Container padding */
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
     }
 }
 </style>

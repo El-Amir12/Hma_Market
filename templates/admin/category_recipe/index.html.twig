@@ -9,19 +9,41 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style>
+/* ========================================
+   CARTES CATÉGORIES
+======================================== */
+.category-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+.category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+}
 .category-card.border-warning {
     border: 2px solid #ffc107 !important;
 }
 .category-image-container {
     position: relative;
-    height: 180px;
+    height: 130px;
     overflow: hidden;
-    border-radius: 15px 15px 0 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+@media (min-width: 768px) {
+    .category-image-container {
+        height: 180px;
+    }
 }
 .category-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s;
+}
+.category-card:hover .category-image {
+    transform: scale(1.05);
 }
 .category-image-placeholder {
     width: 100%;
@@ -43,19 +65,20 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* ✅ Badges en bas de la carte */
 .category-badges {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
 }
 .category-badges .badge {
     font-size: 9px;
     padding: 3px 6px;
 }
 
-/* Styles Select2 - Correction d'alignement vertical comme dans Recipe */
+/* ========================================
+   SELECT2
+======================================== */
 .select2-container--bootstrap-5 .select2-selection {
     height: 38px !important;
     padding: 0 !important;
@@ -101,95 +124,368 @@
     background-color: #e9ecef !important;
     color: #0463f1 !important;
 }
-/* Correction pour les selects normaux */
 .form-select.bg-light.border-0 {
     height: 38px;
     padding: 8px 12px;
 }
-@media (max-width: 768px) {
-    .category-card .btn-sm {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.3rem;
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+@media (max-width: 992px) {
+    .container-fluid {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
     }
-    .category-image-container {
-        height: 140px;
+    
+    .d-flex.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.75rem !important;
+        width: 100%;
     }
-    .d-flex.gap-2 {
+    
+    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 {
         flex-wrap: wrap;
+        width: 100%;
+    }
+    
+    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 .card {
+        flex: 1 1 auto;
+        min-width: 150px;
+    }
+    
+    .stat-item .h3 {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    
+    .d-flex.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+        width: 100%;
+    }
+    
+    .d-flex.justify-content-between.align-items-center > div:first-child {
+        width: 100%;
+    }
+    
+    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 .card {
+        width: 100%;
+        min-width: unset;
+    }
+    
+    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 .btn {
+        width: 100%;
+    }
+    
+    h1.h3 {
+        font-size: 1.1rem !important;
+    }
+    
+    .breadcrumb {
+        font-size: 0.7rem;
+    }
+    
+    /* Statistiques : 2 par ligne sur mobile */
+    .row.g-2 .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-item .h3 {
+        font-size: 1.1rem !important;
+    }
+    .stat-item .text-uppercase {
+        font-size: 0.55rem !important;
+    }
+    .stat-item .fa-2x {
+        font-size: 1.3rem !important;
+    }
+    .stat-item .p-3 {
+        padding: 0.5rem !important;
+    }
+    
+    /* Filtres : tous les champs en colonne sur mobile */
+    .row.g-2.g-sm-3 .col-6,
+    .row.g-2.g-sm-3 .col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .row.g-2.g-sm-3 .col-lg-3 .input-group {
+        width: 100%;
+    }
+    
+    /* FORCER 2 CARTES PAR LIGNE SUR MOBILE */
+    .row.g-2.g-sm-3 .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .category-card .card-title {
+        font-size: 0.8rem;
+    }
+    .category-card .card-title small {
+        font-size: 0.65rem;
+    }
+    
+    .category-image-container {
+        height: 120px;
+    }
+    
+    .category-card .card-body {
+        padding: 0.5rem !important;
+    }
+    
+    .category-card .btn-sm {
+        font-size: 0.6rem;
+        padding: 0.15rem 0.3rem;
+    }
+    
+    .category-badges .badge {
+        font-size: 7px;
+        padding: 2px 4px;
+    }
+    .category-badges .badge i {
+        display: none;
+    }
+    
+    .category-card .d-flex.justify-content-between.align-items-center.mb-3 {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    .category-card .d-flex.justify-content-between.align-items-center.mb-3 > div {
+        width: 100%;
+        min-width: unset !important;
+    }
+    
+    .d-flex.gap-2.mt-auto {
+        flex-wrap: wrap;
+    }
+    .d-flex.gap-2.mt-auto .btn {
+        flex: 1 1 calc(50% - 0.25rem);
+        font-size: 0.55rem;
+        padding: 0.15rem 0.2rem;
+    }
+    
+    .dropdown-menu {
+        font-size: 0.8rem;
+    }
+    
+    .card-header .d-flex.gap-1.gap-sm-2 {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    .card-header .d-flex.gap-1.gap-sm-2 .btn {
+        flex: 1 1 auto;
+        min-width: calc(33% - 0.25rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .container-fluid {
+        padding-left: 0.25rem !important;
+        padding-right: 0.25rem !important;
+    }
+    
+    /* Statistiques : 2 par ligne sur très petit */
+    .row.g-2 .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-left: 0.15rem;
+        padding-right: 0.15rem;
+        margin-bottom: 0.35rem;
+    }
+    
+    .stat-item .h3 {
+        font-size: 0.9rem !important;
+    }
+    .stat-item .text-uppercase {
+        font-size: 0.45rem !important;
+    }
+    .stat-item .fa-2x {
+        font-size: 1rem !important;
+    }
+    .stat-item .p-3 {
+        padding: 0.35rem !important;
+    }
+    
+    /* FORCER 2 CARTES PAR LIGNE SUR TRÈS PETIT ÉCRAN */
+    .row.g-2.g-sm-3 .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-left: 0.15rem;
+        padding-right: 0.15rem;
+        margin-bottom: 0.35rem;
+    }
+    
+    .category-image-container {
+        height: 90px;
+    }
+    
+    .category-card .card-title {
+        font-size: 0.65rem;
+        line-height: 1.2;
+    }
+    .category-card .card-title small {
+        font-size: 0.55rem;
+    }
+    
+    .category-card .card-body {
+        padding: 0.35rem !important;
+    }
+    
+    .category-card .card-text {
+        font-size: 0.55rem !important;
+        margin-bottom: 0.25rem !important;
+        line-height: 1.2;
+    }
+    
+    .category-card .text-muted.small {
+        font-size: 0.5rem !important;
+    }
+    
+    .category-badges .badge {
+        font-size: 5px;
+        padding: 1px 3px;
+        border-radius: 2px;
+    }
+    
+    .d-flex.gap-2.mt-auto .btn {
+        flex: 1 1 100%;
+        font-size: 0.45rem;
+        padding: 0.1rem 0.15rem;
+    }
+    
+    .category-card .dropdown .btn-sm {
+        font-size: 0.5rem;
+        padding: 0.1rem 0.2rem;
+    }
+    
+    .card-header .d-flex.gap-1.gap-sm-2 .btn {
+        flex: 1 1 100%;
+        font-size: 0.55rem;
+        padding: 0.15rem 0.3rem;
+    }
+    
+    .pagination .page-link {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .modal .btn-lg {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.6rem;
+    }
+    
+    .category-card .d-flex.justify-content-between.align-items-center.mb-2.gap-1 {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+    }
+    .category-card .d-flex.justify-content-between.align-items-center.mb-2.gap-1 > div {
+        flex: 1 1 calc(50% - 0.25rem);
+        min-width: unset !important;
+    }
+}
+
+/* Désactiver hover sur mobile */
+@media (max-width: 768px) {
+    .category-card:hover {
+        transform: none !important;
+    }
+    .stat-item:hover {
+        transform: none !important;
     }
 }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid px-4">
-    <!-- En-tête avec quota et bouton d'ajout -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-        <div>
-            <h1 class="h3 mb-0 text-gray-800">
-                <i class="fas fa-utensils me-2"></i>Gestion des sections de menu
+<div class="container-fluid px-2 px-md-4 py-2 py-md-3">
+    <!-- ========== EN-TÊTE ========== -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 mb-md-4 flex-wrap gap-2">
+        <div class="w-100 w-md-auto">
+            <h1 class="h4 h-md-3 mb-0 text-gray-800">
+                <i class="fas fa-utensils me-2"></i><span class="d-none d-sm-inline">Gestion des sections de menu</span>
+                <span class="d-inline d-sm-none">Sections menu</span>
             </h1>
-            <p class="text-muted">Organisez vos plats par catégories et sous-catégories</p>
+            <p class="text-muted mt-1 small d-none d-sm-block">Organisez vos plats par catégories et sous-catégories</p>
         </div>
         
-        <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center gap-2 gap-md-3 flex-wrap w-100 w-md-auto">
             <!-- Indicateur de quota -->
-            <div class="card bg-light p-3">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <span class="badge bg-primary p-2">
+            <div class="card bg-light p-1 p-md-2 flex-grow-1 flex-md-grow-0 w-100 w-md-auto" style="min-width: 100px;">
+                <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+                    <div class="me-1 me-md-2">
+                        <span class="badge bg-primary p-1 p-md-2 rounded-circle">
                             <i class="fas fa-chart-line"></i>
                         </span>
                     </div>
                     <div>
-                        <small class="text-muted">Catégories dans quota</small>
-                        <h5 class="mb-0 {{ quotaReached ? 'text-danger' : 'text-success' }}">
+                        <small class="text-muted d-block small" style="font-size: 0.5rem;">Catégories quota</small>
+                        <h5 class="mb-0 {{ quotaReached ? 'text-danger' : 'text-success' }}" style="font-size: 0.8rem;">
                             {{ activeCount }} / {{ quota }}
                             {% if quota == 'Illimité' %}
-                                <i class="fas fa-infinity text-info ms-1"></i>
+                                <i class="fas fa-infinity text-info ms-1 small"></i>
                             {% endif %}
                         </h5>
-                        {% if quotaReached %}
-                            <small class="text-danger">Quota atteint</small>
-                        {% endif %}
                     </div>
                 </div>
             </div>
 
-            {# Affichage du nombre de catégories en attente (désactivées par quota) #}
+            {# Affichage du nombre de catégories en attente #}
             {% if subscriptionInactiveCount > 0 %}
-            <div class="card bg-light p-3">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <span class="badge bg-warning p-2">
+            <div class="card bg-light p-1 p-md-2 flex-grow-1 flex-md-grow-0 w-100 w-md-auto" style="min-width: 80px;">
+                <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+                    <div class="me-1 me-md-2">
+                        <span class="badge bg-warning p-1 p-md-2 rounded-circle">
                             <i class="fas fa-clock"></i>
                         </span>
                     </div>
                     <div>
-                        <small class="text-muted">En attente</small>
-                        <h5 class="mb-0">{{ subscriptionInactiveCount }}</h5>
-                        <small>désactivées par quota</small>
+                        <small class="text-muted d-block small" style="font-size: 0.5rem;">En attente</small>
+                        <h5 class="mb-0" style="font-size: 0.8rem;">{{ subscriptionInactiveCount }}</h5>
                     </div>
                 </div>
             </div>
             {% endif %}
 
-            {# Bouton Nouvelle Catégorie toujours visible #}
-            <a href="#" id="newCategoryBtn" class="btn btn-primary">
-                <i class="fas fa-plus-circle me-2"></i> Nouvelle Catégorie de Plats
+            {# Bouton Nouvelle Catégorie #}
+            <a href="#" id="newCategoryBtn" class="btn btn-primary btn-sm flex-grow-1 flex-md-grow-0 w-100 w-md-auto">
+                <i class="fas fa-plus-circle me-1"></i> <span class="d-none d-sm-inline">Nouvelle</span>
             </a>
         </div>
     </div>
 
-    {# Message si quota atteint (pour les plans limités) #}
+    {# Message si quota atteint #}
     {% if quotaReached and plan != 'premium' %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
             <div>
                 <i class="fas fa-exclamation-triangle me-2"></i>
                 <strong>Quota atteint !</strong> Vous avez utilisé vos {{ quota }} catégories de plats dans le quota.
             </div>
-            <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-sm">
+            <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-sm w-100 w-sm-auto">
                 <i class="fas fa-arrow-up me-1"></i> Voir les offres
             </a>
         </div>
@@ -212,54 +508,54 @@
         </div>
     {% endfor %}
 
-    <!-- Container des statistiques dynamiques -->
-    <div class="card shadow mb-4">
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0">
-                <i class="fas fa-chart-pie me-2"></i>Statistiques selon les filtres
+    <!-- ========== STATISTIQUES ========== -->
+    <div class="card shadow mb-3 mb-md-4">
+        <div class="card-header bg-white py-2 py-md-3">
+            <h5 class="mb-0 small">
+                <i class="fas fa-chart-pie me-2"></i><span class="d-none d-sm-inline">Statistiques selon les filtres</span>
             </h5>
         </div>
-        <div class="card-body">
-            <div class="row">
-                <!-- Première ligne : 4 cartes -->
-                <div class="col-md-3 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+        <div class="card-body p-2 p-sm-3">
+            <!-- Ligne 1 : 4 cartes -->
+            <div class="row g-2 mb-2">
+                <div class="col-6 col-md-3">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-primary text-uppercase small fw-bold">Total</span>
+                                <span class="text-primary text-uppercase small fw-bold d-block">Total</span>
                                 <h3 class="mb-0">{{ totalFiltered }}</h3>
                             </div>
                             <i class="fas fa-folder fa-2x text-primary opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+                <div class="col-6 col-md-3">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-success text-uppercase small fw-bold">Actives</span>
+                                <span class="text-success text-uppercase small fw-bold d-block">Actives</span>
                                 <h3 class="mb-0 text-success">{{ activeFiltered }}</h3>
                             </div>
                             <i class="fas fa-check-circle fa-2x text-success opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+                <div class="col-6 col-md-3">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-danger text-uppercase small fw-bold">Inactives</span>
+                                <span class="text-danger text-uppercase small fw-bold d-block">Inactives</span>
                                 <h3 class="mb-0 text-danger">{{ inactiveFiltered }}</h3>
                             </div>
                             <i class="fas fa-pause-circle fa-2x text-danger opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+                <div class="col-6 col-md-3">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-info text-uppercase small fw-bold">Principales</span>
+                                <span class="text-info text-uppercase small fw-bold d-block">Principales</span>
                                 <h3 class="mb-0 text-info">{{ mainFiltered }}</h3>
                             </div>
                             <i class="fas fa-sitemap fa-2x text-info opacity-50"></i>
@@ -267,35 +563,41 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <!-- Deuxième ligne : 3 cartes -->
-                <div class="col-md-4 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+            
+            <!-- ✅ Ligne 2 : 3 cartes - CORRIGÉ POUR MOBILE -->
+            <div class="row g-2">
+                {# Carte Sous-catégories #}
+                <div class="col-6 col-md-4">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-warning text-uppercase small fw-bold">Sous-catégories</span>
+                                <span class="text-warning text-uppercase small fw-bold d-block">Sous-catég.</span>
                                 <h3 class="mb-0 text-warning">{{ subFiltered }}</h3>
                             </div>
                             <i class="fas fa-folder-tree fa-2x text-warning opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+                
+                {# Carte Abonnement actif #}
+                <div class="col-6 col-md-4">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-info text-uppercase small fw-bold">Abonnement actif</span>
+                                <span class="text-info text-uppercase small fw-bold d-block">Abonnement actif</span>
                                 <h3 class="mb-0 text-info">{{ subscriptionActiveFiltered }}</h3>
                             </div>
                             <i class="fas fa-database fa-2x text-info opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+                
+                {# ✅ Carte Abonnement inactif - PLEINE LARGEUR SUR MOBILE #}
+                <div class="col-12 col-md-4">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-secondary text-uppercase small fw-bold">Abonnement inactif</span>
+                                <span class="text-secondary text-uppercase small fw-bold d-block">Abonnement inactif</span>
                                 <h3 class="mb-0 text-secondary">{{ subscriptionInactiveFiltered }}</h3>
                             </div>
                             <i class="fas fa-clock fa-2x text-secondary opacity-50"></i>
@@ -306,26 +608,26 @@
         </div>
     </div>
 
-    <!-- Formulaire de filtres -->
-    <div class="card shadow mb-4">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <h5 class="mb-0">
-                <i class="fas fa-filter me-2"></i>Filtres
+    <!-- ========== FILTRES ========== -->
+    <div class="card shadow mb-3 mb-md-4">
+        <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 small">
+                <i class="fas fa-filter me-2"></i><span class="d-none d-sm-inline">Filtres</span>
             </h5>
-            <div class="d-flex gap-2">
-                <button type="submit" form="filter-form" class="btn btn-primary">
-                    <i class="fas fa-filter me-2"></i>Filtrer
+            <div class="d-flex gap-1 gap-sm-2 flex-wrap w-100 w-md-auto">
+                <button type="submit" form="filter-form" class="btn btn-primary btn-sm flex-grow-1 flex-md-grow-0">
+                    <i class="fas fa-filter me-1"></i> <span class="d-none d-sm-inline">Filtrer</span>
                 </button>
-                <a href="{{ path('app_admin_category_recipe_index') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-undo me-2"></i>Effacer
+                <a href="{{ path('app_admin_category_recipe_index') }}" class="btn btn-outline-secondary btn-sm flex-grow-1 flex-md-grow-0">
+                    <i class="fas fa-undo me-1"></i> <span class="d-none d-sm-inline">Effacer</span>
                 </a>
             </div>
         </div>
-        <div class="card-body">
-            <form method="get" id="filter-form" class="row g-3">
-                <!-- Première ligne : tous les filtres -->
-                <div class="col-lg-3 col-md-6">
-                    <label for="search" class="form-label fw-bold">
+        <div class="card-body p-2 p-sm-3">
+            <form method="get" id="filter-form" class="row g-2 g-sm-3">
+                <!-- Ligne 1 : 5 filtres -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label for="search" class="form-label fw-bold small mb-1">
                         <i class="fas fa-search text-primary me-1"></i>Rechercher
                     </label>
                     <div class="input-group">
@@ -333,45 +635,49 @@
                             <i class="fas fa-search text-muted"></i>
                         </span>
                         <input type="text" name="search" id="search" value="{{ search }}" 
-                            class="form-control border-start-0" placeholder="Nom, description...">
+                            class="form-control form-control-sm border-start-0" placeholder="Nom, description...">
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-6">
-                    <label for="status" class="form-label fw-bold">
+                
+                <div class="col-6 col-sm-6 col-lg-2">
+                    <label for="status" class="form-label fw-bold small mb-1">
                         <i class="fas fa-toggle-on text-success me-1"></i>Statut
                     </label>
-                    <select name="status" id="status" class="form-select">
+                    <select name="status" id="status" class="form-select form-select-sm">
                         <option value="all" {{ status == 'all' ? 'selected' : '' }}>Tous</option>
                         <option value="active" {{ status == 'active' ? 'selected' : '' }}>Actives</option>
                         <option value="inactive" {{ status == 'inactive' ? 'selected' : '' }}>Inactives</option>
                     </select>
                 </div>
-                <div class="col-lg-2 col-md-6">
-                    <label for="type" class="form-label fw-bold">
+                
+                <div class="col-6 col-sm-6 col-lg-2">
+                    <label for="type" class="form-label fw-bold small mb-1">
                         <i class="fas fa-sitemap text-info me-1"></i>Type
                     </label>
-                    <select name="type" id="type" class="form-select">
+                    <select name="type" id="type" class="form-select form-select-sm">
                         <option value="all" {{ type == 'all' ? 'selected' : '' }}>Tous</option>
                         <option value="main" {{ type == 'main' ? 'selected' : '' }}>Principales</option>
                         <option value="sub" {{ type == 'sub' ? 'selected' : '' }}>Sous-catégories</option>
                     </select>
                 </div>
-                <div class="col-lg-2 col-md-6">
-                    <label for="sub_status" class="form-label fw-bold">
+
+                <div class="col-6 col-sm-6 col-lg-2">
+                    <label for="sub_status" class="form-label fw-bold small mb-1">
                         <i class="fas fa-credit-card text-warning me-1"></i>Abonnement
                     </label>
-                    <select name="sub_status" id="sub_status" class="form-select">
+                    <select name="sub_status" id="sub_status" class="form-select form-select-sm">
                         <option value="all" {{ subStatus == 'all' ? 'selected' : '' }}>Tous</option>
                         <option value="active" {{ subStatus == 'active' ? 'selected' : '' }}>Actif</option>
                         <option value="inactive" {{ subStatus == 'inactive' ? 'selected' : '' }}>Inactif</option>
                     </select>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <label for="promotion" class="form-label fw-bold">
+
+                <div class="col-6 col-sm-6 col-lg-3">
+                    <label for="promotion" class="form-label fw-bold small mb-1">
                         <i class="fas fa-tags text-danger me-1"></i>Promotion
                     </label>
-                    <select name="promotion" id="promotion" class="form-select" style="width: 100%;">
-                        <option value="">🎯 Toutes les promotions</option>
+                    <select name="promotion" id="promotion" class="form-select form-select-sm" style="width: 100%;">
+                        <option value="">🎯 Toutes</option>
                         {% for promotion in promotions %}
                             <option value="{{ promotion.id }}" {{ selectedPromotion == promotion.id ? 'selected' : '' }}>
                                 {{ promotion.name }}
@@ -389,43 +695,43 @@
     </div>
 
     {# Message informatif quand on filtre par abonnement inactif #}
-    {% if subStatus == 'inactive' %}
-        <div class="alert alert-info mb-4">
+    {% if subStatus == 'inactive' and subscriptionInactiveFiltered > 0 %}
+        <div class="alert alert-info mb-3 mb-md-4 small">
             <i class="fas fa-info-circle me-2"></i>
             <strong>{{ subscriptionInactiveFiltered }} catégorie(s)</strong> désactivées par abonnement.
         </div>
     {% endif %}
 
-    <!-- Grille de cartes -->
-    <div class="row">
+    <!-- ========== GRILLE DE CARTES ========== -->
+    <div class="row g-2 g-sm-3">
         {% for category in categories %}
-        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-            <div class="card category-card shadow h-100 {{ not category.subscriptionActive ? 'border-warning' : '' }}">
-                <!-- Image (sans badges superposés) -->
+        <div class="col-6 col-md-4 col-lg-3 col-xl-3">
+            <div class="card category-card h-100 shadow-sm {{ not category.subscriptionActive ? 'border-warning' : '' }}">
+                <!-- Image -->
                 <div class="category-image-container">
                     {% if category.image %}
                         <img src="{{ asset('uploads/categories_plats/' ~ category.image) }}" 
                             alt="{{ category.name }}"
-                            class="card-img-top category-image">
+                            class="category-image">
                     {% else %}
                         <div class="category-image-placeholder">
-                            <i class="fas fa-utensils fa-4x text-muted"></i>
+                            <i class="fas fa-utensils fa-3x fa-sm-4x text-muted"></i>
                         </div>
                     {% endif %}
                 </div>
 
                 <!-- Contenu -->
-                <div class="card-body d-flex flex-column">
+                <div class="card-body d-flex flex-column p-2 p-sm-3">
                     <!-- Titre avec bouton burger -->
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h5 class="card-title text-truncate mb-0" title="{{ category.name }}">
-                            {{ category.name }}
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <h5 class="card-title text-truncate mb-0 small" title="{{ category.name }}">
+                            {{ category.name|u.truncate(16) }}
                             {% if category.parent %}
-                                <br><small class="text-muted"><i class="fas fa-level-up-alt me-1"></i>{{ category.parent.name }}</small>
+                                <br><small class="text-muted"><i class="fas fa-level-up-alt me-1"></i>{{ category.parent.name|u.truncate(12) }}</small>
                             {% endif %}
                         </h5>
-                        <div class="dropdown ms-2">
-                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
+                        <div class="dropdown ms-1 flex-shrink-0">
+                            <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-bars"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -474,55 +780,58 @@
                     </div>
 
                     <!-- Description -->
-                    <p class="card-text text-muted small mb-3">
-                        {{ category.description|default('Aucune description')|u.truncate(80, '...') }}
+                    <p class="card-text text-muted small mb-2 d-none d-sm-block">
+                        {{ category.description|default('Aucune description')|u.truncate(60, '...') }}
+                    </p>
+                    <p class="card-text text-muted small mb-2 d-block d-sm-none">
+                        {{ category.description|default('Aucune description')|u.truncate(35, '...') }}
                     </p>
                     
-                    <!-- ✅ Badges sous la description -->
+                    <!-- Badges -->
                     <div class="category-badges">
                         {% if not category.subscriptionActive %}
                             <span class="badge bg-warning text-dark">
-                                <i class="fas fa-clock fa-xs me-1"></i> En attente
+                                <i class="fas fa-clock fa-xs me-1 d-none d-sm-inline"></i> En attente
                             </span>
                         {% elseif category.isActive %}
                             <span class="badge bg-success">
-                                <i class="fas fa-check-circle fa-xs me-1"></i> Active
+                                <i class="fas fa-check-circle fa-xs me-1 d-none d-sm-inline"></i> Active
                             </span>
                         {% else %}
                             <span class="badge bg-danger">
-                                <i class="fas fa-pause-circle fa-xs me-1"></i> Désactivée
+                                <i class="fas fa-pause-circle fa-xs me-1 d-none d-sm-inline"></i> Désactivée
                             </span>
                         {% endif %}
                         {% if category.subscriptionActive %}
-                            <span class="badge bg-info">
-                                <i class="fas fa-database fa-xs me-1"></i> Dans quota
+                            <span class="badge bg-info d-none d-sm-inline">
+                                <i class="fas fa-database fa-xs me-1"></i> Quota
                             </span>
                         {% endif %}
                     </div>
 
-                    <!-- Compteurs Recettes & Sous-catégories (côte à côte) -->
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="text-center px-2 py-1 bg-light rounded" style="min-width: 45%;">
+                    <!-- Compteurs Recettes & Sous-catégories -->
+                    <div class="d-flex justify-content-between align-items-center mb-2 gap-1">
+                        <div class="text-center px-1 py-1 bg-light rounded flex-fill" style="font-size: 0.7rem;">
                             <i class="fas fa-utensils text-primary me-1"></i>
                             <span class="fw-bold">{{ category.recipes|length }}</span>
-                            <small class="text-muted d-block">Articles</small>
+                            <small class="text-muted d-block" style="font-size: 0.55rem;">Articles</small>
                         </div>
-                        <div class="text-center px-2 py-1 bg-light rounded" style="min-width: 45%;">
+                        <div class="text-center px-1 py-1 bg-light rounded flex-fill" style="font-size: 0.7rem;">
                             <i class="fas fa-sitemap text-info me-1"></i>
                             <span class="fw-bold">{{ category.children|length }}</span>
-                            <small class="text-muted d-block">sous-catégories</small>
+                            <small class="text-muted d-block" style="font-size: 0.55rem;">sous-catég.</small>
                         </div>
                     </div>
 
-                    <!-- Boutons d'action secondaires (Plats & Promos) -->
-                    <div class="d-flex gap-2 mt-auto">
+                    <!-- Boutons d'action secondaires -->
+                    <div class="d-flex gap-1 mt-auto flex-wrap">
                         <a href="{{ path('app_admin_category_recipe_recipes', {'id': category.id}) }}" 
-                           class="btn btn-sm btn-outline-info flex-fill">
-                            <i class="fas fa-list"></i> Articles
+                           class="btn btn-sm btn-outline-info flex-fill" style="font-size: 0.6rem;">
+                            <i class="fas fa-list"></i> <span class="d-none d-sm-inline">Articles</span>
                         </a>
                         <a href="{{ path('app_admin_category_recipe_promotions', {'id': category.id}) }}" 
-                           class="btn btn-sm btn-outline-warning flex-fill" title="Promotions de la catégorie">
-                            <i class="fas fa-percent me-1"></i> Promotions
+                           class="btn btn-sm btn-outline-warning flex-fill" style="font-size: 0.6rem;">
+                            <i class="fas fa-percent me-1"></i> <span class="d-none d-sm-inline">Promotions</span>
                         </a>
                     </div>
                 </div>
@@ -531,11 +840,11 @@
         {% else %}
         <div class="col-12">
             <div class="card shadow">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-utensils fa-4x text-muted mb-3"></i>
-                    <h4 class="text-muted">Aucune catégorie de plats trouvée</h4>
-                    <a href="{{ path('app_admin_category_recipe_index') }}" class="btn btn-outline-primary">
-                        <i class="fas fa-undo me-1"></i> Réinitialiser les filtres
+                <div class="card-body text-center py-4 py-md-5">
+                    <i class="fas fa-utensils fa-3x fa-md-4 text-muted mb-3"></i>
+                    <h4 class="text-muted fs-5 fs-md-4">Aucune catégorie de plats trouvée</h4>
+                    <a href="{{ path('app_admin_category_recipe_index') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-undo me-1"></i> Réinitialiser
                     </a>
                 </div>
             </div>
@@ -543,12 +852,12 @@
         {% endfor %}
     </div>
 
-    <!-- Pagination -->
+    <!-- ========== PAGINATION ========== -->
     {% if totalPages > 1 %}
-    <div class="row mt-4">
+    <div class="row mt-3 mt-md-4">
         <div class="col-12">
             <nav aria-label="Pagination">
-                <ul class="pagination justify-content-center flex-wrap">
+                <ul class="pagination pagination-sm justify-content-center flex-wrap">
                     {% for i in 1..totalPages %}
                         <li class="page-item {{ i == currentPage ? 'active' }}">
                             <a class="page-link" href="{{ path('app_admin_category_recipe_index', app.request.query.all|merge({'page': i})) }}">{{ i }}</a>
@@ -563,26 +872,26 @@
 
 {# ==================== MODALES ==================== #}
 
-{# Modale pour quota atteint (nouvelle catégorie) #}
+{# Modale pour quota atteint #}
 <div class="modal fade" id="quotaReachedModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header bg-warning text-dark">
-                <h5 class="modal-title">
+                <h5 class="modal-title fs-6">
                     <i class="fas fa-exclamation-triangle me-2"></i> Quota atteint
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-center py-4">
-                <i class="fas fa-ban fa-4x text-warning mb-3"></i>
-                <h5>Vous avez atteint votre limite de {{ quota }} catégories de plats dans le quota.</h5>
-                <p class="text-muted">Pour ajouter de nouvelles catégories, passez à un plan supérieur.</p>
+            <div class="modal-body text-center py-3 py-md-4">
+                <i class="fas fa-ban fa-3x text-warning mb-3"></i>
+                <h5 class="fs-6">Limite de {{ quota }} catégories atteinte</h5>
+                <p class="text-muted small">Pour ajouter de nouvelles catégories, passez à un plan supérieur.</p>
             </div>
-            <div class="modal-footer justify-content-center">
-                <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-lg px-4">
+            <div class="modal-footer justify-content-center flex-wrap py-2 py-md-3">
+                <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-sm px-3 w-100 w-sm-auto">
                     <i class="fas fa-arrow-up me-2"></i> Voir les offres
                 </a>
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-outline-secondary btn-sm w-100 w-sm-auto" data-bs-dismiss="modal">
                     Annuler
                 </button>
             </div>
@@ -590,26 +899,26 @@
     </div>
 </div>
 
-{# Modale pour activation/désactivation manuelle (toggle) #}
+{# Modale pour toggle #}
 <div class="modal fade" id="toggleCategoryModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="toggleModalTitle">Confirmation</h5>
+                <h5 class="modal-title fs-6" id="toggleModalTitle">Confirmation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-center py-4">
-                <i class="fas fa-question-circle fa-4x text-primary mb-3"></i>
-                <p id="toggleModalMessage">...</p>
+            <div class="modal-body text-center py-3 py-md-4">
+                <i class="fas fa-question-circle fa-3x text-primary mb-3"></i>
+                <p id="toggleModalMessage" class="small"></p>
             </div>
-            <div class="modal-footer justify-content-center">
+            <div class="modal-footer justify-content-center flex-wrap py-2 py-md-3">
                 <form id="toggleCategoryForm" method="post" style="display: inline;">
                     <input type="hidden" name="_token" id="toggleCategoryToken" value="">
-                    <button type="submit" class="btn btn-primary px-4">
+                    <button type="submit" class="btn btn-primary btn-sm px-3 w-100 w-sm-auto">
                         <i class="fas fa-check me-2"></i> Confirmer
                     </button>
                 </form>
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-outline-secondary btn-sm w-100 w-sm-auto" data-bs-dismiss="modal">
                     Annuler
                 </button>
             </div>
@@ -617,12 +926,12 @@
     </div>
 </div>
 
-{# Modale suppression (admin) avec confirmation par saisie du nom #}
+{# Modale suppression #}
 <div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">
+                <h5 class="modal-title fs-6">
                     <i class="fas fa-exclamation-triangle me-2"></i> Confirmation de suppression
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -630,11 +939,11 @@
             <div class="modal-body">
                 <div id="deleteCategoryModalContent"></div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <form id="deleteCategoryForm" method="post" action="">
+            <div class="modal-footer flex-wrap gap-2 py-2 py-md-3">
+                <button type="button" class="btn btn-secondary btn-sm flex-grow-1 flex-md-grow-0" data-bs-dismiss="modal">Annuler</button>
+                <form id="deleteCategoryForm" method="post" action="" class="flex-grow-1 flex-md-grow-0">
                     <input type="hidden" name="_token" id="deleteCategoryToken" value="">
-                    <button type="submit" class="btn btn-danger" id="deleteCategoryConfirmBtn">Supprimer</button>
+                    <button type="submit" class="btn btn-danger btn-sm w-100" id="deleteCategoryConfirmBtn">Supprimer</button>
                 </form>
             </div>
         </div>
@@ -655,7 +964,9 @@ document.addEventListener('DOMContentLoaded', function() {
             language: 'fr',
             placeholder: '🎯 Sélectionnez une promotion',
             allowClear: true,
-            width: '100%'
+            width: '100%',
+            dropdownAutoWidth: true,
+            dropdownParent: $('#promotion').parent()
         });
     }
 
@@ -673,7 +984,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ========== 2. Modale pour activation/désactivation manuelle (toggle) ==========
+    // ========== 2. Modale pour toggle ==========
     const toggleModal = new bootstrap.Modal(document.getElementById('toggleCategoryModal'));
     const toggleForm = document.getElementById('toggleCategoryForm');
     const toggleToken = document.getElementById('toggleCategoryToken');
@@ -693,7 +1004,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ========== 3. Gestion de la suppression (admin) ==========
+    // ========== 3. Gestion de la suppression ==========
     const deleteModal = new bootstrap.Modal(document.getElementById('deleteCategoryModal'));
     const deleteForm = document.getElementById('deleteCategoryForm');
     const deleteToken = document.getElementById('deleteCategoryToken');
@@ -722,13 +1033,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 message += ` Pour confirmer la suppression, saisissez exactement le nom "${name}".`;
                 deleteModalContent.innerHTML = `
-                    <div class="alert alert-warning">
+                    <div class="alert alert-warning small p-2">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         ${message}
                     </div>
-                    <div class="input-group mt-3">
+                    <div class="input-group mt-2">
                         <span class="input-group-text"><i class="fas fa-tag"></i></span>
-                        <input type="text" id="deleteConfirmName" class="form-control" placeholder="Saisissez le nom de la catégorie pour confirmer">
+                        <input type="text" id="deleteConfirmName" class="form-control form-control-sm" placeholder="Saisissez le nom de la catégorie">
                     </div>
                 `;
                 deleteConfirmBtn.disabled = true;
@@ -742,7 +1053,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 deleteModalContent.innerHTML = `
                     <p>Êtes-vous sûr de vouloir supprimer la catégorie <strong>"${name}"</strong> ?</p>
-                    <p class="text-danger"><i class="fas fa-exclamation-circle me-1"></i>Cette action est irréversible.</p>
+                    <p class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i>Cette action est irréversible.</p>
                 `;
                 deleteConfirmBtn.disabled = false;
             }

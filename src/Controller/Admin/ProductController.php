@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\HmaService;
 use App\Entity\Product;
+use App\Entity\User;
+use App\Entity\stockMovement;
 use App\Entity\Promotion;
 use App\Form\ProductType;
 use App\Service\UniqueNameValidator;
@@ -745,6 +747,188 @@ final class ProductController extends AbstractController
 
         return $this->render('admin/product/print_sheet.html.twig', [
             'product' => $product,
+            'companyType' => $hmaService->getType(),
+        ]);
+    }
+
+    #[Route('/{id}/stock-movements', name: 'app_admin_product_stock_movements', methods: ['GET'])]
+    public function stockMovements(
+        Product $product,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $this->checkAccess();
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService) {
+            throw new AccessDeniedException('Aucun service associé.');
+        }
+        $this->checkOwnership($product, $hmaService);
+
+        // Récupérer les paramètres de filtre
+        $page = $request->query->getInt('page', 1);
+        $limit = 15;
+        $movementType = $request->query->get('movement_type', '');
+        $dateFrom = $request->query->get('date_from', '');
+        $dateTo = $request->query->get('date_to', '');
+        $sort = $request->query->get('sort', 'created_at');
+        $direction = $request->query->get('direction', 'desc');
+
+        // Construire la requête
+        $qb = $entityManager->createQueryBuilder()
+            ->select('sm')
+            ->from(StockMovement::class, 'sm')
+            ->where('sm.product = :product')
+            ->andWhere('sm.hma_service = :hmaService')
+            ->setParameter('product', $product)
+            ->setParameter('hmaService', $hmaService);
+
+        // Filtre par type de mouvement
+        if ($movementType) {
+            if (str_starts_with($movementType, 'all_')) {
+                $category = substr($movementType, 4);
+                $types = match($category) {
+                    'achats' => ['purchase_in'],
+                    'ventes' => ['sale_out'],
+                    'ajustements' => ['adjustment_in', 'adjustment_out'],
+                    'retours_clients' => ['return_in'],
+                    'retours_fournisseurs' => ['return_out'],
+                    'transferts' => ['transfer_in', 'transfer_out'],
+                    default => []
+                };
+                if (!empty($types)) {
+                    $qb->andWhere($qb->expr()->in('sm.movement_type', $types));
+                }
+            } else {
+                $qb->andWhere('sm.movement_type = :movementType')
+                    ->setParameter('movementType', $movementType);
+            }
+        }
+
+        // Filtre par dates
+        if ($dateFrom) {
+            $qb->andWhere('sm.created_at >= :dateFrom')
+                ->setParameter('dateFrom', new \DateTime($dateFrom . ' 00:00:00'));
+        }
+        if ($dateTo) {
+            $qb->andWhere('sm.created_at <= :dateTo')
+                ->setParameter('dateTo', new \DateTime($dateTo . ' 23:59:59'));
+        }
+
+        // Tri
+        $qb->orderBy('sm.' . $sort, $direction);
+
+        // Pagination
+        $totalItems = count($qb->getQuery()->getResult());
+        $totalPages = ceil($totalItems / $limit);
+        $offset = ($page - 1) * $limit;
+
+        $qb->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        $movements = $qb->getQuery()->getResult();
+
+        // Statistiques
+        $stats = [
+            'total_movements' => $totalItems,
+            'total_in' => $entityManager->createQueryBuilder()
+                ->select('SUM(sm.quantity)')
+                ->from(StockMovement::class, 'sm')
+                ->where('sm.product = :product')
+                ->andWhere('sm.hma_service = :hmaService')
+                ->andWhere('sm.movement_type IN (:types)')
+                ->setParameter('product', $product)
+                ->setParameter('hmaService', $hmaService)
+                ->setParameter('types', ['purchase_in', 'return_in', 'adjustment_in', 'transfer_in'])
+                ->getQuery()
+                ->getSingleScalarResult() ?? 0,
+            'total_out' => $entityManager->createQueryBuilder()
+                ->select('SUM(sm.quantity)')
+                ->from(StockMovement::class, 'sm')
+                ->where('sm.product = :product')
+                ->andWhere('sm.hma_service = :hmaService')
+                ->andWhere('sm.movement_type IN (:types)')
+                ->setParameter('product', $product)
+                ->setParameter('hmaService', $hmaService)
+                ->setParameter('types', ['sale_out', 'adjustment_out', 'return_out', 'transfer_out'])
+                ->getQuery()
+                ->getSingleScalarResult() ?? 0,
+        ];
+
+        // Statistiques par type
+        $movementTypeStats = [];
+        $types = ['purchase_in', 'sale_out', 'adjustment_in', 'adjustment_out', 'return_in', 'return_out', 'transfer_in', 'transfer_out'];
+        foreach ($types as $type) {
+            $count = $entityManager->createQueryBuilder()
+                ->select('SUM(sm.quantity)')
+                ->from(StockMovement::class, 'sm')
+                ->where('sm.product = :product')
+                ->andWhere('sm.hma_service = :hmaService')
+                ->andWhere('sm.movement_type = :type')
+                ->setParameter('product', $product)
+                ->setParameter('hmaService', $hmaService)
+                ->setParameter('type', $type)
+                ->getQuery()
+                ->getSingleScalarResult() ?? 0;
+            $movementTypeStats[$type] = $count;
+        }
+
+        // Récupérer les utilisateurs pour le filtre
+        $users = $entityManager->getRepository(User::class)
+            ->findBy(['hma_service_id' => $hmaService]);
+
+        // Hiérarchie des mouvements pour le filtre
+        $movementHierarchy = [
+            'Achats' => [
+                'children' => [
+                    'purchase_in' => ['label' => 'Achat', 'icon' => 'fas fa-shopping-cart']
+                ]
+            ],
+            'Ventes' => [
+                'children' => [
+                    'sale_out' => ['label' => 'Vente', 'icon' => 'fas fa-tag']
+                ]
+            ],
+            'Ajustements' => [
+                'children' => [
+                    'adjustment_in' => ['label' => 'Ajustement (+)', 'icon' => 'fas fa-plus-circle'],
+                    'adjustment_out' => ['label' => 'Ajustement (-)', 'icon' => 'fas fa-minus-circle']
+                ]
+            ],
+            'Retours clients' => [
+                'children' => [
+                    'return_in' => ['label' => 'Retour client', 'icon' => 'fas fa-undo-alt']
+                ]
+            ],
+            'Retours fournisseurs' => [
+                'children' => [
+                    'return_out' => ['label' => 'Retour fournisseur', 'icon' => 'fas fa-truck-loading']
+                ]
+            ],
+            'Transferts' => [
+                'children' => [
+                    'transfer_in' => ['label' => 'Transfert entrant', 'icon' => 'fas fa-arrow-right'],
+                    'transfer_out' => ['label' => 'Transfert sortant', 'icon' => 'fas fa-arrow-left']
+                ]
+            ]
+        ];
+
+        return $this->render('admin/product/stock_movements.html.twig', [
+            'product' => $product,
+            'movements' => $movements,
+            'stats' => $stats,
+            'movementTypeStats' => $movementTypeStats,
+            'movementHierarchy' => $movementHierarchy,
+            'users' => $users,
+            'totalPages' => $totalPages,
+            'currentPage' => $page,
+            'totalItems' => $totalItems,
+            'filters' => [
+                'movement_type' => $movementType,
+                'date_from' => $dateFrom,
+                'date_to' => $dateTo,
+                'sort' => $sort,
+                'direction' => $direction,
+            ],
             'companyType' => $hmaService->getType(),
         ]);
     }

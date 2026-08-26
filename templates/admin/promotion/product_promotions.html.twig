@@ -3,351 +3,8 @@
 
 {% block title %}Promotions du produit - {{ product.name }}{% endblock %}
 
-{% block body %}
-<div class="container-fluid px-4">
-    <!-- En-tête -->
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-        <div class="mb-2 mb-sm-0">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ path('app_admin_product_index') }}" class="text-decoration-none">
-                            <i class="fas fa-boxes me-1"></i> Produits
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="text-decoration-none">
-                            {{ product.name|u.truncate(30) }}
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active">
-                        <i class="fas fa-tags me-1"></i> Promotions
-                    </li>
-                </ol>
-            </nav>
-            <h1 class="h3 mb-1">
-                <i class="fas fa-tags me-2 text-primary"></i>Promotions du produit
-            </h1>
-            <p class="text-muted mb-0">
-                Produit : <strong>{{ product.name }}</strong> | 
-                Code-barres : <strong>{{ product.barcode }}</strong>
-            </p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-2"></i> Retour au produit
-            </a>
-            <a href="{{ path('app_admin_promotion_new') }}?product_id={{ product.id }}" class="btn btn-primary">
-                <i class="fas fa-plus-circle me-2"></i> Nouvelle promotion
-            </a>
-        </div>
-    </div>
-
-    <!-- Flash messages -->
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
-    {% endfor %}
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger alert-dismissible fade show">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
-    {% endfor %}
-
-    <!-- Informations du produit -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-md-2 text-center">
-                    {% if product.image and product.image != 'default-product.png' %}
-                        <img src="{{ asset('uploads/products/' ~ product.image) }}" 
-                             alt="{{ product.name }}" 
-                             class="rounded shadow-sm" 
-                             style="width: 80px; height: 80px; object-fit: cover;">
-                    {% else %}
-                        <div class="bg-light rounded d-flex align-items-center justify-content-center mx-auto" style="width: 80px; height: 80px;">
-                            <i class="fas fa-box fa-3x text-muted"></i>
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="col-md-10">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <small class="text-muted">Code-barres</small>
-                            <p class="mb-0 fw-bold">{{ product.barcode }}</p>
-                        </div>
-                        <div class="col-md-4">
-                            <small class="text-muted">Prix de vente</small>
-                            <p class="mb-0 fw-bold text-success">{{ product.salePrice|price_with_currency(product.hmaService) }}</p>
-                        </div>
-                        <div class="col-md-4">
-                            <small class="text-muted">Catégorie</small>
-                            <p class="mb-0">{{ product.category ? product.category.name : 'Non catégorisé' }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Statistiques - 6 cartes sur une ligne -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3 border-0">
-            <h5 class="mb-0"><i class="fas fa-chart-pie me-2 text-primary"></i>Statistiques des promotions</h5>
-        </div>
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                    <div class="stat-card p-3 bg-light rounded-3 text-center">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted small">Total</span>
-                                <h3 class="mb-0 fw-bold text-dark">{{ promotions|length }}</h3>
-                            </div>
-                            <i class="fas fa-tag fa-2x text-primary opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                    <div class="stat-card p-3 bg-light rounded-3 text-center">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted small">Actives</span>
-                                <h3 class="mb-0 fw-bold text-success">{{ promotions|filter(p => p.isActive)|length }}</h3>
-                            </div>
-                            <i class="fas fa-check-circle fa-2x text-success opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                    <div class="stat-card p-3 bg-light rounded-3 text-center">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted small">Inactives</span>
-                                <h3 class="mb-0 fw-bold text-danger">{{ promotions|filter(p => not p.isActive)|length }}</h3>
-                            </div>
-                            <i class="fas fa-ban fa-2x text-danger opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                    <div class="stat-card p-3 bg-light rounded-3 text-center">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted small">En cours</span>
-                                <h3 class="mb-0 fw-bold text-warning">{{ promotions|filter(p => p.isOngoing)|length }}</h3>
-                            </div>
-                            <i class="fas fa-clock fa-2x text-warning opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                    <div class="stat-card p-3 bg-light rounded-3 text-center">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted small">À venir</span>
-                                <h3 class="mb-0 fw-bold text-info">{{ promotions|filter(p => p.isUpcoming)|length }}</h3>
-                            </div>
-                            <i class="fas fa-calendar-alt fa-2x text-info opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                    <div class="stat-card p-3 bg-light rounded-3 text-center">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted small">Terminées</span>
-                                <h3 class="mb-0 fw-bold text-secondary">{{ promotions|filter(p => p.isEnded)|length }}</h3>
-                            </div>
-                            <i class="fas fa-stopwatch fa-2x text-secondary opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Filtres -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3 border-0">
-            <h5 class="mb-0"><i class="fas fa-filter me-2 text-primary"></i>Filtres</h5>
-        </div>
-        <div class="card-body">
-            <form method="get" class="row g-3">
-                <div class="col-lg-4 col-md-6">
-                    <label class="form-label fw-semibold">Recherche</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
-                        <input type="text" name="search" value="{{ search }}" class="form-control border-start-0" placeholder="Nom de la promotion...">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label fw-semibold">Statut</label>
-                    <select name="status" class="form-select">
-                        <option value="all" {{ status == 'all' ? 'selected' }}>Tous</option>
-                        <option value="active" {{ status == 'active' ? 'selected' }}>Actives</option>
-                        <option value="inactive" {{ status == 'inactive' ? 'selected' }}>Inactives</option>
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label fw-semibold">Période</label>
-                    <select name="period" class="form-select">
-                        <option value="all" {{ period == 'all' ? 'selected' }}>Toutes</option>
-                        <option value="ongoing" {{ period == 'ongoing' ? 'selected' }}>En cours</option>
-                        <option value="upcoming" {{ period == 'upcoming' ? 'selected' }}>À venir</option>
-                        <option value="ended" {{ period == 'ended' ? 'selected' }}>Terminées</option>
-                    </select>
-                </div>
-                <div class="col-lg-2 d-flex gap-2 align-items-end">
-                    <a href="{{ path('app_admin_product_promotions', {'id': product.id}) }}" class="btn btn-outline-secondary w-30">
-                        <i class="fas fa-undo-alt me-1"></i> Effacer
-                    </a>
-                    <button type="submit" class="btn btn-primary w-50">
-                        <i class="fas fa-filter me-1"></i> Filtrer
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Liste des promotions -->
-    <div class="row g-4">
-        {% for promotion in promotions %}
-            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all rounded-4 overflow-hidden">
-                    {% if promotion.image %}
-                        <img src="{{ asset('uploads/promotions/' ~ promotion.image) }}" class="card-img-top" style="height: 160px; object-fit: cover;" alt="{{ promotion.name }}">
-                    {% else %}
-                        <div class="bg-gradient-light d-flex align-items-center justify-content-center" style="height: 160px;">
-                            <i class="fas fa-tag fa-4x text-muted opacity-25"></i>
-                        </div>
-                    {% endif %}
-                    
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="card-title fw-bold mb-0 text-dark">{{ promotion.name|slice(0, 40) }}</h5>
-                            <span class="badge {{ promotion.isActive ? 'bg-success' : 'bg-secondary' }} px-2 py-1 ms-1 flex-shrink-0">
-                                {{ promotion.isActive ? 'Active' : 'Inactive' }}
-                            </span>
-                        </div>
-                        <p class="card-text small text-muted mb-3">
-                            {{ promotion.description|default('Aucune description')|slice(0, 80) }}
-                            {% if promotion.description|length > 80 %}...{% endif %}
-                        </p>
-                        
-                        <div class="mb-2">
-                            <strong class="text-dark">Réduction :</strong> 
-                            <span class="badge bg-dark text-white px-3 py-2 rounded-pill fs-6">
-                                {% if promotion.typePromotion.name == 'Pourcentage' %}
-                                    {{ promotion.value }}%
-                                {% else %}
-                                    {{ promotion.value|price_with_currency(product.hmaService) }}
-                                {% endif %}
-                            </span>
-                        </div>
-                        
-                        <div class="small text-muted">
-                            <i class="far fa-calendar-alt me-1"></i> 
-                            {{ promotion.startDate|date('d/m/Y') }}
-                            {% if promotion.endDate %}
-                                → {{ promotion.endDate|date('d/m/Y') }}
-                            {% else %}
-                                <span class="badge bg-info bg-opacity-10 text-info ms-1">Sans fin</span>
-                            {% endif %}
-                        </div>
-                        
-                        <!-- Indicateur de période -->
-                        <div class="mt-2">
-                            {% if promotion.isOngoing %}
-                                <span class="badge bg-warning text-dark">
-                                    <i class="fas fa-play me-1"></i> En cours
-                                </span>
-                            {% elseif promotion.isUpcoming %}
-                                <span class="badge bg-info">
-                                    <i class="fas fa-clock me-1"></i> À venir
-                                </span>
-                            {% elseif promotion.endDate and promotion.endDate < date() %}
-                                <span class="badge bg-secondary">
-                                    <i class="fas fa-stop me-1"></i> Terminée
-                                </span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between gap-2 pt-0 pb-3">
-                        <a href="{{ path('app_admin_promotion_show', {id: promotion.id}) }}" class="btn btn-sm btn-outline-info flex-fill">
-                            <i class="fas fa-eye me-1"></i> Voir
-                        </a>
-                        <a href="{{ path('app_admin_promotion_edit', {id: promotion.id}) }}" class="btn btn-sm btn-outline-primary flex-fill">
-                            <i class="fas fa-edit me-1"></i> Modifier
-                        </a>
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <button type="button" class="btn btn-sm btn-outline-danger flex-fill" data-bs-toggle="modal" data-bs-target="#deleteModal{{ promotion.id }}">
-                                <i class="fas fa-trash-alt me-1"></i> Supprimer
-                            </button>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal de suppression -->
-            {% if is_granted('ROLE_ADMIN') %}
-            <div class="modal fade" id="deleteModal{{ promotion.id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header border-0">
-                            <h5 class="modal-title text-danger">
-                                <i class="fas fa-exclamation-triangle me-2"></i> Confirmer la suppression
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body text-center py-4">
-                            <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
-                            <h5>Êtes-vous sûr de vouloir supprimer cette promotion ?</h5>
-                            <p class="text-muted">Cette action est irréversible.</p>
-                            <div class="alert alert-warning mt-3">
-                                <strong>{{ promotion.name }}</strong><br>
-                                Cette promotion ne sera plus associée à ce produit.
-                            </div>
-                        </div>
-                        <div class="modal-footer border-0">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                            <form method="post" action="{{ path('app_admin_promotion_delete', {id: promotion.id}) }}">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ promotion.id) }}">
-                                <button type="submit" class="btn btn-danger">Supprimer définitivement</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-        {% else %}
-            <div class="col-12">
-                <div class="card border-0 shadow-sm rounded-4 text-center py-5">
-                    <div class="card-body">
-                        <i class="fas fa-tags fa-5x text-muted mb-3 opacity-25"></i>
-                        <h4 class="text-muted">Aucune promotion associée à ce produit</h4>
-                        <p class="text-muted">Ajoutez une promotion pour ce produit.</p>
-                        <a href="{{ path('app_admin_promotion_new') }}?product_id={{ product.id }}" class="btn btn-primary mt-2">
-                            <i class="fas fa-plus-circle me-2"></i> Nouvelle promotion
-                        </a>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-
-    <!-- Pagination -->
-    {% if totalPages > 1 %}
-        <nav class="mt-5">
-            <ul class="pagination justify-content-center">
-                {% for page in 1..totalPages %}
-                    <li class="page-item {{ page == currentPage ? 'active' }}">
-                        <a class="page-link" href="{{ path('app_admin_product_promotions', app.request.query.all|merge({'page': page, 'id': product.id})) }}">{{ page }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </nav>
-    {% endif %}
-</div>
-
+{% block stylesheets %}
+{{ parent() }}
 <style>
     .hover-shadow {
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -370,21 +27,6 @@
         background-color: #ffffff !important;
         box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
     }
-    @media (max-width: 768px) {
-        .card-footer {
-            flex-wrap: wrap;
-        }
-        .card-footer .btn {
-            font-size: 0.75rem;
-            padding: 0.375rem 0.5rem;
-        }
-        .stat-card h3 {
-            font-size: 1.25rem;
-        }
-        .stat-card i {
-            font-size: 1.25rem;
-        }
-    }
     .text-dark {
         color: #212529 !important;
     }
@@ -392,5 +34,646 @@
         color: #212529 !important;
         background-color: #ffffff !important;
     }
+
+    /* ========================================
+       RESPONSIVE - FILTRES
+    ======================================== */
+    .filter-label {
+        display: block !important;
+        width: 100% !important;
+        font-size: 0.7rem !important;
+    }
+    .filter-select {
+        width: 100% !important;
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.4rem !important;
+    }
+    .filter-input {
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.4rem !important;
+    }
+
+    /* ========================================
+       RESPONSIVE - MEDIA QUERIES
+    ======================================== */
+    
+    /* Mobile (< 576px) */
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+        }
+        
+        /* En-tête */
+        .h1 {
+            font-size: 1.2rem !important;
+        }
+        .h3 {
+            font-size: 1rem !important;
+        }
+        .h5 {
+            font-size: 0.85rem !important;
+        }
+        .text-muted {
+            font-size: 0.75rem !important;
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            font-size: 0.6rem !important;
+        }
+        .breadcrumb-item a {
+            font-size: 0.6rem !important;
+        }
+        
+        /* Boutons */
+        .btn {
+            font-size: 0.65rem !important;
+            padding: 0.25rem 0.5rem !important;
+        }
+        .btn i {
+            font-size: 0.7rem !important;
+        }
+        
+        /* Formulaires */
+        .form-control, .form-select {
+            font-size: 0.7rem !important;
+            padding: 0.2rem 0.4rem !important;
+        }
+        .form-label {
+            font-size: 0.6rem !important;
+        }
+        .input-group-text {
+            padding: 0.2rem 0.4rem !important;
+            font-size: 0.7rem !important;
+        }
+        
+        /* Stats */
+        .stat-card .h3 {
+            font-size: 1.2rem !important;
+        }
+        .stat-card .fa-2x {
+            font-size: 1.5rem !important;
+        }
+        .stat-card .text-muted {
+            font-size: 0.6rem !important;
+        }
+        .stat-card .p-3 {
+            padding: 0.5rem !important;
+        }
+        
+        /* Cartes des promotions */
+        .card-body {
+            padding: 0.75rem !important;
+        }
+        .card-footer {
+            padding: 0.5rem 0.75rem !important;
+            flex-wrap: wrap;
+        }
+        .card-footer .btn {
+            font-size: 0.55rem !important;
+            padding: 0.15rem 0.2rem !important;
+        }
+        .card-title {
+            font-size: 0.85rem !important;
+        }
+        .card-text {
+            font-size: 0.7rem !important;
+        }
+        .badge {
+            font-size: 0.55rem !important;
+            padding: 0.15rem 0.4rem !important;
+        }
+        .card-img-top {
+            height: 120px !important;
+        }
+        .bg-gradient-light {
+            height: 120px !important;
+        }
+        .bg-gradient-light i {
+            font-size: 3rem !important;
+        }
+        
+        /* Pagination */
+        .pagination .page-link {
+            font-size: 0.65rem !important;
+            padding: 0.25rem 0.5rem !important;
+        }
+        
+        /* MODALES */
+        .modal-dialog {
+            margin: 0.5rem;
+        }
+        .modal-content {
+            border-radius: 12px !important;
+        }
+        .modal-body {
+            padding: 0.75rem !important;
+        }
+        .modal-footer {
+            padding: 0.5rem !important;
+            flex-wrap: wrap;
+        }
+        .modal-footer .btn {
+            font-size: 0.7rem !important;
+            padding: 0.2rem 0.5rem !important;
+        }
+        .modal-header {
+            padding: 0.5rem 0.75rem !important;
+        }
+        .modal-title {
+            font-size: 0.9rem !important;
+        }
+        
+        /* Filtres - 100% sur mobile */
+        .filter-col {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        .filter-col .input-group {
+            width: 100% !important;
+        }
+        .filter-col-half {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        .filter-btn-group {
+            flex-wrap: wrap;
+        }
+        .filter-btn-group .btn {
+            flex: 1 1 100%;
+        }
+        
+        /* Informations produit */
+        .bg-light.rounded {
+            width: 60px !important;
+            height: 60px !important;
+        }
+        .bg-light.rounded i {
+            font-size: 2rem !important;
+        }
+        img.rounded.shadow-sm {
+            width: 60px !important;
+            height: 60px !important;
+        }
+        .col-md-4 p {
+            font-size: 0.8rem !important;
+        }
+        .col-md-4 .fw-bold {
+            font-size: 0.8rem !important;
+        }
+    }
+
+    /* Tablette (576px - 768px) */
+    @media (min-width: 577px) and (max-width: 768px) {
+        .container-fluid {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+        
+        .h1 {
+            font-size: 1.4rem !important;
+        }
+        .h3 {
+            font-size: 1.1rem !important;
+        }
+        .btn {
+            font-size: 0.7rem !important;
+            padding: 0.25rem 0.6rem !important;
+        }
+        .card-title {
+            font-size: 0.9rem !important;
+        }
+        .card-text {
+            font-size: 0.75rem !important;
+        }
+        .card-img-top {
+            height: 150px !important;
+        }
+        .bg-gradient-light {
+            height: 150px !important;
+        }
+        
+        /* Filtres - 2 colonnes sur tablette */
+        .filter-col-half {
+            flex: 0 0 50% !important;
+            max-width: 50% !important;
+            width: 50% !important;
+        }
+        .filter-col {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+    }
+
+    /* Désactiver hover sur mobile */
+    @media (max-width: 768px) {
+        .hover-shadow:hover {
+            transform: none !important;
+        }
+        .stat-card:hover {
+            transform: none !important;
+        }
+    }
 </style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-2 px-md-4 py-2 py-md-3">
+
+    <!-- ==========================================
+         EN-TÊTE
+    ========================================== -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 mb-md-4 flex-wrap gap-2">
+        <div class="w-100 w-sm-auto">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item small">
+                        <a href="{{ path('app_admin_product_index') }}" class="text-decoration-none">
+                            <i class="fas fa-boxes me-1"></i> Produits
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item small">
+                        <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="text-decoration-none">
+                            {{ product.name|u.truncate(15) }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active small">
+                        <i class="fas fa-tags me-1"></i> Promotions
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-1">
+                <i class="fas fa-tags me-2 text-primary"></i>Promotions du produit
+            </h1>
+            <p class="text-muted mb-0 small">
+                Produit : <strong>{{ product.name }}</strong> | 
+                Code : <strong>{{ product.barcode }}</strong>
+            </p>
+        </div>
+        <div class="d-flex gap-1 gap-sm-2 flex-wrap w-100 w-sm-auto">
+            <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="btn btn-outline-secondary btn-sm flex-grow-1 flex-sm-grow-0">
+                <i class="fas fa-arrow-left me-1"></i> <span class="d-none d-sm-inline">Retour</span>
+            </a>
+            <a href="{{ path('app_admin_promotion_new') }}?product_id={{ product.id }}" class="btn btn-primary btn-sm flex-grow-1 flex-sm-grow-0">
+                <i class="fas fa-plus-circle me-1"></i> <span class="d-none d-sm-inline">Nouvelle promotion</span>
+                <span class="d-inline d-sm-none">Nouvelle</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         FLASH MESSAGES
+    ========================================== -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show small">{{ message }}<button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button></div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show small">{{ message }}<button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button></div>
+    {% endfor %}
+
+    <!-- ==========================================
+         INFORMATIONS DU PRODUIT
+    ========================================== -->
+    <div class="card shadow-sm border-0 mb-3 mb-md-4">
+        <div class="card-body p-2 p-md-3">
+            <div class="row align-items-center g-2 g-md-3">
+                <div class="col-3 col-md-2 text-center">
+                    {% if product.image and product.image != 'default-product.png' %}
+                        <img src="{{ asset('uploads/products/' ~ product.image) }}" 
+                             alt="{{ product.name }}" 
+                             class="rounded shadow-sm" 
+                             style="width: 60px; height: 60px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-light rounded d-flex align-items-center justify-content-center mx-auto" style="width: 60px; height: 60px;">
+                            <i class="fas fa-box fa-2x text-muted"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-9 col-md-10">
+                    <div class="row g-1 g-md-3">
+                        <div class="col-12 col-md-4">
+                            <small class="text-muted" style="font-size:0.55rem;">Code-barres</small>
+                            <p class="mb-0 fw-bold small">{{ product.barcode }}</p>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <small class="text-muted" style="font-size:0.55rem;">Prix de vente</small>
+                            <p class="mb-0 fw-bold text-success small">{{ product.salePrice|price_with_currency(product.hmaService) }}</p>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <small class="text-muted" style="font-size:0.55rem;">Catégorie</small>
+                            <p class="mb-0 small">{{ product.category ? product.category.name : 'Non catégorisé' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STATISTIQUES - 6 CARTES
+    ========================================== -->
+    <div class="card shadow-sm border-0 mb-3 mb-md-4">
+        <div class="card-header bg-white py-2 py-md-3 border-0">
+            <h5 class="mb-0 fs-6 fs-md-5"><i class="fas fa-chart-pie me-2 text-primary"></i>Statistiques des promotions</h5>
+        </div>
+        <div class="card-body p-2 p-md-3">
+            <div class="row g-2 g-md-3">
+                <!-- Total -->
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="stat-card p-2 p-md-3 bg-light rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small text-uppercase fw-bold d-block" style="font-size:0.6rem;">Total</span>
+                                <h3 class="mb-0 fw-bold fs-4 fs-md-3">{{ promotions|length }}</h3>
+                            </div>
+                            <i class="fas fa-tag text-primary opacity-50" style="font-size:1.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Actives -->
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="stat-card p-2 p-md-3 bg-light rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small text-uppercase fw-bold d-block" style="font-size:0.6rem;">Actives</span>
+                                <h3 class="mb-0 fw-bold fs-4 fs-md-3 text-success">{{ promotions|filter(p => p.isActive)|length }}</h3>
+                            </div>
+                            <i class="fas fa-check-circle text-success opacity-50" style="font-size:1.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Inactives -->
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="stat-card p-2 p-md-3 bg-light rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small text-uppercase fw-bold d-block" style="font-size:0.6rem;">Inactives</span>
+                                <h3 class="mb-0 fw-bold fs-4 fs-md-3 text-danger">{{ promotions|filter(p => not p.isActive)|length }}</h3>
+                            </div>
+                            <i class="fas fa-ban text-danger opacity-50" style="font-size:1.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- En cours -->
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="stat-card p-2 p-md-3 bg-light rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small text-uppercase fw-bold d-block" style="font-size:0.6rem;">En cours</span>
+                                <h3 class="mb-0 fw-bold fs-4 fs-md-3 text-warning">{{ promotions|filter(p => p.isOngoing)|length }}</h3>
+                            </div>
+                            <i class="fas fa-clock text-warning opacity-50" style="font-size:1.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- À venir -->
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="stat-card p-2 p-md-3 bg-light rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small text-uppercase fw-bold d-block" style="font-size:0.6rem;">À venir</span>
+                                <h3 class="mb-0 fw-bold fs-4 fs-md-3 text-info">{{ promotions|filter(p => p.isUpcoming)|length }}</h3>
+                            </div>
+                            <i class="fas fa-calendar-alt text-info opacity-50" style="font-size:1.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Terminées -->
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="stat-card p-2 p-md-3 bg-light rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small text-uppercase fw-bold d-block" style="font-size:0.6rem;">Terminées</span>
+                                <h3 class="mb-0 fw-bold fs-4 fs-md-3 text-secondary">{{ promotions|filter(p => p.isEnded)|length }}</h3>
+                            </div>
+                            <i class="fas fa-stopwatch text-secondary opacity-50" style="font-size:1.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         FILTRES - VERSION RESPONSIVE
+    ========================================== -->
+    <div class="card shadow-sm border-0 mb-3 mb-md-4">
+        <div class="card-header bg-white py-2 py-md-3 border-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 fs-6 fs-md-5"><i class="fas fa-filter me-2 text-primary"></i>Filtres</h5>
+            <div class="d-flex gap-1 gap-md-2">
+                <a href="{{ path('app_admin_product_promotions', {'id': product.id}) }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-undo-alt me-1"></i> <span class="d-none d-sm-inline">Effacer</span>
+                </a>
+                <button type="submit" form="filter-form" class="btn btn-primary btn-sm">
+                    <i class="fas fa-filter me-1"></i> <span class="d-none d-sm-inline">Filtrer</span>
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-2 p-md-3">
+            <form method="get" id="filter-form">
+                <div class="row g-2 g-md-3 align-items-end">
+                    <!-- Recherche - 100% sur mobile, 4 sur desktop -->
+                    <div class="col-12 col-md-4 filter-col">
+                        <label class="form-label fw-semibold filter-label">Recherche</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0" style="padding:0.2rem 0.4rem;">
+                                <i class="fas fa-search text-muted" style="font-size:0.7rem;"></i>
+                            </span>
+                            <input type="text" name="search" value="{{ search }}" 
+                                   class="form-control border-start-0 filter-input" 
+                                   placeholder="Nom de la promotion..." 
+                                   style="width:100%;">
+                        </div>
+                    </div>
+                    
+                    <!-- Statut - 50% sur mobile, 3 sur desktop -->
+                    <div class="col-6 col-md-3 filter-col-half">
+                        <label class="form-label fw-semibold filter-label">Statut</label>
+                        <select name="status" class="form-select filter-select">
+                            <option value="all" {{ status == 'all' ? 'selected' }}>Tous</option>
+                            <option value="active" {{ status == 'active' ? 'selected' }}>Actives</option>
+                            <option value="inactive" {{ status == 'inactive' ? 'selected' }}>Inactives</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Période - 50% sur mobile, 3 sur desktop -->
+                    <div class="col-6 col-md-3 filter-col-half">
+                        <label class="form-label fw-semibold filter-label">Période</label>
+                        <select name="period" class="form-select filter-select">
+                            <option value="all" {{ period == 'all' ? 'selected' }}>Toutes</option>
+                            <option value="ongoing" {{ period == 'ongoing' ? 'selected' }}>En cours</option>
+                            <option value="upcoming" {{ period == 'upcoming' ? 'selected' }}>À venir</option>
+                            <option value="ended" {{ period == 'ended' ? 'selected' }}>Terminées</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Boutons - 100% sur mobile, 2 sur desktop -->
+                    <div class="col-12 col-md-2 filter-col">
+                        <div class="d-flex gap-1 gap-md-2 filter-btn-group">
+                            <a href="{{ path('app_admin_product_promotions', {'id': product.id}) }}" class="btn btn-outline-secondary btn-sm flex-grow-1">
+                                <i class="fas fa-undo-alt me-1"></i> <span class="d-none d-sm-inline">Effacer</span>
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
+                                <i class="fas fa-filter me-1"></i> <span class="d-none d-sm-inline">Filtrer</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         LISTE DES PROMOTIONS - 2 CARTES SUR MOBILE
+    ========================================== -->
+    <div class="row g-2 g-md-3 g-lg-4">
+        {% for promotion in promotions %}
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all rounded-4 overflow-hidden">
+                    {% if promotion.image %}
+                        <img src="{{ asset('uploads/promotions/' ~ promotion.image) }}" class="card-img-top" style="height: 120px; object-fit: cover;" alt="{{ promotion.name }}">
+                    {% else %}
+                        <div class="bg-gradient-light d-flex align-items-center justify-content-center" style="height: 120px;">
+                            <i class="fas fa-tag fa-4x text-muted opacity-25"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body p-2 p-sm-3 p-md-3">
+                        <div class="d-flex justify-content-between align-items-start mb-1 mb-md-2">
+                            <h5 class="card-title fw-bold mb-0 fs-6 fs-md-5 text-dark">{{ promotion.name|slice(0, 20) }}{% if promotion.name|length > 20 %}...{% endif %}</h5>
+                            <span class="badge {{ promotion.isActive ? 'bg-success' : 'bg-secondary' }} px-2 py-1 ms-1 flex-shrink-0" style="font-size:0.55rem;">
+                                {{ promotion.isActive ? 'Active' : 'Inactive' }}
+                            </span>
+                        </div>
+                        <p class="card-text small text-muted mb-2" style="font-size:0.7rem; min-height:40px;">
+                            {{ promotion.description|default('Aucune description')|slice(0, 50) }}
+                            {% if promotion.description|length > 50 %}...{% endif %}
+                        </p>
+                        
+                        <div class="mb-1 mb-md-2">
+                            <strong class="text-dark small" style="font-size:0.65rem;">Réduction :</strong> 
+                            <span class="badge bg-dark text-white px-2 py-1 rounded-pill" style="font-size:0.65rem;">
+                                {% if promotion.typePromotion.name == 'Pourcentage' %}
+                                    {{ promotion.value }}%
+                                {% else %}
+                                    {{ promotion.value|price_with_currency(product.hmaService) }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="small text-muted" style="font-size:0.6rem;">
+                            <i class="far fa-calendar-alt me-1"></i> 
+                            {{ promotion.startDate|date('d/m/Y') }}
+                            {% if promotion.endDate %}
+                                → {{ promotion.endDate|date('d/m/Y') }}
+                            {% else %}
+                                <span class="badge bg-info bg-opacity-10 text-info ms-1" style="font-size:0.5rem;">Sans fin</span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Indicateur de période -->
+                        <div class="mt-1 mt-md-2">
+                            {% if promotion.isOngoing %}
+                                <span class="badge bg-warning text-dark" style="font-size:0.5rem;">
+                                    <i class="fas fa-play me-1"></i> En cours
+                                </span>
+                            {% elseif promotion.isUpcoming %}
+                                <span class="badge bg-info" style="font-size:0.5rem;">
+                                    <i class="fas fa-clock me-1"></i> À venir
+                                </span>
+                            {% elseif promotion.endDate and promotion.endDate < date() %}
+                                <span class="badge bg-secondary" style="font-size:0.5rem;">
+                                    <i class="fas fa-stop me-1"></i> Terminée
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer bg-transparent border-0 d-flex flex-wrap justify-content-between gap-1 pt-0 pb-2 pb-md-3 px-2 px-sm-3 px-md-3">
+                        <a href="{{ path('app_admin_promotion_show', {id: promotion.id}) }}" class="btn btn-sm btn-outline-info flex-fill" style="font-size:0.55rem; padding:0.15rem 0.2rem;">
+                            <i class="fas fa-eye me-1"></i> <span class="d-none d-sm-inline">Voir</span>
+                        </a>
+                        <a href="{{ path('app_admin_promotion_edit', {id: promotion.id}) }}" class="btn btn-sm btn-outline-primary flex-fill" style="font-size:0.55rem; padding:0.15rem 0.2rem;">
+                            <i class="fas fa-edit me-1"></i> <span class="d-none d-sm-inline">Modifier</span>
+                        </a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <button type="button" class="btn btn-sm btn-outline-danger flex-fill" data-bs-toggle="modal" data-bs-target="#deleteModal{{ promotion.id }}" style="font-size:0.55rem; padding:0.15rem 0.2rem;">
+                                <i class="fas fa-trash-alt me-1"></i> <span class="d-none d-sm-inline">Supprimer</span>
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 MODAL DE SUPPRESSION
+            ========================================== -->
+            {% if is_granted('ROLE_ADMIN') %}
+            <div class="modal fade" id="deleteModal{{ promotion.id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header border-0 py-2">
+                            <h5 class="modal-title text-danger fs-6">
+                                <i class="fas fa-exclamation-triangle me-2"></i> Confirmer
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-center py-3">
+                            <i class="fas fa-trash-alt fa-3x text-danger mb-2"></i>
+                            <h6 class="fs-6">Supprimer cette promotion ?</h6>
+                            <p class="text-muted small">Cette action est irréversible.</p>
+                            <div class="alert alert-warning p-2 small mt-2">
+                                <strong>{{ promotion.name|slice(0, 30) }}</strong><br>
+                                Cette promotion ne sera plus associée à ce produit.
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0 py-2">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+                            <form method="post" action="{{ path('app_admin_promotion_delete', {id: promotion.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ promotion.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% else %}
+            <!-- Aucun résultat -->
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-4 text-center py-4 py-md-5">
+                    <div class="card-body">
+                        <i class="fas fa-tags fa-4x text-muted mb-3 opacity-25"></i>
+                        <h5 class="text-muted fs-6 fs-md-5">Aucune promotion associée</h5>
+                        <p class="text-muted small">Ajoutez une promotion pour ce produit.</p>
+                        <a href="{{ path('app_admin_promotion_new') }}?product_id={{ product.id }}" class="btn btn-primary btn-sm mt-2">
+                            <i class="fas fa-plus-circle me-2"></i> Nouvelle promotion
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- ==========================================
+         PAGINATION
+    ========================================== -->
+    {% if totalPages > 1 %}
+        <nav class="mt-3 mt-md-4">
+            <ul class="pagination pagination-sm justify-content-center flex-wrap gap-1">
+                {% for page in 1..totalPages %}
+                    <li class="page-item {{ page == currentPage ? 'active' }}">
+                        <a class="page-link" href="{{ path('app_admin_product_promotions', app.request.query.all|merge({'page': page, 'id': product.id})) }}" style="font-size:0.7rem; padding:0.25rem 0.5rem;">
+                            {{ page }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
 {% endblock %}

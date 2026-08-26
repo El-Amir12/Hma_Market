@@ -2,347 +2,6 @@
 
 {% block title %}Promotion : {{ promotion.name }}{% endblock %}
 
-{% block body %}
-<div class="container-fluid py-4">
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-        <div>
-            <a href="{{ path('app_restaurant_promotion_index') }}" class="btn btn-outline-secondary mb-2">
-                <i class="fas fa-arrow-left me-2"></i> Retour à la liste
-            </a>
-            <h1 class="display-5 fw-bold mt-2">
-                <i class="fas fa-tag text-primary me-3"></i>{{ promotion.name }}
-            </h1>
-        </div>
-        <div class="mt-2 mt-sm-0 d-flex gap-2">
-            <a href="{{ path('app_restaurant_promotion_edit', {id: promotion.id}) }}" class="btn btn-primary btn-lg">
-                <i class="fas fa-edit me-2"></i> Modifier
-            </a>
-            <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#deletePromotionModal">
-                <i class="fas fa-trash-alt me-2"></i> Supprimer
-            </button>
-        </div>
-    </div>
-
-    <div class="row g-4">
-        <!-- Colonne image -->
-        <div class="col-lg-5 col-xl-4">
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
-                <div class="position-relative">
-                    {% if promotion.image %}
-                        <img src="{{ asset('uploads/promotions/' ~ promotion.image) }}" 
-                             class="card-img-top" 
-                             alt="{{ promotion.name }}" 
-                             style="object-fit: cover; height: 350px; width: 100%;">
-                    {% else %}
-                        <div class="bg-gradient-light d-flex align-items-center justify-content-center" style="height: 350px;">
-                            <i class="fas fa-tag fa-8x text-muted opacity-25"></i>
-                        </div>
-                    {% endif %}
-                    <div class="position-absolute top-0 end-0 p-3">
-                        <span class="badge {{ promotion.isActive ? 'bg-success' : 'bg-secondary' }} fs-6 px-3 py-2 shadow">
-                            <i class="fas {{ promotion.isActive ? 'fa-check-circle' : 'fa-ban' }} me-1"></i>
-                            {{ promotion.isActive ? 'ACTIVE' : 'INACTIVE' }}
-                        </span>
-                    </div>
-                </div>
-                <div class="card-body bg-light">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <div>
-                            <i class="far fa-calendar-alt me-1 text-muted"></i>
-                            <small class="text-muted">Créée le {{ promotion.createdAt|date('d/m/Y à H:i') }}</small>
-                        </div>
-                        {% if promotion.updatedAt and promotion.updatedAt != promotion.createdAt %}
-                        <div>
-                            <i class="far fa-edit me-1 text-muted"></i>
-                            <small class="text-muted">Modifiée le {{ promotion.updatedAt|date('d/m/Y à H:i') }}</small>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Colonne informations -->
-        <div class="col-lg-7 col-xl-8">
-            <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-body p-4 p-xl-5">
-                    <h3 class="card-title mb-4">
-                        <i class="fas fa-info-circle text-primary me-2"></i>Détails de la promotion
-                    </h3>
-                    
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="info-card p-3 bg-light rounded-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-layer-group text-primary me-2"></i>
-                                    <small class="text-muted text-uppercase">Type de réduction</small>
-                                </div>
-                                <p class="fw-bold fs-4 mb-0">{{ promotion.typePromotion.name }}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-card p-3 bg-light rounded-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-percent text-primary me-2"></i>
-                                    <small class="text-muted text-uppercase">Valeur de la réduction</small>
-                                </div>
-                                <p class="fw-bold fs-2 text-primary mb-0">
-                                    {% if promotion.typePromotion.name == 'Pourcentage' %}
-                                        {{ promotion.value }}%
-                                    {% else %}
-                                        {{ promotion.value|price_with_currency(app.user.hmaService) }}
-                                    {% endif %}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="info-card p-3 bg-light rounded-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-align-left text-primary me-2"></i>
-                                    <small class="text-muted text-uppercase">Description</small>
-                                </div>
-                                <p class="mb-0">
-                                    {{ promotion.description|default('Aucune description fournie')|nl2br }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-card p-3 bg-light rounded-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="far fa-calendar-check text-success me-2"></i>
-                                    <small class="text-muted text-uppercase">Date de début</small>
-                                </div>
-                                <p class="fw-semibold fs-5 mb-0">
-                                    {{ promotion.startDate|date('d/m/Y') }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-card p-3 bg-light rounded-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="far fa-calendar-times text-danger me-2"></i>
-                                    <small class="text-muted text-uppercase">Date de fin</small>
-                                </div>
-                                <p class="fw-semibold fs-5 mb-0">
-                                    {% if promotion.endDate %}
-                                        {{ promotion.endDate|date('d/m/Y') }}
-                                    {% else %}
-                                        <span class="badge bg-info">Sans limite</span>
-                                    {% endif %}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Informations de l'utilisateur créateur -->
-                    <div class="mt-4 pt-3 border-top">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                {% if promotion.user.photo %}
-                                    <img src="{{ asset('uploads/users/' ~ promotion.user.photo) }}" alt="{{ promotion.user.fullName }}" class="rounded-circle" width="60" height="60" style="object-fit: cover;">
-                                {% else %}
-                                    <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                                        <i class="fas fa-user fa-2x text-white"></i>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <small class="text-muted">Créée par</small>
-                                <p class="fw-bold mb-0">{{ promotion.user.fullName }}</p>
-                                <small class="text-muted">
-                                    <i class="fas fa-envelope me-1"></i> {{ promotion.user.email }}
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- TABLEAUX DES ASSOCIATIONS -->
-    <!-- ========================================== -->
-    
-    <!-- SECTION CATÉGORIES DE PLATS -->
-    {% if promotion.promotionCategoryRecipes|length > 0 %}
-    <div class="card shadow-sm border-0 rounded-4 mt-4">
-        <div class="card-header bg-gradient-primary text-white py-3">
-            <h5 class="card-title mb-0">
-                <i class="fas fa-utensils me-2"></i>Catégories de plats concernées
-                <span class="badge bg-light text-dark ms-2">{{ promotion.promotionCategoryRecipes|length }}</span>
-            </h5>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead style="background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);">
-                        <tr>
-                            <th class="text-white" style="width: 80px">Image</th>
-                            <th class="text-white">Nom</th>
-                            <th class="text-white">Description</th>
-                            <th class="text-white" style="width: 150px">Hiérarchie</th>
-                            <th class="text-white" style="width: 120px" class="text-center">Nombre de plats</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for promoCategoryRecipe in promotion.promotionCategoryRecipes %}
-                            {% set category = promoCategoryRecipe.categoryRecipe %}
-                            <tr>
-                                <td>
-                                    {% if category.image %}
-                                        <img src="{{ asset('uploads/categories_plats/' ~ category.image) }}" alt="{{ category.name }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
-                                    {% else %}
-                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                            <i class="fas fa-utensils fa-2x text-muted"></i>
-                                        </div>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <strong>{{ category.name }}</strong>
-                                    {% if category.parent %}
-                                        <small class="text-muted d-block">(Sous-catégorie de {{ category.parent.name }})</small>
-                                    {% endif %}
-                                </td>
-                                <td class="text-muted">{{ category.description|default('-')|slice(0, 80) }}{% if category.description|length > 80 %}...{% endif %}</td>
-                                <td>
-                                    {% if category.parent %}
-                                        <span class="badge bg-info">Niveau {{ category.hierarchyLevel }}</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary">Catégorie principale</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-primary rounded-pill px-3 py-2">{{ category.recipes|length }}</span>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- SECTION PLATS -->
-    {% if promotion.promotionRecipes|length > 0 %}
-    <div class="card shadow-sm border-0 rounded-4 mt-4">
-        <div class="card-header bg-gradient-primary text-white py-3">
-            <h5 class="card-title mb-0">
-                <i class="fas fa-hamburger me-2"></i>Plats concernés
-                <span class="badge bg-light text-dark ms-2">{{ promotion.promotionRecipes|length }}</span>
-            </h5>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead style="background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);">
-                        <tr>
-                            <th class="text-white" style="width: 80px">Image</th>
-                            <th class="text-white">Nom</th>
-                            <th class="text-white">Description</th>
-                            <th class="text-white">Catégorie</th>
-                            <th class="text-white text-end">Prix de vente</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for promoRecipe in promotion.promotionRecipes %}
-                            {% set recipe = promoRecipe.recipe %}
-                            <tr>
-                                <td>
-                                    {% if recipe.image %}
-                                        <img src="{{ asset('uploads/images_plats/' ~ recipe.image) }}" alt="{{ recipe.name }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
-                                    {% else %}
-                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                            <i class="fas fa-utensil-spoon fa-2x text-muted"></i>
-                                        </div>
-                                    {% endif %}
-                                </td>
-                                <td><strong>{{ recipe.name }}</strong></td>
-                                <td class="text-muted">{{ recipe.description|default('-')|slice(0, 80) }}{% if recipe.description|length > 80 %}...{% endif %}</td>
-                                <td>{{ recipe.category ? recipe.category.name : '-' }}</td>
-                                <td class="text-end fw-bold text-primary">{{ recipe.sellingPrice|price_with_currency(app.user.hmaService) }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Message si aucune sélection -->
-    {% if promotion.promotionCategoryRecipes|length == 0 and promotion.promotionRecipes|length == 0 %}
-    <div class="card shadow-sm border-0 rounded-4 mt-4 bg-light">
-        <div class="card-body text-center py-5">
-            <i class="fas fa-globe fa-4x text-primary mb-3"></i>
-            <h5 class="mb-2">Promotion globale</h5>
-            <p class="text-muted mb-0">Cette promotion s'applique à tous les plats du menu</p>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Section récapitulative des cas -->
-    <div class="card shadow-sm border-0 rounded-4 mt-4 bg-info bg-opacity-10">
-        <div class="card-body p-4">
-            <div class="d-flex flex-wrap align-items-center gap-3">
-                <div class="flex-shrink-0">
-                    <div class="rounded-circle bg-white p-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 60px; height: 60px;">
-                        <i class="fas fa-info-circle fa-2x text-info"></i>
-                    </div>
-                </div>
-                <div class="flex-grow-1">
-                    <h6 class="mb-2 fw-bold">Comment s'applique cette promotion ?</h6>
-                    <p class="mb-0">
-                        {% set hasCategories = promotion.promotionCategoryRecipes|length > 0 %}
-                        {% set hasRecipes = promotion.promotionRecipes|length > 0 %}
-                        
-                        {% if not hasCategories and not hasRecipes %}
-                            <i class="fas fa-check-circle text-success me-2"></i> <strong>Cas 1 :</strong> Promotion sur <strong class="text-primary">TOUS les plats</strong> du menu
-                        {% elseif hasCategories and not hasRecipes %}
-                            <i class="fas fa-check-circle text-success me-2"></i> <strong>Cas 2 :</strong> Promotion sur les <strong class="text-secondary">catégories de plats sélectionnées</strong> uniquement
-                        {% elseif not hasCategories and hasRecipes %}
-                            <i class="fas fa-check-circle text-success me-2"></i> <strong>Cas 3 :</strong> Promotion sur les <strong class="text-primary">plats sélectionnés</strong> uniquement
-                        {% else %}
-                            <i class="fas fa-check-circle text-success me-2"></i> <strong>Cas 4 :</strong> Promotion sur <strong class="text-primary">l'ensemble</strong> (catégories + plats sélectionnés)
-                        {% endif %}
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de confirmation pour la suppression de la promotion -->
-    <div class="modal fade" id="deletePromotionModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title text-danger">
-                        <i class="fas fa-exclamation-triangle me-2"></i> Confirmer la suppression
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center py-4">
-                    <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
-                    <h5>Êtes-vous sûr de vouloir supprimer cette promotion ?</h5>
-                    <p class="text-muted">Cette action est irréversible.</p>
-                    <div class="alert alert-warning mt-3">
-                        <strong>{{ promotion.name }}</strong><br>
-                        Toutes les associations (catégories de plats et plats) seront également supprimées.
-                    </div>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <form method="post" action="{{ path('app_restaurant_promotion_delete', {id: promotion.id}) }}">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ promotion.id) }}">
-                        <button type="submit" class="btn btn-danger">Supprimer définitivement</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 {% block stylesheets %}
 {{ parent() }}
 <style>
@@ -401,19 +60,20 @@
         color: #ffffff !important;
         border: none;
         font-weight: 600;
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         text-transform: uppercase;
-        letter-spacing: 0.8px;
-        padding: 14px 12px;
+        letter-spacing: 0.5px;
+        padding: 10px 8px;
         vertical-align: middle;
         white-space: nowrap;
     }
     
     .table td {
         vertical-align: middle;
-        padding: 1rem 0.75rem;
+        padding: 0.6rem 0.5rem;
         background-color: #ffffff;
         border-bottom: 1px solid #e9ecef;
+        font-size: 0.75rem;
     }
     
     .table tbody tr:hover {
@@ -424,21 +84,10 @@
         background-color: transparent;
     }
     
-    /* Card header */
     .card-header {
         border-bottom: none;
     }
     
-    /* Badges */
-    .bg-dark {
-        background-color: #212529 !important;
-    }
-    
-    .text-white {
-        color: #ffffff !important;
-    }
-    
-    /* Modal */
     .modal-content {
         border-radius: 1rem;
         border: none;
@@ -451,64 +100,628 @@
     .modal-footer {
         border-top: none;
     }
+
+    /* ========================================
+       RESPONSIVE - MEDIA QUERIES
+    ======================================== */
     
-    /* Responsive */
-    @media (max-width: 768px) {
-        .table th, .table td {
-            padding: 0.75rem 0.5rem;
-            font-size: 0.75rem;
+    /* Mobile (< 576px) */
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding-left: 8px !important;
+            padding-right: 8px !important;
         }
-        .table th {
-            font-size: 0.7rem;
-            letter-spacing: 0.5px;
-        }
+        
+        /* En-tête */
         .display-5 {
-            font-size: 1.75rem;
+            font-size: 1.2rem !important;
+        }
+        .h1 {
+            font-size: 1.2rem !important;
+        }
+        .h3 {
+            font-size: 1rem !important;
+        }
+        .h5 {
+            font-size: 0.85rem !important;
+        }
+        .text-muted {
+            font-size: 0.7rem !important;
+        }
+        
+        /* Boutons */
+        .btn {
+            font-size: 0.65rem !important;
+            padding: 0.25rem 0.5rem !important;
+        }
+        .btn i {
+            font-size: 0.7rem !important;
+        }
+        .btn-lg {
+            font-size: 0.7rem !important;
+            padding: 0.3rem 0.6rem !important;
+        }
+        
+        /* Cartes */
+        .card-header {
+            padding: 0.5rem 0.75rem !important;
+        }
+        .card-body {
+            padding: 0.5rem 0.75rem !important;
+        }
+        .card-body .p-4, .card-body .p-xl-5 {
+            padding: 0.75rem !important;
+        }
+        .card-body .p-4.p-xl-5 {
+            padding: 0.75rem !important;
+        }
+        
+        /* Informations */
+        .info-card {
+            padding: 0.5rem !important;
         }
         .info-card .fs-2 {
-            font-size: 1.5rem;
+            font-size: 1.3rem !important;
         }
         .info-card .fs-4 {
-            font-size: 1.25rem;
+            font-size: 1rem !important;
         }
         .info-card .fs-5 {
-            font-size: 0.9rem;
+            font-size: 0.85rem !important;
         }
-        .btn-group {
+        .info-card .fw-bold {
+            font-size: 1rem !important;
+        }
+        .info-card .fw-semibold {
+            font-size: 0.85rem !important;
+        }
+        .info-card .mb-0 {
+            font-size: 0.85rem !important;
+        }
+        
+        /* Images */
+        .card-img-top {
+            height: 200px !important;
+        }
+        .bg-gradient-light {
+            height: 200px !important;
+        }
+        .bg-gradient-light i {
+            font-size: 4rem !important;
+        }
+        
+        /* Badges */
+        .badge {
+            font-size: 0.55rem !important;
+            padding: 0.2rem 0.4rem !important;
+        }
+        .fs-6.px-3.py-2 {
+            font-size: 0.6rem !important;
+            padding: 0.2rem 0.4rem !important;
+        }
+        
+        /* Tableaux */
+        .table th, .table td {
+            padding: 0.4rem 0.3rem;
+            font-size: 0.65rem;
+        }
+        .table th {
+            font-size: 0.55rem;
+            letter-spacing: 0.3px;
+            padding: 6px 4px;
+        }
+        .table td img {
+            width: 35px !important;
+            height: 35px !important;
+        }
+        .table td .bg-light {
+            width: 35px !important;
+            height: 35px !important;
+        }
+        .table td .bg-light i {
+            font-size: 1rem !important;
+        }
+        
+        /* Section récapitulative */
+        .bg-info.bg-opacity-10 .card-body {
+            padding: 0.75rem !important;
+        }
+        .bg-info.bg-opacity-10 .rounded-circle {
+            width: 40px !important;
+            height: 40px !important;
+        }
+        .bg-info.bg-opacity-10 .rounded-circle i {
+            font-size: 1.2rem !important;
+        }
+        .bg-info.bg-opacity-10 h6 {
+            font-size: 0.8rem !important;
+        }
+        .bg-info.bg-opacity-10 p {
+            font-size: 0.7rem !important;
+        }
+        
+        /* MODALES */
+        .modal-dialog {
+            margin: 0.5rem;
+        }
+        .modal-content {
+            border-radius: 12px !important;
+        }
+        .modal-body {
+            padding: 0.75rem !important;
+        }
+        .modal-footer {
+            padding: 0.5rem !important;
             flex-wrap: wrap;
-            gap: 0.5rem;
         }
-    }
-    
-    @media (max-width: 576px) {
-        .display-5 {
-            font-size: 1.5rem;
+        .modal-footer .btn {
+            font-size: 0.7rem !important;
+            padding: 0.2rem 0.5rem !important;
         }
-        .info-card .fs-1 {
-            font-size: 1.75rem;
+        .modal-header {
+            padding: 0.5rem 0.75rem !important;
         }
+        .modal-title {
+            font-size: 0.9rem !important;
+        }
+        
+        /* Utilisateur */
+        .rounded-circle {
+            width: 40px !important;
+            height: 40px !important;
+        }
+        .rounded-circle i {
+            font-size: 1.2rem !important;
+        }
+        .flex-grow-1.ms-3 {
+            margin-left: 0.5rem !important;
+        }
+        
+        /* Boutons d'action */
         .d-flex.gap-2 {
             flex-wrap: wrap;
+            gap: 0.25rem !important;
+        }
+        .d-flex.gap-2 .btn {
+            flex: 1 1 auto;
+            min-width: 80px;
+        }
+    }
+
+    /* Tablette (576px - 768px) */
+    @media (min-width: 577px) and (max-width: 768px) {
+        .container-fluid {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+        
+        .display-5 {
+            font-size: 1.6rem !important;
+        }
+        .btn {
+            font-size: 0.7rem !important;
+            padding: 0.25rem 0.6rem !important;
+        }
+        .btn-lg {
+            font-size: 0.75rem !important;
+            padding: 0.3rem 0.8rem !important;
+        }
+        
+        .card-body {
+            padding: 1rem !important;
+        }
+        .card-body .p-4, .card-body .p-xl-5 {
+            padding: 1rem !important;
+        }
+        
+        .info-card .fs-2 {
+            font-size: 1.5rem !important;
+        }
+        .info-card .fs-4 {
+            font-size: 1.1rem !important;
+        }
+        .info-card .fs-5 {
+            font-size: 0.9rem !important;
+        }
+        
+        .card-img-top {
+            height: 250px !important;
+        }
+        .bg-gradient-light {
+            height: 250px !important;
+        }
+        
+        .table th, .table td {
+            padding: 0.5rem 0.4rem;
+            font-size: 0.7rem;
+        }
+        .table th {
+            font-size: 0.6rem;
+        }
+        
+        .bg-info.bg-opacity-10 .rounded-circle {
+            width: 45px !important;
+            height: 45px !important;
+        }
+        .bg-info.bg-opacity-10 .rounded-circle i {
+            font-size: 1.4rem !important;
+        }
+    }
+
+    /* Désactiver hover sur mobile */
+    @media (max-width: 768px) {
+        .info-card:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .btn-primary:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .btn-danger:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .table tbody tr:hover {
+            background-color: transparent !important;
+        }
+        .table tbody tr:hover td {
+            background-color: #ffffff !important;
         }
     }
 </style>
 {% endblock %}
 
-{% block javascripts %}
-{{ parent() }}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Ajout d'un effet de tooltip sur les badges si besoin
-        const stockBadges = document.querySelectorAll('.badge.bg-warning, .badge.bg-danger');
-        stockBadges.forEach(badge => {
-            if (badge.textContent.includes('Stock faible')) {
-                badge.setAttribute('title', 'Le stock est inférieur au seuil d\'alerte');
-            }
-            if (badge.textContent.includes('Rupture')) {
-                badge.setAttribute('title', 'Produit en rupture de stock');
-            }
-        });
-    });
-</script>
-{% endblock %}
+{% block body %}
+<div class="container-fluid px-2 px-md-4 py-2 py-md-4">
+
+    <!-- ==========================================
+         EN-TÊTE
+    ========================================== -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 mb-md-4 flex-wrap gap-2">
+        <div class="w-100 w-sm-auto">
+            <a href="{{ path('app_restaurant_promotion_index') }}" class="btn btn-outline-secondary btn-sm mb-2">
+                <i class="fas fa-arrow-left me-1"></i> <span class="d-none d-sm-inline">Retour à la liste</span>
+                <span class="d-inline d-sm-none">Retour</span>
+            </a>
+            <h1 class="h2 h-md-1 fw-bold mt-1">
+                <i class="fas fa-tag text-primary me-2"></i>{{ promotion.name|slice(0, 30) }}{% if promotion.name|length > 30 %}...{% endif %}
+            </h1>
+        </div>
+        <div class="d-flex gap-1 gap-sm-2 flex-wrap w-100 w-sm-auto">
+            <a href="{{ path('app_restaurant_promotion_edit', {id: promotion.id}) }}" class="btn btn-primary btn-sm flex-grow-1 flex-sm-grow-0">
+                <i class="fas fa-edit me-1"></i> <span class="d-none d-sm-inline">Modifier</span>
+            </a>
+            <button type="button" class="btn btn-danger btn-sm flex-grow-1 flex-sm-grow-0" data-bs-toggle="modal" data-bs-target="#deletePromotionModal">
+                <i class="fas fa-trash-alt me-1"></i> <span class="d-none d-sm-inline">Supprimer</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         CONTENU PRINCIPAL
+    ========================================== -->
+    <div class="row g-2 g-md-4">
+        <!-- Colonne image -->
+        <div class="col-12 col-lg-5 col-xl-4">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="position-relative">
+                    {% if promotion.image %}
+                        <img src="{{ asset('uploads/promotions/' ~ promotion.image) }}" 
+                             class="card-img-top" 
+                             alt="{{ promotion.name }}" 
+                             style="object-fit: cover; height: 200px; width: 100%;">
+                    {% else %}
+                        <div class="bg-gradient-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="fas fa-tag fa-5x text-muted opacity-25"></i>
+                        </div>
+                    {% endif %}
+                    <div class="position-absolute top-0 end-0 p-2 p-md-3">
+                        <span class="badge {{ promotion.isActive ? 'bg-success' : 'bg-secondary' }} px-2 py-1 px-md-3 py-md-2 shadow" style="font-size:0.6rem;">
+                            <i class="fas {{ promotion.isActive ? 'fa-check-circle' : 'fa-ban' }} me-1"></i>
+                            {{ promotion.isActive ? 'ACTIVE' : 'INACTIVE' }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body bg-light p-2 p-md-3">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center flex-wrap gap-1 gap-sm-2">
+                        <div>
+                            <i class="far fa-calendar-alt me-1 text-muted"></i>
+                            <small class="text-muted" style="font-size:0.6rem;">Créée le {{ promotion.createdAt|date('d/m/Y à H:i') }}</small>
+                        </div>
+                        {% if promotion.updatedAt and promotion.updatedAt != promotion.createdAt %}
+                        <div>
+                            <i class="far fa-edit me-1 text-muted"></i>
+                            <small class="text-muted" style="font-size:0.6rem;">Modifiée le {{ promotion.updatedAt|date('d/m/Y à H:i') }}</small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne informations -->
+        <div class="col-12 col-lg-7 col-xl-8">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body p-2 p-md-4 p-xl-5">
+                    <h3 class="card-title mb-3 mb-md-4 fs-5 fs-md-4">
+                        <i class="fas fa-info-circle text-primary me-2"></i>Détails de la promotion
+                    </h3>
+                    
+                    <div class="row g-2 g-md-4">
+                        <div class="col-6 col-md-6">
+                            <div class="info-card p-2 p-md-3 bg-light rounded-3">
+                                <div class="d-flex align-items-center mb-1 mb-md-2">
+                                    <i class="fas fa-layer-group text-primary me-1 me-md-2" style="font-size:0.8rem;"></i>
+                                    <small class="text-muted text-uppercase" style="font-size:0.55rem;">Type</small>
+                                </div>
+                                <p class="fw-bold mb-0 fs-6 fs-md-4">{{ promotion.typePromotion.name }}</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6">
+                            <div class="info-card p-2 p-md-3 bg-light rounded-3">
+                                <div class="d-flex align-items-center mb-1 mb-md-2">
+                                    <i class="fas fa-percent text-primary me-1 me-md-2" style="font-size:0.8rem;"></i>
+                                    <small class="text-muted text-uppercase" style="font-size:0.55rem;">Valeur</small>
+                                </div>
+                                <p class="fw-bold mb-0 text-primary fs-5 fs-md-2">
+                                    {% if promotion.typePromotion.name == 'Pourcentage' %}
+                                        {{ promotion.value }}%
+                                    {% else %}
+                                        {{ promotion.value|price_with_currency(app.user.hmaService) }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="info-card p-2 p-md-3 bg-light rounded-3">
+                                <div class="d-flex align-items-center mb-1 mb-md-2">
+                                    <i class="fas fa-align-left text-primary me-1 me-md-2" style="font-size:0.8rem;"></i>
+                                    <small class="text-muted text-uppercase" style="font-size:0.55rem;">Description</small>
+                                </div>
+                                <p class="mb-0 small" style="font-size:0.75rem;">
+                                    {{ promotion.description|default('Aucune description fournie')|nl2br }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6">
+                            <div class="info-card p-2 p-md-3 bg-light rounded-3">
+                                <div class="d-flex align-items-center mb-1 mb-md-2">
+                                    <i class="far fa-calendar-check text-success me-1 me-md-2" style="font-size:0.8rem;"></i>
+                                    <small class="text-muted text-uppercase" style="font-size:0.55rem;">Début</small>
+                                </div>
+                                <p class="fw-semibold mb-0 fs-6 fs-md-5">
+                                    {{ promotion.startDate|date('d/m/Y') }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6">
+                            <div class="info-card p-2 p-md-3 bg-light rounded-3">
+                                <div class="d-flex align-items-center mb-1 mb-md-2">
+                                    <i class="far fa-calendar-times text-danger me-1 me-md-2" style="font-size:0.8rem;"></i>
+                                    <small class="text-muted text-uppercase" style="font-size:0.55rem;">Fin</small>
+                                </div>
+                                <p class="fw-semibold mb-0 fs-6 fs-md-5">
+                                    {% if promotion.endDate %}
+                                        {{ promotion.endDate|date('d/m/Y') }}
+                                    {% else %}
+                                        <span class="badge bg-info" style="font-size:0.6rem;">Sans limite</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations de l'utilisateur créateur -->
+                    <div class="mt-3 mt-md-4 pt-2 pt-md-3 border-top">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                {% if promotion.user.photo %}
+                                    <img src="{{ asset('uploads/users/' ~ promotion.user.photo) }}" alt="{{ promotion.user.fullName }}" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-user fa-1x text-white"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 ms-2 ms-md-3">
+                                <small class="text-muted" style="font-size:0.6rem;">Créée par</small>
+                                <p class="fw-bold mb-0 small">{{ promotion.user.fullName }}</p>
+                                <small class="text-muted" style="font-size:0.55rem;">
+                                    <i class="fas fa-envelope me-1"></i> {{ promotion.user.email }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TABLEAUX DES ASSOCIATIONS -->
+    <!-- ========================================== -->
+    
+    <!-- SECTION CATÉGORIES DE PLATS -->
+    {% if promotion.promotionCategoryRecipes|length > 0 %}
+    <div class="card shadow-sm border-0 rounded-4 mt-3 mt-md-4">
+        <div class="card-header bg-gradient-primary text-white py-2 py-md-3">
+            <h5 class="card-title mb-0 fs-6 fs-md-5">
+                <i class="fas fa-utensils me-2"></i>Catégories de plats concernées
+                <span class="badge bg-light text-dark ms-2">{{ promotion.promotionCategoryRecipes|length }}</span>
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle table-sm">
+                    <thead style="background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);">
+                        <tr>
+                            <th class="text-white" style="width: 60px">Image</th>
+                            <th class="text-white">Nom</th>
+                            <th class="text-white d-none d-md-table-cell">Description</th>
+                            <th class="text-white d-none d-lg-table-cell" style="width: 120px">Hiérarchie</th>
+                            <th class="text-white text-center" style="width: 80px">Plats</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for promoCategoryRecipe in promotion.promotionCategoryRecipes %}
+                            {% set category = promoCategoryRecipe.categoryRecipe %}
+                            <tr>
+                                <td>
+                                    {% if category.image %}
+                                        <img src="{{ asset('uploads/categories_plats/' ~ category.image) }}" alt="{{ category.name }}" class="rounded" style="width: 35px; height: 35px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                            <i class="fas fa-utensils fa-1x text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong class="small">{{ category.name }}</strong>
+                                    {% if category.parent %}
+                                        <small class="text-muted d-block d-md-none" style="font-size:0.55rem;">Sous-catégorie</small>
+                                    {% endif %}
+                                </td>
+                                <td class="text-muted d-none d-md-table-cell small">{{ category.description|default('-')|slice(0, 60) }}{% if category.description|length > 60 %}...{% endif %}</td>
+                                <td class="d-none d-lg-table-cell">
+                                    {% if category.parent %}
+                                        <span class="badge bg-info" style="font-size:0.55rem;">Niveau {{ category.hierarchyLevel }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary" style="font-size:0.55rem;">Principale</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary rounded-pill px-2 py-1" style="font-size:0.6rem;">{{ category.recipes|length }}</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- SECTION PLATS -->
+    {% if promotion.promotionRecipes|length > 0 %}
+    <div class="card shadow-sm border-0 rounded-4 mt-3 mt-md-4">
+        <div class="card-header bg-gradient-primary text-white py-2 py-md-3">
+            <h5 class="card-title mb-0 fs-6 fs-md-5">
+                <i class="fas fa-hamburger me-2"></i>Plats concernés
+                <span class="badge bg-light text-dark ms-2">{{ promotion.promotionRecipes|length }}</span>
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle table-sm">
+                    <thead style="background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);">
+                        <tr>
+                            <th class="text-white" style="width: 60px">Image</th>
+                            <th class="text-white">Nom</th>
+                            <th class="text-white d-none d-md-table-cell">Description</th>
+                            <th class="text-white d-none d-lg-table-cell">Catégorie</th>
+                            <th class="text-white text-end">Prix</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for promoRecipe in promotion.promotionRecipes %}
+                            {% set recipe = promoRecipe.recipe %}
+                            <tr>
+                                <td>
+                                    {% if recipe.image %}
+                                        <img src="{{ asset('uploads/images_plats/' ~ recipe.image) }}" alt="{{ recipe.name }}" class="rounded" style="width: 35px; height: 35px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                            <i class="fas fa-utensil-spoon fa-1x text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td><strong class="small">{{ recipe.name }}</strong></td>
+                                <td class="text-muted d-none d-md-table-cell small">{{ recipe.description|default('-')|slice(0, 60) }}{% if recipe.description|length > 60 %}...{% endif %}</td>
+                                <td class="d-none d-lg-table-cell small">{{ recipe.category ? recipe.category.name : '-' }}</td>
+                                <td class="text-end fw-bold text-primary small">{{ recipe.sellingPrice|price_with_currency(app.user.hmaService) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Message si aucune sélection -->
+    {% if promotion.promotionCategoryRecipes|length == 0 and promotion.promotionRecipes|length == 0 %}
+    <div class="card shadow-sm border-0 rounded-4 mt-3 mt-md-4 bg-light">
+        <div class="card-body text-center py-3 py-md-5">
+            <i class="fas fa-globe fa-3x text-primary mb-2"></i>
+            <h5 class="mb-1 fs-6 fs-md-5">Promotion globale</h5>
+            <p class="text-muted small mb-0">S'applique à tous les plats du menu</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ==========================================
+         SECTION RÉCAPITULATIVE
+    ========================================== -->
+    <div class="card shadow-sm border-0 rounded-4 mt-3 mt-md-4 bg-info bg-opacity-10">
+        <div class="card-body p-2 p-md-4">
+            <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-2 gap-md-3">
+                <div class="flex-shrink-0">
+                    <div class="rounded-circle bg-white p-2 p-md-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;">
+                        <i class="fas fa-info-circle fa-1x text-info"></i>
+                    </div>
+                </div>
+                <div class="flex-grow-1">
+                    <h6 class="mb-1 fw-bold fs-6 fs-md-5">Comment s'applique cette promotion ?</h6>
+                    <p class="mb-0 small">
+                        {% set hasCategories = promotion.promotionCategoryRecipes|length > 0 %}
+                        {% set hasRecipes = promotion.promotionRecipes|length > 0 %}
+                        
+                        {% if not hasCategories and not hasRecipes %}
+                            <i class="fas fa-check-circle text-success me-1"></i> <strong>Cas 1 :</strong> Promotion sur <strong class="text-primary">TOUS les plats</strong>
+                        {% elseif hasCategories and not hasRecipes %}
+                            <i class="fas fa-check-circle text-success me-1"></i> <strong>Cas 2 :</strong> Promotion sur les <strong class="text-primary">catégories sélectionnées</strong>
+                        {% elseif not hasCategories and hasRecipes %}
+                            <i class="fas fa-check-circle text-success me-1"></i> <strong>Cas 3 :</strong> Promotion sur les <strong class="text-primary">plats sélectionnés</strong>
+                        {% else %}
+                            <i class="fas fa-check-circle text-success me-1"></i> <strong>Cas 4 :</strong> Promotion sur <strong class="text-primary">l'ensemble</strong> (catégories + plats)
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MODAL DE SUPPRESSION
+    ========================================== -->
+    <div class="modal fade" id="deletePromotionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header border-0 py-2">
+                    <h5 class="modal-title text-danger fs-6">
+                        <i class="fas fa-exclamation-triangle me-2"></i> Confirmer
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-3">
+                    <i class="fas fa-trash-alt fa-3x text-danger mb-2"></i>
+                    <h6 class="fs-6">Supprimer cette promotion ?</h6>
+                    <p class="text-muted small">Cette action est irréversible.</p>
+                    <div class="alert alert-warning p-2 small mt-2">
+                        <strong>{{ promotion.name|slice(0, 30) }}</strong><br>
+                        Toutes les associations seront supprimées.
+                    </div>
+                </div>
+                <div class="modal-footer border-0 py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+                    <form method="post" action="{{ path('app_restaurant_promotion_delete', {id: promotion.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ promotion.id) }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

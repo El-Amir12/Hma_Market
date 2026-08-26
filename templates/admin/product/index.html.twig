@@ -48,7 +48,6 @@
     transition: all 0.3s ease;
 }
 
-/* ✅ Badges en bas de la carte */
 .product-badges {
     display: flex;
     flex-wrap: wrap;
@@ -60,7 +59,6 @@
     padding: 3px 6px;
 }
 
-/* Styles Select2 */
 .select2-container--bootstrap-5 .select2-selection {
     height: 38px !important;
     border-radius: 8px !important;
@@ -89,13 +87,256 @@
     background-color: #0463f1 !important;
     color: white !important;
 }
-@media (max-width: 576px) {
-    .btn-sm {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.2rem;
+
+/* ✅ RESPONSIVE - 2 CARTES PAR LIGNE SUR MOBILE */
+@media (max-width: 992px) {
+    .container-fluid {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+    
+    .d-flex.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.75rem !important;
+        width: 100%;
+    }
+    
+    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    
+    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 .card {
+        flex: 1 1 auto;
+        min-width: 150px;
+    }
+    
+    .stat-item .h3 {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    
+    .d-flex.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+    }
+    
+    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 .card {
+        width: 100%;
+        min-width: unset;
+    }
+    
+    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 .btn {
+        width: 100%;
+    }
+    
+    h1.h3 {
+        font-size: 1.1rem !important;
+    }
+    
+    .breadcrumb {
+        font-size: 0.7rem;
+    }
+    
+    /* ✅ Statistiques : 2 par ligne sur mobile */
+    .row.mb-3 .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+    
+    .stat-item .h3 {
+        font-size: 1.1rem !important;
     }
     .stat-item .text-uppercase {
+        font-size: 0.55rem !important;
+    }
+    .stat-item .fa-2x {
+        font-size: 1.3rem !important;
+    }
+    .stat-item .p-2 {
+        padding: 0.5rem !important;
+    }
+    
+    /* Filtres en colonne */
+    .row.g-2.g-sm-3 .col-6,
+    .row.g-2.g-sm-3 .col-12 {
+        margin-bottom: 0.5rem;
+    }
+    
+    /* ✅ FORCER 2 CARTES PAR LIGNE SUR MOBILE */
+    .row.g-2.g-sm-3 .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    .product-card .card-title {
+        font-size: 0.8rem;
+    }
+    .product-card .card-title .text-muted {
         font-size: 0.65rem;
+    }
+    
+    .product-image-container {
+        height: 120px;
+    }
+    
+    .product-card .card-body {
+        padding: 0.5rem !important;
+    }
+    
+    .product-card .btn-sm {
+        font-size: 0.6rem;
+        padding: 0.15rem 0.3rem;
+    }
+    
+    .product-badges .badge {
+        font-size: 7px;
+        padding: 2px 4px;
+    }
+    
+    .product-card .row.g-0 .col-6 {
+        font-size: 0.7rem;
+    }
+    .product-card .row.g-0 .col-6 .fw-bold {
+        font-size: 0.75rem;
+    }
+    
+    .d-flex.gap-1.mt-auto {
+        flex-wrap: wrap;
+    }
+    .d-flex.gap-1.mt-auto .btn {
+        flex: 1 1 calc(50% - 0.25rem);
+        font-size: 0.55rem;
+        padding: 0.15rem 0.2rem;
+    }
+    
+    .product-badges .badge i {
+        display: none;
+    }
+    
+    .dropdown-menu {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container-fluid {
+        padding-left: 0.25rem !important;
+        padding-right: 0.25rem !important;
+    }
+    
+    /* ✅ Statistiques : 2 par ligne sur très petit */
+    .row.mb-3 .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-left: 0.15rem;
+        padding-right: 0.15rem;
+    }
+    
+    .stat-item .h3 {
+        font-size: 0.9rem !important;
+    }
+    .stat-item .text-uppercase {
+        font-size: 0.45rem !important;
+    }
+    .stat-item .fa-2x {
+        font-size: 1rem !important;
+    }
+    .stat-item .p-2 {
+        padding: 0.35rem !important;
+    }
+    
+    /* ✅ FORCER 2 CARTES PAR LIGNE SUR TRÈS PETIT ÉCRAN */
+    .row.g-2.g-sm-3 .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+    
+    .product-image-container {
+        height: 90px;
+    }
+    
+    .product-card .card-title {
+        font-size: 0.65rem;
+    }
+    .product-card .card-title .text-muted {
+        font-size: 0.55rem;
+    }
+    
+    .product-card .card-body {
+        padding: 0.35rem !important;
+    }
+    
+    .product-card .text-muted.small {
+        font-size: 0.5rem !important;
+    }
+    
+    .product-card .row.g-0 .col-6 {
+        font-size: 0.55rem;
+    }
+    .product-card .row.g-0 .col-6 .fw-bold {
+        font-size: 0.6rem;
+    }
+    
+    .product-badges .badge {
+        font-size: 5px;
+        padding: 1px 3px;
+        border-radius: 2px;
+    }
+    
+    .d-flex.gap-1.mt-auto .btn {
+        flex: 1 1 100%;
+        font-size: 0.45rem;
+        padding: 0.1rem 0.15rem;
+    }
+    
+    .product-card .dropdown .btn-sm {
+        font-size: 0.5rem;
+        padding: 0.1rem 0.2rem;
+    }
+    
+    .card-header .d-flex.gap-2 .btn-sm {
+        font-size: 0.55rem;
+        padding: 0.15rem 0.3rem;
+    }
+    
+    .pagination .page-link {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .modal .btn-lg {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.6rem;
+    }
+}
+
+/* Désactiver hover sur mobile */
+@media (max-width: 768px) {
+    .product-card:hover {
+        transform: none !important;
+    }
+    .stat-item:hover {
+        transform: none !important;
     }
 }
 </style>
@@ -107,23 +348,24 @@
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
         <div>
             <h1 class="h3 mb-1 text-gray-800 fw-bold">
-                <i class="fas fa-boxes me-2"></i>Catalogue des Produits
+                <i class="fas fa-boxes me-2"></i><span class="d-none d-sm-inline">Catalogue des Produits</span>
+                <span class="d-inline d-sm-none">Produits</span>
             </h1>
-            <p class="text-muted mb-0">Gérez votre inventaire et catalogue</p>
+            <p class="text-muted mb-0 d-none d-sm-block">Gérez votre inventaire et catalogue</p>
         </div>
 
-        <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3 flex-wrap w-100 w-md-auto">
             <!-- Indicateur de quota -->
-            <div class="card bg-light p-3">
+            <div class="card bg-light p-2 p-sm-3 flex-grow-1 flex-md-grow-0">
                 <div class="d-flex align-items-center">
-                    <div class="me-3">
+                    <div class="me-2 me-sm-3">
                         <span class="badge bg-primary p-2">
                             <i class="fas fa-chart-line"></i>
                         </span>
                     </div>
                     <div>
-                        <small class="text-muted">Produits actifs</small>
-                        <h5 class="mb-0 {{ quotaReached ? 'text-danger' : 'text-success' }}">
+                        <small class="text-muted d-none d-sm-block">Produits actifs</small>
+                        <h5 class="mb-0 {{ quotaReached ? 'text-danger' : 'text-success' }}" style="font-size: 0.9rem;">
                             {{ activeCount }} / {{ quota }}
                             {% if quota == 'Illimité' %}
                                 <i class="fas fa-infinity text-info ms-1"></i>
@@ -133,12 +375,13 @@
                 </div>
             </div>
 
-            <button type="button" class="btn btn-outline-primary" id="scan-barcode-btn" title="Rechercher par code-barres">
-                <i class="fas fa-barcode me-2"></i> Scanner
+            <button type="button" class="btn btn-outline-primary btn-sm flex-grow-1 flex-md-grow-0" id="scan-barcode-btn" title="Rechercher par code-barres">
+                <i class="fas fa-barcode me-1"></i> <span class="d-none d-sm-inline">Scanner</span>
             </button>
 
-            <a href="#" id="newProductBtn" class="btn btn-primary">
-                <i class="fas fa-plus-circle me-2"></i> Nouveau Produit
+            <a href="#" id="newProductBtn" class="btn btn-primary btn-sm flex-grow-1 flex-md-grow-0">
+                <i class="fas fa-plus-circle me-1"></i> <span class="d-none d-sm-inline">Nouveau Produit</span>
+                <span class="d-inline d-sm-none">Nouveau</span>
             </a>
         </div>
     </div>
@@ -146,12 +389,12 @@
     {# Message si quota atteint #}
     {% if quotaReached %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
             <div>
                 <i class="fas fa-exclamation-triangle me-2"></i>
                 <strong>Quota atteint !</strong> Vous avez utilisé vos {{ quota }} produits actifs.
             </div>
-            <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-sm">
+            <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-sm w-100 w-sm-auto">
                 <i class="fas fa-arrow-up me-1"></i> Voir les offres
             </a>
         </div>
@@ -161,71 +404,72 @@
 
     <!-- Statistiques filtrées -->
     <div class="card shadow mb-4">
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Statistiques selon les filtres</h5>
+        <div class="card-header bg-white py-2 py-sm-3">
+            <h5 class="mb-0 small"><i class="fas fa-chart-pie me-2"></i><span class="d-none d-sm-inline">Statistiques selon les filtres</span></h5>
         </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-2 col-sm-4 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+        <div class="card-body p-2 p-sm-3">
+            <!-- ✅ 6 statistiques en 3x2 sur mobile -->
+            <div class="row g-2 mb-3">
+                <div class="col-6 col-sm-4 col-md-2">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-primary text-uppercase small fw-bold">Total</span>
+                                <span class="text-primary text-uppercase small fw-bold d-block">Total</span>
                                 <h3 class="mb-0">{{ totalFiltered }}</h3>
                             </div>
                             <i class="fas fa-box fa-2x text-primary opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+                <div class="col-6 col-sm-4 col-md-2">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-success text-uppercase small fw-bold">Actifs</span>
+                                <span class="text-success text-uppercase small fw-bold d-block">Actifs</span>
                                 <h3 class="mb-0">{{ activeFiltered }}</h3>
                             </div>
                             <i class="fas fa-check-circle fa-2x text-success opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+                <div class="col-6 col-sm-4 col-md-2">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-danger text-uppercase small fw-bold">Inactifs</span>
+                                <span class="text-danger text-uppercase small fw-bold d-block">Inactifs</span>
                                 <h3 class="mb-0">{{ inactiveFiltered }}</h3>
                             </div>
                             <i class="fas fa-pause-circle fa-2x text-danger opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+                <div class="col-6 col-sm-4 col-md-2">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-warning text-uppercase small fw-bold">Stock faible</span>
+                                <span class="text-warning text-uppercase small fw-bold d-block">Stock faible</span>
                                 <h3 class="mb-0">{{ lowStockFiltered }}</h3>
                             </div>
                             <i class="fas fa-exclamation-triangle fa-2x text-warning opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+                <div class="col-6 col-sm-4 col-md-2">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-info text-uppercase small fw-bold">Périssables</span>
+                                <span class="text-info text-uppercase small fw-bold d-block">Périssables</span>
                                 <h3 class="mb-0">{{ perishableFiltered }}</h3>
                             </div>
                             <i class="fas fa-calendar-alt fa-2x text-info opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-sm-4 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+                <div class="col-6 col-sm-4 col-md-2">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-secondary text-uppercase small fw-bold">Non périss.</span>
+                                <span class="text-secondary text-uppercase small fw-bold d-block">Non périss.</span>
                                 <h3 class="mb-0">{{ nonPerishableFiltered }}</h3>
                             </div>
                             <i class="fas fa-calendar-check fa-2x text-secondary opacity-50"></i>
@@ -234,9 +478,10 @@
                 </div>
             </div>
 
+            <!-- ✅ Abonnement -->
             <div class="row">
                 <div class="col-12">
-                    <div class="stat-item p-3 bg-light rounded">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="text-dark text-uppercase small fw-bold">Abonnement</span>
                             <i class="fas fa-credit-card fa-2x text-dark opacity-50"></i>
@@ -257,23 +502,23 @@
 
             {# ✅ Statistiques de visibilité (uniquement pour les pharmacies) #}
             {% if companyType == 'pharmacy' %}
-            <div class="row mt-3 border-top pt-3">
-                <div class="col-md-6 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+            <div class="row mt-3 border-top pt-3 g-2">
+                <div class="col-6">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-success text-uppercase small fw-bold">Visibles sur marketplace</span>
+                                <span class="text-success text-uppercase small fw-bold d-block">Visibles</span>
                                 <h3 class="mb-0 text-success">{{ visibleFiltered }}</h3>
                             </div>
                             <i class="fas fa-eye fa-2x text-success opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <div class="stat-item p-3 bg-light rounded">
+                <div class="col-6">
+                    <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-secondary text-uppercase small fw-bold">Masqués sur marketplace</span>
+                                <span class="text-secondary text-uppercase small fw-bold d-block">Masqués</span>
                                 <h3 class="mb-0 text-secondary">{{ hiddenFiltered }}</h3>
                             </div>
                             <i class="fas fa-eye-slash fa-2x text-secondary opacity-50"></i>
@@ -287,48 +532,48 @@
 
     <!-- Filtres -->
     <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <h5 class="mb-0"><i class="fas fa-filter me-2 text-primary"></i>Filtres</h5>
-            <div class="d-flex gap-2">
+        <div class="card-header bg-white py-2 py-sm-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 small"><i class="fas fa-filter me-2 text-primary"></i><span class="d-none d-sm-inline">Filtres</span></h5>
+            <div class="d-flex gap-1 gap-sm-2 flex-wrap">
                 <button type="button" class="btn btn-outline-info btn-sm" id="toggleExtraFiltersBtn">
-                    <i class="fas fa-sliders-h me-1"></i> Autres filtres
+                    <i class="fas fa-sliders-h me-1"></i> <span class="d-none d-sm-inline">Autres filtres</span>
                 </button>
                 <a href="{{ path('app_admin_product_index') }}" class="btn btn-outline-secondary btn-sm">
-                    <i class="fas fa-undo me-1"></i> Effacer
+                    <i class="fas fa-undo me-1"></i> <span class="d-none d-sm-inline">Effacer</span>
                 </a>
                 <button type="submit" form="filter-form" class="btn btn-primary btn-sm">
-                    <i class="fas fa-search me-1"></i> Filtrer
+                    <i class="fas fa-search me-1"></i> <span class="d-none d-sm-inline">Filtrer</span>
                 </button>
             </div>
         </div>
-        <div class="card-body bg-white">
+        <div class="card-body bg-white p-2 p-sm-3">
             <form method="get" id="filter-form">
-                <!-- Première ligne : 3 filtres -->
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold small">
+                <!-- Première ligne -->
+                <div class="row g-2 g-sm-3">
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label class="form-label fw-semibold small mb-1">
                             <i class="fas fa-search me-1"></i> Recherche
                         </label>
-                        <input type="text" name="search" class="form-control" 
+                        <input type="text" name="search" class="form-control form-control-sm" 
                                placeholder="Nom, code-barres..." 
                                value="{{ search }}">
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold small">
+                    <div class="col-6 col-sm-6 col-md-4">
+                        <label class="form-label fw-semibold small mb-1">
                             <i class="fas fa-toggle-on me-1"></i> Statut
                         </label>
-                        <select name="status" class="form-select">
+                        <select name="status" class="form-select form-select-sm">
                             <option value="">Tous</option>
                             <option value="active" {{ selectedStatus == 'active' ? 'selected' : '' }}>Actifs</option>
                             <option value="inactive" {{ selectedStatus == 'inactive' ? 'selected' : '' }}>Inactifs</option>
                             <option value="low-stock" {{ selectedStatus == 'low-stock' ? 'selected' : '' }}>Stock faible</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold small">
+                    <div class="col-6 col-sm-6 col-md-4">
+                        <label class="form-label fw-semibold small mb-1">
                             <i class="fas fa-calendar-alt me-1"></i> Type
                         </label>
-                        <select name="expiry_type" class="form-select">
+                        <select name="expiry_type" class="form-select form-select-sm">
                             <option value="">Tous</option>
                             <option value="perishable" {{ selectedExpiryType == 'perishable' ? 'selected' : '' }}>Périssables</option>
                             <option value="non-perishable" {{ selectedExpiryType == 'non-perishable' ? 'selected' : '' }}>Non périssables</option>
@@ -336,24 +581,24 @@
                     </div>
                 </div>
 
-                <!-- Deuxième ligne : 3 filtres -->
-                <div class="row g-3 mt-3">
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold small">
+                <!-- Deuxième ligne -->
+                <div class="row g-2 g-sm-3 mt-2 mt-sm-3">
+                    <div class="col-6 col-sm-6 col-md-4">
+                        <label class="form-label fw-semibold small mb-1">
                             <i class="fas fa-chart-line me-1"></i> Quota
                         </label>
-                        <select name="subscription_status" class="form-select">
+                        <select name="subscription_status" class="form-select form-select-sm">
                             <option value="">Tous</option>
                             <option value="active" {{ selectedSubscriptionStatus == 'active' ? 'selected' : '' }}>Dans quota</option>
                             <option value="inactive" {{ selectedSubscriptionStatus == 'inactive' ? 'selected' : '' }}>Hors quota</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold small">
+                    <div class="col-6 col-sm-6 col-md-4">
+                        <label class="form-label fw-semibold small mb-1">
                             <i class="fas fa-tag me-1"></i> Catégorie
                         </label>
-                        <select name="category" id="category" class="form-select" style="width: 100%;">
-                            <option value="0">Toutes les catégories</option>
+                        <select name="category" id="category" class="form-select form-select-sm" style="width: 100%;">
+                            <option value="0">Toutes</option>
                             {% for category in categories %}
                                 <option value="{{ category.id }}" {{ selectedCategory == category.id ? 'selected' : '' }}>
                                     {% for i in 0..category.level %}&nbsp;&nbsp;{% endfor %}
@@ -363,12 +608,12 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold small">
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label class="form-label fw-semibold small mb-1">
                             <i class="fas fa-weight-hanging me-1"></i> Unité
                         </label>
-                        <select name="unit" id="unit" class="form-select" style="width: 100%;">
-                            <option value="">Toutes les unités</option>
+                        <select name="unit" id="unit" class="form-select form-select-sm" style="width: 100%;">
+                            <option value="">Toutes</option>
                             {% for unit in units %}
                                 <option value="{{ unit }}" {{ selectedUnit == unit ? 'selected' : '' }}>
                                     {{ unit }}
@@ -378,51 +623,49 @@
                     </div>
                 </div>
 
-                <!-- ✅ Filtres supplémentaires avec visibilité pour pharmacies -->
+                <!-- ✅ Filtres supplémentaires -->
                 <div id="extraFilters" style="display: none;">
-                    <hr class="my-4">
+                    <hr class="my-3">
                     
                     {% if companyType == 'restaurant' %}
-                        <!-- RESTAURANT : 2 filtres -->
-                        <div class="row g-3">
-                            <div class="col-12 col-md-6">
-                                <label class="form-label fw-semibold small">
+                        <div class="row g-2 g-sm-3">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small mb-1">
                                     <i class="fas fa-flask me-1"></i> Dosage
                                 </label>
                                 <input type="text" name="dosage" id="dosage" value="{{ dosage }}" 
-                                    class="form-control" placeholder="Ex: 500mg">
+                                    class="form-control form-control-sm" placeholder="Ex: 500mg">
                             </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label fw-semibold small">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small mb-1">
                                     <i class="fas fa-pills me-1"></i> Forme
                                 </label>
                                 <input type="text" name="form" id="form" value="{{ form }}" 
-                                    class="form-control" placeholder="Ex: comprimé">
+                                    class="form-control form-control-sm" placeholder="Ex: comprimé">
                             </div>
                         </div>
                     {% elseif companyType == 'market' %}
-                        <!-- MARKET : 3 filtres -->
-                        <div class="row g-3">
-                            <div class="col-12 col-md-4">
-                                <label class="form-label fw-semibold small">
+                        <div class="row g-2 g-sm-3">
+                            <div class="col-6 col-md-4">
+                                <label class="form-label fw-semibold small mb-1">
                                     <i class="fas fa-flask me-1"></i> Dosage
                                 </label>
                                 <input type="text" name="dosage" id="dosage" value="{{ dosage }}" 
-                                    class="form-control" placeholder="Ex: 500mg">
+                                    class="form-control form-control-sm" placeholder="Ex: 500mg">
                             </div>
-                            <div class="col-12 col-md-4">
-                                <label class="form-label fw-semibold small">
+                            <div class="col-6 col-md-4">
+                                <label class="form-label fw-semibold small mb-1">
                                     <i class="fas fa-pills me-1"></i> Forme
                                 </label>
                                 <input type="text" name="form" id="form" value="{{ form }}" 
-                                    class="form-control" placeholder="Ex: comprimé">
+                                    class="form-control form-control-sm" placeholder="Ex: comprimé">
                             </div>
                             <div class="col-12 col-md-4">
-                                <label class="form-label fw-semibold small">
+                                <label class="form-label fw-semibold small mb-1">
                                     <i class="fas fa-percent me-1"></i> Promotion
                                 </label>
-                                <select name="promotion" id="promotion" class="form-select" style="width: 100%;">
-                                    <option value="0">🎯 Toutes les promotions</option>
+                                <select name="promotion" id="promotion" class="form-select form-select-sm" style="width: 100%;">
+                                    <option value="0">🎯 Toutes</option>
                                     {% for promotion in promotions %}
                                         <option value="{{ promotion.id }}" {{ selectedPromotion == promotion.id ? 'selected' : '' }}>
                                             {{ promotion.name }}
@@ -437,48 +680,47 @@
                             </div>
                         </div>
                     {% elseif companyType == 'pharmacy' %}
-                        <!-- ✅ PHARMACY : 5 filtres (dont visibilité) -->
-                        <div class="row g-3">
-                            <div class="col-12 col-md-3">
-                                <label class="form-label fw-semibold small">
+                        <div class="row g-2 g-sm-3">
+                            <div class="col-6 col-md-3">
+                                <label class="form-label fw-semibold small mb-1">
                                     <i class="fas fa-flask me-1"></i> Dosage
                                 </label>
                                 <input type="text" name="dosage" id="dosage" value="{{ dosage }}" 
-                                    class="form-control" placeholder="Ex: 500mg">
+                                    class="form-control form-control-sm" placeholder="Ex: 500mg">
                             </div>
-                            <div class="col-12 col-md-3">
-                                <label class="form-label fw-semibold small">
+                            <div class="col-6 col-md-3">
+                                <label class="form-label fw-semibold small mb-1">
                                     <i class="fas fa-pills me-1"></i> Forme
                                 </label>
                                 <input type="text" name="form" id="form" value="{{ form }}" 
-                                    class="form-control" placeholder="Ex: comprimé">
+                                    class="form-control form-control-sm" placeholder="Ex: comprimé">
                             </div>
-                            <div class="col-12 col-md-2">
-                                <label class="form-label fw-semibold small">
+                            <div class="col-6 col-md-2">
+                                <label class="form-label fw-semibold small mb-1">
                                     <i class="fas fa-prescription-bottle me-1"></i> Prescription
                                 </label>
-                                <select name="prescription_required" class="form-select">
+                                <select name="prescription_required" class="form-select form-select-sm">
                                     <option value="">Tous</option>
-                                    <option value="1" {{ prescriptionRequired == '1' ? 'selected' : '' }}>Prescription obligatoire</option>
-                                    <option value="0" {{ prescriptionRequired == '0' ? 'selected' : '' }}>Sans prescription</option>
+                                    <option value="1" {{ prescriptionRequired == '1' ? 'selected' : '' }}>Obligatoire</option>
+                                    <option value="0" {{ prescriptionRequired == '0' ? 'selected' : '' }}>Sans</option>
                                 </select>
                             </div>
-                            <div class="col-12 col-md-2">
-                                <label class="form-label fw-semibold small">
+                            <div class="col-6 col-md-2">
+                                <label class="form-label fw-semibold small mb-1">
                                     <i class="fas fa-eye me-1"></i> Visibilité
                                 </label>
-                                <select name="visibility" class="form-select">
+                                <select name="visibility" class="form-select form-select-sm">
                                     <option value="">Tous</option>
                                     <option value="visible" {{ selectedVisibility == 'visible' ? 'selected' : '' }}>Visibles</option>
                                     <option value="hidden" {{ selectedVisibility == 'hidden' ? 'selected' : '' }}>Masqués</option>
                                 </select>
                             </div>
                             <div class="col-12 col-md-2">
-                                <label class="form-label fw-semibold small">
+                                <label class="form-label fw-semibold small mb-1">
                                     <i class="fas fa-percent me-1"></i> Promotion
                                 </label>
-                                <select name="promotion" id="promotion" class="form-select" style="width: 100%;">
-                                    <option value="0">🎯 Toutes les promotions</option>
+                                <select name="promotion" id="promotion" class="form-select form-select-sm" style="width: 100%;">
+                                    <option value="0">🎯 Toutes</option>
                                     {% for promotion in promotions %}
                                         <option value="{{ promotion.id }}" {{ selectedPromotion == promotion.id ? 'selected' : '' }}>
                                             {{ promotion.name }}
@@ -498,9 +740,9 @@
         </div>
     </div>
 
-    {# Message filtre visibilité (pour les pharmacies) #}
+    {# Message filtre visibilité #}
     {% if companyType == 'pharmacy' and selectedVisibility != '' %}
-        <div class="alert alert-info mb-4">
+        <div class="alert alert-info mb-4 small">
             <i class="fas fa-info-circle me-2"></i>
             {% if selectedVisibility == 'visible' %}
                 Affichage des produits <strong>visibles</strong> sur le marketplace.
@@ -510,10 +752,10 @@
         </div>
     {% endif %}
 
-    <!-- Grille de produits -->
-    <div class="row g-3">
+    <!-- ✅ Grille de produits - 2 cartes par ligne sur mobile -->
+    <div class="row g-2 g-sm-3">
         {% for product in products %}
-        <div class="col-xl-3 col-lg-4 col-md-6">
+        <div class="col-6 col-md-4 col-lg-3 col-xl-3">
             <div class="card product-card h-100 shadow-sm">
                 <div class="product-image-container">
                     {% if product.image and product.image != 'default-product.png' %}
@@ -522,21 +764,21 @@
                              class="card-img-top product-image">
                     {% else %}
                         <div class="product-image-placeholder">
-                            <i class="fas fa-box fa-4x text-muted"></i>
+                            <i class="fas fa-box fa-3x fa-sm-4x text-muted"></i>
                         </div>
                     {% endif %}
                 </div>
 
-                <div class="card-body d-flex flex-column">
+                <div class="card-body d-flex flex-column p-2 p-sm-3">
                     <div class="d-flex justify-content-between align-items-start">
-                        <h5 class="card-title text-truncate mb-0">
-                            {{ product.name }}
-                            <small class="text-muted ms-1">
-                                <i class="fas fa-weight-hanging me-1"></i>{{ product.unit|default('pièce') }}
+                        <h5 class="card-title text-truncate mb-0 small">
+                            {{ product.name|u.truncate(18) }}
+                            <small class="text-muted ms-1 d-none d-sm-inline">
+                                <i class="fas fa-weight-hanging me-1"></i>{{ product.unit|default('pièce')|u.truncate(6) }}
                             </small>
                         </h5>
-                        <div class="dropdown ms-2">
-                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
+                        <div class="dropdown ms-1">
+                            <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-bars"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -579,70 +821,69 @@
                         </div>
                     </div>
 
-                    <p class="text-muted small mb-2">
+                    <p class="text-muted small mb-1 d-none d-sm-block">
                         <i class="fas fa-barcode me-1"></i>{{ product.barcode }}
                     </p>
-                    <p class="text-muted small mb-2">
-                        Catégorie :
+                    <p class="text-muted small mb-1">
+                        <i class="fas fa-tag me-1"></i>
                         {% if product.category %}
-                            <i class="fas fa-tag me-1"></i>{{ product.category.name }}
+                            {{ product.category.name|u.truncate(12) }}
                         {% else %}
-                            <i class="fas fa-question-circle me-1"></i>Non catégorisé
+                            Non catégorisé
                         {% endif %}
                     </p>
 
-                    <!-- ✅ Badges sous la catégorie -->
+                    <!-- ✅ Badges -->
                     <div class="product-badges">
                         {% if not product.subscriptionActive %}
                             <span class="badge bg-warning text-dark">
-                                <i class="fas fa-clock fa-xs me-1"></i> Hors quota
+                                <i class="fas fa-clock fa-xs me-1 d-none d-sm-inline"></i> Hors quota
                             </span>
                         {% else %}
                             {% if product.isActive %}
                                 <span class="badge bg-success">
-                                    <i class="fas fa-check-circle fa-xs me-1"></i> Actif
+                                    <i class="fas fa-check-circle fa-xs me-1 d-none d-sm-inline"></i> Actif
                                 </span>
                             {% else %}
                                 <span class="badge bg-danger">
-                                    <i class="fas fa-pause-circle fa-xs me-1"></i> Inactif
+                                    <i class="fas fa-pause-circle fa-xs me-1 d-none d-sm-inline"></i> Inactif
                                 </span>
                             {% endif %}
                         {% endif %}
                         {% if product.subscriptionActive %}
-                            <span class="badge bg-info">
-                                <i class="fas fa-database fa-xs me-1"></i> Dans quota
+                            <span class="badge bg-info d-none d-sm-inline">
+                                <i class="fas fa-database fa-xs me-1"></i> Quota
                             </span>
                         {% endif %}
-                        {# ✅ Badge de visibilité (pour les pharmacies) #}
                         {% if companyType == 'pharmacy' %}
                             {% if product.companyPublic %}
-                                <span class="badge bg-primary">
+                                <span class="badge bg-primary d-none d-sm-inline">
                                     <i class="fas fa-eye fa-xs me-1"></i> Visible
                                 </span>
                             {% else %}
-                                <span class="badge bg-secondary">
+                                <span class="badge bg-secondary d-none d-sm-inline">
                                     <i class="fas fa-eye-slash fa-xs me-1"></i> Masqué
                                 </span>
                             {% endif %}
                         {% endif %}
                         {% if product.hasExpiryDate %}
-                            <span class="badge bg-warning text-dark">
+                            <span class="badge bg-warning text-dark d-none d-sm-inline">
                                 <i class="fas fa-calendar-alt fa-xs me-1"></i> Périssable
                             </span>
                         {% endif %}
                     </div>
 
                     {% if companyType != 'restaurant' %}
-                    <div class="row g-0 mb-2">
+                    <div class="row g-0 mb-1">
                         <div class="col-6">
-                            <small class="text-muted d-block">Prix vente</small>
-                            <span class="fw-bold text-success">
+                            <small class="text-muted d-block small">Prix vente</small>
+                            <span class="fw-bold text-success small">
                                 {{ product.salePrice|price_with_currency(product.hmaService) }}
                             </span>
                         </div>
                         <div class="col-6 text-end">
-                            <small class="text-muted d-block">Prix achat</small>
-                            <span class="fw-bold text-primary">
+                            <small class="text-muted d-block small">Prix achat</small>
+                            <span class="fw-bold text-primary small">
                                 {{ product.purchasePrice|price_with_currency(product.hmaService) }}
                             </span>
                         </div>
@@ -650,54 +891,54 @@
 
                     {% set margin = product.salePrice - product.purchasePrice %}
                     {% set marginPercentage = product.purchasePrice > 0 ? (margin / product.purchasePrice * 100)|round(1) : 0 %}
-                    <div class="d-flex justify-content-between align-items-center mb-2 small">
-                        <span class="text-muted">Marge</span>
-                        <span class="badge {{ marginPercentage >= 50 ? 'bg-success' : (marginPercentage >= 20 ? 'bg-warning text-dark' : 'bg-danger') }}">
+                    <div class="d-flex justify-content-between align-items-center mb-1 small">
+                        <span class="text-muted small">Marge</span>
+                        <span class="badge {{ marginPercentage >= 50 ? 'bg-success' : (marginPercentage >= 20 ? 'bg-warning text-dark' : 'bg-danger') }}" style="font-size: 8px;">
                             {{ margin|price_with_currency(product.hmaService) }} ({{ marginPercentage }}%)
                         </span>
                     </div>
                     {% else %}
-                    <div class="row g-0 mb-2">
+                    <div class="row g-0 mb-1">
                         <div class="col-12">
-                            <small class="text-muted d-block">Prix d'achat</small>
-                            <span class="fw-bold text-primary">
+                            <small class="text-muted d-block small">Prix d'achat</small>
+                            <span class="fw-bold text-primary small">
                                 {{ product.purchasePrice|price_with_currency(product.hmaService) }}
                             </span>
                         </div>
                     </div>
                     {% endif %}
 
-                    <div class="row g-0 mb-2">
+                    <div class="row g-0 mb-1">
                         <div class="col-6">
-                            <small class="text-muted d-block">Stock</small>
-                            <span class="fw-bold">{{ product.stockQuantity }} {{ product.unit|default('pièce') }}</span>
+                            <small class="text-muted d-block small">Stock</small>
+                            <span class="fw-bold small">{{ product.stockQuantity }} {{ product.unit|default('pièce')|u.truncate(4) }}</span>
                         </div>
                         <div class="col-6 text-end">
-                            <small class="text-muted d-block">Stock min</small>
-                            <span class="fw-bold">{{ product.minQuantity }} {{ product.unit|default('pièce') }}</span>
+                            <small class="text-muted d-block small">Stock min</small>
+                            <span class="fw-bold small">{{ product.minQuantity }} {{ product.unit|default('pièce')|u.truncate(4) }}</span>
                         </div>
                     </div>
 
                     {% if product.dosage or product.form %}
-                        <div class="small text-muted mb-2">
+                        <div class="small text-muted mb-1 d-none d-sm-block">
                             {% if product.dosage %}<span class="me-2"><i class="fas fa-flask me-1"></i>{{ product.dosage }}</span>{% endif %}
                             {% if product.form %}<span><i class="fas fa-pills me-1"></i>{{ product.form }}</span>{% endif %}
                         </div>
                     {% endif %}
 
-                    <div class="d-flex gap-1 mt-auto">
+                    <div class="d-flex gap-1 mt-auto flex-wrap">
                         <a href="{{ path('app_admin_stock_batch_index', {'productId': product.id}) }}" 
-                            class="btn btn-sm btn-outline-info flex-fill" title="Lots de stock">
-                            <i class="fas fa-boxes"></i> Lots
+                            class="btn btn-sm btn-outline-info flex-fill" title="Lots">
+                            <i class="fas fa-boxes"></i> <span class="d-none d-sm-inline">Lots</span>
                         </a>
-                        <a href="#" 
-                           class="btn btn-sm btn-outline-primary flex-fill" title="Mouvements de stock">
-                            <i class="fas fa-exchange-alt"></i> Mouvements
+                        <a href="{{ path('app_admin_product_stock_movements', {'id': product.id}) }}" 
+                        class="btn btn-sm btn-outline-primary flex-fill" title="Mouvements">
+                            <i class="fas fa-exchange-alt"></i> <span class="d-none d-sm-inline">Mouvements</span>
                         </a>
                         {% if companyType != 'restaurant' %}
                             <a href="{{ path('app_admin_product_promotions', {'id': product.id}) }}" 
                             class="btn btn-sm btn-outline-warning flex-fill" title="Promotions">
-                                <i class="fas fa-tags"></i> Promos
+                                <i class="fas fa-tags"></i> <span class="d-none d-sm-inline">Promos</span>
                             </a>
                         {% endif %}
                     </div>
@@ -722,7 +963,7 @@
     <!-- Pagination -->
     {% if totalPages > 1 %}
     <nav aria-label="Pagination" class="mt-4">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center flex-wrap">
             {% for page in 1..totalPages %}
                 <li class="page-item {{ page == currentPage ? 'active' : '' }}">
                     <a class="page-link" href="{{ path('app_admin_product_index', app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
@@ -733,7 +974,7 @@
     {% endif %}
 </div>
 
-<!-- Modale quota atteint pour nouveau produit -->
+<!-- Modales -->
 <div class="modal fade" id="quotaReachedModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -748,11 +989,11 @@
                 <h5>Vous avez atteint votre limite de {{ quota }} produits actifs.</h5>
                 <p class="text-muted">Pour ajouter de nouveaux produits, passez à un plan supérieur.</p>
             </div>
-            <div class="modal-footer justify-content-center">
-                <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-lg px-4">
+            <div class="modal-footer justify-content-center flex-wrap">
+                <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-lg px-4 w-100 w-sm-auto">
                     <i class="fas fa-arrow-up me-2"></i> Voir les offres
                 </a>
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-outline-secondary w-100 w-sm-auto" data-bs-dismiss="modal">Annuler</button>
             </div>
         </div>
     </div>
@@ -775,9 +1016,9 @@
                     Utilisez votre lecteur de code-barres ou saisissez manuellement.
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary" id="scanSubmit">Rechercher</button>
+            <div class="modal-footer flex-wrap gap-2">
+                <button type="button" class="btn btn-secondary flex-grow-1 flex-md-grow-0" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary flex-grow-1 flex-md-grow-0" id="scanSubmit">Rechercher</button>
             </div>
         </div>
     </div>
@@ -794,11 +1035,11 @@
             <div class="modal-body">
                 <p id="toggleStatusMessage"></p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <div class="modal-footer flex-wrap gap-2">
+                <button type="button" class="btn btn-secondary flex-grow-1 flex-md-grow-0" data-bs-dismiss="modal">Annuler</button>
                 <form id="toggleStatusForm" method="post">
                     <input type="hidden" name="_token" id="toggleStatusToken">
-                    <button type="submit" class="btn" id="toggleStatusBtn"></button>
+                    <button type="submit" class="btn flex-grow-1 flex-md-grow-0" id="toggleStatusBtn"></button>
                 </form>
             </div>
         </div>
@@ -817,11 +1058,11 @@
             <div class="modal-body">
                 <p id="deleteMessage"></p>
             </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <div class="modal-footer border-0 flex-wrap gap-2">
+                <button type="button" class="btn btn-secondary flex-grow-1 flex-md-grow-0" data-bs-dismiss="modal">Annuler</button>
                 <form id="deleteForm" method="post">
                     <input type="hidden" name="_token" id="deleteToken">
-                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                    <button type="submit" class="btn btn-danger flex-grow-1 flex-md-grow-0">Supprimer</button>
                 </form>
             </div>
         </div>
@@ -836,36 +1077,36 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // ========== Initialisation Select2 ==========
-    // Select2 pour la catégorie
     if (document.getElementById('category')) {
         $('#category').select2({
             theme: 'bootstrap-5',
             language: 'fr',
             placeholder: '📁 Sélectionnez une catégorie',
             allowClear: true,
-            width: '100%'
+            width: '100%',
+            dropdownParent: $('#category').parent()
         });
     }
 
-    // Select2 pour l'unité
     if (document.getElementById('unit')) {
         $('#unit').select2({
             theme: 'bootstrap-5',
             language: 'fr',
             placeholder: '⚖️ Sélectionnez une unité',
             allowClear: true,
-            width: '100%'
+            width: '100%',
+            dropdownParent: $('#unit').parent()
         });
     }
 
-    // Select2 pour la promotion (si présent)
     if (document.getElementById('promotion')) {
         $('#promotion').select2({
             theme: 'bootstrap-5',
             language: 'fr',
             placeholder: '🎯 Sélectionnez une promotion',
             allowClear: true,
-            width: '100%'
+            width: '100%',
+            dropdownParent: $('#promotion').parent()
         });
     }
 
@@ -893,8 +1134,10 @@ document.addEventListener('DOMContentLoaded', function() {
         scanBtn.addEventListener('click', function() {
             scannerModal.show();
             if (scannerInput) {
-                scannerInput.focus();
-                scannerInput.value = '';
+                setTimeout(function() {
+                    scannerInput.focus();
+                    scannerInput.value = '';
+                }, 300);
             }
         });
 
@@ -967,27 +1210,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleExtraBtn = document.getElementById('toggleExtraFiltersBtn');
     const extraFilters = document.getElementById('extraFilters');
     if (toggleExtraBtn && extraFilters) {
-        // Vérifier si des filtres supplémentaires ont des valeurs
         const dosage = document.getElementById('dosage')?.value;
         const form = document.getElementById('form')?.value;
         const promotion = document.getElementById('promotion')?.value;
         const prescription = document.querySelector('[name="prescription_required"]')?.value;
         const visibility = document.querySelector('[name="visibility"]')?.value;
         
-        // Si un filtre supplémentaire a une valeur, afficher la section
         if ((dosage && dosage !== '') || (form && form !== '') || (promotion && promotion !== '0') || 
             (prescription && prescription !== '') || (visibility && visibility !== '')) {
             extraFilters.style.display = 'block';
-            toggleExtraBtn.innerHTML = '<i class="fas fa-times me-1"></i> Masquer filtres';
+            toggleExtraBtn.innerHTML = '<i class="fas fa-times me-1"></i> <span class="d-none d-sm-inline">Masquer filtres</span>';
         }
 
         toggleExtraBtn.addEventListener('click', function() {
             if (extraFilters.style.display === 'none' || extraFilters.style.display === '') {
                 extraFilters.style.display = 'block';
-                this.innerHTML = '<i class="fas fa-times me-1"></i> Masquer filtres';
+                this.innerHTML = '<i class="fas fa-times me-1"></i> <span class="d-none d-sm-inline">Masquer filtres</span>';
             } else {
                 extraFilters.style.display = 'none';
-                this.innerHTML = '<i class="fas fa-sliders-h me-1"></i> Autres filtres';
+                this.innerHTML = '<i class="fas fa-sliders-h me-1"></i> <span class="d-none d-sm-inline">Autres filtres</span>';
             }
         });
     }

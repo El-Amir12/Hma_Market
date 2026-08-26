@@ -20,32 +20,58 @@
         box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
     .stat-icon {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 1rem;
     }
+    @media (min-width: 768px) {
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+        }
+    }
     .stat-value {
-        font-size: 1.8rem;
+        font-size: 1.3rem;
         font-weight: bold;
         margin-bottom: 0;
         line-height: 1.2;
     }
+    @media (min-width: 768px) {
+        .stat-value {
+            font-size: 1.8rem;
+        }
+    }
     .stat-label {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         font-weight: 600;
     }
+    @media (min-width: 768px) {
+        .stat-label {
+            font-size: 0.7rem;
+        }
+    }
     .stat-sub {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
         margin-top: 0.25rem;
         opacity: 0.8;
     }
+    @media (min-width: 768px) {
+        .stat-sub {
+            font-size: 0.7rem;
+        }
+    }
     .stat-sub small {
-        font-size: 0.65rem;
+        font-size: 0.55rem;
+    }
+    @media (min-width: 768px) {
+        .stat-sub small {
+            font-size: 0.65rem;
+        }
     }
     
     /* Cartes avec fond coloré */
@@ -114,21 +140,22 @@
         border-left: 3px solid #ffc107 !important;
     }
     .user-avatar {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
         object-fit: cover;
         background: #f0f0f0;
+    }
+    @media (min-width: 768px) {
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+        }
     }
     .select2-container--bootstrap-5 .select2-selection {
         border-radius: 0.5rem;
         border-color: #dee2e6;
         min-height: 38px;
-    }
-    @media (max-width: 768px) {
-        .stat-value { font-size: 1.3rem; }
-        .stat-icon { width: 40px; height: 40px; }
-        .stat-icon i { font-size: 1.3rem; }
     }
     
     .badge i, .btn i {
@@ -140,108 +167,172 @@
     .btn-primary i, .btn-success i, .btn-danger i, .btn-warning i, .btn-info i {
         color: white !important;
     }
+    
+    /* Responsive table */
+    @media (max-width: 768px) {
+        .table-responsive {
+            font-size: 0.8rem;
+        }
+        .table td, .table th {
+            padding: 0.4rem 0.3rem;
+        }
+        .badge {
+            font-size: 0.6rem !important;
+            padding: 0.2rem 0.4rem !important;
+        }
+        .btn-sm {
+            padding: 0.15rem 0.3rem;
+            font-size: 0.65rem;
+        }
+        .btn-sm i {
+            font-size: 0.7rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+        .card-header {
+            padding: 0.5rem 0.75rem !important;
+        }
+        .card-body {
+            padding: 0.5rem 0.75rem !important;
+        }
+        .stat-icon {
+            width: 32px;
+            height: 32px;
+        }
+        .stat-icon i {
+            font-size: 1rem;
+        }
+        .stat-value {
+            font-size: 1.1rem;
+        }
+        .stat-label {
+            font-size: 0.55rem;
+        }
+        .stat-sub {
+            font-size: 0.5rem;
+        }
+        .stat-sub small {
+            font-size: 0.45rem;
+        }
+        .user-avatar {
+            width: 22px;
+            height: 22px;
+        }
+        .user-avatar i {
+            font-size: 0.6rem;
+        }
+        .pagination-sm .page-link {
+            padding: 0.15rem 0.3rem;
+            font-size: 0.65rem;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid px-4">
+<div class="container-fluid px-2 px-md-4">
     <!-- En-tête -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 mb-md-4 flex-wrap gap-2 gap-md-3">
         <div>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
+                <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item">
-                        <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
+                        <a href="{{ path('app_dashboard') }}" class="text-decoration-none small">
                             <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
                         </a>
                     </li>
-                    <li class="breadcrumb-item active">
+                    <li class="breadcrumb-item active small">
                         <i class="fas fa-exchange-alt me-1"></i> Mouvements de stock
                     </li>
                 </ol>
             </nav>
-            <h1 class="h3 mb-0 fw-bold">
+            <h1 class="h4 h-md-3 mb-0 fw-bold">
                 <i class="fas fa-exchange-alt me-2 text-primary"></i>
                 Mouvements de stock
             </h1>
-            <p class="text-muted mt-2">
+            <p class="text-muted mt-1 small d-none d-sm-block">
                 <i class="fas fa-info-circle me-1"></i>
                 Visualisez et gérez tous les mouvements de stock de votre entreprise
             </p>
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-1 gap-md-2 flex-wrap">
             <div class="btn-group">
-                <button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="fas fa-file-excel me-1"></i> Exporter
+                <button type="button" class="btn btn-outline-success btn-sm btn-md dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="fas fa-file-excel me-1"></i> <span class="d-none d-sm-inline">Exporter</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{{ path('app_admin_stock_movement_export_excel', app.request.query.all) }}"><i class="fas fa-file-excel me-2 text-success"></i> Excel (.xlsx)</a></li>
-                    <li><a class="dropdown-item" href="{{ path('app_admin_stock_movement_export_pdf', app.request.query.all) }}"><i class="fas fa-file-pdf me-2 text-danger"></i> PDF (.pdf)</a></li>
+                    <li><a class="dropdown-item small" href="{{ path('app_admin_stock_movement_export_excel', app.request.query.all) }}"><i class="fas fa-file-excel me-2 text-success"></i> Excel (.xlsx)</a></li>
+                    <li><a class="dropdown-item small" href="{{ path('app_admin_stock_movement_export_pdf', app.request.query.all) }}"><i class="fas fa-file-pdf me-2 text-danger"></i> PDF (.pdf)</a></li>
                 </ul>
             </div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#printOptionsModal">
-                <i class="fas fa-print me-2"></i> Imprimer sélection
+            <button type="button" class="btn btn-primary btn-sm btn-md" data-bs-toggle="modal" data-bs-target="#printOptionsModal">
+                <i class="fas fa-print me-1 me-md-2"></i> <span class="d-none d-sm-inline">Imprimer</span>
             </button>
         </div>
     </div>
 
     <!-- Cartes statistiques générales -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3 col-sm-6">
+    <div class="row g-2 g-md-3 mb-3 mb-md-4">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-primary shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">Total mouvements</div>
                             <div class="stat-value">{{ stats.total_movements|default(0)|number_format(0, ',', ' ') }}</div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-exchange-alt fa-2x"></i>
+                            <i class="fas fa-exchange-alt fa-1x fa-md-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-info shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">Quantité totale</div>
                             <div class="stat-value">{{ stats.total_quantity|default(0)|number_format(0, ',', ' ') }}</div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-chart-line fa-2x"></i>
+                            <i class="fas fa-chart-line fa-1x fa-md-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-success shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">Entrées</div>
                             <div class="stat-value">{{ stats.total_in|default(0)|number_format(0, ',', ' ') }}</div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-arrow-down fa-2x"></i>
+                            <i class="fas fa-arrow-down fa-1x fa-md-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-danger shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">Sorties</div>
                             <div class="stat-value">{{ stats.total_out|default(0)|number_format(0, ',', ' ') }}</div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-arrow-up fa-2x"></i>
+                            <i class="fas fa-arrow-up fa-1x fa-md-2x"></i>
                         </div>
                     </div>
                 </div>
@@ -249,13 +340,12 @@
         </div>
     </div>
 
-    <!-- Cartes par type de mouvement (regroupées) -->
+    <!-- Cartes par type de mouvement -->
     {% if movementTypeStats|length > 0 %}
-    <div class="row g-3 mb-4">
-        {# Achats #}
-        <div class="col-md-4 col-sm-6">
+    <div class="row g-2 g-md-3 mb-3 mb-md-4">
+        <div class="col-6 col-md-4">
             <div class="card stat-card card-bg-success shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">
@@ -266,17 +356,16 @@
                             </div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-cart-plus fa-2x"></i>
+                            <i class="fas fa-cart-plus fa-1x fa-md-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {# Ventes #}
-        <div class="col-md-4 col-sm-6">
+        <div class="col-6 col-md-4">
             <div class="card stat-card card-bg-danger shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">
@@ -287,17 +376,16 @@
                             </div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-dollar-sign fa-2x"></i>
+                            <i class="fas fa-dollar-sign fa-1x fa-md-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {# Ajustements (regroupés) #}
-        <div class="col-md-4 col-sm-6">
+        <div class="col-6 col-md-4">
             <div class="card stat-card card-bg-warning shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">
@@ -306,7 +394,7 @@
                             <div class="stat-value">
                                 {{ ((movementTypeStats.adjustment_in ?? 0) + (movementTypeStats.adjustment_out ?? 0))|number_format(0, ',', ' ') }}
                             </div>
-                            <div class="stat-sub mt-1">
+                            <div class="stat-sub mt-1 d-none d-sm-block">
                                 <small>
                                     ➕ Entrées: {{ (movementTypeStats.adjustment_in ?? 0)|number_format(0, ',', ' ') }} | 
                                     ➖ Sorties: {{ (movementTypeStats.adjustment_out ?? 0)|number_format(0, ',', ' ') }}
@@ -314,17 +402,16 @@
                             </div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-pencil-alt fa-2x"></i>
+                            <i class="fas fa-pencil-alt fa-1x fa-md-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {# Retours clients #}
-        <div class="col-md-4 col-sm-6">
+        <div class="col-6 col-md-4">
             <div class="card stat-card card-bg-primary shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">
@@ -335,17 +422,16 @@
                             </div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-undo-alt fa-2x"></i>
+                            <i class="fas fa-undo-alt fa-1x fa-md-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {# Retours fournisseurs #}
-        <div class="col-md-4 col-sm-6">
+        <div class="col-6 col-md-4">
             <div class="card stat-card card-bg-secondary shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">
@@ -356,17 +442,16 @@
                             </div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-truck-loading fa-2x"></i>
+                            <i class="fas fa-truck-loading fa-1x fa-md-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {# Transferts (regroupés) #}
-        <div class="col-md-4 col-sm-6">
+        <div class="col-6 col-md-4">
             <div class="card stat-card card-bg-info shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">
@@ -375,7 +460,7 @@
                             <div class="stat-value">
                                 {{ ((movementTypeStats.transfer_in ?? 0) + (movementTypeStats.transfer_out ?? 0))|number_format(0, ',', ' ') }}
                             </div>
-                            <div class="stat-sub mt-1">
+                            <div class="stat-sub mt-1 d-none d-sm-block">
                                 <small>
                                     ➕ Entrants: {{ (movementTypeStats.transfer_in ?? 0)|number_format(0, ',', ' ') }} | 
                                     ➖ Sortants: {{ (movementTypeStats.transfer_out ?? 0)|number_format(0, ',', ' ') }}
@@ -383,7 +468,7 @@
                             </div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-exchange-alt fa-2x"></i>
+                            <i class="fas fa-exchange-alt fa-1x fa-md-2x"></i>
                         </div>
                     </div>
                 </div>
@@ -393,30 +478,29 @@
     {% endif %}
 
     <!-- Filtres -->
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <h5 class="mb-0 fw-semibold"><i class="fas fa-filter me-2 text-primary"></i> Filtres</h5>
-            <div class="d-flex gap-2">
+    <div class="card border-0 shadow-sm mb-3 mb-md-4">
+        <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 fw-semibold fs-6 fs-md-5"><i class="fas fa-filter me-2 text-primary"></i> Filtres</h5>
+            <div class="d-flex gap-1 gap-md-2">
                 <a href="{{ path('app_admin_stock_movement_index') }}" class="btn btn-outline-secondary btn-sm">
-                    <i class="fas fa-undo me-1"></i> Effacer
+                    <i class="fas fa-undo me-1"></i> <span class="d-none d-sm-inline">Effacer</span>
                 </a>
                 <button type="submit" form="filter-form" class="btn btn-primary btn-sm">
-                    <i class="fas fa-search me-1"></i> Filtrer
+                    <i class="fas fa-search me-1"></i> <span class="d-none d-sm-inline">Filtrer</span>
                 </button>
             </div>
         </div>
-        <div class="card-body bg-white">
+        <div class="card-body bg-white p-2 p-md-3">
             <form method="get" id="filter-form">
-                <div class="row g-3">
-                    <div class="col-md-3">
+                <div class="row g-2 g-md-3">
+                    <div class="col-12 col-md-3">
                         <label class="form-label fw-bold small">Recherche</label>
-                        <input type="text" name="search" class="form-control" placeholder="Produit, code-barres, n° lot..." value="{{ filters.search|default('') }}">
+                        <input type="text" name="search" class="form-control form-control-sm" placeholder="Produit, code-barres..." value="{{ filters.search|default('') }}">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-12 col-sm-6 col-md-3">
                         <label class="form-label fw-bold small">Type de mouvement</label>
-                        <select name="movement_type" class="form-select" id="movement_type_select">
-                            <option value="">📋 Tous les mouvements</option>
-                            
+                        <select name="movement_type" class="form-select form-select-sm" id="movement_type_select">
+                            <option value="">📋 Tous</option>
                             {% for category, data in movementHierarchy %}
                                 <optgroup label="{{ category }}">
                                     <option value="all_{{ category|lower }}" {{ filters.movement_type == 'all_' ~ category|lower ? 'selected' }}>
@@ -434,50 +518,51 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold small">Rôle utilisateur</label>
-                        <select name="user_role" id="role-select" class="form-select">
-                            <option value="">Tous les rôles</option>
-                            <option value="ROLE_ADMIN" {{ filters.user_role == 'ROLE_ADMIN' ? 'selected' }}>Administrateur</option>
+                    <div class="col-6 col-sm-6 col-md-3">
+                        <label class="form-label fw-bold small">Rôle</label>
+                        <select name="user_role" id="role-select" class="form-select form-select-sm">
+                            <option value="">Tous</option>
+                            <option value="ROLE_ADMIN" {{ filters.user_role == 'ROLE_ADMIN' ? 'selected' }}>Admin</option>
                             <option value="ROLE_MANAGER" {{ filters.user_role == 'ROLE_MANAGER' ? 'selected' }}>Manager</option>
-                            <option value="ROLE_STOCK_MANAGER" {{ filters.user_role == 'ROLE_STOCK_MANAGER' ? 'selected' }}>Responsable Stock</option>
+                            <option value="ROLE_STOCK_MANAGER" {{ filters.user_role == 'ROLE_STOCK_MANAGER' ? 'selected' }}>Stock</option>
                             <option value="ROLE_CASHIER" {{ filters.user_role == 'ROLE_CASHIER' ? 'selected' }}>Caissier</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-6 col-sm-6 col-md-3">
                         <label class="form-label fw-bold small">Utilisateur</label>
-                        <select name="user_id" id="user-select" class="form-select select2-user">
+                        <select name="user_id" id="user-select" class="form-select form-select-sm select2-user">
                             <option value="">Tous</option>
                             {% for user in users %}
                                 <option value="{{ user.id }}" {{ filters.user_id == user.id ? 'selected' }}>
-                                    {{ user.fullName ?: user.email }} ({{ user.email }})
+                                    {{ user.fullName ?: user.email|u.truncate(15) }}
                                 </option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
-                <div class="row g-3 mt-3">
-                    <div class="col-md-4">
+                <div class="row g-2 g-md-3 mt-2 mt-md-3">
+                    <div class="col-6 col-md-3">
                         <label class="form-label fw-bold small">Date du</label>
-                        <input type="date" name="date_from" class="form-control" value="{{ filters.date_from|default('') }}">
+                        <input type="date" name="date_from" class="form-control form-control-sm" value="{{ filters.date_from|default('') }}">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-3">
                         <label class="form-label fw-bold small">Date au</label>
-                        <input type="date" name="date_to" class="form-control" value="{{ filters.date_to|default('') }}">
+                        <input type="date" name="date_to" class="form-control form-control-sm" value="{{ filters.date_to|default('') }}">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-3">
                         <label class="form-label fw-bold small">Trier par</label>
-                        <div class="d-flex gap-2">
-                            <select name="sort" class="form-select">
-                                <option value="created_at" {{ filters.sort|default('created_at') == 'created_at' ? 'selected' }}>Date</option>
-                                <option value="movement_type" {{ filters.sort|default('created_at') == 'movement_type' ? 'selected' }}>Type</option>
-                                <option value="quantity" {{ filters.sort|default('created_at') == 'quantity' ? 'selected' }}>Quantité</option>
-                            </select>
-                            <select name="direction" class="form-select" style="width: auto;">
-                                <option value="desc" {{ filters.direction|default('desc') == 'desc' ? 'selected' }}>↓ Décroissant</option>
-                                <option value="asc" {{ filters.direction|default('desc') == 'asc' ? 'selected' }}>↑ Croissant</option>
-                            </select>
-                        </div>
+                        <select name="sort" class="form-select form-select-sm">
+                            <option value="created_at" {{ filters.sort|default('created_at') == 'created_at' ? 'selected' }}>Date</option>
+                            <option value="movement_type" {{ filters.sort|default('created_at') == 'movement_type' ? 'selected' }}>Type</option>
+                            <option value="quantity" {{ filters.sort|default('created_at') == 'quantity' ? 'selected' }}>Quantité</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="form-label fw-bold small">Ordre</label>
+                        <select name="direction" class="form-select form-select-sm">
+                            <option value="desc" {{ filters.direction|default('desc') == 'desc' ? 'selected' }}>↓ Décroissant</option>
+                            <option value="asc" {{ filters.direction|default('desc') == 'asc' ? 'selected' }}>↑ Croissant</option>
+                        </select>
                     </div>
                 </div>
             </form>
@@ -486,31 +571,31 @@
 
     <!-- Tableau des mouvements -->
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <h5 class="mb-0 fw-semibold"><i class="fas fa-list me-2"></i> Liste des mouvements</h5>
-            <div class="d-flex gap-2 align-items-center">
-                <span class="badge bg-secondary">{{ movements|length }} mouvement(s)</span>
+        <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 fw-semibold fs-6 fs-md-5"><i class="fas fa-list me-2"></i> Liste des mouvements</h5>
+            <div class="d-flex gap-1 gap-md-2 align-items-center flex-wrap">
+                <span class="badge bg-secondary">{{ movements|length }}</span>
                 <button type="button" class="btn btn-sm btn-outline-primary" id="selectAllBtn">
-                    <i class="fas fa-check-double me-1"></i> Tout sélectionner
+                    <i class="fas fa-check-double me-1"></i> <span class="d-none d-sm-inline">Tout sélectionner</span>
                 </button>
                 <button type="button" class="btn btn-sm btn-outline-secondary" id="deselectAllBtn">
-                    <i class="fas fa-times me-1"></i> Désélectionner
+                    <i class="fas fa-times me-1"></i> <span class="d-none d-sm-inline">Désélectionner</span>
                 </button>
             </div>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0 table-sm">
                     <thead class="table-light">
                         <tr>
-                            <th style="width:40px"><input type="checkbox" id="select-all-checkbox" class="form-check-input"></th>
-                            <th>Date</th>
-                            <th>Type</th>
+                            <th style="width:30px"><input type="checkbox" id="select-all-checkbox" class="form-check-input"></th>
+                            <th class="d-none d-sm-table-cell">Date</th>
+                            <th class="d-none d-md-table-cell">Type</th>
                             <th>Produit</th>
-                            <th>N° lot</th>
-                            <th class="text-end">Quantité</th>
-                            <th>Utilisateur</th>
-                            <th>Raison / Notes</th>
+                            <th class="d-none d-lg-table-cell">N° lot</th>
+                            <th class="text-end">Qté</th>
+                            <th class="d-none d-xl-table-cell">Utilisateur</th>
+                            <th class="d-none d-xxl-table-cell">Raison / Notes</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -519,83 +604,69 @@
                             {% set rowClass = movement.movementType|lower %}
                             <tr class="movement-row-{{ rowClass }}">
                                 <td><input type="checkbox" class="form-check-input batch-checkbox" value="{{ movement.id }}"></td>
-                                <td>
-                                    <div class="fw-bold">{{ movement.createdAt|date('d/m/Y') }}</div>
+                                <td class="d-none d-sm-table-cell">
+                                    <div class="fw-bold small">{{ movement.createdAt|date('d/m/Y') }}</div>
                                     <small class="text-muted">{{ movement.createdAt|date('H:i:s') }}</small>
                                 </td>
-                                <td>
-                                    <span class="badge {{ movement.movementTypeBadgeClass }}">
+                                <td class="d-none d-md-table-cell">
+                                    <span class="badge {{ movement.movementTypeBadgeClass }} small">
                                         <i class="{{ movement.movementTypeIcon }} me-1"></i>
-                                        {{ movement.movementTypeLabel }}
+                                        {{ movement.movementTypeLabel|u.truncate(12) }}
                                     </span>
                                 </td>
                                 <td>
                                     {% if movement.stockBatch %}
-                                        <a href="{{ path('app_admin_product_show', {'id': movement.stockBatch.product.id}) }}" class="text-decoration-none">
-                                            {{ movement.stockBatch.product.name|u.truncate(40) }}
+                                        <a href="{{ path('app_admin_product_show', {'id': movement.stockBatch.product.id}) }}" class="text-decoration-none small">
+                                            {{ movement.stockBatch.product.name|u.truncate(20) }}
                                         </a>
-                                        <br>
-                                        <small class="text-muted">{{ movement.stockBatch.product.barcode }}</small>
                                     {% elseif movement.product %}
-                                        <a href="{{ path('app_admin_product_show', {'id': movement.product.id}) }}" class="text-decoration-none">
-                                            {{ movement.product.name|u.truncate(40) }}
+                                        <a href="{{ path('app_admin_product_show', {'id': movement.product.id}) }}" class="text-decoration-none small">
+                                            {{ movement.product.name|u.truncate(20) }}
                                         </a>
-                                        <br>
-                                        <small class="text-muted">{{ movement.product.barcode }}</small>
                                     {% else %}
-                                        <span class="text-muted">—</span>
+                                        <span class="text-muted small">—</span>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="d-none d-lg-table-cell">
                                     {% if movement.stockBatch %}
-                                        <code>{{ movement.stockBatch.batchNumber|u.truncate(20) }}</code>
+                                        <code class="small">{{ movement.stockBatch.batchNumber|u.truncate(12) }}</code>
                                     {% else %}
-                                        <span class="text-muted">—</span>
+                                        <span class="text-muted small">—</span>
                                     {% endif %}
                                 </td>
                                 <td>
                                     <div class="text-end">
-                                        <span class="fw-bold {{ movement.movementType in ['purchase_in', 'return_in'] ? 'text-success' : 'text-danger' }}">
+                                        <span class="fw-bold small {{ movement.movementType in ['purchase_in', 'return_in'] ? 'text-success' : 'text-danger' }}">
                                             {{ movement.movementType in ['purchase_in', 'return_in'] ? '+' : '-' }} {{ movement.quantity|number_format(0, ',', ' ') }}
                                         </span>
-                                        {% if movement.unitPrice %}
-                                            <br>
-                                            <small class="text-muted">{{ movement.unitPrice|price_with_currency(movement.hmaService) }}/unité</small>
-                                        {% endif %}
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
+                                <td class="d-none d-xl-table-cell">
+                                    <div class="d-flex align-items-center gap-1">
                                         {% if movement.user and movement.user.photo %}
                                             <img src="{{ asset('uploads/users/' ~ movement.user.photo) }}" alt="{{ movement.user.fullName }}" class="user-avatar" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23666\' stroke-width=\'1\'%3E%3Ccircle cx=\'12\' cy=\'8\' r=\'4\'/%3E%3Cpath d=\'M5 20v-2a7 7 0 0 1 14 0v2\'/%3E%3C/svg%3E'">
                                         {% elseif movement.user %}
                                             <div class="user-avatar bg-light d-flex align-items-center justify-content-center">
-                                                <i class="fas fa-user text-muted"></i>
+                                                <i class="fas fa-user text-muted small"></i>
                                             </div>
                                         {% else %}
                                             <div class="user-avatar bg-light d-flex align-items-center justify-content-center">
-                                                <i class="fas fa-robot text-muted"></i>
+                                                <i class="fas fa-robot text-muted small"></i>
                                             </div>
                                         {% endif %}
                                         <div>
-                                            <div class="small fw-bold">{{ movement.user ? (movement.user.fullName ?: movement.user.email) : 'Système' }}</div>
-                                            <div class="small text-muted">{{ movement.user ? movement.user.email : '' }}</div>
-                                            {% if movement.user %}
-                                                <small class="text-muted">{{ movement.user.roleLabel }}</small>
-                                            {% endif %}
+                                            <div class="small fw-bold">{{ movement.user ? (movement.user.fullName ?: movement.user.email|u.truncate(12)) : 'Système' }}</div>
+                                            <div class="small text-muted">{{ movement.user ? movement.user.roleLabel|u.truncate(10) : '' }}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="d-none d-xxl-table-cell">
                                     <div>
                                         {% if movement.notes %}
-                                            <small>{{ movement.notes|u.truncate(60) }}</small>
+                                            <small>{{ movement.notes|u.truncate(30) }}</small>
                                         {% endif %}
                                         {% if movement.referenceId %}
-                                            <br><small class="text-muted">Ref: #{{ movement.referenceId }}</small>
-                                        {% endif %}
-                                        {% if movement.purchaseItem %}
-                                            <br><small class="text-muted">Achat: {{ movement.purchaseItem.purchase.purchaseNumber }}</small>
+                                            <br><small class="text-muted">#{{ movement.referenceId }}</small>
                                         {% endif %}
                                     </div>
                                 </td>
@@ -607,40 +678,66 @@
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="9" class="text-center py-5">
-                                    <i class="fas fa-exchange-alt fa-3x text-muted mb-3"></i>
+                                <td colspan="9" class="text-center py-4 py-md-5">
+                                    <i class="fas fa-exchange-alt fa-2x fa-md-3x text-muted mb-3"></i>
                                     <p class="text-muted mb-0">Aucun mouvement trouvé</p>
                                     <p class="text-muted small">Modifiez vos filtres pour voir plus de résultats</p>
                                     <a href="{{ path('app_stock_adjustment_new') }}" class="btn btn-primary btn-sm mt-2">
                                         <i class="fas fa-plus me-1"></i> Créer un ajustement
                                     </a>
-                                 </div>
-                             </tr>
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
         {% if totalPages > 1 %}
-        <div class="card-footer bg-white">
+        <div class="card-footer bg-white py-2 py-md-3">
             <nav>
-                <ul class="pagination justify-content-center mb-0">
+                <ul class="pagination pagination-sm justify-content-center mb-0">
                     {% if currentPage > 1 %}
                         <li class="page-item">
                             <a class="page-link" href="{{ path('app_admin_stock_movement_index', app.request.query.all|merge({'page': currentPage - 1})) }}">
-                                <i class="fas fa-chevron-left"></i> Précédent
+                                <i class="fas fa-chevron-left"></i> <span class="d-none d-sm-inline">Précédent</span>
                             </a>
                         </li>
                     {% endif %}
-                    {% for page in 1..totalPages %}
+                    {% set maxVisible = 5 %}
+                    {% set startPage = max(1, currentPage - 2) %}
+                    {% set endPage = min(totalPages, startPage + maxVisible - 1) %}
+                    {% if endPage - startPage < maxVisible - 1 %}
+                        {% set startPage = max(1, endPage - maxVisible + 1) %}
+                    {% endif %}
+                    
+                    {% if startPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_admin_stock_movement_index', app.request.query.all|merge({'page': 1})) }}">1</a>
+                        </li>
+                        {% if startPage > 2 %}
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% for page in startPage..endPage %}
                         <li class="page-item {{ page == currentPage ? 'active' : '' }}">
                             <a class="page-link" href="{{ path('app_admin_stock_movement_index', app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
                         </li>
                     {% endfor %}
+                    
+                    {% if endPage < totalPages %}
+                        {% if endPage < totalPages - 1 %}
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        {% endif %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_admin_stock_movement_index', app.request.query.all|merge({'page': totalPages})) }}">{{ totalPages }}</a>
+                        </li>
+                    {% endif %}
+                    
                     {% if currentPage < totalPages %}
                         <li class="page-item">
                             <a class="page-link" href="{{ path('app_admin_stock_movement_index', app.request.query.all|merge({'page': currentPage + 1})) }}">
-                                Suivant <i class="fas fa-chevron-right"></i>
+                                <span class="d-none d-sm-inline">Suivant</span> <i class="fas fa-chevron-right"></i>
                             </a>
                         </li>
                     {% endif %}
@@ -653,27 +750,27 @@
 
 <!-- Modal options impression -->
 <div class="modal fade" id="printOptionsModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title"><i class="fas fa-print me-2"></i> Options d'impression</h5>
+                <h5 class="modal-title fs-6"><i class="fas fa-print me-2"></i> Options d'impression</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div class="alert alert-info">
+                <div class="alert alert-info p-2 small">
                     <i class="fas fa-info-circle me-2"></i> <span id="selectedCount">0</span> mouvement(s) sélectionné(s)
                 </div>
                 <div class="d-grid gap-2">
-                    <button type="button" class="btn btn-primary" id="print-selected">
+                    <button type="button" class="btn btn-primary btn-sm" id="print-selected">
                         <i class="fas fa-print me-2"></i> Imprimer la sélection
                     </button>
-                    <button type="button" class="btn btn-outline-primary" id="print-all">
-                        <i class="fas fa-print me-2"></i> Imprimer tous les mouvements
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="print-all">
+                        <i class="fas fa-print me-2"></i> Imprimer tous
                     </button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fermer</button>
             </div>
         </div>
     </div>
@@ -690,9 +787,10 @@ document.addEventListener('DOMContentLoaded', function() {
         $('.select2-user').select2({
             theme: 'bootstrap-5',
             language: 'fr',
-            placeholder: '-- Tous les utilisateurs --',
+            placeholder: '-- Tous --',
             allowClear: true,
-            width: '100%'
+            width: '100%',
+            dropdownAutoWidth: true
         });
     }
 
@@ -703,7 +801,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateSelectedCount() {
         const selected = document.querySelectorAll('.batch-checkbox:checked').length;
         if (selectedCountSpan) selectedCountSpan.textContent = selected;
-        if (selectAll) selectAll.checked = checkboxes.length === selected;
+        if (selectAll) selectAll.checked = checkboxes.length === selected && selected > 0;
     }
 
     if (selectAll) {

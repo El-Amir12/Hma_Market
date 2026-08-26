@@ -4,37 +4,37 @@
 {% block title %}Nouvel utilisateur - HMA Market{% endblock %}
 
 {% block body %}
-<div class="container-fluid px-4">
+<div class="container-fluid px-2 px-md-4">
     <!-- Header avec effet visuel -->
-    <div class="row mb-5">
+    <div class="row mb-3 mb-md-5">
         <div class="col-12">
-            <div class="modern-header position-relative overflow-hidden rounded-4 shadow-lg">
+            <div class="modern-header position-relative overflow-hidden rounded-3 rounded-md-4 shadow-lg">
                 <div class="floating-shapes">
                     <div class="shape shape-1"></div>
                     <div class="shape shape-2"></div>
                     <div class="shape shape-3"></div>
                 </div>
                 
-                <div class="position-relative p-5" style="z-index: 2;">
-                    <div class="d-flex align-items-center gap-4">
-                        <div class="icon-wrapper bg-white bg-opacity-20 rounded-4 p-4">
-                            <i class="bi bi-person-plus-fill text-white display-4"></i>
+                <div class="position-relative p-3 p-md-5" style="z-index: 2;">
+                    <div class="d-flex align-items-center gap-3 gap-md-4">
+                        <div class="icon-wrapper bg-white bg-opacity-20 rounded-3 rounded-md-4 p-3 p-md-4">
+                            <i class="bi bi-person-plus-fill text-white display-6 display-md-4"></i>
                         </div>
                         <div>
-                            <h1 class="display-5 fw-bold text-white mb-2">Nouvel utilisateur</h1>
-                            <p class="text-white-50 mb-0 fs-5">
+                            <h1 class="h3 h-md-1 display-md-5 fw-bold text-white mb-1 mb-md-2">Nouvel utilisateur</h1>
+                            <p class="text-white-50 mb-0 fs-6 fs-md-5">
                                 <i class="bi bi-building me-2"></i>
                                 {% if is_super_admin %}
                                     Super Administrateur
                                 {% else %}
-                                    {{ app.user.companyDisplayName }}
+                                    {{ app.user.companyDisplayName|u.truncate(25, '...') }}
                                 {% endif %}
                             </p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="wave-decoration">
+                <div class="wave-decoration d-none d-md-block">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
                         <path fill="#ffffff" fill-opacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
                     </svg>
@@ -45,21 +45,20 @@
 
     <!-- Formulaire -->
     <div class="row justify-content-center">
-        <div class="col-lg-10">
+        <div class="col-12 col-lg-10">
             <div class="card border-0 shadow-lg overflow-hidden">
-                <div class="card-header bg-white py-4 border-0">
+                <div class="card-header bg-white py-2 py-md-4 border-0">
                     <div class="d-flex align-items-center">
-                        <div class="step-indicator me-3">
+                        <div class="step-indicator me-2 me-md-3">
                             <span class="step-number">1</span>
                         </div>
                         <div>
-                            <h4 class="mb-1 fw-bold">Informations du nouvel utilisateur</h4>
-                            <p class="text-muted mb-0">Remplissez les informations ci-dessous pour créer un compte</p>
+                            <h4 class="mb-0 mb-sm-1 fw-bold fs-5 fs-md-4">Informations du nouvel utilisateur</h4>
+                            <p class="text-muted mb-0 small d-none d-sm-block">Remplissez les informations ci-dessous pour créer un compte</p>
                         </div>
                     </div>
                 </div>
 
-                {# ✅ PASSER LES VARIABLES AU FORMULAIRE #}
                 {% include 'admin/user/_form.html.twig' with {
                     'edited_user': target_user, 
                     'button_label': 'Créer l\'utilisateur',
@@ -77,27 +76,57 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+    --radius-sm: 10px;
+    --radius-md: 16px;
+}
+
 .step-indicator {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    border-radius: 15px;
+    width: 40px;
+    height: 40px;
+    background: var(--primary-gradient);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+    .step-indicator {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+    }
 }
 
 .step-number {
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: bold;
+    line-height: 1;
+}
+
+@media (min-width: 768px) {
+    .step-number {
+        font-size: 1.5rem;
+    }
 }
 
 .modern-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--primary-gradient);
     position: relative;
-    min-height: 180px;
+    min-height: 130px;
+}
+
+@media (min-width: 768px) {
+    .modern-header {
+        min-height: 180px;
+    }
 }
 
 .floating-shapes {
@@ -117,32 +146,65 @@
 }
 
 .shape-1 {
-    width: 250px;
-    height: 250px;
-    top: -120px;
-    right: -50px;
+    width: 150px;
+    height: 150px;
+    top: -80px;
+    right: -30px;
     animation: float 8s ease-in-out infinite;
 }
 
+@media (min-width: 768px) {
+    .shape-1 {
+        width: 250px;
+        height: 250px;
+        top: -120px;
+        right: -50px;
+    }
+}
+
 .shape-2 {
-    width: 180px;
-    height: 180px;
-    bottom: -70px;
-    left: -30px;
+    width: 100px;
+    height: 100px;
+    bottom: -50px;
+    left: -20px;
     animation: float 12s ease-in-out infinite reverse;
 }
 
+@media (min-width: 768px) {
+    .shape-2 {
+        width: 180px;
+        height: 180px;
+        bottom: -70px;
+        left: -30px;
+    }
+}
+
 .shape-3 {
-    width: 130px;
-    height: 130px;
+    width: 80px;
+    height: 80px;
     top: 30%;
-    left: 20%;
+    left: 15%;
     animation: float 10s ease-in-out infinite;
+}
+
+@media (min-width: 768px) {
+    .shape-3 {
+        width: 130px;
+        height: 130px;
+        left: 20%;
+    }
 }
 
 @keyframes float {
     0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(10deg); }
+    50% { transform: translateY(-15px) rotate(10deg); }
+}
+
+@media (min-width: 768px) {
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(10deg); }
+    }
 }
 
 .icon-wrapper {
@@ -164,11 +226,68 @@
 
 .wave-decoration svg {
     width: 100%;
-    height: 50px;
+    height: 30px;
+}
+
+@media (min-width: 768px) {
+    .wave-decoration svg {
+        height: 50px;
+    }
 }
 
 .text-white-50 {
     color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+}
+
+@media (max-width: 576px) {
+    .badge {
+        font-size: 0.65rem !important;
+        padding: 0.2rem 0.5rem !important;
+    }
+}
+
+/* Card responsive */
+@media (max-width: 576px) {
+    .card-header {
+        padding: 0.75rem !important;
+    }
+    .card-body {
+        padding: 0.5rem !important;
+    }
+}
+
+/* Modal responsive */
+@media (max-width: 576px) {
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    .modal-body {
+        padding: 1rem !important;
+    }
+    .modal-footer {
+        padding: 0.75rem !important;
+    }
+}
+
+/* Photo in modal */
+@media (max-width: 576px) {
+    .modal-body img {
+        width: 60px !important;
+        height: 60px !important;
+    }
+}
+
+/* Container padding */
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
 }
 </style>
 {% endblock %}

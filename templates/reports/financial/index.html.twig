@@ -212,13 +212,95 @@
     .plan-badge.freemium { background: #64748b20; color: #64748b; }
     .plan-badge.basic { background: #0463f120; color: #0463f1; }
     .plan-badge.premium { background: #8b5cf620; color: #8b5cf6; }
+
+    /* ========================================
+       RESPONSIVE
+    ======================================== */
+    .filter-col {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .filter-col-half {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .filter-select {
+        width: 100% !important;
+        font-size: 0.7rem !important;
+    }
+    .filter-input {
+        font-size: 0.7rem !important;
+    }
     
     @media (max-width: 768px) {
         .kpi-value { font-size: 1.3rem; }
         .chart-container { height: 220px; }
         .kpi-card { padding: 1rem; }
-        .data-table { font-size: 0.75rem; }
-        .data-table th, .data-table td { padding: 0.4rem 0.5rem; }
+        .data-table { font-size: 0.7rem; }
+        .data-table th, .data-table td { padding: 0.3rem 0.4rem; }
+        
+        .kpi-icon {
+            width: 36px;
+            height: 36px;
+            font-size: 1rem;
+        }
+        
+        .filter-col-half {
+            flex: 0 0 50% !important;
+            max-width: 50% !important;
+            width: 50% !important;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+        
+        .kpi-value { font-size: 1.1rem; }
+        .kpi-card { padding: 0.75rem; }
+        .kpi-label { font-size: 0.6rem; }
+        .kpi-trend { font-size: 0.55rem; }
+        
+        .chart-container { height: 180px; }
+        .chart-card { padding: 0.75rem; margin-bottom: 0.75rem; }
+        .chart-title { font-size: 0.8rem; }
+        
+        .filters-section { padding: 0.75rem; }
+        .filter-label { font-size: 0.55rem; }
+        .filter-group { margin-bottom: 0.5rem; }
+        
+        .data-table { font-size: 0.6rem; }
+        .data-table th, .data-table td { padding: 0.2rem 0.3rem; }
+        
+        .payment-badge { font-size: 0.55rem; padding: 0.1rem 0.4rem; }
+        .badge { font-size: 0.5rem !important; padding: 0.15rem 0.3rem !important; }
+        
+        .action-buttons .btn {
+            font-size: 0.6rem !important;
+            padding: 0.15rem 0.3rem !important;
+        }
+        
+        .filter-col, .filter-col-half {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        
+        .h1 { font-size: 1.2rem !important; }
+        .h2 { font-size: 1rem !important; }
+        .h3 { font-size: 0.9rem !important; }
+        .text-muted { font-size: 0.6rem !important; }
+        
+        .breadcrumb { font-size: 0.55rem !important; }
+        
+        .modal-dialog { margin: 0.5rem; }
+        .modal-content { border-radius: 12px !important; }
+        
+        .progress-custom { height: 4px; }
     }
     
     @media print {
@@ -249,20 +331,20 @@
 {% endblock %}
 
 {% block body %}
-<div class="report-dashboard py-3">
-    <div class="container-fluid px-3 px-md-4">
+<div class="report-dashboard py-2 py-md-3">
+    <div class="container-fluid px-2 px-md-4">
         
         <!-- En-tête -->
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-            <div>
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 mb-md-4 flex-wrap gap-2">
+            <div class="w-100 w-sm-auto">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1">
-                        <li class="breadcrumb-item">
+                        <li class="breadcrumb-item small">
                             <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
                                 <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
                             </a>
                         </li>
-                        <li class="breadcrumb-item active">
+                        <li class="breadcrumb-item active small">
                             <i class="fas fa-chart-line me-1"></i> Rapport Financier
                         </li>
                     </ol>
@@ -271,7 +353,7 @@
                     <i class="fas fa-chart-line text-primary me-2"></i>
                     Rapport Financier
                 </h1>
-                <p class="text-muted small mb-0">
+                <p class="text-muted small mb-0 d-none d-sm-block">
                     <i class="fas fa-info-circle me-1"></i>
                     {% if is_restaurant %}
                         Analyse complète des performances financières de votre restaurant
@@ -279,18 +361,21 @@
                         Analyse complète des performances financières de votre commerce
                     {% endif %}
                 </p>
+                <p class="text-muted small mb-0 d-block d-sm-none">
+                    {% if is_restaurant %}Performances restaurant{% else %}Performances commerce{% endif %}
+                </p>
             </div>
-            <div class="action-buttons d-flex gap-2">
-                <button class="btn btn-primary btn-sm" onclick="applyFilters()" id="applyBtn">
-                    <i class="fas fa-search me-1"></i> Appliquer
+            <div class="action-buttons d-flex gap-1 gap-sm-2 flex-wrap w-100 w-sm-auto">
+                <button class="btn btn-primary btn-sm flex-grow-1 flex-sm-grow-0" onclick="applyFilters()" id="applyBtn">
+                    <i class="fas fa-search me-1"></i> <span class="d-none d-sm-inline">Appliquer</span>
                 </button>
-                <button class="btn btn-outline-secondary btn-sm" onclick="refreshData()" title="Actualiser">
+                <button class="btn btn-outline-secondary btn-sm flex-grow-1 flex-sm-grow-0" onclick="refreshData()" title="Actualiser">
                     <i class="fas fa-sync-alt"></i>
                 </button>
-                <button class="btn btn-outline-success btn-sm" onclick="exportData()" title="Exporter CSV">
-                    <i class="fas fa-download"></i>
+                <button class="btn btn-outline-success btn-sm flex-grow-1 flex-sm-grow-0" onclick="exportData()" title="Exporter CSV">
+                    <i class="fas fa-download"></i> <span class="d-none d-sm-inline">Exporter</span>
                 </button>
-                <button class="btn btn-outline-secondary btn-sm d-print-none" onclick="window.print()" title="Imprimer">
+                <button class="btn btn-outline-secondary btn-sm flex-grow-1 flex-sm-grow-0 d-print-none" onclick="window.print()" title="Imprimer">
                     <i class="fas fa-print"></i>
                 </button>
             </div>
@@ -298,13 +383,13 @@
 
         <!-- Section Filtres -->
         <div class="filters-section">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-3">
+            <div class="row g-2 g-md-3 align-items-end">
+                <div class="col-12 col-md-3 filter-col">
                     <div class="filter-group">
                         <label class="filter-label">
                             <i class="fas fa-calendar-alt"></i> Période prédéfinie
                         </label>
-                        <select id="datePreset" class="form-select form-select-sm">
+                        <select id="datePreset" class="form-select form-select-sm filter-select">
                             <option value="">Personnalisée</option>
                             {% for key, label in date_presets %}
                                 <option value="{{ key }}" {{ filters.date_preset == key ? 'selected' }}>
@@ -314,30 +399,30 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3 filter-col-half">
                     <div class="filter-group">
                         <label class="filter-label">
                             <i class="fas fa-calendar-day"></i> Date du
                         </label>
-                        <input type="date" id="dateFrom" class="form-control form-control-sm" 
+                        <input type="date" id="dateFrom" class="form-control form-control-sm filter-input" 
                                value="{{ filters.date_from }}">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3 filter-col-half">
                     <div class="filter-group">
                         <label class="filter-label">
                             <i class="fas fa-calendar-day"></i> Date au
                         </label>
-                        <input type="date" id="dateTo" class="form-control form-control-sm" 
+                        <input type="date" id="dateTo" class="form-control form-control-sm filter-input" 
                                value="{{ filters.date_to }}">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-3 filter-col">
                     <div class="filter-group">
                         <label class="filter-label">
                             <i class="fas fa-credit-card"></i> Mode de paiement
                         </label>
-                        <select id="paymentMethod" class="form-select form-select-sm">
+                        <select id="paymentMethod" class="form-select form-select-sm filter-select">
                             <option value="">Tous</option>
                             <option value="cash">Espèces</option>
                             <option value="card">Carte bancaire</option>
@@ -347,22 +432,23 @@
                 </div>
             </div>
             
-            <div id="activeFilters" class="d-flex gap-2 flex-wrap mt-3 pt-2 border-top"></div>
+            <div id="activeFilters" class="d-flex gap-1 gap-md-2 flex-wrap mt-2 mt-md-3 pt-2 pt-md-3 border-top"></div>
         </div>
 
         <!-- Cartes KPI -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-6 col-lg-3">
+        <div class="row g-2 g-md-3 mb-3 mb-md-4">
+            <div class="col-6 col-md-6 col-lg-3">
                 <div class="kpi-card primary">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="kpi-label">
-                                <i class="fas fa-chart-line me-1"></i> Chiffre d'affaires
+                                <i class="fas fa-chart-line me-1"></i> <span class="d-none d-sm-inline">Chiffre d'affaires</span>
+                                <span class="d-inline d-sm-none">CA</span>
                             </div>
                             <div class="kpi-value" id="kpiRevenue">
                                 {{ indicators.revenue|default(0)|number_format(0, ',', ' ') }}
                             </div>
-                            <div class="kpi-trend up" id="kpiRevenueTrend">
+                            <div class="kpi-trend up d-none d-sm-block" id="kpiRevenueTrend">
                                 <i class="fas fa-arrow-up me-1"></i> vs période précédente
                             </div>
                         </div>
@@ -373,12 +459,13 @@
                 </div>
             </div>
             
-            <div class="col-md-6 col-lg-3">
+            <div class="col-6 col-md-6 col-lg-3">
                 <div class="kpi-card success">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="kpi-label">
-                                <i class="fas fa-chart-pie me-1"></i> Marge brute
+                                <i class="fas fa-chart-pie me-1"></i> <span class="d-none d-sm-inline">Marge brute</span>
+                                <span class="d-inline d-sm-none">Marge</span>
                             </div>
                             <div class="kpi-value" id="kpiMargin">
                                 {{ indicators.gross_margin|default(0)|number_format(0, ',', ' ') }}
@@ -395,17 +482,18 @@
                 </div>
             </div>
             
-            <div class="col-md-6 col-lg-3">
+            <div class="col-6 col-md-6 col-lg-3">
                 <div class="kpi-card warning">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="kpi-label">
-                                <i class="fas fa-shopping-cart me-1"></i> Nombre de ventes
+                                <i class="fas fa-shopping-cart me-1"></i> <span class="d-none d-sm-inline">Nombre de ventes</span>
+                                <span class="d-inline d-sm-none">Ventes</span>
                             </div>
                             <div class="kpi-value" id="kpiOrders">
                                 {{ indicators.orders_count|default(0)|number_format(0, ',', ' ') }}
                             </div>
-                            <div class="kpi-trend up">
+                            <div class="kpi-trend up d-none d-sm-block">
                                 commandes
                             </div>
                         </div>
@@ -416,17 +504,18 @@
                 </div>
             </div>
             
-            <div class="col-md-6 col-lg-3">
+            <div class="col-6 col-md-6 col-lg-3">
                 <div class="kpi-card info">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="kpi-label">
-                                <i class="fas fa-wallet me-1"></i> Panier moyen
+                                <i class="fas fa-wallet me-1"></i> <span class="d-none d-sm-inline">Panier moyen</span>
+                                <span class="d-inline d-sm-none">Panier</span>
                             </div>
                             <div class="kpi-value" id="kpiAverageBasket">
                                 {{ indicators.average_basket|default(0)|number_format(0, ',', ' ') }}
                             </div>
-                            <div class="kpi-trend up">
+                            <div class="kpi-trend up d-none d-sm-block">
                                 {{ currency }} par vente
                             </div>
                         </div>
@@ -439,33 +528,35 @@
         </div>
 
         <!-- Graphiques principaux -->
-        <div class="row g-3 mb-4">
-            <div class="col-lg-8">
+        <div class="row g-2 g-md-3 mb-3 mb-md-4">
+            <div class="col-12 col-lg-8">
                 <div class="chart-card">
                     <div class="chart-title">
-                        <div>
+                        <div class="small">
                             <i class="fas fa-chart-line"></i>
-                            Évolution du chiffre d'affaires
+                            <span class="d-none d-sm-inline">Évolution du chiffre d'affaires</span>
+                            <span class="d-inline d-sm-none">Évolution CA</span>
                         </div>
                         <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" class="btn btn-outline-secondary" onclick="changeChartType('revenue')">CA</button>
-                            <button type="button" class="btn btn-outline-secondary" onclick="changeChartType('orders')">Commandes</button>
-                            <button type="button" class="btn btn-outline-secondary" onclick="changeChartType('basket')">Panier</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="changeChartType('revenue')">CA</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="changeChartType('orders')">Cmd</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="changeChartType('basket')">Panier</button>
                         </div>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 200px;">
                         <canvas id="timelineChart"></canvas>
                     </div>
                 </div>
             </div>
             
-            <div class="col-lg-4">
+            <div class="col-12 col-lg-4">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-chart-pie"></i>
-                        Répartition des paiements
+                        <span class="d-none d-sm-inline">Répartition des paiements</span>
+                        <span class="d-inline d-sm-none">Paiements</span>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 200px;">
                         <canvas id="paymentChart"></canvas>
                     </div>
                 </div>
@@ -473,10 +564,10 @@
         </div>
 
         <!-- Top produits et marge par catégorie -->
-        <div class="row g-3 mb-4">
-            <div class="col-lg-6">
+        <div class="row g-2 g-md-3 mb-3 mb-md-4">
+            <div class="col-12 col-lg-6">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-trophy"></i>
                         Top {% if is_restaurant %}recettes{% else %}produits{% endif %}
                     </div>
@@ -486,29 +577,29 @@
                                 <tr>
                                     <th>#</th>
                                     <th>{% if is_restaurant %}Recette{% else %}Produit{% endif %}</th>
-                                    <th class="text-end">Quantité</th>
-                                    <th class="text-end">CA ({{ currency }})</th>
+                                    <th class="text-end d-none d-sm-table-cell">Qté</th>
+                                    <th class="text-end">CA</th>
                                 </thead>
                             </thead>
                             <tbody id="topItemsList">
                                 {% for item in top_items %}
                                     <tr>
-                                        <td>{{ loop.index }}</div>
+                                        <td>{{ loop.index }}</td>
                                         <td>
-                                            {{ item.name }}
+                                            {{ item.name|slice(0, 20) }}{% if item.name|length > 20 %}...{% endif %}
                                             {% if item.recipe_name %}
-                                                <small class="text-muted d-block">{{ item.recipe_name }}</small>
+                                                <small class="text-muted d-block">{{ item.recipe_name|slice(0, 15) }}</small>
                                             {% endif %}
-                                         </div>
-                                        <td class="text-end">{{ item.total_quantity|number_format(0, ',', ' ') }}</div>
-                                        <td class="text-end fw-semibold">{{ item.total_revenue|number_format(0, ',', ' ') }}</div>
+                                        </td>
+                                        <td class="text-end d-none d-sm-table-cell">{{ item.total_quantity|number_format(0, ',', ' ') }}</td>
+                                        <td class="text-end fw-semibold">{{ item.total_revenue|number_format(0, ',', ' ') }}</td>
                                     </tr>
                                 {% else %}
                                     <tr>
                                         <td colspan="4" class="text-center py-4 text-muted">
                                             <i class="fas fa-chart-line fa-2x mb-2 d-block"></i>
                                             Aucune donnée disponible
-                                         </div>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -517,9 +608,9 @@
                 </div>
             </div>
             
-            <div class="col-lg-6">
+            <div class="col-12 col-lg-6">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-chart-simple"></i>
                         Marge par catégorie
                     </div>
@@ -528,21 +619,21 @@
                             <thead>
                                 <tr>
                                     <th>Catégorie</th>
-                                    <th class="text-end">CA ({{ currency }})</th>
-                                    <th class="text-end">Coût ({{ currency }})</th>
+                                    <th class="text-end d-none d-sm-table-cell">CA</th>
+                                    <th class="text-end d-none d-md-table-cell">Coût</th>
                                     <th class="text-end">Marge</th>
                                     <th class="text-end">%</th>
                                 </tr>
                             </thead>
                             <tbody id="marginByCategoryList">
                                 {% for category in margin_by_category %}
-                                    <td>
-                                        <td>{{ category.category }}</div>
-                                        <td class="text-end">{{ category.revenue|number_format(0, ',', ' ') }}</div>
-                                        <td class="text-end text-muted">{{ category.cogs|number_format(0, ',', ' ') }}</div>
+                                    <tr>
+                                        <td>{{ category.category|slice(0, 15) }}{% if category.category|length > 15 %}...{% endif %}</td>
+                                        <td class="text-end d-none d-sm-table-cell">{{ category.revenue|number_format(0, ',', ' ') }}</td>
+                                        <td class="text-end text-muted d-none d-md-table-cell">{{ category.cogs|number_format(0, ',', ' ') }}</td>
                                         <td class="text-end fw-semibold {% if category.margin >= 0 %}text-success{% else %}text-danger{% endif %}">
                                             {{ category.margin|number_format(0, ',', ' ') }}
-                                         </div>
+                                        </td>
                                         <td class="text-end">
                                             <span class="badge 
                                                 {% if category.margin_percentage >= 50 %}badge-margin-high
@@ -550,14 +641,14 @@
                                                 {% else %}badge-margin-low{% endif %}">
                                                 {{ category.margin_percentage }}%
                                             </span>
-                                         </div>
+                                        </td>
                                     </tr>
                                 {% else %}
                                     <tr>
                                         <td colspan="5" class="text-center py-4 text-muted">
                                             <i class="fas fa-chart-simple fa-2x mb-2 d-block"></i>
                                             Aucune donnée disponible
-                                         </div>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -569,85 +660,85 @@
 
         <!-- Section RESTAURANT : Analyse des ventes par recette -->
         {% if is_restaurant %}
-        <div class="row g-3 mb-4">
+        <div class="row g-2 g-md-3 mb-3 mb-md-4">
             <div class="col-12">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-chart-line"></i>
                         Analyse des ventes par recette
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="text-center p-3">
-                                <div class="small text-muted">Nombre total de recettes vendues</div>
-                                <div class="h2 fw-bold text-primary" id="totalRecipesSold">
+                    <div class="row g-2 g-md-3">
+                        <div class="col-6 col-md-4">
+                            <div class="text-center p-2 p-md-3">
+                                <div class="small text-muted" style="font-size:0.55rem;">Total recettes vendues</div>
+                                <div class="h2 fw-bold text-primary fs-4 fs-md-2" id="totalRecipesSold">
                                     {{ recipe_sales_stats.total_quantity|default(0)|number_format(0, ',', ' ') }}
                                 </div>
-                                <div class="small">articles vendus</div>
+                                <div class="small" style="font-size:0.5rem;">articles vendus</div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="text-center p-3">
-                                <div class="small text-muted">Chiffre d'affaires généré par les recettes</div>
-                                <div class="h2 fw-bold text-success" id="totalRecipesRevenue">
+                        <div class="col-6 col-md-4">
+                            <div class="text-center p-2 p-md-3">
+                                <div class="small text-muted" style="font-size:0.55rem;">CA généré</div>
+                                <div class="h2 fw-bold text-success fs-4 fs-md-2" id="totalRecipesRevenue">
                                     {{ recipe_sales_stats.total_revenue|default(0)|number_format(0, ',', ' ') }}
                                 </div>
-                                <div class="small">{{ currency }}</div>
+                                <div class="small" style="font-size:0.5rem;">{{ currency }}</div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="text-center p-3">
-                                <div class="small text-muted">Recettes les plus populaires</div>
-                                <div class="h2 fw-bold text-info" id="topRecipesCount">
+                        <div class="col-12 col-md-4">
+                            <div class="text-center p-2 p-md-3">
+                                <div class="small text-muted" style="font-size:0.55rem;">Recettes populaires</div>
+                                <div class="h2 fw-bold text-info fs-4 fs-md-2" id="topRecipesCount">
                                     {{ recipe_sales_stats.unique_recipes|default(0)|number_format(0, ',', ' ') }}
                                 </div>
-                                <div class="small">recettes différentes</div>
+                                <div class="small" style="font-size:0.5rem;">recettes différentes</div>
                             </div>
                         </div>
                     </div>
                     
                     {% if recipe_sales|default([])|length > 0 %}
                     <hr>
-                    <div class="mt-3">
-                        <strong class="small">Classement des recettes :</strong>
+                    <div class="mt-2 mt-md-3">
+                        <strong class="small" style="font-size:0.65rem;">Classement des recettes :</strong>
                         <div class="table-responsive mt-2">
                             <table class="data-table">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Recette</th>
-                                        <th class="text-end">Quantité vendue</th>
-                                        <th class="text-end">CA généré ({{ currency }})</th>
-                                        <th class="text-end">% du CA total</th>
+                                        <th class="text-end d-none d-sm-table-cell">Qté</th>
+                                        <th class="text-end">CA</th>
+                                        <th class="text-end d-none d-md-table-cell">%</th>
                                     </tr>
                                 </thead>
                                 <tbody id="recipeSalesList">
                                     {% for recipe in recipe_sales|slice(0, 10) %}
                                         <tr>
-                                            <td>{{ loop.index }}</div>
+                                            <td>{{ loop.index }}</td>
                                             <td>
-                                                <strong>{{ recipe.name }}</strong>
+                                                <strong>{{ recipe.name|slice(0, 15) }}</strong>
                                                 {% if recipe.category %}
-                                                    <br><small class="text-muted">{{ recipe.category }}</small>
+                                                    <br><small class="text-muted" style="font-size:0.5rem;">{{ recipe.category|slice(0, 12) }}</small>
                                                 {% endif %}
-                                             </div>
-                                            <td class="text-end">{{ recipe.quantity|number_format(0, ',', ' ') }}</div>
-                                            <td class="text-end fw-semibold text-success">{{ recipe.revenue|number_format(0, ',', ' ') }}</div>
-                                            <td class="text-end">
-                                                <div class="d-flex align-items-center justify-content-end gap-2">
-                                                    <span>{{ recipe.percentage }}%</span>
-                                                    <div class="progress-custom" style="width: 100px;">
+                                            </td>
+                                            <td class="text-end d-none d-sm-table-cell">{{ recipe.quantity|number_format(0, ',', ' ') }}</td>
+                                            <td class="text-end fw-semibold text-success">{{ recipe.revenue|number_format(0, ',', ' ') }}</td>
+                                            <td class="text-end d-none d-md-table-cell">
+                                                <div class="d-flex align-items-center justify-content-end gap-1">
+                                                    <span style="font-size:0.6rem;">{{ recipe.percentage }}%</span>
+                                                    <div class="progress-custom" style="width: 60px;">
                                                         <div class="progress-bar-custom bg-success" style="width: {{ recipe.percentage }}%"></div>
                                                     </div>
                                                 </div>
-                                             </div>
+                                            </td>
                                         </tr>
                                     {% else %}
                                         <tr>
                                             <td colspan="5" class="text-center py-4 text-muted">
                                                 <i class="fas fa-chart-line fa-2x mb-2 d-block"></i>
-                                                Aucune donnée de recette disponible pour cette période
-                                            </div>
+                                                Aucune donnée de recette disponible
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
@@ -666,55 +757,55 @@
         {% endif %}
 
         <!-- Section ABONNEMENTS : Évolution des paiements -->
-        <div class="row g-3 mb-4">
+        <div class="row g-2 g-md-3 mb-3 mb-md-4">
             <div class="col-12">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-chart-line"></i>
                         Évolution des paiements d'abonnement
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="text-center p-3">
-                                <div class="small text-muted">Total payé</div>
-                                <div class="h2 fw-bold text-primary" id="subscriptionTotal">
+                    <div class="row g-2 g-md-3">
+                        <div class="col-6 col-md-4">
+                            <div class="text-center p-2 p-md-3">
+                                <div class="small text-muted" style="font-size:0.55rem;">Total payé</div>
+                                <div class="h2 fw-bold text-primary fs-4 fs-md-2" id="subscriptionTotal">
                                     {{ subscription_stats.total_paid|default(0)|number_format(0, ',', ' ') }}
                                 </div>
-                                <div class="small">{{ currency }}</div>
+                                <div class="small" style="font-size:0.5rem;">{{ currency }}</div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="text-center p-3">
-                                <div class="small text-muted">Dernier paiement</div>
-                                <div class="h2 fw-bold text-warning" id="lastPayment">
+                        <div class="col-6 col-md-4">
+                            <div class="text-center p-2 p-md-3">
+                                <div class="small text-muted" style="font-size:0.55rem;">Dernier paiement</div>
+                                <div class="h2 fw-bold text-warning fs-5 fs-md-3" id="lastPayment">
                                     {% if subscription_stats.last_payment_date %}
                                         {{ subscription_stats.last_payment_date|date('d/m/Y') }}
                                     {% else %}
                                         -
                                     {% endif %}
                                 </div>
-                                <div class="small">
+                                <div class="small" style="font-size:0.5rem;">
                                     {% if subscription_stats.last_payment_amount %}
                                         {{ subscription_stats.last_payment_amount|number_format(0, ',', ' ') }} {{ currency }}
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="text-center p-3">
-                                <div class="small text-muted">Plan actuel</div>
-                                <div class="h2 fw-bold text-info" id="currentPlan">
+                        <div class="col-12 col-md-4">
+                            <div class="text-center p-2 p-md-3">
+                                <div class="small text-muted" style="font-size:0.55rem;">Plan actuel</div>
+                                <div class="h2 fw-bold text-info fs-5 fs-md-3" id="currentPlan">
                                     {% if current_plan %}
-                                        <span class="plan-badge {{ current_plan|lower }}">
+                                        <span class="plan-badge {{ current_plan|lower }}" style="font-size:0.6rem;">
                                             {{ current_plan|capitalize }}
                                         </span>
                                     {% else %}
                                         -
                                     {% endif %}
                                 </div>
-                                <div class="small">
+                                <div class="small" style="font-size:0.5rem;">
                                     {% if subscription_stats.next_payment_date %}
-                                        Prochain paiement: {{ subscription_stats.next_payment_date|date('d/m/Y') }}
+                                        Prochain: {{ subscription_stats.next_payment_date|date('d/m/Y') }}
                                     {% endif %}
                                 </div>
                             </div>
@@ -723,53 +814,51 @@
                     
                     {% if subscription_payments|default([])|length > 0 %}
                     <hr>
-                    <div class="mt-3">
-                        <div class="chart-container" style="height: 300px;">
+                    <div class="mt-2 mt-md-3">
+                        <div class="chart-container" style="height: 200px;">
                             <canvas id="subscriptionChart"></canvas>
                         </div>
                     </div>
                     
-                    <div class="mt-3">
-                        <strong class="small">Historique des paiements :</strong>
+                    <div class="mt-2 mt-md-3">
+                        <strong class="small" style="font-size:0.65rem;">Historique des paiements :</strong>
                         <div class="table-responsive mt-2">
                             <table class="data-table">
                                 <thead>
                                     <tr>
                                         <th>Date</th>
-                                        <th>Montant</th>
-                                        <th>Méthode</th>
-                                        <th>Statut</th>
-                                        <th>N° Abonnement</th>
+                                        <th class="text-end">Montant</th>
+                                        <th class="d-none d-sm-table-cell">Méthode</th>
+                                        <th class="d-none d-md-table-cell">Statut</th>
                                     </tr>
                                 </thead>
                                 <tbody id="paymentHistoryList">
-                                    {% for payment in subscription_payments %}
+                                    {% for payment in subscription_payments|slice(0, 10) %}
                                         <tr>
-                                            <td>{{ payment.paymentDate|date('d/m/Y') }}</div>
-                                            <td class="fw-semibold">{{ payment.amount|number_format(0, ',', ' ') }} {{ currency }}</div>
-                                            <td>
-                                                <span class="payment-badge {{ payment.paymentMethod == 'cash' ? 'cash' : (payment.paymentMethod == 'card' ? 'card' : 'mobile_money') }}">
+                                            <td>{{ payment.paymentDate|date('d/m/Y') }}</td>
+                                            <td class="fw-semibold text-end">{{ payment.amount|number_format(0, ',', ' ') }}</td>
+                                            <td class="d-none d-sm-table-cell">
+                                                <span class="payment-badge {{ payment.paymentMethod == 'cash' ? 'cash' : (payment.paymentMethod == 'card' ? 'card' : 'mobile_money') }}" style="font-size:0.5rem;">
                                                     <i class="fas fa-{% if payment.paymentMethod == 'cash' %}money-bill-wave{% elseif payment.paymentMethod == 'card' %}credit-card{% else %}mobile-alt{% endif %}"></i>
-                                                    {{ payment.paymentMethod|replace({'_': ' '})|capitalize }}
+                                                    {{ payment.paymentMethod|replace({'_': ' '})|capitalize|slice(0, 10) }}
                                                 </span>
-                                            </div>
-                                            <td>
+                                            </td>
+                                            <td class="d-none d-md-table-cell">
                                                 {% if payment.status == 'paid' %}
-                                                    <span class="badge bg-success">Payé</span>
+                                                    <span class="badge bg-success" style="font-size:0.5rem;">Payé</span>
                                                 {% elseif payment.status == 'pending' %}
-                                                    <span class="badge bg-warning">En attente</span>
+                                                    <span class="badge bg-warning" style="font-size:0.5rem;">En attente</span>
                                                 {% else %}
-                                                    <span class="badge bg-secondary">{{ payment.status }}</span>
+                                                    <span class="badge bg-secondary" style="font-size:0.5rem;">{{ payment.status }}</span>
                                                 {% endif %}
-                                            </div>
-                                            <td><small>{{ payment.subscriptionNumber|default('-') }}</small></div>
+                                            </td>
                                         </tr>
                                     {% else %}
                                         <tr>
-                                            <td colspan="5" class="text-center py-4 text-muted">
+                                            <td colspan="4" class="text-center py-4 text-muted">
                                                 <i class="fas fa-credit-card fa-2x mb-2 d-block"></i>
                                                 Aucun paiement d'abonnement enregistré
-                                            </div>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
@@ -782,10 +871,10 @@
         </div>
 
         <!-- Répartition des méthodes de paiement détaillée -->
-        <div class="row g-3">
+        <div class="row g-2 g-md-3">
             <div class="col-12">
                 <div class="chart-card">
-                    <div class="chart-title">
+                    <div class="chart-title small">
                         <i class="fas fa-credit-card"></i>
                         Détail des paiements (Ventes)
                     </div>
@@ -793,38 +882,39 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Mode de paiement</th>
-                                    <th class="text-end">Nombre de transactions</th>
-                                    <th class="text-end">Pourcentage</th>
-                                    <th class="text-end">Montant total ({{ currency }})</th>
+                                    <th>Mode</th>
+                                    <th class="text-end d-none d-sm-table-cell">Nb</th>
+                                    <th class="text-end">%</th>
+                                    <th class="text-end">Montant</th>
                                 </tr>
                             </thead>
                             <tbody id="paymentDetailsList">
                                 {% for payment in payment_distribution %}
                                     <tr>
                                         <td>
-                                            <span class="payment-badge {{ payment.method }}">
+                                            <span class="payment-badge {{ payment.method }}" style="font-size:0.55rem;">
                                                 <i class="fas fa-{% if payment.method == 'cash' %}money-bill-wave{% elseif payment.method == 'card' %}credit-card{% else %}mobile-alt{% endif %}"></i>
-                                                {{ payment.label }}
+                                                <span class="d-none d-sm-inline">{{ payment.label }}</span>
+                                                <span class="d-inline d-sm-none">{{ payment.label|slice(0, 8) }}</span>
                                             </span>
-                                         </div>
-                                        <td class="text-end">{{ payment.count|number_format(0, ',', ' ') }}</div>
+                                        </td>
+                                        <td class="text-end d-none d-sm-table-cell">{{ payment.count|number_format(0, ',', ' ') }}</td>
                                         <td class="text-end">
-                                            <div class="d-flex align-items-center justify-content-end gap-2">
-                                                <span>{{ payment.percentage }}%</span>
-                                                <div class="progress-custom" style="width: 80px;">
+                                            <div class="d-flex align-items-center justify-content-end gap-1">
+                                                <span style="font-size:0.6rem;">{{ payment.percentage }}%</span>
+                                                <div class="progress-custom" style="width: 50px;">
                                                     <div class="progress-bar-custom bg-primary" style="width: {{ payment.percentage }}%"></div>
                                                 </div>
                                             </div>
-                                         </div>
-                                        <td class="text-end fw-semibold">{{ payment.total|number_format(0, ',', ' ') }}</div>
+                                        </td>
+                                        <td class="text-end fw-semibold" style="font-size:0.65rem;">{{ payment.total|number_format(0, ',', ' ') }}</td>
                                     </tr>
                                 {% else %}
                                     <tr>
                                         <td colspan="4" class="text-center py-4 text-muted">
                                             <i class="fas fa-credit-card fa-2x mb-2 d-block"></i>
                                             Aucune donnée disponible
-                                         </div>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -909,11 +999,11 @@ function initTimelineChart() {
                 data: data,
                 borderColor: borderColor,
                 backgroundColor: backgroundColor,
-                borderWidth: 3,
+                borderWidth: 2,
                 fill: true,
                 tension: 0.4,
-                pointRadius: 4,
-                pointHoverRadius: 6,
+                pointRadius: 3,
+                pointHoverRadius: 5,
                 pointBackgroundColor: borderColor,
                 pointBorderColor: 'white'
             }]
@@ -933,13 +1023,14 @@ function initTimelineChart() {
                         }
                     }
                 },
-                legend: { position: 'top' }
+                legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } }
             },
             scales: {
                 y: {
                     beginAtZero: true,
-                    grid: { display: true },
+                    grid: { display: true, drawBorder: false },
                     ticks: {
+                        font: { size: 9 },
                         callback: function(value) {
                             if (currentChartType !== 'orders') {
                                 return new Intl.NumberFormat('fr-FR').format(value) + ' {{ currency }}';
@@ -948,7 +1039,10 @@ function initTimelineChart() {
                         }
                     }
                 },
-                x: { grid: { display: false } }
+                x: { 
+                    grid: { display: false },
+                    ticks: { font: { size: 8 } }
+                }
             }
         }
     });
@@ -983,7 +1077,10 @@ function initPaymentChart() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'bottom' },
+                legend: { 
+                    position: 'bottom',
+                    labels: { boxWidth: 10, font: { size: 9 }, padding: 8 }
+                },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -1032,7 +1129,7 @@ function initSubscriptionChart() {
                 backgroundColor: 'rgba(139, 92, 246, 0.7)',
                 borderColor: '#8b5cf6',
                 borderWidth: 1,
-                borderRadius: 8
+                borderRadius: 4
             }]
         },
         options: {
@@ -1046,19 +1143,26 @@ function initSubscriptionChart() {
                         }
                     }
                 },
-                legend: { position: 'top' }
+                legend: { 
+                    position: 'top',
+                    labels: { boxWidth: 10, font: { size: 9 } }
+                }
             },
             scales: {
                 y: {
                     beginAtZero: true,
-                    title: { display: true, text: 'Montant ({{ currency }})' },
+                    title: { display: true, text: 'Montant ({{ currency }})', font: { size: 9 } },
                     ticks: {
+                        font: { size: 8 },
                         callback: function(value) {
                             return new Intl.NumberFormat('fr-FR').format(value) + ' {{ currency }}';
                         }
                     }
                 },
-                x: { title: { display: true, text: 'Mois' } }
+                x: { 
+                    title: { display: true, text: 'Mois', font: { size: 9 } },
+                    ticks: { font: { size: 8 } }
+                }
             }
         }
     });
@@ -1114,10 +1218,6 @@ function updateDashboard(data) {
         if (kpiAverageBasket) kpiAverageBasket.textContent = new Intl.NumberFormat('fr-FR').format(data.indicators.average_basket || 0);
     }
     
-    if (data.cogs && document.getElementById('cogsTotal')) {
-        document.getElementById('cogsTotal').textContent = new Intl.NumberFormat('fr-FR').format(data.cogs.total || 0);
-    }
-    
     if (data.timeline && data.timeline.length > 0) {
         timelineData = data.timeline;
         initTimelineChart();
@@ -1153,7 +1253,6 @@ function updateDashboard(data) {
         updateSubscriptionStats(data.subscription_stats);
     }
     
-    // Mise à jour des données des recettes (pour restaurants)
     if (data.recipe_sales) {
         updateRecipeSales(data.recipe_sales);
     }
@@ -1173,22 +1272,22 @@ function updateTopItems(items) {
                 <td colspan="4" class="text-center py-4 text-muted">
                     <i class="fas fa-chart-line fa-2x mb-2 d-block"></i>
                     Aucune donnée disponible
-                 </div>
-             </>
+                </td>
+            </tr>
         `;
         return;
     }
     
     container.innerHTML = items.map((item, index) => `
         <tr>
-            <td>${index + 1}</div>
+            <td>${index + 1}</td>
             <td>
-                ${escapeHtml(item.name || '')}
-                ${item.recipe_name ? `<small class="text-muted d-block">${escapeHtml(item.recipe_name)}</small>` : ''}
-             </div>
-            <td class="text-end">${new Intl.NumberFormat('fr-FR').format(item.total_quantity || 0)}</div>
-            <td class="text-end fw-semibold">${new Intl.NumberFormat('fr-FR').format(item.total_revenue || 0)}</div>
-         </>
+                ${escapeHtml(item.name || '').slice(0, 25)}
+                ${item.recipe_name ? `<small class="text-muted d-block">${escapeHtml(item.recipe_name).slice(0, 15)}</small>` : ''}
+            </td>
+            <td class="text-end d-none d-sm-table-cell">${new Intl.NumberFormat('fr-FR').format(item.total_quantity || 0)}</td>
+            <td class="text-end fw-semibold">${new Intl.NumberFormat('fr-FR').format(item.total_revenue || 0)}</td>
+        </tr>
     `).join('');
 }
 
@@ -1202,29 +1301,29 @@ function updateMarginByCategory(categories) {
                 <td colspan="5" class="text-center py-4 text-muted">
                     <i class="fas fa-chart-simple fa-2x mb-2 d-block"></i>
                     Aucune donnée disponible
-                 </div>
-             </>
+                </td>
+            </tr>
         `;
         return;
     }
     
     container.innerHTML = categories.map(category => `
         <tr>
-            <td>${escapeHtml(category.category || 'Sans catégorie')}</div>
-            <td class="text-end">${new Intl.NumberFormat('fr-FR').format(category.revenue || 0)}</div>
-            <td class="text-end text-muted">${new Intl.NumberFormat('fr-FR').format(category.cogs || 0)}</div>
+            <td>${escapeHtml(category.category || 'Sans catégorie').slice(0, 18)}</td>
+            <td class="text-end d-none d-sm-table-cell">${new Intl.NumberFormat('fr-FR').format(category.revenue || 0)}</td>
+            <td class="text-end text-muted d-none d-md-table-cell">${new Intl.NumberFormat('fr-FR').format(category.cogs || 0)}</td>
             <td class="text-end fw-semibold ${(category.margin || 0) >= 0 ? 'text-success' : 'text-danger'}">
                 ${new Intl.NumberFormat('fr-FR').format(category.margin || 0)}
-             </div>
+            </td>
             <td class="text-end">
                 <span class="badge 
                     ${(category.margin_percentage || 0) >= 50 ? 'badge-margin-high'
                     : (category.margin_percentage || 0) >= 30 ? 'badge-margin-medium'
-                    : 'badge-margin-low'}">
+                    : 'badge-margin-low'}" style="font-size:0.55rem;">
                     ${category.margin_percentage || 0}%
                 </span>
-             </div>
-         </>
+            </td>
+        </tr>
     `).join('');
 }
 
@@ -1238,8 +1337,8 @@ function updatePaymentDetails(payments) {
                 <td colspan="4" class="text-center py-4 text-muted">
                     <i class="fas fa-credit-card fa-2x mb-2 d-block"></i>
                     Aucune donnée disponible
-                 </div>
-             </>
+                </td>
+            </tr>
         `;
         return;
     }
@@ -1253,22 +1352,23 @@ function updatePaymentDetails(payments) {
     container.innerHTML = payments.map(payment => `
         <tr>
             <td>
-                <span class="payment-badge ${payment.method || ''}">
+                <span class="payment-badge ${payment.method || ''}" style="font-size:0.55rem;">
                     <i class="fas fa-${icons[payment.method] || 'credit-card'}"></i>
-                    ${payment.label || payment.method || ''}
+                    <span class="d-none d-sm-inline">${payment.label || payment.method || ''}</span>
+                    <span class="d-inline d-sm-none">${(payment.label || payment.method || '').slice(0, 8)}</span>
                 </span>
-             </div>
-            <td class="text-end">${new Intl.NumberFormat('fr-FR').format(payment.count || 0)}</div>
+            </td>
+            <td class="text-end d-none d-sm-table-cell">${new Intl.NumberFormat('fr-FR').format(payment.count || 0)}</td>
             <td class="text-end">
-                <div class="d-flex align-items-center justify-content-end gap-2">
-                    <span>${payment.percentage || 0}%</span>
-                    <div class="progress-custom" style="width: 80px;">
+                <div class="d-flex align-items-center justify-content-end gap-1">
+                    <span style="font-size:0.55rem;">${payment.percentage || 0}%</span>
+                    <div class="progress-custom" style="width: 50px;">
                         <div class="progress-bar-custom bg-primary" style="width: ${payment.percentage || 0}%"></div>
                     </div>
                 </div>
-             </div>
-            <td class="text-end fw-semibold">${new Intl.NumberFormat('fr-FR').format(payment.total || 0)}</div>
-         </>
+            </td>
+            <td class="text-end fw-semibold" style="font-size:0.65rem;">${new Intl.NumberFormat('fr-FR').format(payment.total || 0)}</td>
+        </tr>
     `).join('');
 }
 
@@ -1291,11 +1391,11 @@ function updatePaymentHistory(payments) {
     if (!payments || payments.length === 0) {
         container.innerHTML = `
             <tr>
-                <td colspan="5" class="text-center py-4 text-muted">
+                <td colspan="4" class="text-center py-4 text-muted">
                     <i class="fas fa-credit-card fa-2x mb-2 d-block"></i>
                     Aucun paiement d'abonnement enregistré
-                 </div>
-             </>
+                </td>
+            </tr>
         `;
         return;
     }
@@ -1306,23 +1406,22 @@ function updatePaymentHistory(payments) {
         'mobile_money': 'mobile-alt'
     };
     
-    container.innerHTML = payments.map(payment => `
+    container.innerHTML = payments.slice(0, 10).map(payment => `
         <tr>
-            <td>${new Date(payment.paymentDate).toLocaleDateString('fr-FR')}</div>
-            <td class="fw-semibold">${new Intl.NumberFormat('fr-FR').format(payment.amount || 0)} {{ currency }}</div>
-            <td>
-                <span class="payment-badge ${payment.paymentMethod || ''}">
+            <td>${new Date(payment.paymentDate).toLocaleDateString('fr-FR')}</td>
+            <td class="fw-semibold text-end">${new Intl.NumberFormat('fr-FR').format(payment.amount || 0)}</td>
+            <td class="d-none d-sm-table-cell">
+                <span class="payment-badge ${payment.paymentMethod || ''}" style="font-size:0.5rem;">
                     <i class="fas fa-${methodIcons[payment.paymentMethod] || 'credit-card'}"></i>
-                    ${(payment.paymentMethod || '').replace('_', ' ').toUpperCase()}
+                    ${(payment.paymentMethod || '').replace('_', ' ').toUpperCase().slice(0, 10)}
                 </span>
-             </div>
-            <td>
-                ${payment.status === 'paid' ? '<span class="badge bg-success">Payé</span>' : 
-                  payment.status === 'pending' ? '<span class="badge bg-warning">En attente</span>' : 
-                  '<span class="badge bg-secondary">' + (payment.status || 'Inconnu') + '</span>'}
-             </div>
-            <td><small>${payment.subscriptionNumber || '-'}</small></div>
-         </>
+            </td>
+            <td class="d-none d-md-table-cell">
+                ${payment.status === 'paid' ? '<span class="badge bg-success" style="font-size:0.5rem;">Payé</span>' : 
+                  payment.status === 'pending' ? '<span class="badge bg-warning" style="font-size:0.5rem;">En attente</span>' : 
+                  '<span class="badge bg-secondary" style="font-size:0.5rem;">' + (payment.status || 'Inconnu') + '</span>'}
+            </td>
+        </tr>
     `).join('');
 }
 
@@ -1336,30 +1435,30 @@ function updateRecipeSales(recipes) {
                 <td colspan="5" class="text-center py-4 text-muted">
                     <i class="fas fa-chart-line fa-2x mb-2 d-block"></i>
                     Aucune donnée de recette disponible
-                 </div>
-             </>
+                </td>
+            </tr>
         `;
         return;
     }
     
-    container.innerHTML = recipes.map((recipe, index) => `
+    container.innerHTML = recipes.slice(0, 10).map((recipe, index) => `
         <tr>
-            <td>${index + 1}</div>
+            <td>${index + 1}</td>
             <td>
-                <strong>${escapeHtml(recipe.name)}</strong>
-                ${recipe.category ? `<br><small class="text-muted">${escapeHtml(recipe.category)}</small>` : ''}
-             </div>
-            <td class="text-end">${new Intl.NumberFormat('fr-FR').format(recipe.quantity || 0)}</div>
-            <td class="text-end fw-semibold text-success">${new Intl.NumberFormat('fr-FR').format(recipe.revenue || 0)}</div>
-            <td class="text-end">
-                <div class="d-flex align-items-center justify-content-end gap-2">
-                    <span>${recipe.percentage || 0}%</span>
-                    <div class="progress-custom" style="width: 100px;">
+                <strong>${escapeHtml(recipe.name).slice(0, 18)}</strong>
+                ${recipe.category ? `<br><small class="text-muted" style="font-size:0.5rem;">${escapeHtml(recipe.category).slice(0, 12)}</small>` : ''}
+            </td>
+            <td class="text-end d-none d-sm-table-cell">${new Intl.NumberFormat('fr-FR').format(recipe.quantity || 0)}</td>
+            <td class="text-end fw-semibold text-success">${new Intl.NumberFormat('fr-FR').format(recipe.revenue || 0)}</td>
+            <td class="text-end d-none d-md-table-cell">
+                <div class="d-flex align-items-center justify-content-end gap-1">
+                    <span style="font-size:0.55rem;">${recipe.percentage || 0}%</span>
+                    <div class="progress-custom" style="width: 60px;">
                         <div class="progress-bar-custom bg-success" style="width: ${recipe.percentage || 0}%"></div>
                     </div>
                 </div>
-             </div>
-         </>
+            </td>
+        </tr>
     `).join('');
 }
 
@@ -1407,7 +1506,7 @@ function updateActiveFilters() {
     }
     
     container.innerHTML = activeFilters.map(filter => `
-        <span class="badge bg-secondary d-inline-flex align-items-center gap-2 py-2 px-3" style="cursor: pointer;" onclick="removeFilter('${filter.key}')">
+        <span class="badge bg-secondary d-inline-flex align-items-center gap-1 gap-sm-2 py-1 py-sm-2 px-2 px-sm-3" style="cursor: pointer; font-size:0.6rem;" onclick="removeFilter('${filter.key}')">
             <i class="fas fa-filter"></i>
             ${filter.label}
             <i class="fas fa-times ms-1"></i>
@@ -1423,8 +1522,6 @@ function removeFilter(key) {
         if (datePreset) datePreset.value = '';
         if (dateFrom) dateFrom.value = '';
         if (dateTo) dateTo.value = '';
-        if (dateFrom) dateFrom.disabled = false;
-        if (dateTo) dateTo.disabled = false;
     } else if (key === 'payment') {
         const paymentMethod = document.getElementById('paymentMethod');
         if (paymentMethod) paymentMethod.value = '';
@@ -1460,8 +1557,9 @@ function exportData() {
 
 function showNotification(message, type) {
     const notification = document.createElement('div');
-    notification.className = `position-fixed bottom-0 end-0 p-3 m-3 bg-${type === 'error' ? 'danger' : 'success'} text-white rounded shadow`;
+    notification.className = `position-fixed bottom-0 end-0 p-2 p-md-3 m-2 m-md-3 bg-${type === 'error' ? 'danger' : 'success'} text-white rounded shadow`;
     notification.style.zIndex = '9999';
+    notification.style.fontSize = '0.7rem';
     notification.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'} me-2"></i>${message}`;
     document.body.appendChild(notification);
     setTimeout(() => notification.remove(), 3000);

@@ -454,8 +454,8 @@
                         </a>
                         
                         <!-- Lien vers les mouvements de stock -->
-                        <a href="#" class="btn btn-outline-primary">
-                            <i class="fas fa-exchange-alt me-2"></i> Voir les mouvements
+                        <a href="{{ path('app_admin_product_stock_movements', {'id': product.id}) }}" class="btn btn-outline-primary">
+                            <i class="fas fa-exchange-alt me-2"></i> Mouvements de stock
                         </a>
                         
                         <!-- Lien vers les commandes liées (si pas restaurant) -->
