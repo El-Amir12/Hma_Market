@@ -10,6 +10,7 @@
         transition: transform 0.2s, box-shadow 0.2s;
         border-radius: 1rem;
         border: none;
+        background: white !important;
     }
     .stat-card:hover {
         transform: translateY(-3px);
@@ -29,6 +30,7 @@
         border-radius: 2rem;
         font-weight: 500;
         font-size: 0.75rem;
+        white-space: nowrap;
     }
     .badge-status.active { background: #d1fae5; color: #065f46; }
     .badge-status.pending { background: #fef3c7; color: #b45309; }
@@ -90,102 +92,381 @@
     .info-value {
         font-weight: 600;
     }
+
+    /* Couleurs des icônes sur fond blanc */
+    .stat-icon-primary { color: #0463f1; }
+    .stat-icon-success { color: #10b981; }
+    .stat-icon-warning { color: #f59e0b; }
+    .stat-icon-danger { color: #ef4444; }
+    .stat-icon-bg {
+        background: rgba(4, 99, 241, 0.1);
+    }
+    .stat-icon-bg-success {
+        background: rgba(16, 185, 129, 0.1);
+    }
+    .stat-icon-bg-warning {
+        background: rgba(245, 158, 11, 0.1);
+    }
+    .stat-icon-bg-danger {
+        background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* ========================================
+       RESPONSIVE - FILTRES
+    ======================================== */
+    .filter-col {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .filter-col-half {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .filter-select {
+        width: 100% !important;
+        font-size: 0.7rem !important;
+    }
+    .filter-input {
+        font-size: 0.7rem !important;
+    }
+
+    /* ========================================
+       RESPONSIVE - MEDIA QUERIES
+    ======================================== */
+    
+    /* Tablette */
+    @media (max-width: 768px) {
+        .stat-value { font-size: 1.3rem; }
+        .stat-card .card-body { padding: 0.75rem; }
+        .stat-card .rounded-circle { width: 36px; height: 36px; padding: 0.5rem !important; }
+        .stat-card .rounded-circle i { font-size: 1rem; }
+        
+        .filter-card { padding: 1rem !important; }
+        .last-subscription-card { padding: 1rem !important; }
+        
+        .table th, .table td { padding: 0.5rem; font-size: 0.75rem; }
+        .badge-status { font-size: 0.65rem; padding: 0.2rem 0.5rem; }
+        
+        .filter-col-half {
+            flex: 0 0 50% !important;
+            max-width: 50% !important;
+            width: 50% !important;
+        }
+    }
+    
+    /* Mobile */
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+        
+        /* En-tête */
+        .h1, .h3 {
+            font-size: 1rem !important;
+        }
+        .text-muted {
+            font-size: 0.65rem !important;
+        }
+        .breadcrumb {
+            font-size: 0.55rem !important;
+        }
+        .breadcrumb-item a {
+            font-size: 0.55rem !important;
+        }
+        
+        /* Boutons */
+        .btn {
+            font-size: 0.6rem !important;
+            padding: 0.15rem 0.4rem !important;
+        }
+        .btn i {
+            font-size: 0.6rem !important;
+        }
+        .btn-outline-info.me-2 {
+            margin-right: 0.25rem !important;
+        }
+        
+        /* Statistiques */
+        .stat-value {
+            font-size: 1.1rem !important;
+        }
+        .stat-card .card-body {
+            padding: 0.5rem !important;
+        }
+        .stat-card .rounded-circle {
+            width: 28px !important;
+            height: 28px !important;
+            padding: 0.3rem !important;
+        }
+        .stat-card .rounded-circle i {
+            font-size: 0.8rem !important;
+        }
+        .text-muted.small {
+            font-size: 0.5rem !important;
+        }
+        
+        /* Filtres */
+        .filter-card {
+            padding: 0.5rem !important;
+            border-radius: 0.75rem !important;
+        }
+        .filter-card .form-label {
+            font-size: 0.55rem !important;
+        }
+        .filter-card .form-control,
+        .filter-card .form-select {
+            font-size: 0.6rem !important;
+            padding: 0.15rem 0.3rem !important;
+            border-radius: 4px !important;
+        }
+        .filter-col, .filter-col-half {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        .filter-card .btn {
+            font-size: 0.6rem !important;
+            padding: 0.2rem 0.4rem !important;
+        }
+        
+        /* Badges filtres */
+        .filter-badge {
+            font-size: 0.55rem !important;
+            padding: 0.15rem 0.4rem !important;
+        }
+        .btn-outline-secondary {
+            font-size: 0.55rem !important;
+            padding: 0.15rem 0.4rem !important;
+        }
+        
+        /* Dernier abonnement */
+        .last-subscription-card {
+            padding: 0.5rem !important;
+            border-radius: 0.75rem !important;
+        }
+        .last-subscription-card h5 {
+            font-size: 0.75rem !important;
+        }
+        .last-subscription-card .fa-2x {
+            font-size: 1.5rem !important;
+        }
+        .last-subscription-card .row {
+            gap: 0.25rem !important;
+        }
+        .last-subscription-card .info-row {
+            padding: 0.25rem 0 !important;
+        }
+        .last-subscription-card .info-label {
+            font-size: 0.55rem !important;
+        }
+        .last-subscription-card .info-value {
+            font-size: 0.6rem !important;
+        }
+        .last-subscription-card .badge {
+            font-size: 0.5rem !important;
+            padding: 0.15rem 0.3rem !important;
+        }
+        .last-subscription-card .btn {
+            font-size: 0.55rem !important;
+            padding: 0.15rem 0.3rem !important;
+        }
+        
+        /* Tableau */
+        .table-container .card-body {
+            padding: 0 !important;
+        }
+        .table {
+            min-width: 700px !important;
+            font-size: 0.65rem !important;
+        }
+        .table th {
+            font-size: 0.55rem !important;
+            padding: 0.3rem 0.4rem !important;
+            letter-spacing: 0.3px !important;
+            white-space: nowrap;
+        }
+        .table td {
+            padding: 0.3rem 0.4rem !important;
+            font-size: 0.6rem !important;
+            vertical-align: middle !important;
+        }
+        .table .badge {
+            font-size: 0.45rem !important;
+            padding: 0.1rem 0.3rem !important;
+        }
+        .badge-status {
+            font-size: 0.5rem !important;
+            padding: 0.15rem 0.3rem !important;
+        }
+        .badge-status i {
+            font-size: 0.5rem !important;
+        }
+        
+        /* Actions */
+        .btn-group .btn {
+            font-size: 0.5rem !important;
+            padding: 0.1rem 0.2rem !important;
+        }
+        .btn-group .btn i {
+            font-size: 0.5rem !important;
+        }
+        
+        /* Card header */
+        .card-header {
+            padding: 0.4rem 0.6rem !important;
+        }
+        .card-header h5 {
+            font-size: 0.75rem !important;
+        }
+        .card-header .badge {
+            font-size: 0.5rem !important;
+        }
+        
+        /* Désactiver hover */
+        .stat-card:hover {
+            transform: none !important;
+        }
+        .subscription-row:hover {
+            background: transparent !important;
+        }
+        .last-subscription-card:hover {
+            transform: none !important;
+        }
+        .filter-badge:hover {
+            transform: none !important;
+        }
+        .btn-action:hover {
+            transform: none !important;
+        }
+    }
+
+    /* Très petits écrans */
+    @media (max-width: 400px) {
+        .table {
+            min-width: 600px !important;
+        }
+        .table th {
+            font-size: 0.5rem !important;
+            padding: 0.2rem 0.3rem !important;
+        }
+        .table td {
+            font-size: 0.5rem !important;
+            padding: 0.2rem 0.3rem !important;
+        }
+        .stat-value {
+            font-size: 0.9rem !important;
+        }
+        .btn {
+            font-size: 0.5rem !important;
+            padding: 0.1rem 0.3rem !important;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid px-4">
-    <!-- En-tête -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
+<div class="container-fluid px-2 px-md-4 py-2 py-md-3">
+
+    <!-- ==========================================
+         EN-TÊTE
+    ========================================== -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 mb-md-4 flex-wrap gap-2">
+        <div class="w-100 w-sm-auto">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item small">
                         <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
                             <i class="fas fa-tachometer-alt me-1"></i> Dashboard
                         </a>
                     </li>
-                    <li class="breadcrumb-item active">
+                    <li class="breadcrumb-item active small">
                         <i class="fas fa-tags me-1"></i> Abonnements
                     </li>
                 </ol>
             </nav>
             <h1 class="h3 mb-0 fw-bold">
                 <i class="fas fa-tags text-primary me-2"></i>
-                Gestion des abonnements
+                <span class="d-none d-sm-inline">Gestion des abonnements</span>
+                <span class="d-inline d-sm-none">Abonnements</span>
             </h1>
-            <p class="text-muted mt-2">
+            <p class="text-muted mt-1 small d-none d-sm-block">
                 <i class="fas fa-globe me-1"></i>
                 Gérez tous les abonnements des entreprises
             </p>
+            <p class="text-muted mt-1 small d-block d-sm-none">
+                Gestion des abonnements
+            </p>
         </div>
-        <div>
-            <a href="{{ path('super_admin_payment_index') }}" class="btn btn-outline-info me-2">
-                <i class="fas fa-credit-card me-1"></i> Voir les paiements
-            </a>
-            <a href="{{ path('super_admin_subscription_new') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-1"></i> Nouvel abonnement
+        <div class="d-flex gap-1 gap-sm-2 flex-wrap w-100 w-sm-auto">
+            <a href="{{ path('super_admin_payment_index') }}" class="btn btn-outline-info btn-sm flex-grow-1 flex-sm-grow-0">
+                <i class="fas fa-credit-card me-1"></i> <span class="d-none d-sm-inline">Voir les paiements</span>
+                <span class="d-inline d-sm-none">Paiements</span>
             </a>
         </div>
     </div>
 
-    <!-- Cartes statistiques -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3 col-sm-6">
-            <div class="card stat-card bg-primary bg-opacity-10">
+    <!-- ==========================================
+         CARTES STATISTIQUES - FOND BLANC
+    ========================================== -->
+    <div class="row g-2 g-md-3 mb-3 mb-md-4">
+        <div class="col-6 col-md-3">
+            <div class="card stat-card shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <div class="text-muted small">Total abonnements</div>
-                            <div class="stat-value">{{ subscriptions|length }}</div>
+                            <div class="text-muted small text-uppercase" style="font-size:0.55rem;">Total</div>
+                            <div class="stat-value text-dark">{{ subscriptions|length }}</div>
                         </div>
-                        <div class="rounded-circle bg-primary p-3">
-                            <i class="fas fa-tags fa-fw text-white"></i>
+                        <div class="rounded-circle stat-icon-bg p-2 p-md-3">
+                            <i class="fas fa-tags fa-fw stat-icon-primary" style="font-size:1rem;"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card stat-card bg-success bg-opacity-10">
+        <div class="col-6 col-md-3">
+            <div class="card stat-card shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <div class="text-muted small">Abonnements actifs</div>
-                            <div class="stat-value">{{ subscriptions|filter(s => s.status == 'active')|length }}</div>
+                            <div class="text-muted small text-uppercase" style="font-size:0.55rem;">Actifs</div>
+                            <div class="stat-value text-dark">{{ subscriptions|filter(s => s.status == 'active')|length }}</div>
                         </div>
-                        <div class="rounded-circle bg-success p-3">
-                            <i class="fas fa-check-circle fa-fw text-white"></i>
+                        <div class="rounded-circle stat-icon-bg-success p-2 p-md-3">
+                            <i class="fas fa-check-circle fa-fw stat-icon-success" style="font-size:1rem;"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card stat-card bg-warning bg-opacity-10">
+        <div class="col-6 col-md-3">
+            <div class="card stat-card shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <div class="text-muted small">En attente</div>
-                            <div class="stat-value">{{ subscriptions|filter(s => s.status == 'pending')|length }}</div>
+                            <div class="text-muted small text-uppercase" style="font-size:0.55rem;">En attente</div>
+                            <div class="stat-value text-dark">{{ subscriptions|filter(s => s.status == 'pending')|length }}</div>
                         </div>
-                        <div class="rounded-circle bg-warning p-3">
-                            <i class="fas fa-clock fa-fw text-white"></i>
+                        <div class="rounded-circle stat-icon-bg-warning p-2 p-md-3">
+                            <i class="fas fa-clock fa-fw stat-icon-warning" style="font-size:1rem;"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card stat-card bg-danger bg-opacity-10">
+        <div class="col-6 col-md-3">
+            <div class="card stat-card shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <div class="text-muted small">Expirés/Annulés</div>
-                            <div class="stat-value">{{ subscriptions|filter(s => s.status == 'expired' or s.status == 'cancelled')|length }}</div>
+                            <div class="text-muted small text-uppercase" style="font-size:0.55rem;">Expirés/Annulés</div>
+                            <div class="stat-value text-dark">{{ subscriptions|filter(s => s.status == 'expired' or s.status == 'cancelled')|length }}</div>
                         </div>
-                        <div class="rounded-circle bg-danger p-3">
-                            <i class="fas fa-exclamation-circle fa-fw text-white"></i>
+                        <div class="rounded-circle stat-icon-bg-danger p-2 p-md-3">
+                            <i class="fas fa-exclamation-circle fa-fw stat-icon-danger" style="font-size:1rem;"></i>
                         </div>
                     </div>
                 </div>
@@ -193,21 +474,23 @@
         </div>
     </div>
 
-    <!-- Badges de filtres actifs -->
+    <!-- ==========================================
+         BADGES DE FILTRES ACTIFS
+    ========================================== -->
     {% if filters.company_id or filters.status or filters.date_from or filters.date_to %}
-    <div class="d-flex gap-2 flex-wrap mb-3">
+    <div class="d-flex gap-1 gap-md-2 flex-wrap mb-2 mb-md-3">
         {% if filters.company_id and companies is defined %}
             {% for company in companies %}
                 {% if company.id == filters.company_id %}
-                    <span class="filter-badge" onclick="removeFilter('company_id')">
-                        <i class="fas fa-building me-1"></i> {{ company.companyName }}
+                    <span class="filter-badge" onclick="removeFilter('company_id')" style="font-size:0.6rem; padding:0.15rem 0.4rem;">
+                        <i class="fas fa-building me-1"></i> {{ company.companyName|slice(0, 15) }}
                         <i class="fas fa-times ms-1"></i>
                     </span>
                 {% endif %}
             {% endfor %}
         {% endif %}
         {% if filters.status %}
-            <span class="filter-badge" onclick="removeFilter('status')">
+            <span class="filter-badge" onclick="removeFilter('status')" style="font-size:0.6rem; padding:0.15rem 0.4rem;">
                 <i class="fas fa-filter me-1"></i> Statut: 
                 {% if filters.status == 'active' %}Actif
                 {% elseif filters.status == 'pending' %}En attente
@@ -219,44 +502,49 @@
             </span>
         {% endif %}
         {% if filters.date_from %}
-            <span class="filter-badge" onclick="removeFilter('date_from')">
+            <span class="filter-badge" onclick="removeFilter('date_from')" style="font-size:0.6rem; padding:0.15rem 0.4rem;">
                 <i class="fas fa-calendar me-1"></i> Depuis: {{ filters.date_from }}
                 <i class="fas fa-times ms-1"></i>
             </span>
         {% endif %}
         {% if filters.date_to %}
-            <span class="filter-badge" onclick="removeFilter('date_to')">
+            <span class="filter-badge" onclick="removeFilter('date_to')" style="font-size:0.6rem; padding:0.15rem 0.4rem;">
                 <i class="fas fa-calendar me-1"></i> Jusqu'au: {{ filters.date_to }}
                 <i class="fas fa-times ms-1"></i>
             </span>
         {% endif %}
-        <button class="btn btn-sm btn-outline-secondary" onclick="clearAllFilters()">
+        <button class="btn btn-sm btn-outline-secondary" onclick="clearAllFilters()" style="font-size:0.55rem; padding:0.15rem 0.4rem;">
             <i class="fas fa-eraser me-1"></i> Effacer tout
         </button>
     </div>
     {% endif %}
 
-    <!-- Filtres -->
-    <div class="filter-card p-4 mb-4 shadow-sm">
-        <form method="get" class="row g-3 align-items-end">
-            <div class="col-md-3">
-                <label class="form-label fw-semibold small mb-1">
+    <!-- ==========================================
+         FILTRES
+    ========================================== -->
+    <div class="filter-card p-2 p-md-4 mb-3 mb-md-4 shadow-sm">
+        <form method="get" class="row g-2 g-md-3 align-items-end">
+            <!-- Entreprise - 100% mobile, 3 desktop -->
+            <div class="col-12 col-md-3 filter-col">
+                <label class="form-label fw-semibold small mb-1" style="font-size:0.6rem;">
                     <i class="fas fa-building me-1"></i>Entreprise
                 </label>
-                <select name="company_id" class="form-select">
+                <select name="company_id" class="form-select form-select-sm filter-select" style="font-size:0.7rem;">
                     <option value="">Toutes</option>
                     {% for company in companies|default([]) %}
                         <option value="{{ company.id }}" {{ filters.company_id == company.id ? 'selected' }}>
-                            {{ company.companyName }}
+                            {{ company.companyName|slice(0, 25) }}{% if company.companyName|length > 25 %}...{% endif %}
                         </option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-2">
-                <label class="form-label fw-semibold small mb-1">
+            
+            <!-- Statut - 50% mobile, 2 desktop -->
+            <div class="col-6 col-md-2 filter-col-half">
+                <label class="form-label fw-semibold small mb-1" style="font-size:0.6rem;">
                     <i class="fas fa-filter me-1"></i>Statut
                 </label>
-                <select name="status" class="form-select">
+                <select name="status" class="form-select form-select-sm filter-select" style="font-size:0.7rem;">
                     <option value="">Tous</option>
                     <option value="active" {{ filters.status == 'active' ? 'selected' }}>✓ Actif</option>
                     <option value="pending" {{ filters.status == 'pending' ? 'selected' }}>⏳ En attente</option>
@@ -264,197 +552,210 @@
                     <option value="cancelled" {{ filters.status == 'cancelled' ? 'selected' }}>✗ Annulé</option>
                 </select>
             </div>
-            <div class="col-md-2">
-                <label class="form-label fw-semibold small mb-1">
+            
+            <!-- Date du - 50% mobile, 2 desktop -->
+            <div class="col-6 col-md-2 filter-col-half">
+                <label class="form-label fw-semibold small mb-1" style="font-size:0.6rem;">
                     <i class="fas fa-calendar me-1"></i>Date du
                 </label>
-                <input type="date" name="date_from" class="form-control" value="{{ filters.date_from }}">
+                <input type="date" name="date_from" class="form-control form-control-sm filter-input" value="{{ filters.date_from }}" style="font-size:0.7rem;">
             </div>
-            <div class="col-md-2">
-                <label class="form-label fw-semibold small mb-1">
+            
+            <!-- Date au - 50% mobile, 2 desktop -->
+            <div class="col-6 col-md-2 filter-col-half">
+                <label class="form-label fw-semibold small mb-1" style="font-size:0.6rem;">
                     <i class="fas fa-calendar me-1"></i>Date au
                 </label>
-                <input type="date" name="date_to" class="form-control" value="{{ filters.date_to }}">
+                <input type="date" name="date_to" class="form-control form-control-sm filter-input" value="{{ filters.date_to }}" style="font-size:0.7rem;">
             </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-primary w-100">
+            
+            <!-- Bouton Filtrer - 100% mobile, 3 desktop -->
+            <div class="col-12 col-md-3 filter-col">
+                <button type="submit" class="btn btn-primary w-100" style="font-size:0.7rem; padding:0.2rem 0.4rem;">
                     <i class="fas fa-search me-1"></i> Filtrer
                 </button>
             </div>
         </form>
     </div>
 
-    <!-- Dernier abonnement - Pleine largeur -->
+    <!-- ==========================================
+         DERNIER ABONNEMENT
+    ========================================== -->
     {% set lastSubscription = subscriptions|first %}
     {% if lastSubscription %}
-        <div class="last-subscription-card p-4 mb-4 text-white">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0 fw-bold">
-                    <i class="fas fa-clock me-2"></i> Dernier abonnement enregistré
+        <div class="last-subscription-card p-3 p-md-4 mb-3 mb-md-4 text-white">
+            <div class="d-flex justify-content-between align-items-center mb-2 mb-md-3">
+                <h5 class="mb-0 fw-bold fs-6 fs-md-5">
+                    <i class="fas fa-clock me-2"></i> Dernier abonnement
                 </h5>
-                <i class="fas fa-tag fa-2x opacity-50"></i>
+                <i class="fas fa-tag fa-2x opacity-50" style="font-size:1.5rem;"></i>
             </div>
-            <div class="row">
-                <div class="col-md-4">
+            <div class="row g-1 g-md-0">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Entreprise</span>
-                        <span class="info-value">{{ lastSubscription.hmaService.companyName }}</span>
+                        <span class="info-label" style="font-size:0.65rem;">Entreprise</span>
+                        <span class="info-value" style="font-size:0.7rem;">{{ lastSubscription.hmaService.companyName|slice(0, 20) }}</span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Plan</span>
-                        <span class="info-value">{{ lastSubscription.subscriptionPlan.displayName }}</span>
+                        <span class="info-label" style="font-size:0.65rem;">Plan</span>
+                        <span class="info-value" style="font-size:0.7rem;">{{ lastSubscription.subscriptionPlan.displayName }}</span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Période</span>
-                        <span class="info-value">{{ lastSubscription.billingPeriod == 'monthly' ? 'Mensuel' : 'Annuel' }}</span>
+                        <span class="info-label" style="font-size:0.65rem;">Période</span>
+                        <span class="info-value" style="font-size:0.7rem;">{{ lastSubscription.billingPeriod == 'monthly' ? 'Mensuel' : 'Annuel' }}</span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Statut</span>
-                        <span class="info-value">
+                        <span class="info-label" style="font-size:0.65rem;">Statut</span>
+                        <span class="info-value" style="font-size:0.7rem;">
                             {% if lastSubscription.status == 'active' %}
-                                <span class="badge bg-success">✓ Actif</span>
+                                <span class="badge bg-success" style="font-size:0.55rem;">✓ Actif</span>
                             {% elseif lastSubscription.status == 'pending' %}
-                                <span class="badge bg-warning text-dark">⏳ En attente</span>
+                                <span class="badge bg-warning text-dark" style="font-size:0.55rem;">⏳ En attente</span>
                             {% elseif lastSubscription.status == 'expired' %}
-                                <span class="badge bg-danger">⌛ Expiré</span>
+                                <span class="badge bg-danger" style="font-size:0.55rem;">⌛ Expiré</span>
                             {% else %}
-                                <span class="badge bg-secondary">✗ Annulé</span>
+                                <span class="badge bg-secondary" style="font-size:0.55rem;">✗ Annulé</span>
                             {% endif %}
                         </span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Date création</span>
-                        <span class="info-value">{{ lastSubscription.createdAt|date('d/m/Y H:i') }}</span>
+                        <span class="info-label" style="font-size:0.65rem;">Date création</span>
+                        <span class="info-value" style="font-size:0.7rem;">{{ lastSubscription.createdAt|date('d/m/Y H:i') }}</span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Date fin</span>
-                        <span class="info-value">{{ lastSubscription.endsAt ? lastSubscription.endsAt|date('d/m/Y') : '-' }}</span>
+                        <span class="info-label" style="font-size:0.65rem;">Date fin</span>
+                        <span class="info-value" style="font-size:0.7rem;">{{ lastSubscription.endsAt ? lastSubscription.endsAt|date('d/m/Y') : '-' }}</span>
                     </div>
                 </div>
             </div>
-            <div class="mt-3 text-end">
-                <a href="{{ path('super_admin_subscription_show', {'id': lastSubscription.id}) }}" class="btn btn-light btn-sm">
-                    <i class="fas fa-eye me-1"></i> Voir les détails complets
+            <div class="mt-2 mt-md-3 text-end">
+                <a href="{{ path('super_admin_subscription_show', {'id': lastSubscription.id}) }}" class="btn btn-light btn-sm" style="font-size:0.65rem; padding:0.15rem 0.4rem;">
+                    <i class="fas fa-eye me-1"></i> Voir les détails
                 </a>
             </div>
         </div>
     {% else %}
-        <div class="last-subscription-card p-4 mb-4 text-white">
-            <div class="text-center py-3">
-                <i class="fas fa-tags fa-3x mb-2 opacity-50"></i>
-                <p class="mb-0">Aucun abonnement enregistré pour le moment</p>
+        <div class="last-subscription-card p-3 p-md-4 mb-3 mb-md-4 text-white">
+            <div class="text-center py-2 py-md-3">
+                <i class="fas fa-tags fa-2x fa-md-3x mb-2 opacity-50"></i>
+                <p class="mb-0 small">Aucun abonnement enregistré</p>
             </div>
         </div>
     {% endif %}
 
-    <!-- Liste des abonnements -->
+    <!-- ==========================================
+         LISTE DES ABONNEMENTS
+    ========================================== -->
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-semibold">
+        <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 fw-semibold fs-6 fs-md-5">
                 <i class="fas fa-list me-2 text-primary"></i>
-                Liste des abonnements
+                <span class="d-none d-sm-inline">Liste des abonnements</span>
+                <span class="d-inline d-sm-none">Abonnements</span>
             </h5>
-            <span class="badge bg-secondary">{{ subscriptions|length }} abonnement(s)</span>
+            <span class="badge bg-secondary">{{ subscriptions|length }}</span>
         </div>
         <div class="table-container">
             <div class="card-body p-0">
                 {% if subscriptions is empty %}
-                    <div class="text-center py-5">
+                    <div class="text-center py-4 py-md-5">
                         <i class="fas fa-tags fa-3x text-muted mb-3 opacity-50"></i>
-                        <p class="text-muted mb-0">Aucun abonnement trouvé</p>
+                        <p class="text-muted mb-0 small">Aucun abonnement trouvé</p>
                         <p class="text-muted small mb-3">Modifiez vos filtres ou créez un nouvel abonnement</p>
-                        <a href="{{ path('super_admin_subscription_new') }}" class="btn btn-primary">
+                        <a href="{{ path('super_admin_subscription_new') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus me-1"></i> Nouvel abonnement
                         </a>
                     </div>
                 {% else %}
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="min-width: 80px">ID</th>
-                                <th style="min-width: 200px">Entreprise</th>
-                                <th style="min-width: 180px">Plan</th>
-                                <th style="min-width: 120px">Période</th>
-                                <th style="min-width: 100px">Statut</th>
-                                <th style="min-width: 110px">Date début</th>
-                                <th style="min-width: 110px">Date fin</th>
-                                <th style="min-width: 80px">Actif</th>
-                                <th style="min-width: 130px" class="text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for sub in subscriptions %}
-                                <tr class="subscription-row">
-                                    <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">#{{ sub.id }}</td>
-                                    <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">
-                                        <strong>{{ sub.hmaService.companyName }}</strong>
-                                        <br>
-                                        <small class="text-muted">{{ sub.hmaService.subscriptionNumber }}</small>
-                                    </td>
-                                    <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">
-                                        <strong>{{ sub.subscriptionPlan.displayName }}</strong>
-                                        <br>
-                                        <small class="text-muted">{{ sub.subscriptionPlan.name }}</small>
-                                    </td>
-                                    <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">
-                                        <span class="badge bg-secondary">
-                                            <i class="fas {{ sub.billingPeriod == 'monthly' ? 'fa-calendar-alt' : 'fa-calendar' }} me-1"></i>
-                                            {{ sub.billingPeriod == 'monthly' ? 'Mensuel' : 'Annuel' }}
-                                        </span>
-                                    </td>
-                                    <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">
-                                        <span class="badge-status {{ sub.status }}">
-                                            {% if sub.status == 'active' %}
-                                                <i class="fas fa-check-circle me-1"></i> Actif
-                                            {% elseif sub.status == 'pending' %}
-                                                <i class="fas fa-clock me-1"></i> En attente
-                                            {% elseif sub.status == 'expired' %}
-                                                <i class="fas fa-hourglass-end me-1"></i> Expiré
-                                            {% else %}
-                                                <i class="fas fa-ban me-1"></i> Annulé
-                                            {% endif %}
-                                        </span>
-                                    </td>
-                                    <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">
-                                        {{ sub.startsAt ? sub.startsAt|date('d/m/Y') : '-' }}
-                                    </td>
-                                    <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">
-                                        {{ sub.endsAt ? sub.endsAt|date('d/m/Y') : '-' }}
-                                        {% if sub.endsAt and sub.endsAt < date() %}
-                                            <i class="fas fa-exclamation-triangle text-danger ms-1" title="Expiré"></i>
-                                        {% endif %}
-                                    </td>
-                                    <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">
-                                        {% if sub.subscriptionActive %}
-                                            <span class="badge bg-success"><i class="fas fa-check me-1"></i> Oui</span>
-                                        {% else %}
-                                            <span class="badge bg-danger"><i class="fas fa-times me-1"></i> Non</span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="text-center" onclick="event.stopPropagation()">
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ path('super_admin_subscription_show', {'id': sub.id}) }}" class="btn btn-sm btn-outline-primary btn-action" title="Voir détails">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ path('super_admin_payment_index', {'subscription_id': sub.id}) }}" class="btn btn-sm btn-outline-info btn-action" title="Voir les paiements">
-                                                <i class="fas fa-credit-card"></i>
-                                            </a>
-                                        </div>
-                                    </td>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="min-width: 60px;">ID</th>
+                                    <th style="min-width: 120px;">Entreprise</th>
+                                    <th style="min-width: 120px;">Plan</th>
+                                    <th style="min-width: 90px;">Période</th>
+                                    <th style="min-width: 90px;">Statut</th>
+                                    <th style="min-width: 90px;" class="d-none d-sm-table-cell">Début</th>
+                                    <th style="min-width: 90px;" class="d-none d-md-table-cell">Fin</th>
+                                    <th style="min-width: 70px;" class="d-none d-lg-table-cell">Actif</th>
+                                    <th style="min-width: 80px;">Actions</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {% for sub in subscriptions %}
+                                    <tr class="subscription-row">
+                                        <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">#{{ sub.id }}</td>
+                                        <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">
+                                            <strong class="small">{{ sub.hmaService.companyName|slice(0, 15) }}{% if sub.hmaService.companyName|length > 15 %}...{% endif %}</strong>
+                                            <br>
+                                            <small class="text-muted" style="font-size:0.5rem;">{{ sub.hmaService.subscriptionNumber }}</small>
+                                        </td>
+                                        <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">
+                                            <strong class="small">{{ sub.subscriptionPlan.displayName|slice(0, 12) }}</strong>
+                                            <br>
+                                            <small class="text-muted" style="font-size:0.5rem;">{{ sub.subscriptionPlan.name }}</small>
+                                        </td>
+                                        <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">
+                                            <span class="badge bg-secondary" style="font-size:0.5rem;">
+                                                <i class="fas {{ sub.billingPeriod == 'monthly' ? 'fa-calendar-alt' : 'fa-calendar' }} me-1"></i>
+                                                {{ sub.billingPeriod == 'monthly' ? 'Mensuel' : 'Annuel'|slice(0, 6) }}
+                                            </span>
+                                        </td>
+                                        <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'">
+                                            <span class="badge-status {{ sub.status }}" style="font-size:0.5rem; padding:0.15rem 0.3rem;">
+                                                {% if sub.status == 'active' %}
+                                                    <i class="fas fa-check-circle me-1" style="font-size:0.5rem;"></i> <span class="d-none d-sm-inline">Actif</span>
+                                                {% elseif sub.status == 'pending' %}
+                                                    <i class="fas fa-clock me-1" style="font-size:0.5rem;"></i> <span class="d-none d-sm-inline">En attente</span>
+                                                {% elseif sub.status == 'expired' %}
+                                                    <i class="fas fa-hourglass-end me-1" style="font-size:0.5rem;"></i> <span class="d-none d-sm-inline">Expiré</span>
+                                                {% else %}
+                                                    <i class="fas fa-ban me-1" style="font-size:0.5rem;"></i> <span class="d-none d-sm-inline">Annulé</span>
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'" class="d-none d-sm-table-cell">
+                                            <small style="font-size:0.5rem;">{{ sub.startsAt ? sub.startsAt|date('d/m/Y') : '-' }}</small>
+                                        </td>
+                                        <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'" class="d-none d-md-table-cell">
+                                            <small style="font-size:0.5rem;">{{ sub.endsAt ? sub.endsAt|date('d/m/Y') : '-' }}</small>
+                                            {% if sub.endsAt and sub.endsAt < date() %}
+                                                <i class="fas fa-exclamation-triangle text-danger ms-1" title="Expiré" style="font-size:0.5rem;"></i>
+                                            {% endif %}
+                                        </td>
+                                        <td onclick="window.location='{{ path('super_admin_subscription_show', {'id': sub.id}) }}'" class="d-none d-lg-table-cell">
+                                            {% if sub.subscriptionActive %}
+                                                <span class="badge bg-success" style="font-size:0.45rem;"><i class="fas fa-check me-1"></i> Oui</span>
+                                            {% else %}
+                                                <span class="badge bg-danger" style="font-size:0.45rem;"><i class="fas fa-times me-1"></i> Non</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center" onclick="event.stopPropagation()">
+                                            <div class="d-flex gap-1 justify-content-center">
+                                                <a href="{{ path('super_admin_subscription_show', {'id': sub.id}) }}" class="btn btn-sm btn-outline-primary btn-action" title="Voir" style="padding:0.1rem 0.2rem; font-size:0.5rem;">
+                                                    <i class="fas fa-eye" style="font-size:0.5rem;"></i>
+                                                </a>
+                                                <a href="{{ path('super_admin_payment_index', {'subscription_id': sub.id}) }}" class="btn btn-sm btn-outline-info btn-action" title="Paiements" style="padding:0.1rem 0.2rem; font-size:0.5rem;">
+                                                    <i class="fas fa-credit-card" style="font-size:0.5rem;"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 {% endif %}
             </div>
         </div>

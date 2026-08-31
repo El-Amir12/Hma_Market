@@ -1116,6 +1116,24 @@
         <argument type="service" id=".service_locator.siKanuc.App\Controller\SuperAdmin\AnalysisPriceController"/>
       </call>
     </service>
+    <service id="App\Controller\SuperAdmin\AnalysisRequestController" class="App\Controller\SuperAdmin\AnalysisRequestController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="App\Repository\AnalysisRequestRepository"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\SuperAdmin\AnalysisRequestController"/>
+      </call>
+    </service>
+    <service id="App\Controller\SuperAdmin\AnalysisStatisticsController" class="App\Controller\SuperAdmin\AnalysisStatisticsController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="App\Repository\AnalysisRequestRepository"/>
+      <argument type="service" id="App\Repository\AnalysisPriceRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.siKanuc.App\Controller\SuperAdmin\AnalysisStatisticsController"/>
+      </call>
+    </service>
     <service id="App\Controller\SuperAdmin\CompanyAnalysisController" class="App\Controller\SuperAdmin\CompanyAnalysisController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -1944,7 +1962,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.rngS9XY"/>
+      <argument type="service" id=".service_locator.To0k9Am"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -5152,7 +5170,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.rngS9XY"/>
+      <argument type="service" id=".service_locator.To0k9Am"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -10900,6 +10918,12 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SuperAdmin\AnalysisPriceController" class="App\Controller\SuperAdmin\AnalysisPriceController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SuperAdmin\AnalysisPriceController" class="App\Controller\SuperAdmin\AnalysisPriceController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SuperAdmin\AnalysisPriceController" class="App\Controller\SuperAdmin\AnalysisPriceController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SuperAdmin\AnalysisRequestController" class="App\Controller\SuperAdmin\AnalysisRequestController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SuperAdmin\AnalysisRequestController" class="App\Controller\SuperAdmin\AnalysisRequestController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\SuperAdmin\AnalysisRequestController" class="App\Controller\SuperAdmin\AnalysisRequestController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SuperAdmin\AnalysisStatisticsController" class="App\Controller\SuperAdmin\AnalysisStatisticsController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SuperAdmin\AnalysisStatisticsController" class="App\Controller\SuperAdmin\AnalysisStatisticsController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\SuperAdmin\AnalysisStatisticsController" class="App\Controller\SuperAdmin\AnalysisStatisticsController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SuperAdmin\CompanyAnalysisController" class="App\Controller\SuperAdmin\CompanyAnalysisController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SuperAdmin\CompanyAnalysisController" class="App\Controller\SuperAdmin\CompanyAnalysisController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SuperAdmin\CompanyAnalysisController" class="App\Controller\SuperAdmin\CompanyAnalysisController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -12439,7 +12463,7 @@
         <argument key="tokenRepository" type="service_closure" id="App\Repository\SupplierCreditNoteTokenRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.rngS9XY" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.To0k9Am" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Admin\CartController::receiveCart" type="service_closure" id=".service_locator.nnTODkK"/>
@@ -12682,6 +12706,7 @@
         <argument key="App\Controller\SuperAdmin\AnalysisPriceController::new" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\SuperAdmin\AnalysisPriceController::show" type="service_closure" id=".service_locator.VCbJBCz"/>
         <argument key="App\Controller\SuperAdmin\AnalysisPriceController::toggle" type="service_closure" id=".service_locator.i8zDIA5"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisRequestController::show" type="service_closure" id=".service_locator.dAoTLoj"/>
         <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::cancel" type="service_closure" id=".service_locator.dAoTLoj"/>
         <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::companyStats" type="service_closure" id=".service_locator.NeEnakr"/>
         <argument key="App\Controller\SuperAdmin\CompanyAnalysisController::downloadFinalReport" type="service_closure" id=".service_locator.Xld5WjM"/>
@@ -12957,6 +12982,7 @@
         <argument key="App\Controller\SuperAdmin\AnalysisPriceController:new" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\SuperAdmin\AnalysisPriceController:show" type="service_closure" id=".service_locator.VCbJBCz"/>
         <argument key="App\Controller\SuperAdmin\AnalysisPriceController:toggle" type="service_closure" id=".service_locator.i8zDIA5"/>
+        <argument key="App\Controller\SuperAdmin\AnalysisRequestController:show" type="service_closure" id=".service_locator.dAoTLoj"/>
         <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:cancel" type="service_closure" id=".service_locator.dAoTLoj"/>
         <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:companyStats" type="service_closure" id=".service_locator.NeEnakr"/>
         <argument key="App\Controller\SuperAdmin\CompanyAnalysisController:downloadFinalReport" type="service_closure" id=".service_locator.Xld5WjM"/>
@@ -14312,6 +14338,18 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.siKanuc" method="withContext"/>
     </service>
+    <service id=".service_locator.siKanuc.App\Controller\SuperAdmin\AnalysisRequestController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\SuperAdmin\AnalysisRequestController"/>
+      <argument>App\Controller\SuperAdmin\AnalysisRequestController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
+    <service id=".service_locator.siKanuc.App\Controller\SuperAdmin\AnalysisStatisticsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\SuperAdmin\AnalysisStatisticsController"/>
+      <argument>App\Controller\SuperAdmin\AnalysisStatisticsController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.siKanuc" method="withContext"/>
+    </service>
     <service id=".service_locator.siKanuc.App\Controller\SuperAdmin\CompanyAnalysisController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SuperAdmin\CompanyAnalysisController"/>
       <argument>App\Controller\SuperAdmin\CompanyAnalysisController</argument>
@@ -14607,6 +14645,8 @@
           <argument>App\Controller\Stock\StockTransferController</argument>
           <argument>App\Controller\SubscriptionController</argument>
           <argument>App\Controller\SuperAdmin\AnalysisPriceController</argument>
+          <argument>App\Controller\SuperAdmin\AnalysisRequestController</argument>
+          <argument>App\Controller\SuperAdmin\AnalysisStatisticsController</argument>
           <argument>App\Controller\SuperAdmin\CompanyAnalysisController</argument>
           <argument>App\Controller\SuperAdmin\HmaServiceController</argument>
           <argument>App\Controller\SuperAdmin\PaymentController</argument>
@@ -16332,7 +16372,7 @@
     <service id="Knp\Bundle\TimeBundle\DateTimeFormatter" alias="time.datetime_formatter"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.rngS9XY"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.To0k9Am"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -16418,7 +16458,7 @@
     <service id=".service_locator.GS1F4er" alias=".service_locator.CqWJ9w6"/>
     <service id=".service_locator.3oRQWcw" alias=".service_locator.jMmnFRa"/>
     <service id=".service_locator.zgOrgxD" alias=".service_locator.t.B26rY"/>
-    <service id=".service_locator.vhZtr.g" alias=".service_locator.rngS9XY"/>
+    <service id=".service_locator.B9oHYvN" alias=".service_locator.To0k9Am"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
     <service id=".service_locator.P2VNMyQ" alias=".service_locator.KWhUj2s"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>

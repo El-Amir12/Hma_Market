@@ -33,6 +33,7 @@
         border-radius: 2rem;
         font-weight: 500;
         font-size: 0.75rem;
+        white-space: nowrap;
     }
     .badge-status.completed, .badge-status.paid { background: #d1fae5; color: #065f46; }
     .badge-status.pending { background: #fef3c7; color: #b45309; }
@@ -103,102 +104,374 @@
     .stat-card .small {
         color: rgba(255,255,255,0.8) !important;
     }
+
+    /* ========================================
+       RESPONSIVE - FILTRES
+    ======================================== */
+    .filter-col {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .filter-col-half {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .filter-select {
+        width: 100% !important;
+        font-size: 0.7rem !important;
+    }
+    .filter-input {
+        font-size: 0.7rem !important;
+    }
+
+    /* ========================================
+       RESPONSIVE - MEDIA QUERIES
+    ======================================== */
+    
+    /* Tablette */
+    @media (max-width: 768px) {
+        .stat-value { font-size: 1.3rem; }
+        .stat-card .card-body { padding: 0.75rem; }
+        .stat-card .rounded-circle { width: 36px; height: 36px; padding: 0.5rem !important; }
+        .stat-card .rounded-circle i { font-size: 1rem; }
+        
+        .filter-card { padding: 1rem !important; }
+        .last-payment-card { padding: 1rem !important; }
+        
+        .table th, .table td { padding: 0.5rem; font-size: 0.75rem; }
+        .badge-status { font-size: 0.65rem; padding: 0.2rem 0.5rem; }
+        
+        .filter-col-half {
+            flex: 0 0 50% !important;
+            max-width: 50% !important;
+            width: 50% !important;
+        }
+    }
+    
+    /* Mobile */
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+        
+        /* En-tête */
+        .h1, .h3 {
+            font-size: 1rem !important;
+        }
+        .text-muted {
+            font-size: 0.65rem !important;
+        }
+        .breadcrumb {
+            font-size: 0.55rem !important;
+        }
+        .breadcrumb-item a {
+            font-size: 0.55rem !important;
+        }
+        
+        /* Boutons */
+        .btn {
+            font-size: 0.6rem !important;
+            padding: 0.15rem 0.4rem !important;
+        }
+        .btn i {
+            font-size: 0.6rem !important;
+        }
+        .btn-outline-info {
+            font-size: 0.6rem !important;
+            padding: 0.15rem 0.4rem !important;
+        }
+        
+        /* Statistiques */
+        .stat-value {
+            font-size: 1.1rem !important;
+        }
+        .stat-card .card-body {
+            padding: 0.5rem !important;
+        }
+        .stat-card .rounded-circle {
+            width: 28px !important;
+            height: 28px !important;
+            padding: 0.3rem !important;
+        }
+        .stat-card .rounded-circle i {
+            font-size: 0.8rem !important;
+        }
+        .stat-card .small {
+            font-size: 0.5rem !important;
+        }
+        
+        /* Filtres */
+        .filter-card {
+            padding: 0.5rem !important;
+            border-radius: 0.75rem !important;
+        }
+        .filter-card .form-label {
+            font-size: 0.55rem !important;
+        }
+        .filter-card .form-control,
+        .filter-card .form-select {
+            font-size: 0.6rem !important;
+            padding: 0.15rem 0.3rem !important;
+            border-radius: 4px !important;
+        }
+        .filter-col, .filter-col-half {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        .filter-card .btn {
+            font-size: 0.6rem !important;
+            padding: 0.2rem 0.4rem !important;
+        }
+        
+        /* Badges filtres */
+        .filter-badge {
+            font-size: 0.55rem !important;
+            padding: 0.15rem 0.4rem !important;
+        }
+        .btn-outline-secondary {
+            font-size: 0.55rem !important;
+            padding: 0.15rem 0.4rem !important;
+        }
+        
+        /* Dernier paiement */
+        .last-payment-card {
+            padding: 0.5rem !important;
+            border-radius: 0.75rem !important;
+        }
+        .last-payment-card h5 {
+            font-size: 0.75rem !important;
+        }
+        .last-payment-card .fa-2x {
+            font-size: 1.5rem !important;
+        }
+        .last-payment-card .row {
+            gap: 0.25rem !important;
+        }
+        .last-payment-card .info-row {
+            padding: 0.25rem 0 !important;
+        }
+        .last-payment-card .info-label {
+            font-size: 0.55rem !important;
+        }
+        .last-payment-card .info-value {
+            font-size: 0.6rem !important;
+        }
+        .last-payment-card .badge {
+            font-size: 0.5rem !important;
+            padding: 0.15rem 0.3rem !important;
+        }
+        .last-payment-card .btn {
+            font-size: 0.55rem !important;
+            padding: 0.15rem 0.3rem !important;
+        }
+        
+        /* Tableau */
+        .table-container .card-body {
+            padding: 0 !important;
+        }
+        .table {
+            min-width: 700px !important;
+            font-size: 0.65rem !important;
+        }
+        .table th {
+            font-size: 0.55rem !important;
+            padding: 0.3rem 0.4rem !important;
+            letter-spacing: 0.3px !important;
+            white-space: nowrap;
+        }
+        .table td {
+            padding: 0.3rem 0.4rem !important;
+            font-size: 0.6rem !important;
+            vertical-align: middle !important;
+        }
+        .table .badge {
+            font-size: 0.45rem !important;
+            padding: 0.1rem 0.3rem !important;
+        }
+        .badge-status {
+            font-size: 0.5rem !important;
+            padding: 0.15rem 0.3rem !important;
+        }
+        .badge-status i {
+            font-size: 0.5rem !important;
+        }
+        .amount-cell {
+            font-size: 0.65rem !important;
+        }
+        
+        /* Actions */
+        .btn-group .btn {
+            font-size: 0.5rem !important;
+            padding: 0.1rem 0.2rem !important;
+        }
+        .btn-group .btn i {
+            font-size: 0.5rem !important;
+        }
+        
+        /* Card header */
+        .card-header {
+            padding: 0.4rem 0.6rem !important;
+        }
+        .card-header h5 {
+            font-size: 0.75rem !important;
+        }
+        .card-header .badge {
+            font-size: 0.5rem !important;
+        }
+        
+        /* Désactiver hover */
+        .stat-card:hover {
+            transform: none !important;
+        }
+        .payment-row:hover {
+            background: transparent !important;
+        }
+        .last-payment-card:hover {
+            transform: none !important;
+        }
+        .filter-badge:hover {
+            transform: none !important;
+        }
+        .btn-action:hover {
+            transform: none !important;
+        }
+    }
+
+    /* Très petits écrans */
+    @media (max-width: 400px) {
+        .table {
+            min-width: 600px !important;
+        }
+        .table th {
+            font-size: 0.5rem !important;
+            padding: 0.2rem 0.3rem !important;
+        }
+        .table td {
+            font-size: 0.5rem !important;
+            padding: 0.2rem 0.3rem !important;
+        }
+        .stat-value {
+            font-size: 0.9rem !important;
+        }
+        .btn {
+            font-size: 0.5rem !important;
+            padding: 0.1rem 0.3rem !important;
+        }
+        .badge-status {
+            font-size: 0.45rem !important;
+            padding: 0.1rem 0.2rem !important;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid px-4">
-    <!-- En-tête -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
+<div class="container-fluid px-2 px-md-4 py-2 py-md-3">
+
+    <!-- ==========================================
+         EN-TÊTE
+    ========================================== -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 mb-md-4 flex-wrap gap-2">
+        <div class="w-100 w-sm-auto">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item small">
                         <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
                             <i class="fas fa-tachometer-alt me-1"></i> Dashboard
                         </a>
                     </li>
-                    <li class="breadcrumb-item active">
+                    <li class="breadcrumb-item active small">
                         <i class="fas fa-credit-card me-1"></i> Paiements
                     </li>
                 </ol>
             </nav>
             <h1 class="h3 mb-0 fw-bold">
                 <i class="fas fa-credit-card text-primary me-2"></i>
-                Gestion des paiements
+                <span class="d-none d-sm-inline">Gestion des paiements</span>
+                <span class="d-inline d-sm-none">Paiements</span>
             </h1>
-            <p class="text-muted mt-2">
+            <p class="text-muted mt-1 small d-none d-sm-block">
                 <i class="fas fa-globe me-1"></i>
                 Consultez tous les paiements effectués par les entreprises
             </p>
+            <p class="text-muted mt-1 small d-block d-sm-none">
+                Tous les paiements des entreprises
+            </p>
         </div>
-        <div>
-            <a href="{{ path('super_admin_subscription_index') }}" class="btn btn-outline-info">
-                <i class="fas fa-tags me-1"></i> Voir les abonnements
+        <div class="w-100 w-sm-auto">
+            <a href="{{ path('super_admin_subscription_index') }}" class="btn btn-outline-info btn-sm w-100 w-sm-auto">
+                <i class="fas fa-tags me-1"></i> <span class="d-none d-sm-inline">Voir les abonnements</span>
+                <span class="d-inline d-sm-none">Abonnements</span>
             </a>
         </div>
     </div>
 
-    <!-- Cartes statistiques -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3 col-sm-6">
+    <!-- ==========================================
+         CARTES STATISTIQUES
+    ========================================== -->
+    <div class="row g-2 g-md-3 mb-3 mb-md-4">
+        <div class="col-6 col-md-3">
             <div class="card stat-card bg-primary h-100">
-                <div class="card-body d-flex flex-column">
+                <div class="card-body p-2 p-md-3 d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-start flex-grow-1">
                         <div>
-                            <div class="small text-white opacity-75">Total paiements</div>
-                            <div class="stat-value text-white">{{ payments|length|number_format }}</div>
+                            <div class="small text-white opacity-75" style="font-size:0.5rem;">Total paiements</div>
+                            <div class="stat-value text-white" style="font-size:1.2rem;">{{ payments|length|number_format }}</div>
                         </div>
-                        <div class="rounded-circle bg-white bg-opacity-20 p-3">
-                            <i class="fas fa-credit-card fa-fw text-white"></i>
+                        <div class="rounded-circle bg-white bg-opacity-20 p-2 p-md-3">
+                            <i class="fas fa-credit-card fa-fw text-white" style="font-size:0.8rem;"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
+        <div class="col-6 col-md-3">
             <div class="card stat-card bg-success h-100">
-                <div class="card-body d-flex flex-column">
+                <div class="card-body p-2 p-md-3 d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-start flex-grow-1">
                         <div>
-                            <div class="small text-white opacity-75">Montant total</div>
-                            <div class="stat-value text-white">
+                            <div class="small text-white opacity-75" style="font-size:0.5rem;">Montant total</div>
+                            <div class="stat-value text-white" style="font-size:1.2rem;">
                                 {{ totalAmount|default(0)|number_format(0, ',', ' ') }}
                             </div>
-                            <small class="text-white opacity-75">FCFA</small>
+                            <small class="text-white opacity-75" style="font-size:0.45rem;">FCFA</small>
                         </div>
-                        <div class="rounded-circle bg-white bg-opacity-20 p-3">
-                            <i class="fas fa-money-bill-wave fa-fw text-white"></i>
+                        <div class="rounded-circle bg-white bg-opacity-20 p-2 p-md-3">
+                            <i class="fas fa-money-bill-wave fa-fw text-white" style="font-size:0.8rem;"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
+        <div class="col-6 col-md-3">
             <div class="card stat-card bg-info h-100">
-                <div class="card-body d-flex flex-column">
+                <div class="card-body p-2 p-md-3 d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-start flex-grow-1">
                         <div>
-                            <div class="small text-white opacity-75">Paiements réussis</div>
-                            <div class="stat-value text-white">{{ payments|filter(p => p.status == 'completed' or p.status == 'paid')|length|number_format }}</div>
+                            <div class="small text-white opacity-75" style="font-size:0.5rem;">Paiements réussis</div>
+                            <div class="stat-value text-white" style="font-size:1.2rem;">{{ payments|filter(p => p.status == 'completed' or p.status == 'paid')|length|number_format }}</div>
                         </div>
-                        <div class="rounded-circle bg-white bg-opacity-20 p-3">
-                            <i class="fas fa-check-circle fa-fw text-white"></i>
+                        <div class="rounded-circle bg-white bg-opacity-20 p-2 p-md-3">
+                            <i class="fas fa-check-circle fa-fw text-white" style="font-size:0.8rem;"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
+        <div class="col-6 col-md-3">
             <div class="card stat-card bg-danger h-100">
-                <div class="card-body d-flex flex-column">
+                <div class="card-body p-2 p-md-3 d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-start flex-grow-1">
                         <div>
-                            <div class="small text-white opacity-75">Échoués/En attente</div>
-                            <div class="stat-value text-white">{{ payments|filter(p => p.status == 'failed' or p.status == 'pending')|length|number_format }}</div>
+                            <div class="small text-white opacity-75" style="font-size:0.5rem;">Échoués/En attente</div>
+                            <div class="stat-value text-white" style="font-size:1.2rem;">{{ payments|filter(p => p.status == 'failed' or p.status == 'pending')|length|number_format }}</div>
                         </div>
-                        <div class="rounded-circle bg-white bg-opacity-20 p-3">
-                            <i class="fas fa-exclamation-triangle fa-fw text-white"></i>
+                        <div class="rounded-circle bg-white bg-opacity-20 p-2 p-md-3">
+                            <i class="fas fa-exclamation-triangle fa-fw text-white" style="font-size:0.8rem;"></i>
                         </div>
                     </div>
                 </div>
@@ -206,21 +479,23 @@
         </div>
     </div>
 
-    <!-- Badges de filtres actifs -->
+    <!-- ==========================================
+         BADGES DE FILTRES ACTIFS
+    ========================================== -->
     {% if filters.company_id or filters.status or filters.payment_method or filters.date_from or filters.date_to %}
-    <div class="d-flex gap-2 flex-wrap mb-3">
+    <div class="d-flex gap-1 gap-md-2 flex-wrap mb-2 mb-md-3">
         {% if filters.company_id and companies is defined %}
             {% for company in companies %}
                 {% if company.id == filters.company_id %}
-                    <span class="filter-badge" onclick="removeFilter('company_id')">
-                        <i class="fas fa-building me-1"></i> {{ company.companyName }}
+                    <span class="filter-badge" onclick="removeFilter('company_id')" style="font-size:0.55rem; padding:0.15rem 0.4rem;">
+                        <i class="fas fa-building me-1"></i> {{ company.companyName|slice(0, 15) }}
                         <i class="fas fa-times ms-1"></i>
                     </span>
                 {% endif %}
             {% endfor %}
         {% endif %}
         {% if filters.status %}
-            <span class="filter-badge" onclick="removeFilter('status')">
+            <span class="filter-badge" onclick="removeFilter('status')" style="font-size:0.55rem; padding:0.15rem 0.4rem;">
                 <i class="fas fa-filter me-1"></i> Statut: 
                 {% if filters.status == 'completed' %}Payé
                 {% elseif filters.status == 'pending' %}En attente
@@ -232,9 +507,9 @@
             </span>
         {% endif %}
         {% if filters.payment_method %}
-            <span class="filter-badge" onclick="removeFilter('payment_method')">
+            <span class="filter-badge" onclick="removeFilter('payment_method')" style="font-size:0.55rem; padding:0.15rem 0.4rem;">
                 <i class="fas fa-credit-card me-1"></i> Mode: 
-                {% if filters.payment_method == 'card' %}Carte bancaire
+                {% if filters.payment_method == 'card' %}Carte
                 {% elseif filters.payment_method == 'mobile_money' %}Mobile Money
                 {% elseif filters.payment_method == 'transfer' %}Virement
                 {% elseif filters.payment_method == 'cash' %}Espèces
@@ -244,44 +519,49 @@
             </span>
         {% endif %}
         {% if filters.date_from %}
-            <span class="filter-badge" onclick="removeFilter('date_from')">
+            <span class="filter-badge" onclick="removeFilter('date_from')" style="font-size:0.55rem; padding:0.15rem 0.4rem;">
                 <i class="fas fa-calendar me-1"></i> Depuis: {{ filters.date_from }}
                 <i class="fas fa-times ms-1"></i>
             </span>
         {% endif %}
         {% if filters.date_to %}
-            <span class="filter-badge" onclick="removeFilter('date_to')">
+            <span class="filter-badge" onclick="removeFilter('date_to')" style="font-size:0.55rem; padding:0.15rem 0.4rem;">
                 <i class="fas fa-calendar me-1"></i> Jusqu'au: {{ filters.date_to }}
                 <i class="fas fa-times ms-1"></i>
             </span>
         {% endif %}
-        <button class="btn btn-sm btn-outline-secondary" onclick="clearAllFilters()">
+        <button class="btn btn-sm btn-outline-secondary" onclick="clearAllFilters()" style="font-size:0.5rem; padding:0.15rem 0.4rem;">
             <i class="fas fa-eraser me-1"></i> Effacer tout
         </button>
     </div>
     {% endif %}
 
-    <!-- Filtres -->
-    <div class="filter-card p-4 mb-4 shadow-sm">
-        <form method="get" class="row g-3 align-items-end" id="filterForm">
-            <div class="col-md-3">
-                <label class="form-label fw-semibold small mb-1">
+    <!-- ==========================================
+         FILTRES
+    ========================================== -->
+    <div class="filter-card p-2 p-md-4 mb-3 mb-md-4 shadow-sm">
+        <form method="get" class="row g-2 g-md-3 align-items-end" id="filterForm">
+            <!-- Entreprise - 100% mobile, 3 desktop -->
+            <div class="col-12 col-md-3 filter-col">
+                <label class="form-label fw-semibold small mb-1" style="font-size:0.55rem;">
                     <i class="fas fa-building me-1"></i>Entreprise
                 </label>
-                <select name="company_id" class="form-select">
+                <select name="company_id" class="form-select form-select-sm filter-select" style="font-size:0.65rem;">
                     <option value="">Toutes</option>
                     {% for company in companies|default([]) %}
                         <option value="{{ company.id }}" {{ filters.company_id == company.id ? 'selected' }}>
-                            {{ company.companyName }}
+                            {{ company.companyName|slice(0, 25) }}{% if company.companyName|length > 25 %}...{% endif %}
                         </option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-2">
-                <label class="form-label fw-semibold small mb-1">
+            
+            <!-- Statut - 50% mobile, 2 desktop -->
+            <div class="col-6 col-md-2 filter-col-half">
+                <label class="form-label fw-semibold small mb-1" style="font-size:0.55rem;">
                     <i class="fas fa-filter me-1"></i>Statut
                 </label>
-                <select name="status" class="form-select">
+                <select name="status" class="form-select form-select-sm filter-select" style="font-size:0.65rem;">
                     <option value="">Tous</option>
                     <option value="completed" {{ filters.status == 'completed' ? 'selected' }}>✅ Payé</option>
                     <option value="pending" {{ filters.status == 'pending' ? 'selected' }}>⏳ En attente</option>
@@ -289,103 +569,113 @@
                     <option value="refunded" {{ filters.status == 'refunded' ? 'selected' }}>↩️ Remboursé</option>
                 </select>
             </div>
-            <div class="col-md-2">
-                <label class="form-label fw-semibold small mb-1">
+            
+            <!-- Mode paiement - 50% mobile, 2 desktop -->
+            <div class="col-6 col-md-2 filter-col-half">
+                <label class="form-label fw-semibold small mb-1" style="font-size:0.55rem;">
                     <i class="fas fa-credit-card me-1"></i>Mode de paiement
                 </label>
-                <select name="payment_method" class="form-select">
+                <select name="payment_method" class="form-select form-select-sm filter-select" style="font-size:0.65rem;">
                     <option value="">Tous</option>
-                    <option value="card" {{ filters.payment_method == 'card' ? 'selected' }}>💳 Carte bancaire</option>
+                    <option value="card" {{ filters.payment_method == 'card' ? 'selected' }}>💳 Carte</option>
                     <option value="mobile_money" {{ filters.payment_method == 'mobile_money' ? 'selected' }}>📱 Mobile Money</option>
                     <option value="transfer" {{ filters.payment_method == 'transfer' ? 'selected' }}>🏦 Virement</option>
                     <option value="cash" {{ filters.payment_method == 'cash' ? 'selected' }}>💰 Espèces</option>
                 </select>
             </div>
-            <div class="col-md-2">
-                <label class="form-label fw-semibold small mb-1">
+            
+            <!-- Date du - 50% mobile, 2 desktop -->
+            <div class="col-6 col-md-2 filter-col-half">
+                <label class="form-label fw-semibold small mb-1" style="font-size:0.55rem;">
                     <i class="fas fa-calendar me-1"></i>Date du
                 </label>
-                <input type="date" name="date_from" class="form-control" value="{{ filters.date_from }}">
+                <input type="date" name="date_from" class="form-control form-control-sm filter-input" value="{{ filters.date_from }}" style="font-size:0.65rem;">
             </div>
-            <div class="col-md-2">
-                <label class="form-label fw-semibold small mb-1">
+            
+            <!-- Date au - 50% mobile, 2 desktop -->
+            <div class="col-6 col-md-2 filter-col-half">
+                <label class="form-label fw-semibold small mb-1" style="font-size:0.55rem;">
                     <i class="fas fa-calendar me-1"></i>Date au
                 </label>
-                <input type="date" name="date_to" class="form-control" value="{{ filters.date_to }}">
+                <input type="date" name="date_to" class="form-control form-control-sm filter-input" value="{{ filters.date_to }}" style="font-size:0.65rem;">
             </div>
-            <div class="col-md-1">
-                <button type="submit" class="btn btn-primary w-100">
+            
+            <!-- Bouton Filtrer - 100% mobile, 1 desktop -->
+            <div class="col-12 col-md-1 filter-col">
+                <button type="submit" class="btn btn-primary w-100" style="font-size:0.65rem; padding:0.2rem 0.4rem;">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
         </form>
     </div>
 
-    <!-- Dernier paiement - Pleine largeur -->
+    <!-- ==========================================
+         DERNIER PAIEMENT
+    ========================================== -->
     {% set lastPayment = payments|first %}
     {% if lastPayment %}
-        <div class="last-payment-card p-4 mb-4 text-white">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0 fw-bold">
-                    <i class="fas fa-clock me-2"></i> Dernier paiement enregistré
+        <div class="last-payment-card p-3 p-md-4 mb-3 mb-md-4 text-white">
+            <div class="d-flex justify-content-between align-items-center mb-2 mb-md-3">
+                <h5 class="mb-0 fw-bold fs-6 fs-md-5">
+                    <i class="fas fa-clock me-2"></i> Dernier paiement
                 </h5>
-                <i class="fas fa-credit-card fa-2x opacity-50"></i>
+                <i class="fas fa-credit-card fa-2x opacity-50" style="font-size:1.5rem;"></i>
             </div>
-            <div class="row">
-                <div class="col-md-4">
+            <div class="row g-1 g-md-0">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Entreprise</span>
-                        <span class="info-value">{{ lastPayment.hmaService.companyName }}</span>
+                        <span class="info-label" style="font-size:0.6rem;">Entreprise</span>
+                        <span class="info-value" style="font-size:0.65rem;">{{ lastPayment.hmaService.companyName|slice(0, 20) }}</span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Montant</span>
-                        <span class="info-value">{{ lastPayment.amount|number_format(0, ',', ' ') }} FCFA</span>
+                        <span class="info-label" style="font-size:0.6rem;">Montant</span>
+                        <span class="info-value" style="font-size:0.65rem;">{{ lastPayment.amount|number_format(0, ',', ' ') }} FCFA</span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Mode de paiement</span>
-                        <span class="info-value">
+                        <span class="info-label" style="font-size:0.6rem;">Mode</span>
+                        <span class="info-value" style="font-size:0.65rem;">
                             {% set methodLabels = {
                                 'card': '💳 Carte',
                                 'mobile_money': '📱 Mobile Money',
                                 'transfer': '🏦 Virement',
                                 'cash': '💰 Espèces'
                             } %}
-                            {{ methodLabels[lastPayment.paymentMethod]|default(lastPayment.paymentMethod) }}
+                            {{ methodLabels[lastPayment.paymentMethod]|default(lastPayment.paymentMethod)|slice(0, 12) }}
                         </span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Statut</span>
-                        <span class="info-value">
+                        <span class="info-label" style="font-size:0.6rem;">Statut</span>
+                        <span class="info-value" style="font-size:0.65rem;">
                             {% if lastPayment.status == 'completed' or lastPayment.status == 'paid' %}
-                                <span class="badge bg-success">✓ Payé</span>
+                                <span class="badge bg-success" style="font-size:0.5rem;">✓ Payé</span>
                             {% elseif lastPayment.status == 'pending' %}
-                                <span class="badge bg-warning text-dark">⏳ En attente</span>
+                                <span class="badge bg-warning text-dark" style="font-size:0.5rem;">⏳ En attente</span>
                             {% elseif lastPayment.status == 'failed' %}
-                                <span class="badge bg-danger">❌ Échoué</span>
+                                <span class="badge bg-danger" style="font-size:0.5rem;">❌ Échoué</span>
                             {% else %}
-                                <span class="badge bg-secondary">↩️ Remboursé</span>
+                                <span class="badge bg-secondary" style="font-size:0.5rem;">↩️ Remboursé</span>
                             {% endif %}
                         </span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Date paiement</span>
-                        <span class="info-value">{{ lastPayment.paymentDate ? lastPayment.paymentDate|date('d/m/Y H:i') : lastPayment.createdAt|date('d/m/Y H:i') }}</span>
+                        <span class="info-label" style="font-size:0.6rem;">Date paiement</span>
+                        <span class="info-value" style="font-size:0.65rem;">{{ lastPayment.paymentDate ? lastPayment.paymentDate|date('d/m/Y H:i') : lastPayment.createdAt|date('d/m/Y H:i') }}</span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                     <div class="info-row">
-                        <span class="info-label">Transaction</span>
-                        <span class="info-value">
+                        <span class="info-label" style="font-size:0.6rem;">Transaction</span>
+                        <span class="info-value" style="font-size:0.65rem;">
                             {% if lastPayment.transactionId %}
-                                <code class="small bg-dark text-white px-2 py-1 rounded">{{ lastPayment.transactionId|slice(0, 12) }}...</code>
+                                <code class="small bg-dark text-white px-1 py-1 rounded" style="font-size:0.5rem;">{{ lastPayment.transactionId|slice(0, 10) }}...</code>
                             {% else %}
                                 —
                             {% endif %}
@@ -393,127 +683,132 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-3 text-end">
-                <a href="{{ path('super_admin_payment_show', {'id': lastPayment.id}) }}" class="btn btn-light btn-sm">
-                    <i class="fas fa-eye me-1"></i> Voir les détails complets
+            <div class="mt-2 mt-md-3 text-end">
+                <a href="{{ path('super_admin_payment_show', {'id': lastPayment.id}) }}" class="btn btn-light btn-sm" style="font-size:0.6rem; padding:0.15rem 0.4rem;">
+                    <i class="fas fa-eye me-1"></i> Voir les détails
                 </a>
             </div>
         </div>
     {% else %}
-        <div class="last-payment-card p-4 mb-4 text-white">
-            <div class="text-center py-3">
-                <i class="fas fa-credit-card fa-3x mb-2 opacity-50"></i>
-                <p class="mb-0">Aucun paiement enregistré pour le moment</p>
+        <div class="last-payment-card p-3 p-md-4 mb-3 mb-md-4 text-white">
+            <div class="text-center py-2 py-md-3">
+                <i class="fas fa-credit-card fa-2x fa-md-3x mb-2 opacity-50"></i>
+                <p class="mb-0 small">Aucun paiement enregistré</p>
             </div>
         </div>
     {% endif %}
 
-    <!-- Liste des paiements -->
+    <!-- ==========================================
+         LISTE DES PAIEMENTS
+    ========================================== -->
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-semibold">
+        <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 fw-semibold fs-6 fs-md-5">
                 <i class="fas fa-list me-2 text-primary"></i>
-                Historique des paiements
+                <span class="d-none d-sm-inline">Historique des paiements</span>
+                <span class="d-inline d-sm-none">Paiements</span>
             </h5>
-            <span class="badge bg-secondary">{{ payments|length }} paiement(s)</span>
+            <span class="badge bg-secondary" style="font-size:0.55rem;">{{ payments|length }}</span>
         </div>
         <div class="table-container">
             <div class="card-body p-0">
                 {% if payments is empty %}
-                    <div class="text-center py-5">
+                    <div class="text-center py-4 py-md-5">
                         <i class="fas fa-credit-card fa-3x text-muted mb-3 opacity-50"></i>
-                        <p class="text-muted mb-0">Aucun paiement trouvé</p>
+                        <p class="text-muted mb-0 small">Aucun paiement trouvé</p>
                         <p class="text-muted small mb-3">Modifiez vos filtres</p>
                     </div>
                 {% else %}
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="min-width: 200px">Entreprise</th>
-                                <th style="min-width: 130px">Abonnement</th>
-                                <th style="min-width: 120px">Montant</th>
-                                <th style="min-width: 130px">Mode</th>
-                                <th style="min-width: 100px">Statut</th>
-                                <th style="min-width: 150px">Date</th>
-                                <th style="min-width: 150px">Transaction</th>
-                                <th style="min-width: 130px" class="text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for payment in payments %}
-                                <tr class="payment-row">
-                                    <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'">
-                                        <strong>{{ payment.hmaService.companyName }}</strong>
-                                        <br>
-                                        <small class="text-muted">{{ payment.hmaService.subscriptionNumber }}</small>
-                                    </td>
-                                    <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'">
-                                        {% if payment.subscription %}
-                                            <a href="{{ path('super_admin_subscription_show', {'id': payment.subscription.id}) }}" class="text-decoration-none" onclick="event.stopPropagation()">
-                                                <span class="badge bg-info">
-                                                    <i class="fas fa-tag me-1"></i> Abo #{{ payment.subscription.id }}
-                                                </span>
-                                            </a>
-                                            <br>
-                                            <small class="text-muted">{{ payment.subscription.subscriptionPlan.displayName }}</small>
-                                        {% else %}
-                                            <span class="badge bg-secondary">Sans abonnement</span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="amount-cell" onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'">
-                                        {{ payment.amount|number_format(0, ',', ' ') }} FCFA
-                                    </td>
-                                    <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'">
-                                        {% set methodLabels = {
-                                            'card': '💳 Carte',
-                                            'mobile_money': '📱 Mobile Money',
-                                            'transfer': '🏦 Virement',
-                                            'cash': '💰 Espèces'
-                                        } %}
-                                        {{ methodLabels[payment.paymentMethod]|default(payment.paymentMethod) }}
-                                    </td>
-                                    <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'">
-                                        <span class="badge-status {{ payment.status }}">
-                                            {% if payment.status == 'completed' or payment.status == 'paid' %}
-                                                <i class="fas fa-check-circle me-1"></i> Payé
-                                            {% elseif payment.status == 'pending' %}
-                                                <i class="fas fa-clock me-1"></i> En attente
-                                            {% elseif payment.status == 'failed' %}
-                                                <i class="fas fa-times-circle me-1"></i> Échoué
-                                            {% elseif payment.status == 'refunded' %}
-                                                <i class="fas fa-undo-alt me-1"></i> Remboursé
-                                            {% else %}
-                                                {{ payment.status }}
-                                            {% endif %}
-                                        </span>
-                                    </td>
-                                    <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'">
-                                        <i class="far fa-calendar text-muted me-1"></i>
-                                        {{ payment.paymentDate ? payment.paymentDate|date('d/m/Y H:i') : payment.createdAt|date('d/m/Y H:i') }}
-                                    </td>
-                                    <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'">
-                                        {% if payment.transactionId %}
-                                            <code class="small">{{ payment.transactionId|slice(0, 12) }}...</code>
-                                        {% else %}
-                                            <span class="text-muted">—</span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="text-center" onclick="event.stopPropagation()">
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ path('super_admin_payment_show', {'id': payment.id}) }}" class="btn btn-sm btn-outline-primary btn-action" title="Voir détails">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            {% if payment.subscription %}
-                                                <a href="{{ path('super_admin_subscription_show', {'id': payment.subscription.id}) }}" class="btn btn-sm btn-outline-info btn-action" title="Voir l'abonnement">
-                                                    <i class="fas fa-tags"></i>
-                                                </a>
-                                            {% endif %}
-                                        </div>
-                                    </td>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="min-width: 120px;">Entreprise</th>
+                                    <th style="min-width: 100px;">Abonnement</th>
+                                    <th style="min-width: 90px;">Montant</th>
+                                    <th style="min-width: 90px;" class="d-none d-sm-table-cell">Mode</th>
+                                    <th style="min-width: 80px;">Statut</th>
+                                    <th style="min-width: 80px;" class="d-none d-md-table-cell">Date</th>
+                                    <th style="min-width: 80px;" class="d-none d-lg-table-cell">Transaction</th>
+                                    <th style="min-width: 70px;">Actions</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {% for payment in payments %}
+                                    <tr class="payment-row">
+                                        <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'">
+                                            <strong class="small">{{ payment.hmaService.companyName|slice(0, 15) }}{% if payment.hmaService.companyName|length > 15 %}...{% endif %}</strong>
+                                            <br>
+                                            <small class="text-muted" style="font-size:0.45rem;">{{ payment.hmaService.subscriptionNumber }}</small>
+                                        </td>
+                                        <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'">
+                                            {% if payment.subscription %}
+                                                <a href="{{ path('super_admin_subscription_show', {'id': payment.subscription.id}) }}" class="text-decoration-none" onclick="event.stopPropagation()">
+                                                    <span class="badge bg-info" style="font-size:0.45rem;">
+                                                        <i class="fas fa-tag me-1"></i> #{{ payment.subscription.id }}
+                                                    </span>
+                                                </a>
+                                                <br>
+                                                <small class="text-muted" style="font-size:0.4rem;">{{ payment.subscription.subscriptionPlan.displayName|slice(0, 10) }}</small>
+                                            {% else %}
+                                                <span class="badge bg-secondary" style="font-size:0.45rem;">Sans abo</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="amount-cell" onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'" style="font-size:0.65rem;">
+                                            {{ payment.amount|number_format(0, ',', ' ') }} FCFA
+                                        </td>
+                                        <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'" class="d-none d-sm-table-cell">
+                                            {% set methodLabels = {
+                                                'card': '💳 Carte',
+                                                'mobile_money': '📱 Mobile Money',
+                                                'transfer': '🏦 Virement',
+                                                'cash': '💰 Espèces'
+                                            } %}
+                                            <span style="font-size:0.55rem;">{{ methodLabels[payment.paymentMethod]|default(payment.paymentMethod)|slice(0, 10) }}</span>
+                                        </td>
+                                        <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'">
+                                            <span class="badge-status {{ payment.status }}" style="font-size:0.45rem; padding:0.1rem 0.3rem;">
+                                                {% if payment.status == 'completed' or payment.status == 'paid' %}
+                                                    <i class="fas fa-check-circle me-1" style="font-size:0.4rem;"></i> <span class="d-none d-sm-inline">Payé</span>
+                                                {% elseif payment.status == 'pending' %}
+                                                    <i class="fas fa-clock me-1" style="font-size:0.4rem;"></i> <span class="d-none d-sm-inline">En attente</span>
+                                                {% elseif payment.status == 'failed' %}
+                                                    <i class="fas fa-times-circle me-1" style="font-size:0.4rem;"></i> <span class="d-none d-sm-inline">Échoué</span>
+                                                {% elseif payment.status == 'refunded' %}
+                                                    <i class="fas fa-undo-alt me-1" style="font-size:0.4rem;"></i> <span class="d-none d-sm-inline">Remboursé</span>
+                                                {% else %}
+                                                    {{ payment.status|slice(0, 6) }}
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'" class="d-none d-md-table-cell">
+                                            <i class="far fa-calendar text-muted me-1" style="font-size:0.4rem;"></i>
+                                            <span style="font-size:0.5rem;">{{ payment.paymentDate ? payment.paymentDate|date('d/m/Y H:i') : payment.createdAt|date('d/m/Y H:i') }}</span>
+                                        </td>
+                                        <td onclick="window.location='{{ path('super_admin_payment_show', {'id': payment.id}) }}'" class="d-none d-lg-table-cell">
+                                            {% if payment.transactionId %}
+                                                <code class="small" style="font-size:0.45rem;">{{ payment.transactionId|slice(0, 10) }}...</code>
+                                            {% else %}
+                                                <span class="text-muted" style="font-size:0.45rem;">—</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center" onclick="event.stopPropagation()">
+                                            <div class="d-flex gap-1 justify-content-center">
+                                                <a href="{{ path('super_admin_payment_show', {'id': payment.id}) }}" class="btn btn-sm btn-outline-primary btn-action" title="Voir" style="padding:0.1rem 0.2rem; font-size:0.45rem;">
+                                                    <i class="fas fa-eye" style="font-size:0.45rem;"></i>
+                                                </a>
+                                                {% if payment.subscription %}
+                                                    <a href="{{ path('super_admin_subscription_show', {'id': payment.subscription.id}) }}" class="btn btn-sm btn-outline-info btn-action" title="Abonnement" style="padding:0.1rem 0.2rem; font-size:0.45rem;">
+                                                        <i class="fas fa-tags" style="font-size:0.45rem;"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 {% endif %}
             </div>
         </div>

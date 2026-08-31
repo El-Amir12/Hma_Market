@@ -375,7 +375,7 @@ class MenuBuilder
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_dashboard',
+                        'route' => 'app_company_settings_index',
                         'label' => 'Configuration globale',
                         'icon' => 'fas fa-sliders-h'
                     ]
@@ -401,40 +401,7 @@ class MenuBuilder
             $this->getCatalogueMenu(),
 
             // ============================================
-            // SECTION 4: RAPPORTS
-            // ============================================
-            [
-                'type' => 'section',
-                'label' => 'RAPPORTS'
-            ],
-            [
-                'type' => 'dropdown',
-                'label' => 'Rapports',
-                'icon' => 'fas fa-chart-bar',
-                'children' => [
-                    [
-                        'type' => 'link',
-                        'route' => 'app_financial_report_index',
-                        'label' => 'Rapport financier',
-                        'icon' => 'fas fa-calculator'
-                    ],
-                    [
-                        'type' => 'link',
-                        'route' => 'app_sales_report_index',
-                        'label' => 'Rapport des ventes',
-                        'icon' => 'fas fa-chart-line'
-                    ],
-                    [
-                        'type' => 'link',
-                        'route' => 'app_stock_report_index',
-                        'label' => 'Rapport de stock',
-                        'icon' => 'fas fa-box'
-                    ]
-                ]
-            ],
-
-            // ============================================
-            // SECTION 5: ANALYSES APPROFONDIES (SUPER ADMIN)
+            // SECTION 4: ANALYSES APPROFONDIES (SUPER ADMIN)
             // ============================================
             [
                 'type' => 'section',
@@ -447,7 +414,7 @@ class MenuBuilder
                 'children' => [
                     [
                         'type' => 'link',
-                        'route' => 'app_dashboard',
+                        'route' => 'app_super_admin_analysis_request_index',
                         'label' => 'Toutes les demandes',
                         'icon' => 'fas fa-list'
                     ],
@@ -456,7 +423,7 @@ class MenuBuilder
                     ],
                     [
                         'type' => 'link',
-                        'route' => 'app_dashboard',
+                        'route' => 'app_super_admin_analysis_statistics_index',
                         'label' => 'Statistiques des analyses',
                         'icon' => 'fas fa-chart-bar'
                     ]

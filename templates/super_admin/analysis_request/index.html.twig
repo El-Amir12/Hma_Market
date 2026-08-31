@@ -1,0 +1,807 @@
+{# templates/super_admin/analysis_request/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Toutes les demandes d'analyse - Super Admin{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    :root {
+        --primary: #0463f1;
+        --primary-dark: #0350c4;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --info: #0ea5e9;
+        --purple: #8b5cf6;
+        --dark: #1e293b;
+    }
+
+    .request-dashboard {
+        background: #f1f5f9;
+        min-height: 100vh;
+    }
+
+    /* Cartes KPI */
+    .kpi-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .kpi-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1);
+    }
+    
+    .kpi-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+    
+    .kpi-card.primary::before { background: linear-gradient(90deg, var(--primary), var(--purple)); }
+    .kpi-card.success::before { background: linear-gradient(90deg, var(--success), #34d399); }
+    .kpi-card.danger::before { background: linear-gradient(90deg, var(--danger), #f87171); }
+    .kpi-card.warning::before { background: linear-gradient(90deg, var(--warning), #fbbf24); }
+    .kpi-card.info::before { background: linear-gradient(90deg, var(--info), #38bdf8); }
+    
+    .kpi-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    
+    .kpi-icon.primary { background: rgba(4, 99, 241, 0.1); color: var(--primary); }
+    .kpi-icon.success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .kpi-icon.danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    .kpi-icon.warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+    .kpi-icon.info { background: rgba(14, 165, 233, 0.1); color: var(--info); }
+    
+    .kpi-value {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-top: 0.5rem;
+    }
+    
+    .kpi-label {
+        color: #64748b;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Section filtres */
+    .filters-section {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .filter-group {
+        margin-bottom: 1rem;
+    }
+    
+    .filter-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    .filter-badge-active {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.25rem 0.75rem;
+        background: #f1f5f9;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .filter-badge-active:hover {
+        background: #e2e8f0;
+    }
+
+    /* Table */
+    .table-container {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table th {
+        background: #f8fafc;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        border-bottom: 2px solid #e2e8f0;
+        padding: 0.75rem 1rem;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .table td {
+        padding: 0.75rem 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .table tbody tr {
+        transition: background 0.2s;
+        cursor: pointer;
+    }
+    
+    .table tbody tr:hover {
+        background: #f8fafc;
+    }
+    
+    .table .badge {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 2rem;
+        font-weight: 500;
+    }
+
+    /* Table container avec scroll */
+    .table-scroll-container {
+        max-height: 65vh;
+        overflow-y: auto;
+        border-radius: 1rem;
+    }
+    
+    .table-scroll-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .table-scroll-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .table-scroll-container::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 10px;
+    }
+    
+    .table-scroll-container::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    /* Badges de statut */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 2rem;
+        font-size: 0.7rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+    
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-paid { background: #dbeafe; color: #1e40af; }
+    .status-processing { background: #e0e7ff; color: #3730a3; }
+    .status-completed { background: #d1fae5; color: #065f46; }
+    .status-failed { background: #fee2e2; color: #991b1b; }
+    .status-expired { background: #f1f5f9; color: #475569; }
+
+    /* Pagination */
+    .pagination-container {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .pagination {
+        margin-bottom: 0;
+        gap: 0.25rem;
+    }
+    
+    .page-link {
+        border-radius: 0.5rem !important;
+        border: none;
+        padding: 0.4rem 0.75rem;
+        font-size: 0.75rem;
+        color: var(--dark);
+        background: #f1f5f9;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    
+    .page-link:hover {
+        background: #e2e8f0;
+        color: var(--primary);
+    }
+    
+    .page-item.active .page-link {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .kpi-value { font-size: 1.5rem; }
+        .kpi-card { padding: 1rem; }
+        .action-buttons { margin-top: 1rem; justify-content: flex-start; }
+        .table th, .table td { padding: 0.5rem; font-size: 0.75rem; }
+        .filters-section { padding: 1rem; }
+        .table-container { padding: 1rem; }
+    }
+    
+    @media (max-width: 576px) {
+        .filters-section { padding: 0.75rem; }
+        .table-container { padding: 0.5rem; }
+        .table th, .table td { padding: 0.3rem 0.4rem; font-size: 0.65rem; }
+        .table th { font-size: 0.6rem; }
+        .kpi-value { font-size: 1.2rem; }
+        .kpi-card { padding: 0.75rem; }
+        .kpi-label { font-size: 0.65rem; }
+        .kpi-icon { width: 36px; height: 36px; font-size: 1rem; }
+        .pagination-container { flex-direction: column; align-items: center; }
+        .status-badge { font-size: 0.55rem; padding: 0.15rem 0.4rem; }
+        .badge { font-size: 0.55rem !important; padding: 0.15rem 0.3rem !important; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="request-dashboard py-4">
+    <div class="container-fluid px-4">
+        
+        <!-- En-tête -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+            <div>
+                <h1 class="h2 fw-bold mb-1">
+                    <i class="fas fa-microscope text-primary me-2"></i>
+                    Demandes d'analyse
+                </h1>
+                <p class="text-muted mb-0">
+                    <i class="fas fa-list me-1"></i>
+                    Gestion de toutes les demandes d'analyse des entreprises
+                </p>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="applyFilters()" id="applyBtn">
+                    <i class="fas fa-search me-1"></i> Appliquer
+                </button>
+                <button class="btn btn-outline-secondary" onclick="refreshData()" title="Actualiser">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="btn btn-outline-success" onclick="exportData()" title="Exporter CSV">
+                    <i class="fas fa-download"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filtres -->
+        <div class="filters-section">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-search"></i> Recherche
+                        </label>
+                        <input type="text" id="searchInput" class="form-control" 
+                               placeholder="N° demande, entreprise..." value="{{ filters.search }}">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-tag"></i> Type
+                        </label>
+                        <select id="typeFilter" class="form-select">
+                            <option value="">Tous</option>
+                            {% for type in analysisTypes %}
+                                <option value="{{ type }}" {{ filters.type == type ? 'selected' : '' }}>
+                                    {{ type|capitalize }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-circle"></i> Statut
+                        </label>
+                        <select id="statusFilter" class="form-select">
+                            <option value="">Tous</option>
+                            {% for key, label in statuses %}
+                                <option value="{{ key }}" {{ filters.status == key ? 'selected' : '' }}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-calendar"></i> Période
+                        </label>
+                        <div class="d-flex gap-2">
+                            <input type="date" id="dateFrom" class="form-control" value="{{ filters.date_from }}">
+                            <span class="align-self-center">→</span>
+                            <input type="date" id="dateTo" class="form-control" value="{{ filters.date_to }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">
+                        <i class="fas fa-undo-alt me-1"></i> Réinitialiser
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filtres actifs -->
+            <div id="activeFilters" class="d-flex gap-2 flex-wrap mt-3 pt-2 border-top"></div>
+        </div>
+
+        <!-- Cartes KPI -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="kpi-card primary">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="kpi-label">Total demandes</div>
+                            <div class="kpi-value" id="statTotal">{{ stats.total|default(0) }}</div>
+                        </div>
+                        <div class="kpi-icon primary">
+                            <i class="fas fa-list"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="kpi-card warning">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="kpi-label">En attente</div>
+                            <div class="kpi-value" id="statPending">{{ stats.pending|default(0) }}</div>
+                        </div>
+                        <div class="kpi-icon warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="kpi-card info">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="kpi-label">En traitement</div>
+                            <div class="kpi-value" id="statProcessing">{{ stats.processing|default(0) }}</div>
+                        </div>
+                        <div class="kpi-icon info">
+                            <i class="fas fa-spinner"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="kpi-card success">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="kpi-label">Terminées</div>
+                            <div class="kpi-value" id="statCompleted">{{ stats.completed|default(0) }}</div>
+                        </div>
+                        <div class="kpi-icon success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tableau des demandes -->
+        <div class="table-container">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h5 class="mb-0 fw-semibold">
+                    <i class="fas fa-list me-2 text-primary"></i>
+                    Liste des demandes
+                    <span class="badge bg-secondary ms-2">{{ total|default(0) }}</span>
+                </h5>
+                <small class="text-muted">
+                    {{ requests|length }} demandes affichées
+                </small>
+            </div>
+            
+            <div class="table-scroll-container">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="min-width: 100px;">N° Demande</th>
+                                <th style="min-width: 120px;">Entreprise</th>
+                                <th style="min-width: 100px;">Type</th>
+                                <th style="min-width: 80px;">Montant</th>
+                                <th style="min-width: 120px;">Période</th>
+                                <th style="min-width: 100px;">Statut</th>
+                                <th style="min-width: 100px;">Créée le</th>
+                                <th style="min-width: 80px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in requests %}
+                                <tr onclick="viewRequest('{{ request.id }}')">
+                                    <td>
+                                        <code class="fw-semibold">{{ request.requestNumber }}</code>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold">{{ request.company.companyName|default('N/A') }}</div>
+                                        <small class="text-muted">{{ request.company.type|default('') }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark">{{ request.typeLabel }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold text-primary">{{ request.amountFormatted }}</span>
+                                    </td>
+                                    <td>
+                                        <small>{{ request.periodFormatted }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge status-{{ request.status }}">
+                                            <i class="fas 
+                                                {% if request.status == 'pending' %}fa-clock
+                                                {% elseif request.status == 'paid' %}fa-money-bill-wave
+                                                {% elseif request.status == 'processing' %}fa-spinner fa-spin
+                                                {% elseif request.status == 'completed' %}fa-check-circle
+                                                {% elseif request.status == 'failed' %}fa-times-circle
+                                                {% elseif request.status == 'expired' %}fa-hourglass-end
+                                                {% endif %}">
+                                            </i>
+                                            {{ request.statusLabel }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <small>{{ request.createdAt|date('d/m/Y H:i') }}</small>
+                                    </td>
+                                    <td onclick="event.stopPropagation()">
+                                        <div class="d-flex gap-1">
+                                            <a href="{{ path('app_super_admin_analysis_request_show', {'id': request.id}) }}" 
+                                               class="btn btn-sm btn-outline-primary" title="Voir">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="8" class="text-center py-5 text-muted">
+                                        <i class="fas fa-microscope fa-3x mb-3 opacity-25"></i>
+                                        <p>Aucune demande d'analyse trouvée</p>
+                                        <p class="small">Modifiez vos filtres pour afficher plus de résultats</p>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            {% if total_pages > 1 %}
+            <div class="pagination-container">
+                <small class="text-muted">
+                    {% set start = ((current_page - 1) * limit) + 1 %}
+                    {% set end = current_page * limit %}
+                    {% if end > total %}
+                        {% set end = total %}
+                    {% endif %}
+                    Affichage de {{ start }} à {{ end }} sur {{ total }} demandes
+                </small>
+                <nav>
+                    <ul class="pagination">
+                        {% if current_page > 1 %}
+                            <li class="page-item">
+                                <button class="page-link" onclick="changePage({{ current_page - 1 }})">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                            </li>
+                        {% endif %}
+                        
+                        {% set startPage = current_page - 2 %}
+                        {% if startPage < 1 %}
+                            {% set startPage = 1 %}
+                        {% endif %}
+                        {% set endPage = startPage + 4 %}
+                        {% if endPage > total_pages %}
+                            {% set endPage = total_pages %}
+                            {% set startPage = endPage - 4 %}
+                            {% if startPage < 1 %}
+                                {% set startPage = 1 %}
+                            {% endif %}
+                        {% endif %}
+                        
+                        {% for p in startPage..endPage %}
+                            <li class="page-item {% if p == current_page %}active{% endif %}">
+                                <button class="page-link" onclick="changePage({{ p }})">{{ p }}</button>
+                            </li>
+                        {% endfor %}
+                        
+                        {% if current_page < total_pages %}
+                            <li class="page-item">
+                                <button class="page-link" onclick="changePage({{ current_page + 1 }})">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+// Variables globales
+let currentPage = {{ current_page|default(1) }};
+let isLoading = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateActiveFilters();
+});
+
+async function applyFilters() {
+    if (isLoading) return;
+    isLoading = true;
+    
+    const applyBtn = document.getElementById('applyBtn');
+    if (applyBtn) {
+        applyBtn.classList.add('btn-loading');
+        applyBtn.disabled = true;
+    }
+    
+    const params = new URLSearchParams();
+    const search = document.getElementById('searchInput')?.value.trim() || '';
+    const type = document.getElementById('typeFilter')?.value || '';
+    const status = document.getElementById('statusFilter')?.value || '';
+    const dateFrom = document.getElementById('dateFrom')?.value || '';
+    const dateTo = document.getElementById('dateTo')?.value || '';
+    
+    if (search) params.append('search', search);
+    if (type) params.append('type', type);
+    if (status) params.append('status', status);
+    if (dateFrom) params.append('date_from', dateFrom);
+    if (dateTo) params.append('date_to', dateTo);
+    params.append('page', currentPage);
+    
+    try {
+        const response = await fetch(`/super-admin/analysis-requests/data?${params.toString()}`);
+        if (!response.ok) throw new Error('Erreur réseau');
+        const data = await response.json();
+        updateDashboard(data);
+        updateActiveFilters();
+        showNotification('Données mises à jour avec succès', 'success');
+    } catch (error) {
+        console.error('Erreur:', error);
+        showNotification('Erreur lors du chargement des données', 'error');
+    } finally {
+        if (applyBtn) {
+            applyBtn.classList.remove('btn-loading');
+            applyBtn.disabled = false;
+        }
+        isLoading = false;
+    }
+}
+
+function updateDashboard(data) {
+    // Mettre à jour les KPI
+    if (data.stats) {
+        document.getElementById('statTotal').textContent = data.stats.total || 0;
+        document.getElementById('statPending').textContent = data.stats.pending || 0;
+        document.getElementById('statProcessing').textContent = data.stats.processing || 0;
+        document.getElementById('statCompleted').textContent = data.stats.completed || 0;
+    }
+    
+    // Mettre à jour le tableau (recharger la page pour simplifier)
+    if (data.requests) {
+        window.location.reload();
+    }
+}
+
+function updateActiveFilters() {
+    const search = document.getElementById('searchInput')?.value.trim() || '';
+    const type = document.getElementById('typeFilter')?.value || '';
+    const status = document.getElementById('statusFilter')?.value || '';
+    const dateFrom = document.getElementById('dateFrom')?.value || '';
+    const dateTo = document.getElementById('dateTo')?.value || '';
+    
+    const container = document.getElementById('activeFilters');
+    if (!container) return;
+    
+    const activeFilters = [];
+    
+    if (search) activeFilters.push({ key: 'search', label: `Recherche: ${search}` });
+    if (type) activeFilters.push({ key: 'type', label: `Type: ${type}` });
+    if (status) {
+        const statusLabels = {
+            'pending': 'En attente',
+            'paid': 'Payé',
+            'processing': 'En traitement',
+            'completed': 'Terminé',
+            'failed': 'Échec',
+            'expired': 'Expiré'
+        };
+        activeFilters.push({ key: 'status', label: `Statut: ${statusLabels[status] || status}` });
+    }
+    if (dateFrom || dateTo) {
+        activeFilters.push({ key: 'date', label: `Période: ${dateFrom || '...'} → ${dateTo || '...'}` });
+    }
+    
+    if (activeFilters.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+    
+    container.innerHTML = activeFilters.map(filter => `
+        <span class="filter-badge-active" onclick="removeFilter('${filter.key}')">
+            <i class="fas fa-filter me-1"></i>
+            ${filter.label}
+            <i class="fas fa-times ms-2"></i>
+        </span>
+    `).join('');
+}
+
+function removeFilter(key) {
+    if (key === 'search') {
+        document.getElementById('searchInput').value = '';
+    } else if (key === 'type') {
+        document.getElementById('typeFilter').value = '';
+    } else if (key === 'status') {
+        document.getElementById('statusFilter').value = '';
+    } else if (key === 'date') {
+        document.getElementById('dateFrom').value = '';
+        document.getElementById('dateTo').value = '';
+    }
+    currentPage = 1;
+    applyFilters();
+}
+
+function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('typeFilter').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('dateFrom').value = '';
+    document.getElementById('dateTo').value = '';
+    currentPage = 1;
+    applyFilters();
+}
+
+function changePage(page) {
+    currentPage = page;
+    applyFilters();
+}
+
+function refreshData() {
+    applyFilters();
+}
+
+function exportData() {
+    const params = new URLSearchParams();
+    const search = document.getElementById('searchInput')?.value.trim() || '';
+    const type = document.getElementById('typeFilter')?.value || '';
+    const status = document.getElementById('statusFilter')?.value || '';
+    const dateFrom = document.getElementById('dateFrom')?.value || '';
+    const dateTo = document.getElementById('dateTo')?.value || '';
+    
+    if (search) params.append('search', search);
+    if (type) params.append('type', type);
+    if (status) params.append('status', status);
+    if (dateFrom) params.append('date_from', dateFrom);
+    if (dateTo) params.append('date_to', dateTo);
+    
+    window.location.href = `/super-admin/analysis-requests/export?${params.toString()}`;
+}
+
+function viewRequest(requestId) {
+    window.location.href = `/super-admin/analysis-requests/${requestId}/show`;
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = 'notification-toast';
+    const icon = type === 'success' ? 'check-circle' : 'exclamation-circle';
+    notification.innerHTML = `<i class="fas fa-${icon} me-2"></i>${message}`;
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 10000;
+        padding: 1rem 1.5rem;
+        border-radius: 0.75rem;
+        background: ${type === 'success' ? '#10b981' : '#ef4444'};
+        color: white;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        animation: slideIn 0.3s ease;
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+</script>
+<style>
+    .btn-loading {
+        position: relative;
+        pointer-events: none;
+        opacity: 0.7;
+    }
+    .btn-loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16px;
+        height: 16px;
+        margin: -8px 0 0 -8px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+</style>
+{% endblock %}
