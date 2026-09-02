@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\HmaServiceType;
 use App\Repository\HmaServiceRepository;
 use App\Repository\SubscriptionRepository;
+use App\Repository\PaymentRepository;
 use App\Repository\UserRepository;
 use App\Service\EmailService;
 use App\Service\CompanyDeletionService; 
@@ -17,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;  // ← IMPORTANT : utiliser Attribute\Route
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -27,10 +28,12 @@ use Symfony\Component\Filesystem\Filesystem;
 class HmaServiceController extends AbstractController
 {
     private CompanyDeletionService $companyDeletionService; 
+    
     public function __construct(
         private HmaServiceRepository $hmaServiceRepository,
         private UserRepository $userRepository,
         private SubscriptionRepository $subscriptionRepository,
+        private PaymentRepository $paymentRepository,
         private EntityManagerInterface $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
         private SluggerInterface $slugger,
@@ -150,7 +153,7 @@ class HmaServiceController extends AbstractController
         $hmaService->setIsActive(false);
         
         $form = $this->createForm(HmaServiceType::class, $hmaService, [
-            'is_edit' => false  // <- Important : dit au formulaire qu'on est en création
+            'is_edit' => false
         ]);
         
         $form->handleRequest($request);
@@ -376,13 +379,10 @@ class HmaServiceController extends AbstractController
             $hmaService->setHmaActive($newStatus);
             
             // ✅ OPTIMISATION : Ne pas persister chaque utilisateur individuellement
-            // La modification sera détectée par le flush grâce au change tracking policy
             foreach ($hmaService->getUsers() as $user) {
                 $user->setIsActive($newStatus);
-                // Ne pas appeler persist ici
             }
             
-            // Un seul flush pour tout
             $this->entityManager->flush();
 
             return $this->json([
@@ -441,6 +441,16 @@ class HmaServiceController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
+
+        // 🔑 Récupérer le dernier paiement pour chaque abonnement
+        foreach ($pagination as $subscription) {
+            $lastPayment = $this->paymentRepository->findOneBy(
+                ['subscription' => $subscription],
+                ['createdAt' => 'DESC']
+            );
+            // Ajouter le paiement comme propriété dynamique
+            $subscription->lastPayment = $lastPayment;
+        }
 
         return $this->render('super_admin/hma_service/subscriptions.html.twig', [
             'hma_service' => $hmaService,

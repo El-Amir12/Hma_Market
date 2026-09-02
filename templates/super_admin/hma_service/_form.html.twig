@@ -2,22 +2,25 @@
 
 {% set is_new = form.vars.value.id is null %}
 
-<div class="container-fluid py-4">
+<div class="container-fluid px-2 px-md-4 py-2 py-md-4">
     <div class="row justify-content-center">
-        <div class="col-lg-10">
+        <div class="col-12 col-lg-10">
             <!-- Carte principale -->
-            <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeInUp">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
                 <!-- En-tête avec dégradé -->
-                <div class="card-header bg-gradient-primary text-white p-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                    <div class="d-flex align-items-center">
-                        <div class="rounded-circle bg-white bg-opacity-25 p-4 me-4">
-                            <i class="bi bi-{{ is_new ? 'building-add' : 'pencil-square' }} fs-1 text-white"></i>
+                <div class="card-header bg-gradient-primary text-white p-3 p-md-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="d-flex align-items-center gap-3 gap-md-4">
+                        <div class="rounded-circle bg-white bg-opacity-25 p-3 p-md-4">
+                            <i class="bi bi-{{ is_new ? 'building-add' : 'pencil-square' }} fs-2 fs-md-1 text-white"></i>
                         </div>
                         <div>
-                            <h1 class="display-5 fw-bold mb-2">{{ is_new ? 'Nouvelle entreprise' : 'Modifier ' ~ form.vars.value.companyName }}</h1>
-                            <p class="lead mb-0 text-white-50">
+                            <h1 class="h4 h-md-3 h-lg-2 fw-bold mb-1 mb-md-2">{{ is_new ? 'Nouvelle entreprise' : 'Modifier ' ~ form.vars.value.companyName|slice(0, 20) }}{% if form.vars.value.companyName|length > 20 %}...{% endif %}</h1>
+                            <p class="lead mb-0 text-white-50 small d-none d-sm-block">
                                 <i class="bi bi-info-circle me-2"></i>
                                 {{ is_new ? 'Créez un compte entreprise en quelques clics' : 'Modifiez les informations de l\'entreprise' }}
+                            </p>
+                            <p class="lead mb-0 text-white-50 small d-block d-sm-none">
+                                {{ is_new ? 'Création entreprise' : 'Modification entreprise' }}
                             </p>
                         </div>
                     </div>
@@ -27,52 +30,56 @@
 
                 <!-- Progress Steps (uniquement pour création) -->
                 {% if is_new %}
-                <div class="px-5 pt-5">
+                <div class="px-3 px-md-5 pt-3 pt-md-5">
                     <div class="steps">
                         <div class="step active">
                             <div class="step-icon">1</div>
-                            <div class="step-label">Informations</div>
+                            <div class="step-label d-none d-sm-block">Informations</div>
+                            <div class="step-label d-block d-sm-none">Info</div>
                         </div>
                         <div class="step">
                             <div class="step-icon">2</div>
-                            <div class="step-label">Configuration</div>
+                            <div class="step-label d-none d-sm-block">Configuration</div>
+                            <div class="step-label d-block d-sm-none">Config</div>
                         </div>
                         <div class="step">
                             <div class="step-icon">3</div>
-                            <div class="step-label">Activation</div>
+                            <div class="step-label d-none d-sm-block">Activation</div>
+                            <div class="step-label d-block d-sm-none">Activer</div>
                         </div>
                     </div>
                 </div>
                 {% endif %}
 
-                <div class="card-body p-5">
+                <div class="card-body p-3 p-md-5">
                     <!-- SECTION 1: INFORMATIONS GÉNÉRALES -->
-                    <div class="form-section mb-5">
-                        <div class="section-header mb-4">
-                            <div class="d-flex align-items-center">
-                                <div class="section-icon">
-                                    <i class="bi bi-building fs-2 text-primary"></i>
+                    <div class="form-section mb-3 mb-md-5">
+                        <div class="section-header mb-3 mb-md-4">
+                            <div class="d-flex align-items-center gap-2 gap-md-3">
+                                <div class="section-icon p-2 p-md-3">
+                                    <i class="bi bi-building fs-4 fs-md-2 text-primary"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <h3 class="fw-bold mb-1">Informations générales</h3>
-                                    <p class="text-muted mb-0">Identité et type de l'entreprise</p>
+                                <div class="ms-1 ms-md-3">
+                                    <h3 class="fw-bold mb-1 fs-5 fs-md-4">Informations générales</h3>
+                                    <p class="text-muted mb-0 small d-none d-sm-block">Identité et type de l'entreprise</p>
+                                    <p class="text-muted mb-0 small d-block d-sm-none">Identité et type</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row g-4">
-                            <div class="col-md-6">
+                        <div class="row g-2 g-md-4">
+                            <div class="col-12 col-md-6">
                                 <div class="form-floating">
-                                    {{ form_widget(form.companyName) }}
-                                    {{ form_label(form.companyName, null, {'label_attr': {'class': 'fw-semibold'}}) }}
+                                    {{ form_widget(form.companyName, {'attr': {'style': 'font-size:0.85rem;'}}) }}
+                                    {{ form_label(form.companyName, null, {'label_attr': {'class': 'fw-semibold', 'style': 'font-size:0.85rem;'}}) }}
                                     <div class="invalid-feedback">{{ form_errors(form.companyName) }}</div>
                                 </div>
                             </div>
                             
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <div class="form-floating">
-                                    {{ form_widget(form.companyType) }}
-                                    {{ form_label(form.companyType, null, {'label_attr': {'class': 'fw-semibold'}}) }}
+                                    {{ form_widget(form.companyType, {'attr': {'style': 'font-size:0.85rem;'}}) }}
+                                    {{ form_label(form.companyType, null, {'label_attr': {'class': 'fw-semibold', 'style': 'font-size:0.85rem;'}}) }}
                                     <div class="invalid-feedback">{{ form_errors(form.companyType) }}</div>
                                 </div>
                             </div>
@@ -80,36 +87,37 @@
                     </div>
 
                     <!-- SECTION 2: CONTACT -->
-                    <div class="form-section mb-5">
-                        <div class="section-header mb-4">
-                            <div class="d-flex align-items-center">
-                                <div class="section-icon">
-                                    <i class="bi bi-envelope fs-2 text-primary"></i>
+                    <div class="form-section mb-3 mb-md-5">
+                        <div class="section-header mb-3 mb-md-4">
+                            <div class="d-flex align-items-center gap-2 gap-md-3">
+                                <div class="section-icon p-2 p-md-3">
+                                    <i class="bi bi-envelope fs-4 fs-md-2 text-primary"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <h3 class="fw-bold mb-1">Contact</h3>
-                                    <p class="text-muted mb-0">Coordonnées de l'entreprise</p>
+                                <div class="ms-1 ms-md-3">
+                                    <h3 class="fw-bold mb-1 fs-5 fs-md-4">Contact</h3>
+                                    <p class="text-muted mb-0 small d-none d-sm-block">Coordonnées de l'entreprise</p>
+                                    <p class="text-muted mb-0 small d-block d-sm-none">Coordonnées</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row g-4">
-                            <div class="col-md-6">
+                        <div class="row g-2 g-md-4">
+                            <div class="col-12 col-md-6">
                                 <div class="form-floating">
-                                    {{ form_widget(form.email) }}
-                                    {{ form_label(form.email, null, {'label_attr': {'class': 'fw-semibold'}}) }}
+                                    {{ form_widget(form.email, {'attr': {'style': 'font-size:0.85rem;'}}) }}
+                                    {{ form_label(form.email, null, {'label_attr': {'class': 'fw-semibold', 'style': 'font-size:0.85rem;'}}) }}
                                     <div class="invalid-feedback">{{ form_errors(form.email) }}</div>
-                                    <small class="text-muted mt-2 d-block">
+                                    <small class="text-muted mt-1 d-block" style="font-size:0.6rem;">
                                         <i class="bi bi-info-circle me-1"></i>
-                                        Ce sera l'email de connexion
+                                        Email de connexion
                                     </small>
                                 </div>
                             </div>
                             
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <div class="form-floating">
-                                    {{ form_widget(form.phone) }}
-                                    {{ form_label(form.phone, null, {'label_attr': {'class': 'fw-semibold'}}) }}
+                                    {{ form_widget(form.phone, {'attr': {'style': 'font-size:0.85rem;'}}) }}
+                                    {{ form_label(form.phone, null, {'label_attr': {'class': 'fw-semibold', 'style': 'font-size:0.85rem;'}}) }}
                                     <div class="invalid-feedback">{{ form_errors(form.phone) }}</div>
                                 </div>
                             </div>
@@ -117,40 +125,41 @@
                     </div>
 
                     <!-- SECTION 3: ADRESSE -->
-                    <div class="form-section mb-5">
-                        <div class="section-header mb-4">
-                            <div class="d-flex align-items-center">
-                                <div class="section-icon">
-                                    <i class="bi bi-geo-alt fs-2 text-primary"></i>
+                    <div class="form-section mb-3 mb-md-5">
+                        <div class="section-header mb-3 mb-md-4">
+                            <div class="d-flex align-items-center gap-2 gap-md-3">
+                                <div class="section-icon p-2 p-md-3">
+                                    <i class="bi bi-geo-alt fs-4 fs-md-2 text-primary"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <h3 class="fw-bold mb-1">Adresse</h3>
-                                    <p class="text-muted mb-0">Localisation de l'entreprise</p>
+                                <div class="ms-1 ms-md-3">
+                                    <h3 class="fw-bold mb-1 fs-5 fs-md-4">Adresse</h3>
+                                    <p class="text-muted mb-0 small d-none d-sm-block">Localisation de l'entreprise</p>
+                                    <p class="text-muted mb-0 small d-block d-sm-none">Localisation</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row g-4">
+                        <div class="row g-2 g-md-4">
                             <div class="col-12">
                                 <div class="form-floating">
-                                    {{ form_widget(form.address, {'attr': {'style': 'height: 100px'}}) }}
-                                    {{ form_label(form.address, null, {'label_attr': {'class': 'fw-semibold'}}) }}
+                                    {{ form_widget(form.address, {'attr': {'style': 'height: 80px; font-size:0.85rem;'}}) }}
+                                    {{ form_label(form.address, null, {'label_attr': {'class': 'fw-semibold', 'style': 'font-size:0.85rem;'}}) }}
                                     <div class="invalid-feedback">{{ form_errors(form.address) }}</div>
                                 </div>
                             </div>
                             
-                            <div class="col-md-4">
+                            <div class="col-6 col-md-4">
                                 <div class="form-floating">
-                                    {{ form_widget(form.city) }}
-                                    {{ form_label(form.city, null, {'label_attr': {'class': 'fw-semibold'}}) }}
+                                    {{ form_widget(form.city, {'attr': {'style': 'font-size:0.85rem;'}}) }}
+                                    {{ form_label(form.city, null, {'label_attr': {'class': 'fw-semibold', 'style': 'font-size:0.85rem;'}}) }}
                                     <div class="invalid-feedback">{{ form_errors(form.city) }}</div>
                                 </div>
                             </div>
                             
-                            <div class="col-md-4">
+                            <div class="col-6 col-md-4">
                                 <div class="form-floating">
-                                    {{ form_widget(form.country) }}
-                                    {{ form_label(form.country, null, {'label_attr': {'class': 'fw-semibold'}}) }}
+                                    {{ form_widget(form.country, {'attr': {'style': 'font-size:0.85rem;'}}) }}
+                                    {{ form_label(form.country, null, {'label_attr': {'class': 'fw-semibold', 'style': 'font-size:0.85rem;'}}) }}
                                     <div class="invalid-feedback">{{ form_errors(form.country) }}</div>
                                 </div>
                             </div>
@@ -158,52 +167,53 @@
                     </div>
 
                     <!-- SECTION 4: LOGO -->
-                    <div class="form-section mb-5">
-                        <div class="section-header mb-4">
-                            <div class="d-flex align-items-center">
-                                <div class="section-icon">
-                                    <i class="bi bi-image fs-2 text-primary"></i>
+                    <div class="form-section mb-3 mb-md-5">
+                        <div class="section-header mb-3 mb-md-4">
+                            <div class="d-flex align-items-center gap-2 gap-md-3">
+                                <div class="section-icon p-2 p-md-3">
+                                    <i class="bi bi-image fs-4 fs-md-2 text-primary"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <h3 class="fw-bold mb-1">Logo</h3>
-                                    <p class="text-muted mb-0">Image de profil de l'entreprise</p>
+                                <div class="ms-1 ms-md-3">
+                                    <h3 class="fw-bold mb-1 fs-5 fs-md-4">Logo</h3>
+                                    <p class="text-muted mb-0 small d-none d-sm-block">Image de profil de l'entreprise</p>
+                                    <p class="text-muted mb-0 small d-block d-sm-none">Image de profil</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-12">
-                                <div class="card border-2 border-dashed bg-light rounded-4 p-4">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-8">
-                                            <label class="form-label fw-bold text-primary mb-3">
+                                <div class="card border-2 border-dashed bg-light rounded-4 p-3 p-md-4">
+                                    <div class="row align-items-center g-3 g-md-4">
+                                        <div class="col-12 col-md-8">
+                                            <label class="form-label fw-bold text-primary mb-2 mb-md-3 small">
                                                 <i class="bi bi-cloud-upload me-2"></i>
                                                 {{ form_label(form.logoFile) }}
                                             </label>
-                                            {{ form_widget(form.logoFile) }}
+                                            {{ form_widget(form.logoFile, {'attr': {'style': 'font-size:0.7rem;'}}) }}
                                             <div class="invalid-feedback">{{ form_errors(form.logoFile) }}</div>
-                                            <div class="mt-3">
-                                                <div class="d-flex gap-3 text-muted small">
+                                            <div class="mt-2 mt-md-3">
+                                                <div class="d-flex flex-wrap gap-2 gap-md-3 text-muted small" style="font-size:0.55rem;">
                                                     <span><i class="bi bi-check-circle text-success me-1"></i> JPG, PNG, GIF, WebP</span>
                                                     <span><i class="bi bi-check-circle text-success me-1"></i> Max 2 Mo</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 text-center">
+                                        <div class="col-12 col-md-4 text-center">
                                             {% if not is_new and form.vars.value.logo %}
                                                 <div class="position-relative">
-                                                    <div class="logo-preview-wrapper">
+                                                    <div class="logo-preview-wrapper d-inline-block p-2">
                                                         <img src="{{ asset('uploads/logos/' ~ form.vars.value.logo) }}" 
                                                              alt="Logo actuel"
                                                              class="img-fluid rounded-3 shadow"
-                                                             style="max-height: 100px;">
+                                                             style="max-height: 80px; max-width: 100%;">
                                                     </div>
-                                                    <span class="badge bg-success mt-2">Logo actuel</span>
+                                                    <span class="badge bg-success mt-1 d-block" style="font-size:0.5rem;">Logo actuel</span>
                                                 </div>
                                             {% else %}
                                                 <div class="text-muted">
                                                     <i class="bi bi-image fs-1"></i>
-                                                    <p class="mb-0 small">Aucun logo</p>
+                                                    <p class="mb-0 small" style="font-size:0.55rem;">Aucun logo</p>
                                                 </div>
                                             {% endif %}
                                         </div>
@@ -215,49 +225,50 @@
 
                     <!-- SECTION CONFIGURATION - UNIQUEMENT POUR CRÉATION -->
                     {% if is_new %}
-                    <div class="form-section mb-5">
-                        <div class="section-header mb-4">
-                            <div class="d-flex align-items-center">
-                                <div class="section-icon">
-                                    <i class="bi bi-gear fs-2 text-primary"></i>
+                    <div class="form-section mb-3 mb-md-5">
+                        <div class="section-header mb-3 mb-md-4">
+                            <div class="d-flex align-items-center gap-2 gap-md-3">
+                                <div class="section-icon p-2 p-md-3">
+                                    <i class="bi bi-gear fs-4 fs-md-2 text-primary"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <h3 class="fw-bold mb-1">Configuration initiale</h3>
-                                    <p class="text-muted mb-0">Paramètres de lancement</p>
+                                <div class="ms-1 ms-md-3">
+                                    <h3 class="fw-bold mb-1 fs-5 fs-md-4">Configuration initiale</h3>
+                                    <p class="text-muted mb-0 small d-none d-sm-block">Paramètres de lancement</p>
+                                    <p class="text-muted mb-0 small d-block d-sm-none">Paramètres</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-8 mx-auto">
-                                <div class="card bg-gradient-soft border-0 rounded-4 p-4">
+                            <div class="col-12 col-md-8 mx-auto">
+                                <div class="card bg-gradient-soft border-0 rounded-4 p-3 p-md-4">
                                     <!-- Champ mot de passe -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold">{{ form_label(form.plainPassword) }}</label>
-                                        {{ form_widget(form.plainPassword) }}
-                                        <small class="text-muted d-block mt-2">
+                                    <div class="mb-3 mb-md-4">
+                                        <label class="form-label fw-semibold small">{{ form_label(form.plainPassword) }}</label>
+                                        {{ form_widget(form.plainPassword, {'attr': {'style': 'font-size:0.8rem;'}}) }}
+                                        <small class="text-muted d-block mt-1" style="font-size:0.6rem;">
                                             <i class="bi bi-info-circle me-1"></i>
                                             Laissez vide pour générer automatiquement
                                         </small>
                                     </div>
 
                                     <!-- Checkbox envoi email -->
-                                    <div class="form-check form-switch mb-3">
+                                    <div class="form-check form-switch mb-2">
                                         {{ form_widget(form.sendActivationEmail) }}
-                                        <label class="form-check-label fw-bold fs-5" for="{{ form.sendActivationEmail.vars.id }}">
+                                        <label class="form-check-label fw-bold small" for="{{ form.sendActivationEmail.vars.id }}" style="font-size:0.8rem;">
                                             {{ form_label(form.sendActivationEmail) }}
                                         </label>
                                     </div>
                                     
-                                    <div class="alert alert-info bg-opacity-10 border-0 rounded-3 mt-3">
-                                        <div class="d-flex">
-                                            <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+                                    <div class="alert alert-info bg-opacity-10 border-0 rounded-3 mt-3 p-2 p-md-3">
+                                        <div class="d-flex gap-2 gap-md-3">
+                                            <i class="bi bi-info-circle-fill fs-4 me-2"></i>
                                             <div>
-                                                <strong>Informations importantes :</strong>
-                                                <ul class="mb-0 mt-2">
-                                                    <li>Le mot de passe sera généré automatiquement si vous laissez vide</li>
-                                                    <li>L'email contiendra les identifiants de connexion</li>
-                                                    <li>L'entreprise sera en mode TRIAL (14 jours d'essai)</li>
+                                                <strong class="small" style="font-size:0.7rem;">Informations :</strong>
+                                                <ul class="mb-0 mt-1 small" style="font-size:0.6rem; padding-left:1rem;">
+                                                    <li>Mot de passe généré automatiquement si vide</li>
+                                                    <li>Email avec identifiants de connexion</li>
+                                                    <li>Mode TRIAL (14 jours d'essai)</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -269,29 +280,30 @@
                     {% endif %}
 
                     <!-- SECTION PARAMÈTRES -->
-                    <div class="form-section mb-4">
-                        <div class="section-header mb-4">
-                            <div class="d-flex align-items-center">
-                                <div class="section-icon">
-                                    <i class="bi bi-sliders fs-2 text-primary"></i>
+                    <div class="form-section mb-3 mb-md-4">
+                        <div class="section-header mb-3 mb-md-4">
+                            <div class="d-flex align-items-center gap-2 gap-md-3">
+                                <div class="section-icon p-2 p-md-3">
+                                    <i class="bi bi-sliders fs-4 fs-md-2 text-primary"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <h3 class="fw-bold mb-1">Paramètres</h3>
-                                    <p class="text-muted mb-0">Options de l'entreprise</p>
+                                <div class="ms-1 ms-md-3">
+                                    <h3 class="fw-bold mb-1 fs-5 fs-md-4">Paramètres</h3>
+                                    <p class="text-muted mb-0 small d-none d-sm-block">Options de l'entreprise</p>
+                                    <p class="text-muted mb-0 small d-block d-sm-none">Options</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="card border-0 bg-light rounded-4 p-4">
-                                    <div class="form-check form-switch mb-3">
+                            <div class="col-12">
+                                <div class="card border-0 bg-light rounded-4 p-3 p-md-4">
+                                    <div class="form-check form-switch mb-2">
                                         {{ form_widget(form.hmaActive) }}
-                                        <label class="form-check-label fw-bold fs-5" for="{{ form.hmaActive.vars.id }}">
+                                        <label class="form-check-label fw-bold small" for="{{ form.hmaActive.vars.id }}" style="font-size:0.8rem;">
                                             {{ form_label(form.hmaActive) }}
                                         </label>
                                     </div>
-                                    <div class="small text-muted">
+                                    <div class="small text-muted" style="font-size:0.55rem;">
                                         <i class="bi bi-info-circle me-1"></i>
                                         Si désactivé, tous les utilisateurs seront bloqués
                                     </div>
@@ -302,33 +314,33 @@
 
                     <!-- ALERTE INFORMATIVE POUR L'ÉDITION -->
                     {% if not is_new %}
-                        <div class="alert alert-info bg-light border-0 rounded-4 p-4 mt-4">
-                            <div class="d-flex">
-                                <div class="me-4">
+                        <div class="alert alert-info bg-light border-0 rounded-4 p-3 p-md-4 mt-3 mt-md-4">
+                            <div class="d-flex flex-column flex-sm-row gap-3 gap-md-4">
+                                <div class="text-center text-sm-start">
                                     <i class="bi bi-info-circle-fill fs-1 text-primary"></i>
                                 </div>
                                 <div>
-                                    <h4 class="alert-heading mb-3">Informations importantes</h4>
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-success bg-opacity-10 p-2 rounded-circle me-3">
+                                    <h4 class="alert-heading mb-3 fs-5 fs-md-4">Informations</h4>
+                                    <div class="row g-2 g-md-3">
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="bg-success bg-opacity-10 p-2 rounded-circle">
                                                     <i class="bi bi-lock-fill text-success"></i>
                                                 </div>
                                                 <div>
-                                                    <strong>Mot de passe</strong>
-                                                    <p class="mb-0 small text-muted">Non modifiable - l'utilisateur peut utiliser "Mot de passe oublié"</p>
+                                                    <strong class="small">Mot de passe</strong>
+                                                    <p class="mb-0 small text-muted" style="font-size:0.6rem;">Non modifiable - "Mot de passe oublié"</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="bg-primary bg-opacity-10 p-2 rounded-circle">
                                                     <i class="bi bi-image-fill text-primary"></i>
                                                 </div>
                                                 <div>
-                                                    <strong>Logo</strong>
-                                                    <p class="mb-0 small text-muted">Sélectionnez un fichier pour changer le logo</p>
+                                                    <strong class="small">Logo</strong>
+                                                    <p class="mb-0 small text-muted" style="font-size:0.6rem;">Sélectionnez un fichier pour changer</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -340,15 +352,15 @@
                 </div>
 
                 <!-- FOOTER AVEC BOUTONS D'ACTION -->
-                <div class="card-footer bg-light p-4 border-0">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <a href="{{ path('app_super_admin_hma_service_index') }}" class="btn btn-outline-secondary btn-lg rounded-pill px-5">
-                            <i class="bi bi-arrow-left me-2"></i>
+                <div class="card-footer bg-light p-3 p-md-4 border-0">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 gap-md-3">
+                        <a href="{{ path('app_super_admin_hma_service_index') }}" class="btn btn-outline-secondary w-100 w-sm-auto rounded-pill px-3 px-md-5" style="font-size:0.7rem; padding:0.25rem 0.5rem;">
+                            <i class="bi bi-arrow-left me-1"></i>
                             {{ is_new ? 'Annuler' : 'Retour' }}
                         </a>
-                        <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5" style="background: linear-gradient(135deg, #667eea, #764ba2); border: none;">
-                            <i class="bi bi-{{ is_new ? 'check-circle' : 'check-circle' }} me-2"></i>
-                            {{ is_new ? 'Créer l\'entreprise' : 'Enregistrer les modifications' }}
+                        <button type="submit" class="btn btn-primary w-100 w-sm-auto rounded-pill px-3 px-md-5" style="background: linear-gradient(135deg, #667eea, #764ba2); border: none; font-size:0.7rem; padding:0.25rem 0.5rem;">
+                            <i class="bi bi-{{ is_new ? 'check-circle' : 'check-circle' }} me-1"></i>
+                            {{ is_new ? 'Créer' : 'Enregistrer' }}
                         </button>
                     </div>
                 </div>
@@ -364,37 +376,30 @@
 document.addEventListener('DOMContentLoaded', function() {
     const logoInput = document.getElementById('{{ form.logoFile.vars.id }}');
     if (logoInput) {
-        // Créer un élément pour la prévisualisation
         const previewContainer = document.createElement('div');
-        previewContainer.className = 'mt-3 text-center';
+        previewContainer.className = 'mt-2 mt-md-3 text-center';
         previewContainer.id = 'logoPreview';
-        
         logoInput.parentNode.appendChild(previewContainer);
         
         logoInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
-                // Vérifier la taille
                 if (file.size > 2 * 1024 * 1024) {
                     alert('Le fichier est trop volumineux. Maximum 2Mo.');
                     this.value = '';
                     return;
                 }
-                
-                // Vérifier le type
                 if (!file.type.startsWith('image/')) {
                     alert('Veuillez sélectionner une image valide.');
                     this.value = '';
                     return;
                 }
-                
-                // Afficher la prévisualisation
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     previewContainer.innerHTML = `
                         <div class="position-relative d-inline-block">
-                            <img src="${e.target.result}" alt="Prévisualisation" class="img-thumbnail rounded-3" style="max-height: 150px;">
-                            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0" onclick="this.parentElement.remove(); logoInput.value = '';">
+                            <img src="${e.target.result}" alt="Prévisualisation" class="img-thumbnail rounded-3" style="max-height: 100px;">
+                            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0" onclick="this.parentElement.remove(); logoInput.value = '';" style="font-size:0.5rem; padding:0.1rem 0.2rem;">
                                 <i class="bi bi-x"></i>
                             </button>
                         </div>
@@ -411,8 +416,8 @@ document.addEventListener('DOMContentLoaded', function() {
 /* Style général */
 .form-section {
     background: white;
-    border-radius: 20px;
-    padding: 2rem;
+    border-radius: 16px;
+    padding: 1rem;
     box-shadow: 0 5px 20px rgba(0,0,0,0.02);
     border: 1px solid rgba(0,0,0,0.05);
     transition: all 0.3s ease;
@@ -424,10 +429,10 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .section-icon {
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-    border-radius: 15px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -438,17 +443,17 @@ document.addEventListener('DOMContentLoaded', function() {
 .steps {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem;
     position: relative;
 }
 
 .steps::before {
     content: '';
     position: absolute;
-    top: 25px;
+    top: 20px;
     left: 0;
     right: 0;
-    height: 3px;
+    height: 2px;
     background: #e9ecef;
     z-index: 1;
 }
@@ -461,17 +466,17 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .step-icon {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     background: white;
     border: 3px solid #e9ecef;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 10px;
+    margin: 0 auto 5px;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #6c757d;
     transition: all 0.3s ease;
 }
@@ -490,15 +495,16 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .step-label {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     color: #6c757d;
     font-weight: 500;
 }
 
 /* Form Floating Labels */
 .form-floating > label {
-    padding-left: 1.75rem;
+    padding-left: 1.5rem;
     font-weight: 500;
+    font-size: 0.85rem;
 }
 
 .form-floating > .form-control:focus ~ label,
@@ -506,6 +512,21 @@ document.addEventListener('DOMContentLoaded', function() {
 .form-floating > .form-select ~ label {
     transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
     color: #667eea;
+}
+
+.form-floating > .form-control,
+.form-floating > .form-select {
+    height: calc(3rem + 2px);
+    padding: 0.75rem 0.75rem 0.5rem 1.5rem;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    font-size: 0.85rem;
+}
+
+.form-floating > .form-control:focus,
+.form-floating > .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
 }
 
 /* Border dashed */
@@ -536,51 +557,192 @@ document.addEventListener('DOMContentLoaded', function() {
     background: white;
 }
 
-/* Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate__fadeInUp {
-    animation: fadeInUp 0.6s ease-out;
-}
-
 /* Logo preview */
 .logo-preview-wrapper {
     display: inline-block;
-    padding: 10px;
+    padding: 5px;
     background: white;
-    border-radius: 10px;
+    border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+    }
+    
+    .card {
+        border-radius: 0.75rem !important;
+    }
+    .card-header {
+        padding: 0.75rem !important;
+    }
+    .card-body {
+        padding: 0.5rem 0.75rem !important;
+    }
+    .card-footer {
+        padding: 0.5rem 0.75rem !important;
+    }
+    
     .form-section {
-        padding: 1.5rem;
-    }
-    
-    .steps {
-        margin-bottom: 2rem;
-    }
-    
-    .step-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
+        padding: 0.75rem !important;
+        border-radius: 12px !important;
     }
     
     .section-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 1.5rem;
+        width: 35px !important;
+        height: 35px !important;
+        border-radius: 8px !important;
+    }
+    .section-icon i {
+        font-size: 1.2rem !important;
+    }
+    
+    .steps {
+        margin-bottom: 1rem !important;
+    }
+    .steps::before {
+        top: 15px !important;
+    }
+    .step-icon {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 0.7rem !important;
+        border-width: 2px !important;
+    }
+    .step-label {
+        font-size: 0.5rem !important;
+    }
+    
+    .form-floating > label {
+        font-size: 0.7rem !important;
+        padding-left: 1rem !important;
+    }
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: calc(2.5rem + 2px) !important;
+        padding: 0.5rem 0.5rem 0.35rem 1rem !important;
+        font-size: 0.7rem !important;
+        border-radius: 6px !important;
+        border-width: 1.5px !important;
+    }
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label,
+    .form-floating > .form-select ~ label {
+        transform: scale(0.8) translateY(-0.4rem) translateX(0.1rem) !important;
+    }
+    
+    .form-check.form-switch .form-check-input {
+        width: 2.5em !important;
+        height: 1.2em !important;
+    }
+    .form-check-label {
+        font-size: 0.7rem !important;
+    }
+    
+    .alert {
+        padding: 0.5rem !important;
+        border-radius: 8px !important;
+    }
+    .alert h4 {
+        font-size: 0.85rem !important;
+    }
+    .alert .small {
+        font-size: 0.55rem !important;
+    }
+    
+    .btn {
+        font-size: 0.6rem !important;
+        padding: 0.2rem 0.4rem !important;
+        border-radius: 2rem !important;
+    }
+    .btn i {
+        font-size: 0.6rem !important;
+    }
+    .btn-outline-secondary, .btn-primary {
+        padding: 0.2rem 0.8rem !important;
+    }
+    
+    .row.g-2 {
+        --bs-gutter-y: 0.5rem !important;
+    }
+    .row.g-3 {
+        --bs-gutter-y: 0.5rem !important;
+    }
+    .row.g-4 {
+        --bs-gutter-y: 0.5rem !important;
+    }
+    
+    .bg-light.rounded-4.p-4 {
+        padding: 0.75rem !important;
+    }
+    .rounded-4 {
+        border-radius: 0.75rem !important;
+    }
+    
+    .logo-preview-wrapper img {
+        max-height: 60px !important;
+    }
+    
+    .d-flex.gap-3 {
+        gap: 0.5rem !important;
+    }
+    .d-flex.gap-4 {
+        gap: 0.5rem !important;
+    }
+    
+    /* Désactiver hover */
+    .form-section:hover {
+        box-shadow: none !important;
+        border-color: rgba(0,0,0,0.05) !important;
+    }
+    .btn-primary:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    .btn-outline-secondary:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+}
+
+/* Tablette */
+@media (min-width: 577px) and (max-width: 768px) {
+    .card-header {
+        padding: 1.5rem !important;
+    }
+    .card-body {
+        padding: 1.5rem !important;
+    }
+    .card-footer {
+        padding: 1rem !important;
+    }
+    
+    .form-section {
+        padding: 1.5rem !important;
+    }
+    
+    .form-floating > label {
+        font-size: 0.8rem !important;
+    }
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        font-size: 0.8rem !important;
+    }
+    
+    .btn {
+        font-size: 0.7rem !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+    
+    .section-icon {
+        width: 40px !important;
+        height: 40px !important;
     }
 }
 </style>

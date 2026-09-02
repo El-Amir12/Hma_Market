@@ -4,6 +4,7 @@ namespace App\Controller\SuperAdmin;
 
 use App\Entity\Subscription;
 use App\Entity\Payment;
+use App\Entity\HmaService;  // ← AJOUT
 use App\Form\SubscriptionType;
 use App\Repository\SubscriptionRepository;
 use App\Repository\SubscriptionPlanRepository;
@@ -23,7 +24,8 @@ class SubscriptionController extends AbstractController
     #[Route('/', name: 'super_admin_subscription_index', methods: ['GET'])]
     public function index(
         SubscriptionRepository $subscriptionRepository,
-        HmaServiceRepository $hmaServiceRepository,  // ← Ajoutez ce paramètre
+        HmaServiceRepository $hmaServiceRepository,
+        PaymentRepository $paymentRepository,  // ← AJOUT
         Request $request
     ): Response {
         // Filtres
@@ -68,6 +70,16 @@ class SubscriptionController extends AbstractController
         $queryBuilder->orderBy('s.createdAt', 'DESC');
 
         $subscriptions = $queryBuilder->getQuery()->getResult();
+
+        // 🔑 Récupérer le dernier paiement pour chaque abonnement
+        foreach ($subscriptions as $subscription) {
+            $lastPayment = $paymentRepository->findOneBy(
+                ['subscription' => $subscription],
+                ['createdAt' => 'DESC']
+            );
+            // Ajouter le paiement comme propriété dynamique
+            $subscription->lastPayment = $lastPayment;
+        }
 
         $companies = $hmaServiceRepository->findBy([], ['companyName' => 'ASC']);
 
@@ -132,6 +144,86 @@ class SubscriptionController extends AbstractController
             'payments' => $payments,
             'totalPaid' => $totalPaid,
         ]);
+    }
+
+    #[Route('/export/{company}/{format}', name: 'super_admin_subscription_export', methods: ['GET'])]
+    public function export(
+        HmaService $company,
+        string $format,
+        SubscriptionRepository $subscriptionRepository,
+        PaymentRepository $paymentRepository  // ← AJOUT
+    ): Response {
+        // Récupérer tous les abonnements de l'entreprise
+        $subscriptions = $subscriptionRepository->findBy(
+            ['hma_service' => $company],
+            ['createdAt' => 'DESC']
+        );
+        
+        if ($format === 'pdf') {
+            // Pour PDF, vous pouvez utiliser un générateur de PDF comme DomPDF ou TCPDF
+            // Exemple avec DomPDF (installez via composer require dompdf/dompdf)
+            $html = $this->renderView('super_admin/subscription/export_pdf.html.twig', [
+                'company' => $company,
+                'subscriptions' => $subscriptions,
+            ]);
+            
+            $pdf = new \Dompdf\Dompdf();
+            $pdf->loadHtml($html);
+            $pdf->setPaper('A4', 'landscape');
+            $pdf->render();
+            
+            return new Response($pdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => sprintf('attachment; filename="abonnements_%s.pdf"', $company->getCompanyName())
+            ]);
+        }
+        
+        if ($format === 'excel') {
+            // Pour Excel, vous pouvez utiliser PhpSpreadsheet
+            // installez via composer require phpoffice/phpspreadsheet
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            
+            // En-têtes
+            $sheet->setCellValue('A1', 'Date');
+            $sheet->setCellValue('B1', 'Plan');
+            $sheet->setCellValue('C1', 'Début');
+            $sheet->setCellValue('D1', 'Fin');
+            $sheet->setCellValue('E1', 'Montant');
+            $sheet->setCellValue('F1', 'Statut');
+            $sheet->setCellValue('G1', 'Période');
+            $sheet->setCellValue('H1', 'Paiement');
+            
+            $row = 2;
+            foreach ($subscriptions as $subscription) {
+                // Récupérer le dernier paiement
+                $lastPayment = $paymentRepository->findOneBy(
+                    ['subscription' => $subscription],
+                    ['createdAt' => 'DESC']
+                );
+                
+                $sheet->setCellValue('A' . $row, $subscription->getCreatedAt()?->format('d/m/Y H:i'));
+                $sheet->setCellValue('B' . $row, $subscription->getPlanLabel() ?? 'N/A');
+                $sheet->setCellValue('C' . $row, $subscription->getStartsAt()?->format('d/m/Y'));
+                $sheet->setCellValue('D' . $row, $subscription->getEndsAt()?->format('d/m/Y'));
+                $sheet->setCellValue('E' . $row, $subscription->getPlanPrice() ?? 0);
+                $sheet->setCellValue('F' . $row, $subscription->getStatusLabel());
+                $sheet->setCellValue('G' . $row, $subscription->getBillingPeriodLabel());
+                $sheet->setCellValue('H' . $row, $lastPayment ? $lastPayment->getStatus() : 'Aucun');
+                $row++;
+            }
+            
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $tempFile = tempnam(sys_get_temp_dir(), 'export_');
+            $writer->save($tempFile);
+            
+            return new Response(file_get_contents($tempFile), 200, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => sprintf('attachment; filename="abonnements_%s.xlsx"', $company->getCompanyName())
+            ]);
+        }
+        
+        throw $this->createNotFoundException('Format non supporté');
     }
 
     // Pas de méthode edit ni delete

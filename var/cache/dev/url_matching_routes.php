@@ -604,18 +604,21 @@ return [
                                 .')'
                                 .'|payment/([^/]++)(*:4794)'
                                 .'|subscription(?'
-                                    .'|/([^/]++)(*:4827)'
+                                    .'|/(?'
+                                        .'|([^/]++)(*:4830)'
+                                        .'|export/([^/]++)/([^/]++)(*:4863)'
+                                    .')'
                                     .'|\\-plans/([^/]++)(?'
-                                        .'|(*:4855)'
+                                        .'|(*:4892)'
                                         .'|/(?'
-                                            .'|edit(*:4872)'
-                                            .'|toggle(*:4887)'
+                                            .'|edit(*:4909)'
+                                            .'|toggle(*:4924)'
                                         .')'
-                                        .'|(*:4897)'
+                                        .'|(*:4934)'
                                     .')'
                                 .')'
                             .')'
-                            .'|plier/credit\\-note/respond/([^/]++)(*:4944)'
+                            .'|plier/credit\\-note/respond/([^/]++)(*:4981)'
                         .')'
                     .')'
                 .')'
@@ -813,12 +816,13 @@ return [
         4742 => [[['_route' => 'app_super_admin_hma_service_subscriptions', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::subscriptions'], ['id'], ['GET' => 0], null, false, false, null]],
         4768 => [[['_route' => 'app_super_admin_hma_service_export', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::export'], ['format'], ['GET' => 0], null, false, true, null]],
         4794 => [[['_route' => 'super_admin_payment_show', '_controller' => 'App\\Controller\\SuperAdmin\\PaymentController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        4827 => [[['_route' => 'super_admin_subscription_show', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        4855 => [[['_route' => 'app_super_admin_subscription_plan_show', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        4872 => [[['_route' => 'app_super_admin_subscription_plan_edit', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        4887 => [[['_route' => 'app_super_admin_subscription_plan_toggle', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
-        4897 => [[['_route' => 'app_super_admin_subscription_plan_delete', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        4944 => [
+        4830 => [[['_route' => 'super_admin_subscription_show', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        4863 => [[['_route' => 'super_admin_subscription_export', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionController::export'], ['company', 'format'], ['GET' => 0], null, false, true, null]],
+        4892 => [[['_route' => 'app_super_admin_subscription_plan_show', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        4909 => [[['_route' => 'app_super_admin_subscription_plan_edit', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        4924 => [[['_route' => 'app_super_admin_subscription_plan_toggle', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
+        4934 => [[['_route' => 'app_super_admin_subscription_plan_delete', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        4981 => [
             [['_route' => 'supplier_credit_note_respond', '_controller' => 'App\\Controller\\SupplierCreditNoteResponseController::respond'], ['token'], ['GET' => 0, 'POST' => 1], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

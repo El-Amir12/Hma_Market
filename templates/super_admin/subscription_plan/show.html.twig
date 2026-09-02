@@ -3,11 +3,11 @@
 {% block title %}{{ plan.displayName }} - Détails du plan{% endblock %}
 
 {% block body %}
-<div class="container-fluid px-4 py-4 bg-light min-vh-100">
-    <!-- En-tête moderne avec dégradé amélioré -->
-    <div class="row mb-5">
+<div class="container-fluid px-2 px-sm-3 px-md-4 py-3 py-md-4 bg-light min-vh-100">
+    <!-- En-tête moderne avec dégradé -->
+    <div class="row mb-4 mb-md-5">
         <div class="col-12">
-            <div class="modern-header position-relative overflow-hidden rounded-5 shadow-lg p-5 text-white" 
+            <div class="modern-header position-relative overflow-hidden rounded-4 rounded-md-5 shadow-lg p-3 p-sm-4 p-md-5 text-white" 
                 style="background: linear-gradient(145deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);">
                 <div class="floating-bg">
                     <div class="shape shape-1"></div>
@@ -15,28 +15,31 @@
                     <div class="shape shape-3"></div>
                 </div>
                 <div class="position-relative z-1">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center gap-4">
-                            <div class="icon-wrapper bg-white bg-opacity-20 backdrop-blur rounded-4 p-4">
-                                <i class="fas fa-tag text-white display-4"></i>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                        <div class="d-flex align-items-center gap-3 gap-md-4 w-100 w-md-auto">
+                            <div class="icon-wrapper bg-white bg-opacity-20 backdrop-blur rounded-3 rounded-md-4 p-3 p-md-4 flex-shrink-0">
+                                <i class="fas fa-tag text-white display-6 display-md-4"></i>
                             </div>
-                            <div>
-                                <h1 class="display-4 fw-bold mb-2">{{ plan.displayName }}</h1>
-                                <p class="text-white-50 mb-0 fs-5">Détails du plan d'abonnement • 
-                                    <span class="badge bg-white text-dark rounded-pill px-3 py-2 ms-2">
+                            <div class="flex-grow-1">
+                                <h1 class="h3 h-md-2 h-lg-1 display-md-4 fw-bold mb-1 mb-md-2 text-break">{{ plan.displayName }}</h1>
+                                <p class="text-white-50 mb-0 fs-6 fs-md-5">
+                                    Détails du plan d'abonnement
+                                    <span class="badge bg-white text-dark rounded-pill px-2 px-md-3 py-1 py-md-2 ms-1 ms-md-2 d-inline-block mt-1 mt-md-0">
                                         {% if plan.isUnlimited %}Illimité{% else %}Limité{% endif %}
                                     </span>
                                 </p>
                             </div>
                         </div>
-                        <div>
-                            <a href="{{ path('app_super_admin_subscription_plan_index') }}" class="btn btn-light rounded-pill px-4 shadow-sm" style="cursor: pointer; position: relative; z-index: 100;">
-                                <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                        <div class="w-100 w-md-auto">
+                            <a href="{{ path('app_super_admin_subscription_plan_index') }}" class="btn btn-light rounded-pill px-3 px-md-4 py-2 py-md-2 shadow-sm w-100 w-md-auto d-flex align-items-center justify-content-center" style="cursor: pointer; position: relative; z-index: 100;">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                <span class="d-none d-sm-inline">Retour à la liste</span>
+                                <span class="d-inline d-sm-none">Retour</span>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="wave-bottom">
+                <div class="wave-bottom d-none d-sm-block">
                     <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                         <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white" fill-opacity="0.2"/>
                     </svg>
@@ -48,10 +51,10 @@
     <!-- Messages flash -->
     {% for label, messages in app.flashes %}
         {% for message in messages %}
-            <div class="alert alert-{{ label }} alert-dismissible fade show rounded-4 shadow-sm mb-4 border-0" role="alert">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-{{ label == 'success' ? 'check-circle' : 'exclamation-triangle' }} fs-4 me-3"></i>
-                    <span>{{ message }}</span>
+            <div class="alert alert-{{ label }} alert-dismissible fade show rounded-3 rounded-md-4 shadow-sm mb-3 mb-md-4 border-0" role="alert">
+                <div class="d-flex align-items-center gap-2 gap-md-3">
+                    <i class="fas fa-{{ label == 'success' ? 'check-circle' : 'exclamation-triangle' }} fs-5 fs-md-4 flex-shrink-0"></i>
+                    <span class="small small-md">{{ message }}</span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
@@ -59,56 +62,61 @@
     {% endfor %}
 
     <!-- Détails du plan -->
-    <div class="row mb-5">
+    <div class="row mb-4 mb-md-5">
         <div class="col-12">
-            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-                <div class="card-header bg-gradient-primary text-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-info-circle me-2"></i>Informations générales</h5>
+            <div class="card border-0 shadow-lg rounded-3 rounded-md-4 overflow-hidden">
+                <div class="card-header bg-gradient-primary text-white py-2 py-md-3 d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
+                    <h5 class="mb-0 fw-bold fs-6 fs-md-5">
+                        <i class="fas fa-info-circle me-2"></i>Informations générales
+                    </h5>
+                    <span class="badge bg-white text-dark rounded-pill px-3 py-1 fs-7 fs-md-6">
+                        ID: #{{ plan.id }}
+                    </span>
                 </div>
-                <div class="card-body p-4">
-                    <!-- Informations générales -->
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <ul class="list-unstyled">
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
+                <div class="card-body p-3 p-md-4">
+                    <!-- Informations générales en version responsive -->
+                    <div class="row g-3 g-md-4">
+                        <div class="col-12 col-md-6">
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2 mb-md-3 d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 p-2 rounded-2 rounded-md-3 me-2 me-md-3 flex-shrink-0">
                                         <i class="fas fa-tag text-white"></i>
                                     </div>
-                                    <div><strong>Nom technique :</strong> {{ plan.name }}</div>
+                                    <div class="small small-md"><strong>Nom :</strong> {{ plan.name }}</div>
                                 </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="bg-success bg-opacity-10 p-2 rounded-3 me-3">
+                                <li class="mb-2 mb-md-3 d-flex align-items-center">
+                                    <div class="bg-success bg-opacity-10 p-2 rounded-2 rounded-md-3 me-2 me-md-3 flex-shrink-0">
                                         <i class="fas fa-calendar-check text-white"></i>
                                     </div>
-                                    <div><strong>Créé le :</strong> {{ plan.createdAt|date('d/m/Y H:i') }}</div>
+                                    <div class="small small-md"><strong>Créé le :</strong> {{ plan.createdAt|date('d/m/Y H:i') }}</div>
                                 </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="bg-warning bg-opacity-10 p-2 rounded-3 me-3">
+                                <li class="mb-2 mb-md-3 d-flex align-items-center">
+                                    <div class="bg-warning bg-opacity-10 p-2 rounded-2 rounded-md-3 me-2 me-md-3 flex-shrink-0">
                                         <i class="fas fa-sync-alt text-white"></i>
                                     </div>
-                                    <div><strong>Dernière mise à jour :</strong> {{ plan.updatedAt ? plan.updatedAt|date('d/m/Y H:i') : 'Jamais' }}</div>
+                                    <div class="small small-md"><strong>Mis à jour :</strong> {{ plan.updatedAt ? plan.updatedAt|date('d/m/Y H:i') : 'Jamais' }}</div>
                                 </li>
                             </ul>
                         </div>
-                        <div class="col-md-6">
-                            <ul class="list-unstyled">
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="bg-success bg-opacity-10 p-2 rounded-3 me-3">
+                        <div class="col-12 col-md-6">
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2 mb-md-3 d-flex align-items-center">
+                                    <div class="bg-success bg-opacity-10 p-2 rounded-2 rounded-md-3 me-2 me-md-3 flex-shrink-0">
                                         <i class="fas fa-money-bill-wave text-white"></i>
                                     </div>
-                                    <div><strong>Prix mensuel :</strong> {{ plan.priceMonthly|number_format(0, ',', ' ') }} FCFA</div>
+                                    <div class="small small-md"><strong>Mensuel :</strong> {{ plan.priceMonthly|number_format(0, ',', ' ') }} FCFA</div>
                                 </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="bg-warning bg-opacity-10 p-2 rounded-3 me-3">
+                                <li class="mb-2 mb-md-3 d-flex align-items-center">
+                                    <div class="bg-warning bg-opacity-10 p-2 rounded-2 rounded-md-3 me-2 me-md-3 flex-shrink-0">
                                         <i class="fas fa-money-bill-wave text-white"></i>
                                     </div>
-                                    <div><strong>Prix annuel :</strong> {{ plan.priceYearly|number_format(0, ',', ' ') }} FCFA</div>
+                                    <div class="small small-md"><strong>Annuel :</strong> {{ plan.priceYearly|number_format(0, ',', ' ') }} FCFA</div>
                                 </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="bg-info bg-opacity-10 p-2 rounded-3 me-3">
+                                <li class="mb-2 mb-md-3 d-flex align-items-center">
+                                    <div class="bg-info bg-opacity-10 p-2 rounded-2 rounded-md-3 me-2 me-md-3 flex-shrink-0">
                                         <i class="fas fa-chart-bar text-white"></i>
                                     </div>
-                                    <div><strong>Abonnements :</strong> {{ plan.subscriptions|length }}</div>
+                                    <div class="small small-md"><strong>Abonnements :</strong> {{ plan.subscriptions|length }}</div>
                                 </li>
                             </ul>
                         </div>
@@ -116,39 +124,41 @@
 
                     <!-- Description -->
                     {% if plan.description %}
-                        <div class="description-box p-3 rounded-3 mt-4 mb-4">
+                        <div class="description-box p-2 p-md-3 rounded-3 mt-3 mt-md-4 mb-3 mb-md-4">
                             <i class="fas fa-quote-left me-2 text-info"></i>
-                            <em>{{ plan.description }}</em>
+                            <em class="small small-md">{{ plan.description }}</em>
                         </div>
                     {% endif %}
 
-                    <hr class="my-4">
+                    <hr class="my-3 my-md-4">
 
                     <!-- Limites Commerce -->
-                    <h6 class="fw-bold mb-3"><i class="fas fa-store me-2 text-primary"></i>Limites Commerce</h6>
-                    <div class="d-flex flex-wrap gap-2 mb-4">
+                    <h6 class="fw-bold mb-2 mb-md-3 fs-6 fs-md-5">
+                        <i class="fas fa-store me-2 text-primary"></i>Limites Commerce
+                    </h6>
+                    <div class="d-flex flex-wrap gap-1 gap-md-2 mb-3 mb-md-4">
                         {% if plan.maxUsersPerRole is not null %}
-                            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                            <span class="badge bg-light text-dark border px-2 px-md-3 py-1 py-md-2 rounded-pill fs-7 fs-md-6">
                                 <i class="fas fa-users text-success me-1"></i> {{ plan.maxUsersPerRole }} utilisateurs/rôle
                             </span>
                         {% endif %}
                         {% if plan.maxProducts is not null %}
-                            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                            <span class="badge bg-light text-dark border px-2 px-md-3 py-1 py-md-2 rounded-pill fs-7 fs-md-6">
                                 <i class="fas fa-box text-info me-1"></i> {{ plan.maxProducts|number_format }} produits
                             </span>
                         {% endif %}
                         {% if plan.maxOrdersPerMonth is not null %}
-                            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                            <span class="badge bg-light text-dark border px-2 px-md-3 py-1 py-md-2 rounded-pill fs-7 fs-md-6">
                                 <i class="fas fa-shopping-cart text-warning me-1"></i> {{ plan.maxOrdersPerMonth|number_format }} commandes/mois
                             </span>
                         {% endif %}
                         {% if plan.maxCategories is not null %}
-                            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                            <span class="badge bg-light text-dark border px-2 px-md-3 py-1 py-md-2 rounded-pill fs-7 fs-md-6">
                                 <i class="fas fa-tags text-primary me-1"></i> {{ plan.maxCategories|number_format }} catégories
                             </span>
                         {% endif %}
                         {% if plan.maxSuppliers is not null %}
-                            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                            <span class="badge bg-light text-dark border px-2 px-md-3 py-1 py-md-2 rounded-pill fs-7 fs-md-6">
                                 <i class="fas fa-truck text-secondary me-1"></i> {{ plan.maxSuppliers|number_format }} fournisseurs
                             </span>
                         {% endif %}
@@ -157,10 +167,12 @@
                     <!-- Limites Restaurant -->
                     {% set hasRestaurantLimits = plan.maxRecipes is not null or plan.maxRecipeCategories is not null %}
                     {% if hasRestaurantLimits %}
-                        <h6 class="fw-bold mb-3 mt-4"><i class="fas fa-utensils me-2 text-success"></i>Limites Restaurant</h6>
-                        <div class="d-flex flex-wrap gap-2 mb-4">
+                        <h6 class="fw-bold mb-2 mb-md-3 mt-3 mt-md-4 fs-6 fs-md-5">
+                            <i class="fas fa-utensils me-2 text-success"></i>Limites Restaurant
+                        </h6>
+                        <div class="d-flex flex-wrap gap-1 gap-md-2 mb-3 mb-md-4">
                             {% if plan.maxRecipes is not null %}
-                                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                                <span class="badge bg-light text-dark border px-2 px-md-3 py-1 py-md-2 rounded-pill fs-7 fs-md-6">
                                     <i class="fas fa-book text-success me-1"></i> 
                                     {% if plan.maxRecipes >= 999999999 %}
                                         ♾️ Recettes illimitées
@@ -170,12 +182,12 @@
                                 </span>
                             {% endif %}
                             {% if plan.maxRecipeCategories is not null %}
-                                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                                <span class="badge bg-light text-dark border px-2 px-md-3 py-1 py-md-2 rounded-pill fs-7 fs-md-6">
                                     <i class="fas fa-tag text-info me-1"></i> 
                                     {% if plan.maxRecipeCategories >= 999999999 %}
-                                        ♾️ Catégories de recettes illimitées
+                                        ♾️ Catégories illimitées
                                     {% else %}
-                                        {{ plan.maxRecipeCategories|number_format }} catégories de recettes
+                                        {{ plan.maxRecipeCategories|number_format }} catégories
                                     {% endif %}
                                 </span>
                             {% endif %}
@@ -184,49 +196,58 @@
 
                     <!-- Fonctionnalités incluses -->
                     {% if plan.features|length > 0 %}
-                        <h6 class="fw-bold mb-3"><i class="fas fa-star text-warning me-2"></i>Fonctionnalités incluses</h6>
-                        <div class="d-flex flex-wrap gap-2 mb-3">
+                        <h6 class="fw-bold mb-2 mb-md-3 fs-6 fs-md-5">
+                            <i class="fas fa-star text-warning me-2"></i>Fonctionnalités incluses
+                        </h6>
+                        <div class="d-flex flex-wrap gap-1 gap-md-2 mb-3 mb-md-4">
                             {% for feature in plan.features %}
-                                <span class="badge bg-light text-dark border rounded-pill px-3 py-2">
+                                <span class="badge bg-light text-dark border rounded-pill px-2 px-md-3 py-1 py-md-2 fs-7 fs-md-6">
                                     <i class="fas fa-check-circle text-success me-1"></i> {{ feature }}
                                 </span>
                             {% endfor %}
                         </div>
                     {% endif %}
 
-                    <!-- Statut -->
-                    <div class="mt-4 d-flex align-items-center gap-3">
-                        <span class="badge bg-{{ plan.isActive ? 'success' : 'secondary' }} fs-6 p-3 rounded-pill">
+                    <!-- Statut - Version responsive -->
+                    <div class="mt-3 mt-md-4 d-flex flex-wrap align-items-center gap-2 gap-md-3">
+                        <span class="badge bg-{{ plan.isActive ? 'success' : 'secondary' }} fs-7 fs-md-6 p-2 p-md-3 rounded-pill">
                             <i class="fas fa-{{ plan.isActive ? 'check-circle' : 'times-circle' }} me-1"></i>
                             {{ plan.isActive ? 'Plan actif' : 'Plan inactif' }}
                         </span>
-                        <span class="badge bg-info fs-6 p-3 rounded-pill">
+                        <span class="badge bg-info fs-7 fs-md-6 p-2 p-md-3 rounded-pill">
                             <i class="fas fa-chart-bar me-1"></i>
-                            {{ plan.subscriptions|length }} abonnement(s) souscrit(s)
+                            {{ plan.subscriptions|length }} abonnement(s)
                         </span>
                     </div>
                 </div>
 
-                <!-- Actions du footer -->
-                <div class="card-footer bg-transparent border-0 p-4 d-flex justify-content-between">
-                    <a href="{{ path('app_super_admin_subscription_plan_index') }}" class="btn btn-outline-secondary rounded-pill px-4">
-                        <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                <!-- Actions du footer - Version responsive -->
+                <div class="card-footer bg-transparent border-0 p-3 p-md-4 d-flex flex-column flex-sm-row justify-content-between align-items-stretch align-items-sm-center gap-2 gap-sm-3">
+                    <a href="{{ path('app_super_admin_subscription_plan_index') }}" class="btn btn-outline-secondary rounded-pill px-3 px-md-4 py-2 text-center w-100 w-sm-auto order-2 order-sm-1">
+                        <i class="fas fa-arrow-left me-2"></i>Retour
                     </a>
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-{{ plan.isActive ? 'warning' : 'success' }} rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#toggleModal">
-                            <i class="fas fa-{{ plan.isActive ? 'pause' : 'play' }} me-2"></i>
-                            {{ plan.isActive ? 'Désactiver' : 'Activer' }}
+                    <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-sm-end w-100 w-sm-auto order-1 order-sm-2">
+                        <button type="button" class="btn btn-outline-{{ plan.isActive ? 'warning' : 'success' }} rounded-pill px-3 px-md-4 py-2 flex-grow-1 flex-sm-grow-0" data-bs-toggle="modal" data-bs-target="#toggleModal">
+                            <i class="fas fa-{{ plan.isActive ? 'pause' : 'play' }} me-1 me-md-2"></i>
+                            <span class="d-none d-sm-inline">{{ plan.isActive ? 'Désactiver' : 'Activer' }}</span>
+                            <span class="d-inline d-sm-none">{{ plan.isActive ? 'Désact.' : 'Activer' }}</span>
                         </button>
-                        <a href="{{ path('app_super_admin_subscription_plan_edit', {'id': plan.id}) }}" class="btn btn-outline-primary rounded-pill px-4">
-                            <i class="fas fa-edit me-2"></i>Modifier
+                        <a href="{{ path('app_super_admin_subscription_plan_edit', {'id': plan.id}) }}" class="btn btn-outline-primary rounded-pill px-3 px-md-4 py-2 flex-grow-1 flex-sm-grow-0">
+                            <i class="fas fa-edit me-1 me-md-2"></i>
+                            <span class="d-none d-sm-inline">Modifier</span>
+                            <span class="d-inline d-sm-none">Modif.</span>
                         </a>
                         {% if plan.subscriptions|length == 0 %}
-                            <button type="button" class="btn btn-outline-danger rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                <i class="fas fa-trash me-2"></i>Supprimer
+                            <button type="button" class="btn btn-outline-danger rounded-pill px-3 px-md-4 py-2 flex-grow-1 flex-sm-grow-0" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="fas fa-trash me-1 me-md-2"></i>
+                                <span class="d-none d-sm-inline">Supprimer</span>
+                                <span class="d-inline d-sm-none">Suppr.</span>
                             </button>
                         {% else %}
-                            <button type="button" class="btn btn-outline-danger rounded-pill px-4" disabled title="Impossible de supprimer : des abonnements sont liés à ce plan">
-                                <i class="fas fa-trash me-2"></i>Supprimer
+                            <button type="button" class="btn btn-outline-danger rounded-pill px-3 px-md-4 py-2 flex-grow-1 flex-sm-grow-0" disabled title="Impossible de supprimer : des abonnements sont liés à ce plan">
+                                <i class="fas fa-trash me-1 me-md-2"></i>
+                                <span class="d-none d-sm-inline">Supprimer</span>
+                                <span class="d-inline d-sm-none">Suppr.</span>
                             </button>
                         {% endif %}
                     </div>
@@ -238,90 +259,153 @@
     <!-- Liste des abonnements -->
     <div class="row justify-content-center">
         <div class="col-lg-12">
-            <div class="card border-0 shadow-lg rounded-4">
-                <div class="card-header bg-gradient-secondary text-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Liste des abonnements souscrits</h5>
-                    <div class="d-flex gap-2 align-items-center">
-                        <span class="badge bg-white text-dark rounded-pill px-3">{{ plan.subscriptions|length }} abonnement(s)</span>
-                        <button class="btn btn-light btn-sm rounded-pill px-3" id="filterToggleBtn">
-                            <i class="fas fa-filter me-1"></i>Filtres
+            <div class="card border-0 shadow-lg rounded-3 rounded-md-4">
+                <div class="card-header bg-gradient-secondary text-white py-2 py-md-3 d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
+                    <h5 class="mb-0 fw-bold fs-6 fs-md-5">
+                        <i class="fas fa-list-ul me-2"></i>Liste des abonnements
+                    </h5>
+                    <div class="d-flex flex-wrap gap-2 align-items-center w-100 w-sm-auto">
+                        <span class="badge bg-white text-dark rounded-pill px-3 py-1 fs-7 fs-md-6">
+                            {{ plan.subscriptions|length }} abonnement(s)
+                        </span>
+                        <button class="btn btn-light btn-sm rounded-pill px-3 flex-grow-1 flex-sm-grow-0" id="filterToggleBtn">
+                            <i class="fas fa-filter me-1"></i>
+                            <span class="d-none d-sm-inline">Filtres</span>
+                            <span class="d-inline d-sm-none">Filtres</span>
                         </button>
-                        <button class="btn btn-outline-light btn-sm rounded-pill px-3" id="resetFiltersBtn" style="display: none;">
-                            <i class="fas fa-undo-alt me-1"></i>Réinitialiser
+                        <button class="btn btn-outline-light btn-sm rounded-pill px-3 flex-grow-1 flex-sm-grow-0" id="resetFiltersBtn" style="display: none;">
+                            <i class="fas fa-undo-alt me-1"></i>
+                            <span class="d-none d-sm-inline">Réinitialiser</span>
+                            <span class="d-inline d-sm-none">Reset</span>
                         </button>
                     </div>
                 </div>
-                <div class="card-body p-4">
-                    <!-- Panneau de filtres (caché par défaut) -->
-                    <div id="filterPanel" class="row g-3 mb-4" style="display: none;">
-                        <div class="col-md-4">
-                            <div class="input-group">
+                <div class="card-body p-2 p-sm-3 p-md-4">
+                    <!-- Panneau de filtres -->
+                    <div id="filterPanel" class="row g-2 g-md-3 mb-3 mb-md-4" style="display: none;">
+                        <div class="col-12 col-md-5">
+                            <div class="input-group input-group-sm">
                                 <span class="input-group-text bg-transparent border-end-0">
                                     <i class="fas fa-search"></i>
                                 </span>
-                                <input type="text" class="form-control border-start-0" id="tableSearch" placeholder="Rechercher par entreprise, email...">
+                                <input type="text" class="form-control border-start-0" id="tableSearch" placeholder="Rechercher...">
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="input-group">
-                                <span class="input-group-text bg-transparent">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </span>
-                                <input type="date" class="form-control" id="dateStartFilter" placeholder="Date début">
-                            </div>
+                        <div class="col-6 col-md-3">
+                            <input type="date" class="form-control form-control-sm" id="dateStartFilter" placeholder="Date début">
                         </div>
-                        <div class="col-md-3">
-                            <div class="input-group">
-                                <span class="input-group-text bg-transparent">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </span>
-                                <input type="date" class="form-control" id="dateEndFilter" placeholder="Date fin">
-                            </div>
+                        <div class="col-6 col-md-3">
+                            <input type="date" class="form-control form-control-sm" id="dateEndFilter" placeholder="Date fin">
                         </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-primary w-100" id="applyFiltersBtn">
-                                <i class="fas fa-filter me-1"></i>Appliquer
+                        <div class="col-12 col-md-1">
+                            <button class="btn btn-primary btn-sm w-100" id="applyFiltersBtn">
+                                <i class="fas fa-filter me-1"></i>
+                                <span class="d-none d-sm-inline">Appliquer</span>
+                                <span class="d-inline d-sm-none">OK</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Tableau avec scroll -->
-                    <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
-                        <table class="table table-hover align-middle mb-0" id="subscriptionsTable">
-                            <thead class="bg-light sticky-top">
-                                <tr>
-                                    <th>Entreprise</th>
-                                    <th>Période</th>
-                                    <th>Statut</th>
-                                    <th>Date début</th>
-                                    <th>Date fin</th>
-                                    <th class="text-end px-4">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for subscription in plan.subscriptions %}
-                                    <tr class="subscription-row" data-start-date="{{ subscription.startsAt ? subscription.startsAt|date('Y-m-d') : '' }}" data-end-date="{{ subscription.endsAt ? subscription.endsAt|date('Y-m-d') : '' }}">
-                                        <td class="company-cell">
-                                            <div class="d-flex align-items-center">
-                                                <div class="symbol symbol-40px me-2">
-                                                    {% if subscription.hmaService.logo %}
-                                                        <img src="{{ asset('uploads/logos/' ~ subscription.hmaService.logo) }}" alt="logo" class="rounded-circle" width="32" height="32">
-                                                    {% else %}
-                                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                                            <i class="fas fa-building text-muted"></i>
-                                                        </div>
-                                                    {% endif %}
+                    <!-- Version Desktop - Tableau -->
+                    <div class="d-none d-md-block">
+                        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                            <table class="table table-hover align-middle mb-0" id="subscriptionsTable">
+                                <thead class="bg-light sticky-top">
+                                    <tr>
+                                        <th class="py-2 px-3">Entreprise</th>
+                                        <th class="py-2 px-3">Période</th>
+                                        <th class="py-2 px-3">Statut</th>
+                                        <th class="py-2 px-3">Début</th>
+                                        <th class="py-2 px-3">Fin</th>
+                                        <th class="py-2 px-3 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for subscription in plan.subscriptions %}
+                                        <tr class="subscription-row" data-start-date="{{ subscription.startsAt ? subscription.startsAt|date('Y-m-d') : '' }}" data-end-date="{{ subscription.endsAt ? subscription.endsAt|date('Y-m-d') : '' }}">
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="symbol-40px flex-shrink-0">
+                                                        {% if subscription.hmaService.logo %}
+                                                            <img src="{{ asset('uploads/logos/' ~ subscription.hmaService.logo) }}" alt="logo" class="rounded-circle" width="32" height="32">
+                                                        {% else %}
+                                                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                                                <i class="fas fa-building text-muted"></i>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div>
+                                                        <span class="fw-semibold small">{{ subscription.hmaService.companyName }}</span>
+                                                        <br><small class="text-muted">{{ subscription.hmaService.email }}</small>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <span class="fw-semibold">{{ subscription.hmaService.companyName }}</span>
-                                                    <br><small class="text-muted">{{ subscription.hmaService.email }}</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">{{ subscription.billingPeriod == 'monthly' ? 'Mensuel' : 'Annuel' }}</span>
+                                            </td>
+                                            <td class="status-cell">
+                                                {% set statusClass = {
+                                                    'active': 'success',
+                                                    'pending': 'warning',
+                                                    'expired': 'danger',
+                                                    'cancelled': 'secondary'
+                                                } %}
+                                                {% set statusLabel = {
+                                                    'active': 'Actif',
+                                                    'pending': 'En attente',
+                                                    'expired': 'Expiré',
+                                                    'cancelled': 'Annulé'
+                                                } %}
+                                                <span class="badge bg-{{ statusClass[subscription.status] ?? 'secondary' }}">
+                                                    {{ statusLabel[subscription.status] ?? subscription.status }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">{{ subscription.startsAt ? subscription.startsAt|date('d/m/Y') : '-' }}</td>
+                                            <td class="text-center">{{ subscription.endsAt ? subscription.endsAt|date('d/m/Y') : '-' }}</td>
+                                            <td>
+                                                <div class="d-flex gap-1 justify-content-center">
+                                                    <a href="{{ path('super_admin_subscription_show', {'id': subscription.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill" data-bs-toggle="tooltip" title="Détails">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="{{ path('app_super_admin_hma_service_show', {'id': subscription.hmaService.id}) }}" class="btn btn-sm btn-outline-info rounded-pill" data-bs-toggle="tooltip" title="Voir entreprise">
+                                                        <i class="fas fa-building"></i>
+                                                    </a>
                                                 </div>
-                                            </div>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6" class="text-center py-5">
+                                                <i class="fas fa-inbox display-4 text-muted"></i>
+                                                <p class="mt-3 fs-5">Aucun abonnement associé</p>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Version Mobile - Cards -->
+                    <div class="d-block d-md-none">
+                        {% for subscription in plan.subscriptions %}
+                            <div class="card border-0 border-bottom rounded-0 subscription-row" data-start-date="{{ subscription.startsAt ? subscription.startsAt|date('Y-m-d') : '' }}" data-end-date="{{ subscription.endsAt ? subscription.endsAt|date('Y-m-d') : '' }}">
+                                <div class="card-body p-3">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div class="flex-shrink-0">
+                                            {% if subscription.hmaService.logo %}
+                                                <img src="{{ asset('uploads/logos/' ~ subscription.hmaService.logo) }}" alt="logo" class="rounded-circle" width="40" height="40">
+                                            {% else %}
+                                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-building text-muted"></i>
+                                                </div>
+                                            {% endif %}
                                         </div>
-                                        <td class="text-center">
-                                            <span class="badge bg-info">{{ subscription.billingPeriod == 'monthly' ? 'Mensuel' : 'Annuel' }}</span>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-semibold">{{ subscription.hmaService.companyName }}</div>
+                                            <small class="text-muted">{{ subscription.hmaService.email }}</small>
                                         </div>
-                                        <td class="status-cell">
+                                        <div>
                                             {% set statusClass = {
                                                 'active': 'success',
                                                 'pending': 'warning',
@@ -338,36 +422,47 @@
                                                 {{ statusLabel[subscription.status] ?? subscription.status }}
                                             </span>
                                         </div>
-                                        <td class="text-center">{{ subscription.startsAt ? subscription.startsAt|date('d/m/Y') : '-' }}</div>
-                                        <td class="text-center">{{ subscription.endsAt ? subscription.endsAt|date('d/m/Y') : '-' }}</div>
-                                        <td class="text-end px-4">
-                                            <div class="d-flex gap-2 justify-content-end">
-                                                <a href="{{ path('super_admin_subscription_show', {'id': subscription.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill" data-bs-toggle="tooltip" title="Détails abonnement">
+                                    </div>
+                                    <div class="row g-1 small">
+                                        <div class="col-6">
+                                            <span class="text-muted">Période :</span>
+                                            <div><span class="badge bg-info">{{ subscription.billingPeriod == 'monthly' ? 'Mensuel' : 'Annuel' }}</span></div>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <span class="text-muted">Actions :</span>
+                                            <div class="d-flex gap-1 justify-content-end mt-1">
+                                                <a href="{{ path('super_admin_subscription_show', {'id': subscription.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ path('app_super_admin_hma_service_show', {'id': subscription.hmaService.id}) }}" class="btn btn-sm btn-outline-info rounded-pill" data-bs-toggle="tooltip" title="Voir l'entreprise">
+                                                <a href="{{ path('app_super_admin_hma_service_show', {'id': subscription.hmaService.id}) }}" class="btn btn-sm btn-outline-info rounded-pill">
                                                     <i class="fas fa-building"></i>
                                                 </a>
                                             </div>
                                         </div>
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <td colspan="6" class="text-center py-5">
-                                            <i class="fas fa-inbox display-4 text-muted"></i>
-                                            <p class="mt-3 fs-5">Aucun abonnement n'est associé à ce plan pour le moment.</p>
+                                        <div class="col-6">
+                                            <span class="text-muted">Début :</span>
+                                            <div>{{ subscription.startsAt ? subscription.startsAt|date('d/m/Y') : '-' }}</div>
                                         </div>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                        <div class="col-6 text-end">
+                                            <span class="text-muted">Fin :</span>
+                                            <div>{{ subscription.endsAt ? subscription.endsAt|date('d/m/Y') : '-' }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-inbox display-4 text-muted"></i>
+                                <p class="mt-3">Aucun abonnement associé</p>
+                            </div>
+                        {% endfor %}
                     </div>
 
                     <!-- Pagination -->
                     {% if plan.subscriptions|length > 10 %}
-                    <div class="d-flex justify-content-between align-items-center mt-4">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 mt-3 mt-md-4">
                         <div>
-                            <span class="text-muted">Affichage de <span id="showingStart">1</span> à <span id="showingEnd">10</span> sur <span id="totalCount">{{ plan.subscriptions|length }}</span> entrées</span>
+                            <span class="text-muted small">Affichage de <span id="showingStart">1</span> à <span id="showingEnd">10</span> sur <span id="totalCount">{{ plan.subscriptions|length }}</span></span>
                         </div>
                         <nav>
                             <ul class="pagination pagination-sm" id="paginationControls"></ul>
@@ -382,17 +477,17 @@
 
 <!-- Modal de confirmation activation/désactivation -->
 <div class="modal fade" id="toggleModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content border-0 rounded-4">
-            <div class="modal-header bg-{{ plan.isActive ? 'warning' : 'success' }} text-white border-0">
-                <h5 class="modal-title">
+            <div class="modal-header bg-{{ plan.isActive ? 'warning' : 'success' }} text-white border-0 py-3">
+                <h5 class="modal-title fs-6">
                     <i class="fas fa-{{ plan.isActive ? 'pause-circle' : 'play-circle' }} me-2"></i>
                     {{ plan.isActive ? 'Désactiver' : 'Activer' }} le plan
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body p-4">
-                <p class="mb-0">
+            <div class="modal-body p-3 p-md-4">
+                <p class="mb-0 small">
                     Êtes-vous sûr de vouloir {{ plan.isActive ? 'désactiver' : 'activer' }} le plan <strong>{{ plan.displayName }}</strong> ?
                     {% if plan.isActive %}
                         <br><small class="text-muted">Les entreprises avec ce plan ne pourront plus l'utiliser.</small>
@@ -401,11 +496,11 @@
                     {% endif %}
                 </p>
             </div>
-            <div class="modal-footer border-0 justify-content-center">
-                <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Annuler</button>
+            <div class="modal-footer border-0 justify-content-center gap-2 py-3">
+                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-4" data-bs-dismiss="modal">Annuler</button>
                 <form action="{{ path('app_super_admin_subscription_plan_toggle', {'id': plan.id}) }}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ plan.id) }}">
-                    <button type="submit" class="btn btn-{{ plan.isActive ? 'warning' : 'success' }} px-4 rounded-pill">
+                    <button type="submit" class="btn btn-{{ plan.isActive ? 'warning' : 'success' }} btn-sm rounded-pill px-4">
                         Confirmer
                     </button>
                 </form>
@@ -417,20 +512,20 @@
 <!-- Modal de suppression -->
 {% if plan.subscriptions|length == 0 %}
 <div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content border-0 rounded-4">
-            <div class="modal-header bg-danger text-white border-0">
-                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Supprimer le plan</h5>
+            <div class="modal-header bg-danger text-white border-0 py-3">
+                <h5 class="modal-title fs-6"><i class="fas fa-exclamation-triangle me-2"></i>Supprimer le plan</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body p-4">
-                <p>Attention, cette action est irréversible. Voulez-vous vraiment supprimer le plan <strong>{{ plan.displayName }}</strong> ?</p>
+            <div class="modal-body p-3 p-md-4">
+                <p class="mb-0 small">Attention, cette action est irréversible. Voulez-vous vraiment supprimer le plan <strong>{{ plan.displayName }}</strong> ?</p>
             </div>
-            <div class="modal-footer border-0 justify-content-center">
-                <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Annuler</button>
+            <div class="modal-footer border-0 justify-content-center gap-2 py-3">
+                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-4" data-bs-dismiss="modal">Annuler</button>
                 <form action="{{ path('app_super_admin_subscription_plan_delete', {'id': plan.id}) }}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ plan.id) }}">
-                    <button type="submit" class="btn btn-danger px-4 rounded-pill">Supprimer</button>
+                    <button type="submit" class="btn btn-danger btn-sm rounded-pill px-4">Supprimer</button>
                 </form>
             </div>
         </div>
@@ -440,9 +535,14 @@
 
 <style>
 .modern-header {
-    min-height: 220px;
+    min-height: 160px;
     position: relative;
     box-shadow: 0 25px 40px -12px rgba(0,0,0,0.4);
+}
+@media (min-width: 768px) {
+    .modern-header {
+        min-height: 220px;
+    }
 }
 .floating-bg {
     position: absolute;
@@ -461,25 +561,43 @@
     pointer-events: none;
 }
 .shape-1 {
-    width: 300px;
-    height: 300px;
-    top: -100px;
-    right: -50px;
+    width: 150px;
+    height: 150px;
+    top: -50px;
+    right: -30px;
     animation: float 12s ease-in-out infinite;
 }
 .shape-2 {
-    width: 200px;
-    height: 200px;
-    bottom: -50px;
+    width: 100px;
+    height: 100px;
+    bottom: -30px;
     left: -20px;
     animation: float 15s ease-in-out infinite reverse;
 }
 .shape-3 {
-    width: 150px;
-    height: 150px;
+    width: 80px;
+    height: 80px;
     top: 30%;
     left: 20%;
     animation: float 10s ease-in-out infinite;
+}
+@media (min-width: 768px) {
+    .shape-1 {
+        width: 300px;
+        height: 300px;
+        top: -100px;
+        right: -50px;
+    }
+    .shape-2 {
+        width: 200px;
+        height: 200px;
+        bottom: -50px;
+        left: -20px;
+    }
+    .shape-3 {
+        width: 150px;
+        height: 150px;
+    }
 }
 @keyframes float {
     0%,100%{ transform: translateY(0) rotate(0deg); }
@@ -541,6 +659,46 @@
 .description-box i {
     font-size: 1.2rem;
 }
+.fs-7 {
+    font-size: 0.8rem !important;
+}
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+    .card-body {
+        padding: 12px !important;
+    }
+    .badge {
+        font-size: 0.7rem !important;
+    }
+    .btn-sm {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+    .btn {
+        font-size: 0.75rem;
+    }
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    .modal-content {
+        border-radius: 12px !important;
+    }
+    .pagination .page-link {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.7rem;
+    }
+    .pagination .page-item:not(.active):not(.prev):not(.next) .page-link {
+        display: none;
+    }
+    .pagination .page-item.active .page-link,
+    .pagination .page-item.prev .page-link,
+    .pagination .page-item.next .page-link {
+        display: block;
+    }
+}
 </style>
 
 <!-- JavaScript pour la recherche, les filtres de date et la pagination -->
@@ -553,13 +711,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateStartFilter = document.getElementById('dateStartFilter');
     const dateEndFilter = document.getElementById('dateEndFilter');
     const applyFiltersBtn = document.getElementById('applyFiltersBtn');
-    const table = document.getElementById('subscriptionsTable');
-    const rows = table ? Array.from(table.querySelectorAll('tbody tr:not(.no-results)')) : [];
+    const rows = document.querySelectorAll('.subscription-row');
     const rowsPerPage = 10;
     let currentPage = 1;
-    let filteredRows = rows;
+    let filteredRows = Array.from(rows);
     
-    // Variables pour stocker les filtres actifs
     let activeSearchTerm = '';
     let activeDateStart = '';
     let activeDateEnd = '';
@@ -569,27 +725,24 @@ document.addEventListener('DOMContentLoaded', function() {
         filterToggleBtn.addEventListener('click', function() {
             if (filterPanel.style.display === 'none' || filterPanel.style.display === '') {
                 filterPanel.style.display = 'flex';
-                filterToggleBtn.innerHTML = '<i class="fas fa-filter me-1"></i>Masquer filtres';
+                filterToggleBtn.innerHTML = '<i class="fas fa-filter me-1"></i> <span class="d-none d-sm-inline">Masquer filtres</span><span class="d-inline d-sm-none">Masquer</span>';
             } else {
                 filterPanel.style.display = 'none';
-                filterToggleBtn.innerHTML = '<i class="fas fa-filter me-1"></i>Filtres';
+                filterToggleBtn.innerHTML = '<i class="fas fa-filter me-1"></i> <span class="d-none d-sm-inline">Filtres</span><span class="d-inline d-sm-none">Filtres</span>';
             }
         });
     }
 
     function filterTable() {
-        filteredRows = rows.filter(row => {
-            // Recherche texte
-            const companyCell = row.querySelector('.company-cell')?.innerText.toLowerCase() || '';
+        filteredRows = Array.from(rows).filter(row => {
+            const companyCell = row.querySelector('.fw-semibold')?.innerText.toLowerCase() || '';
             const statusCell = row.querySelector('.status-cell')?.innerText.toLowerCase() || '';
-            const periodCell = row.cells[1]?.innerText.toLowerCase() || '';
+            const periodCell = row.querySelector('.badge.bg-info')?.innerText.toLowerCase() || '';
             const matchesSearch = companyCell.includes(activeSearchTerm) || statusCell.includes(activeSearchTerm) || periodCell.includes(activeSearchTerm);
             
-            // Filtre date début
             const rowStartDate = row.dataset.startDate || '';
             const matchesStartDate = !activeDateStart || (rowStartDate && rowStartDate >= activeDateStart);
             
-            // Filtre date fin
             const rowEndDate = row.dataset.endDate || '';
             const matchesEndDate = !activeDateEnd || (rowEndDate && rowEndDate <= activeDateEnd);
             
@@ -600,7 +753,6 @@ document.addEventListener('DOMContentLoaded', function() {
         updatePagination();
         displayRows();
         
-        // Afficher/masquer le bouton réinitialiser
         if (activeSearchTerm || activeDateStart || activeDateEnd) {
             resetFiltersHeaderBtn.style.display = 'inline-block';
         } else {
@@ -613,10 +765,6 @@ document.addEventListener('DOMContentLoaded', function() {
         activeDateStart = dateStartFilter.value;
         activeDateEnd = dateEndFilter.value;
         filterTable();
-        
-        // Optionnel : fermer le panneau après application
-        // filterPanel.style.display = 'none';
-        // filterToggleBtn.innerHTML = '<i class="fas fa-filter me-1"></i>Filtres';
     }
 
     function resetFilters() {
@@ -630,7 +778,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayRows() {
-        if (!table) return;
         rows.forEach(row => row.style.display = 'none');
         const start = (currentPage - 1) * rowsPerPage;
         const end = Math.min(start + rowsPerPage, filteredRows.length);
@@ -645,13 +792,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (showingEnd) showingEnd.innerText = end;
         if (totalCount) totalCount.innerText = filteredRows.length;
 
-        const noResultsRow = table.querySelector('tbody tr.no-results');
+        const noResultsRow = document.querySelector('.no-results-row');
         if (filteredRows.length === 0) {
             if (!noResultsRow) {
                 const tr = document.createElement('tr');
-                tr.className = 'no-results';
-                tr.innerHTML = '<td colspan="6" class="text-center py-4"><i class="fas fa-exclamation-circle me-2"></i>Aucun résultat trouvé<\/td>';
-                table.querySelector('tbody').appendChild(tr);
+                tr.className = 'no-results-row';
+                tr.innerHTML = '<td colspan="6" class="text-center py-4"><i class="fas fa-exclamation-circle me-2"></i>Aucun résultat trouvé</td>';
+                const tbody = document.querySelector('#subscriptionsTable tbody');
+                if (tbody) tbody.appendChild(tr);
             }
         } else if (noResultsRow) {
             noResultsRow.remove();
@@ -704,7 +852,6 @@ document.addEventListener('DOMContentLoaded', function() {
         updatePagination();
     }
     
-    // Cacher le bouton réinitialiser au départ
     if (resetFiltersHeaderBtn) resetFiltersHeaderBtn.style.display = 'none';
 });
 </script>

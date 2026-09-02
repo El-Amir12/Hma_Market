@@ -1149,6 +1149,7 @@
       <argument type="service" id="App\Repository\HmaServiceRepository"/>
       <argument type="service" id="App\Repository\UserRepository"/>
       <argument type="service" id="App\Repository\SubscriptionRepository"/>
+      <argument type="service" id="App\Repository\PaymentRepository"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="security.user_password_hasher"/>
       <argument type="service" id="slugger"/>
@@ -1962,7 +1963,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.To0k9Am"/>
+      <argument type="service" id=".service_locator.MkvMwYW"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -5170,7 +5171,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.To0k9Am"/>
+      <argument type="service" id=".service_locator.MkvMwYW"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -12428,10 +12429,11 @@
         <argument key="paymentRepository" type="service_closure" id="App\Repository\PaymentRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.jMmnFRa" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.EaYs3HK" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="hmaServiceRepository" type="service_closure" id="App\Repository\HmaServiceRepository"/>
+        <argument key="paymentRepository" type="service_closure" id="App\Repository\PaymentRepository"/>
         <argument key="subscriptionRepository" type="service_closure" id="App\Repository\SubscriptionRepository"/>
       </argument>
     </service>
@@ -12441,6 +12443,14 @@
         <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="hmaServiceRepository" type="service_closure" id="App\Repository\HmaServiceRepository"/>
         <argument key="subscriptionPlanRepository" type="service_closure" id="App\Repository\SubscriptionPlanRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.u6cEktG" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="company" type="service_closure" id=".errored..service_locator.u6cEktG.App\Entity\HmaService"/>
+        <argument key="paymentRepository" type="service_closure" id="App\Repository\PaymentRepository"/>
+        <argument key="subscriptionRepository" type="service_closure" id="App\Repository\SubscriptionRepository"/>
       </argument>
     </service>
     <service id=".service_locator.CZ5qyP3" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -12463,7 +12473,7 @@
         <argument key="tokenRepository" type="service_closure" id="App\Repository\SupplierCreditNoteTokenRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.To0k9Am" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.MkvMwYW" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Admin\CartController::receiveCart" type="service_closure" id=".service_locator.nnTODkK"/>
@@ -12729,7 +12739,8 @@
         <argument key="App\Controller\SuperAdmin\HmaServiceController::toggleStatus" type="service_closure" id=".service_locator.EFV3GZa"/>
         <argument key="App\Controller\SuperAdmin\PaymentController::index" type="service_closure" id=".service_locator.CqWJ9w6"/>
         <argument key="App\Controller\SuperAdmin\PaymentController::show" type="service_closure" id=".service_locator.Jo6MCZf"/>
-        <argument key="App\Controller\SuperAdmin\SubscriptionController::index" type="service_closure" id=".service_locator.jMmnFRa"/>
+        <argument key="App\Controller\SuperAdmin\SubscriptionController::export" type="service_closure" id=".service_locator.u6cEktG"/>
+        <argument key="App\Controller\SuperAdmin\SubscriptionController::index" type="service_closure" id=".service_locator.EaYs3HK"/>
         <argument key="App\Controller\SuperAdmin\SubscriptionController::new" type="service_closure" id=".service_locator.9U6JZIc"/>
         <argument key="App\Controller\SuperAdmin\SubscriptionController::show" type="service_closure" id=".service_locator._EVrFYP"/>
         <argument key="App\Controller\SuperAdmin\SubscriptionPlanController::delete" type="service_closure" id=".service_locator.sSPFBVg"/>
@@ -13005,7 +13016,8 @@
         <argument key="App\Controller\SuperAdmin\HmaServiceController:toggleStatus" type="service_closure" id=".service_locator.EFV3GZa"/>
         <argument key="App\Controller\SuperAdmin\PaymentController:index" type="service_closure" id=".service_locator.CqWJ9w6"/>
         <argument key="App\Controller\SuperAdmin\PaymentController:show" type="service_closure" id=".service_locator.Jo6MCZf"/>
-        <argument key="App\Controller\SuperAdmin\SubscriptionController:index" type="service_closure" id=".service_locator.jMmnFRa"/>
+        <argument key="App\Controller\SuperAdmin\SubscriptionController:export" type="service_closure" id=".service_locator.u6cEktG"/>
+        <argument key="App\Controller\SuperAdmin\SubscriptionController:index" type="service_closure" id=".service_locator.EaYs3HK"/>
         <argument key="App\Controller\SuperAdmin\SubscriptionController:new" type="service_closure" id=".service_locator.9U6JZIc"/>
         <argument key="App\Controller\SuperAdmin\SubscriptionController:show" type="service_closure" id=".service_locator._EVrFYP"/>
         <argument key="App\Controller\SuperAdmin\SubscriptionPlanController:delete" type="service_closure" id=".service_locator.sSPFBVg"/>
@@ -15031,6 +15043,9 @@
     <service id=".errored..service_locator.EFV3GZa.App\Entity\HmaService" class="App\Entity\HmaService">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.EFV3GZa&quot;: it needs an instance of &quot;App\Entity\HmaService&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
+    <service id=".errored..service_locator.u6cEktG.App\Entity\HmaService" class="App\Entity\HmaService">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.u6cEktG&quot;: it needs an instance of &quot;App\Entity\HmaService&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
     <service id=".errored..service_locator.sSPFBVg.App\Entity\SubscriptionPlan" class="App\Entity\SubscriptionPlan">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.sSPFBVg&quot;: it needs an instance of &quot;App\Entity\SubscriptionPlan&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
@@ -16372,7 +16387,7 @@
     <service id="Knp\Bundle\TimeBundle\DateTimeFormatter" alias="time.datetime_formatter"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.To0k9Am"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.MkvMwYW"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -16456,9 +16471,10 @@
     <service id=".service_locator.ArEfX0p" alias=".service_locator.i8zDIA5"/>
     <service id=".service_locator._ioSe5r" alias=".service_locator.NW1L6Ab"/>
     <service id=".service_locator.GS1F4er" alias=".service_locator.CqWJ9w6"/>
-    <service id=".service_locator.3oRQWcw" alias=".service_locator.jMmnFRa"/>
+    <service id=".service_locator.RJc1sj3" alias=".service_locator.EaYs3HK"/>
+    <service id=".service_locator.axkHB1V" alias=".service_locator.u6cEktG"/>
     <service id=".service_locator.zgOrgxD" alias=".service_locator.t.B26rY"/>
-    <service id=".service_locator.B9oHYvN" alias=".service_locator.To0k9Am"/>
+    <service id=".service_locator.VxJtxXk" alias=".service_locator.MkvMwYW"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
     <service id=".service_locator.P2VNMyQ" alias=".service_locator.KWhUj2s"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>
@@ -16606,8 +16622,9 @@
     <service id=".service_locator.tZTlaCt" alias=".service_locator.lEubkBD"/>
     <service id=".service_locator.iPTsvSG" alias=".service_locator.EFV3GZa"/>
     <service id=".service_locator.goWowr4" alias=".service_locator.CqWJ9w6"/>
-    <service id=".service_locator.EvGUxJv" alias=".service_locator.jMmnFRa"/>
+    <service id=".service_locator.NZC1yIZ" alias=".service_locator.EaYs3HK"/>
     <service id=".service_locator.qpTfQm2" alias=".service_locator.9U6JZIc"/>
+    <service id=".service_locator.p9VI5T7" alias=".service_locator.u6cEktG"/>
     <service id=".service_locator.JmdYh6n" alias=".service_locator.CZ5qyP3"/>
     <service id=".service_locator.8_da1Kz" alias=".service_locator.sSPFBVg"/>
     <service id=".service_locator.muyZFE7" alias=".service_locator.t.B26rY"/>
