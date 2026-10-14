@@ -5,12 +5,12 @@
     _self
 ] %}
 
-<div class="card-body p-3 p-md-5">
+<div class="card-body p-2 p-md-4 p-lg-5">
     {{ form_start(form) }}
     
     <div class="row g-3 g-md-4">
         <!-- Photo de profil -->
-        <div class="col-12 mb-3 mb-md-4">
+        <div class="col-12 mb-2 mb-md-4">
             <div class="text-center">
                 <div class="photo-upload-container" id="photoPreviewContainer">
                     <div class="photo-preview-wrapper">
@@ -36,7 +36,9 @@
                                 class="btn btn-sm btn-outline-danger mt-2 mt-md-3" 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#deletePhotoModal">
-                            <i class="bi bi-trash me-1"></i>Supprimer la photo
+                            <i class="bi bi-trash me-1"></i>
+                            <span class="d-none d-sm-inline">Supprimer la photo</span>
+                            <span class="d-inline d-sm-none">Supprimer</span>
                         </button>
                     {% endif %}
                     
@@ -54,8 +56,8 @@
 
         <!-- Informations personnelles -->
         <div class="col-12 col-lg-6">
-            <div class="form-section p-3 p-md-4">
-                <h5 class="section-title mb-3 mb-md-4 fs-6 fs-md-5">
+            <div class="form-section p-2 p-md-4">
+                <h5 class="section-title mb-2 mb-md-4 fs-6">
                     <i class="bi bi-person-badge me-2 text-primary"></i>
                     Informations personnelles
                 </h5>
@@ -94,7 +96,8 @@
                     {% if not can_edit_email %}
                         <small class="text-muted d-block mt-1">
                             <i class="bi bi-info-circle me-1"></i>
-                            L'email ne peut pas être modifié
+                            <span class="d-none d-sm-inline">L'email ne peut pas être modifié</span>
+                            <span class="d-inline d-sm-none">Email non modifiable</span>
                         </small>
                     {% endif %}
                 </div>
@@ -131,8 +134,8 @@
 
         <!-- Informations du compte -->
         <div class="col-12 col-lg-6">
-            <div class="form-section p-3 p-md-4">
-                <h5 class="section-title mb-3 mb-md-4 fs-6 fs-md-5">
+            <div class="form-section p-2 p-md-4">
+                <h5 class="section-title mb-2 mb-md-4 fs-6">
                     <i class="bi bi-shield-lock me-2 text-primary"></i>
                     Informations du compte
                 </h5>
@@ -152,7 +155,8 @@
                     {% if not can_edit_role %}
                         <small class="text-muted d-block mt-1">
                             <i class="bi bi-info-circle me-1"></i>
-                            Vous ne pouvez pas modifier votre propre rôle
+                            <span class="d-none d-sm-inline">Vous ne pouvez pas modifier votre propre rôle</span>
+                            <span class="d-inline d-sm-none">Rôle non modifiable</span>
                         </small>
                     {% endif %}
                 </div>
@@ -173,13 +177,14 @@
                         </div>
                         <small class="text-muted d-block mt-1">
                             <i class="bi bi-info-circle me-1"></i>
-                            Désactiver pour bloquer temporairement l'accès
+                            <span class="d-none d-sm-inline">Désactiver pour bloquer temporairement l'accès</span>
+                            <span class="d-inline d-sm-none">Bloquer l'accès</span>
                         </small>
                     </div>
                 {% endif %}
 
                 <!-- SECTION INFORMATIVE SUR LE MOT DE PASSE -->
-                <div class="password-info mt-3 mt-md-4 p-3 bg-light rounded-3">
+                <div class="password-info mt-3 mt-md-4 p-2 p-md-3">
                     <h6 class="mb-2 mb-md-3 text-warning fs-6">
                         <i class="bi bi-key me-2"></i>
                         Mot de passe
@@ -198,9 +203,10 @@
                             <span class="d-inline d-sm-none">Changer le mot de passe via l'option dédiée.</span>
                         </div>
                         <div class="d-grid">
-                            <a href="{{ path('app_change_password', {'id': edited_user.id}) }}" class="btn btn-outline-warning btn-sm btn-md">
+                            <a href="{{ path('app_change_password', {'id': edited_user.id}) }}" class="btn btn-outline-warning btn-sm">
                                 <i class="bi bi-key me-2"></i>
-                                Changer le mot de passe
+                                <span class="d-none d-sm-inline">Changer le mot de passe</span>
+                                <span class="d-inline d-sm-none">Changer mot de passe</span>
                             </a>
                         </div>
                     {% endif %}
@@ -208,14 +214,19 @@
             </div>
         </div>
 
-        <!-- Boutons d'action -->
+        <!-- ✅ BOUTONS D'ACTION - RESPONSIVE -->
         <div class="col-12 mt-3 mt-md-4">
             <hr class="my-3 my-md-4">
-            <div class="d-flex flex-column flex-sm-row gap-2 gap-md-3 justify-content-end">
-                <a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary btn-lg px-4 px-md-5 order-2 order-sm-1">
+            
+            <div class="action-buttons">
+                <!-- Annuler : à gauche sur desktop, en bas sur mobile -->
+                <a href="{{ path('app_user_index') }}" 
+                   class="btn btn-outline-secondary btn-action btn-cancel">
                     <i class="bi bi-x me-2"></i>Annuler
                 </a>
-                <button type="submit" class="btn btn-primary btn-lg px-4 px-md-5 order-1 order-sm-2">
+                
+                <!-- Enregistrer : à droite sur desktop, en haut sur mobile -->
+                <button type="submit" class="btn btn-primary btn-action btn-submit">
                     <i class="bi bi-{{ is_new ? 'person-plus' : 'check-lg' }} me-2"></i>
                     <span class="d-none d-sm-inline">{{ button_label|default(is_new ? 'Créer l\'utilisateur' : 'Mettre à jour') }}</span>
                     <span class="d-inline d-sm-none">{{ button_label|default(is_new ? 'Créer' : 'Mettre à jour') }}</span>
@@ -271,6 +282,102 @@ document.addEventListener('DOMContentLoaded', function() {
     --radius-lg: 20px;
 }
 
+/* ============================================
+   BOUTONS D'ACTION - RESPONSIVE
+   Mobile : empilés verticalement
+   Desktop : Annuler à gauche, Enregistrer à droite
+   ============================================ */
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+/* Mobile : empilés verticalement, Submit en haut */
+@media (max-width: 575.98px) {
+    .action-buttons {
+        flex-direction: column-reverse;
+        gap: 0.5rem;
+    }
+    
+    .btn-action {
+        width: 100%;
+        padding: 0.65rem 1rem;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+    }
+    
+    .btn-action i {
+        font-size: 1rem;
+    }
+}
+
+/* Tablette et Desktop : Annuler à gauche, Enregistrer à droite */
+@media (min-width: 576px) {
+    .action-buttons {
+        flex-direction: row;
+        justify-content: space-between;  /* ← Un à gauche, un à droite */
+    }
+    
+    .btn-action {
+        min-width: 140px;
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+    }
+}
+
+@media (min-width: 992px) {
+    .btn-action {
+        min-width: 180px;
+        padding: 0.8rem 2rem;
+        font-size: 1.05rem;
+    }
+}
+
+/* Submit button - gradient + shadow */
+.btn-submit {
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(135deg, #5a6fd6, #6a4391);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Cancel button - outline */
+.btn-cancel {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+    font-weight: 500;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: #6c757d;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
 /* Photo upload */
 .photo-upload-container {
     display: flex;
@@ -284,18 +391,26 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .photo-preview, .photo-placeholder {
-    width: 130px;
-    height: 130px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
-    border: 4px solid #fff;
+    border: 3px solid #fff;
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
+}
+
+@media (min-width: 576px) {
+    .photo-preview, .photo-placeholder {
+        width: 120px;
+        height: 120px;
+    }
 }
 
 @media (min-width: 768px) {
     .photo-preview, .photo-placeholder {
         width: 150px;
         height: 150px;
+        border-width: 4px;
     }
 }
 
@@ -311,10 +426,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .photo-upload-label {
     position: absolute;
-    bottom: 5px;
-    right: 5px;
-    width: 36px;
-    height: 36px;
+    bottom: 3px;
+    right: 3px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: var(--primary-gradient);
     color: white;
@@ -325,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function() {
     border: 2px solid white;
     box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
 @media (min-width: 768px) {
@@ -333,6 +448,8 @@ document.addEventListener('DOMContentLoaded', function() {
         width: 40px;
         height: 40px;
         font-size: 1rem;
+        bottom: 5px;
+        right: 5px;
     }
 }
 
@@ -344,7 +461,6 @@ document.addEventListener('DOMContentLoaded', function() {
 /* Form sections */
 .form-section {
     background: #f8fafc;
-    padding: 1rem;
     border-radius: var(--radius-sm);
     height: 100%;
     transition: all 0.3s ease;
@@ -353,7 +469,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 @media (min-width: 768px) {
     .form-section {
-        padding: 1.5rem;
         border-radius: var(--radius-md);
     }
 }
@@ -377,12 +492,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .input-icon {
     position: absolute;
-    left: 12px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
     color: #667eea;
     z-index: 10;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 @media (min-width: 768px) {
@@ -393,12 +508,12 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .form-control-lg, .form-select-lg {
-    height: 48px;
+    height: 46px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
     transition: all 0.3s ease;
     font-size: 0.9rem;
-    padding-left: 2.5rem;
+    padding-left: 2.4rem;
 }
 
 @media (min-width: 768px) {
@@ -473,37 +588,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 
-/* Buttons */
-.btn {
-    border-radius: var(--radius-sm);
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-@media (min-width: 768px) {
-    .btn {
-        border-radius: var(--radius-md);
-    }
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.btn-primary {
-    background: var(--primary-gradient);
-    border: none;
-}
-
-.btn-primary:hover {
-    background: linear-gradient(135deg, #5a6fd6, #6a4391);
-}
-
+/* Bouton "Changer mot de passe" */
 .btn-outline-warning {
     border: 2px solid #ffc107;
     color: #856404;
     font-weight: 500;
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
 }
 
 .btn-outline-warning:hover {
@@ -514,62 +605,16 @@ document.addEventListener('DOMContentLoaded', function() {
     box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
 }
 
-.btn-outline-secondary:hover {
-    background: #6c757d;
-    color: white;
+/* Bouton suppression photo */
+.btn-outline-danger {
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
 }
 
-/* Responsive adjustments */
-@media (max-width: 576px) {
-    .card-body {
-        padding: 0.75rem !important;
-    }
-    
-    .form-label {
-        font-size: 0.85rem;
-    }
-    
-    .form-control-lg, .form-select-lg {
-        font-size: 0.85rem;
-        padding: 0.35rem 0.75rem 0.35rem 2.2rem;
-        height: 44px;
-    }
-    
-    .input-icon {
-        font-size: 0.8rem;
-        left: 10px;
-    }
-    
-    .btn-lg {
-        padding: 0.4rem 1rem;
-        font-size: 0.9rem;
-    }
-    
-    .section-title {
-        font-size: 0.95rem;
-    }
-    
-    .photo-preview, .photo-placeholder {
-        width: 110px;
-        height: 110px;
-    }
-    
-    .photo-upload-label {
-        width: 32px;
-        height: 32px;
-        font-size: 0.7rem;
-    }
-}
-
-@media (min-width: 577px) and (max-width: 768px) {
-    .card-body {
-        padding: 1.25rem !important;
-    }
-    
-    .photo-preview, .photo-placeholder {
-        width: 130px;
-        height: 130px;
-    }
+.btn-outline-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
 /* Scrollbar */
@@ -585,5 +630,16 @@ document.addEventListener('DOMContentLoaded', function() {
 .form-control::-webkit-scrollbar-thumb {
     background: #667eea;
     border-radius: 10px;
+}
+
+/* Small text utility */
+@media (max-width: 575.98px) {
+    .form-label {
+        font-size: 0.85rem;
+    }
+    
+    .section-title {
+        font-size: 0.95rem;
+    }
 }
 </style>

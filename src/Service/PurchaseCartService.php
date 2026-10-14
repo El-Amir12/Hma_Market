@@ -1,4 +1,5 @@
 <?php
+// src/Service/PurchaseCartService.php
 
 namespace App\Service;
 
@@ -21,15 +22,18 @@ class PurchaseCartService
     /**
      * Ajouter un produit au panier
      */
-    public function addItem(Product $product, int $quantity = 1, ?string $batchNumber = null, 
-                           ?\DateTimeInterface $manufacturingDate = null, 
-                           ?\DateTimeInterface $expiryDate = null): void
-    {
+    public function addItem(
+        Product $product,
+        int $quantity = 1,
+        ?string $batchNumber = null,
+        ?\DateTimeInterface $manufacturingDate = null,
+        ?\DateTimeInterface $expiryDate = null
+    ): void {
         $cart = $this->getCart();
-        
+
         // Vérifier si le produit existe déjà dans le panier
         $itemKey = $this->findProductKey($product->getId());
-        
+
         if ($itemKey !== null) {
             // Mettre à jour la quantité
             $cart[$itemKey]['quantity'] += $quantity;
@@ -46,12 +50,12 @@ class PurchaseCartService
                 'manufacturing_date' => $manufacturingDate ? $manufacturingDate->format('Y-m-d') : null,
                 'expiry_date' => $expiryDate ? $expiryDate->format('Y-m-d') : null,
                 'has_expiry_date' => $product->hasExpiryDate(),
-                'added_at' => date('Y-m-d H:i:s')
+                'added_at' => date('Y-m-d H:i:s'),
             ];
-            
+
             $cart[] = $item;
         }
-        
+
         $this->saveCart($cart);
     }
 
@@ -61,7 +65,7 @@ class PurchaseCartService
     public function updateItem(int $index, array $data): void
     {
         $cart = $this->getCart();
-        
+
         if (isset($cart[$index])) {
             foreach ($data as $key => $value) {
                 if ($key === 'manufacturing_date' || $key === 'expiry_date') {
@@ -88,7 +92,7 @@ class PurchaseCartService
     public function removeItem(int $index): void
     {
         $cart = $this->getCart();
-        
+
         if (isset($cart[$index])) {
             unset($cart[$index]);
             $this->saveCart(array_values($cart)); // Réindexer
@@ -96,13 +100,22 @@ class PurchaseCartService
     }
 
     /**
-     * Vider le panier
+     * Vider le panier (produits + fournisseur)
      */
     public function clear(): void
     {
         $this->session->remove(self::CART_KEY);
         $this->session->remove(self::SUPPLIER_KEY);
-        $this->session->save(); // Sauvegarder explicitement
+        $this->session->save();
+    }
+
+    /**
+     * Vider uniquement les produits du panier, en CONSERVANT le fournisseur
+     */
+    public function clearItems(): void
+    {
+        $this->session->remove(self::CART_KEY);
+        $this->session->save();
     }
 
     /**
@@ -128,66 +141,77 @@ class PurchaseCartService
     {
         $total = 0.00;
         $cart = $this->getCart();
-        
+
         foreach ($cart as $item) {
             $price = (float) $item['purchase_price'];
             $quantity = (int) $item['quantity'];
             $total += $price * $quantity;
         }
-        
+
         return number_format($total, 2, '.', '');
     }
 
     /**
-     * Enregistrer le fournisseur
+     * Enregistrer le fournisseur (OPTIONNEL)
+     *
+     * ✅ Le fournisseur est désormais OPTIONNEL.
+     * Une entreprise peut enregistrer une commande sans fournisseur.
      */
     public function setSupplier(?Supplier $supplier): void
     {
-        if ($supplier) {
-            $supplierData = [
-                'id' => $supplier->getId(),
-                'name' => $supplier->getName(),
-                'email' => $supplier->getEmail(),
-                'phone' => $supplier->getPhone(),
-                'address' => $supplier->getAdress(),
-                'selected_at' => date('Y-m-d H:i:s')
-            ];
-            
-            $this->session->set(self::SUPPLIER_KEY, $supplierData);
-            // Force la sauvegarde immédiate
-            $this->session->save();
-        } else {
+        if ($supplier === null) {
+            // ✅ On supprime simplement l'entrée (pas d'erreur)
             $this->session->remove(self::SUPPLIER_KEY);
             $this->session->save();
+            return;
         }
+
+        $supplierData = [
+            'id' => $supplier->getId(),
+            'name' => $supplier->getName(),
+            'email' => $supplier->getEmail(),
+            'phone' => $supplier->getPhone(),
+            'address' => $supplier->getAdress(),
+            'selected_at' => date('Y-m-d H:i:s'),
+        ];
+
+        $this->session->set(self::SUPPLIER_KEY, $supplierData);
+        $this->session->save();
     }
 
     /**
-     * Obtenir le fournisseur
+     * Obtenir le fournisseur (peut être null)
      */
     public function getSupplier(): ?array
     {
         $supplier = $this->session->get(self::SUPPLIER_KEY);
-        
+
         if (!$supplier) {
             return null;
         }
-        
-        // Vérifier la structure
+
         if (!isset($supplier['id'])) {
             return null;
         }
-        
+
         return $supplier;
     }
 
     /**
-     * Obtenir l'ID du fournisseur
+     * Obtenir l'ID du fournisseur (peut être null)
      */
     public function getSupplierId(): ?int
     {
         $supplier = $this->getSupplier();
         return $supplier && isset($supplier['id']) ? (int) $supplier['id'] : null;
+    }
+
+    /**
+     * Vérifier si un fournisseur est sélectionné
+     */
+    public function hasSupplier(): bool
+    {
+        return $this->getSupplierId() !== null;
     }
 
     /**
@@ -204,13 +228,13 @@ class PurchaseCartService
     private function findProductKey(int $productId): ?int
     {
         $cart = $this->getCart();
-        
+
         foreach ($cart as $key => $item) {
             if ($item['product_id'] === $productId) {
                 return $key;
             }
         }
-        
+
         return null;
     }
 
@@ -230,7 +254,8 @@ class PurchaseCartService
     {
         return [
             'items' => $this->getCart(),
-            'supplier' => $this->getSupplier(),
+            'supplier' => $this->getSupplier(),   // peut être null
+            'has_supplier' => $this->hasSupplier(),
             'total_amount' => $this->getTotalAmount(),
             'item_count' => $this->getItemCount(),
             'created_at' => date('Y-m-d H:i:s'),
@@ -238,10 +263,45 @@ class PurchaseCartService
     }
 
     /**
-     * Vérifier si le panier est prêt pour confirmation
+     * ✅ Vérifie si le panier est prêt pour confirmation.
+     *
+     * ⚠️ Le fournisseur n'est PLUS obligatoire.
+     * Une entreprise peut confirmer une commande sans fournisseur (achat interne).
+     *
+     * La seule condition : avoir au moins 1 article dans le panier.
      */
     public function isReadyForConfirmation(): bool
     {
-        return $this->getItemCount() > 0 && $this->getSupplierId() !== null;
+        return $this->getItemCount() > 0;
+    }
+
+    /**
+     * Vérifie si le panier contient au moins un produit périssable
+     * (nécessite la saisie des dates de fabrication/expiration)
+     */
+    public function hasExpirableItems(): bool
+    {
+        foreach ($this->getCart() as $item) {
+            if (!empty($item['has_expiry_date'])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Vérifie que tous les produits périssables ont bien leurs dates
+     * avant de valider la commande
+     */
+    public function hasValidExpiryDates(): bool
+    {
+        foreach ($this->getCart() as $item) {
+            if (!empty($item['has_expiry_date'])) {
+                if (empty($item['expiry_date'])) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

@@ -655,12 +655,51 @@
                             {% set isLowStock = batch.currentQuantity <= 10 %}
                             {% set hasIssue = batch.hasIssue %}
                             {% set locationDisplay = batch.locationEntity ? batch.locationEntity.displayName : (batch.location ?: '—') %}
-                            {% set canReport = false %}
-                            {% if not hasIssue and batch.purchaseItemId %}
-                                {% if canReportIssue is defined and canReportIssue[batch.id] is defined %}
-                                    {% set canReport = canReportIssue[batch.id] %}
-                                {% endif %}
+                            
+                            {# ✅ Récupération du VRAI avoir (sans filtre de statut) #}
+                            {% set creditNote = supplierCreditNotes[batch.id] ?? null %}
+                            {# ✅ Utilisation du statut ACTUEL de l'avoir, pas du batch #}
+                            {% set realIssueStatus = creditNote ? creditNote.status : batch.issueStatus %}
+                            
+                            {# ✅ Calcul du badge de statut AVOIR #}
+                            {% if realIssueStatus == 'recovered' or realIssueStatus == 'resolved' %}
+                                {% set issueBadgeClass = 'bg-success' %}
+                                {% set issueLabel = 'Récupéré' %}
+                                {% set issueIcon = 'fa-check-circle' %}
+                            {% elseif realIssueStatus == 'pending' %}
+                                {% set issueBadgeClass = 'bg-warning text-dark' %}
+                                {% set issueLabel = 'En attente' %}
+                                {% set issueIcon = 'fa-clock' %}
+                            {% elseif realIssueStatus == 'acknowledged' %}
+                                {% set issueBadgeClass = 'bg-info' %}
+                                {% set issueLabel = 'Accusé réception' %}
+                                {% set issueIcon = 'fa-check' %}
+                            {% elseif realIssueStatus == 'under_review' %}
+                                {% set issueBadgeClass = 'bg-info' %}
+                                {% set issueLabel = 'En analyse' %}
+                                {% set issueIcon = 'fa-search' %}
+                            {% elseif realIssueStatus == 'partially_recovered' %}
+                                {% set issueBadgeClass = 'bg-warning text-dark' %}
+                                {% set issueLabel = 'Partiellement récupéré' %}
+                                {% set issueIcon = 'fa-hourglass-half' %}
+                            {% elseif realIssueStatus == 'lost' %}
+                                {% set issueBadgeClass = 'bg-danger' %}
+                                {% set issueLabel = 'Perdu' %}
+                                {% set issueIcon = 'fa-times-circle' %}
+                            {% elseif realIssueStatus == 'closed' %}
+                                {% set issueBadgeClass = 'bg-secondary' %}
+                                {% set issueLabel = 'Clôturé' %}
+                                {% set issueIcon = 'fa-archive' %}
+                            {% elseif realIssueStatus == 'rejected' %}
+                                {% set issueBadgeClass = 'bg-danger' %}
+                                {% set issueLabel = 'Rejeté' %}
+                                {% set issueIcon = 'fa-times-circle' %}
+                            {% else %}
+                                {% set issueBadgeClass = 'bg-secondary' %}
+                                {% set issueLabel = realIssueStatus|replace({'_': ' '})|capitalize %}
+                                {% set issueIcon = 'fa-exclamation-triangle' %}
                             {% endif %}
+                            
                             {% set purchaseItem = purchaseItems[batch.id] is defined ? purchaseItems[batch.id] : null %}
                             
                             <tr class="{% if isExpired %}table-danger{% elseif isExpiringSoon %}table-warning{% elseif isLowStock %}table-info{% elseif hasIssue %}table-light{% endif %}">
@@ -736,13 +775,20 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if hasIssue %}
-                                        <span class="badge {{ batch.issueStatusBadgeClass }}">{{ batch.issueStatusLabel }}</span>
+                                    {# ✅ CORRECTION : Utilisation du VRAI statut de l'avoir #}
+                                    {% if hasIssue and creditNote %}
+                                        <span class="badge {{ issueBadgeClass }}">
+                                            <i class="fas {{ issueIcon }} me-1"></i>{{ issueLabel }}
+                                        </span>
                                         {% if batch.issuePriority == 'critical' %}
                                             <span class="badge bg-danger mt-1 d-block issue-badge">Critique</span>
                                         {% elseif batch.issuePriority == 'high' %}
                                             <span class="badge bg-warning text-dark mt-1 d-block issue-badge">Haute</span>
                                         {% endif %}
+                                        <small class="text-muted d-block">{{ creditNote.declaredAmount|price_with_currency(batch.hmaService) }}</small>
+                                    {% elseif hasIssue %}
+                                        {# Fallback si l'avoir n'est pas chargé #}
+                                        <span class="badge bg-secondary">{{ batch.issueStatusLabel }}</span>
                                         <small class="text-muted d-block">{{ batch.issueDeclaredAmount|price_with_currency(batch.hmaService) }}</small>
                                     {% else %}
                                         <span class="text-muted">—</span>
@@ -755,37 +801,69 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
-                                        <a href="{{ path('app_admin_stock_batch_print', {'id': batch.id}) }}" class="btn btn-sm btn-outline-secondary" title="Imprimer" target="_blank">
+                                        {# Imprimer #}
+                                        <a href="{{ path('app_admin_stock_batch_print', {'id': batch.id}) }}" 
+                                           class="btn btn-sm btn-outline-secondary" 
+                                           title="Imprimer" 
+                                           target="_blank">
                                             <i class="fas fa-print"></i>
                                         </a>
-                                        <a href="{{ path('app_admin_stock_batch_show', {'id': batch.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
+                                        
+                                        {# Voir #}
+                                        <a href="{{ path('app_admin_stock_batch_show', {'id': batch.id}) }}" 
+                                           class="btn btn-sm btn-outline-primary" 
+                                           title="Voir">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ path('app_admin_stock_batch_edit', {'id': batch.id}) }}" class="btn btn-sm btn-outline-warning" title="Modifier">
+                                        
+                                        {# Modifier #}
+                                        <a href="{{ path('app_admin_stock_batch_edit', {'id': batch.id}) }}" 
+                                           class="btn btn-sm btn-outline-warning" 
+                                           title="Modifier l'emplacement">
                                             <i class="fas fa-map-marker-alt"></i>
                                         </a>
-                                        {% if canReport %}
-                                            <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-sm btn-outline-danger" title="Signaler un problème">
+                                        
+                                        {# ✅ Signalement / Voir avoir #}
+                                        {% if canReportIssue[batch.id] ?? false %}
+                                            <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" 
+                                               class="btn btn-sm btn-outline-danger" 
+                                               title="Signaler un problème">
                                                 <i class="fas fa-exclamation-triangle"></i>
                                             </a>
-                                        {% elseif hasIssue and supplierCreditNotes[batch.id] is defined %}
-                                            <a href="{{ path('app_supplier_credit_note_show', {'id': supplierCreditNotes[batch.id].id}) }}" class="btn btn-sm btn-outline-info" title="Voir l'avoir">
-                                                <i class="fas fa-file-invoice-dollar"></i>
+                                        {% elseif creditNote %}
+                                            <a href="{{ path('app_supplier_credit_note_show', {'id': creditNote.id}) }}" 
+                                               class="btn btn-sm 
+                                                   {% if realIssueStatus in ['recovered', 'resolved'] %}btn-success
+                                                   {% elseif realIssueStatus == 'pending' %}btn-warning
+                                                   {% elseif realIssueStatus in ['rejected', 'lost'] %}btn-danger
+                                                   {% else %}btn-info{% endif %}" 
+                                               title="Voir l'avoir ({{ issueLabel }})"
+                                               target="_blank">
+                                                <i class="fas {{ issueIcon }}"></i>
                                             </a>
                                         {% else %}
-                                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Signalement non disponible">
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-secondary" 
+                                                    disabled 
+                                                    title="Signalement non disponible">
                                                 <i class="fas fa-exclamation-triangle text-muted"></i>
                                             </button>
                                         {% endif %}
-                                        <button type="button" class="btn btn-sm btn-outline-info toggle-batch-btn" 
+                                        
+                                        {# Toggle actif/inactif #}
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-info toggle-batch-btn" 
                                                 data-batch-id="{{ batch.id }}" 
                                                 data-is-active="{{ batch.isActive ? '1' : '0' }}" 
                                                 data-batch-number="{{ batch.batchNumber }}" 
                                                 data-token="{{ csrf_token('toggle-batch' ~ batch.id) }}">
                                             <i class="fas {{ batch.isActive ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
                                         </button>
-                                        {% if is_granted('ROLE_ADMIN') and batch.stockMovements|length == 0 and not hasIssue %}
-                                            <button type="button" class="btn btn-sm btn-outline-danger delete-batch-btn" 
+                                        
+                                        {# Supprimer #}
+                                        {% if is_granted('ROLE_ADMIN') and batch.stockMovements|length == 0 and not batch.hasIssue %}
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-danger delete-batch-btn" 
                                                     data-batch-id="{{ batch.id }}" 
                                                     data-batch-number="{{ batch.batchNumber }}" 
                                                     data-token="{{ csrf_token('delete-batch' ~ batch.id) }}">
@@ -809,7 +887,7 @@
             </div>
         </div>
 
-        <!-- ✅ Affichage en cartes pour mobile (md et moins) -->
+        <!-- ✅ Affichage en cartes pour mobile -->
         <div class="card-body p-2 p-sm-3 d-md-none table-card-view">
             {% if batches|length > 0 %}
                 {% for batch in batches %}
@@ -818,12 +896,28 @@
                     {% set isLowStock = batch.currentQuantity <= 10 %}
                     {% set hasIssue = batch.hasIssue %}
                     {% set locationDisplay = batch.locationEntity ? batch.locationEntity.displayName : (batch.location ?: '—') %}
-                    {% set canReport = false %}
-                    {% if not hasIssue and batch.purchaseItemId %}
-                        {% if canReportIssue is defined and canReportIssue[batch.id] is defined %}
-                            {% set canReport = canReportIssue[batch.id] %}
-                        {% endif %}
+                    
+                    {# ✅ Récupération du VRAI avoir #}
+                    {% set creditNote = supplierCreditNotes[batch.id] ?? null %}
+                    {% set realIssueStatus = creditNote ? creditNote.status : batch.issueStatus %}
+                    
+                    {% if realIssueStatus == 'recovered' or realIssueStatus == 'resolved' %}
+                        {% set issueBadgeClass = 'bg-success' %}
+                        {% set issueLabel = 'Récupéré' %}
+                    {% elseif realIssueStatus == 'pending' %}
+                        {% set issueBadgeClass = 'bg-warning text-dark' %}
+                        {% set issueLabel = 'En attente' %}
+                    {% elseif realIssueStatus == 'lost' or realIssueStatus == 'rejected' %}
+                        {% set issueBadgeClass = 'bg-danger' %}
+                        {% set issueLabel = realIssueStatus == 'lost' ? 'Perdu' : 'Rejeté' %}
+                    {% elseif realIssueStatus == 'closed' %}
+                        {% set issueBadgeClass = 'bg-secondary' %}
+                        {% set issueLabel = 'Clôturé' %}
+                    {% else %}
+                        {% set issueBadgeClass = 'bg-info' %}
+                        {% set issueLabel = realIssueStatus|replace({'_': ' '})|capitalize %}
                     {% endif %}
+                    
                     {% set purchaseItem = purchaseItems[batch.id] is defined ? purchaseItems[batch.id] : null %}
                     
                     <div class="batch-card {% if isExpired %}status-expired{% elseif isExpiringSoon %}status-expiring{% elseif isLowStock %}status-low{% elseif hasIssue %}status-issue{% endif %}">
@@ -893,13 +987,17 @@
                             <div class="batch-item">
                                 <span class="label">Avoir</span>
                                 <span class="value">
-                                    {% if hasIssue %}
-                                        <span class="badge {{ batch.issueStatusBadgeClass }}">{{ batch.issueStatusLabel }}</span>
+                                    {# ✅ CORRECTION : Utilisation du VRAI statut #}
+                                    {% if hasIssue and creditNote %}
+                                        <span class="badge {{ issueBadgeClass }}">{{ issueLabel }}</span>
                                         {% if batch.issuePriority == 'critical' %}
                                             <span class="badge bg-danger mt-1 issue-badge d-block">Critique</span>
                                         {% elseif batch.issuePriority == 'high' %}
                                             <span class="badge bg-warning text-dark mt-1 issue-badge d-block">Haute</span>
                                         {% endif %}
+                                        <small class="text-muted d-block">{{ creditNote.declaredAmount|price_with_currency(batch.hmaService) }}</small>
+                                    {% elseif hasIssue %}
+                                        <span class="badge {{ batch.issueStatusBadgeClass }}">{{ batch.issueStatusLabel }}</span>
                                         <small class="text-muted d-block">{{ batch.issueDeclaredAmount|price_with_currency(batch.hmaService) }}</small>
                                     {% else %}
                                         —
@@ -936,13 +1034,18 @@
                             <a href="{{ path('app_admin_stock_batch_edit', {'id': batch.id}) }}" class="btn btn-sm btn-outline-warning" title="Modifier">
                                 <i class="fas fa-map-marker-alt"></i> Modifier
                             </a>
-                            {% if canReport %}
+                            {% if canReportIssue[batch.id] ?? false %}
                                 <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-sm btn-outline-danger" title="Signaler">
                                     <i class="fas fa-exclamation-triangle"></i> Signaler
                                 </a>
-                            {% elseif hasIssue and supplierCreditNotes[batch.id] is defined %}
-                                <a href="{{ path('app_supplier_credit_note_show', {'id': supplierCreditNotes[batch.id].id}) }}" class="btn btn-sm btn-outline-info" title="Voir l'avoir">
-                                    <i class="fas fa-file-invoice-dollar"></i> Avoir
+                            {% elseif creditNote %}
+                                <a href="{{ path('app_supplier_credit_note_show', {'id': creditNote.id}) }}" 
+                                   class="btn btn-sm 
+                                       {% if realIssueStatus in ['recovered', 'resolved'] %}btn-success
+                                       {% elseif realIssueStatus == 'pending' %}btn-warning
+                                       {% elseif realIssueStatus in ['rejected', 'lost'] %}btn-danger
+                                       {% else %}btn-info{% endif %}">
+                                    <i class="fas fa-file-invoice-dollar"></i> Avoir ({{ issueLabel }})
                                 </a>
                             {% else %}
                                 <button type="button" class="btn btn-sm btn-outline-secondary" disabled>
@@ -988,7 +1091,6 @@
                             <a class="page-link" href="{{ path('app_admin_stock_batch_all', app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
                         </li>
                     {% endfor %}
-                    {# Version mobile avec moins de pages #}
                     {% if totalPages > 5 %}
                         <li class="page-item d-block d-sm-none">
                             <span class="page-link">{{ currentPage }} / {{ totalPages }}</span>
@@ -1153,7 +1255,6 @@ document.addEventListener('DOMContentLoaded', function() {
     checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
     updateCount();
 
-    // Impression sélection
     document.getElementById('print-selected')?.addEventListener('click', function() {
         const selected = Array.from(document.querySelectorAll('.batch-checkbox:checked')).map(cb => cb.value);
         if (selected.length) {
@@ -1172,7 +1273,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Toggle batch (activation/désactivation)
     const toggleModal = new bootstrap.Modal(document.getElementById('toggleBatchModal'));
     document.querySelectorAll('.toggle-batch-btn').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -1194,7 +1294,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Suppression
     const deleteModal = new bootstrap.Modal(document.getElementById('deleteBatchModal'));
     document.querySelectorAll('.delete-batch-btn:not([disabled])').forEach(btn => {
         btn.addEventListener('click', function() {

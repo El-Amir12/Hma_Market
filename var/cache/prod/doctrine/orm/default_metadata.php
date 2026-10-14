@@ -5056,6 +5056,9 @@ return [[
         clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
         clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
         clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
@@ -5094,21 +5097,24 @@ return [[
                     'password' => $o[4],
                     'full_name' => $o[5],
                     'phone' => $o[6],
-                    'is_active' => $o[7],
-                    'created_at' => $o[8],
-                    'updated_at' => $o[9],
-                    'passwordChanged' => $o[10],
-                    'subscription_active' => $o[11],
-                    'photo' => $o[12],
-                    'is_super_admin' => $o[13],
-                    'is_hma_owner' => $o[14],
-                    'employment_date' => $o[15],
-                    'login_at' => $o[16],
-                    'logout_at' => $o[17],
-                    'last_activity' => $o[18],
-                    'failed_login_attempts' => $o[19],
-                    'locked_until' => $o[20],
-                    'last_failed_attempt_at' => $o[21],
+                    'isAccountActivated' => $o[7],
+                    'activationToken' => $o[8],
+                    'activationTokenSentAt' => $o[9],
+                    'is_active' => $o[10],
+                    'created_at' => $o[11],
+                    'updated_at' => $o[12],
+                    'passwordChanged' => $o[13],
+                    'subscription_active' => $o[14],
+                    'photo' => $o[15],
+                    'is_super_admin' => $o[16],
+                    'is_hma_owner' => $o[17],
+                    'employment_date' => $o[18],
+                    'login_at' => $o[19],
+                    'logout_at' => $o[20],
+                    'last_activity' => $o[21],
+                    'failed_login_attempts' => $o[22],
+                    'locked_until' => $o[23],
+                    'last_failed_attempt_at' => $o[24],
                 ],
             ],
             'fieldNames' => [
@@ -5119,6 +5125,9 @@ return [[
                     'password' => 'password',
                     'full_name' => 'full_name',
                     'phone' => 'phone',
+                    'is_account_activated' => 'isAccountActivated',
+                    'activation_token' => 'activationToken',
+                    'activation_token_sent_at' => 'activationTokenSentAt',
                     'is_active' => 'is_active',
                     'created_at' => 'created_at',
                     'updated_at' => 'updated_at',
@@ -5144,6 +5153,9 @@ return [[
                     'password' => 'password',
                     'full_name' => 'full_name',
                     'phone' => 'phone',
+                    'isAccountActivated' => 'is_account_activated',
+                    'activationToken' => 'activation_token',
+                    'activationTokenSentAt' => 'activation_token_sent_at',
                     'is_active' => 'is_active',
                     'created_at' => 'created_at',
                     'updated_at' => 'updated_at',
@@ -5185,21 +5197,21 @@ return [[
             ],
             'associationMappings' => [
                 [
-                    'products' => $o[22],
-                    'categories' => $o[23],
-                    'purchases' => $o[24],
-                    'orders' => $o[25],
-                    'stockMovements' => $o[26],
-                    'returns' => $o[27],
-                    'hma_service_id' => $o[28],
+                    'products' => $o[25],
+                    'categories' => $o[26],
+                    'purchases' => $o[27],
+                    'orders' => $o[28],
+                    'stockMovements' => $o[29],
+                    'returns' => $o[30],
+                    'hma_service_id' => $o[31],
                 ],
             ],
             'idGenerator' => [
-                $o[30],
+                $o[33],
             ],
             'name' => [
                 'App\\Entity\\User',
-                29 => 'hma_service_id',
+                32 => 'hma_service_id',
             ],
             'id' => [
                 1 => true,
@@ -5211,6 +5223,9 @@ return [[
                 'string',
                 'string',
                 'string',
+                'boolean',
+                'string',
+                'datetime',
                 'boolean',
                 'datetime',
                 'datetime',
@@ -5234,6 +5249,9 @@ return [[
                 'password',
                 'full_name',
                 'phone',
+                'isAccountActivated',
+                'activationToken',
+                'activationTokenSentAt',
                 'is_active',
                 'created_at',
                 'updated_at',
@@ -5257,6 +5275,9 @@ return [[
                 'password',
                 'full_name',
                 'phone',
+                'is_account_activated',
+                'activation_token',
+                'activation_token_sent_at',
                 'is_active',
                 'created_at',
                 'updated_at',
@@ -5277,22 +5298,30 @@ return [[
                 2 => 180,
                 5 => 100,
                 20,
-                12 => 255,
+                8 => 255,
+                15 => 255,
+            ],
+            'options' => [
+                7 => [
+                    'default' => false,
+                ],
             ],
             'nullable' => [
-                9 => true,
+                8 => true,
+                true,
                 12 => true,
                 15 => true,
+                18 => true,
                 true,
                 true,
                 true,
                 true,
                 true,
                 true,
-                29 => true,
+                32 => true,
             ],
             'fetch' => [
-                22 => 2,
+                25 => 2,
                 2,
                 2,
                 2,
@@ -5301,7 +5330,7 @@ return [[
                 2,
             ],
             'sourceEntity' => [
-                22 => 'App\\Entity\\User',
+                25 => 'App\\Entity\\User',
                 'App\\Entity\\User',
                 'App\\Entity\\User',
                 'App\\Entity\\User',
@@ -5310,7 +5339,7 @@ return [[
                 'App\\Entity\\User',
             ],
             'mappedBy' => [
-                22 => 'user',
+                25 => 'user',
                 'user',
                 'user',
                 'user',
@@ -5318,41 +5347,41 @@ return [[
                 'returned_by',
             ],
             'inversedBy' => [
-                28 => 'users',
+                31 => 'users',
             ],
             'sourceToTargetKeyColumns' => [
-                28 => [
+                31 => [
                     'hma_service_id' => 'id',
                 ],
             ],
             'targetToSourceKeyColumns' => [
-                28 => [
+                31 => [
                     'id' => 'hma_service_id',
                 ],
             ],
             'joinColumns' => [
-                28 => [
-                    $o[29],
+                31 => [
+                    $o[32],
                 ],
             ],
             'joinColumnFieldNames' => [
-                28 => [
+                31 => [
                     'hma_service_id' => 'hma_service_id',
                 ],
             ],
             'deferrable' => [
-                29 => false,
+                32 => false,
             ],
             'unique' => [
-                29 => false,
+                32 => false,
             ],
             'referencedColumnName' => [
-                29 => 'id',
+                32 => 'id',
             ],
         ],
         'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
             'fieldName' => [
-                22 => 'products',
+                25 => 'products',
                 'categories',
                 'purchases',
                 'orders',
@@ -5361,7 +5390,7 @@ return [[
                 'hma_service_id',
             ],
             'targetEntity' => [
-                22 => 'App\\Entity\\Product',
+                25 => 'App\\Entity\\Product',
                 'App\\Entity\\Category',
                 'App\\Entity\\Purchase',
                 'App\\Entity\\Order',
@@ -5712,6 +5741,13 @@ return [[
         clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
         clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
         clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
@@ -5754,10 +5790,17 @@ return [[
                     'payment_status' => $o[9],
                     'status' => $o[10],
                     'notes' => $o[11],
-                    'created_at' => $o[12],
-                    'updated_at' => $o[13],
-                    'subscription_active' => $o[14],
-                    'is_active' => $o[15],
+                    'delivery_address' => $o[12],
+                    'delivery_city' => $o[13],
+                    'delivery_zipcode' => $o[14],
+                    'delivery_country' => $o[15],
+                    'delivery_latitude' => $o[16],
+                    'delivery_longitude' => $o[17],
+                    'customer_email' => $o[18],
+                    'created_at' => $o[19],
+                    'updated_at' => $o[20],
+                    'subscription_active' => $o[21],
+                    'is_active' => $o[22],
                 ],
             ],
             'fieldNames' => [
@@ -5773,6 +5816,13 @@ return [[
                     'payment_status' => 'payment_status',
                     'status' => 'status',
                     'notes' => 'notes',
+                    'delivery_address' => 'delivery_address',
+                    'delivery_city' => 'delivery_city',
+                    'delivery_zipcode' => 'delivery_zipcode',
+                    'delivery_country' => 'delivery_country',
+                    'delivery_latitude' => 'delivery_latitude',
+                    'delivery_longitude' => 'delivery_longitude',
+                    'customer_email' => 'customer_email',
                     'created_at' => 'created_at',
                     'updated_at' => 'updated_at',
                     'subscription_active' => 'subscription_active',
@@ -5792,6 +5842,13 @@ return [[
                     'payment_status' => 'payment_status',
                     'status' => 'status',
                     'notes' => 'notes',
+                    'delivery_address' => 'delivery_address',
+                    'delivery_city' => 'delivery_city',
+                    'delivery_zipcode' => 'delivery_zipcode',
+                    'delivery_country' => 'delivery_country',
+                    'delivery_latitude' => 'delivery_latitude',
+                    'delivery_longitude' => 'delivery_longitude',
+                    'customer_email' => 'customer_email',
                     'created_at' => 'created_at',
                     'updated_at' => 'updated_at',
                     'subscription_active' => 'subscription_active',
@@ -5806,20 +5863,20 @@ return [[
             ],
             'associationMappings' => [
                 [
-                    'user' => $o[16],
-                    'orderItems' => $o[18],
-                    'hma_service' => $o[19],
-                    'customer' => $o[21],
+                    'user' => $o[23],
+                    'orderItems' => $o[25],
+                    'hma_service' => $o[26],
+                    'customer' => $o[28],
                 ],
             ],
             'idGenerator' => [
-                $o[23],
+                $o[30],
             ],
             'name' => [
                 'App\\Entity\\Order',
-                17 => 'user_id',
-                20 => 'hma_service_id',
-                22 => 'customer_id',
+                24 => 'user_id',
+                27 => 'hma_service_id',
+                29 => 'customer_id',
             ],
             'id' => [
                 1 => true,
@@ -5836,6 +5893,13 @@ return [[
                 'string',
                 'string',
                 'text',
+                'string',
+                'string',
+                'string',
+                'string',
+                'float',
+                'float',
+                'string',
                 'datetime',
                 'datetime',
                 'boolean',
@@ -5853,6 +5917,13 @@ return [[
                 'payment_status',
                 'status',
                 'notes',
+                'delivery_address',
+                'delivery_city',
+                'delivery_zipcode',
+                'delivery_country',
+                'delivery_latitude',
+                'delivery_longitude',
+                'customer_email',
                 'created_at',
                 'updated_at',
                 'subscription_active',
@@ -5870,6 +5941,13 @@ return [[
                 'payment_status',
                 'status',
                 'notes',
+                'delivery_address',
+                'delivery_city',
+                'delivery_zipcode',
+                'delivery_country',
+                'delivery_latitude',
+                'delivery_longitude',
+                'customer_email',
                 'created_at',
                 'updated_at',
                 'subscription_active',
@@ -5882,6 +5960,11 @@ return [[
                 8 => 20,
                 20,
                 20,
+                12 => 255,
+                255,
+                50,
+                255,
+                18 => 50,
             ],
             'precision' => [
                 5 => 12,
@@ -5893,8 +5976,21 @@ return [[
                 2,
                 2,
             ],
+            'nullable' => [
+                11 => true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                24 => false,
+                27 => false,
+                29 => true,
+            ],
             'options' => [
-                14 => [
+                21 => [
                     'default' => true,
                 ],
                 [
@@ -5902,110 +5998,105 @@ return [[
                 ],
             ],
             'fetch' => [
-                16 => 2,
-                18 => 2,
+                23 => 2,
+                25 => 2,
                 2,
-                21 => 2,
+                28 => 2,
             ],
             'sourceEntity' => [
-                16 => 'App\\Entity\\Order',
-                18 => 'App\\Entity\\Order',
+                23 => 'App\\Entity\\Order',
+                25 => 'App\\Entity\\Order',
                 'App\\Entity\\Order',
-                21 => 'App\\Entity\\Order',
+                28 => 'App\\Entity\\Order',
             ],
             'inversedBy' => [
-                16 => 'orders',
-                19 => 'orders',
-                21 => 'orders',
+                23 => 'orders',
+                26 => 'orders',
+                28 => 'orders',
             ],
             'sourceToTargetKeyColumns' => [
-                16 => [
+                23 => [
                     'user_id' => 'id',
                 ],
-                19 => [
+                26 => [
                     'hma_service_id' => 'id',
                 ],
-                21 => [
+                28 => [
                     'customer_id' => 'id',
                 ],
             ],
             'targetToSourceKeyColumns' => [
-                16 => [
+                23 => [
                     'id' => 'user_id',
                 ],
-                19 => [
+                26 => [
                     'id' => 'hma_service_id',
                 ],
-                21 => [
+                28 => [
                     'id' => 'customer_id',
                 ],
             ],
             'joinColumns' => [
-                16 => [
-                    $o[17],
+                23 => [
+                    $o[24],
                 ],
-                19 => [
-                    $o[20],
+                26 => [
+                    $o[27],
                 ],
-                21 => [
-                    $o[22],
+                28 => [
+                    $o[29],
                 ],
             ],
             'joinColumnFieldNames' => [
-                16 => [
+                23 => [
                     'user_id' => 'user_id',
                 ],
-                19 => [
+                26 => [
                     'hma_service_id' => 'hma_service_id',
                 ],
-                21 => [
+                28 => [
                     'customer_id' => 'customer_id',
                 ],
             ],
             'deferrable' => [
-                17 => false,
-                20 => false,
-                22 => false,
+                24 => false,
+                27 => false,
+                29 => false,
             ],
             'unique' => [
-                17 => false,
-                20 => false,
-                22 => false,
-            ],
-            'nullable' => [
-                17 => false,
-                20 => false,
-                22 => true,
+                24 => false,
+                27 => false,
+                29 => false,
             ],
             'referencedColumnName' => [
-                17 => 'id',
-                20 => 'id',
-                22 => 'id',
+                24 => 'id',
+                27 => 'id',
+                29 => 'id',
             ],
             'cascade' => [
-                18 => [
+                25 => [
                     'remove',
                 ],
             ],
             'orphanRemoval' => [
-                18 => true,
+                25 => true,
             ],
             'mappedBy' => [
-                18 => 'vente',
+                25 => 'vente',
             ],
         ],
         'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
             'fieldName' => [
-                16 => 'user',
-                18 => 'orderItems',
+                23 => 'user',
+                25 => 'orderItems',
                 'hma_service',
-                21 => 'customer',
+                28 => 'customer',
             ],
             'targetEntity' => [
-                16 => 'App\\Entity\\User',
-                18 => 'App\\Entity\\OrderItem',
+                23 => 'App\\Entity\\User',
+                25 => 'App\\Entity\\OrderItem',
                 'App\\Entity\\HmaService',
-                21 => 'App\\Entity\\Customer',
+                28 => 'App\\Entity\\Customer',
             ],
         ],
     ],
@@ -7702,7 +7793,8 @@ return [[
             ],
             'nullable' => [
                 4 => true,
-                7 => true,
+                6 => true,
+                true,
                 true,
                 true,
                 true,
@@ -8430,6 +8522,15 @@ return [[
                 3 => true,
                 5 => false,
             ],
+            'cascade' => [
+                4 => [
+                    'persist',
+                ],
+                6 => [
+                    'persist',
+                    'remove',
+                ],
+            ],
             'fetch' => [
                 4 => 2,
                 6 => 2,
@@ -8470,12 +8571,6 @@ return [[
             'referencedColumnName' => [
                 5 => 'id',
             ],
-            'cascade' => [
-                6 => [
-                    'persist',
-                    'remove',
-                ],
-            ],
             'orphanRemoval' => [
                 6 => true,
             ],
@@ -8501,9 +8596,6 @@ return [[
     $o = [
         clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
         clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
-        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
@@ -8536,30 +8628,21 @@ return [[
                 [
                     'id' => $o[1],
                     'quantity' => $o[2],
-                    'unit_price' => $o[3],
-                    'total_price' => $o[4],
-                    'created_at' => $o[5],
-                    'updated_at' => $o[6],
+                    'notes' => $o[3],
                 ],
             ],
             'fieldNames' => [
                 [
                     'id' => 'id',
                     'quantity' => 'quantity',
-                    'unit_price' => 'unit_price',
-                    'total_price' => 'total_price',
-                    'created_at' => 'created_at',
-                    'updated_at' => 'updated_at',
+                    'notes' => 'notes',
                 ],
             ],
             'columnNames' => [
                 [
                     'id' => 'id',
                     'quantity' => 'quantity',
-                    'unit_price' => 'unit_price',
-                    'total_price' => 'total_price',
-                    'created_at' => 'created_at',
-                    'updated_at' => 'updated_at',
+                    'notes' => 'notes',
                 ],
             ],
             'table' => [
@@ -8567,26 +8650,19 @@ return [[
                     'name' => 'cart_item',
                 ],
             ],
-            'lifecycleCallbacks' => [
-                [
-                    'preUpdate' => [
-                        'setUpdatedAtValue',
-                    ],
-                ],
-            ],
             'associationMappings' => [
                 [
-                    'cart' => $o[7],
-                    'product' => $o[9],
+                    'cart' => $o[4],
+                    'product' => $o[6],
                 ],
             ],
             'idGenerator' => [
-                $o[11],
+                $o[8],
             ],
             'name' => [
                 'App\\Entity\\CartItem',
-                8 => 'cart_id',
-                10 => 'product_id',
+                5 => 'cart_id',
+                7 => 'product_id',
             ],
             'id' => [
                 1 => true,
@@ -8594,104 +8670,87 @@ return [[
             'type' => [
                 1 => 'integer',
                 'integer',
-                'decimal',
-                'decimal',
-                'datetime_immutable',
-                'datetime_immutable',
+                'string',
             ],
             'fieldName' => [
                 1 => 'id',
                 'quantity',
-                'unit_price',
-                'total_price',
-                'created_at',
-                'updated_at',
+                'notes',
             ],
             'columnName' => [
                 1 => 'id',
                 'quantity',
-                'unit_price',
-                'total_price',
-                'created_at',
-                'updated_at',
-            ],
-            'precision' => [
-                3 => 12,
-                12,
-            ],
-            'scale' => [
-                3 => 2,
-                2,
+                'notes',
             ],
             'nullable' => [
-                6 => true,
-                8 => false,
-                10 => false,
+                3 => true,
+                5 => false,
+                7 => false,
             ],
             'fetch' => [
-                7 => 2,
-                9 => 2,
+                4 => 2,
+                6 => 2,
             ],
             'sourceEntity' => [
-                7 => 'App\\Entity\\CartItem',
-                9 => 'App\\Entity\\CartItem',
+                4 => 'App\\Entity\\CartItem',
+                6 => 'App\\Entity\\CartItem',
             ],
             'inversedBy' => [
-                7 => 'items',
+                4 => 'items',
             ],
             'sourceToTargetKeyColumns' => [
-                7 => [
+                4 => [
                     'cart_id' => 'id',
                 ],
-                9 => [
+                6 => [
                     'product_id' => 'id',
                 ],
             ],
             'targetToSourceKeyColumns' => [
-                7 => [
+                4 => [
                     'id' => 'cart_id',
                 ],
-                9 => [
+                6 => [
                     'id' => 'product_id',
                 ],
             ],
             'joinColumns' => [
-                7 => [
-                    $o[8],
+                4 => [
+                    $o[5],
                 ],
-                9 => [
-                    $o[10],
+                6 => [
+                    $o[7],
                 ],
             ],
             'joinColumnFieldNames' => [
-                7 => [
+                4 => [
                     'cart_id' => 'cart_id',
                 ],
-                9 => [
+                6 => [
                     'product_id' => 'product_id',
                 ],
             ],
             'deferrable' => [
-                8 => false,
-                10 => false,
+                5 => false,
+                7 => false,
             ],
             'unique' => [
-                8 => false,
-                10 => false,
+                5 => false,
+                7 => false,
             ],
             'referencedColumnName' => [
-                8 => 'id',
-                10 => 'id',
+                5 => 'id',
+                7 => 'id',
             ],
         ],
         'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
             'fieldName' => [
-                7 => 'cart',
-                9 => 'product',
+                4 => 'cart',
+                6 => 'product',
             ],
             'targetEntity' => [
-                7 => 'App\\Entity\\Cart',
-                9 => 'App\\Entity\\Product',
+                4 => 'App\\Entity\\Cart',
+                6 => 'App\\Entity\\Product',
             ],
         ],
     ],
@@ -8702,6 +8761,11 @@ return [[
     $o = [
         clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
         clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+        clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
         clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
@@ -8764,7 +8828,12 @@ return [[
                     'created_at' => $o[16],
                     'updated_at' => $o[17],
                     'last_login_at' => $o[18],
-                    'deleted_at' => $o[19],
+                    'failedLoginAttempts' => $o[19],
+                    'lockedUntil' => $o[20],
+                    'lastFailedAttemptAt' => $o[21],
+                    'resetPasswordToken' => $o[22],
+                    'resetPasswordTokenExpiresAt' => $o[23],
+                    'deleted_at' => $o[24],
                 ],
             ],
             'fieldNames' => [
@@ -8787,6 +8856,11 @@ return [[
                     'created_at' => 'created_at',
                     'updated_at' => 'updated_at',
                     'last_login_at' => 'last_login_at',
+                    'failed_login_attempts' => 'failedLoginAttempts',
+                    'locked_until' => 'lockedUntil',
+                    'last_failed_attempt_at' => 'lastFailedAttemptAt',
+                    'reset_password_token' => 'resetPasswordToken',
+                    'reset_password_token_expires_at' => 'resetPasswordTokenExpiresAt',
                     'deleted_at' => 'deleted_at',
                 ],
             ],
@@ -8810,6 +8884,11 @@ return [[
                     'created_at' => 'created_at',
                     'updated_at' => 'updated_at',
                     'last_login_at' => 'last_login_at',
+                    'failedLoginAttempts' => 'failed_login_attempts',
+                    'lockedUntil' => 'locked_until',
+                    'lastFailedAttemptAt' => 'last_failed_attempt_at',
+                    'resetPasswordToken' => 'reset_password_token',
+                    'resetPasswordTokenExpiresAt' => 'reset_password_token_expires_at',
                     'deleted_at' => 'deleted_at',
                 ],
             ],
@@ -8830,12 +8909,12 @@ return [[
             ],
             'associationMappings' => [
                 [
-                    'cart' => $o[20],
-                    'orders' => $o[21],
+                    'cart' => $o[25],
+                    'orders' => $o[26],
                 ],
             ],
             'idGenerator' => [
-                $o[22],
+                $o[27],
             ],
             'name' => [
                 'App\\Entity\\Customer',
@@ -8862,6 +8941,11 @@ return [[
                 'datetime_immutable',
                 'datetime_immutable',
                 'datetime_immutable',
+                'integer',
+                'datetime',
+                'datetime',
+                'string',
+                'datetime',
                 'datetime_immutable',
             ],
             'fieldName' => [
@@ -8883,6 +8967,11 @@ return [[
                 'created_at',
                 'updated_at',
                 'last_login_at',
+                'failedLoginAttempts',
+                'lockedUntil',
+                'lastFailedAttemptAt',
+                'resetPasswordToken',
+                'resetPasswordTokenExpiresAt',
                 'deleted_at',
             ],
             'columnName' => [
@@ -8904,6 +8993,11 @@ return [[
                 'created_at',
                 'updated_at',
                 'last_login_at',
+                'failed_login_attempts',
+                'locked_until',
+                'last_failed_attempt_at',
+                'reset_password_token',
+                'reset_password_token_expires_at',
                 'deleted_at',
             ],
             'length' => [
@@ -8929,6 +9023,11 @@ return [[
                 17 => true,
                 true,
                 true,
+                true,
+                true,
+                true,
+                true,
+                true,
             ],
             'options' => [
                 11 => [
@@ -8942,31 +9041,31 @@ return [[
                 ],
             ],
             'cascade' => [
-                20 => [
+                25 => [
                     'persist',
                     'remove',
                 ],
             ],
             'fetch' => [
-                20 => 2,
+                25 => 2,
                 2,
             ],
             'sourceEntity' => [
-                20 => 'App\\Entity\\Customer',
+                25 => 'App\\Entity\\Customer',
                 'App\\Entity\\Customer',
             ],
             'mappedBy' => [
-                20 => 'customer',
+                25 => 'customer',
                 'customer',
             ],
         ],
         'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
             'fieldName' => [
-                20 => 'cart',
+                25 => 'cart',
                 'orders',
             ],
             'targetEntity' => [
-                20 => 'App\\Entity\\Cart',
+                25 => 'App\\Entity\\Cart',
                 'App\\Entity\\Order',
             ],
         ],

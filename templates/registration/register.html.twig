@@ -159,6 +159,58 @@
     box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
 }
 
+/* ✅ NOUVEAU : Style pour les champs de mot de passe */
+.password-strength {
+    height: 4px;
+    border-radius: 2px;
+    background: #e5e7eb;
+    margin-top: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.password-strength-bar.weak {
+    width: 33%;
+    background: #ef4444;
+}
+
+.password-strength-bar.medium {
+    width: 66%;
+    background: #f59e0b;
+}
+
+.password-strength-bar.strong {
+    width: 100%;
+    background: #10b981;
+}
+
+.password-hint {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6b7280;
+    z-index: 10;
+}
+
+.password-input-wrapper {
+    position: relative;
+}
+
 /* Style pour le champ logo */
 .logo-upload-container {
     border: 2px dashed #e5e7eb;
@@ -253,6 +305,13 @@
             
             {{ form_start(registrationForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
             
+            {# ✅ Afficher les erreurs globales du formulaire #}
+            {% if registrationForm.vars.errors|length > 0 %}
+                <div class="alert alert-danger mb-4">
+                    {{ form_errors(registrationForm) }}
+                </div>
+            {% endif %}
+            
             <div class="row">
                 <div class="col-md-6 mb-4">
                     {{ form_label(registrationForm.companyName, 'Nom de l\'entreprise *', {
@@ -293,7 +352,7 @@
                             'placeholder': 'contact@votre-entreprise.com'
                         }
                     }) }}
-                    <div class="form-text">Nous enverrons vos identifiants à cette adresse</div>
+                    <div class="form-text">Cet email servira d'identifiant de connexion</div>
                     {{ form_errors(registrationForm.email) }}
                 </div>
                 
@@ -311,6 +370,49 @@
                     {{ form_errors(registrationForm.phone) }}
                 </div>
             </div>
+            
+            {# ✅ NOUVEAU BLOC : Mot de passe #}
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    {{ form_label(registrationForm.plainPassword.first, 'Mot de passe *', {
+                        'label_attr': {'class': 'form-label fw-semibold'}
+                    }) }}
+                    <div class="password-input-wrapper">
+                        {{ form_widget(registrationForm.plainPassword.first, {
+                            'attr': {
+                                'class': 'form-control form-control-lg',
+                                'placeholder': 'Minimum 8 caractères'
+                            }
+                        }) }}
+                        <i class="fas fa-eye password-toggle" data-target="{{ registrationForm.plainPassword.first.vars.id }}"></i>
+                    </div>
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                    </div>
+                    <div class="password-hint" id="passwordHint">
+                        Au moins 8 caractères, avec lettres et chiffres
+                    </div>
+                    {{ form_errors(registrationForm.plainPassword.first) }}
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    {{ form_label(registrationForm.plainPassword.second, 'Confirmer le mot de passe *', {
+                        'label_attr': {'class': 'form-label fw-semibold'}
+                    }) }}
+                    <div class="password-input-wrapper">
+                        {{ form_widget(registrationForm.plainPassword.second, {
+                            'attr': {
+                                'class': 'form-control form-control-lg',
+                                'placeholder': 'Retapez le mot de passe'
+                            }
+                        }) }}
+                        <i class="fas fa-eye password-toggle" data-target="{{ registrationForm.plainPassword.second.vars.id }}"></i>
+                    </div>
+                    <div class="form-text">Les deux mots de passe doivent être identiques</div>
+                    {{ form_errors(registrationForm.plainPassword.second) }}
+                </div>
+            </div>
+            {# ✅ FIN NOUVEAU BLOC #}
             
             <div class="mb-4">
                 {{ form_label(registrationForm.address, 'Adresse', {
@@ -354,7 +456,7 @@
                 </div>
             </div>
             
-            <!-- Champ Logo de l'entreprise - AJOUTÉ ICI -->
+            <!-- Champ Logo de l'entreprise -->
             <div class="mb-4">
                 {{ form_label(registrationForm.logoFile, 'Logo de l\'entreprise', {
                     'label_attr': {'class': 'form-label fw-semibold'}
@@ -552,12 +654,72 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion de l'upload du logo
+    // ==================== GESTION DU MOT DE PASSE ====================
+    const passwordInput = document.getElementById('{{ registrationForm.plainPassword.first.vars.id }}');
+    const confirmInput = document.getElementById('{{ registrationForm.plainPassword.second.vars.id }}');
+    const strengthBar = document.getElementById('passwordStrengthBar');
+    const passwordHint = document.getElementById('passwordHint');
+    
+    // Indicateur de force du mot de passe
+    if (passwordInput && strengthBar) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[^a-zA-Z\d]/.test(password)) strength++;
+            
+            // Reset
+            strengthBar.className = 'password-strength-bar';
+            
+            if (password.length === 0) {
+                passwordHint.textContent = 'Au moins 8 caractères, avec lettres et chiffres';
+                passwordHint.style.color = '#6b7280';
+            } else if (strength <= 1) {
+                strengthBar.classList.add('weak');
+                passwordHint.textContent = 'Mot de passe faible';
+                passwordHint.style.color = '#ef4444';
+            } else if (strength <= 2) {
+                strengthBar.classList.add('medium');
+                passwordHint.textContent = 'Mot de passe moyen';
+                passwordHint.style.color = '#f59e0b';
+            } else {
+                strengthBar.classList.add('strong');
+                passwordHint.textContent = 'Mot de passe fort';
+                passwordHint.style.color = '#10b981';
+            }
+        });
+    }
+    
+    // Toggle visibilité du mot de passe
+    document.querySelectorAll('.password-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const targetInput = document.getElementById(targetId);
+            
+            if (targetInput) {
+                if (targetInput.type === 'password') {
+                    targetInput.type = 'text';
+                    this.classList.remove('fa-eye');
+                    this.classList.add('fa-eye-slash');
+                } else {
+                    targetInput.type = 'password';
+                    this.classList.remove('fa-eye-slash');
+                    this.classList.add('fa-eye');
+                }
+            }
+        });
+    });
+    
+    // ==================== GESTION DU LOGO ====================
     const logoInput = document.getElementById('{{ registrationForm.logoFile.vars.id }}');
     const logoPreviewContainer = document.getElementById('logoPreview');
     const previewImage = document.getElementById('previewImage');
@@ -565,11 +727,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoUploadContainer = document.getElementById('logoUploadContainer');
     
     if (logoInput) {
-        // Afficher l'aperçu quand un fichier est sélectionné
         logoInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
-                if (file.size > 2 * 1024 * 1024) { // 2 MB
+                if (file.size > 2 * 1024 * 1024) {
                     alert('Le fichier est trop volumineux. Taille max: 2 Mo');
                     this.value = '';
                     return;
@@ -584,7 +745,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Drag and drop
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             logoUploadContainer.addEventListener(eventName, preventDefaults, false);
         });
@@ -610,7 +770,6 @@ document.addEventListener('DOMContentLoaded', function() {
             logoUploadContainer.classList.remove('drag-over');
         }
         
-        // Gérer le drop de fichier
         logoUploadContainer.addEventListener('drop', function(e) {
             const dt = e.dataTransfer;
             const files = dt.files;
@@ -618,7 +777,6 @@ document.addEventListener('DOMContentLoaded', function() {
             logoInput.dispatchEvent(new Event('change'));
         });
         
-        // Supprimer le logo sélectionné
         removeLogoBtn.addEventListener('click', function() {
             logoInput.value = '';
             previewImage.src = '';
@@ -626,7 +784,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Validation du formulaire
+    // ==================== VALIDATION DU FORMULAIRE ====================
     const form = document.querySelector('form.needs-validation');
     const termsCheckbox = document.getElementById('terms');
     
@@ -649,7 +807,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, false);
     }
     
-    // Ajouter l'effet de focus sur les champs
+    // Effet de focus
     const formControls = form.querySelectorAll('.form-control, .form-select');
     formControls.forEach(control => {
         control.addEventListener('focus', function() {
@@ -664,5 +822,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-{% endblock %}
 {% endblock %}

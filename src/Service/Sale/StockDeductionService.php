@@ -7,9 +7,9 @@ use App\Entity\Product;
 use App\Entity\StockBatch;
 use App\Entity\StockMovement;
 use App\Entity\Order;
-use App\Entity\OrderItem;
 use App\Entity\User;
 use App\Repository\StockBatchRepository;
+use App\Service\StockSyncService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -18,12 +18,34 @@ class StockDeductionService
     public function __construct(
         private EntityManagerInterface $entityManager,
         private StockBatchRepository $stockBatchRepository,
+        private StockSyncService $stockSyncService,
         private LoggerInterface $logger
     ) {
     }
 
     /**
-     * Met à jour le statut des lots (inactif si quantité = 0 ou date expirée)
+     * ✅ Calcule le stock total disponible = SOMME DES LOTS ACTIFS uniquement.
+     * 
+     * ⚠️ IMPORTANT : Ne compte PAS Product.stock_quantity (c'est un cache).
+     */
+    public function getProductTotalStock(Product $product): int
+    {
+        $now = new \DateTime();
+        $totalStock = 0;
+        
+        foreach ($product->getStockBatches() as $batch) {
+            if ($batch->isActive() 
+                && $batch->getCurrentQuantity() > 0
+                && (!$batch->getExpiryDate() || $batch->getExpiryDate() >= $now)) {
+                $totalStock += $batch->getCurrentQuantity();
+            }
+        }
+        
+        return $totalStock;
+    }
+
+    /**
+     * Met à jour le statut d'un lot (inactif si quantité = 0 ou expiré)
      */
     public function updateBatchStatus(StockBatch $batch): void
     {
@@ -53,30 +75,9 @@ class StockDeductionService
             $this->entityManager->persist($batch);
         }
     }
-    
-    /**
-     * Calcule le stock TOTAL = stock_quantity + lots actifs
-     * ✅ Utilisé pour l'affichage du stock disponible
-     */
-    public function getProductTotalStock(Product $product): int
-    {
-        $now = new \DateTime();
-        $totalStockFromBatches = 0;
-        
-        foreach ($product->getStockBatches() as $batch) {
-            if ($batch->isActive() 
-                && $batch->getCurrentQuantity() > 0
-                && (!$batch->getExpiryDate() || $batch->getExpiryDate() >= $now)) {
-                $totalStockFromBatches += $batch->getCurrentQuantity();
-            }
-        }
-        
-        $stockQuantity = $product->getStockQuantity() ?? 0;
-        return $stockQuantity + $totalStockFromBatches;
-    }
 
     /**
-     * Vérifie et désactive tous les lots expirés d'un produit
+     * Désactive tous les lots expirés d'un produit
      */
     public function deactivateExpiredBatches(Product $product): int
     {
@@ -111,8 +112,10 @@ class StockDeductionService
     }
 
     /**
-     * Déduit la quantité d'un produit du stock (méthode FIFO)
-     * ✅ CORRIGÉ : stock_quantity ne change PAS, sauf fallback
+     * ✅ Déduit la quantité d'un produit du stock (méthode FIFO).
+     * 
+     * ⚠️ CORRECTION : Déduction UNIQUEMENT depuis les lots.
+     * Product.stock_quantity est mis à jour automatiquement par syncProductStock().
      */
     public function deductProductStock(
         Product $product,
@@ -124,32 +127,29 @@ class StockDeductionService
         $this->logger->info('=== DÉBUT DÉDUCTION STOCK ===', [
             'product_id' => $product->getId(),
             'product_name' => $product->getName(),
-            'stock_quantity' => $product->getStockQuantity(),
             'quantity_requested' => $quantity,
             'order_id' => $order->getId()
         ]);
 
-        // 1. Désactiver les lots expirés
+        // ✅ 1. Désactiver les lots expirés
         $this->deactivateExpiredBatches($product);
         
-        // 2. Récupérer les lots disponibles
+        // ✅ 2. Récupérer les lots disponibles (triés FIFO/FEFO)
         $availableBatches = $this->getAvailableBatches($product);
         
-        // 3. Calculer le stock TOTAL = stock_quantity + lots
-        $stockFromBatches = array_sum(array_map(fn($b) => $b->getCurrentQuantity(), $availableBatches));
-        $stockQuantity = $product->getStockQuantity() ?? 0;
-        $totalStock = $stockQuantity + $stockFromBatches;
+        // ✅ 3. Calculer le stock total = SOMME DES LOTS uniquement
+        $totalStock = array_sum(array_map(fn($b) => $b->getCurrentQuantity(), $availableBatches));
         
-        $this->logger->info('Stock détaillé avant déduction', [
-            'stock_quantity' => $stockQuantity,
-            'stock_from_batches' => $stockFromBatches,
-            'total_available' => $totalStock
+        $this->logger->info('Stock disponible (lots uniquement)', [
+            'product_id' => $product->getId(),
+            'total_available' => $totalStock,
+            'batches_count' => count($availableBatches)
         ]);
         
-        // 4. Vérifier que le stock total est suffisant
+        // ✅ 4. Vérifier que le stock est suffisant
         if ($totalStock < $quantity) {
             throw new \Exception(sprintf(
-                'Stock insuffisant pour le produit "%s". Stock total: %d %s, Demandé: %d %s',
+                'Stock insuffisant pour le produit "%s". Stock disponible: %d %s, Demandé: %d %s',
                 $product->getName(),
                 $totalStock,
                 $product->getUnit() ?? 'pièce(s)',
@@ -160,11 +160,10 @@ class StockDeductionService
         
         $remainingQuantity = (int) $quantity;
         $usedBatches = [];
-        $totalDeductedFromBatches = 0;
-        $totalDeductedFromDirect = 0;
+        $totalDeducted = 0;
         $finalReferenceId = $referenceId ?? $order->getId();
         
-        // 5. D'abord, déduire des lots existants (FIFO)
+        // ✅ 5. Déduire UNIQUEMENT depuis les lots (FIFO/FEFO)
         foreach ($availableBatches as $batch) {
             if ($remainingQuantity <= 0) {
                 break;
@@ -214,7 +213,7 @@ class StockDeductionService
             ];
             
             $remainingQuantity -= $quantityToTake;
-            $totalDeductedFromBatches += $quantityToTake;
+            $totalDeducted += $quantityToTake;
             
             $this->logger->info('Déduction depuis lot', [
                 'batch_id' => $batch->getId(),
@@ -224,83 +223,29 @@ class StockDeductionService
             ]);
         }
         
-        // 6. Si la quantité demandée est supérieure aux lots,
-        //    déduire du stock_quantity (stock direct)
-        if ($remainingQuantity > 0) {
-            $currentStockQuantity = $product->getStockQuantity() ?? 0;
-            
-            if ($currentStockQuantity < $remainingQuantity) {
-                throw new \Exception(sprintf(
-                    'Stock direct insuffisant. Stock_quantity: %d %s, Besoin: %d %s',
-                    $currentStockQuantity,
-                    $product->getUnit() ?? 'pièce(s)',
-                    $remainingQuantity,
-                    $product->getUnit() ?? 'pièce(s)'
-                ));
-            }
-            
-            // ✅ Déduire du stock_quantity (c'est le seul cas où il change)
-            $newStockQuantity = $currentStockQuantity - $remainingQuantity;
-            $product->setStockQuantity($newStockQuantity);
-            $this->entityManager->persist($product);
-            $totalDeductedFromDirect += $remainingQuantity;
-            
-            // Créer le mouvement de stock sans lot
-            $purchasePrice = $product->getPurchasePrice();
-            if ($purchasePrice === null || $purchasePrice === '') {
-                $purchasePrice = '0';
-            }
-            
-            $movement = $this->createStockMovementWithoutBatch(
-                $product,
-                $remainingQuantity,
-                (string) $purchasePrice,
-                $order,
-                $user,
-                'sale_out',
-                $finalReferenceId
-            );
-            $this->entityManager->persist($movement);
-            
-            $usedBatches[] = [
-                'batch' => null,
-                'quantity' => $remainingQuantity,
-                'unit_price' => $purchasePrice,
-                'total_price' => $remainingQuantity * (float) $purchasePrice,
-                'movement' => $movement,
-                'note' => 'Déduction directe du stock_quantity'
-            ];
-            
-            $this->logger->info('Déduction directe de stock_quantity', [
-                'product_id' => $product->getId(),
-                'quantity_deducted' => $remainingQuantity,
-                'new_stock_quantity' => $newStockQuantity
-            ]);
-        }
-        
-        // 7. Flush final
+        // ✅ 6. Flush
         $this->entityManager->flush();
         
-        // 8. Log du stock total après déduction (pour affichage)
+        // ✅ 7. SYNCHRONISER Product.stock_quantity
+        $this->stockSyncService->syncProductStock($product);
+        
+        // ✅ 8. Log du stock après déduction
         $finalTotalStock = $this->getProductTotalStock($product);
         
         $this->logger->info('=== FIN DÉDUCTION STOCK ===', [
             'product_id' => $product->getId(),
             'product_name' => $product->getName(),
             'total_deducted' => $quantity,
-            'from_batches' => $totalDeductedFromBatches,
-            'from_stock_quantity' => $totalDeductedFromDirect,
+            'batches_used' => count($usedBatches),
             'final_stock_quantity' => $product->getStockQuantity(),
-            'remaining_batches_quantity' => array_sum(array_map(fn($b) => $b->getCurrentQuantity(), $availableBatches)),
-            'final_total_stock' => $finalTotalStock,
-            'batches_used' => count($usedBatches)
+            'final_total_stock' => $finalTotalStock
         ]);
         
         return $usedBatches;
     }
     
     /**
-     * Récupère les lots disponibles triés par FIFO
+     * Récupère les lots disponibles triés par FIFO/FEFO
      */
     private function getAvailableBatches(Product $product): array
     {
@@ -316,6 +261,7 @@ class StockDeductionService
             ->getQuery()
             ->getResult();
         
+        // Tri FEFO (First Expired First Out) si produit périssable
         if ($product->hasExpiryDate()) {
             usort($batches, function($a, $b) {
                 $dateA = $a->getExpiryDate();
@@ -328,6 +274,7 @@ class StockDeductionService
                 return $dateA <=> $dateB;
             });
         } else {
+            // Sinon FIFO (First In First Out)
             usort($batches, fn($a, $b) => $a->getCreatedAt() <=> $b->getCreatedAt());
         }
         
@@ -363,34 +310,7 @@ class StockDeductionService
     }
     
     /**
-     * Crée un mouvement de stock sans lot (fallback)
-     */
-    private function createStockMovementWithoutBatch(
-        Product $product,
-        int $quantity,
-        string $unitPrice,
-        Order $order,
-        User $user,
-        string $type,
-        int $referenceId
-    ): StockMovement {
-        $movement = new StockMovement();
-        $movement->setMovementType($type);
-        $movement->setQuantity($quantity);
-        $movement->setUnitPrice($unitPrice);
-        $movement->setProduct($product);
-        $movement->setStockBatch(null);
-        $movement->setUser($user);
-        $movement->setHmaService($product->getHmaService());
-        $movement->setCreatedAt(new \DateTime());
-        $movement->setReferenceId($referenceId);
-        $movement->setNotes(sprintf('Vente #%s (déduction directe)', $order->getOrderNumber()));
-        
-        return $movement;
-    }
-    
-    /**
-     * Désactive tous les lots expirés (commande CRON)
+     * Désactive tous les lots expirés (maintenance CRON)
      */
     public function deactivateAllExpiredBatches(): int
     {
@@ -404,7 +324,7 @@ class StockDeductionService
             ->getResult();
         
         $count = 0;
-        $productsToUpdate = [];
+        $productsToSync = [];
         
         foreach ($expiredBatches as $batch) {
             $batch->setIsActive(false);
@@ -413,16 +333,22 @@ class StockDeductionService
             $count++;
             
             $product = $batch->getProduct();
-            if ($product && !in_array($product->getId(), $productsToUpdate)) {
-                $productsToUpdate[] = $product->getId();
+            if ($product && !in_array($product->getId(), array_column($productsToSync, 'id'))) {
+                $productsToSync[] = $product;
             }
         }
         
         if ($count > 0) {
             $this->entityManager->flush();
+            
+            // ✅ Synchroniser les produits affectés
+            foreach ($productsToSync as $product) {
+                $this->stockSyncService->syncProductStock($product);
+            }
+            
             $this->logger->info('Désactivation massive des lots expirés', [
                 'count' => $count,
-                'products_affected' => count($productsToUpdate)
+                'products_affected' => count($productsToSync)
             ]);
         }
         

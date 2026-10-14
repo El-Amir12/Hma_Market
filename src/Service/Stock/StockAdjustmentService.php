@@ -8,10 +8,11 @@ use App\Entity\StockAdjustment;
 use App\Entity\StockBatch;
 use App\Entity\User;
 use App\Repository\StockAdjustmentRepository;
-use App\Service\FileUploader;
 use App\Service\NotificationService;
 use App\Service\StockMovementService;
+use App\Service\StockSyncService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class StockAdjustmentService
@@ -19,15 +20,21 @@ class StockAdjustmentService
     public function __construct(
         private EntityManagerInterface $entityManager,
         private StockMovementService $stockMovementService,
+        private StockSyncService $stockSyncService,
         private NotificationService $notificationService,
-        private FileUploader $fileUploader,
-        private StockAdjustmentRepository $adjustmentRepository
-        // ❌ PAS DE $logger ici !
+        private StockAdjustmentRepository $adjustmentRepository,
+        private LoggerInterface $logger,
+        private string $uploadsDirectory   // ✅ Injecté depuis services.yaml
     ) {
     }
 
     /**
      * Crée un ajustement de stock
+     *
+     * Flow :
+     *   1. persist(adjustment) + Flush #1
+     *   2. createAdjustment() → Flush #2 (lot + mouvement) + Flush #3 (Product sync)
+     *   3. Notifications
      */
     public function createAdjustment(
         StockBatch $stockBatch,
@@ -42,6 +49,10 @@ class StockAdjustmentService
             throw new \Exception('La quantité doit être positive.');
         }
 
+        if (!in_array($type, ['in', 'out'], true)) {
+            throw new \Exception('Type d\'ajustement invalide.');
+        }
+
         if ($type === 'out' && $stockBatch->getCurrentQuantity() < $quantity) {
             throw new \Exception(sprintf(
                 'Stock insuffisant. Stock actuel : %d, Quantité demandée : %d',
@@ -50,10 +61,29 @@ class StockAdjustmentService
             ));
         }
 
+        // Recharger les entités managées
+        $managedBatch = $this->entityManager->getRepository(StockBatch::class)
+            ->find($stockBatch->getId());
+        if (!$managedBatch) {
+            throw new \Exception('Lot introuvable en base de données.');
+        }
+
+        $managedUser = $this->entityManager->getRepository(User::class)
+            ->find($user->getId());
+        if (!$managedUser) {
+            throw new \Exception('Utilisateur introuvable en base de données.');
+        }
+
+        $managedHmaService = $this->entityManager->getRepository(HmaService::class)
+            ->find($managedBatch->getHmaService()->getId());
+        if (!$managedHmaService) {
+            throw new \Exception('Entreprise introuvable en base de données.');
+        }
+
         // 2. Upload du fichier justificatif
         $fileName = null;
         if ($justificationFile) {
-            $companyId = $stockBatch->getHmaService()->getId();
+            $companyId = $managedHmaService->getId();
             $fileName = $this->uploadJustificationFile($justificationFile, $companyId);
         }
 
@@ -63,51 +93,68 @@ class StockAdjustmentService
         $adjustment->setQuantity($quantity);
         $adjustment->setReason($reason);
         $adjustment->setJustificationFile($fileName);
-        $adjustment->setCreatedBy($user);
-        $adjustment->setStockBatch($stockBatch);
-        $adjustment->setHmaService($stockBatch->getHmaService());
+        $adjustment->setCreatedBy($managedUser);
+        $adjustment->setStockBatch($managedBatch);
+        $adjustment->setHmaService($managedHmaService);
 
         $this->entityManager->persist($adjustment);
-        $this->entityManager->flush();
+        $this->entityManager->flush();   // ✅ Flush #1
 
         // 4. Créer le mouvement de stock
+        //    ✅ Flush #2 (lot + mouvement) + Flush #3 (Product sync)
         $movementType = $type === 'in' ? 'adjustment_in' : 'adjustment_out';
         $movement = $this->stockMovementService->createAdjustment(
-            $stockBatch,
+            $managedBatch,
             $quantity,
             $movementType,
             $reason,
-            $user,
+            $managedUser,
             $adjustment->getId()
         );
 
         // 5. Envoyer les notifications
-        $this->sendNotifications($adjustment, $movement, $user);
+        $this->sendNotifications($adjustment, $movement, $managedUser);
 
-        // ❌ SUPPRIMER OU COMMENTER LA LIGNE AVEC $this->logger
-        // $this->logger->info('Ajustement de stock créé', [...]);
+        $this->logger->info('Ajustement de stock créé', [
+            'adjustment_id' => $adjustment->getId(),
+            'type' => $type,
+            'quantity' => $quantity,
+            'batch_number' => $managedBatch->getBatchNumber(),
+            'product' => $managedBatch->getProduct()?->getName(),
+            'user' => $managedUser->getEmail(),
+        ]);
 
         return $adjustment;
     }
 
     /**
-     * Upload du fichier justificatif
+     * ✅ Upload du fichier justificatif
+     *
+     * Le fichier est sauvegardé dans :
+     *   {uploadsDirectory}/stock_adjustments/{companyId}/{filename}
+     *
+     * Soit concrètement :
+     *   public/uploads/stock_adjustments/{companyId}/{filename}
+     *
+     * Le chemin relatif stocké en BDD est :
+     *   stock_adjustments/{companyId}/{filename}
      */
     private function uploadJustificationFile(UploadedFile $file, int $companyId): string
     {
-        $targetDirectory = $this->fileUploader->getTargetDirectory();
-        $uploadDir = $targetDirectory . '/stock_adjustments/' . $companyId;
-        
+        $uploadDir = $this->uploadsDirectory . '/stock_adjustments/' . $companyId;
+
         if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
+            if (!mkdir($uploadDir, 0777, true) && !is_dir($uploadDir)) {
+                throw new \RuntimeException(sprintf('Impossible de créer le dossier : %s', $uploadDir));
+            }
         }
-        
+
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = preg_replace('/[^a-zA-Z0-9_-]/', '_', $originalFilename);
         $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
-        
+
         $file->move($uploadDir, $newFilename);
-        
+
         return 'stock_adjustments/' . $companyId . '/' . $newFilename;
     }
 
@@ -119,12 +166,12 @@ class StockAdjustmentService
         $stockBatch = $adjustment->getStockBatch();
         $product = $stockBatch->getProduct();
         $hmaService = $stockBatch->getHmaService();
-        
+
         $typeLabel = $adjustment->getType() === 'in' ? 'ENTRÉE (+) ' : 'SORTIE (-)';
         $quantityFormatted = number_format($adjustment->getQuantity(), 0, ',', ' ');
-        
+
         $subject = sprintf('[%s] Ajustement de stock - %s', $hmaService->getCompanyName(), $typeLabel);
-        
+
         $message = sprintf(
             "📦 **Ajustement de stock effectué**\n\n" .
             "**Entreprise :** %s\n" .
@@ -146,11 +193,11 @@ class StockAdjustmentService
             $user->getFullName() ?: $user->getEmail(),
             (new \DateTime())->format('d/m/Y H:i'),
             number_format($stockBatch->getCurrentQuantity(), 0, ',', ' '),
-            ($stockBatch->getCurrentQuantity() * (float)$stockBatch->getUnitPrice()) . ' FCFA'
+            ($stockBatch->getCurrentQuantity() * (float) $stockBatch->getUnitPrice()) . ' FCFA'
         );
-        
+
         $this->notificationService->notifyAdminsAndManagers($subject, $message);
-        
+
         if ($adjustment->getType() === 'out') {
             $initialQty = $stockBatch->getInitialQuantity();
             if ($initialQty > 0) {

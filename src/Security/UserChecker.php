@@ -16,7 +16,25 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        // ✅ Vérifier si l'utilisateur peut se connecter en utilisant la méthode canLogin()
+        // ============================================
+        // ✅ VÉRIFICATION DU COMPTE ACTIVÉ
+        // UNIQUEMENT POUR LES OWNERS (admin entreprise)
+        // --------------------------------------------
+        // Les owners doivent activer leur compte via le lien email
+        // Les employés (isHmaOwner = false) peuvent se connecter
+        // directement avec leur mot de passe temporaire
+        // ============================================
+        if ($user->isHmaOwner() === true && !$user->isAccountActivated()) {
+            $message = 'Votre compte n\'est pas encore activé. '
+                     . 'Consultez votre boîte mail et cliquez sur le lien d\'activation que nous vous avons envoyé. '
+                     . 'Si vous n\'avez rien reçu, demandez un nouveau lien.';
+            
+            throw new CustomUserMessageAccountStatusException($message);
+        }
+
+        // ============================================
+        // ✅ VÉRIFICATION DES RÈGLES MÉTIER (tous les utilisateurs)
+        // ============================================
         if (!$user->canLogin()) {
             // Déterminer la cause du blocage
             if ($user->getHmaServiceId() && !$user->getHmaServiceId()->isHmaActive()) {

@@ -256,6 +256,56 @@
         margin-bottom: 0;
     }
 
+    /* ✅ Styles pour les champs mot de passe */
+    .password-field-wrapper {
+        position: relative;
+    }
+
+    .password-field-wrapper .form-control {
+        padding-right: 3rem;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.25rem;
+        transition: color 0.2s;
+    }
+
+    .password-toggle:hover {
+        color: var(--primary-color);
+    }
+
+    .password-strength {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .password-strength .bar {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 0.25rem;
+    }
+
+    .password-strength .bar-item {
+        flex: 1;
+        height: 4px;
+        background: #e5e7eb;
+        border-radius: 2px;
+        transition: background 0.3s;
+    }
+
+    .password-strength .bar-item.active.weak { background: #ef4444; }
+    .password-strength .bar-item.active.medium { background: #f59e0b; }
+    .password-strength .bar-item.active.strong { background: #10b981; }
+
     @media (max-width: 768px) {
         .register-card .card-body {
             padding: 1.5rem;
@@ -326,16 +376,16 @@
                         </div>
                     {% endif %}
 
-                    {# ✅ Info box - Explication du processus #}
+                    {# ✅ Info box - Explication du processus mis à jour #}
                     <div class="info-box">
                         <div class="d-flex align-items-start">
                             <i class="fas fa-info-circle fa-lg mt-1"></i>
                             <div>
                                 <h6>Comment ça fonctionne ?</h6>
                                 <p>
-                                    Après votre inscription, vous recevrez un email de vérification avec un 
-                                    <strong>mot de passe temporaire</strong>. Cliquez sur le lien pour activer 
-                                    votre compte, puis connectez-vous avec le mot de passe reçu.
+                                    Après votre inscription, vous recevrez un email de vérification. 
+                                    Cliquez sur le lien pour activer votre compte, puis connectez-vous 
+                                    avec votre email et le mot de passe que vous avez choisi.
                                 </p>
                             </div>
                         </div>
@@ -420,7 +470,52 @@
                             {{ form_errors(registrationForm.country) }}
                         </div>
 
-                        {# ✅ NOTE : Les champs de mot de passe sont supprimés car générés automatiquement #}
+                        {# ✅ NOUVEAU : Champ mot de passe #}
+                        <div class="col-md-6 form-group">
+                            {{ form_label(registrationForm.plainPassword.first, 'Mot de passe *', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="password-field-wrapper">
+                                {{ form_widget(registrationForm.plainPassword.first, {
+                                    'attr': {
+                                        'class': 'form-control',
+                                        'placeholder': 'Minimum 8 caractères',
+                                        'autocomplete': 'new-password',
+                                        'id': 'plainPassword_first'
+                                    }
+                                }) }}
+                                <button type="button" class="password-toggle" onclick="togglePassword('plainPassword_first', this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength" id="passwordStrength">
+                                <div class="bar">
+                                    <div class="bar-item" id="bar1"></div>
+                                    <div class="bar-item" id="bar2"></div>
+                                    <div class="bar-item" id="bar3"></div>
+                                    <div class="bar-item" id="bar4"></div>
+                                </div>
+                                <div class="text-muted" id="strengthText">Force du mot de passe</div>
+                            </div>
+                            {{ form_errors(registrationForm.plainPassword.first) }}
+                        </div>
+
+                        {# ✅ NOUVEAU : Confirmation mot de passe #}
+                        <div class="col-md-6 form-group">
+                            {{ form_label(registrationForm.plainPassword.second, 'Confirmer le mot de passe *', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="password-field-wrapper">
+                                {{ form_widget(registrationForm.plainPassword.second, {
+                                    'attr': {
+                                        'class': 'form-control',
+                                        'placeholder': 'Répétez le mot de passe',
+                                        'autocomplete': 'new-password',
+                                        'id': 'plainPassword_second'
+                                    }
+                                }) }}
+                                <button type="button" class="password-toggle" onclick="togglePassword('plainPassword_second', this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            {{ form_errors(registrationForm.plainPassword.second) }}
+                        </div>
 
                         {# Conditions #}
                         <div class="col-12 form-group">
@@ -462,9 +557,6 @@
                         Vous avez déjà un compte client ?
                         <a href="{{ path('marketplace_login') }}">Connectez-vous</a>
                     </div>
-
-                    {# ✅ Message si l'utilisateur vient de s'inscrire (via flash) #}
-                    {# Le message de vérification est déjà géré par les flash messages ci-dessus #}
                 </div>
             </div>
         </div>
@@ -494,16 +586,112 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         form.addEventListener('submit', function(e) {
             const terms = document.getElementById('terms');
+            const password = document.getElementById('plainPassword_first');
+            const passwordConfirm = document.getElementById('plainPassword_second');
 
+            let valid = true;
+
+            // Vérifier les conditions générales
             if (!terms.checked) {
                 e.preventDefault();
                 terms.classList.add('is-invalid');
                 terms.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                valid = false;
             } else {
                 terms.classList.remove('is-invalid');
+            }
+
+            // Vérifier la force du mot de passe
+            if (password && password.value.length < 8) {
+                e.preventDefault();
+                password.classList.add('is-invalid');
+                valid = false;
+            }
+
+            // Vérifier que les mots de passe correspondent
+            if (password && passwordConfirm && password.value !== passwordConfirm.value) {
+                e.preventDefault();
+                passwordConfirm.classList.add('is-invalid');
+                valid = false;
+            }
+
+            // Désactiver le bouton si tout est valide pour éviter double soumission
+            if (valid) {
+                const btn = document.getElementById('registerBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Inscription...';
+            }
+        });
+    }
+
+    // ==================== PASSWORD STRENGTH ====================
+    const passwordInput = document.getElementById('plainPassword_first');
+    if (passwordInput) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+
+            // Critères
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[^a-zA-Z\d]/.test(password)) strength++;
+
+            // Mettre à jour les barres
+            const bars = [
+                document.getElementById('bar1'),
+                document.getElementById('bar2'),
+                document.getElementById('bar3'),
+                document.getElementById('bar4')
+            ];
+
+            const strengthText = document.getElementById('strengthText');
+            let strengthLevel = '';
+            let activeClass = '';
+
+            if (strength <= 1) {
+                strengthLevel = 'Faible';
+                activeClass = 'weak';
+            } else if (strength === 2) {
+                strengthLevel = 'Moyen';
+                activeClass = 'medium';
+            } else if (strength >= 3) {
+                strengthLevel = 'Fort';
+                activeClass = 'strong';
+            }
+
+            bars.forEach((bar, index) => {
+                bar.classList.remove('active', 'weak', 'medium', 'strong');
+                if (index < strength) {
+                    bar.classList.add('active', activeClass);
+                }
+            });
+
+            if (password.length > 0) {
+                strengthText.textContent = 'Force : ' + strengthLevel;
+                strengthText.className = 'text-' + (activeClass === 'strong' ? 'success' : (activeClass === 'medium' ? 'warning' : 'danger'));
+            } else {
+                strengthText.textContent = 'Force du mot de passe';
+                strengthText.className = 'text-muted';
             }
         });
     }
 });
+
+// ==================== TOGGLE PASSWORD VISIBILITY ====================
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
 </script>
 {% endblock %}

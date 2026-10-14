@@ -20,7 +20,7 @@ class PurchaseType extends AbstractType
                 'class' => Supplier::class,
                 'choice_label' => 'companyName',
                 'placeholder' => 'Sélectionner un fournisseur',
-                'required' => true,
+                'required' => false,
                 'attr' => [
                     'class' => 'form-select select2',
                     'data-placeholder' => 'Rechercher un fournisseur...'

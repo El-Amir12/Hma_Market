@@ -173,11 +173,12 @@ class __TwigTemplate_daf16691684bc0b07dd800e5f2c3246c extends Template
         }
         // line 60
         yield "
-    <!-- Formulaire avec passage de la variable canEditStock -->
     ";
         // line 62
-        yield Twig\Extension\CoreExtension::include($this->env, $context, "admin/product/_form.html.twig", ["button_label" => "Mettre à jour", "canEditStock" => ((        // line 64
-array_key_exists("canEditStock", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["canEditStock"]) || array_key_exists("canEditStock", $context) ? $context["canEditStock"] : (function () { throw new RuntimeError('Variable "canEditStock" does not exist.', 64, $this->source); })()), false)) : (false))]);
+        yield "    ";
+        // line 63
+        yield "    ";
+        yield Twig\Extension\CoreExtension::include($this->env, $context, "admin/product/_form.html.twig", ["button_label" => "Mettre à jour"]);
         // line 65
         yield "
 </div>
@@ -212,7 +213,7 @@ array_key_exists("canEditStock", $context)) ? (Twig\Extension\CoreExtension::def
      */
     public function getDebugInfo(): array
     {
-        return array (  182 => 65,  180 => 64,  179 => 62,  175 => 60,  157 => 44,  155 => 43,  145 => 36,  138 => 32,  122 => 19,  118 => 18,  110 => 13,  102 => 7,  89 => 6,  64 => 4,  41 => 2,);
+        return array (  183 => 65,  180 => 63,  178 => 62,  175 => 60,  157 => 44,  155 => 43,  145 => 36,  138 => 32,  122 => 19,  118 => 18,  110 => 13,  102 => 7,  89 => 6,  64 => 4,  41 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -277,10 +278,10 @@ array_key_exists("canEditStock", $context)) ? (Twig\Extension\CoreExtension::def
     </div>
     {% endif %}
 
-    <!-- Formulaire avec passage de la variable canEditStock -->
+    {# ✅ Utilise {{ include() }} : partage TOUT le contexte #}
+    {# La variable button_label est passée via le contrôleur ou définie dans _form #}
     {{ include('admin/product/_form.html.twig', {
-        'button_label': 'Mettre à jour',
-        'canEditStock': canEditStock|default(false)
+        'button_label': 'Mettre à jour'
     }) }}
 </div>
 {% endblock %}", "admin/product/edit.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\product\\edit.html.twig");

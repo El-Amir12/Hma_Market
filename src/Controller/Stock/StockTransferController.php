@@ -261,4 +261,23 @@ class StockTransferController extends AbstractController
             'transfer' => $transfer
         ]);
     }
+
+    #[Route('/{id}/print', name: 'app_stock_transfer_print', methods: ['GET'])]
+public function print(StockTransfer $transfer): Response
+{
+    $this->denyAccessUnlessGranted('ROLE_MANAGER');
+
+    $hmaService = $this->getCurrentHmaService();
+    if (!$hmaService) {
+        throw $this->createAccessDeniedException('Aucune entreprise associée à votre compte.');
+    }
+
+    if ($transfer->getHmaService()->getId() !== $hmaService->getId()) {
+        throw $this->createAccessDeniedException('Accès non autorisé.');
+    }
+
+    return $this->render('stock/transfer/print.html.twig', [
+        'transfer' => $transfer,
+    ]);
+}
 }

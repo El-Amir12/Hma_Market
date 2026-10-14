@@ -223,6 +223,7 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $stockBatchRepository: '@App\Repository\StockBatchRepository'
+            $stockSyncService: '@App\Service\StockSyncService'
             $logger: '@monolog.logger'
         public: true
 
@@ -260,48 +261,46 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $stockMovementService: '@App\Service\StockMovementService'
+            $stockSyncService: '@App\Service\StockSyncService'
             $notificationService: '@App\Service\NotificationService'
-            $fileUploader: '@App\Service\FileUploader'
             $adjustmentRepository: '@App\Repository\StockAdjustmentRepository'
+            $logger: '@monolog.logger'
+            $uploadsDirectory: '%uploads_directory%'  
         public: true
 
     App\Service\Stock\StockInventoryService:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $stockMovementService: '@App\Service\StockMovementService'
+            $stockSyncService: '@App\Service\StockSyncService'
             $notificationService: '@App\Service\NotificationService'
             $logger: '@monolog.logger'
             $stockBatchRepository: '@App\Repository\StockBatchRepository'
             $productRepository: '@App\Repository\ProductRepository'
+            $inventoryRepository: '@App\Repository\InventoryRepository'
         public: true
 
     App\Service\Stock\StockTransferService:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $stockMovementService: '@App\Service\StockMovementService'
+            $stockSyncService: '@App\Service\StockSyncService'
             $notificationService: '@App\Service\NotificationService'
             $logger: '@monolog.logger'
             $stockBatchRepository: '@App\Repository\StockBatchRepository'
             $locationRepository: '@App\Repository\LocationRepository'
+            $transferRepository: '@App\Repository\StockTransferRepository'
         public: true
 
-    # ==================== DÉJÀ EXISTANT - À GARDER ====================
+    # ==================== SERVICE DE MOUVEMENT DE STOCK ====================
     App\Service\StockMovementService:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
+            $stockSyncService: '@App\Service\StockSyncService'
             $logger: '@monolog.logger'
         public: true
 
     # ==================== SÉCURITÉ ET ÉVÉNEMENTS ====================
-    App\Security\LoginSuccessHandler:
-        arguments:
-            $urlGenerator: '@router'
-            $requestStack: '@request_stack'
-            $entityManager: '@doctrine.orm.entity_manager'
-            $passwordHasher: '@security.user_password_hasher'
-            $subscriptionGenerator: '@App\Service\SubscriptionNumberGenerator'
-            $emailService: '@App\Service\EmailService'
-        public: true
 
     App\EventSubscriber\UserDisabledSubscriber:
         tags:
@@ -336,6 +335,10 @@ services:
             $logger: '@monolog.logger'
         tags:
             - { name: kernel.event_subscriber }
+
+    # ⛔ LISTENER SUPPRIMÉ : StockBatchSyncListener
+    # La synchronisation est désormais explicite dans les services
+    # (StockMovementService, StockDeductionService).
 
     App\Service\UniqueNameValidator:
         autowire: true
@@ -387,7 +390,6 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
         public: true
-
 
     # ==================== SERVICES SUPER ADMIN ====================
     App\Service\SuperAdmin\CompanyAnalysisExportService:

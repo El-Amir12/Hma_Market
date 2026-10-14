@@ -34,7 +34,8 @@ class SubscriptionNumberGenerator
         do {
             $subscriptionNumber = $this->generateRandomNumber();
             
-            // ✅ IMPORTANT: Utiliser le nom du champ EN BASE (subscription_number)
+            // ✅ CORRECTION : Utiliser le nom de la PROPRIÉTÉ PHP (snake_case)
+            // Ta propriété s'appelle $subscription_number, donc on utilise 'subscription_number'
             $existing = $repository->findOneBy(['subscription_number' => $subscriptionNumber]);
             
             $attempt++;
@@ -81,14 +82,8 @@ class SubscriptionNumberGenerator
      */
     public function generateForExisting(HmaService $hmaService): string
     {
-        // ✅ Vérifier avec le nom du champ en base
-        $existingNumber = $this->entityManager->createQueryBuilder()
-            ->select('h.subscription_number')
-            ->from(HmaService::class, 'h')
-            ->where('h.id = :id')
-            ->setParameter('id', $hmaService->getId())
-            ->getQuery()
-            ->getSingleScalarResult();
+        // ✅ Utiliser directement la méthode de l'entité (plus fiable)
+        $existingNumber = $hmaService->getSubscriptionNumber();
 
         if ($existingNumber) {
             return $existingNumber;

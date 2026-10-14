@@ -331,6 +331,24 @@
         background: var(--warning-color) !important;
         color: #000 !important;
     }
+
+    /* ✅ Champ lecture seule stylé */
+    .form-control[readonly] {
+        background-color: #f1f5f9;
+        cursor: not-allowed;
+        color: #475569;
+    }
+
+    /* ✅ Badge achat interne */
+    .optional-badge {
+        background-color: #f3f4f6;
+        color: #6b7280;
+        font-size: 0.7rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 20px;
+        font-weight: normal;
+        margin-left: 0.3rem;
+    }
 </style>
 {% endblock %}
 
@@ -423,7 +441,9 @@
                                                 data-id="{{ item.product_id }}"
                                                 data-name="{{ item.product_name }}"
                                                 data-quantity="{{ item.quantity }}"
-                                                data-price="{{ item.unit_price }}">
+                                                data-price="{{ item.unit_price }}"
+                                                data-barcode="{{ item.barcode }}"
+                                                data-unit="{{ item.unit|default('') }}">
                                             <i class="bi bi-pencil"></i> Modifier
                                         </button>
                                         <button class="btn btn-sm btn-outline-danger remove-btn" data-id="{{ item.product_id }}">
@@ -489,33 +509,82 @@
     </div>
 </div>
 
-<!-- Modal de modification d'article -->
+<!-- ✅ Modal de modification d'article — NOM DU PRODUIT NON MODIFIABLE -->
 <div class="modal fade" id="editItemModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">Modifier l'article</h5>
+                <h5 class="modal-title">
+                    <i class="bi bi-pencil me-2"></i>Modifier l'article
+                </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="editProductId" value="">
+                
+                {# ✅ Nom du produit : lecture seule (non modifiable) #}
                 <div class="mb-3">
-                    <label class="form-label">Produit</label>
-                    <input type="text" id="editProductName" class="form-control" readonly>
+                    <label class="form-label">
+                        <i class="bi bi-box me-1"></i>Produit
+                    </label>
+                    <input type="text" id="editProductName" class="form-control" readonly tabindex="-1">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Le nom du produit ne peut pas être modifié
+                    </small>
                 </div>
+
+                {# ✅ Code-barres : lecture seule #}
                 <div class="mb-3">
-                    <label class="form-label">Quantité</label>
-                    <input type="number" id="editQuantity" class="form-control" min="1" step="1" value="1">
+                    <label class="form-label">
+                        <i class="bi bi-upc-scan me-1"></i>Code-barres
+                    </label>
+                    <input type="text" id="editProductBarcode" class="form-control" readonly tabindex="-1">
                 </div>
+
+                {# ✅ Unité : lecture seule #}
                 <div class="mb-3">
-                    <label class="form-label">Prix unitaire (FCFA)</label>
-                    <input type="number" id="editUnitPrice" class="form-control" step="0.01" min="0.01">
+                    <label class="form-label">
+                        <i class="bi bi-rulers me-1"></i>Unité de mesure
+                    </label>
+                    <input type="text" id="editProductUnit" class="form-control" readonly tabindex="-1">
+                </div>
+
+                <hr>
+
+                {# ✅ Quantité modifiable #}
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bi bi-123 me-1"></i>Quantité <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                        <button class="btn btn-outline-secondary" type="button" id="editDecrementQty">
+                            <i class="bi bi-dash"></i>
+                        </button>
+                        <input type="number" id="editQuantity" class="form-control text-center" min="1" step="1" value="1">
+                        <button class="btn btn-outline-secondary" type="button" id="editIncrementQty">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                {# ✅ Prix unitaire modifiable #}
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bi bi-tag me-1"></i>Prix unitaire (FCFA) <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                        <input type="number" id="editUnitPrice" class="form-control" step="0.01" min="0.01">
+                        <span class="input-group-text">FCFA</span>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                 <button type="button" class="btn btn-primary" id="saveEditChanges">
-                    <span class="btn-text">Enregistrer</span>
+                    <span class="btn-text">
+                        <i class="bi bi-check-lg me-1"></i>Enregistrer
+                    </span>
                     <span class="btn-spinner"></span>
                 </button>
             </div>
@@ -548,85 +617,112 @@
     </div>
 </div>
 
-<!-- Modal de confirmation de commande avec vérification des fournisseurs -->
+<!-- ✅ Modal de confirmation de commande — FOURNISSEUR OPTIONNEL -->
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title"><i class="bi bi-check-circle"></i> Confirmer la commande</h5>
+                <h5 class="modal-title">
+                    <i class="bi bi-check-circle me-2"></i>Confirmer la commande
+                </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                {% if suppliers is empty %}
-                    <div class="alert alert-danger">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        <strong>Aucun fournisseur disponible</strong><br>
-                        Veuillez activer des fournisseurs ou contacter l'administrateur.
-                    </div>
-                {% else %}
-                    <form id="confirmationForm">
-                        <div class="row g-3">
-                            <div class="col-md-12">
-                                <label class="form-label">Fournisseur *</label>
-                                <select name="supplier_id" id="supplierSelect" class="form-select" required>
-                                    <option value="">Sélectionner un fournisseur</option>
-                                    {% for supplier in suppliers %}
-                                       <option value="{{ supplier.id }}">{{ supplier.name }} ({{ supplier.email }})</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">Bon de commande</label>
-                                <input type="text" name="bon_commande" class="form-control" placeholder="Optionnel - Numéro ou référence">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">Notes</label>
-                                <textarea name="notes" class="form-control" rows="2" placeholder="Instructions de livraison, conditions particulières..."></textarea>
-                            </div>
-                            <div class="col-12">
-                                <hr>
-                                <h6>Options de notification</h6>
-                                <div class="row g-2">
-                                    <div class="col-md-4">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" name="notify_by_email" value="1" checked>
-                                            <label class="form-check-label">Email</label>
-                                        </div>
+                <form id="confirmationForm">
+                    <div class="row g-3">
+                        {# ✅ Fournisseur OPTIONNEL #}
+                        <div class="col-md-12">
+                            <label class="form-label">
+                                <i class="bi bi-truck me-1"></i>Fournisseur
+                                <span class="optional-badge">optionnel</span>
+                            </label>
+                            <select name="supplier_id" id="supplierSelect" class="form-select">
+                                <option value="">-- Aucun fournisseur (achat interne) --</option>
+                                {% for supplier in suppliers %}
+                                    <option value="{{ supplier.id }}">{{ supplier.name }} ({{ supplier.email }})</option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Laissez vide pour un achat interne (sans fournisseur)
+                            </small>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">
+                                <i class="bi bi-file-text me-1"></i>Bon de commande
+                            </label>
+                            <input type="text" name="bon_commande" class="form-control" placeholder="Optionnel - Numéro ou référence">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">
+                                <i class="bi bi-sticky me-1"></i>Notes
+                            </label>
+                            <textarea name="notes" class="form-control" rows="2" placeholder="Instructions de livraison, conditions particulières..."></textarea>
+                        </div>
+
+                        {# ✅ Notifications uniquement si fournisseur #}
+                        <div class="col-12" id="notificationSection">
+                            <hr>
+                            <h6>
+                                <i class="bi bi-bell me-2"></i>Options de notification
+                            </h6>
+                            <small class="text-muted d-block mb-2">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Ces options ne s'appliquent qu'aux commandes avec fournisseur
+                            </small>
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" name="notify_by_email" id="notifyByEmail" value="1" checked>
+                                        <label class="form-check-label" for="notifyByEmail">
+                                            <i class="bi bi-envelope me-1"></i>Email
+                                        </label>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" name="notify_by_whatsapp" value="1" checked>
-                                            <label class="form-check-label">WhatsApp</label>
-                                        </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" name="notify_by_whatsapp" id="notifyByWhatsapp" value="1" checked>
+                                        <label class="form-check-label" for="notifyByWhatsapp">
+                                            <i class="bi bi-whatsapp me-1"></i>WhatsApp
+                                        </label>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" name="send_image" value="1" checked>
-                                            <label class="form-check-label">Inclure image produit (WhatsApp)</label>
-                                        </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" name="send_image" id="sendImage" value="1" checked>
+                                        <label class="form-check-label" for="sendImage">
+                                            <i class="bi bi-image me-1"></i>Inclure image
+                                        </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <label class="form-label">Message personnalisé (optionnel)</label>
-                                <textarea name="confirmation_message" class="form-control" rows="2" placeholder="Ajouter un message pour le fournisseur..."></textarea>
-                            </div>
                         </div>
-                    </form>
-                    <div class="alert alert-info mt-3">
-                        <i class="bi bi-info-circle"></i>
-                        La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
+
+                        <div class="col-12" id="customMessageSection">
+                            <label class="form-label">
+                                <i class="bi bi-chat-left-text me-1"></i>Message personnalisé (optionnel)
+                            </label>
+                            <textarea name="confirmation_message" class="form-control" rows="2" placeholder="Ajouter un message pour le fournisseur..."></textarea>
+                        </div>
                     </div>
-                {% endif %}
+                </form>
+                <div class="alert alert-info mt-3 mb-0">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <span id="confirmationInfoText">
+                        La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
+                    </span>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                {% if suppliers is not empty %}
-                    <button type="button" class="btn btn-primary" id="confirmPurchaseBtn">
-                        <span class="btn-text">Confirmer la commande</span>
-                        <span class="btn-spinner"></span>
-                    </button>
-                {% endif %}
+                <button type="button" class="btn btn-primary" id="confirmPurchaseBtn">
+                    <span class="btn-text">
+                        <i class="bi bi-check-lg me-1"></i>Confirmer la commande
+                    </span>
+                    <span class="btn-spinner"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -655,10 +751,15 @@
     const cartTotalSpan = document.getElementById('cartTotal');
     const confirmOrderBtn = document.getElementById('confirmOrderBtn');
 
-    const addProductModal = new bootstrap.Modal(document.getElementById('addProductModal'));
-    const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
-    const removeModal = new bootstrap.Modal(document.getElementById('removeCartItemModal'));
-    const confirmModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+    const addProductModalEl = document.getElementById('addProductModal');
+    const editModalEl = document.getElementById('editItemModal');
+    const removeModalEl = document.getElementById('removeCartItemModal');
+    const confirmModalEl = document.getElementById('confirmationModal');
+
+    const addProductModal = new bootstrap.Modal(addProductModalEl);
+    const editModal = new bootstrap.Modal(editModalEl);
+    const removeModal = new bootstrap.Modal(removeModalEl);
+    const confirmModal = new bootstrap.Modal(confirmModalEl);
 
     function setButtonLoading(btn, isLoading) {
         if (!btn) return;
@@ -713,21 +814,34 @@
     // Éléments du modal d'édition
     const editProductId = document.getElementById('editProductId');
     const editProductName = document.getElementById('editProductName');
+    const editProductBarcode = document.getElementById('editProductBarcode');
+    const editProductUnit = document.getElementById('editProductUnit');
     const editQuantity = document.getElementById('editQuantity');
     const editUnitPrice = document.getElementById('editUnitPrice');
     const saveEditChangesBtn = document.getElementById('saveEditChanges');
+    const editIncrementQty = document.getElementById('editIncrementQty');
+    const editDecrementQty = document.getElementById('editDecrementQty');
 
     // Éléments du modal de suppression
     const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
     let pendingRemoveProductId = null;
 
-    // Gestion des quantités
+    // Gestion des quantités (ajout)
     incrementQty?.addEventListener('click', () => {
         productQuantityInput.value = parseInt(productQuantityInput.value) + 1;
     });
     decrementQty?.addEventListener('click', () => {
         let val = parseInt(productQuantityInput.value);
         if (val > 1) productQuantityInput.value = val - 1;
+    });
+
+    // Gestion des quantités (édition)
+    editIncrementQty?.addEventListener('click', () => {
+        editQuantity.value = parseInt(editQuantity.value) + 1;
+    });
+    editDecrementQty?.addEventListener('click', () => {
+        let val = parseInt(editQuantity.value);
+        if (val > 1) editQuantity.value = val - 1;
     });
 
     // Ajout au panier
@@ -749,7 +863,7 @@
         }
 
         setButtonLoading(confirmAddBtn, true);
-        setModalLoading(document.getElementById('addProductModal'), true);
+        setModalLoading(addProductModalEl, true);
 
         const formData = new FormData();
         formData.append('product_id', currentProduct.id);
@@ -777,7 +891,7 @@
             showToast('error', 'Erreur lors de l\'ajout');
         } finally {
             setButtonLoading(confirmAddBtn, false);
-            setModalLoading(document.getElementById('addProductModal'), false);
+            setModalLoading(addProductModalEl, false);
         }
     });
 
@@ -902,10 +1016,16 @@
             const productName = editBtn.dataset.name;
             const quantity = parseInt(editBtn.dataset.quantity);
             const price = parseFloat(editBtn.dataset.price);
+            const barcode = editBtn.dataset.barcode || '';
+            const unit = editBtn.dataset.unit || '';
+
             editProductId.value = productId;
             editProductName.value = productName;
+            editProductBarcode.value = barcode;
+            editProductUnit.value = unit || '—';
             editQuantity.value = quantity;
             editUnitPrice.value = price;
+
             editModal.show();
         }
     });
@@ -926,7 +1046,7 @@
         }
 
         setButtonLoading(saveEditChangesBtn, true);
-        setModalLoading(document.getElementById('editItemModal'), true);
+        setModalLoading(editModalEl, true);
 
         const updateUrl = updateItemUrlTemplate.replace('{productId}', productId);
         try {
@@ -948,7 +1068,7 @@
             showToast('error', 'Erreur lors de la modification');
         } finally {
             setButtonLoading(saveEditChangesBtn, false);
-            setModalLoading(document.getElementById('editItemModal'), false);
+            setModalLoading(editModalEl, false);
         }
     });
 
@@ -956,10 +1076,10 @@
     confirmRemoveBtn?.addEventListener('click', async () => {
         if (pendingRemoveProductId !== null) {
             setButtonLoading(confirmRemoveBtn, true);
-            setModalLoading(document.getElementById('removeCartItemModal'), true);
+            setModalLoading(removeModalEl, true);
             await removeFromCart(pendingRemoveProductId);
             setButtonLoading(confirmRemoveBtn, false);
-            setModalLoading(document.getElementById('removeCartItemModal'), false);
+            setModalLoading(removeModalEl, false);
             pendingRemoveProductId = null;
             removeModal.hide();
         }
@@ -1039,7 +1159,9 @@
                                     data-id="${item.product_id}"
                                     data-name="${escapeHtml(item.product_name)}"
                                     data-quantity="${item.quantity}"
-                                    data-price="${item.unit_price}">
+                                    data-price="${item.unit_price}"
+                                    data-barcode="${item.barcode || ''}"
+                                    data-unit="${item.unit || ''}">
                                 <i class="bi bi-pencil"></i> Modifier
                             </button>
                             <button class="btn btn-sm btn-outline-danger remove-btn" data-id="${item.product_id}">
@@ -1084,17 +1206,44 @@
         }
     });
 
+    // ✅ Gestion du fournisseur optionnel : masquer les notifications si vide
+    const supplierSelect = document.getElementById('supplierSelect');
+    const notificationSection = document.getElementById('notificationSection');
+    const customMessageSection = document.getElementById('customMessageSection');
+    const confirmationInfoText = document.getElementById('confirmationInfoText');
+
+    function toggleNotificationSections() {
+        const hasSupplier = supplierSelect && supplierSelect.value !== '';
+        if (notificationSection) {
+            notificationSection.style.display = hasSupplier ? '' : 'none';
+        }
+        if (customMessageSection) {
+            customMessageSection.style.display = hasSupplier ? '' : 'none';
+        }
+        if (confirmationInfoText) {
+            confirmationInfoText.innerHTML = hasSupplier
+                ? 'La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.'
+                : 'Aucun fournisseur sélectionné : la commande sera enregistrée comme <strong>achat interne</strong> et aucune notification ne sera envoyée.';
+        }
+    }
+
+    supplierSelect?.addEventListener('change', toggleNotificationSections);
+
     // Confirmation commande
     const confirmPurchaseBtn = document.getElementById('confirmPurchaseBtn');
     
-    confirmOrderBtn?.addEventListener('click', () => confirmModal.show());
+    confirmOrderBtn?.addEventListener('click', () => {
+        confirmModal.show();
+        // Initialiser l'état des sections de notification
+        setTimeout(toggleNotificationSections, 100);
+    });
     
     confirmPurchaseBtn?.addEventListener('click', async () => {
         const form = document.getElementById('confirmationForm');
         const formData = new FormData(form);
         
         setButtonLoading(confirmPurchaseBtn, true);
-        setModalLoading(document.getElementById('confirmationModal'), true);
+        setModalLoading(confirmModalEl, true);
         
         try {
             const response = await fetch(confirmUrl, { method: 'POST', body: formData });
@@ -1106,13 +1255,13 @@
             } else {
                 showToast('error', data.error);
                 setButtonLoading(confirmPurchaseBtn, false);
-                setModalLoading(document.getElementById('confirmationModal'), false);
+                setModalLoading(confirmModalEl, false);
             }
         } catch (error) {
             console.error('Erreur confirmation:', error);
             showToast('error', 'Erreur lors de la confirmation');
             setButtonLoading(confirmPurchaseBtn, false);
-            setModalLoading(document.getElementById('confirmationModal'), false);
+            setModalLoading(confirmModalEl, false);
         }
     });
 
@@ -1155,7 +1304,7 @@
         if (typeof $.fn.select2 !== 'undefined') {
             $('#supplierSelect').select2({
                 theme: 'bootstrap-5',
-                placeholder: 'Rechercher un fournisseur...',
+                placeholder: 'Aucun fournisseur (achat interne)',
                 allowClear: true,
                 dropdownParent: $('#confirmationModal')
             });

@@ -49,7 +49,7 @@ class __TwigTemplate_692294d0b1c2056dad41464248b9b736 extends Template
         yield "
 <div class=\"row g-3 g-md-4\">
     <!-- Carte Informations fournisseur -->
-    <div class=\"col-12 col-lg-12\">
+    <div class=\"col-12\">
         <div class=\"card shadow-lg border-0 h-100 card-hover\">
             <div class=\"card-header bg-gradient-primary text-white py-2 py-md-3\">
                 <h5 class=\"card-title mb-0 fs-6 fs-md-5\">
@@ -70,7 +70,7 @@ class __TwigTemplate_692294d0b1c2056dad41464248b9b736 extends Template
             </div>
             <div class=\"card-body p-3 p-md-4\">
                 <!-- Informations de base -->
-                <div class=\"row g-2 g-md-3\">
+                <div class=\"row g-3\">
                     <div class=\"col-12 col-md-6\">
                         <div class=\"form-floating\">
                             ";
@@ -181,7 +181,7 @@ class __TwigTemplate_692294d0b1c2056dad41464248b9b736 extends Template
                 <hr class=\"my-3 my-md-4\">
 
                 <!-- Statut -->
-                <div class=\"card border-0 bg-light mb-3 mb-md-4\">
+                <div class=\"card border-0 bg-light mb-0\">
                     <div class=\"card-body p-3 p-md-4\">
                         <h6 class=\"card-title text-primary mb-3 fs-6 fs-md-5\">
                             <i class=\"fas fa-toggle-on me-2\"></i> Statut du fournisseur
@@ -221,44 +221,52 @@ class __TwigTemplate_692294d0b1c2056dad41464248b9b736 extends Template
                 </div>
             </div>
 
-            <!-- Footer avec boutons d'action -->
-            <div class=\"card-footer bg-light py-2 py-md-3\">
-                <div class=\"d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 gap-sm-3\">
-                    <a href=\"";
-        // line 130
+            <!-- ✅ Footer avec boutons d'action responsive -->
+            <div class=\"card-footer bg-light py-3\">
+                <div class=\"action-buttons-wrapper\">
+                    ";
+        // line 131
+        yield "                    <a href=\"";
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_supplier_index");
-        yield "\" class=\"btn btn-outline-secondary w-100 w-sm-auto order-2 order-sm-1\">
-                        <i class=\"fas fa-times me-2\"></i> Annuler
+        yield "\" 
+                       class=\"btn btn-outline-secondary btn-action\">
+                        <i class=\"fas fa-times me-1 me-sm-2\"></i> 
+                        <span class=\"btn-text\">Annuler</span>
                     </a>
-                    <div class=\"d-flex flex-wrap gap-2 w-100 w-sm-auto order-1 order-sm-2\">
-                        <button type=\"submit\" class=\"btn btn-primary flex-fill flex-sm-grow-0\">
-                            <i class=\"fas fa-save me-2\"></i> 
-                            ";
-        // line 136
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("button_label", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["button_label"]) || array_key_exists("button_label", $context) ? $context["button_label"] : (function () { throw new RuntimeError('Variable "button_label" does not exist.', 136, $this->source); })()), "Enregistrer")) : ("Enregistrer")), "html", null, true);
-        yield "
-                        </button>
-                        ";
+                    
+                    ";
         // line 138
+        yield "                    ";
         if ((CoreExtension::getAttribute($this->env, $this->source, ($context["supplier"] ?? null), "id", [], "any", true, true, false, 138) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 138, $this->source); })()), "id", [], "any", false, false, false, 138)))) {
             // line 139
-            yield "                            <a href=\"";
+            yield "                        <a href=\"";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_supplier_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 139, $this->source); })()), "id", [], "any", false, false, false, 139)]), "html", null, true);
-            yield "\" class=\"btn btn-info flex-fill flex-sm-grow-0\">
-                                <i class=\"fas fa-eye me-2\"></i> Voir
-                            </a>
-                        ";
+            yield "\" 
+                           class=\"btn btn-info btn-action\">
+                            <i class=\"fas fa-eye me-1 me-sm-2\"></i> 
+                            <span class=\"btn-text\">Voir</span>
+                        </a>
+                    ";
         }
-        // line 143
-        yield "                    </div>
+        // line 145
+        yield "                    
+                    ";
+        // line 147
+        yield "                    <button type=\"submit\" class=\"btn btn-primary btn-action btn-action-primary\">
+                        <i class=\"fas fa-save me-1 me-sm-2\"></i> 
+                        <span class=\"btn-text\">";
+        // line 149
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("button_label", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["button_label"]) || array_key_exists("button_label", $context) ? $context["button_label"] : (function () { throw new RuntimeError('Variable "button_label" does not exist.', 149, $this->source); })()), "Enregistrer")) : ("Enregistrer")), "html", null, true);
+        yield "</span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 ";
-        // line 149
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 149, $this->source); })()), 'form_end');
+        // line 156
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 156, $this->source); })()), 'form_end');
         
         $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
 
@@ -289,7 +297,7 @@ class __TwigTemplate_692294d0b1c2056dad41464248b9b736 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  261 => 149,  253 => 143,  245 => 139,  243 => 138,  238 => 136,  229 => 130,  212 => 116,  208 => 115,  202 => 112,  198 => 111,  195 => 110,  193 => 107,  174 => 91,  167 => 87,  164 => 86,  162 => 82,  153 => 76,  146 => 72,  143 => 71,  141 => 67,  132 => 61,  125 => 57,  122 => 56,  120 => 52,  111 => 46,  104 => 42,  101 => 41,  99 => 37,  90 => 31,  83 => 27,  80 => 26,  78 => 22,  69 => 15,  65 => 13,  61 => 11,  59 => 10,  48 => 2,);
+        return array (  269 => 156,  259 => 149,  255 => 147,  252 => 145,  242 => 139,  239 => 138,  229 => 131,  212 => 116,  208 => 115,  202 => 112,  198 => 111,  195 => 110,  193 => 107,  174 => 91,  167 => 87,  164 => 86,  162 => 82,  153 => 76,  146 => 72,  143 => 71,  141 => 67,  132 => 61,  125 => 57,  122 => 56,  120 => 52,  111 => 46,  104 => 42,  101 => 41,  99 => 37,  90 => 31,  83 => 27,  80 => 26,  78 => 22,  69 => 15,  65 => 13,  61 => 11,  59 => 10,  48 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -298,7 +306,7 @@ class __TwigTemplate_692294d0b1c2056dad41464248b9b736 extends Template
 {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
 <div class=\"row g-3 g-md-4\">
     <!-- Carte Informations fournisseur -->
-    <div class=\"col-12 col-lg-12\">
+    <div class=\"col-12\">
         <div class=\"card shadow-lg border-0 h-100 card-hover\">
             <div class=\"card-header bg-gradient-primary text-white py-2 py-md-3\">
                 <h5 class=\"card-title mb-0 fs-6 fs-md-5\">
@@ -312,7 +320,7 @@ class __TwigTemplate_692294d0b1c2056dad41464248b9b736 extends Template
             </div>
             <div class=\"card-body p-3 p-md-4\">
                 <!-- Informations de base -->
-                <div class=\"row g-2 g-md-3\">
+                <div class=\"row g-3\">
                     <div class=\"col-12 col-md-6\">
                         <div class=\"form-floating\">
                             {{ form_widget(form.name, {'attr': {
@@ -393,7 +401,7 @@ class __TwigTemplate_692294d0b1c2056dad41464248b9b736 extends Template
                 <hr class=\"my-3 my-md-4\">
 
                 <!-- Statut -->
-                <div class=\"card border-0 bg-light mb-3 mb-md-4\">
+                <div class=\"card border-0 bg-light mb-0\">
                     <div class=\"card-body p-3 p-md-4\">
                         <h6 class=\"card-title text-primary mb-3 fs-6 fs-md-5\">
                             <i class=\"fas fa-toggle-on me-2\"></i> Statut du fournisseur
@@ -420,23 +428,30 @@ class __TwigTemplate_692294d0b1c2056dad41464248b9b736 extends Template
                 </div>
             </div>
 
-            <!-- Footer avec boutons d'action -->
-            <div class=\"card-footer bg-light py-2 py-md-3\">
-                <div class=\"d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 gap-sm-3\">
-                    <a href=\"{{ path('app_admin_supplier_index') }}\" class=\"btn btn-outline-secondary w-100 w-sm-auto order-2 order-sm-1\">
-                        <i class=\"fas fa-times me-2\"></i> Annuler
+            <!-- ✅ Footer avec boutons d'action responsive -->
+            <div class=\"card-footer bg-light py-3\">
+                <div class=\"action-buttons-wrapper\">
+                    {# Bouton Annuler #}
+                    <a href=\"{{ path('app_admin_supplier_index') }}\" 
+                       class=\"btn btn-outline-secondary btn-action\">
+                        <i class=\"fas fa-times me-1 me-sm-2\"></i> 
+                        <span class=\"btn-text\">Annuler</span>
                     </a>
-                    <div class=\"d-flex flex-wrap gap-2 w-100 w-sm-auto order-1 order-sm-2\">
-                        <button type=\"submit\" class=\"btn btn-primary flex-fill flex-sm-grow-0\">
-                            <i class=\"fas fa-save me-2\"></i> 
-                            {{ button_label|default('Enregistrer') }}
-                        </button>
-                        {% if supplier.id is defined and supplier.id is not null %}
-                            <a href=\"{{ path('app_admin_supplier_show', {'id': supplier.id}) }}\" class=\"btn btn-info flex-fill flex-sm-grow-0\">
-                                <i class=\"fas fa-eye me-2\"></i> Voir
-                            </a>
-                        {% endif %}
-                    </div>
+                    
+                    {# Bouton Voir (uniquement en édition) #}
+                    {% if supplier.id is defined and supplier.id is not null %}
+                        <a href=\"{{ path('app_admin_supplier_show', {'id': supplier.id}) }}\" 
+                           class=\"btn btn-info btn-action\">
+                            <i class=\"fas fa-eye me-1 me-sm-2\"></i> 
+                            <span class=\"btn-text\">Voir</span>
+                        </a>
+                    {% endif %}
+                    
+                    {# Bouton Enregistrer (principal, toujours à droite sur desktop) #}
+                    <button type=\"submit\" class=\"btn btn-primary btn-action btn-action-primary\">
+                        <i class=\"fas fa-save me-1 me-sm-2\"></i> 
+                        <span class=\"btn-text\">{{ button_label|default('Enregistrer') }}</span>
+                    </button>
                 </div>
             </div>
         </div>

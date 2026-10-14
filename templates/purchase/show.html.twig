@@ -6,6 +6,9 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
+    /* ============================================
+       CARTES STATISTIQUES
+       ============================================ */
     .stat-card {
         border-radius: 1rem;
         transition: all 0.3s ease;
@@ -16,16 +19,20 @@
         transform: translateY(-5px);
         box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
     }
+
+    /* ============================================
+       TIMELINE HISTORIQUE
+       ============================================ */
     .timeline {
         position: relative;
         padding: 1rem 0;
     }
     .timeline-item {
         position: relative;
-        padding-left: 3rem;
-        padding-bottom: 1.5rem;
+        padding-left: 3.5rem;
+        padding-bottom: 1.75rem;
         border-left: 2px solid #e9ecef;
-        margin-left: 1rem;
+        margin-left: 1.25rem;
     }
     .timeline-item:last-child {
         border-left-color: transparent;
@@ -33,10 +40,10 @@
     }
     .timeline-icon {
         position: absolute;
-        left: -1.2rem;
+        left: -1.3rem;
         top: 0;
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 2.6rem;
+        height: 2.6rem;
         background: white;
         border-radius: 50%;
         display: flex;
@@ -44,7 +51,22 @@
         justify-content: center;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         z-index: 1;
+        transition: all 0.3s ease;
     }
+    .timeline-icon i {
+        font-size: 1.1rem;
+    }
+    .timeline-item:hover .timeline-icon {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .timeline-content {
+        padding-top: 0.25rem;
+    }
+
+    /* ============================================
+       BADGES ET BOUTONS
+       ============================================ */
     .badge-status {
         font-size: 0.85rem;
         padding: 0.4rem 1rem;
@@ -54,12 +76,6 @@
     .btn-pdf {
         padding: 0.4rem 1rem;
         font-size: 0.85rem;
-        border-radius: 0.5rem;
-    }
-    .table-product-img {
-        width: 45px;
-        height: 45px;
-        object-fit: cover;
         border-radius: 0.5rem;
     }
     .badge-issue {
@@ -73,11 +89,31 @@
         align-items: center;
         gap: 0.25rem;
     }
+    .badge-issue.status-recovered {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+    .badge-issue.status-resolved {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+    .badge-issue.status-pending {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+    .badge-issue.status-rejected {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
     .btn-view-issue {
         padding: 0.2rem 0.5rem;
         font-size: 0.7rem;
         border-radius: 0.375rem;
     }
+
+    /* ============================================
+       AVATAR UTILISATEUR
+       ============================================ */
     .user-avatar-lg {
         width: 70px;
         height: 70px;
@@ -87,37 +123,155 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+        border: 3px solid #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
+    .user-avatar-lg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .user-avatar-lg i {
+        color: white;
+    }
+
+    /* ============================================
+       LIGNES D'INFORMATION
+       ============================================ */
     .info-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 0.6rem 0;
         border-bottom: 1px solid #f0f0f0;
+        gap: 0.5rem;
+        flex-wrap: wrap;
     }
     .info-row:last-child {
         border-bottom: none;
     }
+    .info-label {
+        color: #6b7280;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    .info-value {
+        font-weight: 600;
+        color: #1f2937;
+        text-align: right;
+        word-break: break-word;
+    }
+
+    /* ============================================
+       IMAGE PRODUIT
+       ============================================ */
+    .table-product-img {
+        width: 45px;
+        height: 45px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+        flex-shrink: 0;
+    }
+
+    /* ============================================
+       EMAIL CLIQUABLE
+       ============================================ */
+    .email-link {
+        color: #0463f1;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        word-break: break-all;
+    }
+    .email-link:hover {
+        color: #0346b8;
+        text-decoration: underline;
+    }
+    .email-link i {
+        font-size: 0.85em;
+        margin-left: 0.25rem;
+        opacity: 0.6;
+    }
+
+    /* ============================================
+       RESPONSIVE MOBILE
+       ============================================ */
     @media (max-width: 768px) {
         .timeline-item {
-            padding-left: 2.5rem;
+            padding-left: 2.75rem;
+            margin-left: 0.75rem;
         }
         .timeline-icon {
-            width: 2rem;
-            height: 2rem;
-            left: -1rem;
+            width: 2.2rem;
+            height: 2.2rem;
+            left: -1.1rem;
         }
+        .timeline-icon i {
+            font-size: 0.9rem;
+        }
+
         .table th, .table td {
             padding: 0.75rem;
             font-size: 0.85rem;
         }
+
+        .user-avatar-lg {
+            width: 55px;
+            height: 55px;
+        }
+
+        .btn-pdf {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.78rem;
+        }
+
+        .info-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .info-value {
+            text-align: left;
+        }
+
+        h1.h2 {
+            font-size: 1.25rem;
+        }
+
+        .fs-2 {
+            font-size: 1.4rem !important;
+        }
     }
+
+    @media (max-width: 480px) {
+        .d-flex.gap-2.flex-wrap {
+            width: 100%;
+        }
+        .d-flex.gap-2.flex-wrap .btn {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        .timeline-item {
+            padding-left: 2.5rem;
+            margin-left: 0.5rem;
+        }
+    }
+
+    /* ============================================
+       ANIMATIONS
+       ============================================ */
     @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
     .animated-card {
-        animation: fadeInUp 0.4s ease-out;
+        animation: fadeInUp 0.4s ease-out both;
+    }
+
+    @media (max-width: 768px) {
+        .stat-card:hover {
+            transform: none;
+        }
     }
 </style>
 {% endblock %}
@@ -125,6 +279,7 @@
 {% block body %}
 <div class="container-fluid py-4">
     <div class="animated-card">
+        <!-- EN-TÊTE -->
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
             <div>
                 <nav aria-label="breadcrumb">
@@ -179,7 +334,9 @@
             </div>
         </div>
 
+        <!-- CARTES PRINCIPALES -->
         <div class="row g-4 mb-4">
+            <!-- Informations générales -->
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="card stat-card shadow-sm h-100">
                     <div class="card-header bg-white py-3 border-0">
@@ -228,6 +385,7 @@
                 </div>
             </div>
 
+            <!-- Fournisseur (optionnel) -->
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="card stat-card shadow-sm h-100">
                     <div class="card-header bg-white py-3 border-0">
@@ -245,26 +403,45 @@
                             {% endif %}
                             <div class="info-row">
                                 <span class="info-label">Téléphone</span>
-                                <span class="info-value">{{ purchase.supplier.phone }}</span>
+                                <span class="info-value">
+                                    {% if purchase.supplier.phone %}
+                                        <a href="tel:{{ purchase.supplier.phone }}" class="email-link">
+                                            {{ purchase.supplier.phone }}
+                                        </a>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </span>
                             </div>
                             <div class="info-row">
                                 <span class="info-label">Email</span>
-                                <span class="info-value small">{{ purchase.supplier.email }}</span>
+                                <span class="info-value small">
+                                    {% if purchase.supplier.email %}
+                                        <a href="mailto:{{ purchase.supplier.email }}" class="email-link">
+                                            {{ purchase.supplier.email }}
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </span>
                             </div>
                             <div class="info-row">
                                 <span class="info-label">Adresse</span>
-                                <span class="info-value small">{{ purchase.supplier.adress }}</span>
+                                <span class="info-value small">{{ purchase.supplier.adress|default('—') }}</span>
                             </div>
                         {% else %}
                             <div class="text-center text-muted py-4">
-                                <i class="fas fa-building fa-3x mb-2 opacity-50"></i>
-                                <p>Aucun fournisseur renseigné</p>
+                                <i class="fas fa-building fa-3x mb-3 opacity-50"></i>
+                                <h6 class="mb-1">Achat interne</h6>
+                                <p class="small mb-0">Aucun fournisseur associé à cette commande</p>
                             </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
 
+            <!-- Créateur -->
             <div class="col-12 col-md-12 col-lg-4">
                 <div class="card stat-card shadow-sm h-100">
                     <div class="card-header bg-white py-3 border-0">
@@ -278,19 +455,32 @@
                                 {% if purchase.user.photo %}
                                     <img src="{{ asset('uploads/users/' ~ purchase.user.photo) }}" 
                                          alt="{{ purchase.user.fullName }}"
-                                         class="w-100 h-100 rounded-circle object-fit-cover">
+                                         onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=&quot;fas fa-user fa-2x&quot;></i>';">
                                 {% else %}
-                                    <i class="fas fa-user-circle fa-3x text-secondary"></i>
+                                    <i class="fas fa-user fa-2x"></i>
                                 {% endif %}
                             </div>
-                            <div>
-                                <div class="fw-bold fs-5">{{ purchase.user.fullName }}</div>
-                                <div class="small text-muted">
-                                    <i class="fas fa-envelope me-1"></i> {{ purchase.user.email }}
-                                </div>
-                                <div class="small text-muted">
-                                    <i class="fas fa-phone me-1"></i> {{ purchase.user.phone }}
-                                </div>
+                            <div class="flex-grow-1" style="min-width: 0;">
+                                <div class="fw-bold fs-5 text-truncate">{{ purchase.user.fullName }}</div>
+                                {% if purchase.user.email %}
+                                    <div class="small text-muted text-truncate">
+                                        <i class="fas fa-envelope me-1"></i>
+                                        <a href="mailto:{{ purchase.user.email }}?subject=À propos de la commande {{ purchase.purchaseNumber }}" 
+                                           class="email-link"
+                                           title="Envoyer un email à {{ purchase.user.fullName }}">
+                                            {{ purchase.user.email }}
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                {% if purchase.user.phone %}
+                                    <div class="small text-muted">
+                                        <i class="fas fa-phone me-1"></i>
+                                        <a href="tel:{{ purchase.user.phone }}" class="email-link">
+                                            {{ purchase.user.phone }}
+                                        </a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                         <hr>
@@ -307,6 +497,7 @@
             </div>
         </div>
 
+        <!-- HISTORIQUE DES STATUTS -->
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-white py-3">
                 <h5 class="mb-0 fw-semibold">
@@ -314,37 +505,67 @@
                 </h5>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="timeline">
-                            {% for event in purchase.statusHistory %}
-                                {% set statusColor = event.status == 'Création' ? 'primary' : (event.status == 'Confirmation' ? 'success' : (event.status == 'Réception' ? 'info' : (event.status == 'Annulation' ? 'danger' : 'secondary'))) %}
-                                <div class="timeline-item">
-                                    <div class="timeline-icon bg-white border border-{{ statusColor }} shadow-sm">
-                                        <i class="fas {{ event.status == 'Création' ? 'fa-plus-circle' : (event.status == 'Confirmation' ? 'fa-check-circle' : (event.status == 'Réception' ? 'fa-box-open' : (event.status == 'Annulation' ? 'fa-ban' : 'fa-edit'))) }} text-{{ statusColor }}"></i>
-                                    </div>
-                                    <div class="timeline-content">
-                                        <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                            <strong class="fs-6">{{ event.status }}</strong>
-                                            <small class="text-muted">{{ event.date|date('d/m/Y H:i') }}</small>
-                                        </div>
-                                        <div class="small text-muted mt-1">
-                                            <i class="fas fa-user me-1"></i> par {{ event.by ? event.by.fullName : 'Système' }}
-                                        </div>
-                                        {% if event.reason is defined and event.reason %}
-                                            <div class="small text-danger mt-1">
-                                                <i class="fas fa-comment me-1"></i> Motif : {{ event.reason }}
-                                            </div>
-                                        {% endif %}
-                                    </div>
+                <div class="timeline">
+                    {% for event in purchase.statusHistory %}
+                        {% set statusColor = event.status == 'Création' ? 'primary' : (event.status == 'Confirmation' ? 'success' : (event.status == 'Réception' ? 'info' : (event.status == 'Annulation' ? 'danger' : 'secondary'))) %}
+                        <div class="timeline-item">
+                            <div class="timeline-icon bg-white border border-{{ statusColor }} shadow-sm">
+                                <i class="fas {{ event.status == 'Création' ? 'fa-plus-circle' : (event.status == 'Confirmation' ? 'fa-check-circle' : (event.status == 'Réception' ? 'fa-box-open' : (event.status == 'Annulation' ? 'fa-ban' : 'fa-edit'))) }} text-{{ statusColor }}"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+                                    <strong class="fs-6">{{ event.status }}</strong>
+                                    <small class="text-muted">
+                                        <i class="far fa-clock me-1"></i>
+                                        {{ event.date|date('d/m/Y H:i') }}
+                                    </small>
                                 </div>
-                            {% endfor %}
+
+                                <div class="d-flex align-items-center gap-2 mt-2">
+                                    {% if event.by %}
+                                        <div class="user-avatar-sm" style="width: 32px; height: 32px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                                            {% if event.by.photo %}
+                                                <img src="{{ asset('uploads/users/' ~ event.by.photo) }}" 
+                                                     alt="{{ event.by.fullName }}"
+                                                     style="width: 100%; height: 100%; object-fit: cover;"
+                                                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;background:linear-gradient(135deg, #667eea 0%, #0463f1 100%);display:flex;align-items:center;justify-content:center;color:white;font-size:0.8rem;&quot;><i class=&quot;fas fa-user&quot;></i></div>';">
+                                            {% else %}
+                                                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #0463f1 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="small text-muted">
+                                            <span class="fw-medium">{{ event.by.fullName }}</span>
+                                            {% if event.by.email %}
+                                                <span class="text-muted mx-1">•</span>
+                                                <a href="mailto:{{ event.by.email }}?subject=À propos de la commande {{ purchase.purchaseNumber }}" 
+                                                   class="email-link small"
+                                                   title="Envoyer un email à {{ event.by.fullName }}">
+                                                    <i class="fas fa-envelope me-1"></i>{{ event.by.email }}
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <div class="small text-muted">
+                                            <i class="fas fa-robot me-1"></i> Système
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                {% if event.reason is defined and event.reason %}
+                                    <div class="small text-danger mt-2 p-2" style="background: #fef2f2; border-radius: 6px;">
+                                        <i class="fas fa-comment me-1"></i> <strong>Motif :</strong> {{ event.reason }}
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
 
+        <!-- PRODUITS COMMANDÉS -->
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white py-3">
                 <h5 class="mb-0 fw-semibold">
@@ -352,37 +573,23 @@
                 </h5>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
+                <table class="table table-hover mb-0 align-middle">
                     <thead class="table-light">
                         <tr>
                             <th style="width: 30%">Produit</th>
-                            <th style="width: 12%">Code-barres</th>
+                            <th style="width: 12%" class="d-none d-md-table-cell">Code-barres</th>
                             <th style="width: 8%" class="text-center">Quantité</th>
                             <th style="width: 12%" class="text-end">Prix unitaire</th>
                             <th style="width: 12%" class="text-end">Total</th>
-                            <th style="width: 13%">Lot</th>
+                            <th style="width: 13%" class="d-none d-lg-table-cell">Lot</th>
                             <th style="width: 13%">Problème</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {# ✅ UNE SEULE BOUCLE (avant il y en avait deux imbriquées) #}
                         {% for item in purchase.purchaseItems %}
-                            {# Récupérer l'avoir associé via l'ID stocké dans StockBatch #}
-                            {% set hasIssue = false %}
-                            {% set creditNoteId = null %}
-                            {% set creditNoteStatus = null %}
-                            {% set creditNoteNumber = null %}
-                            
-                            {% for stockBatch in item.product.stockBatches %}
-                                {% if stockBatch.purchaseItemId == item.id %}
-                                    {% if stockBatch.supplierCreditNoteId %}
-                                        {% set hasIssue = true %}
-                                        {% set creditNoteId = stockBatch.supplierCreditNoteId %}
-                                        {% set creditNoteStatus = stockBatch.issueStatus %}
-                                        {% set creditNoteNumber = 'AVR-' ~ creditNoteId %}
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            
+                            {% set creditNote = creditNotesByItemId[item.id] ?? null %}
+
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -405,11 +612,13 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><code class="small">{{ item.product.barcode }}</code></td>
+                                <td class="d-none d-md-table-cell">
+                                    <code class="small">{{ item.product.barcode }}</code>
+                                </td>
                                 <td class="text-center">{{ item.quantity }}</td>
                                 <td class="text-end">{{ item.unitPrice|number_format(0, ',', ' ') }} FCFA</td>
                                 <td class="text-end fw-bold text-primary">{{ item.totalPrice|number_format(0, ',', ' ') }} FCFA</td>
-                                <td>
+                                <td class="d-none d-lg-table-cell">
                                     {% if item.batchNumber %}
                                         <span class="badge bg-secondary">
                                             <i class="fas fa-tag me-1"></i>{{ item.batchNumber }}
@@ -419,17 +628,23 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if hasIssue and creditNoteId %}
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span class="badge-issue">
-                                                <i class="fas fa-exclamation-triangle"></i>
-                                                {% if creditNoteStatus %}
-                                                    {{ creditNoteStatus|replace({'_': ' '})|capitalize }}
+                                    {# ✅ Utilisation du VRAI statut actuel de l'avoir #}
+                                    {% if creditNote %}
+                                        {% set statusClass = 'status-' ~ (creditNote.status|lower) %}
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <span class="badge-issue {{ statusClass }}">
+                                                {% if creditNote.status in ['recovered', 'resolved'] %}
+                                                    <i class="fas fa-check-circle"></i>
+                                                {% elseif creditNote.status == 'pending' %}
+                                                    <i class="fas fa-clock"></i>
+                                                {% elseif creditNote.status == 'rejected' %}
+                                                    <i class="fas fa-times-circle"></i>
                                                 {% else %}
-                                                    Problème signalé
+                                                    <i class="fas fa-exclamation-triangle"></i>
                                                 {% endif %}
+                                                {{ creditNote.status|replace({'_': ' '})|capitalize }}
                                             </span>
-                                            <a href="{{ path('app_supplier_credit_note_show', {'id': creditNoteId}) }}" 
+                                            <a href="{{ path('app_supplier_credit_note_show', {'id': creditNote.id}) }}" 
                                                class="btn btn-sm btn-outline-danger btn-view-issue"
                                                target="_blank">
                                                 <i class="fas fa-eye me-1"></i> Voir
@@ -471,6 +686,7 @@
     </div>
 </div>
 
+<!-- Modal annulation -->
 <div class="modal fade" id="cancelModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -484,7 +700,11 @@
                 <div class="modal-body">
                     <div class="alert alert-warning mb-3">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        L'annulation enverra une notification au fournisseur.
+                        {% if purchase.supplier %}
+                            L'annulation enverra une notification au fournisseur.
+                        {% else %}
+                            Confirmez-vous l'annulation de cet achat interne ?
+                        {% endif %}
                     </div>
                     <div class="mb-3">
                         <label for="cancelReason" class="form-label fw-bold">
@@ -495,7 +715,11 @@
                                   required></textarea>
                         <div class="form-text">
                             <i class="fas fa-info-circle me-1"></i>
-                            Ce motif sera visible par le fournisseur.
+                            {% if purchase.supplier %}
+                                Ce motif sera visible par le fournisseur.
+                            {% else %}
+                                Ce motif sera enregistré dans l'historique.
+                            {% endif %}
                         </div>
                     </div>
                 </div>

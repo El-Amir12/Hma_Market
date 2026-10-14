@@ -58,7 +58,7 @@
     .stat-sub {
         font-size: 0.6rem;
         margin-top: 0.25rem;
-        opacity: 0.8;
+        opacity: 0.9;
     }
     @media (min-width: 768px) {
         .stat-sub {
@@ -73,7 +73,19 @@
             font-size: 0.65rem;
         }
     }
-    
+
+    /* ============================================
+       ✅ CORRECTION : VISIBILITÉ DES ICÔNES
+       Force les icônes FontAwesome à être lisibles
+       sur tous les fonds colorés (warning, info, etc.)
+    ============================================ */
+    .stat-card .stat-label i,
+    .stat-card .stat-value i,
+    .stat-card .stat-sub i {
+        color: inherit !important;
+        opacity: 1 !important;
+    }
+
     /* Cartes avec fond coloré */
     .card-bg-primary {
         background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%) !important;
@@ -99,16 +111,16 @@
         background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
         color: white;
     }
-    
+
     .card-bg-primary .stat-icon,
     .card-bg-success .stat-icon,
     .card-bg-danger .stat-icon,
     .card-bg-warning .stat-icon,
     .card-bg-info .stat-icon,
     .card-bg-secondary .stat-icon {
-        background: rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.22);
     }
-    
+
     .card-bg-primary .stat-value,
     .card-bg-success .stat-value,
     .card-bg-danger .stat-value,
@@ -117,16 +129,39 @@
     .card-bg-secondary .stat-value {
         color: white;
     }
-    
+
+    /* ✅ Force les icônes FontAwesome à être bien blanches */
+    .card-bg-primary .stat-label i,
+    .card-bg-success .stat-label i,
+    .card-bg-danger .stat-label i,
+    .card-bg-warning .stat-label i,
+    .card-bg-info .stat-label i,
+    .card-bg-secondary .stat-label i,
+    .card-bg-primary .stat-icon i,
+    .card-bg-success .stat-icon i,
+    .card-bg-danger .stat-icon i,
+    .card-bg-warning .stat-icon i,
+    .card-bg-info .stat-icon i,
+    .card-bg-secondary .stat-icon i,
+    .card-bg-primary .stat-sub i,
+    .card-bg-success .stat-sub i,
+    .card-bg-danger .stat-sub i,
+    .card-bg-warning .stat-sub i,
+    .card-bg-info .stat-sub i,
+    .card-bg-secondary .stat-sub i {
+        color: #ffffff !important;
+        opacity: 1 !important;
+    }
+
     .card-bg-primary .text-muted,
     .card-bg-success .text-muted,
     .card-bg-danger .text-muted,
     .card-bg-warning .text-muted,
     .card-bg-info .text-muted,
     .card-bg-secondary .text-muted {
-        color: rgba(255,255,255,0.8) !important;
+        color: rgba(255,255,255,0.9) !important;
     }
-    
+
     .movement-row-purchase {
         border-left: 3px solid #28a745 !important;
     }
@@ -157,7 +192,7 @@
         border-color: #dee2e6;
         min-height: 38px;
     }
-    
+
     .badge i, .btn i {
         color: white !important;
     }
@@ -167,7 +202,7 @@
     .btn-primary i, .btn-success i, .btn-danger i, .btn-warning i, .btn-info i {
         color: white !important;
     }
-    
+
     /* Responsive table */
     @media (max-width: 768px) {
         .table-responsive {
@@ -188,7 +223,7 @@
             font-size: 0.7rem;
         }
     }
-    
+
     @media (max-width: 576px) {
         .container-fluid {
             padding-left: 6px !important;
@@ -389,20 +424,21 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">
-                                <i class="fas fa-pencil-alt me-1"></i> Ajustements
+                                <i class="fas fa-sliders-h me-1"></i> Ajustements
                             </div>
                             <div class="stat-value">
                                 {{ ((movementTypeStats.adjustment_in ?? 0) + (movementTypeStats.adjustment_out ?? 0))|number_format(0, ',', ' ') }}
                             </div>
                             <div class="stat-sub mt-1 d-none d-sm-block">
                                 <small>
-                                    ➕ Entrées: {{ (movementTypeStats.adjustment_in ?? 0)|number_format(0, ',', ' ') }} | 
-                                    ➖ Sorties: {{ (movementTypeStats.adjustment_out ?? 0)|number_format(0, ',', ' ') }}
+                                    <i class="fas fa-plus-circle me-1"></i> Entrées: {{ (movementTypeStats.adjustment_in ?? 0)|number_format(0, ',', ' ') }}
+                                    &nbsp;|&nbsp;
+                                    <i class="fas fa-minus-circle me-1"></i> Sorties: {{ (movementTypeStats.adjustment_out ?? 0)|number_format(0, ',', ' ') }}
                                 </small>
                             </div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-pencil-alt fa-1x fa-md-2x"></i>
+                            <i class="fas fa-sliders-h fa-1x fa-md-2x"></i>
                         </div>
                     </div>
                 </div>
@@ -462,8 +498,9 @@
                             </div>
                             <div class="stat-sub mt-1 d-none d-sm-block">
                                 <small>
-                                    ➕ Entrants: {{ (movementTypeStats.transfer_in ?? 0)|number_format(0, ',', ' ') }} | 
-                                    ➖ Sortants: {{ (movementTypeStats.transfer_out ?? 0)|number_format(0, ',', ' ') }}
+                                    <i class="fas fa-plus-circle me-1"></i> Entrants: {{ (movementTypeStats.transfer_in ?? 0)|number_format(0, ',', ' ') }}
+                                    &nbsp;|&nbsp;
+                                    <i class="fas fa-minus-circle me-1"></i> Sortants: {{ (movementTypeStats.transfer_out ?? 0)|number_format(0, ',', ' ') }}
                                 </small>
                             </div>
                         </div>
@@ -508,9 +545,6 @@
                                     </option>
                                     {% for typeKey, typeData in data.children %}
                                         <option value="{{ typeKey }}" {{ filters.movement_type == typeKey ? 'selected' }}>
-                                            {% if typeData.icon is defined %}
-                                                <i class="{{ typeData.icon }} me-1"></i>
-                                            {% endif %}
                                             {{ typeData.label }}
                                         </option>
                                     {% endfor %}
@@ -709,7 +743,7 @@
                     {% if endPage - startPage < maxVisible - 1 %}
                         {% set startPage = max(1, endPage - maxVisible + 1) %}
                     {% endif %}
-                    
+
                     {% if startPage > 1 %}
                         <li class="page-item">
                             <a class="page-link" href="{{ path('app_admin_stock_movement_index', app.request.query.all|merge({'page': 1})) }}">1</a>
@@ -718,13 +752,13 @@
                             <li class="page-item disabled"><span class="page-link">…</span></li>
                         {% endif %}
                     {% endif %}
-                    
+
                     {% for page in startPage..endPage %}
                         <li class="page-item {{ page == currentPage ? 'active' : '' }}">
                             <a class="page-link" href="{{ path('app_admin_stock_movement_index', app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
                         </li>
                     {% endfor %}
-                    
+
                     {% if endPage < totalPages %}
                         {% if endPage < totalPages - 1 %}
                             <li class="page-item disabled"><span class="page-link">…</span></li>
@@ -733,7 +767,7 @@
                             <a class="page-link" href="{{ path('app_admin_stock_movement_index', app.request.query.all|merge({'page': totalPages})) }}">{{ totalPages }}</a>
                         </li>
                     {% endif %}
-                    
+
                     {% if currentPage < totalPages %}
                         <li class="page-item">
                             <a class="page-link" href="{{ path('app_admin_stock_movement_index', app.request.query.all|merge({'page': currentPage + 1})) }}">

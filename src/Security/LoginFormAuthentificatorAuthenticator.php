@@ -35,7 +35,8 @@ class LoginFormAuthentificatorAuthenticator extends AbstractLoginFormAuthenticat
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private EntityManagerInterface $entityManager,
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
+        private LoginSuccessHandler $loginSuccessHandler
     ) {
         $this->maxAttempts = (int)($_ENV['MAX_LOGIN_ATTEMPTS'] ?? 5);
         $this->lockTimeMinutes = (int)($_ENV['LOGIN_LOCK_TIME'] ?? 15);
@@ -96,6 +97,7 @@ class LoginFormAuthentificatorAuthenticator extends AbstractLoginFormAuthenticat
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $user = $token->getUser();
+        
         if ($user instanceof User) {
             // ✅ Réinitialiser TOUT après une connexion réussie
             $user->setFailedLoginAttempts(0);
@@ -105,11 +107,9 @@ class LoginFormAuthentificatorAuthenticator extends AbstractLoginFormAuthenticat
             $this->entityManager->flush();
         }
 
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
-
-        return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
+        // ✅ DÉLÉGUER AU LoginSuccessHandler
+        // C'est lui qui gère la redirection (dashboard OU changement de mot de passe obligatoire)
+        return $this->loginSuccessHandler->onAuthenticationSuccess($request, $token);
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response

@@ -1,42 +1,53 @@
 # config/packages/security.yaml
 
 security:
+    # ============================================
+    # HASHAGE DES MOTS DE PASSE
+    # ============================================
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-        App\Entity\HmaService:
-            algorithm: auto
         App\Entity\User:
             algorithm: auto
         App\Entity\Customer:
             algorithm: auto
+        # ⚠️ HmaService n'est plus authentifiable → plus de hasher nécessaire
 
+    # ============================================
+    # PROVIDERS
+    # ============================================
     providers:
+        # ✅ Provider UNIQUE pour le back-office
         user_provider:
             entity:
                 class: App\Entity\User
                 property: email
-        hma_service_provider:
-            entity:
-                class: App\Entity\HmaService
-                property: email
+
+        # ✅ Provider pour le marketplace
         customer_provider:
             entity:
                 class: App\Entity\Customer
                 property: email
-        chain_provider:
-            chain:
-                providers: ['user_provider', 'hma_service_provider']
 
+        # ❌ SUPPRIMÉ : hma_service_provider
+        # ❌ SUPPRIMÉ : chain_provider
+        # Raison : HmaService n'est plus authentifiable.
+        # Le User owner est créé dès l'inscription.
+
+    # ============================================
+    # FIREWALLS
+    # ============================================
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        # --------------------------------------------
+        # Firewall MARKETPLACE (Customer)
+        # --------------------------------------------
         customer:
             pattern: ^/marketplace
             provider: customer_provider
             user_checker: App\Security\CustomerUserChecker
-            # ✅ Utiliser UNIQUEMENT custom_authenticator (pas form_login en plus)
             custom_authenticator: App\Security\CustomerAuthenticator
             logout:
                 path: marketplace_logout
@@ -54,9 +65,12 @@ security:
             stateless: false
             context: customer_context
 
+        # --------------------------------------------
+        # Firewall PRINCIPAL (Back-office - User uniquement)
+        # --------------------------------------------
         main:
             lazy: true
-            provider: chain_provider
+            provider: user_provider          # ✅ UNIQUEMENT user_provider
             user_checker: App\Security\UserChecker
             custom_authenticator: App\Security\LoginFormAuthentificatorAuthenticator
             logout:
@@ -74,6 +88,9 @@ security:
             entry_point: App\Security\LoginFormAuthentificatorAuthenticator
             context: admin_context
 
+    # ============================================
+    # CONTRÔLE D'ACCÈS
+    # ============================================
     access_control:
         # ============================================
         # 1. ROUTES PUBLIQUES (ACCÈS LIBRE)
@@ -88,7 +105,11 @@ security:
         - { path: ^/payment/success, roles: PUBLIC_ACCESS }
         - { path: ^/payment/error, roles: PUBLIC_ACCESS }
         - { path: ^/payment/already-processed, roles: PUBLIC_ACCESS }
-        
+
+        # ✅ NOUVEAU : Activation de compte
+        - { path: ^/activate/, roles: PUBLIC_ACCESS }
+        - { path: ^/resend-activation, roles: PUBLIC_ACCESS }
+
         # Marketplace - Authentification Customer (PUBLIC)
         - { path: ^/marketplace/login, roles: PUBLIC_ACCESS }
         - { path: ^/marketplace/register, roles: PUBLIC_ACCESS }
@@ -97,7 +118,7 @@ security:
         - { path: ^/marketplace/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/marketplace/verify-email/, roles: PUBLIC_ACCESS }
         - { path: ^/marketplace/resend-verification/, roles: PUBLIC_ACCESS }
-        
+
         # Marketplace - Pages publiques (ACCÈS LIBRE)
         - { path: ^/marketplace/$, roles: PUBLIC_ACCESS }
         - { path: ^/marketplace$, roles: PUBLIC_ACCESS }
@@ -109,7 +130,7 @@ security:
         - { path: ^/marketplace/pharmacy/, roles: PUBLIC_ACCESS }
         - { path: ^/marketplace/ajax/, roles: PUBLIC_ACCESS }
         - { path: ^/marketplace/search, roles: PUBLIC_ACCESS }
-        
+
         # Marketplace - Routes protégées
         - { path: ^/marketplace/change-password, roles: ROLE_CUSTOMER }
         - { path: ^/marketplace/cart, roles: ROLE_CUSTOMER }
@@ -135,7 +156,7 @@ security:
         - { path: ^/about$, roles: PUBLIC_ACCESS }
         - { path: ^/features$, roles: PUBLIC_ACCESS }
         - { path: ^/pricing$, roles: PUBLIC_ACCESS }
-        
+
         # Ressources statiques
         - { path: ^/api/public/, roles: PUBLIC_ACCESS }
         - { path: ^/uploads/, roles: PUBLIC_ACCESS }
@@ -190,7 +211,10 @@ security:
         # 8. TOUT LE RESTE (CATCH-ALL)
         # ============================================
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
-        
+
+    # ============================================
+    # HIÉRARCHIE DES RÔLES
+    # ============================================
     role_hierarchy:
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
         ROLE_ADMIN: [ROLE_MANAGER, ROLE_STOCK_MANAGER]

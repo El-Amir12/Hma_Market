@@ -24,6 +24,9 @@
         <div class="alert alert-danger">{{ message }}</div>
     {% endfor %}
 
-    {{ include('admin/product/_form.html.twig') }}
+    {# ✅ Utilise {{ include() }} : partage TOUT le contexte #}
+    {{ include('admin/product/_form.html.twig', {
+        'button_label': 'Créer le produit'
+    }) }}
 </div>
 {% endblock %}

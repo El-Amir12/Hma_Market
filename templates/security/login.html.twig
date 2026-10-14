@@ -14,6 +14,25 @@
                 <p class="text-muted">Accédez à votre tableau de bord HMA Market</p>
             </div>
             
+            {# ✅ FLASH MESSAGES (activation, succès, etc.) #}
+            {% for label, messages in app.flashes %}
+                <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                    {% if label == 'success' %}
+                        <i class="fas fa-check-circle me-2"></i>
+                    {% elseif label == 'error' or label == 'danger' %}
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                    {% elseif label == 'warning' %}
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                    {% elseif label == 'info' %}
+                        <i class="fas fa-info-circle me-2"></i>
+                    {% endif %}
+                    {% for message in messages %}
+                        {{ message|raw }}
+                    {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+            
             {# Affichage des erreurs d'authentification (y compris compte bloqué) #}
             {% if error %}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">

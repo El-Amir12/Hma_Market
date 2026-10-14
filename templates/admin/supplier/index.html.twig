@@ -8,24 +8,22 @@
     <!-- En-tête -->
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 mb-md-4 flex-wrap gap-2 gap-md-3">
         <div>
-            <h1 class="h4 h-md-3 mb-0 text-gray-800">
+            <h1 class="h5 h-md-3 mb-0 text-gray-800">
                 <i class="fas fa-truck me-2"></i>Gestion des Fournisseurs
             </h1>
             <p class="text-muted mt-1 small d-none d-sm-block">Gérez vos fournisseurs et leurs coordonnées</p>
         </div>
         
-        <div class="d-flex align-items-center gap-1 gap-md-3 flex-wrap">
+        <div class="d-flex align-items-center gap-2 flex-wrap w-100 w-sm-auto justify-content-between justify-content-sm-end">
             <!-- Quota -->
-            <div class="card bg-light border-0 shadow-sm p-1 p-md-2" style="min-width: 100px;">
-                <div class="d-flex align-items-center">
-                    <div class="me-1 me-md-2">
-                        <span class="badge bg-primary p-1 p-md-2 rounded-circle">
-                            <i class="fas fa-chart-line fa-fw fs-6 fs-md-5"></i>
-                        </span>
-                    </div>
+            <div class="quota-card bg-light border-0 shadow-sm">
+                <div class="d-flex align-items-center gap-1">
+                    <span class="badge bg-primary rounded-circle quota-badge">
+                        <i class="fas fa-chart-line"></i>
+                    </span>
                     <div>
-                        <small class="text-muted d-block small" style="font-size: 0.5rem;">Fournisseurs quota</small>
-                        <h6 class="mb-0 {{ quotaReached ? 'text-danger' : 'text-success' }} fw-bold fs-6 fs-md-5">
+                        <small class="text-muted d-block quota-label">Fournisseurs</small>
+                        <h6 class="mb-0 {{ quotaReached ? 'text-danger' : 'text-success' }} fw-bold quota-value">
                             {{ activeCount }} / {{ quota }}
                             {% if quota == 'Illimité' %}
                                 <i class="fas fa-infinity text-info ms-1 small"></i>
@@ -37,30 +35,28 @@
 
             <!-- En attente -->
             {% if subscriptionInactiveCount > 0 %}
-            <div class="card bg-light border-0 shadow-sm p-1 p-md-2" style="min-width: 80px;">
-                <div class="d-flex align-items-center">
-                    <div class="me-1 me-md-2">
-                        <span class="badge bg-warning p-1 p-md-2 rounded-circle">
-                            <i class="fas fa-clock fa-fw fs-6 fs-md-5"></i>
-                        </span>
-                    </div>
+            <div class="quota-card bg-light border-0 shadow-sm">
+                <div class="d-flex align-items-center gap-1">
+                    <span class="badge bg-warning rounded-circle quota-badge">
+                        <i class="fas fa-clock"></i>
+                    </span>
                     <div>
-                        <small class="text-muted d-block small" style="font-size: 0.5rem;">En attente</small>
-                        <h6 class="mb-0 fw-bold fs-6 fs-md-5">{{ subscriptionInactiveCount }}</h6>
+                        <small class="text-muted d-block quota-label">En attente</small>
+                        <h6 class="mb-0 fw-bold quota-value">{{ subscriptionInactiveCount }}</h6>
                     </div>
                 </div>
             </div>
             {% endif %}
 
-            <a href="{{ path('app_admin_supplier_new') }}" id="newSupplierBtn" class="btn btn-primary btn-sm btn-md shadow-sm">
-                <i class="fas fa-plus-circle me-1 me-md-2"></i> <span class="d-none d-sm-inline">Nouveau</span>
+            <a href="{{ path('app_admin_supplier_new') }}" id="newSupplierBtn" class="btn btn-primary btn-sm shadow-sm">
+                <i class="fas fa-plus-circle me-1"></i> <span class="d-none d-sm-inline">Nouveau</span>
             </a>
         </div>
     </div>
 
     {# Message quota atteint #}
     {% if quotaReached and plan != 'premium' %}
-    <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
+    <div class="alert alert-warning alert-dismissible fade show shadow-sm py-2" role="alert">
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center flex-wrap gap-2">
             <div class="small">
                 <i class="fas fa-exclamation-triangle me-2"></i>
@@ -76,14 +72,14 @@
 
     {# Flash messages #}
     {% for message in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <div class="alert alert-success alert-dismissible fade show shadow-sm py-2" role="alert">
             <i class="fas fa-check-circle me-2"></i> {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     {% endfor %}
     
     {% for message in app.flashes('error') %}
-        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm py-2" role="alert">
             <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
@@ -91,76 +87,65 @@
 
     <!-- Statistiques filtrées -->
     <div class="card shadow-sm border-0 mb-3 mb-md-4">
-        <div class="card-header bg-white py-2 py-md-3">
-            <h5 class="mb-0 fw-semibold fs-6 fs-md-5">
+        <div class="card-header bg-white py-2">
+            <h5 class="mb-0 fw-semibold fs-6">
                 <i class="fas fa-chart-pie text-primary me-2"></i>Statistiques
             </h5>
         </div>
         <div class="card-body p-2 p-md-3">
-            <div class="row g-2 g-md-3 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5">
-                <div class="col">
-                    <div class="stat-item p-2 p-md-3 bg-light rounded-3 h-100">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted text-uppercase small fw-bold">Filtrés</span>
-                                <h3 class="mb-0 fw-bold fs-4 fs-md-3">{{ totalFiltered }}</h3>
-                            </div>
-                            <div class="bg-primary p-1 p-md-2 rounded-3">
-                                <i class="fas fa-truck text-white fs-5 fs-md-3"></i>
-                            </div>
-                        </div>
+            <div class="stats-grid">
+                <!-- Actifs -->
+                <div class="stat-item">
+                    <div class="stat-icon bg-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Actifs</span>
+                        <span class="stat-value text-success">{{ activeFiltered }}</span>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="stat-item p-2 p-md-3 bg-light rounded-3 h-100">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted text-uppercase small fw-bold">Actifs</span>
-                                <h3 class="mb-0 fw-bold text-success fs-4 fs-md-3">{{ activeFiltered }}</h3>
-                            </div>
-                            <div class="bg-success p-1 p-md-2 rounded-3">
-                                <i class="fas fa-check-circle text-white fs-5 fs-md-3"></i>
-                            </div>
-                        </div>
+                
+                <!-- Inactifs -->
+                <div class="stat-item">
+                    <div class="stat-icon bg-danger">
+                        <i class="fas fa-pause-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Inactifs</span>
+                        <span class="stat-value text-danger">{{ inactiveFiltered }}</span>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="stat-item p-2 p-md-3 bg-light rounded-3 h-100">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted text-uppercase small fw-bold">Inactifs</span>
-                                <h3 class="mb-0 fw-bold text-danger fs-4 fs-md-3">{{ inactiveFiltered }}</h3>
-                            </div>
-                            <div class="bg-danger p-1 p-md-2 rounded-3">
-                                <i class="fas fa-pause-circle text-white fs-5 fs-md-3"></i>
-                            </div>
-                        </div>
+                
+                <!-- Abonnement actif -->
+                <div class="stat-item">
+                    <div class="stat-icon bg-info">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Abon. actif</span>
+                        <span class="stat-value text-info">{{ subscriptionActiveFiltered }}</span>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="stat-item p-2 p-md-3 bg-light rounded-3 h-100">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted text-uppercase small fw-bold">Abonnement actif</span>
-                                <h3 class="mb-0 fw-bold text-info fs-4 fs-md-3">{{ subscriptionActiveFiltered }}</h3>
-                            </div>
-                            <div class="bg-info p-1 p-md-2 rounded-3">
-                                <i class="fas fa-database text-white fs-5 fs-md-3"></i>
-                            </div>
-                        </div>
+                
+                <!-- Abonnement inactif -->
+                <div class="stat-item">
+                    <div class="stat-icon bg-secondary">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Abon. inactif</span>
+                        <span class="stat-value text-secondary">{{ subscriptionInactiveFiltered }}</span>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="stat-item p-2 p-md-3 bg-light rounded-3 h-100">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted text-uppercase small fw-bold">Abonnement inactif</span>
-                                <h3 class="mb-0 fw-bold text-secondary fs-4 fs-md-3">{{ subscriptionInactiveFiltered }}</h3>
-                            </div>
-                            <div class="bg-secondary p-1 p-md-2 rounded-3">
-                                <i class="fas fa-clock text-white fs-5 fs-md-3"></i>
-                            </div>
-                        </div>
+                
+                <!-- Filtrés (pleine largeur sur mobile) -->
+                <div class="stat-item stat-item-full">
+                    <div class="stat-icon bg-primary">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Filtrés</span>
+                        <span class="stat-value text-primary">{{ totalFiltered }}</span>
                     </div>
                 </div>
             </div>
@@ -169,50 +154,50 @@
 
     <!-- Filtres -->
     <div class="card shadow-sm border-0 mb-3 mb-md-4">
-        <div class="card-header bg-white py-2 py-md-3">
-            <h5 class="mb-0 fw-semibold fs-6 fs-md-5">
+        <div class="card-header bg-white py-2">
+            <h5 class="mb-0 fw-semibold fs-6">
                 <i class="fas fa-filter text-primary me-2"></i>Filtres
             </h5>
         </div>
         <div class="card-body p-2 p-md-3">
-            <form method="get" class="row g-2 g-md-3">
-                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                    <label for="search" class="form-label fw-semibold small">
+            <form method="get" class="row g-2">
+                <div class="col-12 col-md-4">
+                    <label for="search" class="form-label fw-semibold small mb-1">
                         <i class="fas fa-search text-primary me-1"></i>Rechercher
                     </label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                         <span class="input-group-text bg-light border-0">
-                            <i class="fas fa-search text-muted small"></i>
+                            <i class="fas fa-search text-muted"></i>
                         </span>
                         <input type="text" name="search" id="search" value="{{ search }}" 
-                            class="form-control bg-light border-0 form-control-sm" placeholder="Nom, contact...">
+                            class="form-control bg-light border-0" placeholder="Nom, contact...">
                     </div>
                 </div>
-                <div class="col-6 col-sm-6 col-md-2 col-lg-2">
-                    <label for="status" class="form-label fw-semibold small">
+                <div class="col-6 col-md-2">
+                    <label for="status" class="form-label fw-semibold small mb-1">
                         <i class="fas fa-toggle-on text-success me-1"></i>Statut
                     </label>
-                    <select name="status" id="status" class="form-select bg-light border-0 form-select-sm">
+                    <select name="status" id="status" class="form-select form-select-sm bg-light border-0">
                         <option value="all" {{ status == 'all' ? 'selected' : '' }}>Tous</option>
                         <option value="active" {{ status == 'active' ? 'selected' : '' }}>Actifs</option>
                         <option value="inactive" {{ status == 'inactive' ? 'selected' : '' }}>Inactifs</option>
                     </select>
                 </div>
-                <div class="col-6 col-sm-6 col-md-2 col-lg-2">
-                    <label for="sub_status" class="form-label fw-semibold small">
+                <div class="col-6 col-md-2">
+                    <label for="sub_status" class="form-label fw-semibold small mb-1">
                         <i class="fas fa-credit-card text-warning me-1"></i>Abonnement
                     </label>
-                    <select name="sub_status" id="sub_status" class="form-select bg-light border-0 form-select-sm">
+                    <select name="sub_status" id="sub_status" class="form-select form-select-sm bg-light border-0">
                         <option value="all" {{ subStatus == 'all' ? 'selected' : '' }}>Tous</option>
                         <option value="active" {{ subStatus == 'active' ? 'selected' : '' }}>Actif</option>
                         <option value="inactive" {{ subStatus == 'inactive' ? 'selected' : '' }}>Inactif</option>
                     </select>
                 </div>
-                <div class="col-12 col-sm-12 col-md-4 col-lg-4 d-flex align-items-end gap-2">
-                    <button type="submit" class="btn btn-primary w-100 py-1 py-md-2 btn-sm">
-                        <i class="fas fa-search me-1"></i> <span class="d-none d-sm-inline">Filtrer</span>
+                <div class="col-12 col-md-4 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
+                        <i class="fas fa-search me-1"></i> Filtrer
                     </button>
-                    <a href="{{ path('app_admin_supplier_index') }}" class="btn btn-outline-secondary py-1 py-md-2 btn-sm" title="Effacer">
+                    <a href="{{ path('app_admin_supplier_index') }}" class="btn btn-outline-secondary btn-sm" title="Effacer">
                         <i class="fas fa-undo"></i>
                     </a>
                 </div>
@@ -222,7 +207,7 @@
 
     {# Message filtres #}
     {% if subStatus == 'inactive' and subscriptionInactiveFiltered > 0 %}
-        <div class="alert alert-info alert-dismissible fade show mb-3 mb-md-4 shadow-sm">
+        <div class="alert alert-info alert-dismissible fade show mb-3 mb-md-4 shadow-sm py-2" role="alert">
             <i class="fas fa-info-circle me-2"></i>
             <strong>{{ subscriptionInactiveFiltered }} fournisseur(s)</strong> désactivés par abonnement.
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -232,76 +217,72 @@
     <!-- Grille de fournisseurs -->
     <div class="row g-2 g-md-3 g-lg-4">
         {% for supplier in suppliers %}
-        <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
+        <div class="col-12 col-sm-6 col-md-4 col-xl-3">
             <div class="card h-100 border-0 shadow-sm hover-card">
-                <div class="card-header bg-transparent border-0 pt-2 pt-md-3 px-2 px-md-3">
+                <div class="card-header bg-transparent border-0 pt-2 px-2 px-md-3">
                     <div class="d-flex flex-wrap justify-content-between align-items-start gap-1">
                         <div>
-                            <span class="badge {{ supplier.isActive ? 'bg-success' : 'bg-danger' }} rounded-pill px-2 px-md-3 py-1 py-md-2 small">
+                            <span class="badge {{ supplier.isActive ? 'bg-success' : 'bg-danger' }} rounded-pill px-2 py-1 small">
                                 <i class="fas {{ supplier.isActive ? 'fa-check-circle' : 'fa-pause-circle' }} me-1"></i>
                                 <span class="d-none d-sm-inline">{{ supplier.isActive ? 'Actif' : 'Inactif' }}</span>
                             </span>
                         </div>
                         <div>
                             {% if supplier.subscriptionActive %}
-                                <span class="badge bg-info rounded-pill px-2 px-md-3 py-1 py-md-2 small" title="Dans quota">
+                                <span class="badge bg-info rounded-pill px-2 py-1 small" title="Dans quota">
                                     <i class="fas fa-database me-1"></i><span class="d-none d-md-inline">Quota</span>
                                 </span>
                             {% else %}
-                                <span class="badge bg-warning rounded-pill px-2 px-md-3 py-1 py-md-2 small" title="Hors quota">
+                                <span class="badge bg-warning rounded-pill px-2 py-1 small" title="Hors quota">
                                     <i class="fas fa-clock me-1"></i><span class="d-none d-md-inline">Attente</span>
                                 </span>
                             {% endif %}
                         </div>
                     </div>
-                    <h5 class="card-title mt-2 mb-0 fw-bold text-truncate fs-6 fs-md-5">{{ supplier.name }}</h5>
+                    <h5 class="card-title mt-2 mb-0 fw-bold text-truncate fs-6">{{ supplier.name }}</h5>
                 </div>
-                <div class="card-body pt-0 pt-md-1 px-2 px-md-3 pb-2 pb-md-3">
+                <div class="card-body pt-0 px-2 px-md-3 pb-2 pb-md-3">
                     <div class="mb-1 mb-md-2">
                         <div class="d-flex align-items-center mb-1 mb-md-2">
-                            <div class="bg-light rounded-circle p-1 p-md-2 me-1 me-md-2 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; min-width: 24px;">
-                                <i class="fas fa-user text-primary small"></i>
+                            <div class="contact-icon">
+                                <i class="fas fa-user text-primary"></i>
                             </div>
                             <span class="small text-truncate">{{ supplier.contactPerson|u.truncate(15) }}</span>
                         </div>
                         <div class="d-flex align-items-center mb-1 mb-md-2">
-                            <div class="bg-light rounded-circle p-1 p-md-2 me-1 me-md-2 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; min-width: 24px;">
-                                <i class="fas fa-phone text-success small"></i>
+                            <div class="contact-icon">
+                                <i class="fas fa-phone text-success"></i>
                             </div>
                             <span class="small text-truncate">{{ supplier.phone }}</span>
                             <a href="https://wa.me/{{ supplier.phone|replace({' ': '', '-': '', '+': ''}) }}" 
                                target="_blank" 
                                class="ms-auto text-success"
                                title="WhatsApp">
-                                <i class="fab fa-whatsapp fs-6"></i>
+                                <i class="fab fa-whatsapp"></i>
                             </a>
                         </div>
                         
-                        {# ✅ EMAIL CLAIR ET CLAQUABLE #}
+                        {# EMAIL CLAIR ET CLIQUABLE #}
                         <div class="d-flex align-items-center mb-1 mb-md-2">
-                            <div class="bg-light rounded-circle p-1 p-md-2 me-1 me-md-2 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; min-width: 24px;">
-                                <i class="fas fa-envelope text-info small"></i>
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope text-info"></i>
                             </div>
                             <a href="mailto:{{ supplier.email }}" 
-                               class="small text-primary text-decoration-none fw-semibold text-truncate" 
-                               title="Envoyer un email à {{ supplier.email }}"
-                               style="max-width: 150px;">
-                                <i class="fas fa-paper-plane me-1" style="font-size: 0.6rem;"></i>
+                               class="small text-primary text-decoration-none fw-semibold text-truncate email-link" 
+                               title="Envoyer un email à {{ supplier.email }}">
+                                <i class="fas fa-paper-plane me-1 icon-tiny"></i>
                                 {{ supplier.email|u.truncate(20) }}
                             </a>
-                            <span class="ms-1 text-muted small" title="Cliquez pour envoyer un email">
-                                <i class="fas fa-external-link-alt" style="font-size: 0.5rem;"></i>
-                            </span>
                         </div>
                         
                         <div class="d-flex align-items-center d-none d-sm-flex">
-                            <div class="bg-light rounded-circle p-1 p-md-2 me-1 me-md-2 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; min-width: 24px;">
-                                <i class="fas fa-map-marker-alt text-warning small"></i>
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt text-warning"></i>
                             </div>
                             <span class="small text-truncate">{{ supplier.adress|u.truncate(25) }}</span>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between gap-1 gap-md-2 mt-2 mt-md-3">
+                    <div class="d-flex justify-content-between gap-1 mt-2">
                         <a href="{{ path('app_admin_supplier_show', {'id': supplier.id}) }}" class="btn btn-sm btn-outline-info flex-fill" title="Voir">
                             <i class="fas fa-eye"></i>
                         </a>
@@ -340,10 +321,10 @@
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center py-4 py-md-5">
-                    <i class="fas fa-truck fa-3x fa-md-4 text-muted mb-3"></i>
-                    <h4 class="text-muted fw-light fs-5 fs-md-4">Aucun fournisseur trouvé</h4>
-                    <p class="text-muted mb-3 mb-md-4 small">Modifiez vos filtres ou créez un nouveau fournisseur.</p>
-                    <a href="{{ path('app_admin_supplier_index') }}" class="btn btn-outline-primary btn-sm btn-md px-3 px-md-4">
+                    <i class="fas fa-truck fa-3x text-muted mb-3 opacity-50"></i>
+                    <h4 class="text-muted fw-light fs-5">Aucun fournisseur trouvé</h4>
+                    <p class="text-muted mb-3 small">Modifiez vos filtres ou créez un nouveau fournisseur.</p>
+                    <a href="{{ path('app_admin_supplier_index') }}" class="btn btn-outline-primary btn-sm px-3">
                         <i class="fas fa-undo me-2"></i> Réinitialiser
                     </a>
                 </div>
@@ -359,7 +340,7 @@
             Page {{ currentPage }} / {{ totalPages }} ({{ totalItems }} résultats)
         </div>
         <nav aria-label="Pagination">
-            <ul class="pagination pagination-sm mb-0">
+            <ul class="pagination pagination-sm mb-0 justify-content-center">
                 <li class="page-item {{ currentPage <= 1 ? 'disabled' }}">
                     <a class="page-link" href="{{ path('app_admin_supplier_index', app.request.query.all|merge({'page': currentPage - 1})) }}"><i class="fas fa-chevron-left"></i></a>
                 </li>
@@ -375,7 +356,7 @@
                         <a class="page-link" href="{{ path('app_admin_supplier_index', app.request.query.all|merge({'page': 1})) }}">1</a>
                     </li>
                     {% if startPage > 2 %}
-                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                        <li class="page-item disabled d-none d-sm-block"><span class="page-link">…</span></li>
                     {% endif %}
                 {% endif %}
                 
@@ -387,7 +368,7 @@
                 
                 {% if endPage < totalPages %}
                     {% if endPage < totalPages - 1 %}
-                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                        <li class="page-item disabled d-none d-sm-block"><span class="page-link">…</span></li>
                     {% endif %}
                     <li class="page-item">
                         <a class="page-link" href="{{ path('app_admin_supplier_index', app.request.query.all|merge({'page': totalPages})) }}">{{ totalPages }}</a>
@@ -405,43 +386,43 @@
 
 <!-- Modals -->
 <div class="modal fade" id="quotaReachedModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-dialog modal-dialog-centered modal-sm modal-dialog-scrollable">
         <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-warning text-white border-0">
+            <div class="modal-header bg-warning text-white border-0 py-2">
                 <h5 class="modal-title fs-6"><i class="fas fa-exclamation-triangle me-2"></i> Quota atteint</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-center py-3 py-md-4">
-                <i class="fas fa-ban fa-3x text-warning mb-3"></i>
+            <div class="modal-body text-center py-3">
+                <i class="fas fa-ban fa-2x text-warning mb-2"></i>
                 <h5 class="fs-6">Limite de {{ quota }} fournisseurs atteinte</h5>
-                <p class="text-muted small">Passez à un plan supérieur pour ajouter des fournisseurs.</p>
+                <p class="text-muted small mb-0">Passez à un plan supérieur pour ajouter des fournisseurs.</p>
             </div>
-            <div class="modal-footer border-0 justify-content-center py-2 py-md-3">
-                <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-sm px-3">
+            <div class="modal-footer border-0 justify-content-center py-2 flex-column flex-sm-row gap-2">
+                <a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-sm px-3 w-100 w-sm-auto">
                     <i class="fas fa-arrow-up me-2"></i> Voir les offres
                 </a>
-                <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm px-3 w-100 w-sm-auto" data-bs-dismiss="modal">Annuler</button>
             </div>
         </div>
     </div>
 </div>
 
 <div class="modal fade" id="toggleSupplierModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-dialog modal-dialog-centered modal-sm modal-dialog-scrollable">
         <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-warning text-white border-0">
+            <div class="modal-header bg-warning text-white border-0 py-2">
                 <h5 class="modal-title fs-6">Confirmation</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-center py-3 py-md-4">
-                <i class="fas fa-question-circle fa-3x text-primary mb-3"></i>
+            <div class="modal-body text-center py-3">
+                <i class="fas fa-question-circle fa-2x text-primary mb-2"></i>
                 <p id="toggleSupplierMessage" class="mb-0 small"></p>
             </div>
-            <div class="modal-footer border-0 justify-content-center py-2 py-md-3">
-                <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">Annuler</button>
-                <form id="toggleSupplierForm" method="post" class="d-inline">
+            <div class="modal-footer border-0 justify-content-center py-2 flex-column flex-sm-row gap-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm px-3 w-100 w-sm-auto" data-bs-dismiss="modal">Annuler</button>
+                <form id="toggleSupplierForm" method="post" class="d-inline w-100 w-sm-auto">
                     <input type="hidden" name="_token" id="toggleSupplierToken">
-                    <button type="submit" class="btn btn-warning btn-sm px-3">Confirmer</button>
+                    <button type="submit" class="btn btn-warning btn-sm px-3 w-100">Confirmer</button>
                 </form>
             </div>
         </div>
@@ -450,21 +431,21 @@
 
 {% if is_granted('ROLE_ADMIN') %}
 <div class="modal fade" id="deleteSupplierModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-dialog modal-dialog-centered modal-sm modal-dialog-scrollable">
         <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-danger text-white border-0">
+            <div class="modal-header bg-danger text-white border-0 py-2">
                 <h5 class="modal-title fs-6"><i class="fas fa-exclamation-triangle me-2"></i> Confirmation</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-center py-3 py-md-4">
-                <i class="fas fa-trash-alt fa-3x text-danger mb-3"></i>
+            <div class="modal-body text-center py-3">
+                <i class="fas fa-trash-alt fa-2x text-danger mb-2"></i>
                 <p id="deleteSupplierMessage" class="mb-0 small"></p>
             </div>
-            <div class="modal-footer border-0 justify-content-center py-2 py-md-3">
-                <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">Annuler</button>
-                <form id="deleteSupplierForm" method="post" class="d-inline">
+            <div class="modal-footer border-0 justify-content-center py-2 flex-column flex-sm-row gap-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm px-3 w-100 w-sm-auto" data-bs-dismiss="modal">Annuler</button>
+                <form id="deleteSupplierForm" method="post" class="d-inline w-100 w-sm-auto">
                     <input type="hidden" name="_token" id="deleteSupplierCsrfToken">
-                    <button type="submit" class="btn btn-danger btn-sm px-3">Supprimer</button>
+                    <button type="submit" class="btn btn-danger btn-sm px-3 w-100">Supprimer</button>
                 </form>
             </div>
         </div>
@@ -481,6 +462,130 @@
     --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
 }
 
+/* ============================================
+   CARTES STATISTIQUES
+   Mobile : 4 en haut (1/4) + 1 pleine largeur en bas
+   ============================================ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+/* Par défaut : chaque carte prend 1/4 (4 par ligne) */
+.stat-item {
+    grid-column: span 1;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.5rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    min-height: 58px;
+    min-width: 0;
+}
+
+/* ✅ La carte "Filtrés" prend toute la largeur (4/4) */
+.stat-item-full {
+    grid-column: span 4;
+    padding: 0.6rem 0.75rem;
+}
+
+.stat-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+.stat-item-full .stat-icon {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    font-size: 0.8rem;
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
+.stat-label {
+    font-size: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    color: #6b7280;
+    font-weight: 600;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stat-item-full .stat-label {
+    font-size: 0.6rem;
+}
+
+.stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1.2;
+    margin-top: 0.1rem;
+}
+
+.stat-item-full .stat-value {
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   QUOTA CARDS
+   ============================================ */
+.quota-card {
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    min-width: auto;
+}
+
+.quota-badge {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    padding: 0 !important;
+    flex-shrink: 0;
+}
+
+.quota-label {
+    font-size: 0.55rem;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.quota-value {
+    font-size: 0.8rem;
+    line-height: 1.2;
+}
+
+/* ============================================
+   CARTES FOURNISSEURS
+   ============================================ */
 .hover-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     border-radius: 12px;
@@ -491,12 +596,29 @@
     box-shadow: var(--shadow-md) !important;
 }
 
-.stat-item {
-    transition: background-color 0.2s;
-    border-radius: 8px;
+.contact-icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    background: #f1f5f9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.5rem;
+    font-size: 0.7rem;
+    flex-shrink: 0;
 }
-.stat-item:hover {
-    background-color: #e9ecef !important;
+
+.icon-tiny {
+    font-size: 0.55rem;
+}
+
+.email-link {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .badge {
@@ -504,7 +626,7 @@
     letter-spacing: 0.3px;
 }
 
-/* Email link style */
+/* Email link hover */
 a[href^="mailto:"] {
     transition: all 0.2s ease;
 }
@@ -512,15 +634,95 @@ a[href^="mailto:"]:hover {
     color: #0d6efd !important;
     text-decoration: underline !important;
 }
-a[href^="mailto:"] i.fa-paper-plane {
-    transition: transform 0.2s ease;
+a[href^="mailto:"]:hover .fa-paper-plane {
+    animation: fly 0.4s ease;
 }
-a[href^="mailto:"]:hover i.fa-paper-plane {
-    transform: translateX(2px) scale(1.1);
+@keyframes fly {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(5px) scale(1.2); }
+    100% { transform: translateX(0); }
 }
 
-/* Responsive cards */
-@media (max-width: 576px) {
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Tablette ≥ 576px : 5 cartes sur une seule ligne */
+@media (min-width: 576px) {
+    .stats-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.75rem;
+    }
+    .stat-item,
+    .stat-item-full {
+        grid-column: span 1;  /* Toutes sur une ligne */
+        padding: 0.75rem;
+        min-height: 65px;
+        gap: 0.6rem;
+    }
+    .stat-icon,
+    .stat-item-full .stat-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        font-size: 1rem;
+    }
+    .stat-label,
+    .stat-item-full .stat-label {
+        font-size: 0.7rem;
+    }
+    .stat-value,
+    .stat-item-full .stat-value {
+        font-size: 1.25rem;
+    }
+    .quota-card {
+        padding: 0.5rem 0.75rem;
+    }
+    .quota-badge {
+        width: 30px;
+        height: 30px;
+        font-size: 0.85rem;
+    }
+    .quota-label {
+        font-size: 0.65rem;
+    }
+    .quota-value {
+        font-size: 0.95rem;
+    }
+}
+
+/* Desktop ≥ 992px */
+@media (min-width: 992px) {
+    .stats-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.75rem;
+    }
+    .stat-item,
+    .stat-item-full {
+        padding: 0.85rem 1rem;
+        min-height: 70px;
+    }
+    .stat-icon,
+    .stat-item-full .stat-icon {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        font-size: 1.1rem;
+    }
+    .stat-value,
+    .stat-item-full .stat-value {
+        font-size: 1.4rem;
+    }
+}
+
+/* Mobile < 576px */
+@media (max-width: 575.98px) {
+    .container-fluid {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+
+    /* Cartes fournisseurs */
     .card-header {
         padding: 0.5rem 0.75rem !important;
     }
@@ -532,103 +734,50 @@ a[href^="mailto:"]:hover i.fa-paper-plane {
     }
     .badge {
         font-size: 0.55rem !important;
-        padding: 0.1rem 0.4rem !important;
+        padding: 0.15rem 0.4rem !important;
     }
     .btn-sm {
-        padding: 0.15rem 0.25rem !important;
-        font-size: 0.6rem !important;
-        min-height: 28px;
+        padding: 0.25rem 0.4rem !important;
+        font-size: 0.7rem !important;
+        min-height: 30px;
     }
     .btn-sm i {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
     }
+    .contact-icon {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        font-size: 0.6rem;
+        margin-right: 0.4rem;
+    }
+    .email-link {
+        max-width: 120px;
+        font-size: 0.75rem !important;
+    }
+
+    /* Pagination */
     .pagination-sm .page-link {
-        padding: 0.15rem 0.35rem !important;
-        font-size: 0.65rem !important;
+        padding: 0.2rem 0.4rem !important;
+        font-size: 0.7rem !important;
     }
-    .container-fluid {
-        padding-left: 4px !important;
-        padding-right: 4px !important;
-    }
-    .fs-5.fs-md-3 {
-        font-size: 1rem !important;
-    }
-    .fs-4.fs-md-3 {
-        font-size: 1.1rem !important;
-    }
-    .stat-item {
-        padding: 0.5rem !important;
-    }
-    .stat-item .bg-primary,
-    .stat-item .bg-success,
-    .stat-item .bg-danger,
-    .stat-item .bg-info,
-    .stat-item .bg-secondary {
-        padding: 0.25rem !important;
-        border-radius: 6px !important;
-    }
-    .stat-item i {
+
+    /* Alertes */
+    .alert {
+        padding: 0.5rem 0.75rem !important;
         font-size: 0.8rem !important;
     }
-    .stat-item h3 {
-        font-size: 0.9rem !important;
-    }
-    .stat-item span {
-        font-size: 0.5rem !important;
-    }
-    /* Email link mobile */
-    a[href^="mailto:"] {
+    .alert .btn {
         font-size: 0.7rem !important;
-        max-width: 100px !important;
+        padding: 0.2rem 0.5rem !important;
     }
-    a[href^="mailto:"] i.fa-paper-plane {
-        font-size: 0.5rem !important;
-    }
-    .bg-light.rounded-circle {
-        width: 20px !important;
-        height: 20px !important;
-        min-width: 20px !important;
-    }
-    .bg-light.rounded-circle i {
-        font-size: 0.5rem !important;
-    }
-}
 
-@media (min-width: 577px) and (max-width: 768px) {
-    .card-header {
-        padding: 0.75rem !important;
-    }
-    .card-body {
-        padding: 0.75rem !important;
-    }
-    .stat-item {
-        padding: 0.5rem !important;
-    }
-    .stat-item i {
+    /* Header */
+    h1.h5 {
         font-size: 1rem !important;
     }
-    .stat-item h3 {
-        font-size: 1.2rem !important;
-    }
-    a[href^="mailto:"] {
-        max-width: 130px !important;
-    }
-}
 
-@media (min-width: 769px) and (max-width: 992px) {
-    .stat-item i {
-        font-size: 1.2rem !important;
-    }
-    .stat-item h3 {
-        font-size: 1.4rem !important;
-    }
-}
-
-/* Modal responsive */
-@media (max-width: 576px) {
-    .modal-dialog {
-        margin: 0.5rem;
-    }
+    /* Modals */
     .modal-body {
         padding: 0.75rem !important;
     }
@@ -636,56 +785,60 @@ a[href^="mailto:"]:hover i.fa-paper-plane {
         padding: 0.5rem !important;
     }
     .modal-footer .btn {
-        font-size: 0.7rem !important;
-        padding: 0.2rem 0.5rem !important;
-    }
-}
-
-/* Stats icons */
-.bg-primary .fas, .bg-success .fas, .bg-danger .fas, .bg-info .fas, .bg-secondary .fas {
-    opacity: 0.9;
-}
-
-/* Quota card responsive */
-@media (max-width: 576px) {
-    .card.bg-light {
-        padding: 0.25rem 0.5rem !important;
-        min-width: 70px !important;
-    }
-    .card.bg-light .badge {
-        padding: 0.15rem !important;
-    }
-    .card.bg-light .badge i {
-        font-size: 0.6rem !important;
-    }
-    .card.bg-light h6 {
-        font-size: 0.7rem !important;
-    }
-    .card.bg-light small {
-        font-size: 0.4rem !important;
-    }
-}
-
-/* Alert responsive */
-@media (max-width: 576px) {
-    .alert {
-        padding: 0.5rem !important;
         font-size: 0.75rem !important;
-    }
-    .alert .btn {
-        font-size: 0.65rem !important;
-        padding: 0.15rem 0.5rem !important;
+        padding: 0.3rem 0.6rem !important;
     }
 }
 
-/* Email icon hover effect */
-a[href^="mailto:"]:hover .fa-paper-plane {
-    animation: fly 0.4s ease;
+/* Très petits mobiles < 376px */
+@media (max-width: 375.98px) {
+    .stat-item,
+    .stat-item-full {
+        padding: 0.4rem 0.35rem;
+        min-height: 52px;
+        gap: 0.3rem;
+    }
+    .stat-icon,
+    .stat-item-full .stat-icon {
+        width: 26px;
+        height: 26px;
+        min-width: 26px;
+        font-size: 0.65rem;
+    }
+    .stat-label,
+    .stat-item-full .stat-label {
+        font-size: 0.45rem;
+    }
+    .stat-value,
+    .stat-item-full .stat-value {
+        font-size: 0.85rem;
+    }
+    .quota-card {
+        padding: 0.3rem 0.5rem;
+    }
+    .quota-badge {
+        width: 20px;
+        height: 20px;
+        font-size: 0.6rem;
+    }
+    .quota-label {
+        font-size: 0.5rem;
+    }
+    .quota-value {
+        font-size: 0.75rem;
+    }
 }
-@keyframes fly {
-    0% { transform: translateX(0); }
-    50% { transform: translateX(5px) scale(1.2); }
-    100% { transform: translateX(0); }
+
+/* Classe utilitaire pour boutons full width sur mobile */
+@media (max-width: 575.98px) {
+    .w-100-mobile {
+        width: 100% !important;
+    }
+}
+@media (min-width: 576px) {
+    .w-sm-auto {
+        width: auto !important;
+    }
 }
 </style>
 {% endblock %}
@@ -708,7 +861,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Toggle status
-    const toggleModal = new bootstrap.Modal(document.getElementById('toggleSupplierModal'));
+    const toggleModalEl = document.getElementById('toggleSupplierModal');
+    const toggleModal = new bootstrap.Modal(toggleModalEl);
     const toggleForm = document.getElementById('toggleSupplierForm');
     const toggleToken = document.getElementById('toggleSupplierToken');
     const toggleMessage = document.getElementById('toggleSupplierMessage');
@@ -728,26 +882,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Suppression
     {% if is_granted('ROLE_ADMIN') %}
-    const deleteModal = new bootstrap.Modal(document.getElementById('deleteSupplierModal'));
-    const deleteForm = document.getElementById('deleteSupplierForm');
-    const deleteToken = document.getElementById('deleteSupplierCsrfToken');
-    const deleteMessage = document.getElementById('deleteSupplierMessage');
+    const deleteModalEl = document.getElementById('deleteSupplierModal');
+    if (deleteModalEl) {
+        const deleteModal = new bootstrap.Modal(deleteModalEl);
+        const deleteForm = document.getElementById('deleteSupplierForm');
+        const deleteToken = document.getElementById('deleteSupplierCsrfToken');
+        const deleteMessage = document.getElementById('deleteSupplierMessage');
 
-    document.querySelectorAll('.delete-supplier-btn:not([disabled])').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const id = this.dataset.supplierId;
-            const name = this.dataset.supplierName;
-            deleteMessage.innerHTML = `
-                <div class="alert alert-warning mb-2 p-2 small">
-                    <i class="fas fa-exclamation-triangle me-2"></i>Cette action est irréversible.
-                </div>
-                <p class="mb-0">Supprimer le fournisseur <strong>"${name}"</strong> ?</p>
-            `;
-            deleteForm.action = `/admin/supplier/${id}`;
-            deleteToken.value = '{{ csrf_token("delete") }}';
-            deleteModal.show();
+        document.querySelectorAll('.delete-supplier-btn:not([disabled])').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.dataset.supplierId;
+                const name = this.dataset.supplierName;
+                deleteMessage.innerHTML = `
+                    <div class="alert alert-warning mb-2 p-2 small">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Cette action est irréversible.
+                    </div>
+                    <p class="mb-0">Supprimer le fournisseur <strong>"${name}"</strong> ?</p>
+                `;
+                deleteForm.action = `/admin/supplier/${id}`;
+                deleteToken.value = '{{ csrf_token("delete") }}';
+                deleteModal.show();
+            });
         });
-    });
+    }
     {% endif %}
 });
 </script>

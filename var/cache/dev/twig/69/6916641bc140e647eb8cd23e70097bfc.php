@@ -133,13 +133,17 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
         /* Navbar */
         .navbar {
             backdrop-filter: blur(10px);
-            background-color: rgba(255,255,255,0.9);
+            background-color: rgba(255,255,255,0.95);
             box-shadow: 0 2px 20px rgba(0,0,0,0.05);
         }
 
         .navbar-brand img {
             height: 40px;
             width: auto;
+        }
+
+        .navbar-brand span {
+            font-size: 1.25rem;
         }
 
         .btn-gradient {
@@ -217,6 +221,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .hero-subtitle {
@@ -230,6 +235,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             box-shadow: 0 30px 60px rgba(0,0,0,0.1);
             transform: perspective(1000px) rotateY(-5deg);
             transition: all 0.5s ease;
+            max-width: 100%;
         }
 
         .hero-image:hover {
@@ -330,6 +336,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             font-size: 0.85rem;
             font-weight: 600;
             letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         .price {
@@ -354,12 +361,14 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
         .feature-list li {
             margin-bottom: 0.75rem;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
         }
 
-        .feature-list i {
+        .feature-list li i {
             margin-right: 0.5rem;
             color: var(--success);
+            flex-shrink: 0;
+            margin-top: 0.2rem;
         }
 
         /* Testimonial card */
@@ -380,6 +389,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             font-size: 5rem;
             color: rgba(4,99,241,0.1);
             font-family: serif;
+            line-height: 1;
         }
 
         .user-avatar {
@@ -393,6 +403,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             justify-content: center;
             font-weight: 600;
             font-size: 1.2rem;
+            flex-shrink: 0;
         }
 
         /* CTA Section */
@@ -445,6 +456,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         /* Marketplace Section */
@@ -474,16 +486,374 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             background: #f8fafc;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        /* ============================================
+           RESPONSIVE MOBILE
+           ============================================ */
+
+        /* Tablette */
+        @media (max-width: 991.98px) {
+            .hero {
+                padding-top: 100px;
+                padding-bottom: 60px;
+            }
+            
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 2.75rem;
             }
-            .section-title {
-                font-size: 2rem;
-            }
-            .pricing-card.popular {
+            
+            .hero-image {
                 transform: none;
+                margin-top: 2rem;
+            }
+            
+            .hero-image:hover {
+                transform: none;
+            }
+            
+            .pricing-card.popular {
+                transform: scale(1);
+                margin-top: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 767.98px) {
+            /* Navbar */
+            .navbar {
+                padding: 0.5rem 0;
+            }
+            
+            .navbar-brand img {
+                height: 32px;
+            }
+            
+            .navbar-brand span {
+                font-size: 1rem;
+            }
+            
+            .navbar-collapse {
+                margin-top: 0.75rem;
+                padding: 1rem;
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            
+            .navbar-nav {
+                align-items: stretch !important;
+            }
+            
+            .navbar-nav .nav-item {
+                width: 100%;
+            }
+            
+            .navbar-nav .nav-link {
+                padding: 0.65rem 0.5rem;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            
+            .navbar-nav .nav-item:last-child .nav-link {
+                border-bottom: none;
+            }
+            
+            .navbar-nav .nav-item.ms-2 {
+                margin-left: 0 !important;
+                margin-top: 0.75rem;
+            }
+            
+            .navbar-nav .nav-item.ms-2 .d-flex {
+                flex-direction: column;
+                gap: 0.5rem !important;
+            }
+            
+            .navbar-nav .nav-item.ms-2 .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            /* Hero */
+            .hero {
+                padding-top: 90px;
+                padding-bottom: 40px;
+            }
+            
+            .hero::before,
+            .hero::after {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .hero-title {
+                font-size: 1.85rem;
+                text-align: center;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                text-align: center;
+            }
+            
+            .hero .d-flex.flex-wrap {
+                justify-content: center;
+                flex-direction: column;
+            }
+            
+            .hero .d-flex.flex-wrap .btn {
+                width: 100%;
+                font-size: 1rem;
+                padding: 0.75rem 1rem;
+            }
+            
+            .hero .row.mt-5 .col-4 {
+                padding-left: 0.25rem;
+                padding-right: 0.25rem;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .hero .row.mt-5 p {
+                font-size: 0.8rem;
+            }
+            
+            /* Sections */
+            .section-title {
+                font-size: 1.75rem;
+            }
+            
+            .section-subtitle {
+                font-size: 0.95rem;
+                margin-bottom: 2rem;
+            }
+            
+            /* Feature cards */
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .feature-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .feature-card h4 {
+                font-size: 1.15rem;
+            }
+            
+            .feature-card p {
+                font-size: 0.9rem;
+            }
+            
+            /* Marketplace */
+            .marketplace-feature-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.15rem;
+                border-radius: 12px;
+            }
+            
+            .marketplace-feature-item {
+                padding: 0.5rem;
+                gap: 0.75rem;
+            }
+            
+            .marketplace-feature-item h6 {
+                font-size: 0.95rem;
+            }
+            
+            .marketplace-feature-item p {
+                font-size: 0.8rem;
+            }
+            
+            #marketplace .section-title {
+                font-size: 1.5rem !important;
+            }
+            
+            #marketplace .btn {
+                width: 100%;
+                margin-left: 0 !important;
+                margin-bottom: 0.5rem;
+                font-size: 0.95rem;
+                padding: 0.65rem 1rem;
+            }
+            
+            #marketplace .bg-white.rounded-4 {
+                padding: 1.5rem 1rem !important;
+            }
+            
+            #marketplace .d-flex.justify-content-center.gap-4 {
+                gap: 1rem !important;
+            }
+            
+            #marketplace .h4 {
+                font-size: 1.25rem;
+            }
+            
+            #marketplace .d-flex.justify-content-center.gap-3 {
+                flex-wrap: wrap;
+                gap: 0.5rem !important;
+            }
+            
+            #marketplace .badge {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.75rem !important;
+            }
+            
+            /* Pricing */
+            .pricing-card {
+                padding: 1.75rem 1.25rem;
+                border-radius: 20px;
+            }
+            
+            .pricing-card.popular {
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .price {
+                font-size: 2.25rem;
+                margin: 1rem 0;
+            }
+            
+            .price-period {
+                font-size: 0.85rem;
+            }
+            
+            .feature-list li {
+                font-size: 0.9rem;
+            }
+            
+            /* About & Testimonial */
+            .testimonial-card {
+                padding: 1.5rem;
+                margin-top: 1.5rem;
+            }
+            
+            .testimonial-card::before {
+                font-size: 3.5rem;
+                top: 5px;
+                left: 15px;
+            }
+            
+            .testimonial-card p {
+                font-size: 0.95rem;
+                padding-left: 0.5rem;
+            }
+            
+            .user-avatar {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+            
+            /* CTA & Contact */
+            .cta-section {
+                padding: 50px 0;
+            }
+            
+            .cta-title {
+                font-size: 1.75rem;
+            }
+            
+            .cta-subtitle {
+                font-size: 1rem;
+            }
+            
+            .cta-section .card-body {
+                padding: 1.5rem 1.25rem !important;
+            }
+            
+            .cta-section h4 {
+                font-size: 1.15rem;
+                text-align: center;
+            }
+            
+            .cta-section .text-muted {
+                font-size: 0.9rem;
+                text-align: center;
+            }
+            
+            .cta-section .form-control-lg {
+                font-size: 0.95rem;
+                padding: 0.6rem 0.9rem;
+            }
+            
+            .cta-section .btn-lg {
+                font-size: 1rem;
+                padding: 0.65rem 1rem;
+            }
+            
+            /* Footer */
+            footer {
+                text-align: center;
+            }
+            
+            footer .col-md-6 {
+                margin-bottom: 1rem;
+            }
+            
+            footer .text-md-end {
+                text-align: center !important;
+            }
+            
+            footer p {
+                font-size: 0.9rem;
+            }
+            
+            /* Marketplace badge hero */
+            .badge.bg-primary {
+                font-size: 0.7rem !important;
+                padding: 0.4rem 0.85rem !important;
+            }
+        }
+
+        /* Très petits mobiles */
+        @media (max-width: 375.98px) {
+            .hero-title {
+                font-size: 1.55rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .stat-number {
+                font-size: 1.25rem;
+            }
+            
+            .hero .row.mt-5 p {
+                font-size: 0.7rem;
+            }
+            
+            .price {
+                font-size: 1.9rem;
+            }
+            
+            .cta-title {
+                font-size: 1.5rem;
+            }
+            
+            .navbar-brand img {
+                height: 28px;
+            }
+            
+            .navbar-brand span {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Classe utilitaire : pleine largeur sur mobile */
+        @media (max-width: 575.98px) {
+            .w-100-mobile {
+                width: 100% !important;
             }
         }
     </style>
@@ -497,7 +867,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
         yield from [];
     }
 
-    // line 395
+    // line 765
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -510,25 +880,25 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 396
+        // line 766
         yield "    <!-- Navigation -->
     <nav class=\"navbar navbar-expand-lg navbar-light fixed-top\">
         <div class=\"container\">
             <a class=\"navbar-brand d-flex align-items-center\" href=\"";
-        // line 399
+        // line 769
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_home");
         yield "\">
                 <img src=\"";
-        // line 400
+        // line 770
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("uploads/logos/logo.png"), "html", null, true);
         yield "\" alt=\"HMA Market\" height=\"40\" class=\"me-2\">
                 <span class=\"fw-bold fs-4\" style=\"color: var(--primary);\">HMA SERVICE</span>
             </a>
-            <button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\">
+            <button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
                 <span class=\"navbar-toggler-icon\"></span>
             </button>
             <div class=\"collapse navbar-collapse\" id=\"navbarNav\">
-                <ul class=\"navbar-nav ms-auto align-items-center\">
+                <ul class=\"navbar-nav ms-auto align-items-lg-center\">
                     <li class=\"nav-item\">
                         <a class=\"nav-link\" href=\"#home\">Accueil</a>
                     </li>
@@ -546,30 +916,30 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                     </li>
                     
                     ";
-        // line 425
+        // line 795
         yield "                    <li class=\"nav-item\">
                         <a class=\"nav-link\" href=\"";
-        // line 426
+        // line 796
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_home");
         yield "\" 
                         target=\"_blank\" 
                         rel=\"noopener noreferrer\"
-                        style=\"color: var(--primary); font-weight: 600; position: relative; display: flex; align-items: center;\">
+                        style=\"color: var(--primary); font-weight: 600;\">
                             <i class=\"fas fa-store me-1\"></i> 
                             Marketplace
                         </a>
                     </li>
                     
-                    <li class=\"nav-item ms-2\">
+                    <li class=\"nav-item ms-lg-2\">
                         <div class=\"d-flex flex-wrap gap-2\" style=\"row-gap: 0.5rem;\">
                             <a href=\"";
-        // line 437
+        // line 807
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_login");
         yield "\" class=\"btn btn-outline-gradient\">
                                 <i class=\"fas fa-sign-in-alt me-2\"></i>Connexion
                             </a>
                             <a href=\"";
-        // line 440
+        // line 810
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
         yield "\" class=\"btn btn-gradient\">
                                 <i class=\"fas fa-user-plus me-2\"></i>Inscription
@@ -613,7 +983,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                 </div>
                 <div class=\"col-lg-6 animate__animated animate__fadeInRight\">
                     <img src=\"";
-        // line 481
+        // line 851
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("uploads/logos/logo.png"), "html", null, true);
         yield "\" 
                         alt=\"Dashboard HMA Market\" 
@@ -631,7 +1001,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                 <p class=\"section-subtitle\">Tout ce dont vous avez besoin pour gérer votre entreprise au quotidien</p>
             </div>
             <div class=\"row g-4\">
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-box-seam\"></i>
@@ -645,7 +1015,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </ul>
                     </div>
                 </div>
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-cash-coin\"></i>
@@ -659,7 +1029,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </ul>
                     </div>
                 </div>
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-graph-up\"></i>
@@ -673,7 +1043,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </ul>
                     </div>
                 </div>
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-people\"></i>
@@ -687,7 +1057,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </ul>
                     </div>
                 </div>
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-credit-card\"></i>
@@ -701,7 +1071,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </ul>
                     </div>
                 </div>
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-phone\"></i>
@@ -722,8 +1092,8 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
     <!-- Marketplace Section -->
     <section id=\"marketplace\" class=\"py-5 bg-light\">
         <div class=\"container\">
-            <div class=\"row align-items-center\">
-                <div class=\"col-lg-6\">
+            <div class=\"row align-items-center g-4\">
+                <div class=\"col-12 col-lg-6\">
                     <div class=\"mb-4\">
                         <span class=\"badge bg-primary mb-3\" style=\"font-size: 0.8rem; padding: 0.5rem 1rem;\">
                             <i class=\"bi bi-star-fill me-1\"></i> NOUVEAU
@@ -762,27 +1132,27 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </div>
                     </div>
                     
-                    <div class=\"mt-4\">
+                    <div class=\"mt-4 d-flex flex-column flex-sm-row gap-2\">
                         <a href=\"";
-        // line 629
+        // line 999
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_home");
         yield "\" class=\"btn btn-gradient btn-lg\">
                             <i class=\"bi bi-arrow-right me-2\"></i>Découvrir la Marketplace
                         </a>
                         <a href=\"";
-        // line 632
+        // line 1002
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_pharmacy_search");
-        yield "\" class=\"btn btn-outline-gradient btn-lg ms-2\">
+        yield "\" class=\"btn btn-outline-gradient btn-lg\">
                             <i class=\"bi bi-search me-2\"></i>Rechercher
                         </a>
                     </div>
                 </div>
-                <div class=\"col-lg-6\">
-                    <div class=\"text-center p-4\">
-                        <div class=\"bg-white rounded-4 shadow-lg p-5\">
+                <div class=\"col-12 col-lg-6\">
+                    <div class=\"text-center p-2 p-md-4\">
+                        <div class=\"bg-white rounded-4 shadow-lg p-3 p-md-5\">
                             <i class=\"bi bi-shop display-1 text-primary opacity-25\"></i>
                             <div class=\"mt-4\">
-                                <div class=\"d-flex justify-content-center gap-4\">
+                                <div class=\"d-flex justify-content-center gap-3 gap-md-4\">
                                     <div class=\"text-center\">
                                         <div class=\"h4 fw-bold text-primary\">100+</div>
                                         <small class=\"text-muted\">Pharmacies</small>
@@ -798,7 +1168,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                                 </div>
                             </div>
                             <div class=\"mt-4 pt-3 border-top\">
-                                <div class=\"d-flex justify-content-center gap-3\">
+                                <div class=\"d-flex justify-content-center gap-2 gap-md-3 flex-wrap\">
                                     <span class=\"badge bg-light text-dark px-3 py-2\">
                                         <i class=\"bi bi-check-circle-fill text-success me-1\"></i> Médicaments
                                     </span>
@@ -825,7 +1195,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                 <p class=\"section-subtitle\">Des tarifs adaptés à toutes les tailles d'entreprises</p>
             </div>
             <div class=\"row g-4 align-items-center\">
-                <div class=\"col-lg-4\">
+                <div class=\"col-12 col-lg-4\">
                     <div class=\"pricing-card\">
                         <h4 class=\"text-center\">Starter</h4>
                         <p class=\"text-center text-muted\">Pour les petites structures</p>
@@ -841,12 +1211,12 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                             <li class=\"text-muted\"><i class=\"bi bi-x-circle-fill text-danger me-2\"></i>API d'intégration</li>
                         </ul>
                         <a href=\"";
-        // line 700
+        // line 1070
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
         yield "\" class=\"btn btn-outline-gradient w-100\">Commencer</a>
                     </div>
                 </div>
-                <div class=\"col-lg-4\">
+                <div class=\"col-12 col-lg-4\">
                     <div class=\"pricing-card popular\">
                         <h4 class=\"text-center\">Pro</h4>
                         <p class=\"text-center text-muted\">Pour les entreprises en croissance</p>
@@ -862,12 +1232,12 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                             <li><i class=\"bi bi-check-circle-fill\"></i>API d'intégration</li>
                         </ul>
                         <a href=\"";
-        // line 718
+        // line 1088
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
         yield "\" class=\"btn btn-gradient w-100\">Choisir Pro</a>
                     </div>
                 </div>
-                <div class=\"col-lg-4\">
+                <div class=\"col-12 col-lg-4\">
                     <div class=\"pricing-card\">
                         <h4 class=\"text-center\">Enterprise</h4>
                         <p class=\"text-center text-muted\">Solution sur mesure</p>
@@ -892,11 +1262,11 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
     <!-- About Section -->
     <section id=\"about\" class=\"py-5 bg-light\">
         <div class=\"container\">
-            <div class=\"row align-items-center\">
-                <div class=\"col-lg-6 mb-4 mb-lg-0\">
+            <div class=\"row align-items-center g-4\">
+                <div class=\"col-12 col-lg-6\">
                     <h2 class=\"section-title\">À propos de HMA Service</h2>
                     <p class=\"section-subtitle\">Notre mission, notre vision</p>
-                    <div class=\"feature-card p-4\">
+                    <div class=\"feature-card p-3 p-md-4\">
                         <h4>Notre mission</h4>
                         <p class=\"text-muted\">Nous aidons les entreprises africaines à digitaliser leurs opérations et à accroître leur productivité grâce à des solutions logicielles accessibles et adaptées.</p>
                         <p class=\"text-muted\">Fondée en 2023, HMA Service s'engage à fournir des outils de gestion d'entreprise performants à des prix abordables.</p>
@@ -912,7 +1282,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </div>
                     </div>
                 </div>
-                <div class=\"col-lg-6\">
+                <div class=\"col-12 col-lg-6\">
                     <div class=\"testimonial-card\">
                         <p class=\"mb-4\">\"HMA Service a transformé la façon dont nous gérons notre entreprise. L'interface est intuitive et le support est exceptionnel.\"</p>
                         <div class=\"d-flex align-items-center\">
@@ -932,19 +1302,19 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
     <section id=\"contact\" class=\"cta-section\">
         <div class=\"container\">
             <div class=\"row justify-content-center\">
-                <div class=\"col-lg-8 text-center\">
+                <div class=\"col-12 col-lg-8 text-center\">
                     <h2 class=\"cta-title\">Prêt à transformer votre entreprise ?</h2>
                     <p class=\"cta-subtitle\">Inscrivez-vous maintenant et profitez de 14 jours d'essai gratuit</p>
                     <div class=\"card bg-white shadow-lg border-0\">
-                        <div class=\"card-body p-5\">
-                            <div class=\"row\">
-                                <div class=\"col-md-6 mb-4 mb-md-0\">
+                        <div class=\"card-body p-3 p-md-5\">
+                            <div class=\"row g-4\">
+                                <div class=\"col-12 col-md-6\">
                                     <h4>Contactez-nous</h4>
-                                    <p class=\"text-muted mb-3\"><i class=\"bi bi-envelope me-2 text-primary\"></i>contact@hmamarket.com</p>
+                                    <p class=\"text-muted mb-3 text-break\"><i class=\"bi bi-envelope me-2 text-primary\"></i>contact@hmamarket.com</p>
                                     <p class=\"text-muted mb-3\"><i class=\"bi bi-phone me-2 text-primary\"></i>+229 01 56 13 92 00</p>
                                     <p class=\"text-muted\"><i class=\"bi bi-geo-alt me-2 text-primary\"></i>Cotonou, Bénin</p>
                                 </div>
-                                <div class=\"col-md-6\">
+                                <div class=\"col-12 col-md-6\">
                                     <form id=\"contactForm\">
                                         <div class=\"mb-3\">
                                             <input type=\"text\" class=\"form-control form-control-lg\" placeholder=\"Votre nom\" required>
@@ -971,14 +1341,14 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
     <!-- Footer -->
     <footer class=\"bg-dark text-white py-4\">
         <div class=\"container\">
-            <div class=\"row\">
-                <div class=\"col-md-6\">
-                    <p class=\"mb-0\">&copy; ";
-        // line 827
+            <div class=\"row g-3 align-items-center\">
+                <div class=\"col-12 col-md-6\">
+                    <p class=\"mb-0 text-center text-md-start\">&copy; ";
+        // line 1197
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate("now", "Y"), "html", null, true);
         yield " HMA Service. Tous droits réservés.</p>
                 </div>
-                <div class=\"col-md-6 text-md-end\">
+                <div class=\"col-12 col-md-6 text-center text-md-end\">
                     <a href=\"#\" class=\"text-white me-3\"><i class=\"bi bi-facebook\"></i></a>
                     <a href=\"#\" class=\"text-white me-3\"><i class=\"bi bi-twitter\"></i></a>
                     <a href=\"#\" class=\"text-white me-3\"><i class=\"bi bi-linkedin\"></i></a>
@@ -997,7 +1367,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
         yield from [];
     }
 
-    // line 840
+    // line 1210
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -1010,7 +1380,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 841
+        // line 1211
         yield "    ";
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
@@ -1028,6 +1398,12 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                             top: targetElement.offsetTop - 80,
                             behavior: 'smooth'
                         });
+                        // Fermer le menu mobile après clic
+                        const navbarCollapse = document.getElementById('navbarNav');
+                        if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                            const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                            if (bsCollapse) bsCollapse.hide();
+                        }
                     }
                 });
             });
@@ -1050,7 +1426,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('animate__animated', 'animate__fadeInUp');
-                        observer.unobserve(entry.target); // une seule fois
+                        observer.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
@@ -1091,7 +1467,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  1014 => 841,  1001 => 840,  978 => 827,  866 => 718,  845 => 700,  774 => 632,  768 => 629,  617 => 481,  573 => 440,  567 => 437,  553 => 426,  550 => 425,  523 => 400,  519 => 399,  514 => 396,  501 => 395,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  1384 => 1211,  1371 => 1210,  1348 => 1197,  1236 => 1088,  1215 => 1070,  1144 => 1002,  1138 => 999,  987 => 851,  943 => 810,  937 => 807,  923 => 796,  920 => 795,  893 => 770,  889 => 769,  884 => 766,  871 => 765,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1134,13 +1510,17 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
         /* Navbar */
         .navbar {
             backdrop-filter: blur(10px);
-            background-color: rgba(255,255,255,0.9);
+            background-color: rgba(255,255,255,0.95);
             box-shadow: 0 2px 20px rgba(0,0,0,0.05);
         }
 
         .navbar-brand img {
             height: 40px;
             width: auto;
+        }
+
+        .navbar-brand span {
+            font-size: 1.25rem;
         }
 
         .btn-gradient {
@@ -1218,6 +1598,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .hero-subtitle {
@@ -1231,6 +1612,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             box-shadow: 0 30px 60px rgba(0,0,0,0.1);
             transform: perspective(1000px) rotateY(-5deg);
             transition: all 0.5s ease;
+            max-width: 100%;
         }
 
         .hero-image:hover {
@@ -1331,6 +1713,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             font-size: 0.85rem;
             font-weight: 600;
             letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         .price {
@@ -1355,12 +1738,14 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
         .feature-list li {
             margin-bottom: 0.75rem;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
         }
 
-        .feature-list i {
+        .feature-list li i {
             margin-right: 0.5rem;
             color: var(--success);
+            flex-shrink: 0;
+            margin-top: 0.2rem;
         }
 
         /* Testimonial card */
@@ -1381,6 +1766,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             font-size: 5rem;
             color: rgba(4,99,241,0.1);
             font-family: serif;
+            line-height: 1;
         }
 
         .user-avatar {
@@ -1394,6 +1780,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             justify-content: center;
             font-weight: 600;
             font-size: 1.2rem;
+            flex-shrink: 0;
         }
 
         /* CTA Section */
@@ -1446,6 +1833,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         /* Marketplace Section */
@@ -1475,16 +1863,374 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
             background: #f8fafc;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        /* ============================================
+           RESPONSIVE MOBILE
+           ============================================ */
+
+        /* Tablette */
+        @media (max-width: 991.98px) {
+            .hero {
+                padding-top: 100px;
+                padding-bottom: 60px;
+            }
+            
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 2.75rem;
             }
-            .section-title {
-                font-size: 2rem;
-            }
-            .pricing-card.popular {
+            
+            .hero-image {
                 transform: none;
+                margin-top: 2rem;
+            }
+            
+            .hero-image:hover {
+                transform: none;
+            }
+            
+            .pricing-card.popular {
+                transform: scale(1);
+                margin-top: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 767.98px) {
+            /* Navbar */
+            .navbar {
+                padding: 0.5rem 0;
+            }
+            
+            .navbar-brand img {
+                height: 32px;
+            }
+            
+            .navbar-brand span {
+                font-size: 1rem;
+            }
+            
+            .navbar-collapse {
+                margin-top: 0.75rem;
+                padding: 1rem;
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            
+            .navbar-nav {
+                align-items: stretch !important;
+            }
+            
+            .navbar-nav .nav-item {
+                width: 100%;
+            }
+            
+            .navbar-nav .nav-link {
+                padding: 0.65rem 0.5rem;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            
+            .navbar-nav .nav-item:last-child .nav-link {
+                border-bottom: none;
+            }
+            
+            .navbar-nav .nav-item.ms-2 {
+                margin-left: 0 !important;
+                margin-top: 0.75rem;
+            }
+            
+            .navbar-nav .nav-item.ms-2 .d-flex {
+                flex-direction: column;
+                gap: 0.5rem !important;
+            }
+            
+            .navbar-nav .nav-item.ms-2 .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            /* Hero */
+            .hero {
+                padding-top: 90px;
+                padding-bottom: 40px;
+            }
+            
+            .hero::before,
+            .hero::after {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .hero-title {
+                font-size: 1.85rem;
+                text-align: center;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                text-align: center;
+            }
+            
+            .hero .d-flex.flex-wrap {
+                justify-content: center;
+                flex-direction: column;
+            }
+            
+            .hero .d-flex.flex-wrap .btn {
+                width: 100%;
+                font-size: 1rem;
+                padding: 0.75rem 1rem;
+            }
+            
+            .hero .row.mt-5 .col-4 {
+                padding-left: 0.25rem;
+                padding-right: 0.25rem;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .hero .row.mt-5 p {
+                font-size: 0.8rem;
+            }
+            
+            /* Sections */
+            .section-title {
+                font-size: 1.75rem;
+            }
+            
+            .section-subtitle {
+                font-size: 0.95rem;
+                margin-bottom: 2rem;
+            }
+            
+            /* Feature cards */
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .feature-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .feature-card h4 {
+                font-size: 1.15rem;
+            }
+            
+            .feature-card p {
+                font-size: 0.9rem;
+            }
+            
+            /* Marketplace */
+            .marketplace-feature-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.15rem;
+                border-radius: 12px;
+            }
+            
+            .marketplace-feature-item {
+                padding: 0.5rem;
+                gap: 0.75rem;
+            }
+            
+            .marketplace-feature-item h6 {
+                font-size: 0.95rem;
+            }
+            
+            .marketplace-feature-item p {
+                font-size: 0.8rem;
+            }
+            
+            #marketplace .section-title {
+                font-size: 1.5rem !important;
+            }
+            
+            #marketplace .btn {
+                width: 100%;
+                margin-left: 0 !important;
+                margin-bottom: 0.5rem;
+                font-size: 0.95rem;
+                padding: 0.65rem 1rem;
+            }
+            
+            #marketplace .bg-white.rounded-4 {
+                padding: 1.5rem 1rem !important;
+            }
+            
+            #marketplace .d-flex.justify-content-center.gap-4 {
+                gap: 1rem !important;
+            }
+            
+            #marketplace .h4 {
+                font-size: 1.25rem;
+            }
+            
+            #marketplace .d-flex.justify-content-center.gap-3 {
+                flex-wrap: wrap;
+                gap: 0.5rem !important;
+            }
+            
+            #marketplace .badge {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.75rem !important;
+            }
+            
+            /* Pricing */
+            .pricing-card {
+                padding: 1.75rem 1.25rem;
+                border-radius: 20px;
+            }
+            
+            .pricing-card.popular {
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .price {
+                font-size: 2.25rem;
+                margin: 1rem 0;
+            }
+            
+            .price-period {
+                font-size: 0.85rem;
+            }
+            
+            .feature-list li {
+                font-size: 0.9rem;
+            }
+            
+            /* About & Testimonial */
+            .testimonial-card {
+                padding: 1.5rem;
+                margin-top: 1.5rem;
+            }
+            
+            .testimonial-card::before {
+                font-size: 3.5rem;
+                top: 5px;
+                left: 15px;
+            }
+            
+            .testimonial-card p {
+                font-size: 0.95rem;
+                padding-left: 0.5rem;
+            }
+            
+            .user-avatar {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+            
+            /* CTA & Contact */
+            .cta-section {
+                padding: 50px 0;
+            }
+            
+            .cta-title {
+                font-size: 1.75rem;
+            }
+            
+            .cta-subtitle {
+                font-size: 1rem;
+            }
+            
+            .cta-section .card-body {
+                padding: 1.5rem 1.25rem !important;
+            }
+            
+            .cta-section h4 {
+                font-size: 1.15rem;
+                text-align: center;
+            }
+            
+            .cta-section .text-muted {
+                font-size: 0.9rem;
+                text-align: center;
+            }
+            
+            .cta-section .form-control-lg {
+                font-size: 0.95rem;
+                padding: 0.6rem 0.9rem;
+            }
+            
+            .cta-section .btn-lg {
+                font-size: 1rem;
+                padding: 0.65rem 1rem;
+            }
+            
+            /* Footer */
+            footer {
+                text-align: center;
+            }
+            
+            footer .col-md-6 {
+                margin-bottom: 1rem;
+            }
+            
+            footer .text-md-end {
+                text-align: center !important;
+            }
+            
+            footer p {
+                font-size: 0.9rem;
+            }
+            
+            /* Marketplace badge hero */
+            .badge.bg-primary {
+                font-size: 0.7rem !important;
+                padding: 0.4rem 0.85rem !important;
+            }
+        }
+
+        /* Très petits mobiles */
+        @media (max-width: 375.98px) {
+            .hero-title {
+                font-size: 1.55rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .stat-number {
+                font-size: 1.25rem;
+            }
+            
+            .hero .row.mt-5 p {
+                font-size: 0.7rem;
+            }
+            
+            .price {
+                font-size: 1.9rem;
+            }
+            
+            .cta-title {
+                font-size: 1.5rem;
+            }
+            
+            .navbar-brand img {
+                height: 28px;
+            }
+            
+            .navbar-brand span {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Classe utilitaire : pleine largeur sur mobile */
+        @media (max-width: 575.98px) {
+            .w-100-mobile {
+                width: 100% !important;
             }
         }
     </style>
@@ -1498,11 +2244,11 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                 <img src=\"{{ asset('uploads/logos/logo.png') }}\" alt=\"HMA Market\" height=\"40\" class=\"me-2\">
                 <span class=\"fw-bold fs-4\" style=\"color: var(--primary);\">HMA SERVICE</span>
             </a>
-            <button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\">
+            <button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">
                 <span class=\"navbar-toggler-icon\"></span>
             </button>
             <div class=\"collapse navbar-collapse\" id=\"navbarNav\">
-                <ul class=\"navbar-nav ms-auto align-items-center\">
+                <ul class=\"navbar-nav ms-auto align-items-lg-center\">
                     <li class=\"nav-item\">
                         <a class=\"nav-link\" href=\"#home\">Accueil</a>
                     </li>
@@ -1519,18 +2265,18 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         <a class=\"nav-link\" href=\"#contact\">Contact</a>
                     </li>
                     
-                    {# ✅ VERSION FINALE - S'ouvre dans un nouvel onglet #}
+                    {# Marketplace - s'ouvre dans un nouvel onglet #}
                     <li class=\"nav-item\">
                         <a class=\"nav-link\" href=\"{{ path('marketplace_home') }}\" 
                         target=\"_blank\" 
                         rel=\"noopener noreferrer\"
-                        style=\"color: var(--primary); font-weight: 600; position: relative; display: flex; align-items: center;\">
+                        style=\"color: var(--primary); font-weight: 600;\">
                             <i class=\"fas fa-store me-1\"></i> 
                             Marketplace
                         </a>
                     </li>
                     
-                    <li class=\"nav-item ms-2\">
+                    <li class=\"nav-item ms-lg-2\">
                         <div class=\"d-flex flex-wrap gap-2\" style=\"row-gap: 0.5rem;\">
                             <a href=\"{{ path('app_login') }}\" class=\"btn btn-outline-gradient\">
                                 <i class=\"fas fa-sign-in-alt me-2\"></i>Connexion
@@ -1592,7 +2338,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                 <p class=\"section-subtitle\">Tout ce dont vous avez besoin pour gérer votre entreprise au quotidien</p>
             </div>
             <div class=\"row g-4\">
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-box-seam\"></i>
@@ -1606,7 +2352,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </ul>
                     </div>
                 </div>
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-cash-coin\"></i>
@@ -1620,7 +2366,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </ul>
                     </div>
                 </div>
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-graph-up\"></i>
@@ -1634,7 +2380,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </ul>
                     </div>
                 </div>
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-people\"></i>
@@ -1648,7 +2394,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </ul>
                     </div>
                 </div>
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-credit-card\"></i>
@@ -1662,7 +2408,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </ul>
                     </div>
                 </div>
-                <div class=\"col-md-6 col-lg-4\">
+                <div class=\"col-12 col-md-6 col-lg-4\">
                     <div class=\"feature-card\">
                         <div class=\"feature-icon\">
                             <i class=\"bi bi-phone\"></i>
@@ -1683,8 +2429,8 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
     <!-- Marketplace Section -->
     <section id=\"marketplace\" class=\"py-5 bg-light\">
         <div class=\"container\">
-            <div class=\"row align-items-center\">
-                <div class=\"col-lg-6\">
+            <div class=\"row align-items-center g-4\">
+                <div class=\"col-12 col-lg-6\">
                     <div class=\"mb-4\">
                         <span class=\"badge bg-primary mb-3\" style=\"font-size: 0.8rem; padding: 0.5rem 1rem;\">
                             <i class=\"bi bi-star-fill me-1\"></i> NOUVEAU
@@ -1723,21 +2469,21 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </div>
                     </div>
                     
-                    <div class=\"mt-4\">
+                    <div class=\"mt-4 d-flex flex-column flex-sm-row gap-2\">
                         <a href=\"{{ path('marketplace_home') }}\" class=\"btn btn-gradient btn-lg\">
                             <i class=\"bi bi-arrow-right me-2\"></i>Découvrir la Marketplace
                         </a>
-                        <a href=\"{{ path('marketplace_pharmacy_search') }}\" class=\"btn btn-outline-gradient btn-lg ms-2\">
+                        <a href=\"{{ path('marketplace_pharmacy_search') }}\" class=\"btn btn-outline-gradient btn-lg\">
                             <i class=\"bi bi-search me-2\"></i>Rechercher
                         </a>
                     </div>
                 </div>
-                <div class=\"col-lg-6\">
-                    <div class=\"text-center p-4\">
-                        <div class=\"bg-white rounded-4 shadow-lg p-5\">
+                <div class=\"col-12 col-lg-6\">
+                    <div class=\"text-center p-2 p-md-4\">
+                        <div class=\"bg-white rounded-4 shadow-lg p-3 p-md-5\">
                             <i class=\"bi bi-shop display-1 text-primary opacity-25\"></i>
                             <div class=\"mt-4\">
-                                <div class=\"d-flex justify-content-center gap-4\">
+                                <div class=\"d-flex justify-content-center gap-3 gap-md-4\">
                                     <div class=\"text-center\">
                                         <div class=\"h4 fw-bold text-primary\">100+</div>
                                         <small class=\"text-muted\">Pharmacies</small>
@@ -1753,7 +2499,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                                 </div>
                             </div>
                             <div class=\"mt-4 pt-3 border-top\">
-                                <div class=\"d-flex justify-content-center gap-3\">
+                                <div class=\"d-flex justify-content-center gap-2 gap-md-3 flex-wrap\">
                                     <span class=\"badge bg-light text-dark px-3 py-2\">
                                         <i class=\"bi bi-check-circle-fill text-success me-1\"></i> Médicaments
                                     </span>
@@ -1780,7 +2526,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                 <p class=\"section-subtitle\">Des tarifs adaptés à toutes les tailles d'entreprises</p>
             </div>
             <div class=\"row g-4 align-items-center\">
-                <div class=\"col-lg-4\">
+                <div class=\"col-12 col-lg-4\">
                     <div class=\"pricing-card\">
                         <h4 class=\"text-center\">Starter</h4>
                         <p class=\"text-center text-muted\">Pour les petites structures</p>
@@ -1798,7 +2544,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         <a href=\"{{ path('app_register') }}\" class=\"btn btn-outline-gradient w-100\">Commencer</a>
                     </div>
                 </div>
-                <div class=\"col-lg-4\">
+                <div class=\"col-12 col-lg-4\">
                     <div class=\"pricing-card popular\">
                         <h4 class=\"text-center\">Pro</h4>
                         <p class=\"text-center text-muted\">Pour les entreprises en croissance</p>
@@ -1816,7 +2562,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         <a href=\"{{ path('app_register') }}\" class=\"btn btn-gradient w-100\">Choisir Pro</a>
                     </div>
                 </div>
-                <div class=\"col-lg-4\">
+                <div class=\"col-12 col-lg-4\">
                     <div class=\"pricing-card\">
                         <h4 class=\"text-center\">Enterprise</h4>
                         <p class=\"text-center text-muted\">Solution sur mesure</p>
@@ -1841,11 +2587,11 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
     <!-- About Section -->
     <section id=\"about\" class=\"py-5 bg-light\">
         <div class=\"container\">
-            <div class=\"row align-items-center\">
-                <div class=\"col-lg-6 mb-4 mb-lg-0\">
+            <div class=\"row align-items-center g-4\">
+                <div class=\"col-12 col-lg-6\">
                     <h2 class=\"section-title\">À propos de HMA Service</h2>
                     <p class=\"section-subtitle\">Notre mission, notre vision</p>
-                    <div class=\"feature-card p-4\">
+                    <div class=\"feature-card p-3 p-md-4\">
                         <h4>Notre mission</h4>
                         <p class=\"text-muted\">Nous aidons les entreprises africaines à digitaliser leurs opérations et à accroître leur productivité grâce à des solutions logicielles accessibles et adaptées.</p>
                         <p class=\"text-muted\">Fondée en 2023, HMA Service s'engage à fournir des outils de gestion d'entreprise performants à des prix abordables.</p>
@@ -1861,7 +2607,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                         </div>
                     </div>
                 </div>
-                <div class=\"col-lg-6\">
+                <div class=\"col-12 col-lg-6\">
                     <div class=\"testimonial-card\">
                         <p class=\"mb-4\">\"HMA Service a transformé la façon dont nous gérons notre entreprise. L'interface est intuitive et le support est exceptionnel.\"</p>
                         <div class=\"d-flex align-items-center\">
@@ -1881,19 +2627,19 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
     <section id=\"contact\" class=\"cta-section\">
         <div class=\"container\">
             <div class=\"row justify-content-center\">
-                <div class=\"col-lg-8 text-center\">
+                <div class=\"col-12 col-lg-8 text-center\">
                     <h2 class=\"cta-title\">Prêt à transformer votre entreprise ?</h2>
                     <p class=\"cta-subtitle\">Inscrivez-vous maintenant et profitez de 14 jours d'essai gratuit</p>
                     <div class=\"card bg-white shadow-lg border-0\">
-                        <div class=\"card-body p-5\">
-                            <div class=\"row\">
-                                <div class=\"col-md-6 mb-4 mb-md-0\">
+                        <div class=\"card-body p-3 p-md-5\">
+                            <div class=\"row g-4\">
+                                <div class=\"col-12 col-md-6\">
                                     <h4>Contactez-nous</h4>
-                                    <p class=\"text-muted mb-3\"><i class=\"bi bi-envelope me-2 text-primary\"></i>contact@hmamarket.com</p>
+                                    <p class=\"text-muted mb-3 text-break\"><i class=\"bi bi-envelope me-2 text-primary\"></i>contact@hmamarket.com</p>
                                     <p class=\"text-muted mb-3\"><i class=\"bi bi-phone me-2 text-primary\"></i>+229 01 56 13 92 00</p>
                                     <p class=\"text-muted\"><i class=\"bi bi-geo-alt me-2 text-primary\"></i>Cotonou, Bénin</p>
                                 </div>
-                                <div class=\"col-md-6\">
+                                <div class=\"col-12 col-md-6\">
                                     <form id=\"contactForm\">
                                         <div class=\"mb-3\">
                                             <input type=\"text\" class=\"form-control form-control-lg\" placeholder=\"Votre nom\" required>
@@ -1920,11 +2666,11 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
     <!-- Footer -->
     <footer class=\"bg-dark text-white py-4\">
         <div class=\"container\">
-            <div class=\"row\">
-                <div class=\"col-md-6\">
-                    <p class=\"mb-0\">&copy; {{ \"now\"|date(\"Y\") }} HMA Service. Tous droits réservés.</p>
+            <div class=\"row g-3 align-items-center\">
+                <div class=\"col-12 col-md-6\">
+                    <p class=\"mb-0 text-center text-md-start\">&copy; {{ \"now\"|date(\"Y\") }} HMA Service. Tous droits réservés.</p>
                 </div>
-                <div class=\"col-md-6 text-md-end\">
+                <div class=\"col-12 col-md-6 text-center text-md-end\">
                     <a href=\"#\" class=\"text-white me-3\"><i class=\"bi bi-facebook\"></i></a>
                     <a href=\"#\" class=\"text-white me-3\"><i class=\"bi bi-twitter\"></i></a>
                     <a href=\"#\" class=\"text-white me-3\"><i class=\"bi bi-linkedin\"></i></a>
@@ -1951,6 +2697,12 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                             top: targetElement.offsetTop - 80,
                             behavior: 'smooth'
                         });
+                        // Fermer le menu mobile après clic
+                        const navbarCollapse = document.getElementById('navbarNav');
+                        if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                            const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                            if (bsCollapse) bsCollapse.hide();
+                        }
                     }
                 });
             });
@@ -1973,7 +2725,7 @@ class __TwigTemplate_2bdeb27db6d43a31a5ce0a12fc62511d extends Template
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('animate__animated', 'animate__fadeInUp');
-                        observer.unobserve(entry.target); // une seule fois
+                        observer.unobserve(entry.target);
                     }
                 });
             }, observerOptions);

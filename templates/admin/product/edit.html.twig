@@ -58,10 +58,10 @@
     </div>
     {% endif %}
 
-    <!-- Formulaire avec passage de la variable canEditStock -->
+    {# ✅ Utilise {{ include() }} : partage TOUT le contexte #}
+    {# La variable button_label est passée via le contrôleur ou définie dans _form #}
     {{ include('admin/product/_form.html.twig', {
-        'button_label': 'Mettre à jour',
-        'canEditStock': canEditStock|default(false)
+        'button_label': 'Mettre à jour'
     }) }}
 </div>
 {% endblock %}

@@ -15,6 +15,7 @@ use App\Repository\ProductRepository;
 use App\Repository\StockBatchRepository;
 use App\Service\NotificationService;
 use App\Service\StockMovementService;
+use App\Service\StockSyncService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -23,6 +24,7 @@ class StockInventoryService
     public function __construct(
         private EntityManagerInterface $entityManager,
         private StockMovementService $stockMovementService,
+        private StockSyncService $stockSyncService,
         private NotificationService $notificationService,
         private LoggerInterface $logger,
         private StockBatchRepository $stockBatchRepository,
@@ -39,7 +41,7 @@ class StockInventoryService
         $prefix = 'INV';
         $companyCode = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $hmaService->getCompanyName()), 0, 3));
         $date = (new \DateTime())->format('Ymd');
-        
+
         $lastInventory = $this->inventoryRepository
             ->createQueryBuilder('i')
             ->where('i.inventory_number LIKE :pattern')
@@ -48,14 +50,14 @@ class StockInventoryService
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
-        
+
         if ($lastInventory) {
             $lastNumber = (int)substr($lastInventory->getInventoryNumber(), -4);
             $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
         } else {
             $newNumber = '0001';
         }
-        
+
         return "{$prefix}-{$companyCode}-{$date}-{$newNumber}";
     }
 
@@ -69,12 +71,12 @@ class StockInventoryService
             ->where('sb.product = :product')
             ->andWhere('sb.is_active = true')
             ->setParameter('product', $product);
-        
+
         if ($location) {
             $qb->andWhere('sb.locationEntity = :location')
                ->setParameter('location', $location);
         }
-        
+
         return (int)$qb->getQuery()->getSingleScalarResult();
     }
 
@@ -88,26 +90,44 @@ class StockInventoryService
         ?Location $location = null,
         ?string $notes = null
     ): Inventory {
-        $inventoryNumber = $this->generateInventoryNumber($hmaService);
-        
+        $hmaServiceRef = $this->entityManager->getReference(
+            HmaService::class,
+            $hmaService->getId()
+        );
+
+        $userRef = $this->entityManager->getReference(
+            User::class,
+            $createdBy->getId()
+        );
+
+        $locationRef = null;
+        if ($location) {
+            $locationRef = $this->entityManager->getReference(
+                Location::class,
+                $location->getId()
+            );
+        }
+
+        $inventoryNumber = $this->generateInventoryNumber($hmaServiceRef);
+
         $inventory = new Inventory();
         $inventory->setInventoryNumber($inventoryNumber);
         $inventory->setInventoryDate($inventoryDate);
-        $inventory->setCreatedBy($createdBy);
-        $inventory->setHmaService($hmaService);
+        $inventory->setCreatedBy($userRef);
+        $inventory->setHmaService($hmaServiceRef);
         $inventory->setNotes($notes);
-        $inventory->setLocation($location);
+        $inventory->setLocation($locationRef);
         $inventory->setStatus(Inventory::STATUS_DRAFT);
-        
+
         $this->entityManager->persist($inventory);
         $this->entityManager->flush();
-        
+
         $this->logger->info('Inventaire créé', [
             'inventory_id' => $inventory->getId(),
             'inventory_number' => $inventoryNumber,
             'created_by' => $createdBy->getEmail()
         ]);
-        
+
         return $inventory;
     }
 
@@ -125,19 +145,38 @@ class StockInventoryService
                 throw new \Exception('Ce produit est déjà dans l\'inventaire.');
             }
         }
-        
-        $expectedQuantity = $this->calculateExpectedQuantity($product, $location ?? $inventory->getLocation());
-        
+
+        $productRef = $this->entityManager->getReference(
+            Product::class,
+            $product->getId()
+        );
+
+        $inventoryRef = $this->entityManager->getReference(
+            Inventory::class,
+            $inventory->getId()
+        );
+
+        $locationRef = null;
+        $targetLocation = $location ?? $inventory->getLocation();
+        if ($targetLocation) {
+            $locationRef = $this->entityManager->getReference(
+                Location::class,
+                $targetLocation->getId()
+            );
+        }
+
+        $expectedQuantity = $this->calculateExpectedQuantity($productRef, $locationRef);
+
         $item = new InventoryItem();
-        $item->setInventory($inventory);
-        $item->setProduct($product);
-        $item->setLocation($location ?? $inventory->getLocation());
+        $item->setInventory($inventoryRef);
+        $item->setProduct($productRef);
+        $item->setLocation($locationRef);
         $item->setExpectedQuantity($expectedQuantity);
         $item->setActualQuantity(0);
-        
+
         $this->entityManager->persist($item);
         $this->entityManager->flush();
-        
+
         return $item;
     }
 
@@ -150,7 +189,7 @@ class StockInventoryService
             'hma_service' => $inventory->getHmaService(),
             'is_active' => true
         ]);
-        
+
         $count = 0;
         foreach ($products as $product) {
             try {
@@ -163,12 +202,12 @@ class StockInventoryService
                 ]);
             }
         }
-        
+
         if ($count > 0 && $inventory->getStatus() === Inventory::STATUS_DRAFT) {
             $inventory->setStatus(Inventory::STATUS_IN_PROGRESS);
             $this->entityManager->flush();
         }
-        
+
         return $count;
     }
 
@@ -184,17 +223,22 @@ class StockInventoryService
         if ($item->getInventory()->getStatus() === Inventory::STATUS_COMPLETED) {
             throw new \Exception('Cet inventaire est déjà terminé.');
         }
-        
+
+        $counterRef = $this->entityManager->getReference(
+            User::class,
+            $counter->getId()
+        );
+
         $item->setActualQuantity($actualQuantity);
-        $item->setCountedBy($counter);
+        $item->setCountedBy($counterRef);
         $item->setCountedAt(new \DateTime());
-        
+
         if ($notes) {
             $item->setNotes($notes);
         }
-        
+
         $this->entityManager->flush();
-        
+
         $this->logger->info('Saisie inventaire', [
             'inventory_id' => $item->getInventory()->getId(),
             'product_id' => $item->getProduct()->getId(),
@@ -203,22 +247,32 @@ class StockInventoryService
             'difference' => $item->getDifference(),
             'counter' => $counter->getEmail()
         ]);
-        
+
         return $item;
     }
 
     /**
      * Valide l'inventaire et applique les ajustements
+     *
+     * Flow :
+     *   - Pour chaque écart → applyInventoryAdjustment()
+     *     → createAdjustment() → Flush #1 + Flush #2 (sync product)
+     *   - setStatus(COMPLETED) → Flush final
      */
     public function validateInventory(Inventory $inventory, User $validator): array
     {
         if ($inventory->getStatus() === Inventory::STATUS_COMPLETED) {
             throw new \Exception('Cet inventaire est déjà validé.');
         }
-        
+
+        $validatorRef = $this->entityManager->getReference(
+            User::class,
+            $validator->getId()
+        );
+
         $differences = [];
         $adjustments = [];
-        
+
         foreach ($inventory->getItems() as $item) {
             if ($item->getDifference() !== 0) {
                 $differences[] = [
@@ -227,22 +281,22 @@ class StockInventoryService
                     'actual' => $item->getActualQuantity(),
                     'difference' => $item->getDifference()
                 ];
-                
-                $adjustment = $this->applyInventoryAdjustment($item, $validator);
+
+                $adjustment = $this->applyInventoryAdjustment($item, $validatorRef);
                 if ($adjustment) {
                     $adjustments[] = $adjustment;
                 }
             }
         }
-        
+
         $inventory->setStatus(Inventory::STATUS_COMPLETED);
-        $inventory->setValidatedBy($validator);
+        $inventory->setValidatedBy($validatorRef);
         $inventory->setValidatedAt(new \DateTime());
-        
+
         $this->entityManager->flush();
-        
+
         $this->sendInventoryValidationNotification($inventory, $differences, $adjustments, $validator);
-        
+
         $this->logger->info('Inventaire validé', [
             'inventory_id' => $inventory->getId(),
             'inventory_number' => $inventory->getInventoryNumber(),
@@ -250,7 +304,7 @@ class StockInventoryService
             'adjustments_count' => count($adjustments),
             'validated_by' => $validator->getEmail()
         ]);
-        
+
         return [
             'inventory' => $inventory,
             'differences' => $differences,
@@ -264,11 +318,11 @@ class StockInventoryService
     private function applyInventoryAdjustment(InventoryItem $item, User $validator): ?array
     {
         $difference = $item->getDifference();
-        
+
         if ($difference === 0) {
             return null;
         }
-        
+
         $product = $item->getProduct();
         $hmaService = $item->getInventory()->getHmaService();
         $reason = sprintf(
@@ -276,7 +330,7 @@ class StockInventoryService
             $item->getInventory()->getInventoryNumber(),
             $item->getNotes() ?? "Écart constaté: " . ($difference > 0 ? "+" : "") . $difference . " unités"
         );
-        
+
         if ($difference > 0) {
             $type = 'in';
             $movementType = 'adjustment_in';
@@ -286,13 +340,13 @@ class StockInventoryService
             $movementType = 'adjustment_out';
             $explanation = "Manque constaté: {$difference} unités";
         }
-        
+
         $absoluteDifference = abs($difference);
-        
+
         // Récupérer ou créer un lot pour l'ajustement
         $stockBatch = $this->getOrCreateBatchForAdjustment($product, $hmaService, $item->getLocation(), $validator);
-        
-        // Créer l'ajustement
+
+        // createAdjustment() gère tout : modif lot, mouvement, Flush #1, sync, Flush #2
         $movement = $this->stockMovementService->createAdjustment(
             $stockBatch,
             $absoluteDifference,
@@ -301,7 +355,7 @@ class StockInventoryService
             $validator,
             $item->getInventory()->getId()
         );
-        
+
         return [
             'product' => $product->getName(),
             'type' => $type,
@@ -321,35 +375,53 @@ class StockInventoryService
         ?Location $location,
         User $user
     ): StockBatch {
+        $productRef = $this->entityManager->getReference(
+            Product::class,
+            $product->getId()
+        );
+
+        $hmaServiceRef = $this->entityManager->getReference(
+            HmaService::class,
+            $hmaService->getId()
+        );
+
         // Chercher un lot existant pour ce produit
         $existingBatch = $this->stockBatchRepository->findOneBy([
-            'product' => $product,
-            'hma_service' => $hmaService,
+            'product' => $productRef,
+            'hma_service' => $hmaServiceRef,
             'is_active' => true
         ], ['created_at' => 'DESC']);
-        
+
         if ($existingBatch) {
             return $existingBatch;
         }
-        
+
         // Créer un nouveau lot
         $batchNumber = 'ADJ-' . date('Ymd') . '-' . uniqid();
         $unitPrice = $product->getPurchasePrice() ?: '0';
-        
+
+        $locationRef = null;
+        if ($location) {
+            $locationRef = $this->entityManager->getReference(
+                Location::class,
+                $location->getId()
+            );
+        }
+
         $newBatch = new StockBatch();
         $newBatch->setBatchNumber($batchNumber);
-        $newBatch->setProduct($product);
+        $newBatch->setProduct($productRef);
         $newBatch->setInitialQuantity(0);
         $newBatch->setCurrentQuantity(0);
         $newBatch->setUnitPrice($unitPrice);
         $newBatch->setIsActive(true);
-        $newBatch->setHmaService($hmaService);
-        $newBatch->setLocationEntity($location);
+        $newBatch->setHmaService($hmaServiceRef);
+        $newBatch->setLocationEntity($locationRef);
         $newBatch->setCreatedAt(new \DateTime());
-        
+
         $this->entityManager->persist($newBatch);
         $this->entityManager->flush();
-        
+
         return $newBatch;
     }
 
@@ -363,7 +435,7 @@ class StockInventoryService
         User $validator
     ): void {
         $subject = sprintf('[Inventaire] %s - Terminé', $inventory->getInventoryNumber());
-        
+
         $differencesText = "";
         foreach ($differences as $diff) {
             $differencesText .= sprintf(
@@ -375,7 +447,7 @@ class StockInventoryService
                 $diff['difference']
             );
         }
-        
+
         $adjustmentsText = "";
         foreach ($adjustments as $adj) {
             $adjustmentsText .= sprintf(
@@ -385,7 +457,7 @@ class StockInventoryService
                 $adj['quantity']
             );
         }
-        
+
         $message = sprintf(
             "📋 **Inventaire terminé**\n\n" .
             "**N° inventaire :** %s\n" .
@@ -402,7 +474,7 @@ class StockInventoryService
             count($differences),
             count($adjustments)
         );
-        
+
         $this->notificationService->notifyAdminsAndManagers($subject, $message);
     }
 
@@ -422,12 +494,12 @@ class StockInventoryService
         if ($inventory->getStatus() === Inventory::STATUS_COMPLETED) {
             throw new \Exception('Un inventaire terminé ne peut pas être annulé.');
         }
-        
+
         $inventory->setStatus(Inventory::STATUS_CANCELLED);
         $inventory->setNotes(($inventory->getNotes() ? $inventory->getNotes() . "\n" : "") . "Annulé par {$user->getEmail()}: {$reason}");
-        
+
         $this->entityManager->flush();
-        
+
         return $inventory;
     }
 }

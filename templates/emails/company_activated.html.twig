@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Votre compte est activé</title>
+</head>
+<body style="font-family: Arial, sans-serif; background: #f9fafb; padding: 30px;">
+    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; padding: 40px;">
+        <h1 style="color: #0463f1;">🎉 Votre compte est activé !</h1>
+        
+        <p>Bonjour <strong>{{ owner.fullName }}</strong>,</p>
+        
+        <p>
+            Nous avons le plaisir de vous informer que le compte de votre entreprise
+            <strong>{{ company.companyName }}</strong> a été activé avec succès.
+        </p>
+        
+        <div style="background: #f0f7ff; border-left: 4px solid #0463f1; padding: 20px; margin: 20px 0;">
+            <p style="margin: 0;"><strong>Numéro d'abonnement :</strong> {{ subscription_number }}</p>
+            <p style="margin: 10px 0 0 0;"><strong>Plan actuel :</strong> {{ company.currentPlanLabel }}</p>
+            <p style="margin: 10px 0 0 0;"><strong>Date d'activation :</strong> {{ "now"|date("d/m/Y H:i") }}</p>
+        </div>
+        
+        <p>
+            Vous pouvez dès maintenant accéder à votre tableau de bord :
+        </p>
+        
+        <p style="text-align: center; margin: 30px 0;">
+            <a href="{{ dashboard_url }}" 
+               style="background: #0463f1; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                Accéder au tableau de bord
+            </a>
+        </p>
+        
+        <p style="color: #666; font-size: 14px;">
+            Pour toute question, contactez notre support à 
+            <a href="mailto:{{ support_email }}">{{ support_email }}</a>.
+        </p>
+        
+        <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+        
+        <p style="color: #999; font-size: 12px; text-align: center;">
+            {{ app_name }} - Tous droits réservés
+        </p>
+    </div>
+</body>
+</html>

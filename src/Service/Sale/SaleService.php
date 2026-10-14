@@ -863,16 +863,16 @@ class SaleService
     }
 
     /**
-     * Calcule le stock total d'un produit = stock_quantity + lots actifs
-     * ✅ Utilisé pour l'affichage du stock disponible
+     * ✅ Calcule le stock total d'un produit = SOMME DES LOTS ACTIFS UNIQUEMENT.
+     * 
+     * ⚠️ IMPORTANT : Ne compte PAS Product.stock_quantity (c'est un cache).
      */
     public function getProductTotalStock(Product $product): int
     {
         $now = new \DateTime();
-        $totalStock = $product->getStockQuantity() ?? 0;
+        $totalStock = 0;  // ← Retire $product->getStockQuantity()
         
         foreach ($product->getStockBatches() as $batch) {
-            // ✅ Ne compter que les lots actifs, avec quantité > 0, et non expirés
             if ($batch->isActive() 
                 && $batch->getCurrentQuantity() > 0
                 && (!$batch->getExpiryDate() || $batch->getExpiryDate() >= $now)) {

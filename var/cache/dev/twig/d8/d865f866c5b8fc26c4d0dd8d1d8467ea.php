@@ -98,39 +98,43 @@ class __TwigTemplate_f8b7d05e9973f7fdf2eb363cd088e0d2 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
         // line 7
-        yield "<div class=\"container-fluid px-4\">
+        yield "<div class=\"container-fluid px-3 px-md-4\">
     <!-- En-tête -->
-    <div class=\"d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3\">
-        <div>
+    <div class=\"d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 mb-md-4 gap-3\">
+        <div class=\"w-100\">
             <nav aria-label=\"breadcrumb\">
-                <ol class=\"breadcrumb\">
-                    <li class=\"breadcrumb-item\"><a href=\"";
-        // line 13
+                <ol class=\"breadcrumb mb-2\">
+                    <li class=\"breadcrumb-item\">
+                        <a href=\"";
+        // line 14
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_supplier_index");
-        yield "\" class=\"text-decoration-none\">Fournisseurs</a></li>
+        yield "\" class=\"text-decoration-none\">
+                            <i class=\"fas fa-truck me-1\"></i> Fournisseurs
+                        </a>
+                    </li>
                     <li class=\"breadcrumb-item active\">Nouveau</li>
                 </ol>
             </nav>
-            <h1 class=\"h3 mb-0 text-gray-800\">
+            <h1 class=\"h4 h-md-3 mb-1 text-gray-800\">
                 <i class=\"fas fa-plus-circle text-primary me-2\"></i> Nouveau Fournisseur
             </h1>
-            <p class=\"text-muted mt-2\">Ajoutez un nouveau fournisseur</p>
+            <p class=\"text-muted mb-0 small\">Ajoutez un nouveau fournisseur</p>
         </div>
-        <div class=\"float-animation\">
+        <div class=\"float-animation d-none d-md-block flex-shrink-0\">
             <i class=\"fas fa-truck fa-3x text-primary opacity-50\"></i>
         </div>
     </div>
 
     <!-- Messages flash -->
     ";
-        // line 28
+        // line 32
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 28, $this->source); })()), "flashes", ["success"], "method", false, false, false, 28));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 32, $this->source); })()), "flashes", ["success"], "method", false, false, false, 32));
         foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
-            // line 29
+            // line 33
             yield "        <div class=\"alert alert-success alert-dismissible fade show shadow-sm\" role=\"alert\">
             <i class=\"fas fa-check-circle me-2\"></i> ";
-            // line 30
+            // line 34
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["message"], "html", null, true);
             yield "
             <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
@@ -140,15 +144,15 @@ class __TwigTemplate_f8b7d05e9973f7fdf2eb363cd088e0d2 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 34
+        // line 38
         yield "    ";
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 34, $this->source); })()), "flashes", ["error"], "method", false, false, false, 34));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 38, $this->source); })()), "flashes", ["error"], "method", false, false, false, 38));
         foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
-            // line 35
+            // line 39
             yield "        <div class=\"alert alert-danger alert-dismissible fade show shadow-sm\" role=\"alert\">
             <i class=\"fas fa-exclamation-circle me-2\"></i> ";
-            // line 36
+            // line 40
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["message"], "html", null, true);
             yield "
             <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button>
@@ -158,11 +162,11 @@ class __TwigTemplate_f8b7d05e9973f7fdf2eb363cd088e0d2 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 40
+        // line 44
         yield "
     <!-- Formulaire -->
     ";
-        // line 42
+        // line 46
         yield Twig\Extension\CoreExtension::include($this->env, $context, "admin/supplier/_form.html.twig");
         yield "
 </div>
@@ -176,7 +180,7 @@ class __TwigTemplate_f8b7d05e9973f7fdf2eb363cd088e0d2 extends Template
         yield from [];
     }
 
-    // line 46
+    // line 50
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -189,59 +193,157 @@ class __TwigTemplate_f8b7d05e9973f7fdf2eb363cd088e0d2 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 47
+        // line 51
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
 <style>
+    /* ============================================
+       STYLES COMMUNS AUX FORMULAIRES FOURNISSEURS
+       ============================================ */
     .bg-gradient-primary {
         background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
     }
-    /* Vous pouvez également copier les autres styles de la catégorie si nécessaire */
+
     .card-hover {
         transition: all 0.3s ease;
         border-radius: 15px;
         overflow: hidden;
     }
+
     .card-hover:hover {
-        transform: translateY(-5px);
+        transform: translateY(-3px);
         box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
     }
+
+    /* Form floating */
     .form-floating > label {
         padding-left: 2.5rem;
     }
+
     .form-floating > .form-control,
     .form-floating > .form-select {
         height: calc(3.5rem + 2px);
         line-height: 1.25;
         padding: 1rem 0.75rem 0.5rem 2.5rem;
-    }
-    .form-floating > .form-control:focus ~ label,
-    .form-floating > .form-control:not(:placeholder-shown) ~ label {
-        transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
-        color: #667eea;
-    }
-    .form-floating > .form-control,
-    .form-floating > .form-select {
         border-radius: 10px;
         border: 2px solid #e0e0e0;
     }
+
     .form-floating > .form-control:focus,
     .form-floating > .form-select:focus {
         border-color: #667eea;
         box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
     }
+
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
+        color: #667eea;
+    }
+
+    /* Boutons */
     .btn-primary {
         background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
         border: none;
         transition: all 0.3s ease;
     }
+
     .btn-primary:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
-    .btn-outline-secondary:hover {
+
+    .btn-outline-secondary:hover,
+    .btn-info:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* ============================================
+       ✅ BOUTONS D'ACTION RESPONSIVE
+       ============================================ */
+    .action-buttons-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    /* Mobile (< 576px) : boutons empilés en colonne, ordre logique */
+    @media (max-width: 575.98px) {
+        .action-buttons-wrapper {
+            flex-direction: column;
+        }
+
+        .action-buttons-wrapper .btn-action {
+            width: 100%;
+            padding: 0.65rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Enregistrer en 1er (action principale) */
+        .action-buttons-wrapper .btn-action-primary {
+            order: -1;
+        }
+    }
+
+    /* Tablette (576px - 767px) : boutons côte à côte, largeur auto */
+    @media (min-width: 576px) and (max-width: 767.98px) {
+        .action-buttons-wrapper {
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .action-buttons-wrapper .btn-action {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Desktop (≥ 768px) : Annuler + Voir à gauche, Enregistrer à droite */
+    @media (min-width: 768px) {
+        .action-buttons-wrapper {
+            flex-direction: row;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+        }
+
+        /* Les boutons secondaires groupés à gauche */
+        .action-buttons-wrapper .btn-action:not(.btn-action-primary) {
+            flex: 0 0 auto;
+        }
+
+        /* Le bouton principal à droite */
+        .action-buttons-wrapper .btn-action-primary {
+            margin-left: auto;
+            flex: 0 0 auto;
+        }
+    }
+
+    /* Icône + texte : espacement adapté sur mobile */
+    @media (max-width: 575.98px) {
+        .btn-action i {
+            margin-right: 0.5rem !important;
+        }
+    }
+
+    /* Animation flottante (desktop) */
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .float-animation {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    /* Container mobile padding */
+    @media (max-width: 575.98px) {
+        .container-fluid {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
     }
 </style>
 ";
@@ -275,7 +377,7 @@ class __TwigTemplate_f8b7d05e9973f7fdf2eb363cd088e0d2 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  193 => 47,  180 => 46,  166 => 42,  162 => 40,  152 => 36,  149 => 35,  144 => 34,  134 => 30,  131 => 29,  127 => 28,  109 => 13,  101 => 7,  88 => 6,  65 => 4,  42 => 2,);
+        return array (  197 => 51,  184 => 50,  170 => 46,  166 => 44,  156 => 40,  153 => 39,  148 => 38,  138 => 34,  135 => 33,  131 => 32,  110 => 14,  101 => 7,  88 => 6,  65 => 4,  42 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -286,22 +388,26 @@ class __TwigTemplate_f8b7d05e9973f7fdf2eb363cd088e0d2 extends Template
 {% block title %}Nouveau Fournisseur - HMA Market{% endblock %}
 
 {% block body %}
-<div class=\"container-fluid px-4\">
+<div class=\"container-fluid px-3 px-md-4\">
     <!-- En-tête -->
-    <div class=\"d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3\">
-        <div>
+    <div class=\"d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 mb-md-4 gap-3\">
+        <div class=\"w-100\">
             <nav aria-label=\"breadcrumb\">
-                <ol class=\"breadcrumb\">
-                    <li class=\"breadcrumb-item\"><a href=\"{{ path('app_admin_supplier_index') }}\" class=\"text-decoration-none\">Fournisseurs</a></li>
+                <ol class=\"breadcrumb mb-2\">
+                    <li class=\"breadcrumb-item\">
+                        <a href=\"{{ path('app_admin_supplier_index') }}\" class=\"text-decoration-none\">
+                            <i class=\"fas fa-truck me-1\"></i> Fournisseurs
+                        </a>
+                    </li>
                     <li class=\"breadcrumb-item active\">Nouveau</li>
                 </ol>
             </nav>
-            <h1 class=\"h3 mb-0 text-gray-800\">
+            <h1 class=\"h4 h-md-3 mb-1 text-gray-800\">
                 <i class=\"fas fa-plus-circle text-primary me-2\"></i> Nouveau Fournisseur
             </h1>
-            <p class=\"text-muted mt-2\">Ajoutez un nouveau fournisseur</p>
+            <p class=\"text-muted mb-0 small\">Ajoutez un nouveau fournisseur</p>
         </div>
-        <div class=\"float-animation\">
+        <div class=\"float-animation d-none d-md-block flex-shrink-0\">
             <i class=\"fas fa-truck fa-3x text-primary opacity-50\"></i>
         </div>
     </div>
@@ -328,55 +434,153 @@ class __TwigTemplate_f8b7d05e9973f7fdf2eb363cd088e0d2 extends Template
 {% block stylesheets %}
 {{ parent() }}
 <style>
+    /* ============================================
+       STYLES COMMUNS AUX FORMULAIRES FOURNISSEURS
+       ============================================ */
     .bg-gradient-primary {
         background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
     }
-    /* Vous pouvez également copier les autres styles de la catégorie si nécessaire */
+
     .card-hover {
         transition: all 0.3s ease;
         border-radius: 15px;
         overflow: hidden;
     }
+
     .card-hover:hover {
-        transform: translateY(-5px);
+        transform: translateY(-3px);
         box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
     }
+
+    /* Form floating */
     .form-floating > label {
         padding-left: 2.5rem;
     }
+
     .form-floating > .form-control,
     .form-floating > .form-select {
         height: calc(3.5rem + 2px);
         line-height: 1.25;
         padding: 1rem 0.75rem 0.5rem 2.5rem;
-    }
-    .form-floating > .form-control:focus ~ label,
-    .form-floating > .form-control:not(:placeholder-shown) ~ label {
-        transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
-        color: #667eea;
-    }
-    .form-floating > .form-control,
-    .form-floating > .form-select {
         border-radius: 10px;
         border: 2px solid #e0e0e0;
     }
+
     .form-floating > .form-control:focus,
     .form-floating > .form-select:focus {
         border-color: #667eea;
         box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
     }
+
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        transform: scale(.85) translateY(-0.9rem) translateX(0.15rem);
+        color: #667eea;
+    }
+
+    /* Boutons */
     .btn-primary {
         background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
         border: none;
         transition: all 0.3s ease;
     }
+
     .btn-primary:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
-    .btn-outline-secondary:hover {
+
+    .btn-outline-secondary:hover,
+    .btn-info:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* ============================================
+       ✅ BOUTONS D'ACTION RESPONSIVE
+       ============================================ */
+    .action-buttons-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    /* Mobile (< 576px) : boutons empilés en colonne, ordre logique */
+    @media (max-width: 575.98px) {
+        .action-buttons-wrapper {
+            flex-direction: column;
+        }
+
+        .action-buttons-wrapper .btn-action {
+            width: 100%;
+            padding: 0.65rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Enregistrer en 1er (action principale) */
+        .action-buttons-wrapper .btn-action-primary {
+            order: -1;
+        }
+    }
+
+    /* Tablette (576px - 767px) : boutons côte à côte, largeur auto */
+    @media (min-width: 576px) and (max-width: 767.98px) {
+        .action-buttons-wrapper {
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .action-buttons-wrapper .btn-action {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Desktop (≥ 768px) : Annuler + Voir à gauche, Enregistrer à droite */
+    @media (min-width: 768px) {
+        .action-buttons-wrapper {
+            flex-direction: row;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+        }
+
+        /* Les boutons secondaires groupés à gauche */
+        .action-buttons-wrapper .btn-action:not(.btn-action-primary) {
+            flex: 0 0 auto;
+        }
+
+        /* Le bouton principal à droite */
+        .action-buttons-wrapper .btn-action-primary {
+            margin-left: auto;
+            flex: 0 0 auto;
+        }
+    }
+
+    /* Icône + texte : espacement adapté sur mobile */
+    @media (max-width: 575.98px) {
+        .btn-action i {
+            margin-right: 0.5rem !important;
+        }
+    }
+
+    /* Animation flottante (desktop) */
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .float-animation {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    /* Container mobile padding */
+    @media (max-width: 575.98px) {
+        .container-fluid {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
     }
 </style>
 {% endblock %}", "admin/supplier/new.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\supplier\\new.html.twig");

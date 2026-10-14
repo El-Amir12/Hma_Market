@@ -51,22 +51,6 @@
             line-height: 1.6;
             font-size: 16px;
         }
-        .password-box {
-            background: #f3f4f6;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-            border: 2px dashed #d1d5db;
-        }
-        .password-box .password {
-            font-size: 20px;
-            font-weight: 700;
-            color: #0463f1;
-            font-family: monospace;
-            letter-spacing: 1px;
-            word-break: break-all;
-        }
         .btn {
             display: inline-block;
             background: linear-gradient(135deg, #0463f1 0%, #8b5cf6 100%);
@@ -110,6 +94,18 @@
         .warning i {
             margin-right: 8px;
         }
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #0463f1;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 20px 0;
+            color: #1e40af;
+            font-size: 14px;
+        }
+        .info-box i {
+            margin-right: 8px;
+        }
         @media (max-width: 480px) {
             .container { margin: 20px; }
             .header { padding: 30px 20px; }
@@ -132,28 +128,24 @@
 
             <div style="text-align: center; margin: 30px 0;">
                 <a href="{{ verificationUrl }}" class="btn">
-                    <i class="fas fa-check-circle"></i> Vérifier mon email
+                    ✅ Vérifier mon email
                 </a>
             </div>
 
             <div class="warning">
-                <i class="fas fa-info-circle"></i>
+                <i>⏰</i>
                 <strong>Ce lien est valable 24 heures.</strong>
             </div>
 
-            <div class="password-box">
-                <p style="margin: 0 0 10px; color: #4b5563; font-size: 14px;">
-                    <i class="fas fa-key"></i> Voici votre mot de passe temporaire :
-                </p>
-                <div class="password">{{ randomPassword }}</div>
-                <p style="margin: 10px 0 0; color: #6b7280; font-size: 13px;">
-                    <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
-                    Nous vous recommandons de changer ce mot de passe lors de votre première connexion.
-                </p>
+            {# ✅ Info box - Rappel du mot de passe choisi #}
+            <div class="info-box">
+                <i>🔑</i>
+                <strong>Rappel :</strong> Lors de votre inscription, vous avez choisi votre propre mot de passe. 
+                Utilisez-le pour vous connecter une fois votre compte activé.
             </div>
 
             <p style="font-size: 14px; color: #6b7280; margin-top: 20px;">
-                <i class="fas fa-info-circle" style="color: #0463f1;"></i>
+                <i>ℹ️</i>
                 Si vous n'avez pas créé de compte sur HMA Market, ignorez simplement cet email.
             </p>
 

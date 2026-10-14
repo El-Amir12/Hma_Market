@@ -1,4 +1,5 @@
 <?php
+// src/Form/HmaServiceRegistrationType.php
 
 namespace App\Form;
 
@@ -11,12 +12,15 @@ use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class HmaServiceRegistrationType extends AbstractType
 {
@@ -41,43 +45,43 @@ class HmaServiceRegistrationType extends AbstractType
                 ]
             ])
             ->add('companyType', ChoiceType::class, [
-            'label' => 'Type d\'entreprise',
-            'choices' => [
-                '🛒 Alimentation & Distribution' => [
-                    'Supermarché' => 'supermarket',
-                    'Épicerie / Alimentation générale' => 'grocery-store',
-                    'Boulangerie / Pâtisserie' => 'bakery',
-                    'Boucherie / Charcuterie' => 'butcher',
-                    'Restaurant / Café' => 'restaurant',
+                'label' => 'Type d\'entreprise',
+                'choices' => [
+                    '🛒 Alimentation & Distribution' => [
+                        'Supermarché' => 'supermarket',
+                        'Épicerie / Alimentation générale' => 'grocery-store',
+                        'Boulangerie / Pâtisserie' => 'bakery',
+                        'Boucherie / Charcuterie' => 'butcher',
+                        'Restaurant / Café' => 'restaurant',
+                    ],
+                    '💊 Santé & Bien-être' => [
+                        'Pharmacie' => 'pharmacy',
+                        'Parapharmacie' => 'parapharmacy',
+                        'Cosmétiques / Parfumerie' => 'cosmetics',
+                    ],
+                    '👕 Commerce de détail' => [
+                        'Magasin de vêtements' => 'clothing-store',
+                        'Magasin d\'électronique' => 'electronics-store',
+                        'Magasin de meubles' => 'furniture-store',
+                        'Quincaillerie / Bricolage' => 'hardware-store',
+                    ],
+                    '💇 Services' => [
+                        'Salon de coiffure' => 'salon',
+                        'Laverie' => 'laundry',
+                    ],
+                    '📦 Grossiste & Distribution' => [
+                        'Grossiste' => 'wholesaler',
+                    ],
+                    'Autre' => [
+                        'Autre' => 'other'
+                    ]
                 ],
-                '💊 Santé & Bien-être' => [
-                    'Pharmacie' => 'pharmacy',
-                    'Parapharmacie' => 'parapharmacy',
-                    'Cosmétiques / Parfumerie' => 'cosmetics',
-                ],
-                '👕 Commerce de détail' => [
-                    'Magasin de vêtements' => 'clothing-store',
-                    'Magasin d\'électronique' => 'electronics-store',
-                    'Magasin de meubles' => 'furniture-store',
-                    'Quincaillerie / Bricolage' => 'hardware-store',
-                ],
-                '💇 Services' => [
-                    'Salon de coiffure' => 'salon',
-                    'Laverie' => 'laundry',
-                ],
-                '📦 Grossiste & Distribution' => [
-                    'Grossiste' => 'wholesaler',
-                ],
-                'Autre' => [
-                    'Autre' => 'other'
+                'placeholder' => '-- Sélectionnez un type d\'entreprise --',
+                'attr' => ['class' => 'form-select form-select-lg'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Le type d\'entreprise est requis'])
                 ]
-            ],
-            'placeholder' => '-- Sélectionnez un type d\'entreprise --',
-            'attr' => ['class' => 'form-select form-select-lg'],
-            'constraints' => [
-                new NotBlank(['message' => 'Le type d\'entreprise est requis'])
-            ]
-        ])
+            ])
             ->add('email', EmailType::class, [
                 'label' => 'Email professionnel *',
                 'attr' => [
@@ -100,6 +104,41 @@ class HmaServiceRegistrationType extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => 'Le téléphone est requis']),
                 ]
+            ])
+            // ✅ NOUVEAU : Mot de passe (non mappé sur HmaService)
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'mapped' => false,   // ⚠️ CRUCIAL : ne pas mapper sur HmaService
+                'first_options' => [
+                    'label' => 'Mot de passe *',
+                    'attr' => [
+                        'placeholder' => 'Minimum 8 caractères',
+                        'class' => 'form-control',
+                        'autocomplete' => 'new-password'
+                    ],
+                ],
+                'second_options' => [
+                    'label' => 'Confirmer le mot de passe *',
+                    'attr' => [
+                        'placeholder' => 'Retapez le mot de passe',
+                        'class' => 'form-control',
+                        'autocomplete' => 'new-password'
+                    ],
+                ],
+                'invalid_message' => 'Les deux mots de passe doivent être identiques.',
+                'constraints' => [
+                    new NotBlank(['message' => 'Le mot de passe est requis']),
+                    new Length([
+                        'min' => 8,
+                        'max' => 4096,
+                        'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères',
+                        'maxMessage' => 'Le mot de passe ne peut pas dépasser {{ limit }} caractères',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[A-Za-z])(?=.*\d).+$/',
+                        'message' => 'Le mot de passe doit contenir au moins une lettre et un chiffre.',
+                    ]),
+                ],
             ])
             ->add('address', TextareaType::class, [
                 'label' => 'Adresse',
@@ -131,7 +170,7 @@ class HmaServiceRegistrationType extends AbstractType
             ->add('logoFile', FileType::class, [
                 'label' => 'Logo de l\'entreprise',
                 'required' => false,
-                'mapped' => false, // Ce champ n'est pas mappé directement à l'entité
+                'mapped' => false,
                 'attr' => [
                     'class' => 'form-control',
                     'accept' => 'image/*'

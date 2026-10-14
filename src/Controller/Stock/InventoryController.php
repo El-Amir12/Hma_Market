@@ -34,17 +34,15 @@ class InventoryController extends AbstractController
         if (!$user) {
             return null;
         }
-        
-        // L'utilisateur peut être une instance de User (c'est le cas normal)
+
         if ($user instanceof \App\Entity\User) {
-            return $user->getHmaServiceId(); // ✅ Utilisation de getHmaServiceId()
+            return $user->getHmaServiceId();
         }
-        
-        // Si c'est déjà un HmaService (cas d'un compte entreprise)
+
         if ($user instanceof HmaService) {
             return $user;
         }
-        
+
         return null;
     }
 
@@ -52,27 +50,27 @@ class InventoryController extends AbstractController
     public function index(Request $request, InventoryRepository $repository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_STOCK_MANAGER');
-        
+
         $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw $this->createAccessDeniedException('Aucune entreprise associée à votre compte.');
         }
-        
+
         $filters = [
             'status' => $request->query->get('status'),
             'date_from' => $request->query->get('date_from'),
             'date_to' => $request->query->get('date_to'),
         ];
-        
+
         $inventories = $repository->findFiltered(
             $hmaService,
             $filters['status'],
             $filters['date_from'] ? new \DateTime($filters['date_from']) : null,
             $filters['date_to'] ? new \DateTime($filters['date_to']) : null
         );
-        
+
         $stats = $this->inventoryService->getStatistics($hmaService);
-        
+
         return $this->render('stock/inventory/index.html.twig', [
             'inventories' => $inventories,
             'stats' => $stats,
@@ -84,40 +82,48 @@ class InventoryController extends AbstractController
     public function new(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_STOCK_MANAGER');
-        
+
         $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw $this->createAccessDeniedException('Aucune entreprise associée à votre compte.');
         }
-        
+
         $user = $this->getUser();
         if (!$user instanceof \App\Entity\User) {
             throw $this->createAccessDeniedException('Utilisateur non trouvé.');
         }
-        
+
+        // Recharger l'utilisateur et l'entreprise depuis l'EntityManager
+        $managedUser = $this->entityManager->getRepository(\App\Entity\User::class)->find($user->getId());
+        $managedHmaService = $this->entityManager->getRepository(HmaService::class)->find($hmaService->getId());
+
+        if (!$managedUser || !$managedHmaService) {
+            throw $this->createAccessDeniedException('Entités introuvables.');
+        }
+
         $inventory = new Inventory();
         $form = $this->createForm(InventoryType::class, $inventory, [
-            'hma_service' => $hmaService
+            'hma_service' => $managedHmaService
         ]);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $inventory = $this->inventoryService->createInventory(
-                hmaService: $hmaService,
-                createdBy: $user,
+                hmaService: $managedHmaService,
+                createdBy: $managedUser,
                 inventoryDate: $inventory->getInventoryDate(),
                 location: $inventory->getLocation(),
                 notes: $inventory->getNotes()
             );
-            
+
             $this->addFlash('success', sprintf(
                 '✅ Inventaire %s créé avec succès.',
                 $inventory->getInventoryNumber()
             ));
-            
+
             return $this->redirectToRoute('app_stock_inventory_add_products', ['id' => $inventory->getId()]);
         }
-        
+
         return $this->render('stock/inventory/new.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -127,83 +133,177 @@ class InventoryController extends AbstractController
     public function addProducts(Request $request, Inventory $inventory): Response
     {
         $this->denyAccessUnlessGranted('ROLE_STOCK_MANAGER');
-        
+
         $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw $this->createAccessDeniedException('Aucune entreprise associée à votre compte.');
         }
-        
+
         if ($inventory->getHmaService()->getId() !== $hmaService->getId()) {
             throw $this->createAccessDeniedException('Accès non autorisé.');
         }
-        
+
         if ($inventory->getStatus() === Inventory::STATUS_COMPLETED) {
             $this->addFlash('error', 'Cet inventaire est déjà terminé.');
             return $this->redirectToRoute('app_stock_inventory_show', ['id' => $inventory->getId()]);
         }
-        
-        $form = $this->createForm(InventoryAddProductsType::class, null, [
-            'hma_service' => $hmaService
-        ]);
-        $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid()) {
-            // ✅ CORRECTION : Vérifier dans la requête si le bouton add_all a été soumis
-            if ($request->request->get('add_all')) {
-                $count = $this->inventoryService->addAllProductsToInventory($inventory, $inventory->getLocation());
-                $this->addFlash('success', sprintf('%d produits ajoutés à l\'inventaire.', $count));
+
+        // ✅ Gestion du POST
+        if ($request->isMethod('POST')) {
+            $isAddAll = $request->request->has('add_all');
+
+            if ($isAddAll) {
+                $count = $this->inventoryService->addAllProductsToInventory(
+                    $inventory,
+                    $inventory->getLocation()
+                );
+
+                $this->addFlash(
+                    $count > 0 ? 'success' : 'warning',
+                    $count > 0
+                        ? sprintf('✅ %d produits ajoutés à l\'inventaire.', $count)
+                        : 'Aucun produit n\'a pu être ajouté.'
+                );
             } else {
-                $products = $form->get('products')->getData();
+                // ✅ Récupérer les IDs des produits cochés
+                $productIds = $request->request->all('products');
+
+                if (empty($productIds)) {
+                    $this->addFlash('warning', 'Veuillez cocher au moins un produit.');
+                    return $this->redirectToRoute('app_stock_inventory_add_products', [
+                        'id' => $inventory->getId()
+                    ]);
+                }
+
                 $count = 0;
-                foreach ($products as $product) {
+                foreach ($productIds as $productId) {
                     try {
-                        $this->inventoryService->addProductToInventory($inventory, $product, $inventory->getLocation());
-                        $count++;
+                        $product = $this->entityManager->getRepository(\App\Entity\Product::class)
+                            ->find((int) $productId);
+
+                        if ($product) {
+                            $this->inventoryService->addProductToInventory(
+                                $inventory,
+                                $product,
+                                $inventory->getLocation()
+                            );
+                            $count++;
+                        }
                     } catch (\Exception $e) {
                         $this->addFlash('warning', $e->getMessage());
                     }
                 }
-                if ($count > 0) {
-                    $this->addFlash('success', sprintf('%d produit(s) ajouté(s) à l\'inventaire.', $count));
-                }
+
+                $this->addFlash(
+                    $count > 0 ? 'success' : 'warning',
+                    $count > 0
+                        ? sprintf('✅ %d produit(s) ajouté(s) à l\'inventaire.', $count)
+                        : 'Aucun produit n\'a pu être ajouté.'
+                );
             }
-            
-            return $this->redirectToRoute('app_stock_inventory_count', ['id' => $inventory->getId()]);
+
+            return $this->redirectToRoute('app_stock_inventory_count', [
+                'id' => $inventory->getId()
+            ]);
         }
-        
+
+        // ✅ GET : charger la liste des produits actifs
+        $products = $this->entityManager->getRepository(\App\Entity\Product::class)->findBy(
+            [
+                'hma_service' => $hmaService,
+                'is_active' => true,
+            ],
+            ['name' => 'ASC']
+        );
+
         return $this->render('stock/inventory/add_products.html.twig', [
             'inventory' => $inventory,
-            'form' => $form->createView(),
+            'products' => $products,
         ]);
+    }
+
+    #[Route('/{inventoryId}/item/{itemId}/remove', name: 'app_stock_inventory_remove_item', methods: ['POST'])]
+    public function removeItem(
+        Request $request,
+        int $inventoryId,
+        int $itemId
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_STOCK_MANAGER');
+
+        $hmaService = $this->getCurrentHmaService();
+        if (!$hmaService) {
+            throw $this->createAccessDeniedException('Aucune entreprise associée à votre compte.');
+        }
+
+        // Vérification CSRF
+        if (!$this->isCsrfTokenValid('remove-item', $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token CSRF invalide.');
+            return $this->redirectToRoute('app_stock_inventory_count', ['id' => $inventoryId]);
+        }
+
+        // Récupérer l'inventaire
+        $inventory = $this->entityManager->getRepository(Inventory::class)->find($inventoryId);
+        if (!$inventory) {
+            throw $this->createNotFoundException('Inventaire introuvable.');
+        }
+
+        if ($inventory->getHmaService()->getId() !== $hmaService->getId()) {
+            throw $this->createAccessDeniedException('Accès non autorisé.');
+        }
+
+        if ($inventory->getStatus() === Inventory::STATUS_COMPLETED) {
+            $this->addFlash('error', 'Cet inventaire est déjà terminé.');
+            return $this->redirectToRoute('app_stock_inventory_show', ['id' => $inventoryId]);
+        }
+
+        // Récupérer l'item
+        $item = $this->entityManager->getRepository(InventoryItem::class)->find($itemId);
+        if (!$item || $item->getInventory()->getId() !== $inventory->getId()) {
+            $this->addFlash('error', 'Produit introuvable dans cet inventaire.');
+            return $this->redirectToRoute('app_stock_inventory_count', ['id' => $inventoryId]);
+        }
+
+        $productName = $item->getProduct()->getName();
+
+        // Supprimer l'item
+        $this->entityManager->remove($item);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', sprintf(
+            '✅ Le produit "%s" a été retiré de l\'inventaire.',
+            $productName
+        ));
+
+        return $this->redirectToRoute('app_stock_inventory_count', ['id' => $inventoryId]);
     }
 
     #[Route('/{id}/count', name: 'app_stock_inventory_count', methods: ['GET', 'POST'])]
     public function count(Request $request, Inventory $inventory): Response
     {
         $this->denyAccessUnlessGranted('ROLE_STOCK_MANAGER');
-        
+
         $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw $this->createAccessDeniedException('Aucune entreprise associée à votre compte.');
         }
-        
+
         $user = $this->getUser();
         if (!$user instanceof \App\Entity\User) {
             throw $this->createAccessDeniedException('Utilisateur non trouvé.');
         }
-        
+
         if ($inventory->getHmaService()->getId() !== $hmaService->getId()) {
             throw $this->createAccessDeniedException('Accès non autorisé.');
         }
-        
+
         if ($inventory->getStatus() === Inventory::STATUS_COMPLETED) {
             $this->addFlash('error', 'Cet inventaire est déjà terminé.');
             return $this->redirectToRoute('app_stock_inventory_show', ['id' => $inventory->getId()]);
         }
-        
+
         if ($request->isMethod('POST')) {
             $items = $request->request->all('items');
-            
+
             foreach ($items as $itemData) {
                 $item = $this->entityManager->getRepository(InventoryItem::class)->find($itemData['id']);
                 if ($item && $item->getInventory()->getId() === $inventory->getId()) {
@@ -214,15 +314,15 @@ class InventoryController extends AbstractController
                     );
                 }
             }
-            
+
             if ($request->request->has('validate')) {
                 return $this->redirectToRoute('app_stock_inventory_validate', ['id' => $inventory->getId()]);
             }
-            
+
             $this->addFlash('success', 'Saisie sauvegardée.');
             return $this->redirectToRoute('app_stock_inventory_count', ['id' => $inventory->getId()]);
         }
-        
+
         return $this->render('stock/inventory/count.html.twig', [
             'inventory' => $inventory,
             'items' => $inventory->getItems(),
@@ -236,48 +336,48 @@ class InventoryController extends AbstractController
     public function validate(Request $request, Inventory $inventory): Response
     {
         $this->denyAccessUnlessGranted('ROLE_STOCK_MANAGER');
-        
+
         $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw $this->createAccessDeniedException('Aucune entreprise associée à votre compte.');
         }
-        
+
         $user = $this->getUser();
         if (!$user instanceof \App\Entity\User) {
             throw $this->createAccessDeniedException('Utilisateur non trouvé.');
         }
-        
+
         if ($inventory->getHmaService()->getId() !== $hmaService->getId()) {
             throw $this->createAccessDeniedException('Accès non autorisé.');
         }
-        
+
         if ($inventory->getStatus() === Inventory::STATUS_COMPLETED) {
             $this->addFlash('error', 'Cet inventaire est déjà terminé.');
             return $this->redirectToRoute('app_stock_inventory_show', ['id' => $inventory->getId()]);
         }
-        
+
         if ($request->isMethod('POST')) {
             try {
                 $result = $this->inventoryService->validateInventory($inventory, $user);
-                
+
                 $this->addFlash('success', sprintf(
                     '✅ Inventaire validé ! %d ajustement(s) effectué(s).',
                     count($result['adjustments'])
                 ));
-                
+
                 return $this->redirectToRoute('app_stock_inventory_show', ['id' => $inventory->getId()]);
             } catch (\Exception $e) {
                 $this->addFlash('error', $e->getMessage());
             }
         }
-        
+
         $differences = [];
         foreach ($inventory->getItems() as $item) {
             if ($item->getDifference() !== 0) {
                 $differences[] = $item;
             }
         }
-        
+
         return $this->render('stock/inventory/validate.html.twig', [
             'inventory' => $inventory,
             'differences' => $differences,
@@ -290,16 +390,16 @@ class InventoryController extends AbstractController
     public function show(Inventory $inventory): Response
     {
         $this->denyAccessUnlessGranted('ROLE_STOCK_MANAGER');
-        
+
         $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw $this->createAccessDeniedException('Aucune entreprise associée à votre compte.');
         }
-        
+
         if ($inventory->getHmaService()->getId() !== $hmaService->getId()) {
             throw $this->createAccessDeniedException('Accès non autorisé.');
         }
-        
+
         return $this->render('stock/inventory/show.html.twig', [
             'inventory' => $inventory,
             'items' => $inventory->getItems(),
@@ -314,35 +414,35 @@ class InventoryController extends AbstractController
     public function cancel(Request $request, Inventory $inventory): Response
     {
         $this->denyAccessUnlessGranted('ROLE_STOCK_MANAGER');
-        
+
         $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw $this->createAccessDeniedException('Aucune entreprise associée à votre compte.');
         }
-        
+
         $user = $this->getUser();
         if (!$user instanceof \App\Entity\User) {
             throw $this->createAccessDeniedException('Utilisateur non trouvé.');
         }
-        
+
         if ($inventory->getHmaService()->getId() !== $hmaService->getId()) {
             throw $this->createAccessDeniedException('Accès non autorisé.');
         }
-        
+
         $reason = $request->request->get('reason');
-        
+
         if (!$reason) {
             $this->addFlash('error', 'Veuillez fournir une raison pour l\'annulation.');
             return $this->redirectToRoute('app_stock_inventory_show', ['id' => $inventory->getId()]);
         }
-        
+
         try {
             $this->inventoryService->cancelInventory($inventory, $user, $reason);
             $this->addFlash('success', 'Inventaire annulé avec succès.');
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
         }
-        
+
         return $this->redirectToRoute('app_stock_inventory_index');
     }
 }

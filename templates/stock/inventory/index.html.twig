@@ -6,84 +6,226 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    .stat-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-        border-radius: 1rem;
-        background: white !important;
-        border: none;
+/* ============================================
+   CARTES STATISTIQUES
+   ============================================ */
+.stat-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 1rem;
+    background: white !important;
+    border: none;
+}
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+.stat-card .stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+.stat-card .stat-sub {
+    font-size: 0.7rem;
+    margin-top: 0.25rem;
+    opacity: 0.8;
+}
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+}
+.card-bg-primary {
+    background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%) !important;
+    color: white;
+}
+.card-bg-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    color: white;
+}
+.card-bg-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: white;
+}
+.card-bg-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+    color: white;
+}
+.card-bg-primary .stat-icon,
+.card-bg-warning .stat-icon,
+.card-bg-success .stat-icon,
+.card-bg-secondary .stat-icon {
+    background: rgba(255,255,255,0.2);
+}
+.card-bg-primary .stat-value,
+.card-bg-warning .stat-value,
+.card-bg-success .stat-value,
+.card-bg-secondary .stat-value {
+    color: white;
+}
+
+/* ============================================
+   TABLEAU DES INVENTAIRES
+   ============================================ */
+.inventory-table {
+    margin: 0;
+}
+
+.inventory-table thead th {
+    font-weight: 700;
+    color: #475569;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+    background: #f8fafc;
+    white-space: nowrap;
+}
+
+.inventory-table tbody tr {
+    transition: all 0.2s;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.inventory-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.inventory-table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+/* ============================================
+   RESPONSIVE MOBILE
+   ============================================ */
+@media (max-width: 767.98px) {
+    .container-fluid {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
     }
-    .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    
+    /* Header */
+    .page-header-actions {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 0.75rem !important;
     }
+    
+    .page-header-actions .btn {
+        width: 100%;
+    }
+    
+    /* Stats cards */
     .stat-card .stat-value {
-        font-size: 2rem;
-        font-weight: bold;
-        margin-bottom: 0;
+        font-size: 1.5rem;
     }
-    .stat-card .stat-label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 600;
-    }
-    .stat-card .stat-sub {
-        font-size: 0.7rem;
-        margin-top: 0.25rem;
-        opacity: 0.8;
-    }
+    
     .stat-icon {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .stat-icon i {
+        font-size: 1.25rem !important;
+    }
+    
+    /* Filtres */
+    .filter-form .col-md-3 {
+        width: 100%;
+    }
+    
+    /* TABLEAU -> CARTES */
+    .inventory-table thead {
+        display: none;
+    }
+    
+    .inventory-table tbody tr {
+        display: block;
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        margin: 0.75rem;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    
+    .inventory-table tbody tr:hover {
+        background: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .inventory-table tbody td {
+        display: block;
+        padding: 0.5rem 0 !important;
+        border: none;
+        text-align: left !important;
+    }
+    
+    .inventory-table tbody td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: #94a3b8;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.35rem;
+    }
+    
+    .inventory-table tbody td[data-label="N° inventaire"] {
+        padding-bottom: 0.75rem !important;
+        border-bottom: 1px solid #f1f5f9;
+        margin-bottom: 0.5rem;
+    }
+    
+    .inventory-table tbody td[data-label="Actions"] {
+        padding-top: 0.75rem !important;
+        border-top: 1px solid #f1f5f9;
+        margin-top: 0.5rem;
+        text-align: center !important;
+    }
+    
+    .inventory-table tbody td[data-label="Actions"]::before {
+        display: none;
+    }
+    
+    .inventory-table tbody td[data-label="Actions"] .btn-group {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 1rem;
+        width: 100%;
+        gap: 0.35rem;
     }
-    .card-bg-primary {
-        background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%) !important;
-        color: white;
+    
+    .inventory-table tbody td[data-label="Actions"] .btn-group .btn {
+        flex: 1;
+        padding: 0.5rem;
     }
-    .card-bg-warning {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-        color: white;
+    
+    /* Empty state */
+    .inventory-table tbody td[colspan] {
+        text-align: center !important;
+        padding: 2rem 1rem !important;
     }
-    .card-bg-success {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-        color: white;
-    }
-    .card-bg-secondary {
-        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
-        color: white;
-    }
-    .card-bg-primary .stat-icon,
-    .card-bg-warning .stat-icon,
-    .card-bg-success .stat-icon,
-    .card-bg-secondary .stat-icon {
-        background: rgba(255,255,255,0.2);
-    }
-    .card-bg-primary .stat-value,
-    .card-bg-warning .stat-value,
-    .card-bg-success .stat-value,
-    .card-bg-secondary .stat-value {
-        color: white;
-    }
-    .card-bg-primary .text-muted,
-    .card-bg-warning .text-muted,
-    .card-bg-success .text-muted,
-    .card-bg-secondary .text-muted {
-        color: rgba(255,255,255,0.8) !important;
-    }
+}
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="container-fluid px-4">
     <!-- En-tête -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-start mb-4 page-header-actions flex-wrap gap-3">
         <div>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
+                <ol class="breadcrumb mb-2">
                     <li class="breadcrumb-item">
                         <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
                             <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
@@ -98,12 +240,12 @@
                 <i class="fas fa-clipboard-list text-primary me-2"></i>
                 Inventaires
             </h1>
-            <p class="text-muted mt-2">
+            <p class="text-muted mt-2 mb-0">
                 <i class="fas fa-info-circle me-1"></i>
                 Gérez les inventaires physiques et les comptages de stock
             </p>
         </div>
-        <div>
+        <div class="d-flex gap-2">
             <a href="{{ path('app_stock_inventory_new') }}" class="btn btn-primary">
                 <i class="fas fa-plus me-1"></i> Nouvel inventaire
             </a>
@@ -112,64 +254,64 @@
 
     <!-- Cartes statistiques -->
     <div class="row g-3 mb-4">
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-primary shadow-sm">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="flex-grow-1">
-                            <div class="stat-label">Total inventaires</div>
+                        <div class="flex-grow-1 min-w-0">
+                            <div class="stat-label">Total</div>
                             <div class="stat-value">{{ stats.total|default(0)|number_format(0, ',', ' ') }}</div>
-                            <div class="stat-sub">inventaires créés</div>
+                            <div class="stat-sub d-none d-sm-block">inventaires créés</div>
                         </div>
-                        <div class="stat-icon">
+                        <div class="stat-icon flex-shrink-0">
                             <i class="fas fa-chart-bar fa-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-warning shadow-sm">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="flex-grow-1">
+                        <div class="flex-grow-1 min-w-0">
                             <div class="stat-label">En cours</div>
                             <div class="stat-value">{{ stats.in_progress|default(0)|number_format(0, ',', ' ') }}</div>
-                            <div class="stat-sub">inventaire(s) en cours</div>
+                            <div class="stat-sub d-none d-sm-block">inventaire(s) en cours</div>
                         </div>
-                        <div class="stat-icon">
+                        <div class="stat-icon flex-shrink-0">
                             <i class="fas fa-spinner fa-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-success shadow-sm">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="flex-grow-1">
+                        <div class="flex-grow-1 min-w-0">
                             <div class="stat-label">Terminés</div>
                             <div class="stat-value">{{ stats.completed|default(0)|number_format(0, ',', ' ') }}</div>
-                            <div class="stat-sub">inventaire(s) terminés</div>
+                            <div class="stat-sub d-none d-sm-block">inventaire(s) terminés</div>
                         </div>
-                        <div class="stat-icon">
+                        <div class="stat-icon flex-shrink-0">
                             <i class="fas fa-check-circle fa-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-secondary shadow-sm">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="flex-grow-1">
+                        <div class="flex-grow-1 min-w-0">
                             <div class="stat-label">Brouillons</div>
                             <div class="stat-value">{{ stats.draft|default(0)|number_format(0, ',', ' ') }}</div>
-                            <div class="stat-sub">inventaire(s) en brouillon</div>
+                            <div class="stat-sub d-none d-sm-block">inventaire(s) en brouillon</div>
                         </div>
-                        <div class="stat-icon">
+                        <div class="stat-icon flex-shrink-0">
                             <i class="fas fa-pen fa-2x"></i>
                         </div>
                     </div>
@@ -186,8 +328,8 @@
             </h5>
         </div>
         <div class="card-body">
-            <form method="get" class="row g-3">
-                <div class="col-md-3">
+            <form method="get" class="row g-3 filter-form">
+                <div class="col-12 col-md-3">
                     <label class="form-label fw-bold small">Statut</label>
                     <select name="status" class="form-select">
                         <option value="">Tous</option>
@@ -197,15 +339,15 @@
                         <option value="cancelled" {{ filters.status == 'cancelled' ? 'selected' }}>Annulé</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <label class="form-label fw-bold small">Date du</label>
                     <input type="date" name="date_from" class="form-control" value="{{ filters.date_from }}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <label class="form-label fw-bold small">Date au</label>
                     <input type="date" name="date_to" class="form-control" value="{{ filters.date_to }}">
                 </div>
-                <div class="col-md-3 d-flex align-items-end">
+                <div class="col-12 col-md-3 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="fas fa-search me-1"></i> Filtrer
                     </button>
@@ -216,7 +358,7 @@
 
     <!-- Tableau des inventaires -->
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h5 class="mb-0 fw-semibold">
                 <i class="fas fa-list me-2 text-primary"></i>
                 Liste des inventaires
@@ -225,8 +367,8 @@
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="table align-middle mb-0 inventory-table">
+                    <thead>
                         <tr>
                             <th>N° inventaire</th>
                             <th>Date</th>
@@ -241,26 +383,29 @@
                     <tbody>
                         {% for inventory in inventories %}
                             <tr>
-                                <td class="align-middle">
+                                <td data-label="N° inventaire">
                                     <div class="fw-bold">{{ inventory.inventoryNumber }}</div>
                                     <small class="text-muted">{{ inventory.createdAt|date('d/m/Y H:i') }}</small>
-                                </div>
-                                <td class="align-middle">{{ inventory.inventoryDate|date('d/m/Y') }}</div>
-                                <td class="align-middle">
+                                </td>
+                                <td data-label="Date">
+                                    <i class="fas fa-calendar text-muted me-1 d-none d-md-inline"></i>
+                                    {{ inventory.inventoryDate|date('d/m/Y') }}
+                                </td>
+                                <td data-label="Statut">
                                     <span class="badge {{ inventory.statusBadgeClass }}">
                                         <i class="fas {{ inventory.statusIcon }} me-1"></i>
                                         {{ inventory.statusLabel }}
                                     </span>
-                                </div>
-                                <td class="align-middle">
+                                </td>
+                                <td data-label="Emplacement">
                                     {% if inventory.location %}
                                         <i class="fas fa-map-marker-alt text-muted me-1"></i>
                                         {{ inventory.location.displayName }}
                                     {% else %}
                                         <span class="text-muted">Tous les emplacements</span>
                                     {% endif %}
-                                </div>
-                                <td class="align-middle">
+                                </td>
+                                <td data-label="Progression">
                                     <div class="d-flex align-items-center gap-2">
                                         <div class="progress flex-grow-1" style="height: 6px;">
                                             <div class="progress-bar bg-primary" style="width: {{ inventory.progress }}%"></div>
@@ -268,14 +413,14 @@
                                         <small class="fw-bold">{{ inventory.progress }}%</small>
                                     </div>
                                     <small class="text-muted">{{ inventory.countedItemsCount }}/{{ inventory.items|length }} comptés</small>
-                                </div>
-                                <td class="align-middle">
+                                </td>
+                                <td data-label="Créé par">
                                     <div class="d-flex align-items-center gap-2">
                                         <i class="fas fa-user-circle text-muted"></i>
                                         <small>{{ inventory.createdBy.fullName ?: inventory.createdBy.email }}</small>
                                     </div>
-                                </div>
-                                <td class="align-middle">
+                                </td>
+                                <td data-label="Validé par">
                                     {% if inventory.validatedBy %}
                                         <div class="d-flex align-items-center gap-2">
                                             <i class="fas fa-check-circle text-success"></i>
@@ -284,24 +429,30 @@
                                     {% else %}
                                         <span class="text-muted">—</span>
                                     {% endif %}
-                                </div>
-                                <td class="align-middle text-center">
+                                </td>
+                                <td data-label="Actions" class="text-center">
                                     <div class="btn-group" role="group">
-                                        <a href="{{ path('app_stock_inventory_show', {'id': inventory.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir le détail">
+                                        <a href="{{ path('app_stock_inventory_show', {'id': inventory.id}) }}" 
+                                           class="btn btn-sm btn-outline-primary" 
+                                           title="Voir le détail">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         {% if inventory.status == 'in_progress' %}
-                                            <a href="{{ path('app_stock_inventory_count', {'id': inventory.id}) }}" class="btn btn-sm btn-outline-success" title="Continuer la saisie">
+                                            <a href="{{ path('app_stock_inventory_count', {'id': inventory.id}) }}" 
+                                               class="btn btn-sm btn-outline-success" 
+                                               title="Continuer la saisie">
                                                 <i class="fas fa-clipboard-list"></i>
                                             </a>
                                         {% endif %}
                                         {% if inventory.status == 'draft' %}
-                                            <a href="{{ path('app_stock_inventory_add_products', {'id': inventory.id}) }}" class="btn btn-sm btn-outline-warning" title="Ajouter des produits">
+                                            <a href="{{ path('app_stock_inventory_add_products', {'id': inventory.id}) }}" 
+                                               class="btn btn-sm btn-outline-warning" 
+                                               title="Ajouter des produits">
                                                 <i class="fas fa-plus"></i>
                                             </a>
                                         {% endif %}
                                     </div>
-                                </div>
+                                </td>
                             </tr>
                         {% else %}
                             <tr>
@@ -312,7 +463,7 @@
                                     <a href="{{ path('app_stock_inventory_new') }}" class="btn btn-primary">
                                         <i class="fas fa-plus me-1"></i> Créer un inventaire
                                     </a>
-                                </div>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>

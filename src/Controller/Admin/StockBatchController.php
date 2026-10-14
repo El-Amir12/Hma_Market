@@ -7,13 +7,14 @@ use App\Entity\HmaService;
 use App\Entity\Location;
 use App\Entity\Product;
 use App\Entity\PurchaseItem;
-use App\Entity\Purchase;      
+use App\Entity\Purchase;
 use App\Entity\StockBatch;
-use App\Entity\SupplierCreditNote; // ✅ AJOUTÉ
+use App\Entity\SupplierCreditNote;
 use App\Form\StockBatchEditType;
 use App\Repository\LocationRepository;
 use App\Repository\ProductRepository;
 use App\Repository\StockBatchRepository;
+use App\Repository\SupplierCreditNoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,11 +27,10 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 #[Route('/admin/stock-batch')]
 final class StockBatchController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private SupplierCreditNoteRepository $creditNoteRepository,
+    ) {
     }
 
     private function getCurrentHmaService(): ?HmaService
@@ -44,8 +44,8 @@ final class StockBatchController extends AbstractController
 
     private function checkStockManagementAccess(): void
     {
-        if (!$this->isGranted('ROLE_ADMIN') && 
-            !$this->isGranted('ROLE_MANAGER') && 
+        if (!$this->isGranted('ROLE_ADMIN') &&
+            !$this->isGranted('ROLE_MANAGER') &&
             !$this->isGranted('ROLE_STOCK_MANAGER')) {
             throw new AccessDeniedException('Accès refusé. Vous devez être administrateur, manager ou responsable stock.');
         }
@@ -111,7 +111,7 @@ final class StockBatchController extends AbstractController
             1,
             99999
         );
-        
+
         /** @var StockBatch[] $allFilteredBatches */
         $allFilteredBatches = iterator_to_array($allFilteredBatchesPaginator);
 
@@ -119,7 +119,7 @@ final class StockBatchController extends AbstractController
         $issueStats = $this->calculateIssueStatsFromBatches($allFilteredBatches);
         $statsFiltered['open_issues'] = $issueStats['open_issues'];
         $statsFiltered['total_issue_amount'] = $issueStats['total_issue_amount'];
-        
+
         $lowStockBatches = 0;
         foreach ($allFilteredBatches as $batch) {
             if ($batch->getCurrentQuantity() <= 10) {
@@ -127,7 +127,7 @@ final class StockBatchController extends AbstractController
             }
         }
         $statsFiltered['low_stock_batches'] = $lowStockBatches;
-        
+
         $locationsFiltered = $this->getUniqueLocationsFromBatches($allFilteredBatches);
         $productsFiltered = $this->getUniqueProductsFromBatches($allFilteredBatches);
         $productsFilteredCount = count($productsFiltered);
@@ -154,12 +154,12 @@ final class StockBatchController extends AbstractController
         $totalItems = $batches->count();
         $totalPages = ceil($totalItems / $limit);
 
-        // ✅ Construire le purchaseMap, purchaseItems, canReportIssue ET supplierCreditNotes
+        // ✅ Construction des maps
         $purchaseMap = [];
         $purchaseItems = [];
         $canReportIssueMap = [];
-        $supplierCreditNoteMap = []; // ✅ NOUVEAU : stocker les avoirs associés
-        
+        $supplierCreditNoteMap = [];
+
         foreach ($batches as $batch) {
             if ($batch->getPurchaseItemId()) {
                 $purchaseItem = $this->entityManager->getRepository(PurchaseItem::class)->find($batch->getPurchaseItemId());
@@ -168,13 +168,21 @@ final class StockBatchController extends AbstractController
                     $purchaseItems[$batch->getId()] = $purchaseItem;
                 }
             }
-            
-            // ✅ Calculer si le signalement est autorisé pour ce lot
+
             $canReportIssueMap[$batch->getId()] = $this->canReportIssue($batch);
-            
-            // ✅ Récupérer l'avoir associé au lot (si existant)
-            $creditNote = $this->entityManager->getRepository(SupplierCreditNote::class)
-                ->findOneBy(['stockBatch' => $batch, 'status' => 'pending']);
+
+            // ✅ CORRECTION : chercher l'avoir SANS filtrer par statut 'pending'
+            // On récupère le VRAI avoir, quel que soit son statut (pending, recovered, etc.)
+            $creditNote = null;
+            if ($batch->getSupplierCreditNoteId()) {
+                $creditNote = $this->creditNoteRepository->find($batch->getSupplierCreditNoteId());
+            }
+
+            // Fallback : si pas trouvé via ID, chercher via relation
+            if (!$creditNote) {
+                $creditNote = $this->creditNoteRepository->findOneBy(['stockBatch' => $batch]);
+            }
+
             if ($creditNote) {
                 $supplierCreditNoteMap[$batch->getId()] = $creditNote;
             }
@@ -192,8 +200,7 @@ final class StockBatchController extends AbstractController
             'purchaseMap' => $purchaseMap,
             'purchaseItems' => $purchaseItems,
             'canReportIssue' => $canReportIssueMap,
-            'supplierCreditNotes' => $supplierCreditNoteMap, // ✅ AJOUTÉ
-            
+            'supplierCreditNotes' => $supplierCreditNoteMap,
             'hmaService' => $hmaService,
             'filters' => [
                 'search' => $search,
@@ -212,12 +219,6 @@ final class StockBatchController extends AbstractController
         ]);
     }
 
-    /**
-     * Calcule les statistiques à partir d'un tableau de lots
-     * 
-     * @param StockBatch[] $batches
-     * @return array<string, int|float>
-     */
     private function calculateStatsFromBatches(array $batches): array
     {
         $now = new \DateTime();
@@ -232,17 +233,17 @@ final class StockBatchController extends AbstractController
             if ($batch->isActive()) {
                 $activeBatches++;
             }
-            
+
             if ($batch->getExpiryDate() && $batch->getExpiryDate() < $now) {
                 $expiredBatches++;
             }
-            
+
             if ($batch->getExpiryDate() && $batch->getExpiryDate() >= $now && $batch->getExpiryDate() < (clone $now)->modify('+30 days')) {
                 $expiringSoonBatches++;
             }
-            
+
             $totalQuantity += $batch->getCurrentQuantity();
-            
+
             if ($batch->hasIssue()) {
                 $hasIssueCount++;
             }
@@ -258,36 +259,38 @@ final class StockBatchController extends AbstractController
         ];
     }
 
-    /**
-     * Calcule les statistiques des avoirs à partir d'un tableau de lots
-     * 
-     * @param StockBatch[] $batches
-     * @return array<string, int|float>
-     */
     private function calculateIssueStatsFromBatches(array $batches): array
     {
         $openIssues = 0;
         $totalIssueAmount = 0;
-        
+
         foreach ($batches as $batch) {
-            if ($batch->hasIssue() && $batch->getIssueStatus() !== 'closed' && $batch->getIssueStatus() !== 'recovered') {
+            if (!$batch->hasIssue()) {
+                continue;
+            }
+
+            // ✅ Lire le VRAI statut depuis l'avoir si disponible
+            $creditNote = $batch->getSupplierCreditNoteId()
+                ? $this->creditNoteRepository->find($batch->getSupplierCreditNoteId())
+                : null;
+
+            $status = $creditNote ? $creditNote->getStatus() : $batch->getIssueStatus();
+
+            if (!in_array($status, ['closed', 'recovered'], true)) {
                 $openIssues++;
-                $totalIssueAmount += (float)($batch->getIssueDeclaredAmount() ?? 0);
+                $amount = $creditNote
+                    ? (float) ($creditNote->getDeclaredAmount() ?? 0)
+                    : (float) ($batch->getIssueDeclaredAmount() ?? 0);
+                $totalIssueAmount += $amount;
             }
         }
-        
+
         return [
             'open_issues' => $openIssues,
             'total_issue_amount' => $totalIssueAmount,
         ];
     }
 
-    /**
-     * Récupère les emplacements uniques à partir d'un tableau de lots
-     * 
-     * @param StockBatch[] $batches
-     * @return string[]
-     */
     private function getUniqueLocationsFromBatches(array $batches): array
     {
         $locations = [];
@@ -301,12 +304,6 @@ final class StockBatchController extends AbstractController
         return $locations;
     }
 
-    /**
-     * Récupère les produits uniques à partir d'un tableau de lots
-     * 
-     * @param StockBatch[] $batches
-     * @return Product[]
-     */
     private function getUniqueProductsFromBatches(array $batches): array
     {
         $products = [];
@@ -364,34 +361,35 @@ final class StockBatchController extends AbstractController
             $direction
         );
 
-        // ✅ Calculer canReportIssue pour chaque lot et récupérer les avoirs
         $canReportIssueMap = [];
         $purchaseItems = [];
         $supplierCreditNoteMap = [];
-        
-        // ✅ Compter les lots actifs et inactifs
+
         $activeBatches = 0;
         $inactiveBatches = 0;
-        
+
         foreach ($batches as $batch) {
             $canReportIssueMap[$batch->getId()] = $this->canReportIssue($batch);
-            
-            // Récupérer les PurchaseItems pour les numéros de commande
+
             if ($batch->getPurchaseItemId()) {
                 $purchaseItem = $this->entityManager->getRepository(PurchaseItem::class)->find($batch->getPurchaseItemId());
                 if ($purchaseItem) {
                     $purchaseItems[$batch->getId()] = $purchaseItem;
                 }
             }
-            
-            // ✅ Récupérer l'avoir associé au lot
-            $creditNote = $this->entityManager->getRepository(SupplierCreditNote::class)
-                ->findOneBy(['stockBatch' => $batch, 'status' => 'pending']);
+
+            // ✅ CORRECTION : récupérer l'avoir sans filtrer par 'pending'
+            $creditNote = null;
+            if ($batch->getSupplierCreditNoteId()) {
+                $creditNote = $this->creditNoteRepository->find($batch->getSupplierCreditNoteId());
+            }
+            if (!$creditNote) {
+                $creditNote = $this->creditNoteRepository->findOneBy(['stockBatch' => $batch]);
+            }
             if ($creditNote) {
                 $supplierCreditNoteMap[$batch->getId()] = $creditNote;
             }
-            
-            // ✅ Compter les lots actifs et inactifs
+
             if ($batch->isActive()) {
                 $activeBatches++;
             } else {
@@ -399,10 +397,7 @@ final class StockBatchController extends AbstractController
             }
         }
 
-        // ✅ Récupérer les statistiques existantes
         $stats = $batchRepository->getStatsForProduct($product);
-        
-        // ✅ Ajouter les lots inactifs aux statistiques
         $stats['inactive_batches'] = $inactiveBatches;
         $stats['active_batches'] = $activeBatches;
 
@@ -443,27 +438,29 @@ final class StockBatchController extends AbstractController
             throw new AccessDeniedException('Accès non autorisé.');
         }
 
-        // ✅ Récupérer le PurchaseItem pour la page de détail
         $purchaseItem = null;
         if ($batch->getPurchaseItemId()) {
             $purchaseItem = $this->entityManager->getRepository(PurchaseItem::class)->find($batch->getPurchaseItemId());
         }
 
-        // ✅ Récupérer l'avoir associé au lot
+        // ✅ CORRECTION : récupérer l'avoir sans filtrer par statut
         $supplierCreditNote = null;
-        if ($batch->hasIssue()) {
-            $supplierCreditNote = $this->entityManager->getRepository(SupplierCreditNote::class)
-                ->findOneBy(['stockBatch' => $batch, 'status' => 'pending']);
+        if ($batch->hasIssue() || $batch->getSupplierCreditNoteId()) {
+            if ($batch->getSupplierCreditNoteId()) {
+                $supplierCreditNote = $this->creditNoteRepository->find($batch->getSupplierCreditNoteId());
+            }
+            if (!$supplierCreditNote) {
+                $supplierCreditNote = $this->creditNoteRepository->findOneBy(['stockBatch' => $batch]);
+            }
         }
 
-        // ✅ Vérifier si le signalement est autorisé
         $canReportIssue = $this->canReportIssue($batch);
 
         return $this->render('admin/stock_batch/show.html.twig', [
             'batch' => $batch,
             'product' => $batch->getProduct(),
             'purchaseItem' => $purchaseItem,
-            'supplierCreditNote' => $supplierCreditNote, // ✅ AJOUTÉ
+            'supplierCreditNote' => $supplierCreditNote,
             'canReportIssue' => $canReportIssue,
             'canEdit' => $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_MANAGER') || $this->isGranted('ROLE_STOCK_MANAGER'),
             'canDelete' => $this->isGranted('ROLE_ADMIN'),
@@ -482,34 +479,34 @@ final class StockBatchController extends AbstractController
 
         $hasSales = $this->hasSalesMovements($batch);
         $product = $batch->getProduct();
-        
+
         $form = $this->createForm(StockBatchEditType::class, $batch, [
             'product' => $product,
             'has_sales' => $hasSales,
         ]);
-        
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($hasSales) {
                 $originalData = $this->getOriginalBatchData($batch);
                 $submittedData = $form->getData();
-                
+
                 if ($originalData['current_quantity'] != $submittedData->getCurrentQuantity()) {
                     $this->addFlash('error', 'La quantité ne peut pas être modifiée car des ventes ont déjà été effectuées.');
                     return $this->redirectToRoute('app_admin_stock_batch_edit', ['id' => $batch->getId()]);
                 }
-                
+
                 if ($originalData['unit_price'] != $submittedData->getUnitPrice()) {
                     $this->addFlash('error', 'Le prix unitaire ne peut pas être modifié car des ventes ont déjà été effectuées.');
                     return $this->redirectToRoute('app_admin_stock_batch_edit', ['id' => $batch->getId()]);
                 }
             }
-            
+
             if ($product->hasExpiryDate()) {
                 $manufacturingDate = $request->request->get('manufacturing_date');
                 $expiryDate = $batch->getExpiryDate();
-                
+
                 if ($manufacturingDate && $expiryDate) {
                     $manuDate = new \DateTime($manufacturingDate);
                     if ($expiryDate <= $manuDate) {
@@ -518,16 +515,16 @@ final class StockBatchController extends AbstractController
                     }
                 }
             }
-            
+
             $batch->setUpdatedAt(new \DateTimeImmutable());
-            
+
             if ($request->request->has('manufacturing_date') && $request->request->get('manufacturing_date')) {
                 $manufacturingDate = new \DateTime($request->request->get('manufacturing_date'));
                 $batch->setManufacturingDate($manufacturingDate);
             }
-            
+
             $this->entityManager->flush();
-            
+
             $this->addFlash('success', 'Lot modifié avec succès.');
             return $this->redirectToRoute('app_admin_stock_batch_show', ['id' => $batch->getId()]);
         }
@@ -558,12 +555,12 @@ final class StockBatchController extends AbstractController
         }
 
         $newStatus = !$batch->isActive();
-        
+
         if ($newStatus && $batch->getExpiryDate() && $batch->getExpiryDate() < new \DateTime()) {
             $this->addFlash('warning', 'Impossible d\'activer un lot expiré.');
             return $this->redirectToRoute('app_admin_stock_batch_all');
         }
-        
+
         if ($newStatus && $batch->getCurrentQuantity() <= 0) {
             $this->addFlash('warning', 'Impossible d\'activer un lot sans stock.');
             return $this->redirectToRoute('app_admin_stock_batch_all');
@@ -593,12 +590,12 @@ final class StockBatchController extends AbstractController
             $this->addFlash('error', 'Token CSRF invalide.');
             return $this->redirectToRoute('app_admin_stock_batch_all');
         }
-        
+
         if ($batch->getStockMovements()->count() > 0) {
             $this->addFlash('error', 'Impossible de supprimer ce lot car des mouvements de stock lui sont associés.');
             return $this->redirectToRoute('app_admin_stock_batch_all');
         }
-        
+
         if ($batch->getPurchaseItemId()) {
             $this->addFlash('error', 'Impossible de supprimer ce lot car il est lié à un achat.');
             return $this->redirectToRoute('app_admin_stock_batch_all');
@@ -631,16 +628,16 @@ final class StockBatchController extends AbstractController
     {
         $this->checkStockManagementAccess();
         $hmaService = $this->getCurrentHmaService();
-        
+
         $ids = explode(',', $request->query->get('ids', ''));
         $batches = $batchRepository->findBy(['id' => $ids]);
-        
+
         foreach ($batches as $batch) {
             if ($batch->getHmaService()->getId() !== $hmaService->getId()) {
                 throw new AccessDeniedException('Accès non autorisé.');
             }
         }
-        
+
         return $this->render('admin/stock_batch/print_multiple.html.twig', [
             'batches' => $batches,
         ]);
@@ -757,25 +754,22 @@ final class StockBatchController extends AbstractController
         }
 
         $spreadsheet = $this->generateExcelFile($batches, $filters, $hmaService, $products, $user, $userRoleLabels, $totalQuantity, $totalValue);
-        
+
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
         $filename = 'export_lots_' . (new \DateTime())->format('Ymd_His') . '.xlsx';
-        
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', 'attachment;filename="' . $filename . '"');
         $response->headers->set('Cache-Control', 'max-age=0');
-        
+
         ob_start();
         $writer->save('php://output');
         $response->setContent(ob_get_clean());
-        
+
         return $response;
     }
 
-    /**
-     * Import des lots depuis un fichier Excel
-     */
     #[Route('/import/excel', name: 'app_admin_stock_batch_import_excel', methods: ['POST'])]
     public function importExcel(Request $request, StockBatchRepository $batchRepository): Response
     {
@@ -795,56 +789,55 @@ final class StockBatchController extends AbstractController
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file);
             $sheet = $spreadsheet->getActiveSheet();
             $rows = $sheet->toArray();
-            
-            // Supprimer l'en-tête
+
             array_shift($rows);
-            
+
             $updated = 0;
             $errors = 0;
             $updateOnlyLocation = $request->request->get('update_only_location') === 'on';
-            
+
             foreach ($rows as $row) {
                 if (empty($row[0]) || empty($row[1])) {
                     continue;
                 }
-                
+
                 $batchId = (int) $row[0];
                 $batchNumber = $row[1];
                 $newLocation = $row[2] ?? null;
                 $newExpiryDate = !empty($row[3]) ? \DateTime::createFromFormat('Y-m-d', $row[3]) : null;
-                
+
                 $batch = $batchRepository->find($batchId);
-                
+
                 if (!$batch || $batch->getHmaService()->getId() !== $hmaService->getId()) {
                     $errors++;
                     continue;
                 }
-                
+
                 if ($batch->getBatchNumber() !== $batchNumber) {
                     $errors++;
                     continue;
                 }
-                
+
                 if ($newLocation) {
                     $batch->setLocation($newLocation);
                     $updated++;
                 }
-                
+
                 if (!$updateOnlyLocation && $newExpiryDate && $batch->getStockMovements()->count() === 0) {
                     $batch->setExpiryDate($newExpiryDate);
                     $updated++;
                 }
-                
+
                 $batch->setUpdatedAt(new \DateTimeImmutable());
             }
-            
+
             $this->entityManager->flush();
             $this->addFlash('success', "Import terminé : $updated lot(s) mis à jour, $errors erreur(s)");
-            
+
         } catch (\Exception $e) {
             $this->addFlash('error', 'Erreur lors de l\'import : ' . $e->getMessage());
         }
-        
+
         return $this->redirectToRoute('app_admin_stock_batch_all');
     }
 
@@ -922,13 +915,23 @@ final class StockBatchController extends AbstractController
             $totalValue += $batch->getCurrentQuantity() * (float)$batch->getUnitPrice();
         }
 
-        // Statistiques des avoirs
+        // Statistiques avoirs avec VRAI statut
         $openIssues = 0;
         $totalIssueAmount = 0;
         foreach ($batches as $batch) {
-            if ($batch->hasIssue() && $batch->getIssueStatus() !== 'closed' && $batch->getIssueStatus() !== 'recovered') {
+            if (!$batch->hasIssue()) {
+                continue;
+            }
+            $creditNote = $batch->getSupplierCreditNoteId()
+                ? $this->creditNoteRepository->find($batch->getSupplierCreditNoteId())
+                : null;
+            $status = $creditNote ? $creditNote->getStatus() : $batch->getIssueStatus();
+            if (!in_array($status, ['closed', 'recovered'], true)) {
                 $openIssues++;
-                $totalIssueAmount += (float)($batch->getIssueDeclaredAmount() ?? 0);
+                $amount = $creditNote
+                    ? (float) ($creditNote->getDeclaredAmount() ?? 0)
+                    : (float) ($batch->getIssueDeclaredAmount() ?? 0);
+                $totalIssueAmount += $amount;
             }
         }
 
@@ -978,19 +981,15 @@ final class StockBatchController extends AbstractController
         ]);
     }
 
-    /**
-     * Export du template Excel pour l'import des lots
-     */
     #[Route('/export/excel/template', name: 'app_admin_stock_batch_export_excel_template', methods: ['GET'])]
     public function exportExcelTemplate(): Response
     {
         $this->checkStockManagementAccess();
-        
+
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Template Import Lots');
 
-        // En-têtes
         $headers = ['ID', 'N° Lot', 'Emplacement (à modifier)', 'Date expiration (YYYY-MM-DD)'];
         $col = 'A';
         foreach ($headers as $header) {
@@ -998,19 +997,16 @@ final class StockBatchController extends AbstractController
             $sheet->getStyle($col . '1')->getFont()->setBold(true);
             $col++;
         }
-        
-        // Exemple de données
+
         $sheet->setCellValue('A2', '123');
         $sheet->setCellValue('B2', 'LOT-20241201-1-0001');
         $sheet->setCellValue('C2', 'A12 - Étagère 3');
         $sheet->setCellValue('D2', '2025-12-31');
-        
-        // Ajuster les colonnes
+
         foreach (range('A', 'D') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
-        
-        // Feuille d'instructions
+
         $instructionSheet = $spreadsheet->createSheet();
         $instructionSheet->setTitle('Instructions');
         $instructionSheet->setCellValue('A1', 'INSTRUCTIONS D\'IMPORTATION');
@@ -1021,19 +1017,19 @@ final class StockBatchController extends AbstractController
         $instructionSheet->setCellValue('A6', '4. Format de date : YYYY-MM-DD (ex: 2025-12-31)');
         $instructionSheet->setCellValue('A7', '5. Les lignes avec des erreurs seront ignorées');
         $instructionSheet->getColumnDimension('A')->setWidth(60);
-        
+
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
         $filename = 'template_import_lots.xlsx';
-        
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', 'attachment;filename="' . $filename . '"');
         $response->headers->set('Cache-Control', 'max-age=0');
-        
+
         ob_start();
         $writer->save('php://output');
         $response->setContent(ob_get_clean());
-        
+
         return $response;
     }
 
@@ -1161,9 +1157,9 @@ final class StockBatchController extends AbstractController
         $row++;
 
         $headers = [
-            'ID', 'N° Lot', 'Produit', 'Code-barres', 'Catégorie', 'Emplacement', 
-            'Qté initiale', 'Qté actuelle', '% restant', 'Prix unitaire', 'Valeur', 
-            'Fabrication', 'Expiration', 'Avoir', 'Statut avoir', 'Montant déclaré', 
+            'ID', 'N° Lot', 'Produit', 'Code-barres', 'Catégorie', 'Emplacement',
+            'Qté initiale', 'Qté actuelle', '% restant', 'Prix unitaire', 'Valeur',
+            'Fabrication', 'Expiration', 'Avoir', 'Statut avoir', 'Montant déclaré',
             'Montant récupéré', 'Statut', 'Créé le', 'Modifié le'
         ];
         $col = 'A';
@@ -1178,9 +1174,15 @@ final class StockBatchController extends AbstractController
         foreach ($batches as $batch) {
             $col = 'A';
             $percentage = $batch->getInitialQuantity() > 0 ? round(($batch->getCurrentQuantity() / $batch->getInitialQuantity()) * 100, 1) : 0;
-            
+
             $locationDisplay = $batch->getLocationEntity() ? $batch->getLocationEntity()->getDisplayName() : ($batch->getLocation() ?: '—');
-            
+
+            // ✅ Récupérer le VRAI statut de l'avoir
+            $creditNote = $batch->getSupplierCreditNoteId()
+                ? $this->creditNoteRepository->find($batch->getSupplierCreditNoteId())
+                : null;
+            $realIssueStatus = $creditNote ? $creditNote->getStatus() : $batch->getIssueStatus();
+
             $sheet->setCellValue($col++ . $row, $batch->getId());
             $sheet->setCellValue($col++ . $row, $batch->getBatchNumber());
             $sheet->setCellValue($col++ . $row, $batch->getProduct()?->getName() ?? '—');
@@ -1195,13 +1197,13 @@ final class StockBatchController extends AbstractController
             $sheet->setCellValue($col++ . $row, $batch->getManufacturingDate()?->format('d/m/Y') ?: '—');
             $sheet->setCellValue($col++ . $row, $batch->getExpiryDate()?->format('d/m/Y') ?: '—');
             $sheet->setCellValue($col++ . $row, $batch->hasIssue() ? 'Oui' : 'Non');
-            $sheet->setCellValue($col++ . $row, $batch->getIssueStatusLabel());
+            $sheet->setCellValue($col++ . $row, $realIssueStatus ? ucfirst(str_replace('_', ' ', $realIssueStatus)) : ($batch->getIssueStatusLabel() ?: '—'));
             $sheet->setCellValue($col++ . $row, $batch->getIssueDeclaredAmount() ? number_format((float)$batch->getIssueDeclaredAmount(), 0, ',', ' ') . ' FCFA' : '—');
             $sheet->setCellValue($col++ . $row, $batch->getIssueRecoveredAmount() ? number_format((float)$batch->getIssueRecoveredAmount(), 0, ',', ' ') . ' FCFA' : '—');
             $sheet->setCellValue($col++ . $row, $batch->isActive() ? 'Actif' : 'Inactif');
             $sheet->setCellValue($col++ . $row, $batch->getCreatedAt()->format('d/m/Y H:i'));
             $sheet->setCellValue($col++ . $row, $batch->getUpdatedAt()?->format('d/m/Y H:i') ?: '—');
-            
+
             if ($batch->getExpiryDate() && $batch->getExpiryDate() < $now) {
                 $sheet->getStyle('A' . $row . ':T' . $row)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('33FFCCCC');
             } elseif ($batch->getCurrentQuantity() <= 10) {
@@ -1240,7 +1242,7 @@ final class StockBatchController extends AbstractController
         foreach (range('A', 'T') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
-        
+
         return $spreadsheet;
     }
 
@@ -1249,13 +1251,13 @@ final class StockBatchController extends AbstractController
         if (!$productId) {
             return 'Tous les produits';
         }
-        
+
         foreach ($products as $product) {
             if ($product->getId() == $productId) {
                 return $product->getName();
             }
         }
-        
+
         return 'Produit non trouvé';
     }
 
@@ -1283,53 +1285,46 @@ final class StockBatchController extends AbstractController
         };
     }
 
-    /**
-     * Vérifie si un signalement est encore autorisé pour ce lot
-     * ✅ Un problème peut être signalé si :
-     * - Le lot a un purchaseItemId
-     * - La commande associée est réceptionnée
-     * - La date de réception est inférieure à 30 jours
-     */
     private function canReportIssue(StockBatch $batch): bool
     {
-        // Si le lot n'a pas de purchaseItemId, on ne peut pas remonter à la commande
         if (!$batch->getPurchaseItemId()) {
             return false;
         }
-        
-        // Récupérer le PurchaseItem
+
         $purchaseItem = $this->entityManager->getRepository(PurchaseItem::class)->find($batch->getPurchaseItemId());
         if (!$purchaseItem) {
             return false;
         }
-        
-        // Récupérer la commande
+
         $purchase = $purchaseItem->getPurchase();
         if (!$purchase) {
             return false;
         }
-        
-        // Le lot doit venir d'une commande réceptionnée
+
         if ($purchase->getStatus() !== Purchase::STATUS_RECEIVED) {
             return false;
         }
-        
-        // Si le lot a déjà un avoir, on ne peut pas signaler
-        if ($batch->hasIssue()) {
+
+        // ✅ Si le lot a DÉJÀ un avoir, on ne peut pas signaler à nouveau
+        $existingCreditNote = null;
+        if ($batch->getSupplierCreditNoteId()) {
+            $existingCreditNote = $this->creditNoteRepository->find($batch->getSupplierCreditNoteId());
+        }
+        if (!$existingCreditNote) {
+            $existingCreditNote = $this->creditNoteRepository->findOneBy(['stockBatch' => $batch]);
+        }
+        if ($existingCreditNote) {
             return false;
         }
-        
-        // ✅ Si la commande est réceptionnée depuis moins de 30 jours
+
         $receivedAt = $purchase->getReceivedAt();
         if (!$receivedAt) {
             return false;
         }
-        
+
         $now = new \DateTime();
         $diff = $receivedAt->diff($now);
-        $days = $diff->days;
-        
-        // Autoriser le signalement dans les 30 jours suivant la réception
-        return $days <= 30;
+
+        return $diff->days <= 30;
     }
 }

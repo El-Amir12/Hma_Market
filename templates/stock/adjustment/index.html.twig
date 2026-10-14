@@ -5,8 +5,10 @@
 
 {% block stylesheets %}
 {{ parent() }}
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
+    /* ============================================
+       STAT CARDS
+       ============================================ */
     .stat-card {
         transition: transform 0.2s, box-shadow 0.2s;
         border-radius: 1rem;
@@ -18,28 +20,30 @@
         box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
     .stat-card .stat-value {
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: bold;
         margin-bottom: 0;
+        line-height: 1.1;
     }
     .stat-card .stat-label {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         font-weight: 600;
     }
     .stat-card .stat-sub {
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         margin-top: 0.25rem;
-        opacity: 0.8;
+        opacity: 0.85;
     }
     .stat-icon {
-        width: 50px;
-        height: 50px;
+        width: 46px;
+        height: 46px;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 1rem;
+        flex-shrink: 0;
     }
     .card-bg-success {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
@@ -73,25 +77,243 @@
     .card-bg-danger .text-muted,
     .card-bg-primary .text-muted,
     .card-bg-info .text-muted {
-        color: rgba(255,255,255,0.8) !important;
+        color: rgba(255,255,255,0.85) !important;
+    }
+
+    /* ============================================
+       TABLEAU
+       ============================================ */
+    .table-adjustments td {
+        vertical-align: middle;
+    }
+    .badge-type {
+        font-size: 0.72rem;
+        padding: 0.35rem 0.6rem;
+        font-weight: 600;
+    }
+    .reason-text {
+        max-width: 200px;
+        display: inline-block;
+        word-break: break-word;
+    }
+
+    /* ============================================
+       BOUTONS D'ACTION
+       ============================================ */
+    .btn-icon-sm {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+    }
+
+    /* ============================================
+       CARTES MOBILE (à la place du tableau)
+       ============================================ */
+    .adjustment-card-mobile {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        position: relative;
+        transition: box-shadow 0.2s;
+    }
+    .adjustment-card-mobile:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .adjustment-card-mobile::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 12px 0 0 12px;
+    }
+    .adjustment-card-mobile.type-in::before {
+        background: #10b981;
+    }
+    .adjustment-card-mobile.type-out::before {
+        background: #ef4444;
+    }
+
+    .adjustment-card-mobile .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px dashed #e9ecef;
+    }
+    .adjustment-card-mobile .mobile-header-left {
+        flex-grow: 1;
+        min-width: 0;
+    }
+    .adjustment-card-mobile .mobile-date {
+        font-size: 0.72rem;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-bottom: 0.35rem;
+    }
+    .adjustment-card-mobile .mobile-product {
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 0.92rem;
+        line-height: 1.3;
+        margin-bottom: 0.15rem;
+    }
+    .adjustment-card-mobile .mobile-barcode {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        font-family: 'Courier New', monospace;
+    }
+
+    .adjustment-card-mobile .mobile-qty {
+        flex-shrink: 0;
+        text-align: right;
+        padding: 0.25rem 0.5rem;
+        border-radius: 8px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        line-height: 1.1;
+        min-width: 70px;
+    }
+    .adjustment-card-mobile.type-in .mobile-qty {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    .adjustment-card-mobile.type-out .mobile-qty {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .adjustment-card-mobile .mobile-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .adjustment-card-mobile .mobile-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+    }
+    .adjustment-card-mobile .mobile-row-label {
+        color: #64748b;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .adjustment-card-mobile .mobile-row-value {
+        color: #1e293b;
+        font-weight: 600;
+        text-align: right;
+        word-break: break-word;
+    }
+    .adjustment-card-mobile .mobile-reason {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 0.55rem 0.75rem;
+        font-size: 0.78rem;
+        color: #475569;
+        margin-top: 0.5rem;
+        border-left: 3px solid #cbd5e1;
+    }
+
+    .adjustment-card-mobile .mobile-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px dashed #e9ecef;
+    }
+    .adjustment-card-mobile .mobile-actions .btn {
+        flex: 1;
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+
+        .page-header-flex {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 1rem;
+        }
+        .page-header-flex .btn-primary {
+            width: 100%;
+            justify-content: center;
+        }
+        h1.h3 {
+            font-size: 1.15rem;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.4rem;
+        }
+        .stat-card .stat-label {
+            font-size: 0.65rem;
+        }
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+        }
+        .stat-icon i {
+            font-size: 1.3rem !important;
+        }
+
+        .filter-form .col-md-3 {
+            width: 100%;
+        }
+
+        .table-responsive {
+            display: none;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .adjustment-cards-mobile {
+            display: none;
+        }
     }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid px-4">
-    <!-- En-tête -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid px-2 px-md-4 py-3">
+
+    <!-- ==========================================
+         EN-TÊTE
+    ========================================== -->
+    <div class="d-flex justify-content-between align-items-center mb-4 page-header-flex flex-wrap gap-3">
         <div>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item small">
                         <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
-                            <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
+                            <i class="fas fa-tachometer-alt me-1"></i>
+                            <span class="d-none d-sm-inline">Tableau de bord</span>
                         </a>
                     </li>
-                    <li class="breadcrumb-item active">
-                        <i class="fas fa-calculator me-1"></i> Ajustements de stock
+                    <li class="breadcrumb-item active small">
+                        <i class="fas fa-calculator me-1"></i> Ajustements
                     </li>
                 </ol>
             </nav>
@@ -99,7 +321,7 @@
                 <i class="fas fa-calculator text-primary me-2"></i>
                 Ajustements de stock
             </h1>
-            <p class="text-muted mt-2">
+            <p class="text-muted mt-2 mb-0 small d-none d-md-block">
                 <i class="fas fa-info-circle me-1"></i>
                 Gérez les entrées et sorties manuelles de stock (casse, perte, surplus, etc.)
             </p>
@@ -111,16 +333,18 @@
         </div>
     </div>
 
-    <!-- Cartes statistiques -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
+    <!-- ==========================================
+         STATISTIQUES
+    ========================================== -->
+    <div class="row g-2 g-md-3 mb-4">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-success shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
-                            <div class="stat-label">Entrées (+) </div>
-                            <div class="stat-value">{{ stats.total_in|number_format(0, ',', ' ') }}</div>
-                            <div class="stat-sub">{{ stats.count_in }} mouvement(s)</div>
+                            <div class="stat-label">Entrées (+)</div>
+                            <div class="stat-value">{{ stats.total_in|default(0)|number_format(0, ',', ' ') }}</div>
+                            <div class="stat-sub">{{ stats.count_in|default(0) }} mouvement(s)</div>
                         </div>
                         <div class="stat-icon">
                             <i class="fas fa-plus-circle fa-2x"></i>
@@ -129,14 +353,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-danger shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
                             <div class="stat-label">Sorties (-)</div>
-                            <div class="stat-value">{{ stats.total_out|number_format(0, ',', ' ') }}</div>
-                            <div class="stat-sub">{{ stats.count_out }} mouvement(s)</div>
+                            <div class="stat-value">{{ stats.total_out|default(0)|number_format(0, ',', ' ') }}</div>
+                            <div class="stat-sub">{{ stats.count_out|default(0) }} mouvement(s)</div>
                         </div>
                         <div class="stat-icon">
                             <i class="fas fa-minus-circle fa-2x"></i>
@@ -145,14 +369,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-primary shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
-                            <div class="stat-label">Total mouvements</div>
-                            <div class="stat-value">{{ stats.total_movements|number_format(0, ',', ' ') }}</div>
-                            <div class="stat-sub">ajustements effectués</div>
+                            <div class="stat-label">Mouvements</div>
+                            <div class="stat-value">{{ stats.total_movements|default(0)|number_format(0, ',', ' ') }}</div>
+                            <div class="stat-sub">ajustements</div>
                         </div>
                         <div class="stat-icon">
                             <i class="fas fa-chart-line fa-2x"></i>
@@ -161,13 +385,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card stat-card card-bg-info shadow-sm">
-                <div class="card-body">
+                <div class="card-body p-2 p-md-3">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="flex-grow-1">
-                            <div class="stat-label">Quantité totale</div>
-                            <div class="stat-value">{{ stats.total_quantity|number_format(0, ',', ' ') }}</div>
+                            <div class="stat-label">Quantité</div>
+                            <div class="stat-value">{{ stats.total_quantity|default(0)|number_format(0, ',', ' ') }}</div>
                             <div class="stat-sub">unités concernées</div>
                         </div>
                         <div class="stat-icon">
@@ -179,122 +403,140 @@
         </div>
     </div>
 
-    <!-- Filtres -->
+    <!-- ==========================================
+         FILTRES
+    ========================================== -->
     <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0 fw-semibold">
+        <div class="card-header bg-white py-2 py-md-3">
+            <h5 class="mb-0 fw-semibold small">
                 <i class="fas fa-filter me-2 text-primary"></i> Filtres
             </h5>
         </div>
-        <div class="card-body">
-            <form method="get" class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label fw-bold small">Type</label>
-                    <select name="type" class="form-select">
+        <div class="card-body p-2 p-md-3">
+            <form method="get" class="row g-2 g-md-3 filter-form">
+                <div class="col-12 col-md-3">
+                    <label class="form-label fw-bold small mb-1">Type</label>
+                    <select name="type" class="form-select form-select-sm">
                         <option value="">Tous</option>
-                        <option value="in" {{ filters.type == 'in' ? 'selected' }}>Entrées (+) </option>
+                        <option value="in" {{ filters.type == 'in' ? 'selected' }}>Entrées (+)</option>
                         <option value="out" {{ filters.type == 'out' ? 'selected' }}>Sorties (-)</option>
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-bold small">Date du</label>
-                    <input type="date" name="date_from" class="form-control" value="{{ filters.date_from }}">
+                <div class="col-6 col-md-3">
+                    <label class="form-label fw-bold small mb-1">Date du</label>
+                    <input type="date" name="date_from" class="form-control form-control-sm" value="{{ filters.date_from }}">
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-bold small">Date au</label>
-                    <input type="date" name="date_to" class="form-control" value="{{ filters.date_to }}">
+                <div class="col-6 col-md-3">
+                    <label class="form-label fw-bold small mb-1">Date au</label>
+                    <input type="date" name="date_to" class="form-control form-control-sm" value="{{ filters.date_to }}">
                 </div>
-                <div class="col-md-3 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">
+                <div class="col-12 col-md-3 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
                         <i class="fas fa-search me-1"></i> Filtrer
                     </button>
+                    {% if filters.type or filters.date_from or filters.date_to %}
+                        <a href="{{ path('app_stock_adjustment_index') }}" class="btn btn-outline-secondary btn-sm" title="Effacer les filtres">
+                            <i class="fas fa-undo"></i>
+                        </a>
+                    {% endif %}
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Tableau des ajustements -->
+    <!-- ==========================================
+         LISTE DES AJUSTEMENTS
+    ========================================== -->
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-semibold">
+        <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-semibold small">
                 <i class="fas fa-list me-2 text-primary"></i>
                 Liste des ajustements
             </h5>
             <span class="badge bg-secondary">{{ adjustments|length }} résultat(s)</span>
         </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+
+        {% if adjustments|length > 0 %}
+            {# ============================================
+               VUE TABLEAU (desktop)
+            ============================================ #}
+            <div class="card-body p-0 table-responsive d-none d-md-block">
+                <table class="table table-hover align-middle mb-0 table-adjustments">
                     <thead class="table-light">
                         <tr>
-                            <th>Date</th>
+                            <th class="ps-3">Date</th>
                             <th>Type</th>
                             <th>Produit</th>
                             <th>N° lot</th>
                             <th class="text-end">Quantité</th>
                             <th>Raison</th>
                             <th>Utilisateur</th>
-                            <th>Justificatif</th>
-                            <th class="text-center">Actions</th>
+                            <th class="text-center">Justificatif</th>
+                            <th class="text-center pe-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for adjustment in adjustments %}
                             <tr>
-                                <td class="align-middle">
-                                    <div class="fw-bold">{{ adjustment.createdAt|date('d/m/Y') }}</div>
+                                <td class="ps-3">
+                                    <div class="fw-bold small">{{ adjustment.createdAt|date('d/m/Y') }}</div>
                                     <small class="text-muted">{{ adjustment.createdAt|date('H:i') }}</small>
-                                </div>
-                                <td class="align-middle">
-                                    <span class="badge {{ adjustment.typeBadgeClass }}">
+                                </td>
+                                <td>
+                                    <span class="badge {{ adjustment.typeBadgeClass }} badge-type">
                                         <i class="{{ adjustment.typeIcon }} me-1"></i>
                                         {{ adjustment.typeLabel }}
                                     </span>
-                                </div>
-                                <td class="align-middle">
-                                    <div class="fw-bold">{{ adjustment.stockBatch.product.name|u.truncate(35) }}</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold small">{{ adjustment.stockBatch.product.name|u.truncate(35) }}</div>
                                     <small class="text-muted">{{ adjustment.stockBatch.product.barcode }}</small>
-                                </div>
-                                <td class="align-middle">
-                                    <code class="small">{{ adjustment.stockBatch.batchNumber }}</code>
-                                </div>
-                                <td class="align-middle text-end">
+                                </td>
+                                <td>
+                                    <code class="small">{{ adjustment.stockBatch.batchNumber|u.truncate(20) }}</code>
+                                </td>
+                                <td class="text-end">
                                     <span class="fw-bold {{ adjustment.type == 'in' ? 'text-success' : 'text-danger' }}">
                                         {{ adjustment.type == 'in' ? '+' : '-' }}{{ adjustment.quantity|number_format(0, ',', ' ') }}
                                     </span>
-                                </div>
-                                <td class="align-middle">
-                                    <small>{{ adjustment.reason|u.truncate(45) }}</small>
-                                </div>
-                                <td class="align-middle">
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ adjustment.reason|u.truncate(45) }}</small>
+                                </td>
+                                <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <i class="fas fa-user-circle text-muted"></i>
-                                        <small>{{ adjustment.createdBy.fullName ?: adjustment.createdBy.email }}</small>
+                                        <small>{{ adjustment.createdBy.fullName ?: adjustment.createdBy.email|u.truncate(20) }}</small>
                                     </div>
-                                </div>
-                                <td class="align-middle text-center">
+                                </td>
+                                <td class="text-center">
+                                    {# ✅ Justificatif via la route app_serve_upload #}
                                     {% if adjustment.justificationFile %}
-                                        <a href="{{ asset('uploads/' ~ adjustment.justificationFile) }}" target="_blank" class="btn btn-sm btn-outline-info" title="Voir le justificatif">
-                                            <i class="fas fa-file me-1"></i> Voir
-                                        </a>
+                                        {% set parts = adjustment.justificationFile|split('/') %}
+                                        {% if parts|length >= 3 %}
+                                            {% set filename = parts|slice(2)|join('/') %}
+                                            <a href="{{ path('app_serve_upload', {
+                                                folder: parts[0],
+                                                companyId: parts[1],
+                                                filename: filename
+                                            }) }}" 
+                                               target="_blank" 
+                                               class="btn btn-sm btn-outline-info btn-icon-sm" 
+                                               title="Voir le justificatif">
+                                                <i class="fas fa-paperclip"></i>
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted small">—</span>
+                                        {% endif %}
                                     {% else %}
-                                        <span class="text-muted">—</span>
+                                        <span class="text-muted small">—</span>
                                     {% endif %}
                                 </td>
-                                <td class="align-middle text-center">
-                                    <a href="{{ path('app_stock_adjustment_show', {'id': adjustment.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir le détail">
+                                <td class="text-center pe-3">
+                                    <a href="{{ path('app_stock_adjustment_show', {'id': adjustment.id}) }}" 
+                                       class="btn btn-sm btn-outline-primary btn-icon-sm" 
+                                       title="Voir le détail">
                                         <i class="fas fa-eye"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="9" class="text-center py-5">
-                                    <i class="fas fa-calculator fa-3x text-muted mb-3 opacity-50"></i>
-                                    <p class="text-muted mb-0">Aucun ajustement trouvé</p>
-                                    <p class="text-muted small mb-3">Modifiez vos filtres ou créez un nouvel ajustement</p>
-                                    <a href="{{ path('app_stock_adjustment_new') }}" class="btn btn-primary">
-                                        <i class="fas fa-plus me-1"></i> Créer un ajustement
                                     </a>
                                 </td>
                             </tr>
@@ -302,13 +544,107 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+
+            {# ============================================
+               VUE CARTES (mobile)
+            ============================================ #}
+            <div class="card-body p-2 adjustment-cards-mobile">
+                {% for adjustment in adjustments %}
+                    <div class="adjustment-card-mobile type-{{ adjustment.type }}">
+                        <div class="mobile-header">
+                            <div class="mobile-header-left">
+                                <div class="mobile-date">
+                                    <i class="far fa-calendar-alt"></i>
+                                    {{ adjustment.createdAt|date('d/m/Y') }} · {{ adjustment.createdAt|date('H:i') }}
+                                </div>
+                                <div class="mobile-product">
+                                    {{ adjustment.stockBatch.product.name|u.truncate(35) }}
+                                </div>
+                                <div class="mobile-barcode">
+                                    {{ adjustment.stockBatch.product.barcode }}
+                                </div>
+                            </div>
+                            <div class="mobile-qty">
+                                {{ adjustment.type == 'in' ? '+' : '-' }}{{ adjustment.quantity|number_format(0, ',', ' ') }}
+                            </div>
+                        </div>
+
+                        <div class="mobile-rows">
+                            <div class="mobile-row">
+                                <span class="mobile-row-label">
+                                    <i class="fas fa-tag"></i> Type
+                                </span>
+                                <span class="mobile-row-value">
+                                    <span class="badge {{ adjustment.typeBadgeClass }} badge-type">
+                                        <i class="{{ adjustment.typeIcon }} me-1"></i>
+                                        {{ adjustment.typeLabel }}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="mobile-row">
+                                <span class="mobile-row-label">
+                                    <i class="fas fa-barcode"></i> N° lot
+                                </span>
+                                <span class="mobile-row-value">
+                                    <code class="small">{{ adjustment.stockBatch.batchNumber|u.truncate(20) }}</code>
+                                </span>
+                            </div>
+                            <div class="mobile-row">
+                                <span class="mobile-row-label">
+                                    <i class="fas fa-user"></i> Utilisateur
+                                </span>
+                                <span class="mobile-row-value">
+                                    {{ adjustment.createdBy.fullName ?: adjustment.createdBy.email|u.truncate(20) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        {% if adjustment.reason %}
+                            <div class="mobile-reason">
+                                <i class="fas fa-comment me-1"></i>
+                                {{ adjustment.reason|u.truncate(100) }}
+                            </div>
+                        {% endif %}
+
+                        <div class="mobile-actions">
+                            <a href="{{ path('app_stock_adjustment_show', {'id': adjustment.id}) }}" 
+                               class="btn btn-outline-primary">
+                                <i class="fas fa-eye me-1"></i> Voir
+                            </a>
+                            {# ✅ Justificatif via la route app_serve_upload #}
+                            {% if adjustment.justificationFile %}
+                                {% set parts = adjustment.justificationFile|split('/') %}
+                                {% if parts|length >= 3 %}
+                                    {% set filename = parts|slice(2)|join('/') %}
+                                    <a href="{{ path('app_serve_upload', {
+                                        folder: parts[0],
+                                        companyId: parts[1],
+                                        filename: filename
+                                    }) }}" 
+                                       target="_blank" 
+                                       class="btn btn-outline-info">
+                                        <i class="fas fa-paperclip me-1"></i> Justif.
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card-body text-center py-5">
+                <i class="fas fa-calculator fa-3x text-muted mb-3 opacity-50"></i>
+                <p class="text-muted mb-0">Aucun ajustement trouvé</p>
+                <p class="text-muted small mb-3">Modifiez vos filtres ou créez un nouvel ajustement</p>
+                <a href="{{ path('app_stock_adjustment_new') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i> Créer un ajustement
+                </a>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
 {% endblock %}

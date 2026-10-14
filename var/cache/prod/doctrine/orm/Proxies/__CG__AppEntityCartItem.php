@@ -23,21 +23,15 @@ class CartItem extends \App\Entity\CartItem implements \Doctrine\ORM\Proxy\Inter
 
     private const LAZY_OBJECT_PROPERTY_SCOPES = [
         "\0".parent::class."\0".'cart' => [parent::class, 'cart', null, 16],
-        "\0".parent::class."\0".'created_at' => [parent::class, 'created_at', null, 16],
         "\0".parent::class."\0".'id' => [parent::class, 'id', null, 16],
+        "\0".parent::class."\0".'notes' => [parent::class, 'notes', null, 16],
         "\0".parent::class."\0".'product' => [parent::class, 'product', null, 16],
         "\0".parent::class."\0".'quantity' => [parent::class, 'quantity', null, 16],
-        "\0".parent::class."\0".'total_price' => [parent::class, 'total_price', null, 16],
-        "\0".parent::class."\0".'unit_price' => [parent::class, 'unit_price', null, 16],
-        "\0".parent::class."\0".'updated_at' => [parent::class, 'updated_at', null, 16],
         'cart' => [parent::class, 'cart', null, 16],
-        'created_at' => [parent::class, 'created_at', null, 16],
         'id' => [parent::class, 'id', null, 16],
+        'notes' => [parent::class, 'notes', null, 16],
         'product' => [parent::class, 'product', null, 16],
         'quantity' => [parent::class, 'quantity', null, 16],
-        'total_price' => [parent::class, 'total_price', null, 16],
-        'unit_price' => [parent::class, 'unit_price', null, 16],
-        'updated_at' => [parent::class, 'updated_at', null, 16],
     ];
 
     public function __isInitialized(): bool

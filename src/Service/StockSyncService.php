@@ -20,101 +20,79 @@ class StockSyncService
     }
 
     /**
-     * Synchronise les lots d'un produit :
-     * - Désactive les lots expirés
-     * - Désactive les lots vides
-     * - Calcule le stock total (stock_quantity + lots)
-     * ✅ stock_quantity ne change PAS (sauf si on le corrige manuellement)
+     * ✅ Calcule et met à jour Product.stock_quantity — SANS FLUSH.
      */
     public function syncProductStock(Product $product): array
     {
         $result = [
             'product_id' => $product->getId(),
-            'product_name' => $product->getName(),
-            'batches_deactivated_expired' => 0,
-            'batches_deactivated_empty' => 0,
-            'stock_quantity' => $product->getStockQuantity(),
-            'active_batches_count' => 0,
-            'batches_total_quantity' => 0,
-            'total_stock' => 0
+            'old_stock_quantity' => $product->getStockQuantity(),
+            'new_stock_quantity' => 0,
         ];
 
-        $now = new \DateTime();
-        $hasChanges = false;
-
-        // 1. Calculer la somme des lots actifs valides
-        $batchesTotal = 0;
-        $activeBatchCount = 0;
-
-        foreach ($product->getStockBatches() as $batch) {
-            $isValid = $batch->isActive() 
-                && $batch->getCurrentQuantity() > 0
-                && (!$batch->getExpiryDate() || $batch->getExpiryDate() >= $now);
-
-            if ($isValid) {
-                $batchesTotal += $batch->getCurrentQuantity();
-                $activeBatchCount++;
-            }
+        $productId = $product->getId();
+        if ($productId === null) {
+            return $result;
         }
 
-        $result['batches_total_quantity'] = $batchesTotal;
-        $result['active_batches_count'] = $activeBatchCount;
+        $now = new \DateTime();
 
-        // 2. Désactiver les lots invalides
-        foreach ($product->getStockBatches() as $batch) {
+        $batches = $this->stockBatchRepository->createQueryBuilder('sb')
+            ->where('sb.product = :productId')
+            ->setParameter('productId', $productId)
+            ->getQuery()
+            ->getResult();
+
+        // Désactiver les lots invalides
+        foreach ($batches as $batch) {
             $shouldBeActive = true;
 
             if ($batch->getExpiryDate() && $batch->getExpiryDate() < $now) {
                 $shouldBeActive = false;
-                $result['batches_deactivated_expired']++;
-                $this->logger->info('Lot désactivé (expiré)', [
-                    'batch_id' => $batch->getId(),
-                    'batch_number' => $batch->getBatchNumber(),
-                    'expiry_date' => $batch->getExpiryDate()->format('Y-m-d'),
-                    'product' => $product->getName()
-                ]);
-            }
-            elseif ($batch->getCurrentQuantity() <= 0) {
+            } elseif ($batch->getCurrentQuantity() <= 0) {
                 $shouldBeActive = false;
-                $result['batches_deactivated_empty']++;
-                $this->logger->info('Lot désactivé (quantité nulle)', [
-                    'batch_id' => $batch->getId(),
-                    'batch_number' => $batch->getBatchNumber(),
-                    'current_quantity' => $batch->getCurrentQuantity(),
-                    'product' => $product->getName()
-                ]);
             }
 
             if ($batch->isActive() !== $shouldBeActive) {
                 $batch->setIsActive($shouldBeActive);
                 $batch->setUpdatedAt(new \DateTimeImmutable());
                 $this->entityManager->persist($batch);
-                $hasChanges = true;
             }
         }
 
-        // ✅ CORRECTION : stock_quantity ne change PAS
-        // On garde stock_quantity inchangé
-        $result['stock_quantity'] = $product->getStockQuantity();
-        $result['total_stock'] = ($product->getStockQuantity() ?? 0) + $batchesTotal;
+        // Calculer le total
+        $total = 0;
+        foreach ($batches as $batch) {
+            if (
+                $batch->isActive()
+                && $batch->getCurrentQuantity() > 0
+                && (!$batch->getExpiryDate() || $batch->getExpiryDate() >= $now)
+            ) {
+                $total += $batch->getCurrentQuantity();
+            }
+        }
 
-        if ($hasChanges) {
-            $this->entityManager->flush();
-            $this->logger->info('Stock synchronisé (lots nettoyés)', [
-                'product_id' => $product->getId(),
-                'product_name' => $product->getName(),
-                'stock_quantity' => $product->getStockQuantity(),
-                'batches_total' => $batchesTotal,
-                'total_stock' => $result['total_stock']
-            ]);
+        $result['new_stock_quantity'] = $total;
+
+        if (($product->getStockQuantity() ?? 0) !== $total) {
+            $product->setStockQuantity($total);
+            $product->setLastStockUpdatedAt(new \DateTime());
+            $this->entityManager->persist($product);
         }
 
         return $result;
     }
 
     /**
-     * Synchronise le stock de tous les produits d'un service
+     * ✅ Version avec flush — c'est CELLE-CI qu'il faut appeler depuis les services.
      */
+    public function syncProductStockAndFlush(Product $product): array
+    {
+        $result = $this->syncProductStock($product);
+        $this->entityManager->flush();
+        return $result;
+    }
+
     public function syncAllProductsStock(HmaService $hmaService): array
     {
         $products = $this->entityManager->getRepository(Product::class)
@@ -124,18 +102,39 @@ class StockSyncService
         foreach ($products as $product) {
             $results[] = $this->syncProductStock($product);
         }
+        $this->entityManager->flush();
 
         return $results;
     }
 
-    /**
-     * Désactive tous les lots expirés (pour la maintenance)
-     */
+    public function calculateTotalStock(Product $product): int
+    {
+        $now = new \DateTime();
+        $total = 0;
+
+        $batches = $this->stockBatchRepository->createQueryBuilder('sb')
+            ->where('sb.product = :productId')
+            ->setParameter('productId', $product->getId())
+            ->getQuery()
+            ->getResult();
+
+        foreach ($batches as $batch) {
+            if (
+                $batch->isActive()
+                && $batch->getCurrentQuantity() > 0
+                && (!$batch->getExpiryDate() || $batch->getExpiryDate() >= $now)
+            ) {
+                $total += $batch->getCurrentQuantity();
+            }
+        }
+
+        return $total;
+    }
+
     public function deactivateAllExpiredBatches(): int
     {
         $now = new \DateTime();
-        
-        $expiredBatches = $this->stockBatchRepository->createQueryBuilder('sb')
+        $expired = $this->stockBatchRepository->createQueryBuilder('sb')
             ->where('sb.is_active = true')
             ->andWhere('sb.expiry_date IS NOT NULL')
             ->andWhere('sb.expiry_date < :now')
@@ -144,149 +143,80 @@ class StockSyncService
             ->getResult();
 
         $count = 0;
-        foreach ($expiredBatches as $batch) {
+        $productsToSync = [];
+
+        foreach ($expired as $batch) {
             $batch->setIsActive(false);
             $batch->setUpdatedAt(new \DateTimeImmutable());
             $this->entityManager->persist($batch);
             $count++;
+
+            $product = $batch->getProduct();
+            if ($product && !in_array($product->getId(), array_column($productsToSync, 'id'))) {
+                $productsToSync[] = $product;
+            }
         }
 
         if ($count > 0) {
             $this->entityManager->flush();
-            $this->logger->info('Désactivation massive des lots expirés', ['count' => $count]);
+            foreach ($productsToSync as $product) {
+                $this->syncProductStock($product);
+            }
+            $this->entityManager->flush();
         }
 
         return $count;
     }
 
-    /**
-     * Désactive tous les lots vides (pour la maintenance)
-     */
     public function deactivateAllEmptyBatches(): int
     {
-        $emptyBatches = $this->stockBatchRepository->createQueryBuilder('sb')
+        $empty = $this->stockBatchRepository->createQueryBuilder('sb')
             ->where('sb.is_active = true')
             ->andWhere('sb.current_quantity <= 0')
             ->getQuery()
             ->getResult();
 
         $count = 0;
-        foreach ($emptyBatches as $batch) {
+        $productsToSync = [];
+
+        foreach ($empty as $batch) {
             $batch->setIsActive(false);
             $batch->setUpdatedAt(new \DateTimeImmutable());
             $this->entityManager->persist($batch);
             $count++;
+
+            $product = $batch->getProduct();
+            if ($product && !in_array($product->getId(), array_column($productsToSync, 'id'))) {
+                $productsToSync[] = $product;
+            }
         }
 
         if ($count > 0) {
             $this->entityManager->flush();
-            $this->logger->info('Désactivation massive des lots vides', ['count' => $count]);
+            foreach ($productsToSync as $product) {
+                $this->syncProductStock($product);
+            }
+            $this->entityManager->flush();
         }
 
         return $count;
     }
 
-    /**
-     * Nettoie et synchronise tout le stock (maintenance complète)
-     */
     public function fullStockMaintenance(): array
     {
         $result = [
-            'expired_batches' => 0,
-            'empty_batches' => 0,
-            'products_synced' => 0
+            'expired_batches' => $this->deactivateAllExpiredBatches(),
+            'empty_batches' => $this->deactivateAllEmptyBatches(),
+            'products_synced' => 0,
         ];
 
-        $result['expired_batches'] = $this->deactivateAllExpiredBatches();
-        $result['empty_batches'] = $this->deactivateAllEmptyBatches();
-        
         $products = $this->entityManager->getRepository(Product::class)->findAll();
-        
         foreach ($products as $product) {
             $this->syncProductStock($product);
             $result['products_synced']++;
         }
+        $this->entityManager->flush();
 
         return $result;
-    }
-
-    /**
-     * ✅ Réinitialise stock_quantity d'un produit (correction manuelle)
-     * ⚠️ À utiliser uniquement pour corriger des erreurs
-     */
-    public function resetProductStock(Product $product, int $newQuantity): void
-    {
-        $oldQuantity = $product->getStockQuantity();
-        $product->setStockQuantity($newQuantity);
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
-        
-        $this->logger->warning('Stock réinitialisé (correction manuelle)', [
-            'product_id' => $product->getId(),
-            'product_name' => $product->getName(),
-            'old_quantity' => $oldQuantity,
-            'new_quantity' => $newQuantity
-        ]);
-    }
-
-    /**
-     * ✅ Ajoute une quantité à stock_quantity (ajustement manuel)
-     */
-    public function addStock(Product $product, int $quantity, string $reason = 'Ajustement manuel'): void
-    {
-        $oldQuantity = $product->getStockQuantity();
-        $newQuantity = $oldQuantity + $quantity;
-        $product->setStockQuantity($newQuantity);
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
-        
-        $this->logger->info('Ajout de stock (ajustement manuel)', [
-            'product_id' => $product->getId(),
-            'product_name' => $product->getName(),
-            'quantity_added' => $quantity,
-            'old_quantity' => $oldQuantity,
-            'new_quantity' => $newQuantity,
-            'reason' => $reason
-        ]);
-    }
-
-    /**
-     * ✅ Retire une quantité de stock_quantity (ajustement manuel)
-     */
-    public function removeStock(Product $product, int $quantity, string $reason = 'Ajustement manuel'): void
-    {
-        $oldQuantity = $product->getStockQuantity();
-        $newQuantity = max(0, $oldQuantity - $quantity);
-        $product->setStockQuantity($newQuantity);
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
-        
-        $this->logger->info('Retrait de stock (ajustement manuel)', [
-            'product_id' => $product->getId(),
-            'product_name' => $product->getName(),
-            'quantity_removed' => $quantity,
-            'old_quantity' => $oldQuantity,
-            'new_quantity' => $newQuantity,
-            'reason' => $reason
-        ]);
-    }
-
-    /**
-     * ✅ Calcule le stock total (stock_quantity + lots actifs)
-     */
-    public function calculateTotalStock(Product $product): int
-    {
-        $now = new \DateTime();
-        $batchesTotal = 0;
-
-        foreach ($product->getStockBatches() as $batch) {
-            if ($batch->isActive() 
-                && $batch->getCurrentQuantity() > 0
-                && (!$batch->getExpiryDate() || $batch->getExpiryDate() >= $now)) {
-                $batchesTotal += $batch->getCurrentQuantity();
-            }
-        }
-
-        return ($product->getStockQuantity() ?? 0) + $batchesTotal;
     }
 }

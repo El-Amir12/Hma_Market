@@ -76,17 +76,30 @@
                                 </div>
                             </div>
                         </div>
+
+                        {# ✅ CORRECTION : Justificatif via la route app_serve_upload #}
                         {% if adjustment.justificationFile %}
-                        <div class="col-12">
-                            <div class="border-bottom pb-2">
-                                <small class="text-muted">Justificatif</small>
-                                <div>
-                                    <a href="{{ asset('uploads/' ~ adjustment.justificationFile) }}" target="_blank" class="btn btn-sm btn-outline-info">
-                                        <i class="fas fa-download me-1"></i> Télécharger le justificatif
-                                    </a>
+                            {% set parts = adjustment.justificationFile|split('/') %}
+                            {% if parts|length >= 3 %}
+                                {% set filename = parts|slice(2)|join('/') %}
+                                <div class="col-12">
+                                    <div class="border-bottom pb-2">
+                                        <small class="text-muted">Justificatif</small>
+                                        <div class="mt-2">
+                                            <a href="{{ path('app_serve_upload', {
+                                                folder: parts[0],
+                                                companyId: parts[1],
+                                                filename: filename
+                                            }) }}" 
+                                               target="_blank" 
+                                               class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-paperclip me-1"></i>
+                                                Voir le justificatif
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>

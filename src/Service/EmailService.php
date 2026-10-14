@@ -1,4 +1,5 @@
 <?php
+// src/Service/EmailService.php
 
 namespace App\Service;
 
@@ -48,9 +49,64 @@ class EmailService
         $this->supportEmail = $supportEmail;
     }
 
-    public function sendWelcomeEmail(HmaService $hmaService, string $plainPassword): bool
+    /**
+     * ✅ Envoie l'email de bienvenue AVEC le lien d'activation.
+     * L'utilisateur DOIT cliquer sur ce lien pour activer son compte.
+     */
+    public function sendWelcomeEmail(HmaService $hmaService, User $owner, string $activationToken): bool
     {
-        $subject = "Bienvenue sur {$this->appName} !";
+        $subject = "Bienvenue sur {$this->appName} - Activez votre compte";
+        
+        if (!$this->isProduction) {
+            $subject = "[DEV] " . $subject;
+        }
+        
+        try {
+            $activationUrl = $this->urlGenerator->generate(
+                'app_activate_account',
+                ['token' => $activationToken],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $email = (new TemplatedEmail())
+                ->from(new Address($this->fromEmail, $this->fromName))
+                ->to(new Address($owner->getEmail(), $owner->getFullName()))
+                ->subject($subject)
+                ->htmlTemplate('emails/welcome.html.twig')
+                ->context([
+                    'company' => $hmaService,
+                    'owner' => $owner,
+                    'activation_url' => $activationUrl,
+                    'app_name' => $this->appName,
+                    'login_url' => $this->urlGenerator->generate('app_login', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                    'expires_in_hours' => 48,
+                    'is_production' => $this->isProduction,
+                ]);
+
+            $this->mailer->send($email);
+            $this->logger->info('Welcome email with activation link sent', [
+                'to' => $owner->getEmail(),
+                'activation_url' => $activationUrl,
+            ]);
+            return true;
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to send welcome email: ' . $e->getMessage());
+            
+            if (!$this->isProduction) {
+                $this->logger->warning('Welcome email non envoyé (mode dev)');
+                return true;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * ✅ NOUVELLE MÉTHODE : Envoyé quand le owner active son entreprise
+     * (à sa 1ère connexion après inscription).
+     */
+    public function sendCompanyActivationEmail(HmaService $hmaService, User $owner): bool
+    {
+        $subject = "Votre compte {$this->appName} est activé !";
         
         if (!$this->isProduction) {
             $subject = "[DEV] " . $subject;
@@ -59,26 +115,28 @@ class EmailService
         try {
             $email = (new TemplatedEmail())
                 ->from(new Address($this->fromEmail, $this->fromName))
-                ->to(new Address($hmaService->getEmail(), $hmaService->getCompanyName()))
+                ->to(new Address($owner->getEmail(), $owner->getFullName()))
                 ->subject($subject)
-                ->htmlTemplate('emails/welcome.html.twig')
+                ->htmlTemplate('emails/company_activated.html.twig')
                 ->context([
                     'company' => $hmaService,
-                    'password' => $plainPassword,
+                    'owner' => $owner,
+                    'subscription_number' => $hmaService->getSubscriptionNumber(),
                     'app_name' => $this->appName,
-                    'login_url' => $this->urlGenerator->generate('app_login', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                    'dashboard_url' => $this->urlGenerator->generate('app_dashboard', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                    'support_email' => $this->supportEmail,
+                    'global_logo_url' => $this->getGlobalLogoUrl(),
                     'is_production' => $this->isProduction,
                 ]);
 
             $this->mailer->send($email);
-            $this->logger->info('Welcome email sent', ['to' => $hmaService->getEmail()]);
+            $this->logger->info('Company activation email sent', ['to' => $owner->getEmail()]);
             return true;
         } catch (\Exception $e) {
-            $this->logger->error('Failed to send welcome email: ' . $e->getMessage());
+            $this->logger->error('Failed to send company activation email: ' . $e->getMessage());
             
-            // En développement, on simule le succès pour ne pas bloquer le flux
             if (!$this->isProduction) {
-                $this->logger->warning('Email non envoyé (mode dev) - Vérifiez mailer.log ou utilisez le mailer helper');
+                $this->logger->warning('Company activation email non envoyé (mode dev)');
                 return true;
             }
             return false;
@@ -165,42 +223,17 @@ class EmailService
         }
     }
 
+    /**
+     * ⚠️ DÉPRÉCIÉ : Conservée pour rétrocompatibilité uniquement.
+     * N'est plus appelée dans le nouveau flux (le mot de passe n'est plus
+     * généré aléatoirement, il est choisi par l'utilisateur à l'inscription).
+     * 
+     * @deprecated Utiliser sendWelcomeEmail(HmaService, User) à la place
+     */
     public function sendOwnerCredentials(HmaService $hmaService, User $ownerUser, string $plainPassword, string $subscriptionNumber): bool
     {
-        $subject = "Votre compte propriétaire {$this->appName} est prêt !";
-        
-        if (!$this->isProduction) {
-            $subject = "[DEV] " . $subject;
-        }
-        
-        try {
-            $email = (new TemplatedEmail())
-                ->from(new Address($this->fromEmail, $this->fromName))
-                ->to(new Address($hmaService->getEmail(), $hmaService->getCompanyName()))
-                ->subject($subject)
-                ->htmlTemplate('emails/owner_credentials.html.twig')
-                ->context([
-                    'company' => $hmaService,
-                    'owner' => $ownerUser,
-                    'password' => $plainPassword,
-                    'subscription_number' => $subscriptionNumber,
-                    'app_name' => $this->appName,
-                    'login_url' => $this->urlGenerator->generate('app_login', [], UrlGeneratorInterface::ABSOLUTE_URL),
-                    'is_production' => $this->isProduction,
-                ]);
-
-            $this->mailer->send($email);
-            $this->logger->info('Owner credentials email sent');
-            return true;
-        } catch (\Exception $e) {
-            $this->logger->error('Failed to send owner credentials email: ' . $e->getMessage());
-            
-            if (!$this->isProduction) {
-                $this->logger->warning('Owner credentials email non envoyé (mode dev)');
-                return true;
-            }
-            return false;
-        }
+        $this->logger->warning('DEPRECATED: sendOwnerCredentials called. Use sendWelcomeEmail(HmaService, User) instead.');
+        return true;
     }
 
     public function sendActivationConfirmation(HmaService $hmaService, string $subscriptionNumber): bool
@@ -420,7 +453,7 @@ class EmailService
             return true;
         } catch (\Exception $e) {
             $this->logger->error('Erreur envoi email désactivation: ' . $e->getMessage());
-            return !$this->isProduction; // en dev, on simule le succès
+            return !$this->isProduction;
         }
     }
 }

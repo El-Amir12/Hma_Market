@@ -133,8 +133,10 @@ class __TwigTemplate_8d4646c2bc937f20efe0be50273bf77f extends Template
         // line 26
         yield "
     ";
-        // line 27
-        yield Twig\Extension\CoreExtension::include($this->env, $context, "admin/product/_form.html.twig");
+        // line 28
+        yield "    ";
+        yield Twig\Extension\CoreExtension::include($this->env, $context, "admin/product/_form.html.twig", ["button_label" => "Créer le produit"]);
+        // line 30
         yield "
 </div>
 ";
@@ -168,7 +170,7 @@ class __TwigTemplate_8d4646c2bc937f20efe0be50273bf77f extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  137 => 27,  134 => 26,  125 => 24,  121 => 23,  105 => 10,  100 => 7,  87 => 6,  64 => 4,  41 => 2,);
+        return array (  140 => 30,  137 => 28,  134 => 26,  125 => 24,  121 => 23,  105 => 10,  100 => 7,  87 => 6,  64 => 4,  41 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -199,7 +201,10 @@ class __TwigTemplate_8d4646c2bc937f20efe0be50273bf77f extends Template
         <div class=\"alert alert-danger\">{{ message }}</div>
     {% endfor %}
 
-    {{ include('admin/product/_form.html.twig') }}
+    {# ✅ Utilise {{ include() }} : partage TOUT le contexte #}
+    {{ include('admin/product/_form.html.twig', {
+        'button_label': 'Créer le produit'
+    }) }}
 </div>
 {% endblock %}", "admin/product/new.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\product\\new.html.twig");
     }

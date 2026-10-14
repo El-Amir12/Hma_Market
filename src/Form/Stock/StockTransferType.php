@@ -37,17 +37,28 @@ class StockTransferType extends AbstractType
                 },
                 'choice_label' => function (StockBatch $batch) {
                     return sprintf(
-                        '%s - %s (Stock: %d unités, Prix: %s) - Emplacement: %s',
+                        '%s - %s (Stock: %d unités) - %s',
                         $batch->getProduct()->getName(),
                         $batch->getBatchNumber(),
                         $batch->getCurrentQuantity(),
-                        number_format((float)$batch->getUnitPrice(), 0, ',', ' ') . ' FCFA',
                         $batch->getLocationDisplay()
                     );
                 },
+                // ✅ Attributs data-* pour le JS
+                'choice_attr' => function (StockBatch $batch) {
+                    return [
+                        'data-current-quantity' => $batch->getCurrentQuantity(),
+                        'data-batch-number' => $batch->getBatchNumber(),
+                        'data-product-name' => $batch->getProduct()?->getName() ?? '',
+                        'data-location' => $batch->getLocationDisplay(),
+                    ];
+                },
                 'placeholder' => '-- Sélectionner un lot --',
                 'required' => true,
-                'attr' => ['class' => 'form-select select2-batch']
+                'attr' => [
+                    'class' => 'form-select select2-batch',
+                    'id' => 'transfer_stock_batch',   // ✅ ID explicite
+                ],
             ])
             ->add('destination_location', EntityType::class, [
                 'label' => 'Emplacement de destination',
@@ -62,20 +73,24 @@ class StockTransferType extends AbstractType
                 'choice_label' => 'displayName',
                 'placeholder' => '-- Sélectionner un emplacement --',
                 'required' => true,
-                'attr' => ['class' => 'form-select select2-location']
+                'attr' => [
+                    'class' => 'form-select select2-location',
+                    'id' => 'transfer_destination_location',  // ✅ ID explicite
+                ],
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'Quantité à transférer',
                 'required' => true,
                 'constraints' => [
                     new NotBlank(['message' => 'La quantité est obligatoire.']),
-                    new Positive(['message' => 'La quantité doit être positive.'])
+                    new Positive(['message' => 'La quantité doit être positive.']),
                 ],
                 'attr' => [
                     'min' => 1,
                     'class' => 'form-control',
-                    'placeholder' => 'Ex: 10'
-                ]
+                    'placeholder' => 'Ex: 10',
+                    'id' => 'transfer_quantity',   // ✅ ID explicite
+                ],
             ])
             ->add('reason', TextareaType::class, [
                 'label' => 'Raison du transfert',
@@ -83,9 +98,9 @@ class StockTransferType extends AbstractType
                 'attr' => [
                     'rows' => 3,
                     'class' => 'form-control',
-                    'placeholder' => 'Ex: Réapprovisionnement magasin secondaire, Transfert entre dépôts...'
+                    'placeholder' => 'Ex: Réapprovisionnement magasin secondaire...',
+                    'id' => 'transfer_reason',   // ✅ ID explicite
                 ],
-                'help' => 'Optionnel mais recommandé pour tracer les transferts.'
             ]);
     }
 
@@ -95,7 +110,7 @@ class StockTransferType extends AbstractType
             'data_class' => StockTransfer::class,
             'hma_service' => null,
         ]);
-        
+
         $resolver->setAllowedTypes('hma_service', ['App\Entity\HmaService', 'null']);
     }
 }

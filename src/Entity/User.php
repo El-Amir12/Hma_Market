@@ -48,6 +48,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     /**
+     * @var bool Si false, le compte n'est pas encore activé
+     */
+    #[ORM\Column(options: ['default' => false])]
+    private bool $isAccountActivated = false;
+
+    /**
+     * @var string|null Token unique pour activer le compte
+     */
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $activationToken = null;
+
+    /**
+     * @var \DateTime|null Date d'envoi du lien d'activation
+     */
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $activationTokenSentAt = null;
+
+    /**
      * @var bool|null Contrôle manuel par l'admin de l'entreprise
      * L'admin peut activer/désactiver manuellement un utilisateur
      */
@@ -255,6 +273,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function isAccountActivated(): bool
+    {
+        return $this->isAccountActivated;
+    }
+
+    public function setIsAccountActivated(bool $isAccountActivated): static
+    {
+        $this->isAccountActivated = $isAccountActivated;
+        return $this;
+    }
+
+    public function getActivationToken(): ?string
+    {
+        return $this->activationToken;
+    }
+
+    public function setActivationToken(?string $activationToken): static
+    {
+        $this->activationToken = $activationToken;
+        return $this;
+    }
+
+    public function getActivationTokenSentAt(): ?\DateTime
+    {
+        return $this->activationTokenSentAt;
+    }
+
+    public function setActivationTokenSentAt(?\DateTime $activationTokenSentAt): static
+    {
+        $this->activationTokenSentAt = $activationTokenSentAt;
+        return $this;
+    }
+
     public function isActive(): ?bool
     {
         return $this->is_active;
@@ -296,6 +347,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPasswordChanged(bool $passwordChanged): static
     {
         $this->passwordChanged = $passwordChanged;
+        
+        // ✅ SYNCHRONISATION AUTOMATIQUE
+        // Quand l'utilisateur change son mot de passe pour la première fois,
+        // on considère son compte comme activé
+        if ($passwordChanged === true) {
+            $this->isAccountActivated = true;
+            
+            // ✅ Nettoyer le token d'activation (plus nécessaire)
+            $this->activationToken = null;
+            $this->activationTokenSentAt = null;
+        }
+        
         return $this;
     }
 

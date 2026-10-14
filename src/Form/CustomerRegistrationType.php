@@ -1,5 +1,6 @@
 <?php
 // src/Form/CustomerRegistrationType.php
+
 namespace App\Form;
 
 use App\Entity\Customer;
@@ -7,12 +8,15 @@ use App\Form\Type\CountryType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class CustomerRegistrationType extends AbstractType
 {
@@ -81,6 +85,40 @@ class CustomerRegistrationType extends AbstractType
             ->add('country', CountryType::class, [
                 'label' => 'Pays',
                 'required' => false,
+            ])
+            // ✅ NOUVEAU : Champ mot de passe avec confirmation
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'mapped' => false,
+                'first_options' => [
+                    'label' => 'Mot de passe *',
+                    'attr' => [
+                        'class' => 'form-control form-control-lg',
+                        'placeholder' => 'Minimum 8 caractères',
+                        'autocomplete' => 'new-password'
+                    ],
+                ],
+                'second_options' => [
+                    'label' => 'Confirmer le mot de passe *',
+                    'attr' => [
+                        'class' => 'form-control form-control-lg',
+                        'placeholder' => 'Répétez le mot de passe',
+                        'autocomplete' => 'new-password'
+                    ],
+                ],
+                'invalid_message' => 'Les deux mots de passe ne correspondent pas.',
+                'constraints' => [
+                    new NotBlank(['message' => 'Le mot de passe est obligatoire.']),
+                    new Length([
+                        'min' => 8,
+                        'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères.',
+                        'max' => 4096,
+                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+                        'message' => 'Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre.',
+                    ]),
+                ],
             ])
             ->add('terms', CheckboxType::class, [
                 'label' => 'J\'accepte les conditions générales d\'utilisation *',

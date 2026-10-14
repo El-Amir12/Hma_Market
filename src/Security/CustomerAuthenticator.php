@@ -94,31 +94,22 @@ class CustomerAuthenticator extends AbstractLoginFormAuthenticator
             $this->logger->info('✅ Customer authentifié avec succès', [
                 'email' => $customer->getEmail(),
                 'id' => $customer->getId(),
-                'must_change_password' => $customer->isMustChangePassword()
             ]);
             
-            // ✅ Si l'utilisateur doit changer son mot de passe
-            if ($customer->isMustChangePassword()) {
-                $request->getSession()->set('_force_change_password', '1');
-                return new RedirectResponse($this->urlGenerator->generate('marketplace_change_password'));
-            }
+            // ❌ SUPPRIMÉ : plus de vérification mustChangePassword
+            // Le customer a choisi son mot de passe à l'inscription
         }
 
-        // ✅ Vérifier la target path AVANT de l'utiliser
+        // ✅ Vérifier la target path
         $targetPath = $this->getSafeTargetPath($request->getSession(), $firewallName);
         
         if ($targetPath) {
-            $this->logger->info('➡️ Redirection vers target path', ['target' => $targetPath]);
             return new RedirectResponse($targetPath);
         }
 
         // ✅ Redirection par défaut vers la home
-        $homeUrl = $this->urlGenerator->generate('marketplace_home');
-        $this->logger->info('🏠 Redirection vers la page d\'accueil', ['url' => $homeUrl]);
-        
-        return new RedirectResponse($homeUrl);
+        return new RedirectResponse($this->urlGenerator->generate('marketplace_home'));
     }
-
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         $email = $request->getPayload()->getString('email');

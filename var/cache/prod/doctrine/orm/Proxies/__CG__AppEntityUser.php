@@ -22,6 +22,8 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\InternalProxy
     
 
     private const LAZY_OBJECT_PROPERTY_SCOPES = [
+        "\0".parent::class."\0".'activationToken' => [parent::class, 'activationToken', null, 16],
+        "\0".parent::class."\0".'activationTokenSentAt' => [parent::class, 'activationTokenSentAt', null, 16],
         "\0".parent::class."\0".'categories' => [parent::class, 'categories', null, 16],
         "\0".parent::class."\0".'created_at' => [parent::class, 'created_at', null, 16],
         "\0".parent::class."\0".'email' => [parent::class, 'email', null, 16],
@@ -30,6 +32,7 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\InternalProxy
         "\0".parent::class."\0".'full_name' => [parent::class, 'full_name', null, 16],
         "\0".parent::class."\0".'hma_service_id' => [parent::class, 'hma_service_id', null, 16],
         "\0".parent::class."\0".'id' => [parent::class, 'id', null, 16],
+        "\0".parent::class."\0".'isAccountActivated' => [parent::class, 'isAccountActivated', null, 16],
         "\0".parent::class."\0".'is_active' => [parent::class, 'is_active', null, 16],
         "\0".parent::class."\0".'is_hma_owner' => [parent::class, 'is_hma_owner', null, 16],
         "\0".parent::class."\0".'is_super_admin' => [parent::class, 'is_super_admin', null, 16],
@@ -50,6 +53,8 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\InternalProxy
         "\0".parent::class."\0".'stockMovements' => [parent::class, 'stockMovements', null, 16],
         "\0".parent::class."\0".'subscription_active' => [parent::class, 'subscription_active', null, 16],
         "\0".parent::class."\0".'updated_at' => [parent::class, 'updated_at', null, 16],
+        'activationToken' => [parent::class, 'activationToken', null, 16],
+        'activationTokenSentAt' => [parent::class, 'activationTokenSentAt', null, 16],
         'categories' => [parent::class, 'categories', null, 16],
         'created_at' => [parent::class, 'created_at', null, 16],
         'email' => [parent::class, 'email', null, 16],
@@ -58,6 +63,7 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\InternalProxy
         'full_name' => [parent::class, 'full_name', null, 16],
         'hma_service_id' => [parent::class, 'hma_service_id', null, 16],
         'id' => [parent::class, 'id', null, 16],
+        'isAccountActivated' => [parent::class, 'isAccountActivated', null, 16],
         'is_active' => [parent::class, 'is_active', null, 16],
         'is_hma_owner' => [parent::class, 'is_hma_owner', null, 16],
         'is_super_admin' => [parent::class, 'is_super_admin', null, 16],

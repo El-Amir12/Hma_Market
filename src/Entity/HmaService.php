@@ -87,7 +87,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 100, unique: true)] 
     private ?string $email = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $password = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

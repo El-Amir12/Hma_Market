@@ -346,62 +346,95 @@
                 </a>
             {% endif %}
             
-            {# ✅ CONDITION POUR SIGNALER UN PROBLÈME #}
-            {% if batch.hasIssue %}
-                {% set creditNote = supplierCreditNote is defined ? supplierCreditNote : null %}
-                {% if creditNote %}
-                    <a href="{{ path('app_supplier_credit_note_show', {'id': creditNote.id}) }}" class="btn btn-outline-info btn-action btn-sm">
-                        <i class="fas fa-file-invoice-dollar me-1"></i> <span class="d-none d-sm-inline">Voir l'avoir</span>
-                    </a>
-                {% else %}
-                    <button type="button" class="btn btn-outline-secondary btn-action btn-sm" disabled>
-                        <i class="fas fa-file-invoice-dollar me-1"></i> Avoir
-                    </button>
-                {% endif %}
+            {# ✅ CORRECTION : Utiliser supplierCreditNote (le VRAI avoir) #}
+            {% set creditNote = supplierCreditNote is defined ? supplierCreditNote : null %}
+            {% set realIssueStatus = creditNote ? creditNote.status : batch.issueStatus %}
+            
+            {% if batch.hasIssue and creditNote %}
+                {# ✅ Avoir existant → lien vers l'avoir avec statut à jour #}
+                <a href="{{ path('app_supplier_credit_note_show', {'id': creditNote.id}) }}" 
+                   class="btn btn-sm btn-action
+                       {% if realIssueStatus in ['recovered', 'resolved'] %}btn-success
+                       {% elseif realIssueStatus == 'pending' %}btn-warning
+                       {% elseif realIssueStatus in ['rejected', 'lost'] %}btn-danger
+                       {% else %}btn-outline-info{% endif %}">
+                    <i class="fas 
+                        {% if realIssueStatus in ['recovered', 'resolved'] %}fa-check-circle
+                        {% elseif realIssueStatus == 'pending' %}fa-clock
+                        {% elseif realIssueStatus in ['rejected', 'lost'] %}fa-times-circle
+                        {% else %}fa-file-invoice-dollar{% endif %} me-1"></i> 
+                    <span class="d-none d-sm-inline">
+                        {% if realIssueStatus in ['recovered', 'resolved'] %}Récupéré
+                        {% elseif realIssueStatus == 'pending' %}En attente
+                        {% elseif realIssueStatus == 'lost' %}Perdu
+                        {% elseif realIssueStatus == 'rejected' %}Rejeté
+                        {% elseif realIssueStatus == 'closed' %}Clôturé
+                        {% else %}Voir l'avoir{% endif %}
+                    </span>
+                </a>
+            {% elseif batch.hasIssue %}
+                {# Avoir existant mais non chargé (fallback) #}
+                <a href="{{ path('app_supplier_credit_note_show', {'id': batch.supplierCreditNoteId}) }}" 
+                   class="btn btn-outline-info btn-action btn-sm">
+                    <i class="fas fa-file-invoice-dollar me-1"></i> 
+                    <span class="d-none d-sm-inline">Voir l'avoir</span>
+                </a>
             {% elseif canReportIssue is defined and canReportIssue %}
+                {# ✅ Pas d'avoir → bouton "Signaler" #}
                 {% if purchaseItem is defined and purchaseItem and purchaseItem.purchase %}
                     {% set purchase = purchaseItem.purchase %}
                     {% if purchase.receivedAt %}
                         {% set daysSinceReception = date().diff(purchase.receivedAt).days %}
                         {% set daysRemaining = 30 - daysSinceReception %}
-                        <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-outline-danger btn-action btn-sm" title="Encore {{ daysRemaining }} jour(s)">
+                        <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" 
+                           class="btn btn-outline-danger btn-action btn-sm" 
+                           title="Encore {{ daysRemaining }} jour(s)">
                             <i class="fas fa-exclamation-triangle me-1"></i> 
                             <span class="d-none d-sm-inline">Signaler</span>
                             <span class="badge bg-danger ms-1">{{ daysRemaining }}j</span>
                         </a>
                     {% else %}
-                        <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-outline-danger btn-action btn-sm">
-                            <i class="fas fa-exclamation-triangle me-1"></i> <span class="d-none d-sm-inline">Signaler</span>
+                        <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" 
+                           class="btn btn-outline-danger btn-action btn-sm">
+                            <i class="fas fa-exclamation-triangle me-1"></i> 
+                            <span class="d-none d-sm-inline">Signaler</span>
                         </a>
                     {% endif %}
                 {% else %}
-                    <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" class="btn btn-outline-danger btn-action btn-sm">
-                        <i class="fas fa-exclamation-triangle me-1"></i> <span class="d-none d-sm-inline">Signaler</span>
+                    <a href="{{ path('app_supplier_credit_note_new', {'batchId': batch.id}) }}" 
+                       class="btn btn-outline-danger btn-action btn-sm">
+                        <i class="fas fa-exclamation-triangle me-1"></i> 
+                        <span class="d-none d-sm-inline">Signaler</span>
                     </a>
                 {% endif %}
             {% else %}
+                {# Signalement indisponible #}
                 {% if purchaseItem is defined and purchaseItem and purchaseItem.purchase %}
                     {% set purchase = purchaseItem.purchase %}
                     {% if purchase.receivedAt %}
                         {% set daysSinceReception = date().diff(purchase.receivedAt).days %}
                         {% if daysSinceReception > 30 %}
                             <button type="button" class="btn btn-outline-secondary btn-action btn-sm" disabled>
-                                <i class="fas fa-exclamation-triangle me-1"></i> <span class="d-none d-sm-inline">Signalement expiré</span>
+                                <i class="fas fa-exclamation-triangle me-1"></i> 
+                                <span class="d-none d-sm-inline">Signalement expiré</span>
                                 <span class="badge bg-secondary ms-1">+{{ daysSinceReception - 30 }}j</span>
                             </button>
                         {% else %}
                             <button type="button" class="btn btn-outline-secondary btn-action btn-sm" disabled>
-                                <i class="fas fa-exclamation-triangle me-1"></i> <span class="d-none d-sm-inline">Indisponible</span>
+                                <i class="fas fa-exclamation-triangle me-1"></i> 
+                                <span class="d-none d-sm-inline">Indisponible</span>
                             </button>
                         {% endif %}
                     {% else %}
                         <button type="button" class="btn btn-outline-secondary btn-action btn-sm" disabled>
-                            <i class="fas fa-exclamation-triangle me-1"></i> <span class="d-none d-sm-inline">Indisponible</span>
+                            <i class="fas fa-exclamation-triangle me-1"></i> 
+                            <span class="d-none d-sm-inline">Indisponible</span>
                         </button>
                     {% endif %}
                 {% else %}
                     <button type="button" class="btn btn-outline-secondary btn-action btn-sm" disabled>
-                        <i class="fas fa-exclamation-triangle me-1"></i> <span class="d-none d-sm-inline">Indisponible</span>
+                        <i class="fas fa-exclamation-triangle me-1"></i> 
+                        <span class="d-none d-sm-inline">Indisponible</span>
                     </button>
                 {% endif %}
             {% endif %}
@@ -467,10 +500,47 @@
                                 
                                 <dt class="col-5 text-muted small">Avoir</dt>
                                 <dd class="col-7 small">
+                                    {# ✅ CORRECTION : Utiliser le VRAI statut de l'avoir #}
                                     {% if batch.hasIssue %}
-                                        <span class="badge {{ batch.issueStatusBadgeClass }}">
-                                            {{ batch.issueStatusLabel|u.truncate(12) }}
-                                        </span>
+                                        {% set realIssueStatus = creditNote ? creditNote.status : batch.issueStatus %}
+                                        {% if realIssueStatus == 'recovered' or realIssueStatus == 'resolved' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>Récupéré
+                                            </span>
+                                        {% elseif realIssueStatus == 'pending' %}
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fas fa-clock me-1"></i>En attente
+                                            </span>
+                                        {% elseif realIssueStatus == 'acknowledged' %}
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-check me-1"></i>Accusé réception
+                                            </span>
+                                        {% elseif realIssueStatus == 'under_review' %}
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-search me-1"></i>En analyse
+                                            </span>
+                                        {% elseif realIssueStatus == 'partially_recovered' %}
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fas fa-hourglass-half me-1"></i>Partiel
+                                            </span>
+                                        {% elseif realIssueStatus == 'lost' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times-circle me-1"></i>Perdu
+                                            </span>
+                                        {% elseif realIssueStatus == 'rejected' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-ban me-1"></i>Rejeté
+                                            </span>
+                                        {% elseif realIssueStatus == 'closed' %}
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-archive me-1"></i>Clôturé
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                {{ realIssueStatus|replace({'_': ' '})|capitalize }}
+                                            </span>
+                                        {% endif %}
+                                        
                                         {% if batch.issuePriority == 'critical' %}
                                             <span class="badge bg-danger ms-1 small">Critique</span>
                                         {% elseif batch.issuePriority == 'high' %}
@@ -584,60 +654,139 @@
 
         <!-- Colonne droite - Avoir et mouvements -->
         <div class="col-12 col-lg-6">
-            <!-- Informations avoir -->
+            <!-- ✅ CORRECTION : Informations avoir avec VRAI statut -->
             {% if batch.hasIssue %}
-            <div class="card info-card border-0 shadow-sm mb-3 mb-md-4 status-card status-{{ batch.issueStatus }}">
-                <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-1">
-                    <h5 class="mb-0 fw-semibold small">
-                        <i class="fas fa-file-invoice-dollar me-2 text-danger"></i>
-                        Avoir fournisseur
-                    </h5>
-                    <span class="badge {{ batch.issueStatusBadgeClass }} fs-6 px-2 px-md-3 py-1 py-md-2">
-                        {{ batch.issueStatusLabel }}
-                    </span>
+                {% set realIssueStatus = creditNote ? creditNote.status : batch.issueStatus %}
+                {% set realDeclaredAmount = creditNote ? creditNote.declaredAmount : batch.issueDeclaredAmount %}
+                {% set realRecoveredAmount = creditNote ? creditNote.recoveredAmount : batch.issueRecoveredAmount %}
+                {% set realLostAmount = creditNote ? creditNote.lostAmount : batch.issueLostAmount %}
+                {% set realReportedAt = creditNote ? creditNote.createdAt : batch.issueReportedAt %}
+                {% set realResolvedAt = creditNote ? creditNote.resolvedAt : batch.issueResolvedAt %}
+                
+                {# ✅ Classe CSS dynamique selon le statut #}
+                {% if realIssueStatus == 'recovered' or realIssueStatus == 'resolved' %}
+                    {% set statusCardClass = 'bg-success bg-opacity-10 border-success' %}
+                    {% set statusBadgeClass = 'bg-success' %}
+                    {% set statusLabel = 'Récupéré' %}
+                    {% set statusIcon = 'fa-check-circle' %}
+                {% elseif realIssueStatus == 'pending' %}
+                    {% set statusCardClass = 'bg-warning bg-opacity-10 border-warning' %}
+                    {% set statusBadgeClass = 'bg-warning text-dark' %}
+                    {% set statusLabel = 'En attente' %}
+                    {% set statusIcon = 'fa-clock' %}
+                {% elseif realIssueStatus == 'acknowledged' %}
+                    {% set statusCardClass = 'bg-info bg-opacity-10 border-info' %}
+                    {% set statusBadgeClass = 'bg-info' %}
+                    {% set statusLabel = 'Accusé réception' %}
+                    {% set statusIcon = 'fa-check' %}
+                {% elseif realIssueStatus == 'under_review' %}
+                    {% set statusCardClass = 'bg-info bg-opacity-10 border-info' %}
+                    {% set statusBadgeClass = 'bg-info' %}
+                    {% set statusLabel = 'En analyse' %}
+                    {% set statusIcon = 'fa-search' %}
+                {% elseif realIssueStatus == 'partially_recovered' %}
+                    {% set statusCardClass = 'bg-warning bg-opacity-10 border-warning' %}
+                    {% set statusBadgeClass = 'bg-warning text-dark' %}
+                    {% set statusLabel = 'Partiel. récupéré' %}
+                    {% set statusIcon = 'fa-hourglass-half' %}
+                {% elseif realIssueStatus == 'lost' %}
+                    {% set statusCardClass = 'bg-danger bg-opacity-10 border-danger' %}
+                    {% set statusBadgeClass = 'bg-danger' %}
+                    {% set statusLabel = 'Perdu' %}
+                    {% set statusIcon = 'fa-times-circle' %}
+                {% elseif realIssueStatus == 'rejected' %}
+                    {% set statusCardClass = 'bg-danger bg-opacity-10 border-danger' %}
+                    {% set statusBadgeClass = 'bg-danger' %}
+                    {% set statusLabel = 'Rejeté' %}
+                    {% set statusIcon = 'fa-ban' %}
+                {% elseif realIssueStatus == 'closed' %}
+                    {% set statusCardClass = 'bg-secondary bg-opacity-10 border-secondary' %}
+                    {% set statusBadgeClass = 'bg-secondary' %}
+                    {% set statusLabel = 'Clôturé' %}
+                    {% set statusIcon = 'fa-archive' %}
+                {% else %}
+                    {% set statusCardClass = 'bg-light border-secondary' %}
+                    {% set statusBadgeClass = 'bg-secondary' %}
+                    {% set statusLabel = realIssueStatus|replace({'_': ' '})|capitalize %}
+                    {% set statusIcon = 'fa-exclamation-triangle' %}
+                {% endif %}
+                
+                <div class="card info-card border-0 shadow-sm mb-3 mb-md-4 border-start border-4 {{ statusCardClass }}">
+                    <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-1">
+                        <h5 class="mb-0 fw-semibold small">
+                            <i class="fas fa-file-invoice-dollar me-2 text-danger"></i>
+                            Avoir fournisseur
+                        </h5>
+                        <span class="badge {{ statusBadgeClass }} fs-6 px-2 px-md-3 py-1 py-md-2">
+                            <i class="fas {{ statusIcon }} me-1"></i>{{ statusLabel }}
+                        </span>
+                    </div>
+                    <div class="card-body p-2 p-md-3">
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Montant déclaré</small>
+                                <span class="fw-bold text-danger">
+                                    {{ realDeclaredAmount|price_with_currency(batch.hmaService) }}
+                                </span>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Priorité</small>
+                                {% if batch.issuePriority == 'critical' %}
+                                    <span class="badge bg-danger">Critique</span>
+                                {% elseif batch.issuePriority == 'high' %}
+                                    <span class="badge bg-warning text-dark">Haute</span>
+                                {% elseif batch.issuePriority == 'medium' %}
+                                    <span class="badge bg-info">Moyenne</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Basse</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Récupéré</small>
+                                <span class="fw-bold text-success">
+                                    {{ (realRecoveredAmount ?: 0)|price_with_currency(batch.hmaService) }}
+                                </span>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Perdu</small>
+                                <span class="fw-bold text-secondary">
+                                    {{ (realLostAmount ?: 0)|price_with_currency(batch.hmaService) }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Signalé le</small>
+                                <span class="small">
+                                    {{ realReportedAt ? realReportedAt|date('d/m/Y H:i') : '—' }}
+                                </span>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Résolu le</small>
+                                <span class="small">
+                                    {{ realResolvedAt ? realResolvedAt|date('d/m/Y H:i') : '—' }}
+                                </span>
+                            </div>
+                        </div>
+                        {% if creditNote %}
+                            <div class="mt-3 text-center">
+                                <a href="{{ path('app_supplier_credit_note_show', {'id': creditNote.id}) }}" 
+                                   class="btn btn-outline-danger btn-sm w-100">
+                                    <i class="fas fa-eye me-1"></i> Voir le détail de l'avoir
+                                </a>
+                            </div>
+                        {% elseif batch.supplierCreditNoteId %}
+                            <div class="mt-3 text-center">
+                                <a href="{{ path('app_supplier_credit_note_show', {'id': batch.supplierCreditNoteId}) }}" 
+                                   class="btn btn-outline-danger btn-sm w-100">
+                                    <i class="fas fa-eye me-1"></i> Voir le détail de l'avoir
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="card-body p-2 p-md-3">
-                    <div class="row g-2 mb-2">
-                        <div class="col-6">
-                            <small class="text-muted d-block">Montant déclaré</small>
-                            <span class="fw-bold text-danger">{{ batch.issueDeclaredAmount|price_with_currency(batch.hmaService) }}</span>
-                        </div>
-                        <div class="col-6">
-                            <small class="text-muted d-block">Priorité</small>
-                            <span class="badge {{ batch.issuePriorityBadgeClass }}">
-                                {{ batch.issuePriorityLabel }}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="row g-2 mb-2">
-                        <div class="col-6">
-                            <small class="text-muted d-block">Récupéré</small>
-                            <span class="fw-bold text-success">{{ (batch.issueRecoveredAmount ?: 0)|price_with_currency(batch.hmaService) }}</span>
-                        </div>
-                        <div class="col-6">
-                            <small class="text-muted d-block">Perdu</small>
-                            <span class="fw-bold text-secondary">{{ (batch.issueLostAmount ?: 0)|price_with_currency(batch.hmaService) }}</span>
-                        </div>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col-6">
-                            <small class="text-muted d-block">Signalé le</small>
-                            <span class="small">{{ batch.issueReportedAt ? batch.issueReportedAt|date('d/m/Y H:i') : '—' }}</span>
-                        </div>
-                        <div class="col-6">
-                            <small class="text-muted d-block">Résolu le</small>
-                            <span class="small">{{ batch.issueResolvedAt ? batch.issueResolvedAt|date('d/m/Y H:i') : '—' }}</span>
-                        </div>
-                    </div>
-                    {% if batch.supplierCreditNoteId %}
-                        <div class="mt-3 text-center">
-                            <a href="{{ path('app_supplier_credit_note_show', {'id': batch.supplierCreditNoteId}) }}" class="btn btn-outline-danger btn-sm w-100">
-                                <i class="fas fa-eye me-1"></i> Voir le détail de l'avoir
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
             {% else %}
             <div class="card info-card border-0 shadow-sm mb-3 mb-md-4 bg-light">
                 <div class="card-body text-center py-3 py-md-4 p-2 p-md-3">
@@ -653,7 +802,9 @@
                         <button type="button" class="btn btn-outline-secondary btn-sm" disabled>
                             <i class="fas fa-exclamation-triangle me-1"></i> Signalement indisponible
                         </button>
-                        <p class="text-muted small mt-2">Disponible uniquement pour les lots issus de commandes réceptionnées depuis moins de 30 jours.</p>
+                        <p class="text-muted small mt-2">
+                            Disponible uniquement pour les lots issus de commandes réceptionnées depuis moins de 30 jours.
+                        </p>
                     {% endif %}
                 </div>
             </div>
@@ -677,13 +828,19 @@
                             </a>
                         </dd>
                         <dt class="col-5 col-sm-4 text-muted small">Fournisseur</dt>
-                        <dd class="col-7 col-sm-8 small">{{ purchaseItem.purchase.supplier.name|default('Non renseigné')|u.truncate(20) }}</dd>
+                        <dd class="col-7 col-sm-8 small">
+                            {{ purchaseItem.purchase.supplier.name|default('Non renseigné')|u.truncate(20) }}
+                        </dd>
                         <dt class="col-5 col-sm-4 text-muted small">Date d'achat</dt>
                         <dd class="col-7 col-sm-8 small">{{ purchaseItem.purchase.createdAt|date('d/m/Y') }}</dd>
                         <dt class="col-5 col-sm-4 text-muted small">Qté achetée</dt>
-                        <dd class="col-7 col-sm-8 small">{{ purchaseItem.quantity }} {{ product.unit|default('pièce(s)')|u.truncate(6) }}</dd>
+                        <dd class="col-7 col-sm-8 small">
+                            {{ purchaseItem.quantity }} {{ product.unit|default('pièce(s)')|u.truncate(6) }}
+                        </dd>
                         <dt class="col-5 col-sm-4 text-muted small">Prix d'achat</dt>
-                        <dd class="col-7 col-sm-8 small">{{ purchaseItem.unitPrice|price_with_currency(batch.hmaService) }}</dd>
+                        <dd class="col-7 col-sm-8 small">
+                            {{ purchaseItem.unitPrice|price_with_currency(batch.hmaService) }}
+                        </dd>
                     </dl>
                 </div>
             </div>

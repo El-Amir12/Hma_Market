@@ -427,6 +427,24 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         background: var(--warning-color) !important;
         color: #000 !important;
     }
+
+    /* ✅ Champ lecture seule stylé */
+    .form-control[readonly] {
+        background-color: #f1f5f9;
+        cursor: not-allowed;
+        color: #475569;
+    }
+
+    /* ✅ Badge achat interne */
+    .optional-badge {
+        background-color: #f3f4f6;
+        color: #6b7280;
+        font-size: 0.7rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 20px;
+        font-weight: normal;
+        margin-left: 0.3rem;
+    }
 </style>
 ";
         
@@ -438,7 +456,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         yield from [];
     }
 
-    // line 337
+    // line 355
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -451,7 +469,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 338
+        // line 356
         yield "<div class=\"purchase-container\">
     <div class=\"header-bar\">
         <h1 class=\"h2 mb-0\">
@@ -460,14 +478,14 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         </h1>
         <div>
             <a href=\"";
-        // line 345
+        // line 363
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_index");
         yield "\" class=\"btn btn-outline-secondary me-2\">
                 <i class=\"bi bi-arrow-left\"></i> Retour
             </a>
             <button type=\"button\" class=\"btn btn-primary\" id=\"confirmOrderBtn\" ";
-        // line 348
-        if (Twig\Extension\CoreExtension::testEmpty((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 348, $this->source); })()))) {
+        // line 366
+        if (Twig\Extension\CoreExtension::testEmpty((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 366, $this->source); })()))) {
             yield "disabled";
         }
         yield ">
@@ -505,15 +523,15 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
             <div class=\"panel-header\">
                 <i class=\"bi bi-cart me-2\"></i> Votre panier
                 <span class=\"badge bg-primary rounded-pill ms-2\" id=\"cartCount\">";
-        // line 382
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 382, $this->source); })())), "html", null, true);
+        // line 400
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 400, $this->source); })())), "html", null, true);
         yield "</span>
             </div>
             <div class=\"panel-content\" id=\"cartContainer\">
                 ";
-        // line 385
-        if (Twig\Extension\CoreExtension::testEmpty((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 385, $this->source); })()))) {
-            // line 386
+        // line 403
+        if (Twig\Extension\CoreExtension::testEmpty((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 403, $this->source); })()))) {
+            // line 404
             yield "                    <div class=\"text-center py-5 text-muted\">
                         <i class=\"bi bi-cart-x fs-1\"></i>
                         <p class=\"mt-2\">Votre panier est vide</p>
@@ -523,101 +541,109 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
                     </div>
                 ";
         } else {
-            // line 394
+            // line 412
             yield "                    <ul class=\"cart-items\" id=\"cartItemsList\">
                         ";
-            // line 395
+            // line 413
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 395, $this->source); })()));
+            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["cart"]) || array_key_exists("cart", $context) ? $context["cart"] : (function () { throw new RuntimeError('Variable "cart" does not exist.', 413, $this->source); })()));
             foreach ($context['_seq'] as $context["_key"] => $context["item"]) {
-                // line 396
+                // line 414
                 yield "                            <li class=\"cart-item\" data-product-id=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 396), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 414), "html", null, true);
                 yield "\">
                                 <div class=\"cart-item-img\">
                                     ";
-                // line 398
-                if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 398) && (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 398) != "default-product.png"))) {
-                    // line 399
+                // line 416
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 416) && (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 416) != "default-product.png"))) {
+                    // line 417
                     yield "                                        <img src=\"";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/products/" . CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 399))), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/products/" . CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 417))), "html", null, true);
                     yield "\" alt=\"";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 399), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 417), "html", null, true);
                     yield "\" onerror=\"this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='flex';\">
                                     ";
                 }
-                // line 401
+                // line 419
                 yield "                                    <i class=\"fas fa-box fallback-icon\" style=\"display: ";
-                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 401) && (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 401) != "default-product.png"))) ? ("none") : ("flex"));
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 419) && (CoreExtension::getAttribute($this->env, $this->source, $context["item"], "image", [], "any", false, false, false, 419) != "default-product.png"))) ? ("none") : ("flex"));
                 yield ";\"></i>
                                 </div>
                                 <div class=\"cart-item-details\">
                                     <div class=\"cart-item-title\">";
-                // line 404
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 404), "html", null, true);
+                // line 422
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 422), "html", null, true);
                 yield "</div>
                                     <div class=\"cart-item-meta\">
                                         <i class=\"bi bi-upc-scan\"></i> ";
-                // line 406
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "barcode", [], "any", false, false, false, 406), "html", null, true);
+                // line 424
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "barcode", [], "any", false, false, false, 424), "html", null, true);
                 yield "
                                         ";
-                // line 407
-                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit", [], "any", false, false, false, 407)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 408
+                // line 425
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit", [], "any", false, false, false, 425)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 426
                     yield "                                            <span class=\"ms-2\"><i class=\"bi bi-rulers\"></i> ";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit", [], "any", false, false, false, 408), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit", [], "any", false, false, false, 426), "html", null, true);
                     yield "</span>
                                         ";
                 }
-                // line 410
+                // line 428
                 yield "                                        ";
-                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["item"], "has_expiry_date", [], "any", false, false, false, 410)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                    // line 411
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["item"], "has_expiry_date", [], "any", false, false, false, 428)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 429
                     yield "                                            <span class=\"badge bg-warning text-dark\">Périssable</span>
                                         ";
                 }
-                // line 413
+                // line 431
                 yield "                                    </div>
                                 </div>
                                 <div class=\"cart-item-quantity\">
                                     <span class=\"badge bg-secondary\">";
-                // line 416
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 416), "html", null, true);
+                // line 434
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 434), "html", null, true);
                 yield "</span>
                                 </div>
                                 <div class=\"cart-item-price\">
                                     <div class=\"total\">";
-                // line 419
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "total_price", [], "any", false, false, false, 419), 0, ",", " "), "html", null, true);
+                // line 437
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "total_price", [], "any", false, false, false, 437), 0, ",", " "), "html", null, true);
                 yield " FCFA</div>
                                     <small class=\"text-muted\">";
-                // line 420
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 420), 0, ",", " "), "html", null, true);
+                // line 438
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 438), 0, ",", " "), "html", null, true);
                 yield " FCFA/unité</small>
                                     <div class=\"action-buttons\">
                                         <button class=\"btn btn-sm btn-outline-primary edit-item\" 
                                                 data-id=\"";
-                // line 423
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 423), "html", null, true);
+                // line 441
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 441), "html", null, true);
                 yield "\"
                                                 data-name=\"";
-                // line 424
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 424), "html", null, true);
+                // line 442
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_name", [], "any", false, false, false, 442), "html", null, true);
                 yield "\"
                                                 data-quantity=\"";
-                // line 425
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 425), "html", null, true);
+                // line 443
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "quantity", [], "any", false, false, false, 443), "html", null, true);
                 yield "\"
                                                 data-price=\"";
-                // line 426
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 426), "html", null, true);
+                // line 444
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit_price", [], "any", false, false, false, 444), "html", null, true);
+                yield "\"
+                                                data-barcode=\"";
+                // line 445
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "barcode", [], "any", false, false, false, 445), "html", null, true);
+                yield "\"
+                                                data-unit=\"";
+                // line 446
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit", [], "any", true, true, false, 446)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "unit", [], "any", false, false, false, 446), "")) : ("")), "html", null, true);
                 yield "\">
                                             <i class=\"bi bi-pencil\"></i> Modifier
                                         </button>
                                         <button class=\"btn btn-sm btn-outline-danger remove-btn\" data-id=\"";
-                // line 429
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 429), "html", null, true);
+                // line 449
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["item"], "product_id", [], "any", false, false, false, 449), "html", null, true);
                 yield "\">
                                             <i class=\"bi bi-trash\"></i> Supprimer
                                         </button>
@@ -629,17 +655,17 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['item'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 436
+            // line 456
             yield "                    </ul>
                 ";
         }
-        // line 438
+        // line 458
         yield "            </div>
             <div class=\"cart-footer\">
                 <strong>Total TTC :</strong>
                 <h4 class=\"mb-0 text-primary\" id=\"cartTotal\">";
-        // line 441
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["cart_total"]) || array_key_exists("cart_total", $context) ? $context["cart_total"] : (function () { throw new RuntimeError('Variable "cart_total" does not exist.', 441, $this->source); })()), 0, ",", " "), "html", null, true);
+        // line 461
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber((isset($context["cart_total"]) || array_key_exists("cart_total", $context) ? $context["cart_total"] : (function () { throw new RuntimeError('Variable "cart_total" does not exist.', 461, $this->source); })()), 0, ",", " "), "html", null, true);
         yield " FCFA</h4>
             </div>
         </div>
@@ -691,33 +717,87 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
     </div>
 </div>
 
-<!-- Modal de modification d'article -->
+<!-- ✅ Modal de modification d'article — NOM DU PRODUIT NON MODIFIABLE -->
 <div class=\"modal fade\" id=\"editItemModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
             <div class=\"modal-header bg-primary text-white\">
-                <h5 class=\"modal-title\">Modifier l'article</h5>
+                <h5 class=\"modal-title\">
+                    <i class=\"bi bi-pencil me-2\"></i>Modifier l'article
+                </h5>
                 <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
             </div>
             <div class=\"modal-body\">
                 <input type=\"hidden\" id=\"editProductId\" value=\"\">
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Produit</label>
-                    <input type=\"text\" id=\"editProductName\" class=\"form-control\" readonly>
+                
+                ";
+        // line 526
+        yield "                <div class=\"mb-3\">
+                    <label class=\"form-label\">
+                        <i class=\"bi bi-box me-1\"></i>Produit
+                    </label>
+                    <input type=\"text\" id=\"editProductName\" class=\"form-control\" readonly tabindex=\"-1\">
+                    <small class=\"text-muted\">
+                        <i class=\"bi bi-info-circle me-1\"></i>
+                        Le nom du produit ne peut pas être modifié
+                    </small>
                 </div>
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Quantité</label>
-                    <input type=\"number\" id=\"editQuantity\" class=\"form-control\" min=\"1\" step=\"1\" value=\"1\">
+
+                ";
+        // line 538
+        yield "                <div class=\"mb-3\">
+                    <label class=\"form-label\">
+                        <i class=\"bi bi-upc-scan me-1\"></i>Code-barres
+                    </label>
+                    <input type=\"text\" id=\"editProductBarcode\" class=\"form-control\" readonly tabindex=\"-1\">
                 </div>
-                <div class=\"mb-3\">
-                    <label class=\"form-label\">Prix unitaire (FCFA)</label>
-                    <input type=\"number\" id=\"editUnitPrice\" class=\"form-control\" step=\"0.01\" min=\"0.01\">
+
+                ";
+        // line 546
+        yield "                <div class=\"mb-3\">
+                    <label class=\"form-label\">
+                        <i class=\"bi bi-rulers me-1\"></i>Unité de mesure
+                    </label>
+                    <input type=\"text\" id=\"editProductUnit\" class=\"form-control\" readonly tabindex=\"-1\">
+                </div>
+
+                <hr>
+
+                ";
+        // line 556
+        yield "                <div class=\"mb-3\">
+                    <label class=\"form-label\">
+                        <i class=\"bi bi-123 me-1\"></i>Quantité <span class=\"text-danger\">*</span>
+                    </label>
+                    <div class=\"input-group\">
+                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"editDecrementQty\">
+                            <i class=\"bi bi-dash\"></i>
+                        </button>
+                        <input type=\"number\" id=\"editQuantity\" class=\"form-control text-center\" min=\"1\" step=\"1\" value=\"1\">
+                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"editIncrementQty\">
+                            <i class=\"bi bi-plus\"></i>
+                        </button>
+                    </div>
+                </div>
+
+                ";
+        // line 572
+        yield "                <div class=\"mb-3\">
+                    <label class=\"form-label\">
+                        <i class=\"bi bi-tag me-1\"></i>Prix unitaire (FCFA) <span class=\"text-danger\">*</span>
+                    </label>
+                    <div class=\"input-group\">
+                        <input type=\"number\" id=\"editUnitPrice\" class=\"form-control\" step=\"0.01\" min=\"0.01\">
+                        <span class=\"input-group-text\">FCFA</span>
+                    </div>
                 </div>
             </div>
             <div class=\"modal-footer\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
                 <button type=\"button\" class=\"btn btn-primary\" id=\"saveEditChanges\">
-                    <span class=\"btn-text\">Enregistrer</span>
+                    <span class=\"btn-text\">
+                        <i class=\"bi bi-check-lg me-1\"></i>Enregistrer
+                    </span>
                     <span class=\"btn-spinner\"></span>
                 </button>
             </div>
@@ -750,114 +830,131 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
     </div>
 </div>
 
-<!-- Modal de confirmation de commande avec vérification des fournisseurs -->
+<!-- ✅ Modal de confirmation de commande — FOURNISSEUR OPTIONNEL -->
 <div class=\"modal fade\" id=\"confirmationModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-lg modal-dialog-centered\">
         <div class=\"modal-content\">
             <div class=\"modal-header bg-primary text-white\">
-                <h5 class=\"modal-title\"><i class=\"bi bi-check-circle\"></i> Confirmer la commande</h5>
+                <h5 class=\"modal-title\">
+                    <i class=\"bi bi-check-circle me-2\"></i>Confirmer la commande
+                </h5>
                 <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
             </div>
             <div class=\"modal-body\">
-                ";
-        // line 560
-        if (Twig\Extension\CoreExtension::testEmpty((isset($context["suppliers"]) || array_key_exists("suppliers", $context) ? $context["suppliers"] : (function () { throw new RuntimeError('Variable "suppliers" does not exist.', 560, $this->source); })()))) {
-            // line 561
-            yield "                    <div class=\"alert alert-danger\">
-                        <i class=\"bi bi-exclamation-triangle me-2\"></i>
-                        <strong>Aucun fournisseur disponible</strong><br>
-                        Veuillez activer des fournisseurs ou contacter l'administrateur.
-                    </div>
-                ";
-        } else {
-            // line 567
-            yield "                    <form id=\"confirmationForm\">
-                        <div class=\"row g-3\">
-                            <div class=\"col-md-12\">
-                                <label class=\"form-label\">Fournisseur *</label>
-                                <select name=\"supplier_id\" id=\"supplierSelect\" class=\"form-select\" required>
-                                    <option value=\"\">Sélectionner un fournisseur</option>
-                                    ";
-            // line 573
-            $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["suppliers"]) || array_key_exists("suppliers", $context) ? $context["suppliers"] : (function () { throw new RuntimeError('Variable "suppliers" does not exist.', 573, $this->source); })()));
-            foreach ($context['_seq'] as $context["_key"] => $context["supplier"]) {
-                // line 574
-                yield "                                       <option value=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "id", [], "any", false, false, false, 574), "html", null, true);
-                yield "\">";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "name", [], "any", false, false, false, 574), "html", null, true);
-                yield " (";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "email", [], "any", false, false, false, 574), "html", null, true);
-                yield ")</option>
-                                    ";
-            }
-            $_parent = $context['_parent'];
-            unset($context['_seq'], $context['_key'], $context['supplier'], $context['_parent']);
-            $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 576
-            yield "                                </select>
-                            </div>
-                            <div class=\"col-12\">
-                                <label class=\"form-label\">Bon de commande</label>
-                                <input type=\"text\" name=\"bon_commande\" class=\"form-control\" placeholder=\"Optionnel - Numéro ou référence\">
-                            </div>
-                            <div class=\"col-12\">
-                                <label class=\"form-label\">Notes</label>
-                                <textarea name=\"notes\" class=\"form-control\" rows=\"2\" placeholder=\"Instructions de livraison, conditions particulières...\"></textarea>
-                            </div>
-                            <div class=\"col-12\">
-                                <hr>
-                                <h6>Options de notification</h6>
-                                <div class=\"row g-2\">
-                                    <div class=\"col-md-4\">
-                                        <div class=\"form-check\">
-                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_email\" value=\"1\" checked>
-                                            <label class=\"form-check-label\">Email</label>
-                                        </div>
+                <form id=\"confirmationForm\">
+                    <div class=\"row g-3\">
+                        ";
+        // line 634
+        yield "                        <div class=\"col-md-12\">
+                            <label class=\"form-label\">
+                                <i class=\"bi bi-truck me-1\"></i>Fournisseur
+                                <span class=\"optional-badge\">optionnel</span>
+                            </label>
+                            <select name=\"supplier_id\" id=\"supplierSelect\" class=\"form-select\">
+                                <option value=\"\">-- Aucun fournisseur (achat interne) --</option>
+                                ";
+        // line 641
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["suppliers"]) || array_key_exists("suppliers", $context) ? $context["suppliers"] : (function () { throw new RuntimeError('Variable "suppliers" does not exist.', 641, $this->source); })()));
+        foreach ($context['_seq'] as $context["_key"] => $context["supplier"]) {
+            // line 642
+            yield "                                    <option value=\"";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "id", [], "any", false, false, false, 642), "html", null, true);
+            yield "\">";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "name", [], "any", false, false, false, 642), "html", null, true);
+            yield " (";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["supplier"], "email", [], "any", false, false, false, 642), "html", null, true);
+            yield ")</option>
+                                ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['supplier'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 644
+        yield "                            </select>
+                            <small class=\"text-muted\">
+                                <i class=\"bi bi-info-circle me-1\"></i>
+                                Laissez vide pour un achat interne (sans fournisseur)
+                            </small>
+                        </div>
+
+                        <div class=\"col-12\">
+                            <label class=\"form-label\">
+                                <i class=\"bi bi-file-text me-1\"></i>Bon de commande
+                            </label>
+                            <input type=\"text\" name=\"bon_commande\" class=\"form-control\" placeholder=\"Optionnel - Numéro ou référence\">
+                        </div>
+
+                        <div class=\"col-12\">
+                            <label class=\"form-label\">
+                                <i class=\"bi bi-sticky me-1\"></i>Notes
+                            </label>
+                            <textarea name=\"notes\" class=\"form-control\" rows=\"2\" placeholder=\"Instructions de livraison, conditions particulières...\"></textarea>
+                        </div>
+
+                        ";
+        // line 666
+        yield "                        <div class=\"col-12\" id=\"notificationSection\">
+                            <hr>
+                            <h6>
+                                <i class=\"bi bi-bell me-2\"></i>Options de notification
+                            </h6>
+                            <small class=\"text-muted d-block mb-2\">
+                                <i class=\"bi bi-info-circle me-1\"></i>
+                                Ces options ne s'appliquent qu'aux commandes avec fournisseur
+                            </small>
+                            <div class=\"row g-2\">
+                                <div class=\"col-md-4\">
+                                    <div class=\"form-check\">
+                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_email\" id=\"notifyByEmail\" value=\"1\" checked>
+                                        <label class=\"form-check-label\" for=\"notifyByEmail\">
+                                            <i class=\"bi bi-envelope me-1\"></i>Email
+                                        </label>
                                     </div>
-                                    <div class=\"col-md-4\">
-                                        <div class=\"form-check\">
-                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_whatsapp\" value=\"1\" checked>
-                                            <label class=\"form-check-label\">WhatsApp</label>
-                                        </div>
+                                </div>
+                                <div class=\"col-md-4\">
+                                    <div class=\"form-check\">
+                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_whatsapp\" id=\"notifyByWhatsapp\" value=\"1\" checked>
+                                        <label class=\"form-check-label\" for=\"notifyByWhatsapp\">
+                                            <i class=\"bi bi-whatsapp me-1\"></i>WhatsApp
+                                        </label>
                                     </div>
-                                    <div class=\"col-md-4\">
-                                        <div class=\"form-check\">
-                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"send_image\" value=\"1\" checked>
-                                            <label class=\"form-check-label\">Inclure image produit (WhatsApp)</label>
-                                        </div>
+                                </div>
+                                <div class=\"col-md-4\">
+                                    <div class=\"form-check\">
+                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"send_image\" id=\"sendImage\" value=\"1\" checked>
+                                        <label class=\"form-check-label\" for=\"sendImage\">
+                                            <i class=\"bi bi-image me-1\"></i>Inclure image
+                                        </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class=\"col-12\">
-                                <label class=\"form-label\">Message personnalisé (optionnel)</label>
-                                <textarea name=\"confirmation_message\" class=\"form-control\" rows=\"2\" placeholder=\"Ajouter un message pour le fournisseur...\"></textarea>
-                            </div>
                         </div>
-                    </form>
-                    <div class=\"alert alert-info mt-3\">
-                        <i class=\"bi bi-info-circle\"></i>
-                        La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
+
+                        <div class=\"col-12\" id=\"customMessageSection\">
+                            <label class=\"form-label\">
+                                <i class=\"bi bi-chat-left-text me-1\"></i>Message personnalisé (optionnel)
+                            </label>
+                            <textarea name=\"confirmation_message\" class=\"form-control\" rows=\"2\" placeholder=\"Ajouter un message pour le fournisseur...\"></textarea>
+                        </div>
                     </div>
-                ";
-        }
-        // line 621
-        yield "            </div>
+                </form>
+                <div class=\"alert alert-info mt-3 mb-0\">
+                    <i class=\"bi bi-info-circle me-2\"></i>
+                    <span id=\"confirmationInfoText\">
+                        La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
+                    </span>
+                </div>
+            </div>
             <div class=\"modal-footer\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                ";
-        // line 624
-        if ((($tmp =  !Twig\Extension\CoreExtension::testEmpty((isset($context["suppliers"]) || array_key_exists("suppliers", $context) ? $context["suppliers"] : (function () { throw new RuntimeError('Variable "suppliers" does not exist.', 624, $this->source); })()))) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 625
-            yield "                    <button type=\"button\" class=\"btn btn-primary\" id=\"confirmPurchaseBtn\">
-                        <span class=\"btn-text\">Confirmer la commande</span>
-                        <span class=\"btn-spinner\"></span>
-                    </button>
-                ";
-        }
-        // line 630
-        yield "            </div>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmPurchaseBtn\">
+                    <span class=\"btn-text\">
+                        <i class=\"bi bi-check-lg me-1\"></i>Confirmer la commande
+                    </span>
+                    <span class=\"btn-spinner\"></span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -871,7 +968,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         yield from [];
     }
 
-    // line 636
+    // line 732
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -884,34 +981,34 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 637
+        // line 733
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
 <script>
     // URLs
     const searchUrl = \"";
-        // line 641
+        // line 737
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_search_products");
         yield "\";
     const addToCartUrl = \"";
-        // line 642
+        // line 738
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_add_product");
         yield "\";
     const cartDataUrl = \"";
-        // line 643
+        // line 739
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_cart_data");
         yield "\";
     const confirmUrl = \"";
-        // line 644
+        // line 740
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_confirm");
         yield "\";
     const removeProductUrlTemplate = \"";
-        // line 645
+        // line 741
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_remove_product", ["productId" => "PLACEHOLDER"]);
         yield "\".replace('PLACEHOLDER', '{productId}');
     const updateItemUrlTemplate = \"";
-        // line 646
+        // line 742
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("purchase_update_item", ["productId" => "PLACEHOLDER"]);
         yield "\".replace('PLACEHOLDER', '{productId}');
 
@@ -925,10 +1022,15 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
     const cartTotalSpan = document.getElementById('cartTotal');
     const confirmOrderBtn = document.getElementById('confirmOrderBtn');
 
-    const addProductModal = new bootstrap.Modal(document.getElementById('addProductModal'));
-    const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
-    const removeModal = new bootstrap.Modal(document.getElementById('removeCartItemModal'));
-    const confirmModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+    const addProductModalEl = document.getElementById('addProductModal');
+    const editModalEl = document.getElementById('editItemModal');
+    const removeModalEl = document.getElementById('removeCartItemModal');
+    const confirmModalEl = document.getElementById('confirmationModal');
+
+    const addProductModal = new bootstrap.Modal(addProductModalEl);
+    const editModal = new bootstrap.Modal(editModalEl);
+    const removeModal = new bootstrap.Modal(removeModalEl);
+    const confirmModal = new bootstrap.Modal(confirmModalEl);
 
     function setButtonLoading(btn, isLoading) {
         if (!btn) return;
@@ -983,21 +1085,34 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
     // Éléments du modal d'édition
     const editProductId = document.getElementById('editProductId');
     const editProductName = document.getElementById('editProductName');
+    const editProductBarcode = document.getElementById('editProductBarcode');
+    const editProductUnit = document.getElementById('editProductUnit');
     const editQuantity = document.getElementById('editQuantity');
     const editUnitPrice = document.getElementById('editUnitPrice');
     const saveEditChangesBtn = document.getElementById('saveEditChanges');
+    const editIncrementQty = document.getElementById('editIncrementQty');
+    const editDecrementQty = document.getElementById('editDecrementQty');
 
     // Éléments du modal de suppression
     const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
     let pendingRemoveProductId = null;
 
-    // Gestion des quantités
+    // Gestion des quantités (ajout)
     incrementQty?.addEventListener('click', () => {
         productQuantityInput.value = parseInt(productQuantityInput.value) + 1;
     });
     decrementQty?.addEventListener('click', () => {
         let val = parseInt(productQuantityInput.value);
         if (val > 1) productQuantityInput.value = val - 1;
+    });
+
+    // Gestion des quantités (édition)
+    editIncrementQty?.addEventListener('click', () => {
+        editQuantity.value = parseInt(editQuantity.value) + 1;
+    });
+    editDecrementQty?.addEventListener('click', () => {
+        let val = parseInt(editQuantity.value);
+        if (val > 1) editQuantity.value = val - 1;
     });
 
     // Ajout au panier
@@ -1019,7 +1134,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         }
 
         setButtonLoading(confirmAddBtn, true);
-        setModalLoading(document.getElementById('addProductModal'), true);
+        setModalLoading(addProductModalEl, true);
 
         const formData = new FormData();
         formData.append('product_id', currentProduct.id);
@@ -1047,7 +1162,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
             showToast('error', 'Erreur lors de l\\'ajout');
         } finally {
             setButtonLoading(confirmAddBtn, false);
-            setModalLoading(document.getElementById('addProductModal'), false);
+            setModalLoading(addProductModalEl, false);
         }
     });
 
@@ -1172,10 +1287,16 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
             const productName = editBtn.dataset.name;
             const quantity = parseInt(editBtn.dataset.quantity);
             const price = parseFloat(editBtn.dataset.price);
+            const barcode = editBtn.dataset.barcode || '';
+            const unit = editBtn.dataset.unit || '';
+
             editProductId.value = productId;
             editProductName.value = productName;
+            editProductBarcode.value = barcode;
+            editProductUnit.value = unit || '—';
             editQuantity.value = quantity;
             editUnitPrice.value = price;
+
             editModal.show();
         }
     });
@@ -1196,7 +1317,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         }
 
         setButtonLoading(saveEditChangesBtn, true);
-        setModalLoading(document.getElementById('editItemModal'), true);
+        setModalLoading(editModalEl, true);
 
         const updateUrl = updateItemUrlTemplate.replace('{productId}', productId);
         try {
@@ -1218,7 +1339,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
             showToast('error', 'Erreur lors de la modification');
         } finally {
             setButtonLoading(saveEditChangesBtn, false);
-            setModalLoading(document.getElementById('editItemModal'), false);
+            setModalLoading(editModalEl, false);
         }
     });
 
@@ -1226,10 +1347,10 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
     confirmRemoveBtn?.addEventListener('click', async () => {
         if (pendingRemoveProductId !== null) {
             setButtonLoading(confirmRemoveBtn, true);
-            setModalLoading(document.getElementById('removeCartItemModal'), true);
+            setModalLoading(removeModalEl, true);
             await removeFromCart(pendingRemoveProductId);
             setButtonLoading(confirmRemoveBtn, false);
-            setModalLoading(document.getElementById('removeCartItemModal'), false);
+            setModalLoading(removeModalEl, false);
             pendingRemoveProductId = null;
             removeModal.hide();
         }
@@ -1309,7 +1430,9 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
                                     data-id=\"\${item.product_id}\"
                                     data-name=\"\${escapeHtml(item.product_name)}\"
                                     data-quantity=\"\${item.quantity}\"
-                                    data-price=\"\${item.unit_price}\">
+                                    data-price=\"\${item.unit_price}\"
+                                    data-barcode=\"\${item.barcode || ''}\"
+                                    data-unit=\"\${item.unit || ''}\">
                                 <i class=\"bi bi-pencil\"></i> Modifier
                             </button>
                             <button class=\"btn btn-sm btn-outline-danger remove-btn\" data-id=\"\${item.product_id}\">
@@ -1354,17 +1477,44 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         }
     });
 
+    // ✅ Gestion du fournisseur optionnel : masquer les notifications si vide
+    const supplierSelect = document.getElementById('supplierSelect');
+    const notificationSection = document.getElementById('notificationSection');
+    const customMessageSection = document.getElementById('customMessageSection');
+    const confirmationInfoText = document.getElementById('confirmationInfoText');
+
+    function toggleNotificationSections() {
+        const hasSupplier = supplierSelect && supplierSelect.value !== '';
+        if (notificationSection) {
+            notificationSection.style.display = hasSupplier ? '' : 'none';
+        }
+        if (customMessageSection) {
+            customMessageSection.style.display = hasSupplier ? '' : 'none';
+        }
+        if (confirmationInfoText) {
+            confirmationInfoText.innerHTML = hasSupplier
+                ? 'La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.'
+                : 'Aucun fournisseur sélectionné : la commande sera enregistrée comme <strong>achat interne</strong> et aucune notification ne sera envoyée.';
+        }
+    }
+
+    supplierSelect?.addEventListener('change', toggleNotificationSections);
+
     // Confirmation commande
     const confirmPurchaseBtn = document.getElementById('confirmPurchaseBtn');
     
-    confirmOrderBtn?.addEventListener('click', () => confirmModal.show());
+    confirmOrderBtn?.addEventListener('click', () => {
+        confirmModal.show();
+        // Initialiser l'état des sections de notification
+        setTimeout(toggleNotificationSections, 100);
+    });
     
     confirmPurchaseBtn?.addEventListener('click', async () => {
         const form = document.getElementById('confirmationForm');
         const formData = new FormData(form);
         
         setButtonLoading(confirmPurchaseBtn, true);
-        setModalLoading(document.getElementById('confirmationModal'), true);
+        setModalLoading(confirmModalEl, true);
         
         try {
             const response = await fetch(confirmUrl, { method: 'POST', body: formData });
@@ -1376,13 +1526,13 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
             } else {
                 showToast('error', data.error);
                 setButtonLoading(confirmPurchaseBtn, false);
-                setModalLoading(document.getElementById('confirmationModal'), false);
+                setModalLoading(confirmModalEl, false);
             }
         } catch (error) {
             console.error('Erreur confirmation:', error);
             showToast('error', 'Erreur lors de la confirmation');
             setButtonLoading(confirmPurchaseBtn, false);
-            setModalLoading(document.getElementById('confirmationModal'), false);
+            setModalLoading(confirmModalEl, false);
         }
     });
 
@@ -1425,7 +1575,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         if (typeof \$.fn.select2 !== 'undefined') {
             \$('#supplierSelect').select2({
                 theme: 'bootstrap-5',
-                placeholder: 'Rechercher un fournisseur...',
+                placeholder: 'Aucun fournisseur (achat interne)',
                 allowClear: true,
                 dropdownParent: \$('#confirmationModal')
             });
@@ -1464,7 +1614,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  915 => 646,  911 => 645,  907 => 644,  903 => 643,  899 => 642,  895 => 641,  888 => 637,  875 => 636,  860 => 630,  853 => 625,  851 => 624,  846 => 621,  799 => 576,  786 => 574,  782 => 573,  774 => 567,  766 => 561,  764 => 560,  642 => 441,  637 => 438,  633 => 436,  620 => 429,  614 => 426,  610 => 425,  606 => 424,  602 => 423,  596 => 420,  592 => 419,  586 => 416,  581 => 413,  577 => 411,  574 => 410,  568 => 408,  566 => 407,  562 => 406,  557 => 404,  550 => 401,  542 => 399,  540 => 398,  534 => 396,  530 => 395,  527 => 394,  517 => 386,  515 => 385,  509 => 382,  470 => 348,  464 => 345,  455 => 338,  442 => 337,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  1012 => 742,  1008 => 741,  1004 => 740,  1000 => 739,  996 => 738,  992 => 737,  985 => 733,  972 => 732,  897 => 666,  874 => 644,  861 => 642,  857 => 641,  848 => 634,  785 => 572,  768 => 556,  757 => 546,  748 => 538,  735 => 526,  668 => 461,  663 => 458,  659 => 456,  646 => 449,  640 => 446,  636 => 445,  632 => 444,  628 => 443,  624 => 442,  620 => 441,  614 => 438,  610 => 437,  604 => 434,  599 => 431,  595 => 429,  592 => 428,  586 => 426,  584 => 425,  580 => 424,  575 => 422,  568 => 419,  560 => 417,  558 => 416,  552 => 414,  548 => 413,  545 => 412,  535 => 404,  533 => 403,  527 => 400,  488 => 366,  482 => 363,  473 => 356,  460 => 355,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1802,6 +1952,24 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         background: var(--warning-color) !important;
         color: #000 !important;
     }
+
+    /* ✅ Champ lecture seule stylé */
+    .form-control[readonly] {
+        background-color: #f1f5f9;
+        cursor: not-allowed;
+        color: #475569;
+    }
+
+    /* ✅ Badge achat interne */
+    .optional-badge {
+        background-color: #f3f4f6;
+        color: #6b7280;
+        font-size: 0.7rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 20px;
+        font-weight: normal;
+        margin-left: 0.3rem;
+    }
 </style>
 {% endblock %}
 
@@ -1894,7 +2062,9 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
                                                 data-id=\"{{ item.product_id }}\"
                                                 data-name=\"{{ item.product_name }}\"
                                                 data-quantity=\"{{ item.quantity }}\"
-                                                data-price=\"{{ item.unit_price }}\">
+                                                data-price=\"{{ item.unit_price }}\"
+                                                data-barcode=\"{{ item.barcode }}\"
+                                                data-unit=\"{{ item.unit|default('') }}\">
                                             <i class=\"bi bi-pencil\"></i> Modifier
                                         </button>
                                         <button class=\"btn btn-sm btn-outline-danger remove-btn\" data-id=\"{{ item.product_id }}\">
@@ -1960,33 +2130,82 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
     </div>
 </div>
 
-<!-- Modal de modification d'article -->
+<!-- ✅ Modal de modification d'article — NOM DU PRODUIT NON MODIFIABLE -->
 <div class=\"modal fade\" id=\"editItemModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-dialog-centered\">
         <div class=\"modal-content\">
             <div class=\"modal-header bg-primary text-white\">
-                <h5 class=\"modal-title\">Modifier l'article</h5>
+                <h5 class=\"modal-title\">
+                    <i class=\"bi bi-pencil me-2\"></i>Modifier l'article
+                </h5>
                 <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
             </div>
             <div class=\"modal-body\">
                 <input type=\"hidden\" id=\"editProductId\" value=\"\">
+                
+                {# ✅ Nom du produit : lecture seule (non modifiable) #}
                 <div class=\"mb-3\">
-                    <label class=\"form-label\">Produit</label>
-                    <input type=\"text\" id=\"editProductName\" class=\"form-control\" readonly>
+                    <label class=\"form-label\">
+                        <i class=\"bi bi-box me-1\"></i>Produit
+                    </label>
+                    <input type=\"text\" id=\"editProductName\" class=\"form-control\" readonly tabindex=\"-1\">
+                    <small class=\"text-muted\">
+                        <i class=\"bi bi-info-circle me-1\"></i>
+                        Le nom du produit ne peut pas être modifié
+                    </small>
                 </div>
+
+                {# ✅ Code-barres : lecture seule #}
                 <div class=\"mb-3\">
-                    <label class=\"form-label\">Quantité</label>
-                    <input type=\"number\" id=\"editQuantity\" class=\"form-control\" min=\"1\" step=\"1\" value=\"1\">
+                    <label class=\"form-label\">
+                        <i class=\"bi bi-upc-scan me-1\"></i>Code-barres
+                    </label>
+                    <input type=\"text\" id=\"editProductBarcode\" class=\"form-control\" readonly tabindex=\"-1\">
                 </div>
+
+                {# ✅ Unité : lecture seule #}
                 <div class=\"mb-3\">
-                    <label class=\"form-label\">Prix unitaire (FCFA)</label>
-                    <input type=\"number\" id=\"editUnitPrice\" class=\"form-control\" step=\"0.01\" min=\"0.01\">
+                    <label class=\"form-label\">
+                        <i class=\"bi bi-rulers me-1\"></i>Unité de mesure
+                    </label>
+                    <input type=\"text\" id=\"editProductUnit\" class=\"form-control\" readonly tabindex=\"-1\">
+                </div>
+
+                <hr>
+
+                {# ✅ Quantité modifiable #}
+                <div class=\"mb-3\">
+                    <label class=\"form-label\">
+                        <i class=\"bi bi-123 me-1\"></i>Quantité <span class=\"text-danger\">*</span>
+                    </label>
+                    <div class=\"input-group\">
+                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"editDecrementQty\">
+                            <i class=\"bi bi-dash\"></i>
+                        </button>
+                        <input type=\"number\" id=\"editQuantity\" class=\"form-control text-center\" min=\"1\" step=\"1\" value=\"1\">
+                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"editIncrementQty\">
+                            <i class=\"bi bi-plus\"></i>
+                        </button>
+                    </div>
+                </div>
+
+                {# ✅ Prix unitaire modifiable #}
+                <div class=\"mb-3\">
+                    <label class=\"form-label\">
+                        <i class=\"bi bi-tag me-1\"></i>Prix unitaire (FCFA) <span class=\"text-danger\">*</span>
+                    </label>
+                    <div class=\"input-group\">
+                        <input type=\"number\" id=\"editUnitPrice\" class=\"form-control\" step=\"0.01\" min=\"0.01\">
+                        <span class=\"input-group-text\">FCFA</span>
+                    </div>
                 </div>
             </div>
             <div class=\"modal-footer\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
                 <button type=\"button\" class=\"btn btn-primary\" id=\"saveEditChanges\">
-                    <span class=\"btn-text\">Enregistrer</span>
+                    <span class=\"btn-text\">
+                        <i class=\"bi bi-check-lg me-1\"></i>Enregistrer
+                    </span>
                     <span class=\"btn-spinner\"></span>
                 </button>
             </div>
@@ -2019,85 +2238,112 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
     </div>
 </div>
 
-<!-- Modal de confirmation de commande avec vérification des fournisseurs -->
+<!-- ✅ Modal de confirmation de commande — FOURNISSEUR OPTIONNEL -->
 <div class=\"modal fade\" id=\"confirmationModal\" tabindex=\"-1\" aria-hidden=\"true\">
     <div class=\"modal-dialog modal-lg modal-dialog-centered\">
         <div class=\"modal-content\">
             <div class=\"modal-header bg-primary text-white\">
-                <h5 class=\"modal-title\"><i class=\"bi bi-check-circle\"></i> Confirmer la commande</h5>
+                <h5 class=\"modal-title\">
+                    <i class=\"bi bi-check-circle me-2\"></i>Confirmer la commande
+                </h5>
                 <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
             </div>
             <div class=\"modal-body\">
-                {% if suppliers is empty %}
-                    <div class=\"alert alert-danger\">
-                        <i class=\"bi bi-exclamation-triangle me-2\"></i>
-                        <strong>Aucun fournisseur disponible</strong><br>
-                        Veuillez activer des fournisseurs ou contacter l'administrateur.
-                    </div>
-                {% else %}
-                    <form id=\"confirmationForm\">
-                        <div class=\"row g-3\">
-                            <div class=\"col-md-12\">
-                                <label class=\"form-label\">Fournisseur *</label>
-                                <select name=\"supplier_id\" id=\"supplierSelect\" class=\"form-select\" required>
-                                    <option value=\"\">Sélectionner un fournisseur</option>
-                                    {% for supplier in suppliers %}
-                                       <option value=\"{{ supplier.id }}\">{{ supplier.name }} ({{ supplier.email }})</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class=\"col-12\">
-                                <label class=\"form-label\">Bon de commande</label>
-                                <input type=\"text\" name=\"bon_commande\" class=\"form-control\" placeholder=\"Optionnel - Numéro ou référence\">
-                            </div>
-                            <div class=\"col-12\">
-                                <label class=\"form-label\">Notes</label>
-                                <textarea name=\"notes\" class=\"form-control\" rows=\"2\" placeholder=\"Instructions de livraison, conditions particulières...\"></textarea>
-                            </div>
-                            <div class=\"col-12\">
-                                <hr>
-                                <h6>Options de notification</h6>
-                                <div class=\"row g-2\">
-                                    <div class=\"col-md-4\">
-                                        <div class=\"form-check\">
-                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_email\" value=\"1\" checked>
-                                            <label class=\"form-check-label\">Email</label>
-                                        </div>
+                <form id=\"confirmationForm\">
+                    <div class=\"row g-3\">
+                        {# ✅ Fournisseur OPTIONNEL #}
+                        <div class=\"col-md-12\">
+                            <label class=\"form-label\">
+                                <i class=\"bi bi-truck me-1\"></i>Fournisseur
+                                <span class=\"optional-badge\">optionnel</span>
+                            </label>
+                            <select name=\"supplier_id\" id=\"supplierSelect\" class=\"form-select\">
+                                <option value=\"\">-- Aucun fournisseur (achat interne) --</option>
+                                {% for supplier in suppliers %}
+                                    <option value=\"{{ supplier.id }}\">{{ supplier.name }} ({{ supplier.email }})</option>
+                                {% endfor %}
+                            </select>
+                            <small class=\"text-muted\">
+                                <i class=\"bi bi-info-circle me-1\"></i>
+                                Laissez vide pour un achat interne (sans fournisseur)
+                            </small>
+                        </div>
+
+                        <div class=\"col-12\">
+                            <label class=\"form-label\">
+                                <i class=\"bi bi-file-text me-1\"></i>Bon de commande
+                            </label>
+                            <input type=\"text\" name=\"bon_commande\" class=\"form-control\" placeholder=\"Optionnel - Numéro ou référence\">
+                        </div>
+
+                        <div class=\"col-12\">
+                            <label class=\"form-label\">
+                                <i class=\"bi bi-sticky me-1\"></i>Notes
+                            </label>
+                            <textarea name=\"notes\" class=\"form-control\" rows=\"2\" placeholder=\"Instructions de livraison, conditions particulières...\"></textarea>
+                        </div>
+
+                        {# ✅ Notifications uniquement si fournisseur #}
+                        <div class=\"col-12\" id=\"notificationSection\">
+                            <hr>
+                            <h6>
+                                <i class=\"bi bi-bell me-2\"></i>Options de notification
+                            </h6>
+                            <small class=\"text-muted d-block mb-2\">
+                                <i class=\"bi bi-info-circle me-1\"></i>
+                                Ces options ne s'appliquent qu'aux commandes avec fournisseur
+                            </small>
+                            <div class=\"row g-2\">
+                                <div class=\"col-md-4\">
+                                    <div class=\"form-check\">
+                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_email\" id=\"notifyByEmail\" value=\"1\" checked>
+                                        <label class=\"form-check-label\" for=\"notifyByEmail\">
+                                            <i class=\"bi bi-envelope me-1\"></i>Email
+                                        </label>
                                     </div>
-                                    <div class=\"col-md-4\">
-                                        <div class=\"form-check\">
-                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_whatsapp\" value=\"1\" checked>
-                                            <label class=\"form-check-label\">WhatsApp</label>
-                                        </div>
+                                </div>
+                                <div class=\"col-md-4\">
+                                    <div class=\"form-check\">
+                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"notify_by_whatsapp\" id=\"notifyByWhatsapp\" value=\"1\" checked>
+                                        <label class=\"form-check-label\" for=\"notifyByWhatsapp\">
+                                            <i class=\"bi bi-whatsapp me-1\"></i>WhatsApp
+                                        </label>
                                     </div>
-                                    <div class=\"col-md-4\">
-                                        <div class=\"form-check\">
-                                            <input type=\"checkbox\" class=\"form-check-input\" name=\"send_image\" value=\"1\" checked>
-                                            <label class=\"form-check-label\">Inclure image produit (WhatsApp)</label>
-                                        </div>
+                                </div>
+                                <div class=\"col-md-4\">
+                                    <div class=\"form-check\">
+                                        <input type=\"checkbox\" class=\"form-check-input\" name=\"send_image\" id=\"sendImage\" value=\"1\" checked>
+                                        <label class=\"form-check-label\" for=\"sendImage\">
+                                            <i class=\"bi bi-image me-1\"></i>Inclure image
+                                        </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class=\"col-12\">
-                                <label class=\"form-label\">Message personnalisé (optionnel)</label>
-                                <textarea name=\"confirmation_message\" class=\"form-control\" rows=\"2\" placeholder=\"Ajouter un message pour le fournisseur...\"></textarea>
-                            </div>
                         </div>
-                    </form>
-                    <div class=\"alert alert-info mt-3\">
-                        <i class=\"bi bi-info-circle\"></i>
-                        La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
+
+                        <div class=\"col-12\" id=\"customMessageSection\">
+                            <label class=\"form-label\">
+                                <i class=\"bi bi-chat-left-text me-1\"></i>Message personnalisé (optionnel)
+                            </label>
+                            <textarea name=\"confirmation_message\" class=\"form-control\" rows=\"2\" placeholder=\"Ajouter un message pour le fournisseur...\"></textarea>
+                        </div>
                     </div>
-                {% endif %}
+                </form>
+                <div class=\"alert alert-info mt-3 mb-0\">
+                    <i class=\"bi bi-info-circle me-2\"></i>
+                    <span id=\"confirmationInfoText\">
+                        La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.
+                    </span>
+                </div>
             </div>
             <div class=\"modal-footer\">
                 <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Annuler</button>
-                {% if suppliers is not empty %}
-                    <button type=\"button\" class=\"btn btn-primary\" id=\"confirmPurchaseBtn\">
-                        <span class=\"btn-text\">Confirmer la commande</span>
-                        <span class=\"btn-spinner\"></span>
-                    </button>
-                {% endif %}
+                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmPurchaseBtn\">
+                    <span class=\"btn-text\">
+                        <i class=\"bi bi-check-lg me-1\"></i>Confirmer la commande
+                    </span>
+                    <span class=\"btn-spinner\"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -2126,10 +2372,15 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
     const cartTotalSpan = document.getElementById('cartTotal');
     const confirmOrderBtn = document.getElementById('confirmOrderBtn');
 
-    const addProductModal = new bootstrap.Modal(document.getElementById('addProductModal'));
-    const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
-    const removeModal = new bootstrap.Modal(document.getElementById('removeCartItemModal'));
-    const confirmModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+    const addProductModalEl = document.getElementById('addProductModal');
+    const editModalEl = document.getElementById('editItemModal');
+    const removeModalEl = document.getElementById('removeCartItemModal');
+    const confirmModalEl = document.getElementById('confirmationModal');
+
+    const addProductModal = new bootstrap.Modal(addProductModalEl);
+    const editModal = new bootstrap.Modal(editModalEl);
+    const removeModal = new bootstrap.Modal(removeModalEl);
+    const confirmModal = new bootstrap.Modal(confirmModalEl);
 
     function setButtonLoading(btn, isLoading) {
         if (!btn) return;
@@ -2184,21 +2435,34 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
     // Éléments du modal d'édition
     const editProductId = document.getElementById('editProductId');
     const editProductName = document.getElementById('editProductName');
+    const editProductBarcode = document.getElementById('editProductBarcode');
+    const editProductUnit = document.getElementById('editProductUnit');
     const editQuantity = document.getElementById('editQuantity');
     const editUnitPrice = document.getElementById('editUnitPrice');
     const saveEditChangesBtn = document.getElementById('saveEditChanges');
+    const editIncrementQty = document.getElementById('editIncrementQty');
+    const editDecrementQty = document.getElementById('editDecrementQty');
 
     // Éléments du modal de suppression
     const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
     let pendingRemoveProductId = null;
 
-    // Gestion des quantités
+    // Gestion des quantités (ajout)
     incrementQty?.addEventListener('click', () => {
         productQuantityInput.value = parseInt(productQuantityInput.value) + 1;
     });
     decrementQty?.addEventListener('click', () => {
         let val = parseInt(productQuantityInput.value);
         if (val > 1) productQuantityInput.value = val - 1;
+    });
+
+    // Gestion des quantités (édition)
+    editIncrementQty?.addEventListener('click', () => {
+        editQuantity.value = parseInt(editQuantity.value) + 1;
+    });
+    editDecrementQty?.addEventListener('click', () => {
+        let val = parseInt(editQuantity.value);
+        if (val > 1) editQuantity.value = val - 1;
     });
 
     // Ajout au panier
@@ -2220,7 +2484,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         }
 
         setButtonLoading(confirmAddBtn, true);
-        setModalLoading(document.getElementById('addProductModal'), true);
+        setModalLoading(addProductModalEl, true);
 
         const formData = new FormData();
         formData.append('product_id', currentProduct.id);
@@ -2248,7 +2512,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
             showToast('error', 'Erreur lors de l\\'ajout');
         } finally {
             setButtonLoading(confirmAddBtn, false);
-            setModalLoading(document.getElementById('addProductModal'), false);
+            setModalLoading(addProductModalEl, false);
         }
     });
 
@@ -2373,10 +2637,16 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
             const productName = editBtn.dataset.name;
             const quantity = parseInt(editBtn.dataset.quantity);
             const price = parseFloat(editBtn.dataset.price);
+            const barcode = editBtn.dataset.barcode || '';
+            const unit = editBtn.dataset.unit || '';
+
             editProductId.value = productId;
             editProductName.value = productName;
+            editProductBarcode.value = barcode;
+            editProductUnit.value = unit || '—';
             editQuantity.value = quantity;
             editUnitPrice.value = price;
+
             editModal.show();
         }
     });
@@ -2397,7 +2667,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         }
 
         setButtonLoading(saveEditChangesBtn, true);
-        setModalLoading(document.getElementById('editItemModal'), true);
+        setModalLoading(editModalEl, true);
 
         const updateUrl = updateItemUrlTemplate.replace('{productId}', productId);
         try {
@@ -2419,7 +2689,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
             showToast('error', 'Erreur lors de la modification');
         } finally {
             setButtonLoading(saveEditChangesBtn, false);
-            setModalLoading(document.getElementById('editItemModal'), false);
+            setModalLoading(editModalEl, false);
         }
     });
 
@@ -2427,10 +2697,10 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
     confirmRemoveBtn?.addEventListener('click', async () => {
         if (pendingRemoveProductId !== null) {
             setButtonLoading(confirmRemoveBtn, true);
-            setModalLoading(document.getElementById('removeCartItemModal'), true);
+            setModalLoading(removeModalEl, true);
             await removeFromCart(pendingRemoveProductId);
             setButtonLoading(confirmRemoveBtn, false);
-            setModalLoading(document.getElementById('removeCartItemModal'), false);
+            setModalLoading(removeModalEl, false);
             pendingRemoveProductId = null;
             removeModal.hide();
         }
@@ -2510,7 +2780,9 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
                                     data-id=\"\${item.product_id}\"
                                     data-name=\"\${escapeHtml(item.product_name)}\"
                                     data-quantity=\"\${item.quantity}\"
-                                    data-price=\"\${item.unit_price}\">
+                                    data-price=\"\${item.unit_price}\"
+                                    data-barcode=\"\${item.barcode || ''}\"
+                                    data-unit=\"\${item.unit || ''}\">
                                 <i class=\"bi bi-pencil\"></i> Modifier
                             </button>
                             <button class=\"btn btn-sm btn-outline-danger remove-btn\" data-id=\"\${item.product_id}\">
@@ -2555,17 +2827,44 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         }
     });
 
+    // ✅ Gestion du fournisseur optionnel : masquer les notifications si vide
+    const supplierSelect = document.getElementById('supplierSelect');
+    const notificationSection = document.getElementById('notificationSection');
+    const customMessageSection = document.getElementById('customMessageSection');
+    const confirmationInfoText = document.getElementById('confirmationInfoText');
+
+    function toggleNotificationSections() {
+        const hasSupplier = supplierSelect && supplierSelect.value !== '';
+        if (notificationSection) {
+            notificationSection.style.display = hasSupplier ? '' : 'none';
+        }
+        if (customMessageSection) {
+            customMessageSection.style.display = hasSupplier ? '' : 'none';
+        }
+        if (confirmationInfoText) {
+            confirmationInfoText.innerHTML = hasSupplier
+                ? 'La confirmation enverra un email et/ou WhatsApp au fournisseur avec les détails de la commande.'
+                : 'Aucun fournisseur sélectionné : la commande sera enregistrée comme <strong>achat interne</strong> et aucune notification ne sera envoyée.';
+        }
+    }
+
+    supplierSelect?.addEventListener('change', toggleNotificationSections);
+
     // Confirmation commande
     const confirmPurchaseBtn = document.getElementById('confirmPurchaseBtn');
     
-    confirmOrderBtn?.addEventListener('click', () => confirmModal.show());
+    confirmOrderBtn?.addEventListener('click', () => {
+        confirmModal.show();
+        // Initialiser l'état des sections de notification
+        setTimeout(toggleNotificationSections, 100);
+    });
     
     confirmPurchaseBtn?.addEventListener('click', async () => {
         const form = document.getElementById('confirmationForm');
         const formData = new FormData(form);
         
         setButtonLoading(confirmPurchaseBtn, true);
-        setModalLoading(document.getElementById('confirmationModal'), true);
+        setModalLoading(confirmModalEl, true);
         
         try {
             const response = await fetch(confirmUrl, { method: 'POST', body: formData });
@@ -2577,13 +2876,13 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
             } else {
                 showToast('error', data.error);
                 setButtonLoading(confirmPurchaseBtn, false);
-                setModalLoading(document.getElementById('confirmationModal'), false);
+                setModalLoading(confirmModalEl, false);
             }
         } catch (error) {
             console.error('Erreur confirmation:', error);
             showToast('error', 'Erreur lors de la confirmation');
             setButtonLoading(confirmPurchaseBtn, false);
-            setModalLoading(document.getElementById('confirmationModal'), false);
+            setModalLoading(confirmModalEl, false);
         }
     });
 
@@ -2626,7 +2925,7 @@ class __TwigTemplate_667e69936576447488040ed232b09534 extends Template
         if (typeof \$.fn.select2 !== 'undefined') {
             \$('#supplierSelect').select2({
                 theme: 'bootstrap-5',
-                placeholder: 'Rechercher un fournisseur...',
+                placeholder: 'Aucun fournisseur (achat interne)',
                 allowClear: true,
                 dropdownParent: \$('#confirmationModal')
             });

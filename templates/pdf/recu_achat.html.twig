@@ -4,20 +4,14 @@
     <meta charset="UTF-8">
     <title>Reçu d'achat {{ purchase.purchaseNumber }}</title>
     <style>
-        @page {
-            margin: 1.5cm;
-        }
+        @page { margin: 1.5cm; }
         body { 
             font-family: 'DejaVu Sans', Arial, sans-serif; 
             font-size: 11px;
             line-height: 1.4;
             color: #333;
         }
-        h1 { 
-            color: #0463f1; 
-            font-size: 22px;
-            margin: 0 0 5px;
-        }
+        h1 { color: #0463f1; font-size: 22px; margin: 0 0 5px; }
         .header { 
             text-align: center;
             margin-bottom: 25px;
@@ -30,8 +24,15 @@
             padding: 10px;
             border-radius: 5px;
         }
-        .info p {
-            margin: 4px 0;
+        .info p { margin: 4px 0; }
+        .no-supplier {
+            background: #fff3cd;
+            padding: 8px 12px;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+            font-style: italic;
+            border-radius: 4px;
+            margin: 6px 0;
         }
         table { 
             width: 100%; 
@@ -39,21 +40,11 @@
             margin: 15px 0;
             font-size: 10px;
         }
-        th, td { 
-            border: 1px solid #ddd; 
-            padding: 6px 4px; 
-            vertical-align: top;
-        }
-        th { 
-            background-color: #0463f1; 
-            color: white;
-            font-weight: bold;
-            text-align: center;
-        }
+        th, td { border: 1px solid #ddd; padding: 6px 4px; vertical-align: top; }
+        th { background-color: #0463f1; color: white; font-weight: bold; text-align: center; }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
         .text-left { text-align: left; }
-        
         .total { 
             font-weight: bold; 
             text-align: right; 
@@ -76,20 +67,9 @@
             border-radius: 3px;
             font-size: 8px;
         }
-        .product-details {
-            font-size: 9px;
-            color: #666;
-            margin-top: 3px;
-        }
-        .footer {
-            margin-top: 25px;
-            text-align: center;
-            font-size: 9px;
-            color: #999;
-        }
-        .table-container {
-            overflow-x: auto;
-        }
+        .product-details { font-size: 9px; color: #666; margin-top: 3px; }
+        .footer { margin-top: 25px; text-align: center; font-size: 9px; color: #999; }
+        .table-container { overflow-x: auto; }
     </style>
 </head>
 <body>
@@ -98,14 +78,21 @@
         <p><strong>N° {{ purchase.purchaseNumber }}</strong></p>
         <p>Date de réception : <strong>{{ purchase.receivedAt|date('d/m/Y H:i') }}</strong></p>
     </div>
-    
+
     <div class="info">
-        <p><strong>🏢 Fournisseur :</strong> {{ purchase.supplier.name }}</p>
-        <p><strong>📧 Email :</strong> {{ purchase.supplier.email }}</p>
-        <p><strong>📞 Téléphone :</strong> {{ purchase.supplier.phone }}</p>
+        {# ✅ Fournisseur optionnel #}
+        {% if purchase.supplier %}
+            <p><strong>🏢 Fournisseur :</strong> {{ purchase.supplier.name }}</p>
+            <p><strong>📧 Email :</strong> {{ purchase.supplier.email }}</p>
+            <p><strong>📞 Téléphone :</strong> {{ purchase.supplier.phone }}</p>
+        {% else %}
+            <div class="no-supplier">
+                <strong>🏢 Achat interne</strong> — aucun fournisseur associé
+            </div>
+        {% endif %}
         <p><strong>👤 Réceptionné par :</strong> {{ purchase.user.fullName }}</p>
     </div>
-    
+
     <div class="table-container">
         <table>
             <thead>
@@ -125,14 +112,14 @@
                     {% set stockBatch = stock_batches[item.id] ?? null %}
                     {% set hasIssue = false %}
                     {% set creditNote = null %}
-                    
+
                     {% for note in supplier_credit_notes|default([]) %}
                         {% if note.stockBatch.id == stockBatch.id %}
                             {% set hasIssue = true %}
                             {% set creditNote = note %}
                         {% endif %}
                     {% endfor %}
-                    
+
                     <tr>
                         <td>
                             <strong>{{ item.product.name }}</strong>
@@ -177,8 +164,7 @@
                             {% endif %}
                         </td>
                     </tr>
-                    
-                    {# Afficher les détails du problème #}
+
                     {% if hasIssue and creditNote %}
                         <tr style="background-color: #fff3cd;">
                             <td colspan="8" style="padding: 6px 10px;">
@@ -201,23 +187,19 @@
             </tfoot>
         </table>
     </div>
-    
+
     <div class="total">
         <p>💰 Montant total à régler : <strong>{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</strong></p>
         {% if purchase.notes %}
             <p style="font-size: 10px;">📝 Notes : {{ purchase.notes }}</p>
         {% endif %}
     </div>
-    
+
     <div class="signature">
         <p>Bon pour réception,</p>
         <p><strong>{{ purchase.user.fullName }}</strong></p>
         <p>{{ purchase.receivedAt|date('d/m/Y') }}</p>
     </div>
-    
+
     <div class="footer">
-        <p>Ce document fait office de reçu officiel de réception de marchandises.</p>
-        <p>Généré le {{ "now"|date('d/m/Y H:i') }}</p>
-    </div>
-</body>
-</html>
+        <p>Ce

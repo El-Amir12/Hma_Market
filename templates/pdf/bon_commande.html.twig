@@ -8,6 +8,14 @@
         h1 { color: #0463f1; }
         .header { margin-bottom: 30px; }
         .info { margin-bottom: 20px; }
+        .no-supplier {
+            background: #f8f9fa;
+            padding: 10px;
+            border-left: 4px solid #6c757d;
+            color: #6c757d;
+            font-style: italic;
+            border-radius: 4px;
+        }
         table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
@@ -20,11 +28,20 @@
         <p>N° {{ purchase.purchaseNumber }}</p>
         <p>Date : {{ purchase.confirmedAt|date('d/m/Y H:i') }}</p>
     </div>
+
+    {# ✅ Fournisseur optionnel #}
     <div class="info">
-        <p><strong>Fournisseur :</strong> {{ purchase.supplier.name }}</p>
-        <p><strong>Contact :</strong> {{ purchase.supplier.contactPerson }} / {{ purchase.supplier.phone }}</p>
-        <p><strong>Adresse :</strong> {{ purchase.supplier.adress }}</p>
+        {% if purchase.supplier %}
+            <p><strong>Fournisseur :</strong> {{ purchase.supplier.name }}</p>
+            <p><strong>Contact :</strong> {{ purchase.supplier.contactPerson }} / {{ purchase.supplier.phone }}</p>
+            <p><strong>Adresse :</strong> {{ purchase.supplier.adress }}</p>
+        {% else %}
+            <div class="no-supplier">
+                <strong>Achat interne</strong> — aucun fournisseur associé
+            </div>
+        {% endif %}
     </div>
+
     <table>
         <thead>
             <tr>

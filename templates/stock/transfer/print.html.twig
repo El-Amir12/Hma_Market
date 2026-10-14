@@ -1,0 +1,88 @@
+{# templates/stock/transfer/print.html.twig #}
+{% extends 'base_print.html.twig' %}
+
+{% block title %}Transfert {{ transfer.transferNumber }} - HMA Market{% endblock %}
+
+{% block body %}
+
+<div class="print-header">
+    <h1>BON DE TRANSFERT</h1>
+    <p>{{ transfer.transferNumber }} — {{ transfer.createdAt|date('d/m/Y H:i') }}</p>
+</div>
+
+<div class="row mb-4">
+    <div class="col-6">
+        <h6 class="fw-bold text-primary">
+            <i class="fas fa-warehouse me-1"></i> Source
+        </h6>
+        <p class="mb-0">
+            {{ transfer.sourceLocation ? transfer.sourceLocation.displayName : 'Non défini' }}
+        </p>
+    </div>
+    <div class="col-6 text-end">
+        <h6 class="fw-bold text-primary">
+            <i class="fas fa-map-marker-alt me-1"></i> Destination
+        </h6>
+        <p class="mb-0">
+            {{ transfer.destinationLocation.displayName }}
+        </p>
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th>Produit</th>
+            <th>N° lot</th>
+            <th class="text-end">Quantité</th>
+            <th class="text-end">Prix unitaire</th>
+            <th class="text-end">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ transfer.stockBatch.product.name }}</td>
+            <td><code>{{ transfer.stockBatch.batchNumber }}</code></td>
+            <td class="text-end">{{ transfer.quantity|number_format(0, ',', ' ') }}</td>
+            <td class="text-end">{{ transfer.stockBatch.unitPrice|price_with_currency(transfer.hmaService) }}</td>
+            <td class="text-end fw-bold">
+                {{ (transfer.quantity * transfer.stockBatch.unitPrice)|price_with_currency(transfer.hmaService) }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="row mt-4">
+    <div class="col-6">
+        <p class="mb-1">
+            <strong>Statut :</strong>
+            <span class="badge {{ transfer.statusBadgeClass }}">{{ transfer.statusLabel }}</span>
+        </p>
+        <p class="mb-1"><strong>Créé par :</strong> {{ transfer.createdBy.fullName ?: transfer.createdBy.email }}</p>
+        {% if transfer.receivedBy %}
+            <p class="mb-1"><strong>Réceptionné par :</strong> {{ transfer.receivedBy.fullName ?: transfer.receivedBy.email }}</p>
+            <p class="mb-1"><strong>Date de réception :</strong> {{ transfer.receivedAt|date('d/m/Y H:i') }}</p>
+        {% endif %}
+    </div>
+    <div class="col-6">
+        {% if transfer.reason %}
+            <p class="mb-1"><strong>Raison :</strong></p>
+            <p class="text-muted">{{ transfer.reason }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-5 pt-5">
+    <div class="col-6">
+        <p class="border-top pt-2 text-center">Signature expéditeur</p>
+    </div>
+    <div class="col-6">
+        <p class="border-top pt-2 text-center">Signature destinataire</p>
+    </div>
+</div>
+
+<div class="print-footer">
+    Document généré par HMA Market le {{ "now"|date('d/m/Y à H:i') }}
+</div>
+
+{% endblock %}

@@ -552,7 +552,7 @@
     </div>
 
     <!-- ==========================================
-         FILTRES - VERSION CORRIGÉE
+         FILTRES
     ========================================== -->
     <div class="card border-0 shadow-sm mb-3 mb-md-4 filters-card">
         <div class="card-header py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
@@ -572,13 +572,11 @@
             <form method="get" id="filter-form">
                 <!-- LIGNE 1 -->
                 <div class="row g-2 g-md-3">
-                    <!-- Recherche - 100% sur mobile, 3 sur desktop -->
                     <div class="col-12 col-md-3 filter-col">
                         <label class="form-label fw-semibold small filter-label">Recherche</label>
                         <input type="text" name="search" class="form-control form-control-sm filter-select" placeholder="N° lot..." value="{{ filters.search|default('') }}">
                     </div>
-                    
-                    <!-- Statut - 50% sur mobile, 2 sur desktop -->
+
                     <div class="col-6 col-md-2 filter-col-half">
                         <label class="form-label fw-semibold small filter-label">Statut</label>
                         <select name="status" class="form-select form-select-sm filter-select">
@@ -587,8 +585,7 @@
                             <option value="inactive" {{ filters.status|default('') == 'inactive' ? 'selected' }}>Inactifs</option>
                         </select>
                     </div>
-                    
-                    <!-- Expiration - 50% sur mobile, 2 sur desktop -->
+
                     <div class="col-6 col-md-2 filter-col-half">
                         <label class="form-label fw-semibold small filter-label">Expiration</label>
                         <select name="expiry_status" class="form-select form-select-sm filter-select">
@@ -598,8 +595,7 @@
                             <option value="not_expiring" {{ filters.expiry_status|default('') == 'not_expiring' ? 'selected' }}>Non expirés</option>
                         </select>
                     </div>
-                    
-                    <!-- Stock faible - 50% sur mobile, 2 sur desktop -->
+
                     <div class="col-6 col-md-2 filter-col-half">
                         <label class="form-label fw-semibold small filter-label">Stock faible</label>
                         <select name="low_stock" class="form-select form-select-sm filter-select">
@@ -607,8 +603,7 @@
                             <option value="yes" {{ filters.low_stock|default('') == 'yes' ? 'selected' }}>≤ 10</option>
                         </select>
                     </div>
-                    
-                    <!-- Emplacement - 50% sur mobile, 3 sur desktop -->
+
                     <div class="col-6 col-md-3 filter-col-half">
                         <label class="form-label fw-semibold small filter-label">Emplacement</label>
                         <select name="location" id="location-select" class="form-select form-select-sm select2-location filter-select">
@@ -622,7 +617,6 @@
 
                 <!-- LIGNE 2 -->
                 <div class="row g-2 g-md-3 mt-2 mt-md-3">
-                    <!-- Avoir - 50% sur mobile, 3 sur desktop -->
                     <div class="col-6 col-md-3 filter-col-half">
                         <label class="form-label fw-semibold small filter-label">Avoir</label>
                         <select name="has_issue" class="form-select form-select-sm filter-select">
@@ -631,29 +625,26 @@
                             <option value="no" {{ filters.has_issue|default('') == 'no' ? 'selected' }}>Sans avoir</option>
                         </select>
                     </div>
-                    
-                    <!-- Statut avoir - 50% sur mobile, 3 sur desktop -->
+
                     <div class="col-6 col-md-3 filter-col-half">
                         <label class="form-label fw-semibold small filter-label">Statut avoir</label>
                         <select name="issue_status" class="form-select form-select-sm filter-select">
                             <option value="">Tous</option>
-                            <option value="pending">En attente</option>
-                            <option value="acknowledged">Accusé</option>
-                            <option value="under_review">En analyse</option>
-                            <option value="partially_recovered">Partiel</option>
-                            <option value="recovered">Récupéré</option>
-                            <option value="lost">Perdu</option>
-                            <option value="closed">Clôturé</option>
+                            <option value="pending" {{ filters.issue_status|default('') == 'pending' ? 'selected' }}>En attente</option>
+                            <option value="acknowledged" {{ filters.issue_status|default('') == 'acknowledged' ? 'selected' }}>Accusé</option>
+                            <option value="under_review" {{ filters.issue_status|default('') == 'under_review' ? 'selected' }}>En analyse</option>
+                            <option value="partially_recovered" {{ filters.issue_status|default('') == 'partially_recovered' ? 'selected' }}>Partiel</option>
+                            <option value="recovered" {{ filters.issue_status|default('') == 'recovered' ? 'selected' }}>Récupéré</option>
+                            <option value="lost" {{ filters.issue_status|default('') == 'lost' ? 'selected' }}>Perdu</option>
+                            <option value="closed" {{ filters.issue_status|default('') == 'closed' ? 'selected' }}>Clôturé</option>
                         </select>
                     </div>
-                    
-                    <!-- Expiration du - 50% sur mobile, 3 sur desktop -->
+
                     <div class="col-6 col-md-3 filter-col-half">
                         <label class="form-label fw-semibold small filter-label">Expiration du</label>
                         <input type="date" name="date_from" class="form-control form-control-sm filter-select" value="{{ filters.date_from|default('') }}">
                     </div>
-                    
-                    <!-- Expiration au - 50% sur mobile, 3 sur desktop -->
+
                     <div class="col-6 col-md-3 filter-col-half">
                         <label class="form-label fw-semibold small filter-label">Expiration au</label>
                         <input type="date" name="date_to" class="form-control form-control-sm filter-select" value="{{ filters.date_to|default('') }}">
@@ -662,7 +653,6 @@
 
                 <!-- LIGNE 3 -->
                 <div class="row g-2 g-md-3 mt-2 mt-md-3">
-                    <!-- Trier par - 50% sur mobile, 6 sur desktop -->
                     <div class="col-6 col-md-6 filter-col-half">
                         <label class="form-label fw-semibold small filter-label">Trier par</label>
                         <select name="sort" class="form-select form-select-sm filter-select">
@@ -672,8 +662,7 @@
                             <option value="created_at" {{ filters.sort|default('expiry_date') == 'created_at' ? 'selected' }}>Date création</option>
                         </select>
                     </div>
-                    
-                    <!-- Ordre - 50% sur mobile, 6 sur desktop -->
+
                     <div class="col-6 col-md-6 filter-col-half">
                         <label class="form-label fw-semibold small filter-label">Ordre</label>
                         <select name="direction" class="form-select form-select-sm filter-select">
@@ -704,7 +693,49 @@
                 {% endif %}
             {% endif %}
 
+            {# ✅ Récupération du VRAI avoir #}
             {% set creditNote = supplierCreditNotes[batch.id] is defined ? supplierCreditNotes[batch.id] : null %}
+            {% set realIssueStatus = creditNote ? creditNote.status : batch.issueStatus %}
+            {% set realDeclaredAmount = creditNote ? creditNote.declaredAmount : batch.issueDeclaredAmount %}
+
+            {# ✅ Calcul du badge de statut #}
+            {% if realIssueStatus == 'recovered' or realIssueStatus == 'resolved' %}
+                {% set issueBadgeClass = 'bg-success' %}
+                {% set issueLabel = 'Récupéré' %}
+                {% set issueIcon = 'fa-check-circle' %}
+            {% elseif realIssueStatus == 'pending' %}
+                {% set issueBadgeClass = 'bg-warning text-dark' %}
+                {% set issueLabel = 'En attente' %}
+                {% set issueIcon = 'fa-clock' %}
+            {% elseif realIssueStatus == 'acknowledged' %}
+                {% set issueBadgeClass = 'bg-info' %}
+                {% set issueLabel = 'Accusé réception' %}
+                {% set issueIcon = 'fa-check' %}
+            {% elseif realIssueStatus == 'under_review' %}
+                {% set issueBadgeClass = 'bg-info' %}
+                {% set issueLabel = 'En analyse' %}
+                {% set issueIcon = 'fa-search' %}
+            {% elseif realIssueStatus == 'partially_recovered' %}
+                {% set issueBadgeClass = 'bg-warning text-dark' %}
+                {% set issueLabel = 'Partiel. récupéré' %}
+                {% set issueIcon = 'fa-hourglass-half' %}
+            {% elseif realIssueStatus == 'lost' %}
+                {% set issueBadgeClass = 'bg-danger' %}
+                {% set issueLabel = 'Perdu' %}
+                {% set issueIcon = 'fa-times-circle' %}
+            {% elseif realIssueStatus == 'rejected' %}
+                {% set issueBadgeClass = 'bg-danger' %}
+                {% set issueLabel = 'Rejeté' %}
+                {% set issueIcon = 'fa-ban' %}
+            {% elseif realIssueStatus == 'closed' %}
+                {% set issueBadgeClass = 'bg-secondary' %}
+                {% set issueLabel = 'Clôturé' %}
+                {% set issueIcon = 'fa-archive' %}
+            {% else %}
+                {% set issueBadgeClass = 'bg-secondary' %}
+                {% set issueLabel = realIssueStatus|replace({'_': ' '})|capitalize %}
+                {% set issueIcon = 'fa-exclamation-triangle' %}
+            {% endif %}
 
             <div class="col-12 col-sm-6 col-lg-6 col-xl-4">
                 <div class="card batch-card h-100 shadow-sm {% if hasIssue %}has-issue{% elseif isExpired %}expired{% endif %}">
@@ -755,8 +786,15 @@
                                             {% endif %}
                                         </a>
                                     {% elseif hasIssue and creditNote %}
-                                        <a class="dropdown-item text-info small" href="{{ path('app_supplier_credit_note_show', {'id': creditNote.id}) }}">
-                                            <i class="fas fa-file-invoice-dollar me-2"></i> Voir l'avoir
+                                        {# ✅ Voir l'avoir avec VRAI statut #}
+                                        <a class="dropdown-item small 
+                                            {% if realIssueStatus in ['recovered', 'resolved'] %}text-success
+                                            {% elseif realIssueStatus == 'pending' %}text-warning
+                                            {% elseif realIssueStatus in ['lost', 'rejected'] %}text-danger
+                                            {% else %}text-info{% endif %}" 
+                                           href="{{ path('app_supplier_credit_note_show', {'id': creditNote.id}) }}">
+                                            <i class="fas {{ issueIcon }} me-2"></i> 
+                                            Voir avoir ({{ issueLabel }})
                                         </a>
                                     {% elseif hasIssue %}
                                         <a class="dropdown-item text-muted small" href="#" onclick="return false;">
@@ -865,16 +903,25 @@
                             {% endif %}
                         </div>
 
-                        <!-- Section avoir -->
+                        <!-- ✅ Section avoir avec VRAI statut -->
                         {% if hasIssue %}
-                            <div class="alert alert-danger py-1 py-md-2 mb-0 small">
+                            <div class="alert 
+                                {% if realIssueStatus in ['recovered', 'resolved'] %}alert-success
+                                {% elseif realIssueStatus == 'pending' %}alert-warning
+                                {% elseif realIssueStatus in ['lost', 'rejected'] %}alert-danger
+                                {% else %}alert-info{% endif %} 
+                                py-1 py-md-2 mb-0 small">
                                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-1">
                                     <div>
                                         <i class="fas fa-file-invoice-dollar me-1"></i>
-                                        <span class="badge {{ batch.issueStatusBadgeClass }}">{{ batch.issueStatusLabel }}</span>
+                                        <span class="badge {{ issueBadgeClass }}">
+                                            <i class="fas {{ issueIcon }} me-1"></i>{{ issueLabel }}
+                                        </span>
                                     </div>
                                     <div class="text-end">
-                                        <small class="text-danger">{{ batch.issueDeclaredAmount|price_with_currency(batch.hmaService) }}</small>
+                                        <small class="{% if realIssueStatus in ['recovered', 'resolved'] %}text-success{% elseif realIssueStatus == 'pending' %}text-warning{% else %}text-danger{% endif %}">
+                                            {{ realDeclaredAmount|price_with_currency(batch.hmaService) }}
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -1019,16 +1066,6 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedCountSpan.textContent = selected;
         }
     }
-
-    document.getElementById('selectAllBtn')?.addEventListener('click', function() {
-        checkboxes.forEach(cb => cb.checked = true);
-        updateSelectedCount();
-    });
-
-    document.getElementById('deselectAllBtn')?.addEventListener('click', function() {
-        checkboxes.forEach(cb => cb.checked = false);
-        updateSelectedCount();
-    });
 
     checkboxes.forEach(cb => cb.addEventListener('change', updateSelectedCount));
     updateSelectedCount();

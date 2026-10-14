@@ -102,159 +102,403 @@ class __TwigTemplate_70f6ca76acba0d5ebafe4925bef8931e extends Template
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
 <link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
+<link href=\"https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css\" rel=\"stylesheet\" />
 <style>
     :root {
         --primary: #0463f1;
+        --primary-dark: #0346b8;
         --success: #10b981;
         --warning: #f59e0b;
         --danger: #ef4444;
-        --info: #0ea5e9;
-        --gray-100: #f3f4f6;
-        --gray-200: #e5e7eb;
-        --gray-600: #4b5563;
     }
 
-    .form-section {
-        background: var(--gray-100);
-        border-radius: 1rem;
-        padding: 1.5rem;
+    .transfer-wrapper {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    /* ============================================
+       EN-TÊTE
+       ============================================ */
+    .page-header-simple {
+        background-color: #0463f1 !important;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
         margin-bottom: 1.5rem;
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
     }
-    .form-section:hover {
-        border-color: var(--primary);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+
+    .page-header-simple,
+    .page-header-simple * {
+        color: #ffffff !important;
     }
-    .form-section-title {
-        font-size: 0.85rem;
+
+    .page-header-simple .header-title {
+        font-size: 1.4rem;
         font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--gray-600);
+        margin: 0 0 0.35rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .page-header-simple .header-subtitle {
+        color: rgba(255, 255, 255, 0.95) !important;
+        font-size: 0.88rem;
+        margin: 0;
+    }
+
+    .page-header-simple .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .page-header-simple .btn-back-simple {
+        background-color: #ffffff !important;
+        color: #0463f1 !important;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        transition: background-color 0.2s ease;
+    }
+    .page-header-simple .btn-back-simple:hover {
+        background-color: #f1f5f9 !important;
+        color: #0346b8 !important;
+    }
+    .page-header-simple .btn-back-simple i {
+        color: #0463f1 !important;
+    }
+
+    .breadcrumb-simple {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 0.75rem 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.82rem;
+    }
+    .breadcrumb-simple li {
+        color: #ffffff !important;
+        display: flex;
+        align-items: center;
+    }
+    .breadcrumb-simple li a {
+        color: #ffffff !important;
+        text-decoration: none;
+        opacity: 0.9;
+    }
+    .breadcrumb-simple li a:hover {
+        opacity: 1;
+        text-decoration: underline;
+    }
+    .breadcrumb-simple li + li::before {
+        content: '/';
+        color: rgba(255, 255, 255, 0.7) !important;
+        margin-right: 0.4rem;
+        font-weight: 300;
+    }
+    .breadcrumb-simple li.active {
+        opacity: 1;
+        font-weight: 600;
+    }
+
+    /* ============================================
+       SECTIONS
+       ============================================ */
+    .form-section {
+        background: #fff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e9ecef;
+    }
+
+    .form-section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #1e293b;
         margin-bottom: 1.25rem;
         padding-bottom: 0.75rem;
-        border-bottom: 2px solid var(--gray-200);
+        border-bottom: 2px solid #f1f5f9;
+    }
+    .form-section-title .step-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: #0463f1;
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+    .form-section-title .badge-optional {
+        background: #e2e8f0;
+        color: #475569;
+        font-size: 0.68rem;
+        padding: 0.2rem 0.55rem;
+        border-radius: 20px;
+        font-weight: 500;
+        margin-left: auto;
+    }
+
+    /* ============================================
+       ERREURS
+       ============================================ */
+    .form-error-box {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-left: 4px solid #ef4444;
+        border-radius: 10px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1.25rem;
+        color: #991b1b;
+    }
+    .form-error-box .error-title {
+        font-weight: 700;
+        font-size: 0.92rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        margin-bottom: 0.5rem;
     }
-    .form-section-title i {
-        color: var(--primary);
-        font-size: 1.1rem;
+    .form-error-box ul {
+        margin: 0;
+        padding-left: 1.5rem;
+        font-size: 0.85rem;
     }
+    .field-error {
+        color: #dc2626;
+        font-size: 0.8rem;
+        margin-top: 0.35rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .form-control.is-invalid-custom {
+        border-color: #dc2626 !important;
+        background-color: #fef2f2 !important;
+    }
+
+    /* Box info */
+    .batch-info-box {
+        background: #f0f6ff;
+        border: 1px solid #bfdbfe;
+        border-left: 4px solid #0463f1;
+        border-radius: 8px;
+        padding: 0.85rem 1rem;
+        margin-bottom: 1rem;
+        font-size: 0.88rem;
+    }
+
+    /* Form controls */
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        padding: 0.6rem 0.85rem;
+        font-size: 0.92rem;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #0463f1;
+        box-shadow: 0 0 0 3px rgba(4, 99, 241, 0.15);
+    }
+    .form-label {
+        font-size: 0.85rem;
+        margin-bottom: 0.4rem;
+        color: #334155;
+        font-weight: 600;
+    }
+    textarea.form-control {
+        min-height: 90px;
+        resize: vertical;
+    }
+
+    /* Select2 */
+    .select2-container--bootstrap-5 .select2-selection--single {
+        height: auto !important;
+        min-height: 52px !important;
+        padding: 0.5rem 0.85rem !important;
+        border-radius: 8px !important;
+        border: 1px solid #d1d5db !important;
+        background: #fff !important;
+    }
+    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+        color: #1e293b !important;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0 !important;
+    }
+
+    /* Boutons */
+    .action-bar {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+    .btn {
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 0.6rem 1.4rem;
+        font-size: 0.9rem;
+    }
+    .btn-primary {
+        background: #0463f1;
+        border: none;
+    }
+    .btn-primary:hover:not(:disabled) {
+        background: #0346b8;
+    }
+    .btn-primary:disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+    }
+
+    /* Info card */
     .info-card {
         background: linear-gradient(135deg, #e8f4fd 0%, #dbeafe 100%);
-        border-radius: 1rem;
-        padding: 1.25rem;
-        margin-bottom: 1.5rem;
-        border-left: 4px solid var(--primary);
+        border-radius: 12px;
+        padding: 1.15rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #0463f1;
     }
-    .alert-custom {
-        border-radius: 1rem;
+    .info-card small {
+        line-height: 1.7;
+    }
+
+    /* Alerte */
+    .alert-warning-simple {
+        background: #fef3c7;
+        border-left: 4px solid #f59e0b;
+        border-radius: 8px;
+        padding: 1rem 1.15rem;
+        display: flex;
+        gap: 0.85rem;
+        align-items: flex-start;
+        color: #78350f;
+        margin-bottom: 1rem;
+        font-size: 0.88rem;
+    }
+    .alert-warning-simple i {
+        color: #d97706;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    /* Modals */
+    .confirmation-modal .modal-content {
+        border: none;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+    .confirmation-modal .modal-header {
+        background: #f59e0b;
+        color: #fff;
         border: none;
         padding: 1rem 1.25rem;
     }
-    .step-indicator {
+    .confirmation-modal .modal-header.danger-header {
+        background: #ef4444;
+    }
+    .confirmation-modal .modal-header .modal-title {
+        font-weight: 700;
+        font-size: 0.98rem;
+        color: #fff;
+    }
+    .confirmation-modal .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+    }
+    .confirmation-modal .modal-body {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .confirm-summary {
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 0.85rem 1rem;
+        border: 1px solid #e2e8f0;
+    }
+    .confirm-summary .summary-row {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 2rem;
-        position: relative;
-        padding: 0 1rem;
+        align-items: flex-start;
+        padding: 0.5rem 0;
+        gap: 1rem;
+        border-bottom: 1px dashed #e2e8f0;
     }
-    .step {
-        text-align: center;
-        flex: 1;
-        position: relative;
-        z-index: 1;
+    .confirm-summary .summary-row:last-child {
+        border-bottom: none;
     }
-    .step-circle {
-        width: 45px;
-        height: 45px;
-        background: white;
-        border: 2px solid var(--gray-200);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 0.6rem;
-        font-weight: bold;
-        color: var(--gray-600);
-        transition: all 0.3s ease;
-    }
-    .step.active .step-circle {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: white;
-        box-shadow: 0 0 0 4px rgba(4, 99, 241, 0.2);
-    }
-    .step.completed .step-circle {
-        background: var(--success);
-        border-color: var(--success);
-        color: white;
-    }
-    .step-label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--gray-600);
-    }
-    .step.active .step-label {
-        color: var(--primary);
-    }
-    .step.completed .step-label {
-        color: var(--success);
-    }
-    .steps-line {
-        position: absolute;
-        top: 22px;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--gray-200);
-        z-index: 0;
-    }
-    .select2-container--bootstrap-5 .select2-selection {
-        border-radius: 0.75rem;
-        border-color: var(--gray-200);
-        min-height: 42px;
-    }
-    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-        line-height: 40px;
-        padding-left: 1rem;
-    }
-    .form-control, .form-select {
-        border-radius: 0.75rem;
-        border-color: var(--gray-200);
-        padding: 0.6rem 1rem;
-    }
-    .form-control:focus, .form-select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(4, 99, 241, 0.1);
-    }
-    .btn {
-        border-radius: 0.75rem;
-        padding: 0.6rem 1.25rem;
+    .confirm-summary .summary-label {
+        color: #64748b;
+        font-size: 0.82rem;
         font-weight: 500;
-        transition: all 0.2s;
+        flex-shrink: 0;
     }
-    .btn-primary {
-        background: var(--primary);
+    .confirm-summary .summary-value {
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 0.88rem;
+        text-align: right;
+        word-break: break-word;
+    }
+    .confirmation-modal .modal-footer {
         border: none;
+        padding: 1rem 1.5rem 1.25rem;
+        gap: 0.5rem;
     }
-    .btn-primary:hover {
-        background: #0350c4;
-        transform: translateY(-1px);
-    }
-    .btn-outline-secondary:hover {
-        transform: translateY(-1px);
-    }
-    .badge-info {
-        background: rgba(4, 99, 241, 0.1);
-        color: var(--primary);
-        padding: 0.35rem 0.75rem;
-        border-radius: 2rem;
-        font-size: 0.7rem;
-        font-weight: 500;
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .page-header-simple {
+            padding: 1rem 1.15rem;
+        }
+        .page-header-simple .header-title {
+            font-size: 1.15rem;
+        }
+        .form-section {
+            padding: 1.15rem;
+        }
+        .form-section-title {
+            font-size: 0.88rem;
+        }
+        .action-bar {
+            flex-direction: column-reverse;
+        }
+        .action-bar .btn {
+            width: 100%;
+        }
+        .confirmation-modal .modal-footer {
+            flex-direction: column-reverse;
+        }
+        .confirmation-modal .modal-footer .btn {
+            width: 100%;
+        }
+        .confirm-summary .summary-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+        .confirm-summary .summary-value {
+            text-align: left;
+        }
     }
 </style>
 ";
@@ -267,7 +511,7 @@ class __TwigTemplate_70f6ca76acba0d5ebafe4925bef8931e extends Template
         yield from [];
     }
 
-    // line 166
+    // line 410
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -280,255 +524,367 @@ class __TwigTemplate_70f6ca76acba0d5ebafe4925bef8931e extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 167
-        yield "<div class=\"container-fluid px-4 py-3\">
-    <div class=\"d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3\">
-        <div>
-            <nav aria-label=\"breadcrumb\">
-                <ol class=\"breadcrumb\">
-                    <li class=\"breadcrumb-item\">
-                        <a href=\"";
-        // line 173
+        // line 411
+        yield "<div class=\"container-fluid px-2 px-md-4 py-3\">
+    <div class=\"transfer-wrapper\">
+
+        <!-- EN-TÊTE -->
+        <div class=\"page-header-simple\">
+            <ul class=\"breadcrumb-simple\">
+                <li><a href=\"";
+        // line 417
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_dashboard");
-        yield "\" class=\"text-decoration-none\">
-                            <i class=\"fas fa-tachometer-alt me-1\"></i> Tableau de bord
-                        </a>
-                    </li>
-                    <li class=\"breadcrumb-item\">
-                        <a href=\"";
-        // line 178
+        yield "\">Tableau de bord</a></li>
+                <li><a href=\"";
+        // line 418
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_index");
-        yield "\" class=\"text-decoration-none\">
-                            <i class=\"fas fa-exchange-alt me-1\"></i> Transferts
-                        </a>
-                    </li>
-                    <li class=\"breadcrumb-item active\">Nouveau transfert</li>
-                </ol>
-            </nav>
-            <h1 class=\"h3 mb-0 fw-bold\">
-                <i class=\"fas fa-plus-circle text-primary me-2\"></i>
-                Nouveau transfert de stock
-            </h1>
-            <p class=\"text-muted mt-2\">
-                <i class=\"fas fa-info-circle me-1\"></i>
-                Transférez des marchandises d'un emplacement à un autre
-            </p>
+        yield "\">Transferts</a></li>
+                <li class=\"active\">Nouveau transfert</li>
+            </ul>
+            <div class=\"header-actions\">
+                <div>
+                    <h1 class=\"header-title\">
+                        <i class=\"fas fa-exchange-alt\"></i>
+                        Nouveau transfert de stock
+                    </h1>
+                    <p class=\"header-subtitle\">
+                        <i class=\"fas fa-info-circle me-1\"></i>
+                        Transférez des marchandises d'un emplacement à un autre
+                    </p>
+                </div>
+                <a href=\"";
+        // line 432
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_index");
+        yield "\" class=\"btn-back-simple\">
+                    <i class=\"fas fa-arrow-left\"></i> Retour
+                </a>
+            </div>
         </div>
-        <div>
+
+        <!-- ERREURS GLOBALES -->
+        ";
+        // line 439
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 439, $this->source); })()), "vars", [], "any", false, false, false, 439), "errors", [], "any", false, false, false, 439)) > 0)) {
+            // line 440
+            yield "            <div class=\"form-error-box\">
+                <div class=\"error-title\">
+                    <i class=\"fas fa-exclamation-triangle\"></i>
+                    Le formulaire contient des erreurs
+                </div>
+                <ul>
+                    ";
+            // line 446
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 446, $this->source); })()), "vars", [], "any", false, false, false, 446), "errors", [], "any", false, false, false, 446));
+            foreach ($context['_seq'] as $context["_key"] => $context["error"]) {
+                // line 447
+                yield "                        <li>";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["error"], "message", [], "any", false, false, false, 447), "html", null, true);
+                yield "</li>
+                    ";
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_key'], $context['error'], $context['_parent']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 449
+            yield "                </ul>
+            </div>
+        ";
+        }
+        // line 452
+        yield "
+        <!-- FORMULAIRE -->
+        ";
+        // line 454
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 454, $this->source); })()), 'form_start', ["attr" => ["novalidate" => "novalidate", "id" => "transferForm"]]);
+        yield "
+
+        <!-- ÉTAPE 1 : Lot -->
+        <div class=\"form-section\">
+            <div class=\"form-section-title\">
+                <span class=\"step-badge\">1</span>
+                <span><i class=\"fas fa-boxes me-1 text-primary\"></i> Lot à transférer</span>
+            </div>
+            ";
+        // line 462
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 462, $this->source); })()), "stock_batch", [], "any", false, false, false, 462), 'label', ["label_attr" => ["class" => "form-label"]]);
+        yield "
+            ";
+        // line 463
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 463, $this->source); })()), "stock_batch", [], "any", false, false, false, 463), 'widget');
+        yield "
+            ";
+        // line 464
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 464, $this->source); })()), "stock_batch", [], "any", false, false, false, 464), "vars", [], "any", false, false, false, 464), "errors", [], "any", false, false, false, 464));
+        foreach ($context['_seq'] as $context["_key"] => $context["error"]) {
+            // line 465
+            yield "                <div class=\"field-error\">
+                    <i class=\"fas fa-exclamation-circle\"></i> ";
+            // line 466
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["error"], "message", [], "any", false, false, false, 466), "html", null, true);
+            yield "
+                </div>
+            ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['error'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 469
+        yield "            <small class=\"text-muted d-block mt-2\">
+                <i class=\"fas fa-info-circle me-1\"></i>
+                Seuls les lots avec stock disponible sont affichés
+            </small>
+        </div>
+
+        <!-- ÉTAPE 2 : Destination -->
+        <div class=\"form-section\">
+            <div class=\"form-section-title\">
+                <span class=\"step-badge\">2</span>
+                <span><i class=\"fas fa-map-marker-alt me-1 text-primary\"></i> Emplacement de destination</span>
+            </div>
+            ";
+        // line 481
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 481, $this->source); })()), "destination_location", [], "any", false, false, false, 481), 'label', ["label_attr" => ["class" => "form-label"]]);
+        yield "
+            ";
+        // line 482
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 482, $this->source); })()), "destination_location", [], "any", false, false, false, 482), 'widget');
+        yield "
+            ";
+        // line 483
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 483, $this->source); })()), "destination_location", [], "any", false, false, false, 483), "vars", [], "any", false, false, false, 483), "errors", [], "any", false, false, false, 483));
+        foreach ($context['_seq'] as $context["_key"] => $context["error"]) {
+            // line 484
+            yield "                <div class=\"field-error\">
+                    <i class=\"fas fa-exclamation-circle\"></i> ";
+            // line 485
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["error"], "message", [], "any", false, false, false, 485), "html", null, true);
+            yield "
+                </div>
+            ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['error'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 488
+        yield "            <small class=\"text-muted d-block mt-2\">
+                <i class=\"fas fa-info-circle me-1\"></i>
+                L'emplacement où les produits seront transférés
+            </small>
+        </div>
+
+        <!-- ÉTAPE 3 : Quantité -->
+        <div class=\"form-section\">
+            <div class=\"form-section-title\">
+                <span class=\"step-badge\">3</span>
+                <span><i class=\"fas fa-hashtag me-1 text-primary\"></i> Quantité à transférer</span>
+            </div>
+
+            <div id=\"batch-info-box\" class=\"batch-info-box\" style=\"display: none;\">
+                <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-2\">
+                    <div>
+                        <i class=\"fas fa-boxes me-1 text-primary\"></i>
+                        <strong>Lot sélectionné :</strong>
+                        <span id=\"batch-info-num\" class=\"text-primary fw-bold\">—</span>
+                        <span id=\"batch-info-prod\" class=\"text-muted small\">—</span>
+                    </div>
+                    <div class=\"text-end\">
+                        <span class=\"text-muted small\">Disponible :</span>
+                        <strong id=\"batch-info-qty\" class=\"text-success\">—</strong>
+                        <span class=\"text-muted small\">unités</span>
+                    </div>
+                </div>
+            </div>
+
+            ";
+        // line 517
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 517, $this->source); })()), "quantity", [], "any", false, false, false, 517), 'label', ["label_attr" => ["class" => "form-label"]]);
+        yield "
+            ";
+        // line 518
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 518, $this->source); })()), "quantity", [], "any", false, false, false, 518), 'widget');
+        yield "
+            ";
+        // line 519
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 519, $this->source); })()), "quantity", [], "any", false, false, false, 519), "vars", [], "any", false, false, false, 519), "errors", [], "any", false, false, false, 519));
+        foreach ($context['_seq'] as $context["_key"] => $context["error"]) {
+            // line 520
+            yield "                <div class=\"field-error\">
+                    <i class=\"fas fa-exclamation-circle\"></i> ";
+            // line 521
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["error"], "message", [], "any", false, false, false, 521), "html", null, true);
+            yield "
+                </div>
+            ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['error'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 524
+        yield "
+            <div id=\"quantity-error\" class=\"field-error\" style=\"display: none;\">
+                <i class=\"fas fa-exclamation-circle\"></i> <span id=\"quantity-error-text\"></span>
+            </div>
+
+            <small class=\"text-muted d-block mt-2\">
+                <i class=\"fas fa-info-circle me-1\"></i>
+                La quantité ne peut pas dépasser le stock disponible du lot
+            </small>
+        </div>
+
+        <!-- ÉTAPE 4 : Raison -->
+        <div class=\"form-section\">
+            <div class=\"form-section-title\">
+                <span class=\"step-badge\">4</span>
+                <span><i class=\"fas fa-pen me-1 text-primary\"></i> Raison du transfert</span>
+                <span class=\"badge-optional\">Optionnel</span>
+            </div>
+            ";
+        // line 542
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 542, $this->source); })()), "reason", [], "any", false, false, false, 542), 'label', ["label_attr" => ["class" => "form-label"]]);
+        yield "
+            ";
+        // line 543
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 543, $this->source); })()), "reason", [], "any", false, false, false, 543), 'widget');
+        yield "
+            ";
+        // line 544
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 544, $this->source); })()), "reason", [], "any", false, false, false, 544), "vars", [], "any", false, false, false, 544), "errors", [], "any", false, false, false, 544));
+        foreach ($context['_seq'] as $context["_key"] => $context["error"]) {
+            // line 545
+            yield "                <div class=\"field-error\">
+                    <i class=\"fas fa-exclamation-circle\"></i> ";
+            // line 546
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["error"], "message", [], "any", false, false, false, 546), "html", null, true);
+            yield "
+                </div>
+            ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['error'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 549
+        yield "        </div>
+
+        <!-- INFO -->
+        <div class=\"info-card\">
+            <div class=\"d-flex gap-3\">
+                <div>
+                    <i class=\"fas fa-truck fa-2x text-primary\"></i>
+                </div>
+                <div>
+                    <strong class=\"d-block mb-1\">📦 Comment fonctionne un transfert ?</strong>
+                    <small class=\"text-secondary\">
+                        <i class=\"fas fa-check-circle text-success me-1\"></i> Création → statut <strong>\"En attente\"</strong><br>
+                        <i class=\"fas fa-check-circle text-success me-1\"></i> Expédition → stock <strong>déduit</strong> de la source<br>
+                        <i class=\"fas fa-check-circle text-success me-1\"></i> Réception → stock <strong>ajouté</strong> à la destination<br>
+                        <i class=\"fas fa-check-circle text-success me-1\"></i> Transfert marqué <strong>\"Terminé\"</strong>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALERTE -->
+        <div class=\"alert-warning-simple\">
+            <i class=\"fas fa-exclamation-triangle\"></i>
+            <div>
+                <strong>⚠️ Points importants</strong>
+                <small class=\"d-block mt-1\">
+                    • Le stock n'est déduit qu'après avoir <strong>expédié</strong> le transfert<br>
+                    • Le stock n'est ajouté qu'après avoir <strong>réceptionné</strong> le transfert<br>
+                    • Un transfert peut être <strong>annulé</strong> tant qu'il n'est pas réceptionné
+                </small>
+            </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class=\"action-bar\">
             <a href=\"";
-        // line 195
+        // line 584
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_index");
         yield "\" class=\"btn btn-outline-secondary\">
-                <i class=\"fas fa-arrow-left me-1\"></i> Retour
+                <i class=\"fas fa-times me-1\"></i> Annuler
             </a>
+            <button type=\"submit\" class=\"btn btn-primary\" id=\"submitBtn\">
+                <i class=\"fas fa-save me-1\"></i> Créer le transfert
+            </button>
+        </div>
+
+        ";
+        // line 592
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 592, $this->source); })()), 'form_end');
+        yield "
+    </div>
+</div>
+
+<!-- MODAL DE CONFIRMATION -->
+<div class=\"modal fade confirmation-modal\" id=\"confirmTransferModal\" tabindex=\"-1\" data-bs-backdrop=\"static\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header\">
+                <h5 class=\"modal-title\">
+                    <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                    Confirmer le transfert
+                </h5>
+                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body\">
+                <p class=\"mb-3 small text-muted\">Vérifiez les informations :</p>
+                <div class=\"confirm-summary\">
+                    <div class=\"summary-row\">
+                        <span class=\"summary-label\">Lot</span>
+                        <span class=\"summary-value\" id=\"confirm-batch\">—</span>
+                    </div>
+                    <div class=\"summary-row\">
+                        <span class=\"summary-label\">De</span>
+                        <span class=\"summary-value\" id=\"confirm-source\">—</span>
+                    </div>
+                    <div class=\"summary-row\">
+                        <span class=\"summary-label\">Vers</span>
+                        <span class=\"summary-value\" id=\"confirm-destination\">—</span>
+                    </div>
+                    <div class=\"summary-row\">
+                        <span class=\"summary-label\">Quantité</span>
+                        <span class=\"summary-value\" id=\"confirm-quantity\">—</span>
+                    </div>
+                    <div class=\"summary-row\">
+                        <span class=\"summary-label\">Raison</span>
+                        <span class=\"summary-value\" id=\"confirm-reason\">—</span>
+                    </div>
+                </div>
+            </div>
+            <div class=\"modal-footer\">
+                <button type=\"button\" class=\"btn btn-outline-secondary\" data-bs-dismiss=\"modal\">
+                    Annuler
+                </button>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmTransferBtn\">
+                    <i class=\"fas fa-check me-1\"></i> Confirmer
+                </button>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- Indicateur d'étapes -->
-    <div class=\"step-indicator\">
-        <div class=\"step active\">
-            <div class=\"step-circle\">1</div>
-            <div class=\"step-label\">Création</div>
-        </div>
-        <div class=\"step\">
-            <div class=\"step-circle\">2</div>
-            <div class=\"step-label\">Expédition</div>
-        </div>
-        <div class=\"step\">
-            <div class=\"step-circle\">3</div>
-            <div class=\"step-label\">En transit</div>
-        </div>
-        <div class=\"step\">
-            <div class=\"step-circle\">4</div>
-            <div class=\"step-label\">Réception</div>
-        </div>
-        <div class=\"steps-line\"></div>
-    </div>
-
-    <div class=\"row\">
-        <div class=\"col-lg-10 mx-auto\">
-            <div class=\"card border-0 shadow-sm\" style=\"border-radius: 1.25rem; overflow: hidden;\">
-                <div class=\"card-header bg-white py-3\" style=\"border-bottom: 1px solid #eef2f6;\">
-                    <h5 class=\"mb-0 fw-semibold\">
-                        <i class=\"fas fa-exchange-alt me-2 text-primary\"></i>
-                        Formulaire de transfert
-                    </h5>
-                </div>
-                <div class=\"card-body p-4\">
-                    ";
-        // line 232
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 232, $this->source); })()), 'form_start', ["attr" => ["novalidate" => "novalidate", "id" => "transferForm"]]);
-        yield "
-                    
-                    <!-- ÉTAPE 1 : Lot à transférer -->
-                    <div class=\"form-section\">
-                        <div class=\"form-section-title\">
-                            <i class=\"fas fa-boxes\"></i>
-                            <span>1. Lot à transférer</span>
-                            <span class=\"badge-info ms-2\">Obligatoire</span>
-                        </div>
-                        <div class=\"mb-3\">
-                            ";
-        // line 242
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 242, $this->source); })()), "stock_batch", [], "any", false, false, false, 242), 'label', ["label_attr" => ["class" => "form-label fw-semibold mb-2"]]);
-        yield "
-                            ";
-        // line 243
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 243, $this->source); })()), "stock_batch", [], "any", false, false, false, 243), 'widget');
-        yield "
-                            ";
-        // line 244
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 244, $this->source); })()), "stock_batch", [], "any", false, false, false, 244), 'errors');
-        yield "
-                            <small class=\"text-muted d-block mt-2\">
-                                <i class=\"fas fa-info-circle me-1\"></i>
-                                Seuls les lots avec stock disponible sont affichés
-                            </small>
-                        </div>
-                    </div>
-
-                    <!-- ÉTAPE 2 : Emplacement de destination -->
-                    <div class=\"form-section\">
-                        <div class=\"form-section-title\">
-                            <i class=\"fas fa-map-marker-alt\"></i>
-                            <span>2. Emplacement de destination</span>
-                            <span class=\"badge-info ms-2\">Obligatoire</span>
-                        </div>
-                        <div class=\"mb-3\">
-                            ";
-        // line 260
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 260, $this->source); })()), "destination_location", [], "any", false, false, false, 260), 'label', ["label_attr" => ["class" => "form-label fw-semibold mb-2"]]);
-        yield "
-                            ";
-        // line 261
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 261, $this->source); })()), "destination_location", [], "any", false, false, false, 261), 'widget');
-        yield "
-                            ";
-        // line 262
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 262, $this->source); })()), "destination_location", [], "any", false, false, false, 262), 'errors');
-        yield "
-                            <small class=\"text-muted d-block mt-2\">
-                                <i class=\"fas fa-info-circle me-1\"></i>
-                                L'emplacement où les produits seront transférés
-                            </small>
-                        </div>
-                    </div>
-
-                    <!-- ÉTAPE 3 : Quantité -->
-                    <div class=\"form-section\">
-                        <div class=\"form-section-title\">
-                            <i class=\"fas fa-hashtag\"></i>
-                            <span>3. Quantité à transférer</span>
-                            <span class=\"badge-info ms-2\">Obligatoire</span>
-                        </div>
-                        <div class=\"row\">
-                            <div class=\"col-md-6 mb-3\">
-                                ";
-        // line 279
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 279, $this->source); })()), "quantity", [], "any", false, false, false, 279), 'label', ["label_attr" => ["class" => "form-label fw-semibold mb-2"]]);
-        yield "
-                                <div class=\"input-group\">
-                                    <span class=\"input-group-text bg-light border-end-0\" style=\"border-radius: 0.75rem 0 0 0.75rem;\">
-                                        <i class=\"fas fa-box text-primary\"></i>
-                                    </span>
-                                    ";
-        // line 284
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 284, $this->source); })()), "quantity", [], "any", false, false, false, 284), 'widget', ["attr" => ["class" => "border-start-0"]]);
-        yield "
-                                </div>
-                                ";
-        // line 286
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 286, $this->source); })()), "quantity", [], "any", false, false, false, 286), 'errors');
-        yield "
-                                <small class=\"text-muted d-block mt-2\" id=\"stockInfo\">
-                                    <i class=\"fas fa-database me-1\"></i>
-                                    Chargez un lot pour voir le stock disponible
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ÉTAPE 4 : Raison du transfert -->
-                    <div class=\"form-section\">
-                        <div class=\"form-section-title\">
-                            <i class=\"fas fa-pen\"></i>
-                            <span>4. Raison du transfert</span>
-                            <span class=\"badge-info ms-2\">Optionnel</span>
-                        </div>
-                        <div class=\"mb-3\">
-                            ";
-        // line 303
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 303, $this->source); })()), "reason", [], "any", false, false, false, 303), 'label', ["label_attr" => ["class" => "form-label fw-semibold mb-2"]]);
-        yield "
-                            ";
-        // line 304
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 304, $this->source); })()), "reason", [], "any", false, false, false, 304), 'widget');
-        yield "
-                            ";
-        // line 305
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 305, $this->source); })()), "reason", [], "any", false, false, false, 305), 'errors');
-        yield "
-                            <small class=\"text-muted d-block mt-2\">
-                                <i class=\"fas fa-info-circle me-1\"></i>
-                                Une raison claire facilite le suivi des transferts
-                            </small>
-                        </div>
-                    </div>
-
-                    <!-- Information sur le transfert -->
-                    <div class=\"info-card\">
-                        <div class=\"d-flex\">
-                            <div class=\"me-3\">
-                                <div class=\"rounded-circle bg-primary bg-opacity-10 p-2\">
-                                    <i class=\"fas fa-truck fa-2x text-primary\"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <strong class=\"d-block mb-1\">📦 Comment fonctionne un transfert ?</strong>
-                                <small class=\"text-secondary\">
-                                    <i class=\"fas fa-check-circle text-success me-1\"></i> Le transfert est d'abord créé (statut \"En attente\")<br>
-                                    <i class=\"fas fa-check-circle text-success me-1\"></i> Expédition → stock déduit de l'emplacement source<br>
-                                    <i class=\"fas fa-check-circle text-success me-1\"></i> Réception → stock ajouté à l'emplacement destination<br>
-                                    <i class=\"fas fa-check-circle text-success me-1\"></i> Le transfert est marqué \"Terminé\"
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ALERTE IMPORTANTE -->
-                    <div class=\"alert alert-warning alert-custom mt-3\">
-                        <div class=\"d-flex\">
-                            <div class=\"me-3\">
-                                <i class=\"fas fa-exclamation-triangle fa-2x text-warning\"></i>
-                            </div>
-                            <div>
-                                <strong class=\"d-block mb-1\">⚠️ Points importants</strong>
-                                <small class=\"d-block\">
-                                    • Le stock n'est déduit qu'après avoir <strong>expédié</strong> le transfert<br>
-                                    • Le stock n'est ajouté qu'après avoir <strong>réceptionné</strong> le transfert<br>
-                                    • Un transfert peut être <strong>annulé</strong> tant qu'il n'est pas réceptionné
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class=\"d-flex justify-content-end gap-3 mt-4 pt-3 border-top\">
-                        <a href=\"";
-        // line 351
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_index");
-        yield "\" class=\"btn btn-outline-secondary px-4\">
-                            <i class=\"fas fa-times me-1\"></i> Annuler
-                        </a>
-                        <button type=\"submit\" class=\"btn btn-primary px-4\">
-                            <i class=\"fas fa-save me-1\"></i> Créer le transfert
-                        </button>
-                    </div>
-
-                    ";
-        // line 359
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 359, $this->source); })()), 'form_end');
-        yield "
-                </div>
+<!-- MODAL D'ALERTE -->
+<div class=\"modal fade confirmation-modal\" id=\"alertModal\" tabindex=\"-1\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header danger-header\">
+                <h5 class=\"modal-title\">
+                    <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                    <span id=\"alertModalTitle\">Attention</span>
+                </h5>
+                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body\">
+                <p class=\"mb-0\" id=\"alertModalMessage\">Message</p>
+            </div>
+            <div class=\"modal-footer\">
+                <button type=\"button\" class=\"btn btn-primary\" data-bs-dismiss=\"modal\">Compris</button>
             </div>
         </div>
     </div>
@@ -543,7 +899,7 @@ class __TwigTemplate_70f6ca76acba0d5ebafe4925bef8931e extends Template
         yield from [];
     }
 
-    // line 367
+    // line 666
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -556,70 +912,281 @@ class __TwigTemplate_70f6ca76acba0d5ebafe4925bef8931e extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 368
+        // line 667
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
 <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js\"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Select2 pour le lot
-    \$('.select2-batch').select2({
+
+    console.log('=== INIT TRANSFER ===');
+
+    // ============================================
+    // MODAL D'ALERTE
+    // ============================================
+    const alertModalEl = document.getElementById('alertModal');
+    const alertModal = new bootstrap.Modal(alertModalEl);
+    const alertTitle = document.getElementById('alertModalTitle');
+    const alertMessage = document.getElementById('alertModalMessage');
+
+    function showAlert(message, title = 'Attention') {
+        alertTitle.textContent = title;
+        alertMessage.textContent = message;
+        alertModal.show();
+    }
+
+    // ============================================
+    // ✅ RÉCUPÉRATION ROBUSTE PAR NAME (fiable à 100%)
+    // ============================================
+    function getFieldByName(name) {
+        return document.querySelector(`[name=\"\${name}\"]`);
+    }
+
+    // ✅ On utilise le name Symfony — toujours fiable
+    const form = document.getElementById('transferForm');
+
+    // Les names Symfony sont : stock_transfer[champ]
+    const batchSelect = getFieldByName('stock_transfer[stock_batch]');
+    const destSelect = getFieldByName('stock_transfer[destination_location]');
+    const qtyInput = getFieldByName('stock_transfer[quantity]');
+    const reasonInput = getFieldByName('stock_transfer[reason]');
+
+    // ✅ DEBUG COMPLET
+    console.log('=== CHAMPS DÉTECTÉS ===');
+    console.log('Form:', form);
+    console.log('Batch select:', batchSelect, '| name:', batchSelect?.name);
+    console.log('Dest select:', destSelect, '| name:', destSelect?.name);
+    console.log('Qty input:', qtyInput, '| name:', qtyInput?.name, '| id:', qtyInput?.id);
+    console.log('Reason input:', reasonInput, '| name:', reasonInput?.name);
+    console.log('=======================');
+
+    if (!qtyInput) {
+        console.error('❌ Champ quantité introuvable !');
+        console.error('Recherche des inputs :');
+        document.querySelectorAll('input').forEach(el => {
+            console.error(' → name:', el.name, '| id:', el.id, '| type:', el.type);
+        });
+        alert('Erreur : champ quantité introuvable.');
+        return;
+    }
+
+    // ============================================
+    // VARIABLES
+    // ============================================
+    let selectedBatchQty = 0;
+    let selectedBatchNumber = '';
+    let selectedBatchProduct = '';
+    let selectedBatchSource = '';
+
+    const qtyError = document.getElementById('quantity-error');
+    const qtyErrorText = document.getElementById('quantity-error-text');
+
+    // ============================================
+    // SELECT2 — on cible par name
+    // ============================================
+    \$(batchSelect).select2({
         theme: 'bootstrap-5',
         language: 'fr',
         placeholder: '-- Sélectionner un lot --',
         allowClear: true,
         width: '100%',
-        templateResult: function(data) {
-            if (!data.id) return data.text;
-            // Personnaliser l'affichage dans la liste déroulante
-            return \$('<span><i class=\"fas fa-box me-2 text-primary\"></i>' + data.text + '</span>');
-        }
     });
 
-    // Select2 pour l'emplacement destination
-    \$('.select2-location').select2({
+    \$(destSelect).select2({
         theme: 'bootstrap-5',
         language: 'fr',
         placeholder: '-- Sélectionner un emplacement --',
         allowClear: true,
         width: '100%',
-        templateResult: function(data) {
-            if (!data.id) return data.text;
-            return \$('<span><i class=\"fas fa-map-marker-alt me-2 text-primary\"></i>' + data.text + '</span>');
+    });
+
+    // ============================================
+    // ✅ SÉLECTION DU LOT — attaché à l'élément trouvé par name
+    // ============================================
+    \$(batchSelect).on('select2:select', function(e) {
+        const data = e.params.data;
+        if (!data.element) return;
+
+        const \$opt = \$(data.element);
+        selectedBatchQty = parseInt(\$opt.data('current-quantity')) || 0;
+        selectedBatchNumber = \$opt.data('batch-number') || '';
+        selectedBatchProduct = \$opt.data('product-name') || '';
+        selectedBatchSource = \$opt.data('location') || '—';
+
+        console.log('✅ Lot sélectionné:', {
+            qty: selectedBatchQty,
+            num: selectedBatchNumber,
+            prod: selectedBatchProduct,
+            source: selectedBatchSource,
+        });
+
+        const infoBox = document.getElementById('batch-info-box');
+        document.getElementById('batch-info-num').textContent = selectedBatchNumber;
+        document.getElementById('batch-info-prod').textContent = selectedBatchProduct ? '— ' + selectedBatchProduct : '';
+        document.getElementById('batch-info-qty').textContent = selectedBatchQty;
+        infoBox.style.display = 'block';
+
+        if (qtyInput) {
+            qtyInput.max = selectedBatchQty;
+            const currentVal = parseInt(qtyInput.value) || 0;
+            if (currentVal > selectedBatchQty) {
+                qtyInput.value = selectedBatchQty;
+            }
+        }
+
+        validateQuantity();
+    });
+
+    \$(batchSelect).on('select2:clear', function() {
+        selectedBatchQty = 0;
+        selectedBatchNumber = '';
+        selectedBatchProduct = '';
+        selectedBatchSource = '';
+        document.getElementById('batch-info-box').style.display = 'none';
+        if (qtyInput) qtyInput.removeAttribute('max');
+        validateQuantity();
+    });
+
+    // ============================================
+    // ✅ VALIDATION QUANTITÉ
+    // ============================================
+    function validateQuantity() {
+        if (!qtyInput) return true;
+        const qty = parseInt(qtyInput.value) || 0;
+
+        if (qtyError) qtyError.style.display = 'none';
+        qtyInput.classList.remove('is-invalid-custom');
+
+        if (qty <= 0) return true;
+
+        if (selectedBatchQty > 0 && qty > selectedBatchQty) {
+            if (qtyErrorText) {
+                qtyErrorText.textContent = `La quantité (\${qty}) dépasse le stock disponible (\${selectedBatchQty}).`;
+            }
+            if (qtyError) qtyError.style.display = 'flex';
+            qtyInput.classList.add('is-invalid-custom');
+            return false;
+        }
+        return true;
+    }
+
+    if (qtyInput) {
+        qtyInput.addEventListener('input', validateQuantity);
+        qtyInput.addEventListener('change', validateQuantity);
+    }
+
+    // ============================================
+    // ✅ HELPER : la valeur Select2 (fiable)
+    // ============================================
+    function getSelect2Value(\$selectElement) {
+        if (typeof \$.fn.select2 === 'undefined') {
+            return \$selectElement.val();
+        }
+        const data = \$selectElement.select2('data');
+        return (data && data.length > 0 && data[0].id) ? data[0].id : null;
+    }
+
+    // ============================================
+    // ✅ LECTURE ROBUSTE DE LA QUANTITÉ
+    // ============================================
+    function getQuantity() {
+        if (!qtyInput) return 0;
+        const raw = qtyInput.value;
+        const parsed = parseInt(raw, 10);
+        console.log('🔍 Quantité — raw:', JSON.stringify(raw), '| parsed:', parsed);
+        return isNaN(parsed) ? 0 : parsed;
+    }
+
+    // ============================================
+    // SOUMISSION + MODAL
+    // ============================================
+    const confirmModalEl = document.getElementById('confirmTransferModal');
+    const confirmModal = new bootstrap.Modal(confirmModalEl);
+    let isConfirmed = false;
+
+    form.addEventListener('submit', function(e) {
+        console.log('=== SUBMIT DÉCLENCHÉ ===');
+
+        if (isConfirmed) return true;
+        e.preventDefault();
+
+        // 1) Lot
+        const batchValue = getSelect2Value(\$(batchSelect));
+        console.log('Lot value:', batchValue);
+
+        if (!batchValue) {
+            showAlert('Veuillez sélectionner un lot.', 'Lot manquant');
+            return false;
+        }
+
+        // 2) Destination
+        const destValue = getSelect2Value(\$(destSelect));
+        console.log('Dest value:', destValue);
+
+        if (!destValue) {
+            showAlert('Veuillez sélectionner un emplacement de destination.', 'Destination manquante');
+            return false;
+        }
+
+        // 3) Quantité
+        const quantity = getQuantity();
+        console.log('Quantité lue:', quantity);
+
+        if (quantity <= 0) {
+            showAlert('Veuillez saisir une quantité valide (supérieure à 0).', 'Quantité invalide');
+            qtyInput.focus();
+            return false;
+        }
+
+        // 4) Stock
+        if (selectedBatchQty > 0 && quantity > selectedBatchQty) {
+            showAlert(`La quantité (\${quantity}) dépasse le stock disponible (\${selectedBatchQty}).`, 'Stock insuffisant');
+            qtyInput.focus();
+            return false;
+        }
+
+        // 5) Destination label
+        let destinationLabel = '—';
+        if (typeof \$.fn.select2 !== 'undefined') {
+            const destData = \$(destSelect).select2('data')[0];
+            destinationLabel = destData ? destData.text : '—';
+        }
+
+        // 6) Remplir modal
+        document.getElementById('confirm-batch').textContent = selectedBatchNumber + (selectedBatchProduct ? ' — ' + selectedBatchProduct : '');
+        document.getElementById('confirm-source').textContent = selectedBatchSource || '—';
+        document.getElementById('confirm-destination').textContent = destinationLabel;
+        document.getElementById('confirm-quantity').innerHTML = `<span class=\"text-primary\">\${quantity} unités</span>`;
+
+        const reason = reasonInput?.value.trim() || '';
+        document.getElementById('confirm-reason').textContent = reason ? (reason.length > 80 ? reason.substring(0, 80) + '…' : reason) : '—';
+
+        confirmModal.show();
+    });
+
+    // Confirmer
+    document.getElementById('confirmTransferBtn').addEventListener('click', function() {
+        console.log('=== CONFIRM TRANSFER ===');
+        isConfirmed = true;
+        this.disabled = true;
+        this.innerHTML = '<span class=\"spinner-border spinner-border-sm me-2\"></span>Traitement...';
+        confirmModal.hide();
+        setTimeout(() => {
+            console.log('Envoi du formulaire...');
+            form.submit();
+        }, 200);
+    });
+
+    confirmModalEl.addEventListener('hidden.bs.modal', function() {
+        const btn = document.getElementById('confirmTransferBtn');
+        if (!isConfirmed) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class=\"fas fa-check me-1\"></i> Confirmer';
         }
     });
 
-    // Afficher les informations du lot sélectionné
-    const batchSelect = \$('#";
-        // line 401
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 401, $this->source); })()), "stock_batch", [], "any", false, false, false, 401), "vars", [], "any", false, false, false, 401), "id", [], "any", false, false, false, 401), "html", null, true);
-        yield "');
-    const quantityInput = \$('#";
-        // line 402
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["form"]) || array_key_exists("form", $context) ? $context["form"] : (function () { throw new RuntimeError('Variable "form" does not exist.', 402, $this->source); })()), "quantity", [], "any", false, false, false, 402), "vars", [], "any", false, false, false, 402), "id", [], "any", false, false, false, 402), "html", null, true);
-        yield "');
-    const stockInfo = \$('#stockInfo');
-    
-    batchSelect.on('change', function() {
-        const selectedOption = \$(this).find('option:selected');
-        const batchInfo = selectedOption.text();
-        
-        // Extraire le stock disponible du texte (pattern: Stock: X unités)
-        const stockMatch = batchInfo.match(/Stock:\\s*(\\d+)/i);
-        if (stockMatch && stockMatch[1]) {
-            const maxStock = parseInt(stockMatch[1]);
-            quantityInput.attr('max', maxStock);
-            quantityInput.attr('placeholder', maxStock);
-            
-            // Mettre à jour l'info stock
-            stockInfo.html('<i class=\"fas fa-database me-1 text-success\"></i> Stock disponible: <strong>' + maxStock.toLocaleString() + '</strong> unités');
-            stockInfo.removeClass('text-muted').addClass('text-success');
-        } else {
-            stockInfo.html('<i class=\"fas fa-info-circle me-1\"></i> Chargez un lot pour voir le stock disponible');
-            stockInfo.removeClass('text-success').addClass('text-muted');
-        }
-    });
+    console.log('=== INIT TERMINÉE ===');
 });
 </script>
 ";
@@ -653,7 +1220,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  600 => 402,  596 => 401,  560 => 368,  547 => 367,  529 => 359,  518 => 351,  469 => 305,  465 => 304,  461 => 303,  441 => 286,  436 => 284,  428 => 279,  408 => 262,  404 => 261,  400 => 260,  381 => 244,  377 => 243,  373 => 242,  360 => 232,  320 => 195,  300 => 178,  292 => 173,  284 => 167,  271 => 166,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  916 => 667,  903 => 666,  819 => 592,  808 => 584,  771 => 549,  762 => 546,  759 => 545,  755 => 544,  751 => 543,  747 => 542,  727 => 524,  718 => 521,  715 => 520,  711 => 519,  707 => 518,  703 => 517,  672 => 488,  663 => 485,  660 => 484,  656 => 483,  652 => 482,  648 => 481,  634 => 469,  625 => 466,  622 => 465,  618 => 464,  614 => 463,  610 => 462,  599 => 454,  595 => 452,  590 => 449,  581 => 447,  577 => 446,  569 => 440,  567 => 439,  557 => 432,  540 => 418,  536 => 417,  528 => 411,  515 => 410,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -666,358 +1233,657 @@ document.addEventListener('DOMContentLoaded', function() {
 {% block stylesheets %}
 {{ parent() }}
 <link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
+<link href=\"https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css\" rel=\"stylesheet\" />
 <style>
     :root {
         --primary: #0463f1;
+        --primary-dark: #0346b8;
         --success: #10b981;
         --warning: #f59e0b;
         --danger: #ef4444;
-        --info: #0ea5e9;
-        --gray-100: #f3f4f6;
-        --gray-200: #e5e7eb;
-        --gray-600: #4b5563;
     }
 
-    .form-section {
-        background: var(--gray-100);
-        border-radius: 1rem;
-        padding: 1.5rem;
+    .transfer-wrapper {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    /* ============================================
+       EN-TÊTE
+       ============================================ */
+    .page-header-simple {
+        background-color: #0463f1 !important;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
         margin-bottom: 1.5rem;
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
     }
-    .form-section:hover {
-        border-color: var(--primary);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+
+    .page-header-simple,
+    .page-header-simple * {
+        color: #ffffff !important;
     }
-    .form-section-title {
-        font-size: 0.85rem;
+
+    .page-header-simple .header-title {
+        font-size: 1.4rem;
         font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--gray-600);
+        margin: 0 0 0.35rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .page-header-simple .header-subtitle {
+        color: rgba(255, 255, 255, 0.95) !important;
+        font-size: 0.88rem;
+        margin: 0;
+    }
+
+    .page-header-simple .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .page-header-simple .btn-back-simple {
+        background-color: #ffffff !important;
+        color: #0463f1 !important;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        transition: background-color 0.2s ease;
+    }
+    .page-header-simple .btn-back-simple:hover {
+        background-color: #f1f5f9 !important;
+        color: #0346b8 !important;
+    }
+    .page-header-simple .btn-back-simple i {
+        color: #0463f1 !important;
+    }
+
+    .breadcrumb-simple {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 0.75rem 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.82rem;
+    }
+    .breadcrumb-simple li {
+        color: #ffffff !important;
+        display: flex;
+        align-items: center;
+    }
+    .breadcrumb-simple li a {
+        color: #ffffff !important;
+        text-decoration: none;
+        opacity: 0.9;
+    }
+    .breadcrumb-simple li a:hover {
+        opacity: 1;
+        text-decoration: underline;
+    }
+    .breadcrumb-simple li + li::before {
+        content: '/';
+        color: rgba(255, 255, 255, 0.7) !important;
+        margin-right: 0.4rem;
+        font-weight: 300;
+    }
+    .breadcrumb-simple li.active {
+        opacity: 1;
+        font-weight: 600;
+    }
+
+    /* ============================================
+       SECTIONS
+       ============================================ */
+    .form-section {
+        background: #fff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e9ecef;
+    }
+
+    .form-section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #1e293b;
         margin-bottom: 1.25rem;
         padding-bottom: 0.75rem;
-        border-bottom: 2px solid var(--gray-200);
+        border-bottom: 2px solid #f1f5f9;
+    }
+    .form-section-title .step-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: #0463f1;
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+    .form-section-title .badge-optional {
+        background: #e2e8f0;
+        color: #475569;
+        font-size: 0.68rem;
+        padding: 0.2rem 0.55rem;
+        border-radius: 20px;
+        font-weight: 500;
+        margin-left: auto;
+    }
+
+    /* ============================================
+       ERREURS
+       ============================================ */
+    .form-error-box {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-left: 4px solid #ef4444;
+        border-radius: 10px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1.25rem;
+        color: #991b1b;
+    }
+    .form-error-box .error-title {
+        font-weight: 700;
+        font-size: 0.92rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        margin-bottom: 0.5rem;
     }
-    .form-section-title i {
-        color: var(--primary);
-        font-size: 1.1rem;
+    .form-error-box ul {
+        margin: 0;
+        padding-left: 1.5rem;
+        font-size: 0.85rem;
     }
+    .field-error {
+        color: #dc2626;
+        font-size: 0.8rem;
+        margin-top: 0.35rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .form-control.is-invalid-custom {
+        border-color: #dc2626 !important;
+        background-color: #fef2f2 !important;
+    }
+
+    /* Box info */
+    .batch-info-box {
+        background: #f0f6ff;
+        border: 1px solid #bfdbfe;
+        border-left: 4px solid #0463f1;
+        border-radius: 8px;
+        padding: 0.85rem 1rem;
+        margin-bottom: 1rem;
+        font-size: 0.88rem;
+    }
+
+    /* Form controls */
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        padding: 0.6rem 0.85rem;
+        font-size: 0.92rem;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #0463f1;
+        box-shadow: 0 0 0 3px rgba(4, 99, 241, 0.15);
+    }
+    .form-label {
+        font-size: 0.85rem;
+        margin-bottom: 0.4rem;
+        color: #334155;
+        font-weight: 600;
+    }
+    textarea.form-control {
+        min-height: 90px;
+        resize: vertical;
+    }
+
+    /* Select2 */
+    .select2-container--bootstrap-5 .select2-selection--single {
+        height: auto !important;
+        min-height: 52px !important;
+        padding: 0.5rem 0.85rem !important;
+        border-radius: 8px !important;
+        border: 1px solid #d1d5db !important;
+        background: #fff !important;
+    }
+    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+        color: #1e293b !important;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0 !important;
+    }
+
+    /* Boutons */
+    .action-bar {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+    .btn {
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 0.6rem 1.4rem;
+        font-size: 0.9rem;
+    }
+    .btn-primary {
+        background: #0463f1;
+        border: none;
+    }
+    .btn-primary:hover:not(:disabled) {
+        background: #0346b8;
+    }
+    .btn-primary:disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+    }
+
+    /* Info card */
     .info-card {
         background: linear-gradient(135deg, #e8f4fd 0%, #dbeafe 100%);
-        border-radius: 1rem;
-        padding: 1.25rem;
-        margin-bottom: 1.5rem;
-        border-left: 4px solid var(--primary);
+        border-radius: 12px;
+        padding: 1.15rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #0463f1;
     }
-    .alert-custom {
-        border-radius: 1rem;
+    .info-card small {
+        line-height: 1.7;
+    }
+
+    /* Alerte */
+    .alert-warning-simple {
+        background: #fef3c7;
+        border-left: 4px solid #f59e0b;
+        border-radius: 8px;
+        padding: 1rem 1.15rem;
+        display: flex;
+        gap: 0.85rem;
+        align-items: flex-start;
+        color: #78350f;
+        margin-bottom: 1rem;
+        font-size: 0.88rem;
+    }
+    .alert-warning-simple i {
+        color: #d97706;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    /* Modals */
+    .confirmation-modal .modal-content {
+        border: none;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+    .confirmation-modal .modal-header {
+        background: #f59e0b;
+        color: #fff;
         border: none;
         padding: 1rem 1.25rem;
     }
-    .step-indicator {
+    .confirmation-modal .modal-header.danger-header {
+        background: #ef4444;
+    }
+    .confirmation-modal .modal-header .modal-title {
+        font-weight: 700;
+        font-size: 0.98rem;
+        color: #fff;
+    }
+    .confirmation-modal .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+    }
+    .confirmation-modal .modal-body {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .confirm-summary {
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 0.85rem 1rem;
+        border: 1px solid #e2e8f0;
+    }
+    .confirm-summary .summary-row {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 2rem;
-        position: relative;
-        padding: 0 1rem;
+        align-items: flex-start;
+        padding: 0.5rem 0;
+        gap: 1rem;
+        border-bottom: 1px dashed #e2e8f0;
     }
-    .step {
-        text-align: center;
-        flex: 1;
-        position: relative;
-        z-index: 1;
+    .confirm-summary .summary-row:last-child {
+        border-bottom: none;
     }
-    .step-circle {
-        width: 45px;
-        height: 45px;
-        background: white;
-        border: 2px solid var(--gray-200);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 0.6rem;
-        font-weight: bold;
-        color: var(--gray-600);
-        transition: all 0.3s ease;
-    }
-    .step.active .step-circle {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: white;
-        box-shadow: 0 0 0 4px rgba(4, 99, 241, 0.2);
-    }
-    .step.completed .step-circle {
-        background: var(--success);
-        border-color: var(--success);
-        color: white;
-    }
-    .step-label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--gray-600);
-    }
-    .step.active .step-label {
-        color: var(--primary);
-    }
-    .step.completed .step-label {
-        color: var(--success);
-    }
-    .steps-line {
-        position: absolute;
-        top: 22px;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--gray-200);
-        z-index: 0;
-    }
-    .select2-container--bootstrap-5 .select2-selection {
-        border-radius: 0.75rem;
-        border-color: var(--gray-200);
-        min-height: 42px;
-    }
-    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-        line-height: 40px;
-        padding-left: 1rem;
-    }
-    .form-control, .form-select {
-        border-radius: 0.75rem;
-        border-color: var(--gray-200);
-        padding: 0.6rem 1rem;
-    }
-    .form-control:focus, .form-select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(4, 99, 241, 0.1);
-    }
-    .btn {
-        border-radius: 0.75rem;
-        padding: 0.6rem 1.25rem;
+    .confirm-summary .summary-label {
+        color: #64748b;
+        font-size: 0.82rem;
         font-weight: 500;
-        transition: all 0.2s;
+        flex-shrink: 0;
     }
-    .btn-primary {
-        background: var(--primary);
+    .confirm-summary .summary-value {
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 0.88rem;
+        text-align: right;
+        word-break: break-word;
+    }
+    .confirmation-modal .modal-footer {
         border: none;
+        padding: 1rem 1.5rem 1.25rem;
+        gap: 0.5rem;
     }
-    .btn-primary:hover {
-        background: #0350c4;
-        transform: translateY(-1px);
-    }
-    .btn-outline-secondary:hover {
-        transform: translateY(-1px);
-    }
-    .badge-info {
-        background: rgba(4, 99, 241, 0.1);
-        color: var(--primary);
-        padding: 0.35rem 0.75rem;
-        border-radius: 2rem;
-        font-size: 0.7rem;
-        font-weight: 500;
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .page-header-simple {
+            padding: 1rem 1.15rem;
+        }
+        .page-header-simple .header-title {
+            font-size: 1.15rem;
+        }
+        .form-section {
+            padding: 1.15rem;
+        }
+        .form-section-title {
+            font-size: 0.88rem;
+        }
+        .action-bar {
+            flex-direction: column-reverse;
+        }
+        .action-bar .btn {
+            width: 100%;
+        }
+        .confirmation-modal .modal-footer {
+            flex-direction: column-reverse;
+        }
+        .confirmation-modal .modal-footer .btn {
+            width: 100%;
+        }
+        .confirm-summary .summary-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+        .confirm-summary .summary-value {
+            text-align: left;
+        }
     }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class=\"container-fluid px-4 py-3\">
-    <div class=\"d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3\">
-        <div>
-            <nav aria-label=\"breadcrumb\">
-                <ol class=\"breadcrumb\">
-                    <li class=\"breadcrumb-item\">
-                        <a href=\"{{ path('app_dashboard') }}\" class=\"text-decoration-none\">
-                            <i class=\"fas fa-tachometer-alt me-1\"></i> Tableau de bord
-                        </a>
-                    </li>
-                    <li class=\"breadcrumb-item\">
-                        <a href=\"{{ path('app_stock_transfer_index') }}\" class=\"text-decoration-none\">
-                            <i class=\"fas fa-exchange-alt me-1\"></i> Transferts
-                        </a>
-                    </li>
-                    <li class=\"breadcrumb-item active\">Nouveau transfert</li>
-                </ol>
-            </nav>
-            <h1 class=\"h3 mb-0 fw-bold\">
-                <i class=\"fas fa-plus-circle text-primary me-2\"></i>
-                Nouveau transfert de stock
-            </h1>
-            <p class=\"text-muted mt-2\">
+<div class=\"container-fluid px-2 px-md-4 py-3\">
+    <div class=\"transfer-wrapper\">
+
+        <!-- EN-TÊTE -->
+        <div class=\"page-header-simple\">
+            <ul class=\"breadcrumb-simple\">
+                <li><a href=\"{{ path('app_dashboard') }}\">Tableau de bord</a></li>
+                <li><a href=\"{{ path('app_stock_transfer_index') }}\">Transferts</a></li>
+                <li class=\"active\">Nouveau transfert</li>
+            </ul>
+            <div class=\"header-actions\">
+                <div>
+                    <h1 class=\"header-title\">
+                        <i class=\"fas fa-exchange-alt\"></i>
+                        Nouveau transfert de stock
+                    </h1>
+                    <p class=\"header-subtitle\">
+                        <i class=\"fas fa-info-circle me-1\"></i>
+                        Transférez des marchandises d'un emplacement à un autre
+                    </p>
+                </div>
+                <a href=\"{{ path('app_stock_transfer_index') }}\" class=\"btn-back-simple\">
+                    <i class=\"fas fa-arrow-left\"></i> Retour
+                </a>
+            </div>
+        </div>
+
+        <!-- ERREURS GLOBALES -->
+        {% if form.vars.errors|length > 0 %}
+            <div class=\"form-error-box\">
+                <div class=\"error-title\">
+                    <i class=\"fas fa-exclamation-triangle\"></i>
+                    Le formulaire contient des erreurs
+                </div>
+                <ul>
+                    {% for error in form.vars.errors %}
+                        <li>{{ error.message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <!-- FORMULAIRE -->
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'transferForm'}}) }}
+
+        <!-- ÉTAPE 1 : Lot -->
+        <div class=\"form-section\">
+            <div class=\"form-section-title\">
+                <span class=\"step-badge\">1</span>
+                <span><i class=\"fas fa-boxes me-1 text-primary\"></i> Lot à transférer</span>
+            </div>
+            {{ form_label(form.stock_batch, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.stock_batch) }}
+            {% for error in form.stock_batch.vars.errors %}
+                <div class=\"field-error\">
+                    <i class=\"fas fa-exclamation-circle\"></i> {{ error.message }}
+                </div>
+            {% endfor %}
+            <small class=\"text-muted d-block mt-2\">
                 <i class=\"fas fa-info-circle me-1\"></i>
-                Transférez des marchandises d'un emplacement à un autre
-            </p>
+                Seuls les lots avec stock disponible sont affichés
+            </small>
         </div>
-        <div>
+
+        <!-- ÉTAPE 2 : Destination -->
+        <div class=\"form-section\">
+            <div class=\"form-section-title\">
+                <span class=\"step-badge\">2</span>
+                <span><i class=\"fas fa-map-marker-alt me-1 text-primary\"></i> Emplacement de destination</span>
+            </div>
+            {{ form_label(form.destination_location, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.destination_location) }}
+            {% for error in form.destination_location.vars.errors %}
+                <div class=\"field-error\">
+                    <i class=\"fas fa-exclamation-circle\"></i> {{ error.message }}
+                </div>
+            {% endfor %}
+            <small class=\"text-muted d-block mt-2\">
+                <i class=\"fas fa-info-circle me-1\"></i>
+                L'emplacement où les produits seront transférés
+            </small>
+        </div>
+
+        <!-- ÉTAPE 3 : Quantité -->
+        <div class=\"form-section\">
+            <div class=\"form-section-title\">
+                <span class=\"step-badge\">3</span>
+                <span><i class=\"fas fa-hashtag me-1 text-primary\"></i> Quantité à transférer</span>
+            </div>
+
+            <div id=\"batch-info-box\" class=\"batch-info-box\" style=\"display: none;\">
+                <div class=\"d-flex justify-content-between align-items-center flex-wrap gap-2\">
+                    <div>
+                        <i class=\"fas fa-boxes me-1 text-primary\"></i>
+                        <strong>Lot sélectionné :</strong>
+                        <span id=\"batch-info-num\" class=\"text-primary fw-bold\">—</span>
+                        <span id=\"batch-info-prod\" class=\"text-muted small\">—</span>
+                    </div>
+                    <div class=\"text-end\">
+                        <span class=\"text-muted small\">Disponible :</span>
+                        <strong id=\"batch-info-qty\" class=\"text-success\">—</strong>
+                        <span class=\"text-muted small\">unités</span>
+                    </div>
+                </div>
+            </div>
+
+            {{ form_label(form.quantity, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.quantity) }}
+            {% for error in form.quantity.vars.errors %}
+                <div class=\"field-error\">
+                    <i class=\"fas fa-exclamation-circle\"></i> {{ error.message }}
+                </div>
+            {% endfor %}
+
+            <div id=\"quantity-error\" class=\"field-error\" style=\"display: none;\">
+                <i class=\"fas fa-exclamation-circle\"></i> <span id=\"quantity-error-text\"></span>
+            </div>
+
+            <small class=\"text-muted d-block mt-2\">
+                <i class=\"fas fa-info-circle me-1\"></i>
+                La quantité ne peut pas dépasser le stock disponible du lot
+            </small>
+        </div>
+
+        <!-- ÉTAPE 4 : Raison -->
+        <div class=\"form-section\">
+            <div class=\"form-section-title\">
+                <span class=\"step-badge\">4</span>
+                <span><i class=\"fas fa-pen me-1 text-primary\"></i> Raison du transfert</span>
+                <span class=\"badge-optional\">Optionnel</span>
+            </div>
+            {{ form_label(form.reason, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.reason) }}
+            {% for error in form.reason.vars.errors %}
+                <div class=\"field-error\">
+                    <i class=\"fas fa-exclamation-circle\"></i> {{ error.message }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- INFO -->
+        <div class=\"info-card\">
+            <div class=\"d-flex gap-3\">
+                <div>
+                    <i class=\"fas fa-truck fa-2x text-primary\"></i>
+                </div>
+                <div>
+                    <strong class=\"d-block mb-1\">📦 Comment fonctionne un transfert ?</strong>
+                    <small class=\"text-secondary\">
+                        <i class=\"fas fa-check-circle text-success me-1\"></i> Création → statut <strong>\"En attente\"</strong><br>
+                        <i class=\"fas fa-check-circle text-success me-1\"></i> Expédition → stock <strong>déduit</strong> de la source<br>
+                        <i class=\"fas fa-check-circle text-success me-1\"></i> Réception → stock <strong>ajouté</strong> à la destination<br>
+                        <i class=\"fas fa-check-circle text-success me-1\"></i> Transfert marqué <strong>\"Terminé\"</strong>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALERTE -->
+        <div class=\"alert-warning-simple\">
+            <i class=\"fas fa-exclamation-triangle\"></i>
+            <div>
+                <strong>⚠️ Points importants</strong>
+                <small class=\"d-block mt-1\">
+                    • Le stock n'est déduit qu'après avoir <strong>expédié</strong> le transfert<br>
+                    • Le stock n'est ajouté qu'après avoir <strong>réceptionné</strong> le transfert<br>
+                    • Un transfert peut être <strong>annulé</strong> tant qu'il n'est pas réceptionné
+                </small>
+            </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class=\"action-bar\">
             <a href=\"{{ path('app_stock_transfer_index') }}\" class=\"btn btn-outline-secondary\">
-                <i class=\"fas fa-arrow-left me-1\"></i> Retour
+                <i class=\"fas fa-times me-1\"></i> Annuler
             </a>
+            <button type=\"submit\" class=\"btn btn-primary\" id=\"submitBtn\">
+                <i class=\"fas fa-save me-1\"></i> Créer le transfert
+            </button>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<!-- MODAL DE CONFIRMATION -->
+<div class=\"modal fade confirmation-modal\" id=\"confirmTransferModal\" tabindex=\"-1\" data-bs-backdrop=\"static\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header\">
+                <h5 class=\"modal-title\">
+                    <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                    Confirmer le transfert
+                </h5>
+                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body\">
+                <p class=\"mb-3 small text-muted\">Vérifiez les informations :</p>
+                <div class=\"confirm-summary\">
+                    <div class=\"summary-row\">
+                        <span class=\"summary-label\">Lot</span>
+                        <span class=\"summary-value\" id=\"confirm-batch\">—</span>
+                    </div>
+                    <div class=\"summary-row\">
+                        <span class=\"summary-label\">De</span>
+                        <span class=\"summary-value\" id=\"confirm-source\">—</span>
+                    </div>
+                    <div class=\"summary-row\">
+                        <span class=\"summary-label\">Vers</span>
+                        <span class=\"summary-value\" id=\"confirm-destination\">—</span>
+                    </div>
+                    <div class=\"summary-row\">
+                        <span class=\"summary-label\">Quantité</span>
+                        <span class=\"summary-value\" id=\"confirm-quantity\">—</span>
+                    </div>
+                    <div class=\"summary-row\">
+                        <span class=\"summary-label\">Raison</span>
+                        <span class=\"summary-value\" id=\"confirm-reason\">—</span>
+                    </div>
+                </div>
+            </div>
+            <div class=\"modal-footer\">
+                <button type=\"button\" class=\"btn btn-outline-secondary\" data-bs-dismiss=\"modal\">
+                    Annuler
+                </button>
+                <button type=\"button\" class=\"btn btn-primary\" id=\"confirmTransferBtn\">
+                    <i class=\"fas fa-check me-1\"></i> Confirmer
+                </button>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- Indicateur d'étapes -->
-    <div class=\"step-indicator\">
-        <div class=\"step active\">
-            <div class=\"step-circle\">1</div>
-            <div class=\"step-label\">Création</div>
-        </div>
-        <div class=\"step\">
-            <div class=\"step-circle\">2</div>
-            <div class=\"step-label\">Expédition</div>
-        </div>
-        <div class=\"step\">
-            <div class=\"step-circle\">3</div>
-            <div class=\"step-label\">En transit</div>
-        </div>
-        <div class=\"step\">
-            <div class=\"step-circle\">4</div>
-            <div class=\"step-label\">Réception</div>
-        </div>
-        <div class=\"steps-line\"></div>
-    </div>
-
-    <div class=\"row\">
-        <div class=\"col-lg-10 mx-auto\">
-            <div class=\"card border-0 shadow-sm\" style=\"border-radius: 1.25rem; overflow: hidden;\">
-                <div class=\"card-header bg-white py-3\" style=\"border-bottom: 1px solid #eef2f6;\">
-                    <h5 class=\"mb-0 fw-semibold\">
-                        <i class=\"fas fa-exchange-alt me-2 text-primary\"></i>
-                        Formulaire de transfert
-                    </h5>
-                </div>
-                <div class=\"card-body p-4\">
-                    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'transferForm'}}) }}
-                    
-                    <!-- ÉTAPE 1 : Lot à transférer -->
-                    <div class=\"form-section\">
-                        <div class=\"form-section-title\">
-                            <i class=\"fas fa-boxes\"></i>
-                            <span>1. Lot à transférer</span>
-                            <span class=\"badge-info ms-2\">Obligatoire</span>
-                        </div>
-                        <div class=\"mb-3\">
-                            {{ form_label(form.stock_batch, null, {'label_attr': {'class': 'form-label fw-semibold mb-2'}}) }}
-                            {{ form_widget(form.stock_batch) }}
-                            {{ form_errors(form.stock_batch) }}
-                            <small class=\"text-muted d-block mt-2\">
-                                <i class=\"fas fa-info-circle me-1\"></i>
-                                Seuls les lots avec stock disponible sont affichés
-                            </small>
-                        </div>
-                    </div>
-
-                    <!-- ÉTAPE 2 : Emplacement de destination -->
-                    <div class=\"form-section\">
-                        <div class=\"form-section-title\">
-                            <i class=\"fas fa-map-marker-alt\"></i>
-                            <span>2. Emplacement de destination</span>
-                            <span class=\"badge-info ms-2\">Obligatoire</span>
-                        </div>
-                        <div class=\"mb-3\">
-                            {{ form_label(form.destination_location, null, {'label_attr': {'class': 'form-label fw-semibold mb-2'}}) }}
-                            {{ form_widget(form.destination_location) }}
-                            {{ form_errors(form.destination_location) }}
-                            <small class=\"text-muted d-block mt-2\">
-                                <i class=\"fas fa-info-circle me-1\"></i>
-                                L'emplacement où les produits seront transférés
-                            </small>
-                        </div>
-                    </div>
-
-                    <!-- ÉTAPE 3 : Quantité -->
-                    <div class=\"form-section\">
-                        <div class=\"form-section-title\">
-                            <i class=\"fas fa-hashtag\"></i>
-                            <span>3. Quantité à transférer</span>
-                            <span class=\"badge-info ms-2\">Obligatoire</span>
-                        </div>
-                        <div class=\"row\">
-                            <div class=\"col-md-6 mb-3\">
-                                {{ form_label(form.quantity, null, {'label_attr': {'class': 'form-label fw-semibold mb-2'}}) }}
-                                <div class=\"input-group\">
-                                    <span class=\"input-group-text bg-light border-end-0\" style=\"border-radius: 0.75rem 0 0 0.75rem;\">
-                                        <i class=\"fas fa-box text-primary\"></i>
-                                    </span>
-                                    {{ form_widget(form.quantity, {'attr': {'class': 'border-start-0'}}) }}
-                                </div>
-                                {{ form_errors(form.quantity) }}
-                                <small class=\"text-muted d-block mt-2\" id=\"stockInfo\">
-                                    <i class=\"fas fa-database me-1\"></i>
-                                    Chargez un lot pour voir le stock disponible
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ÉTAPE 4 : Raison du transfert -->
-                    <div class=\"form-section\">
-                        <div class=\"form-section-title\">
-                            <i class=\"fas fa-pen\"></i>
-                            <span>4. Raison du transfert</span>
-                            <span class=\"badge-info ms-2\">Optionnel</span>
-                        </div>
-                        <div class=\"mb-3\">
-                            {{ form_label(form.reason, null, {'label_attr': {'class': 'form-label fw-semibold mb-2'}}) }}
-                            {{ form_widget(form.reason) }}
-                            {{ form_errors(form.reason) }}
-                            <small class=\"text-muted d-block mt-2\">
-                                <i class=\"fas fa-info-circle me-1\"></i>
-                                Une raison claire facilite le suivi des transferts
-                            </small>
-                        </div>
-                    </div>
-
-                    <!-- Information sur le transfert -->
-                    <div class=\"info-card\">
-                        <div class=\"d-flex\">
-                            <div class=\"me-3\">
-                                <div class=\"rounded-circle bg-primary bg-opacity-10 p-2\">
-                                    <i class=\"fas fa-truck fa-2x text-primary\"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <strong class=\"d-block mb-1\">📦 Comment fonctionne un transfert ?</strong>
-                                <small class=\"text-secondary\">
-                                    <i class=\"fas fa-check-circle text-success me-1\"></i> Le transfert est d'abord créé (statut \"En attente\")<br>
-                                    <i class=\"fas fa-check-circle text-success me-1\"></i> Expédition → stock déduit de l'emplacement source<br>
-                                    <i class=\"fas fa-check-circle text-success me-1\"></i> Réception → stock ajouté à l'emplacement destination<br>
-                                    <i class=\"fas fa-check-circle text-success me-1\"></i> Le transfert est marqué \"Terminé\"
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ALERTE IMPORTANTE -->
-                    <div class=\"alert alert-warning alert-custom mt-3\">
-                        <div class=\"d-flex\">
-                            <div class=\"me-3\">
-                                <i class=\"fas fa-exclamation-triangle fa-2x text-warning\"></i>
-                            </div>
-                            <div>
-                                <strong class=\"d-block mb-1\">⚠️ Points importants</strong>
-                                <small class=\"d-block\">
-                                    • Le stock n'est déduit qu'après avoir <strong>expédié</strong> le transfert<br>
-                                    • Le stock n'est ajouté qu'après avoir <strong>réceptionné</strong> le transfert<br>
-                                    • Un transfert peut être <strong>annulé</strong> tant qu'il n'est pas réceptionné
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class=\"d-flex justify-content-end gap-3 mt-4 pt-3 border-top\">
-                        <a href=\"{{ path('app_stock_transfer_index') }}\" class=\"btn btn-outline-secondary px-4\">
-                            <i class=\"fas fa-times me-1\"></i> Annuler
-                        </a>
-                        <button type=\"submit\" class=\"btn btn-primary px-4\">
-                            <i class=\"fas fa-save me-1\"></i> Créer le transfert
-                        </button>
-                    </div>
-
-                    {{ form_end(form) }}
-                </div>
+<!-- MODAL D'ALERTE -->
+<div class=\"modal fade confirmation-modal\" id=\"alertModal\" tabindex=\"-1\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header danger-header\">
+                <h5 class=\"modal-title\">
+                    <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                    <span id=\"alertModalTitle\">Attention</span>
+                </h5>
+                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body\">
+                <p class=\"mb-0\" id=\"alertModalMessage\">Message</p>
+            </div>
+            <div class=\"modal-footer\">
+                <button type=\"button\" class=\"btn btn-primary\" data-bs-dismiss=\"modal\">Compris</button>
             </div>
         </div>
     </div>
@@ -1030,57 +1896,274 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js\"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Select2 pour le lot
-    \$('.select2-batch').select2({
+
+    console.log('=== INIT TRANSFER ===');
+
+    // ============================================
+    // MODAL D'ALERTE
+    // ============================================
+    const alertModalEl = document.getElementById('alertModal');
+    const alertModal = new bootstrap.Modal(alertModalEl);
+    const alertTitle = document.getElementById('alertModalTitle');
+    const alertMessage = document.getElementById('alertModalMessage');
+
+    function showAlert(message, title = 'Attention') {
+        alertTitle.textContent = title;
+        alertMessage.textContent = message;
+        alertModal.show();
+    }
+
+    // ============================================
+    // ✅ RÉCUPÉRATION ROBUSTE PAR NAME (fiable à 100%)
+    // ============================================
+    function getFieldByName(name) {
+        return document.querySelector(`[name=\"\${name}\"]`);
+    }
+
+    // ✅ On utilise le name Symfony — toujours fiable
+    const form = document.getElementById('transferForm');
+
+    // Les names Symfony sont : stock_transfer[champ]
+    const batchSelect = getFieldByName('stock_transfer[stock_batch]');
+    const destSelect = getFieldByName('stock_transfer[destination_location]');
+    const qtyInput = getFieldByName('stock_transfer[quantity]');
+    const reasonInput = getFieldByName('stock_transfer[reason]');
+
+    // ✅ DEBUG COMPLET
+    console.log('=== CHAMPS DÉTECTÉS ===');
+    console.log('Form:', form);
+    console.log('Batch select:', batchSelect, '| name:', batchSelect?.name);
+    console.log('Dest select:', destSelect, '| name:', destSelect?.name);
+    console.log('Qty input:', qtyInput, '| name:', qtyInput?.name, '| id:', qtyInput?.id);
+    console.log('Reason input:', reasonInput, '| name:', reasonInput?.name);
+    console.log('=======================');
+
+    if (!qtyInput) {
+        console.error('❌ Champ quantité introuvable !');
+        console.error('Recherche des inputs :');
+        document.querySelectorAll('input').forEach(el => {
+            console.error(' → name:', el.name, '| id:', el.id, '| type:', el.type);
+        });
+        alert('Erreur : champ quantité introuvable.');
+        return;
+    }
+
+    // ============================================
+    // VARIABLES
+    // ============================================
+    let selectedBatchQty = 0;
+    let selectedBatchNumber = '';
+    let selectedBatchProduct = '';
+    let selectedBatchSource = '';
+
+    const qtyError = document.getElementById('quantity-error');
+    const qtyErrorText = document.getElementById('quantity-error-text');
+
+    // ============================================
+    // SELECT2 — on cible par name
+    // ============================================
+    \$(batchSelect).select2({
         theme: 'bootstrap-5',
         language: 'fr',
         placeholder: '-- Sélectionner un lot --',
         allowClear: true,
         width: '100%',
-        templateResult: function(data) {
-            if (!data.id) return data.text;
-            // Personnaliser l'affichage dans la liste déroulante
-            return \$('<span><i class=\"fas fa-box me-2 text-primary\"></i>' + data.text + '</span>');
-        }
     });
 
-    // Select2 pour l'emplacement destination
-    \$('.select2-location').select2({
+    \$(destSelect).select2({
         theme: 'bootstrap-5',
         language: 'fr',
         placeholder: '-- Sélectionner un emplacement --',
         allowClear: true,
         width: '100%',
-        templateResult: function(data) {
-            if (!data.id) return data.text;
-            return \$('<span><i class=\"fas fa-map-marker-alt me-2 text-primary\"></i>' + data.text + '</span>');
+    });
+
+    // ============================================
+    // ✅ SÉLECTION DU LOT — attaché à l'élément trouvé par name
+    // ============================================
+    \$(batchSelect).on('select2:select', function(e) {
+        const data = e.params.data;
+        if (!data.element) return;
+
+        const \$opt = \$(data.element);
+        selectedBatchQty = parseInt(\$opt.data('current-quantity')) || 0;
+        selectedBatchNumber = \$opt.data('batch-number') || '';
+        selectedBatchProduct = \$opt.data('product-name') || '';
+        selectedBatchSource = \$opt.data('location') || '—';
+
+        console.log('✅ Lot sélectionné:', {
+            qty: selectedBatchQty,
+            num: selectedBatchNumber,
+            prod: selectedBatchProduct,
+            source: selectedBatchSource,
+        });
+
+        const infoBox = document.getElementById('batch-info-box');
+        document.getElementById('batch-info-num').textContent = selectedBatchNumber;
+        document.getElementById('batch-info-prod').textContent = selectedBatchProduct ? '— ' + selectedBatchProduct : '';
+        document.getElementById('batch-info-qty').textContent = selectedBatchQty;
+        infoBox.style.display = 'block';
+
+        if (qtyInput) {
+            qtyInput.max = selectedBatchQty;
+            const currentVal = parseInt(qtyInput.value) || 0;
+            if (currentVal > selectedBatchQty) {
+                qtyInput.value = selectedBatchQty;
+            }
+        }
+
+        validateQuantity();
+    });
+
+    \$(batchSelect).on('select2:clear', function() {
+        selectedBatchQty = 0;
+        selectedBatchNumber = '';
+        selectedBatchProduct = '';
+        selectedBatchSource = '';
+        document.getElementById('batch-info-box').style.display = 'none';
+        if (qtyInput) qtyInput.removeAttribute('max');
+        validateQuantity();
+    });
+
+    // ============================================
+    // ✅ VALIDATION QUANTITÉ
+    // ============================================
+    function validateQuantity() {
+        if (!qtyInput) return true;
+        const qty = parseInt(qtyInput.value) || 0;
+
+        if (qtyError) qtyError.style.display = 'none';
+        qtyInput.classList.remove('is-invalid-custom');
+
+        if (qty <= 0) return true;
+
+        if (selectedBatchQty > 0 && qty > selectedBatchQty) {
+            if (qtyErrorText) {
+                qtyErrorText.textContent = `La quantité (\${qty}) dépasse le stock disponible (\${selectedBatchQty}).`;
+            }
+            if (qtyError) qtyError.style.display = 'flex';
+            qtyInput.classList.add('is-invalid-custom');
+            return false;
+        }
+        return true;
+    }
+
+    if (qtyInput) {
+        qtyInput.addEventListener('input', validateQuantity);
+        qtyInput.addEventListener('change', validateQuantity);
+    }
+
+    // ============================================
+    // ✅ HELPER : la valeur Select2 (fiable)
+    // ============================================
+    function getSelect2Value(\$selectElement) {
+        if (typeof \$.fn.select2 === 'undefined') {
+            return \$selectElement.val();
+        }
+        const data = \$selectElement.select2('data');
+        return (data && data.length > 0 && data[0].id) ? data[0].id : null;
+    }
+
+    // ============================================
+    // ✅ LECTURE ROBUSTE DE LA QUANTITÉ
+    // ============================================
+    function getQuantity() {
+        if (!qtyInput) return 0;
+        const raw = qtyInput.value;
+        const parsed = parseInt(raw, 10);
+        console.log('🔍 Quantité — raw:', JSON.stringify(raw), '| parsed:', parsed);
+        return isNaN(parsed) ? 0 : parsed;
+    }
+
+    // ============================================
+    // SOUMISSION + MODAL
+    // ============================================
+    const confirmModalEl = document.getElementById('confirmTransferModal');
+    const confirmModal = new bootstrap.Modal(confirmModalEl);
+    let isConfirmed = false;
+
+    form.addEventListener('submit', function(e) {
+        console.log('=== SUBMIT DÉCLENCHÉ ===');
+
+        if (isConfirmed) return true;
+        e.preventDefault();
+
+        // 1) Lot
+        const batchValue = getSelect2Value(\$(batchSelect));
+        console.log('Lot value:', batchValue);
+
+        if (!batchValue) {
+            showAlert('Veuillez sélectionner un lot.', 'Lot manquant');
+            return false;
+        }
+
+        // 2) Destination
+        const destValue = getSelect2Value(\$(destSelect));
+        console.log('Dest value:', destValue);
+
+        if (!destValue) {
+            showAlert('Veuillez sélectionner un emplacement de destination.', 'Destination manquante');
+            return false;
+        }
+
+        // 3) Quantité
+        const quantity = getQuantity();
+        console.log('Quantité lue:', quantity);
+
+        if (quantity <= 0) {
+            showAlert('Veuillez saisir une quantité valide (supérieure à 0).', 'Quantité invalide');
+            qtyInput.focus();
+            return false;
+        }
+
+        // 4) Stock
+        if (selectedBatchQty > 0 && quantity > selectedBatchQty) {
+            showAlert(`La quantité (\${quantity}) dépasse le stock disponible (\${selectedBatchQty}).`, 'Stock insuffisant');
+            qtyInput.focus();
+            return false;
+        }
+
+        // 5) Destination label
+        let destinationLabel = '—';
+        if (typeof \$.fn.select2 !== 'undefined') {
+            const destData = \$(destSelect).select2('data')[0];
+            destinationLabel = destData ? destData.text : '—';
+        }
+
+        // 6) Remplir modal
+        document.getElementById('confirm-batch').textContent = selectedBatchNumber + (selectedBatchProduct ? ' — ' + selectedBatchProduct : '');
+        document.getElementById('confirm-source').textContent = selectedBatchSource || '—';
+        document.getElementById('confirm-destination').textContent = destinationLabel;
+        document.getElementById('confirm-quantity').innerHTML = `<span class=\"text-primary\">\${quantity} unités</span>`;
+
+        const reason = reasonInput?.value.trim() || '';
+        document.getElementById('confirm-reason').textContent = reason ? (reason.length > 80 ? reason.substring(0, 80) + '…' : reason) : '—';
+
+        confirmModal.show();
+    });
+
+    // Confirmer
+    document.getElementById('confirmTransferBtn').addEventListener('click', function() {
+        console.log('=== CONFIRM TRANSFER ===');
+        isConfirmed = true;
+        this.disabled = true;
+        this.innerHTML = '<span class=\"spinner-border spinner-border-sm me-2\"></span>Traitement...';
+        confirmModal.hide();
+        setTimeout(() => {
+            console.log('Envoi du formulaire...');
+            form.submit();
+        }, 200);
+    });
+
+    confirmModalEl.addEventListener('hidden.bs.modal', function() {
+        const btn = document.getElementById('confirmTransferBtn');
+        if (!isConfirmed) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class=\"fas fa-check me-1\"></i> Confirmer';
         }
     });
 
-    // Afficher les informations du lot sélectionné
-    const batchSelect = \$('#{{ form.stock_batch.vars.id }}');
-    const quantityInput = \$('#{{ form.quantity.vars.id }}');
-    const stockInfo = \$('#stockInfo');
-    
-    batchSelect.on('change', function() {
-        const selectedOption = \$(this).find('option:selected');
-        const batchInfo = selectedOption.text();
-        
-        // Extraire le stock disponible du texte (pattern: Stock: X unités)
-        const stockMatch = batchInfo.match(/Stock:\\s*(\\d+)/i);
-        if (stockMatch && stockMatch[1]) {
-            const maxStock = parseInt(stockMatch[1]);
-            quantityInput.attr('max', maxStock);
-            quantityInput.attr('placeholder', maxStock);
-            
-            // Mettre à jour l'info stock
-            stockInfo.html('<i class=\"fas fa-database me-1 text-success\"></i> Stock disponible: <strong>' + maxStock.toLocaleString() + '</strong> unités');
-            stockInfo.removeClass('text-muted').addClass('text-success');
-        } else {
-            stockInfo.html('<i class=\"fas fa-info-circle me-1\"></i> Chargez un lot pour voir le stock disponible');
-            stockInfo.removeClass('text-success').addClass('text-muted');
-        }
-    });
+    console.log('=== INIT TERMINÉE ===');
 });
 </script>
 {% endblock %}", "stock/transfer/new.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\stock\\transfer\\new.html.twig");

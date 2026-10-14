@@ -1,0 +1,1330 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* stock/transfer/index.html.twig */
+class __TwigTemplate_78122c0d09bcbfad46d6ecb123304a27 extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->blocks = [
+            'title' => [$this, 'block_title'],
+            'stylesheets' => [$this, 'block_stylesheets'],
+            'body' => [$this, 'block_body'],
+            'javascripts' => [$this, 'block_javascripts'],
+        ];
+    }
+
+    protected function doGetParent(array $context): bool|string|Template|TemplateWrapper
+    {
+        // line 2
+        return "base.html.twig";
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $this->parent = $this->load("base.html.twig", 2);
+        yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
+    }
+
+    // line 4
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_title(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        yield "Transferts de stock - HMA Market";
+        yield from [];
+    }
+
+    // line 6
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_stylesheets(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        // line 7
+        yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
+        yield "
+<style>
+    /* ============================================
+       STAT CARDS
+       ============================================ */
+    .stat-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 1rem;
+        background: white !important;
+        border: none;
+        cursor: pointer;
+    }
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .stat-card .stat-value {
+        font-size: 1.75rem;
+        font-weight: bold;
+        margin-bottom: 0;
+        line-height: 1.1;
+    }
+    .stat-card .stat-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    .stat-card .stat-sub {
+        font-size: 0.68rem;
+        margin-top: 0.25rem;
+        opacity: 0.85;
+    }
+    .stat-icon {
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 1rem;
+        flex-shrink: 0;
+    }
+    .card-bg-primary {
+        background: linear-gradient(135deg, #0463f1 0%, #0350c4 100%) !important;
+        color: white;
+    }
+    .card-bg-warning {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        color: white;
+    }
+    .card-bg-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        color: white;
+    }
+    .card-bg-danger {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+        color: white;
+    }
+    .card-bg-info {
+        background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+        color: white;
+    }
+    .card-bg-primary .stat-icon,
+    .card-bg-warning .stat-icon,
+    .card-bg-success .stat-icon,
+    .card-bg-danger .stat-icon,
+    .card-bg-info .stat-icon {
+        background: rgba(255,255,255,0.2);
+    }
+    .card-bg-primary .stat-value,
+    .card-bg-warning .stat-value,
+    .card-bg-success .stat-value,
+    .card-bg-danger .stat-value,
+    .card-bg-info .stat-value {
+        color: white;
+    }
+    .card-bg-primary .text-muted,
+    .card-bg-warning .text-muted,
+    .card-bg-success .text-muted,
+    .card-bg-danger .text-muted,
+    .card-bg-info .text-muted {
+        color: rgba(255,255,255,0.85) !important;
+    }
+
+    /* ============================================
+       BADGES STATUT
+    ============================================ */
+    .badge-status {
+        font-size: 0.72rem;
+        padding: 0.35rem 0.6rem;
+        font-weight: 600;
+    }
+
+    /* ============================================
+       ROUTE DE → VERS (DESKTOP)
+    ============================================ */
+    .route-badges {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+    }
+    .route-badges .badge {
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 0.4rem 0.55rem;
+        white-space: normal;
+        text-align: left;
+        max-width: 160px;
+        line-height: 1.2;
+    }
+    .route-badges .badge-source {
+        background-color: #d1fae5 !important;
+        color: #065f46 !important;
+        border: 1px solid #a7f3d0;
+    }
+    .route-badges .badge-dest {
+        background-color: #dbeafe !important;
+        color: #1e40af !important;
+        border: 1px solid #bfdbfe;
+    }
+    .route-badges .badge i {
+        color: inherit;
+    }
+    .route-badges .route-arrow-icon {
+        color: #64748b;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+    }
+
+    /* ============================================
+       USER AVATAR (DESKTOP)
+    ============================================ */
+    .user-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-width: 0;
+    }
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 2px solid #e2e8f0;
+    }
+    .user-avatar-placeholder {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 0.85rem;
+    }
+    .user-info {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        line-height: 1.2;
+    }
+    .user-info .user-name {
+        font-weight: 600;
+        font-size: 0.78rem;
+        color: #1e293b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 140px;
+    }
+    .user-info .user-email {
+        font-size: 0.68rem;
+        color: #64748b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 140px;
+    }
+
+    /* ============================================
+       CARTES MOBILE
+    ============================================ */
+    .transfer-card-mobile {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        position: relative;
+        transition: box-shadow 0.2s;
+    }
+    .transfer-card-mobile:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .transfer-card-mobile::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 12px 0 0 12px;
+    }
+    .transfer-card-mobile.status-pending::before {
+        background: #f59e0b;
+    }
+    .transfer-card-mobile.status-in-transit::before {
+        background: #0ea5e9;
+    }
+    .transfer-card-mobile.status-completed::before {
+        background: #10b981;
+    }
+    .transfer-card-mobile.status-cancelled::before {
+        background: #ef4444;
+    }
+
+    .transfer-card-mobile .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px dashed #e9ecef;
+    }
+    .transfer-card-mobile .mobile-number {
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 0.92rem;
+    }
+    .transfer-card-mobile .mobile-date {
+        font-size: 0.72rem;
+        color: #64748b;
+        margin-top: 0.15rem;
+    }
+
+    .transfer-card-mobile .mobile-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .transfer-card-mobile .mobile-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+    }
+    .transfer-card-mobile .mobile-row-label {
+        color: #64748b;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .transfer-card-mobile .mobile-row-value {
+        color: #1e293b;
+        font-weight: 600;
+        text-align: right;
+        word-break: break-word;
+    }
+
+    .transfer-card-mobile .mobile-route {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        background: #f8fafc;
+        padding: 0.65rem 0.75rem;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+        font-size: 0.82rem;
+    }
+    .transfer-card-mobile .route-point {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        word-break: break-word;
+    }
+    .transfer-card-mobile .route-point.from {
+        color: #065f46;
+    }
+    .transfer-card-mobile .route-point.to {
+        color: #1e40af;
+    }
+    .transfer-card-mobile .route-arrow {
+        color: #94a3b8;
+        font-size: 0.7rem;
+        padding-left: 0.5rem;
+    }
+
+    .transfer-card-mobile .mobile-user {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #f8fafc;
+        padding: 0.55rem 0.75rem;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+    }
+    .transfer-card-mobile .mobile-user .user-avatar,
+    .transfer-card-mobile .mobile-user .user-avatar-placeholder {
+        width: 36px;
+        height: 36px;
+    }
+    .transfer-card-mobile .mobile-user .user-info .user-name {
+        font-size: 0.82rem;
+        max-width: 180px;
+    }
+    .transfer-card-mobile .mobile-user .user-info .user-email {
+        font-size: 0.72rem;
+        max-width: 180px;
+    }
+
+    .transfer-card-mobile .mobile-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px dashed #e9ecef;
+        flex-wrap: wrap;
+    }
+    .transfer-card-mobile .mobile-actions .btn {
+        flex: 1 1 auto;
+        min-width: 0;
+        font-size: 0.78rem;
+        padding: 0.45rem 0.6rem;
+    }
+
+    /* ============================================
+       RESPONSIVE
+    ============================================ */
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+
+        .page-header-flex {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 1rem;
+        }
+        .page-header-flex .btn-primary {
+            width: 100%;
+            justify-content: center;
+        }
+        h1.h3 {
+            font-size: 1.15rem;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.35rem;
+        }
+        .stat-card .stat-label {
+            font-size: 0.62rem;
+        }
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+        }
+        .stat-icon i {
+            font-size: 1.2rem !important;
+        }
+
+        .filter-form .col-md-3 {
+            width: 100%;
+        }
+
+        /* Tableau masqué sur mobile */
+        .table-responsive {
+            display: none;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .transfer-cards-mobile {
+            display: none;
+        }
+    }
+</style>
+";
+        yield from [];
+    }
+
+    // line 394
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_body(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        // line 395
+        yield "<div class=\"container-fluid px-2 px-md-4 py-3\">
+
+    <!-- ==========================================
+         EN-TÊTE
+    ========================================== -->
+    <div class=\"d-flex justify-content-between align-items-center mb-4 page-header-flex flex-wrap gap-3\">
+        <div>
+            <nav aria-label=\"breadcrumb\">
+                <ol class=\"breadcrumb mb-1\">
+                    <li class=\"breadcrumb-item small\">
+                        <a href=\"";
+        // line 405
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_dashboard");
+        yield "\" class=\"text-decoration-none\">
+                            <i class=\"fas fa-tachometer-alt me-1\"></i>
+                            <span class=\"d-none d-sm-inline\">Tableau de bord</span>
+                        </a>
+                    </li>
+                    <li class=\"breadcrumb-item active small\">
+                        <i class=\"fas fa-exchange-alt me-1\"></i> Transferts
+                    </li>
+                </ol>
+            </nav>
+            <h1 class=\"h3 mb-0 fw-bold\">
+                <i class=\"fas fa-exchange-alt text-primary me-2\"></i>
+                Transferts de stock
+            </h1>
+            <p class=\"text-muted mt-2 mb-0 small d-none d-md-block\">
+                <i class=\"fas fa-info-circle me-1\"></i>
+                Gérez les transferts de stock entre emplacements
+            </p>
+        </div>
+        <div>
+            <a href=\"";
+        // line 425
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_new");
+        yield "\" class=\"btn btn-primary\">
+                <i class=\"fas fa-plus me-1\"></i> Nouveau transfert
+            </a>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STATISTIQUES (cliquables pour filtrer)
+    ========================================== -->
+    <div class=\"row g-2 g-md-3 mb-4\">
+        <div class=\"col-6 col-md-3\">
+            <a href=\"";
+        // line 436
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_index");
+        yield "\" class=\"text-decoration-none\">
+                <div class=\"card stat-card card-bg-primary shadow-sm\">
+                    <div class=\"card-body p-2 p-md-3\">
+                        <div class=\"d-flex align-items-center justify-content-between\">
+                            <div class=\"flex-grow-1\">
+                                <div class=\"stat-label\">Total</div>
+                                <div class=\"stat-value\">";
+        // line 442
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total", [], "any", true, true, false, 442)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total", [], "any", false, false, false, 442), 0)) : (0)), 0, ",", " "), "html", null, true);
+        yield "</div>
+                                <div class=\"stat-sub\">transferts</div>
+                            </div>
+                            <div class=\"stat-icon\">
+                                <i class=\"fas fa-exchange-alt fa-2x\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class=\"col-6 col-md-3\">
+            <a href=\"";
+        // line 454
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_index", ["status" => "pending"]);
+        yield "\" class=\"text-decoration-none\">
+                <div class=\"card stat-card card-bg-warning shadow-sm\">
+                    <div class=\"card-body p-2 p-md-3\">
+                        <div class=\"d-flex align-items-center justify-content-between\">
+                            <div class=\"flex-grow-1\">
+                                <div class=\"stat-label\">En attente</div>
+                                <div class=\"stat-value\">";
+        // line 460
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "pending", [], "any", true, true, false, 460)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "pending", [], "any", false, false, false, 460), 0)) : (0)), 0, ",", " "), "html", null, true);
+        yield "</div>
+                                <div class=\"stat-sub\">à expédier</div>
+                            </div>
+                            <div class=\"stat-icon\">
+                                <i class=\"fas fa-clock fa-2x\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class=\"col-6 col-md-3\">
+            <a href=\"";
+        // line 472
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_index", ["status" => "in_transit"]);
+        yield "\" class=\"text-decoration-none\">
+                <div class=\"card stat-card card-bg-info shadow-sm\">
+                    <div class=\"card-body p-2 p-md-3\">
+                        <div class=\"d-flex align-items-center justify-content-between\">
+                            <div class=\"flex-grow-1\">
+                                <div class=\"stat-label\">En transit</div>
+                                <div class=\"stat-value\">";
+        // line 478
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "in_transit", [], "any", true, true, false, 478)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "in_transit", [], "any", false, false, false, 478), 0)) : (0)), 0, ",", " "), "html", null, true);
+        yield "</div>
+                                <div class=\"stat-sub\">en route</div>
+                            </div>
+                            <div class=\"stat-icon\">
+                                <i class=\"fas fa-truck fa-2x\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class=\"col-6 col-md-3\">
+            <a href=\"";
+        // line 490
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_index", ["status" => "completed"]);
+        yield "\" class=\"text-decoration-none\">
+                <div class=\"card stat-card card-bg-success shadow-sm\">
+                    <div class=\"card-body p-2 p-md-3\">
+                        <div class=\"d-flex align-items-center justify-content-between\">
+                            <div class=\"flex-grow-1\">
+                                <div class=\"stat-label\">Terminés</div>
+                                <div class=\"stat-value\">";
+        // line 496
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "completed", [], "any", true, true, false, 496)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "completed", [], "any", false, false, false, 496), 0)) : (0)), 0, ",", " "), "html", null, true);
+        yield "</div>
+                                <div class=\"stat-sub\">livrés</div>
+                            </div>
+                            <div class=\"stat-icon\">
+                                <i class=\"fas fa-check-circle fa-2x\"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         FILTRES
+    ========================================== -->
+    <div class=\"card border-0 shadow-sm mb-4\">
+        <div class=\"card-header bg-white py-2 py-md-3\">
+            <h5 class=\"mb-0 fw-semibold small\">
+                <i class=\"fas fa-filter me-2 text-primary\"></i> Filtres
+            </h5>
+        </div>
+        <div class=\"card-body p-2 p-md-3\">
+            <form method=\"get\" class=\"row g-2 g-md-3 filter-form\">
+                <div class=\"col-12 col-md-3\">
+                    <label class=\"form-label fw-bold small mb-1\">Statut</label>
+                    <select name=\"status\" class=\"form-select form-select-sm\">
+                        <option value=\"\">Tous</option>
+                        <option value=\"pending\" ";
+        // line 524
+        yield (((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "status", [], "any", false, false, false, 524) == "pending")) ? ("selected") : (""));
+        yield ">En attente</option>
+                        <option value=\"in_transit\" ";
+        // line 525
+        yield (((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "status", [], "any", false, false, false, 525) == "in_transit")) ? ("selected") : (""));
+        yield ">En transit</option>
+                        <option value=\"completed\" ";
+        // line 526
+        yield (((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "status", [], "any", false, false, false, 526) == "completed")) ? ("selected") : (""));
+        yield ">Terminé</option>
+                        <option value=\"cancelled\" ";
+        // line 527
+        yield (((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "status", [], "any", false, false, false, 527) == "cancelled")) ? ("selected") : (""));
+        yield ">Annulé</option>
+                    </select>
+                </div>
+                <div class=\"col-6 col-md-3\">
+                    <label class=\"form-label fw-bold small mb-1\">Date du</label>
+                    <input type=\"date\" name=\"date_from\" class=\"form-control form-control-sm\" value=\"";
+        // line 532
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "date_from", [], "any", false, false, false, 532), "html", null, true);
+        yield "\">
+                </div>
+                <div class=\"col-6 col-md-3\">
+                    <label class=\"form-label fw-bold small mb-1\">Date au</label>
+                    <input type=\"date\" name=\"date_to\" class=\"form-control form-control-sm\" value=\"";
+        // line 536
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "date_to", [], "any", false, false, false, 536), "html", null, true);
+        yield "\">
+                </div>
+                <div class=\"col-12 col-md-3 d-flex align-items-end gap-2\">
+                    <button type=\"submit\" class=\"btn btn-primary btn-sm flex-grow-1\">
+                        <i class=\"fas fa-search me-1\"></i> Filtrer
+                    </button>
+                    ";
+        // line 542
+        if (((CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "status", [], "any", false, false, false, 542) || CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "date_from", [], "any", false, false, false, 542)) || CoreExtension::getAttribute($this->env, $this->source, ($context["filters"] ?? null), "date_to", [], "any", false, false, false, 542))) {
+            // line 543
+            yield "                        <a href=\"";
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_index");
+            yield "\" class=\"btn btn-outline-secondary btn-sm\" title=\"Effacer\">
+                            <i class=\"fas fa-undo\"></i>
+                        </a>
+                    ";
+        }
+        // line 547
+        yield "                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         LISTE DES TRANSFERTS
+    ========================================== -->
+    <div class=\"card border-0 shadow-sm\">
+        <div class=\"card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center\">
+            <h5 class=\"mb-0 fw-semibold small\">
+                <i class=\"fas fa-list me-2 text-primary\"></i>
+                Liste des transferts
+            </h5>
+            <span class=\"badge bg-secondary\">";
+        // line 561
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), ($context["transfers"] ?? null)), "html", null, true);
+        yield " résultat(s)</span>
+        </div>
+
+        ";
+        // line 564
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), ($context["transfers"] ?? null)) > 0)) {
+            // line 565
+            yield "            ";
+            // line 568
+            yield "            <div class=\"card-body p-0 table-responsive d-none d-md-block\">
+                <table class=\"table table-hover align-middle mb-0\">
+                    <thead class=\"table-light\">
+                        <tr>
+                            <th class=\"ps-3\">N° transfert</th>
+                            <th>Produit</th>
+                            <th>N° lot</th>
+                            <th class=\"text-end\">Qté</th>
+                            <th>De → Vers</th>
+                            <th>Statut</th>
+                            <th>Créé par</th>
+                            <th class=\"text-center pe-3\">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ";
+            // line 583
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable(($context["transfers"] ?? null));
+            foreach ($context['_seq'] as $context["_key"] => $context["transfer"]) {
+                // line 584
+                yield "                            <tr>
+                                <td class=\"ps-3\">
+                                    <div class=\"fw-bold small\">";
+                // line 586
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "transferNumber", [], "any", false, false, false, 586), "html", null, true);
+                yield "</div>
+                                    <small class=\"text-muted\">";
+                // line 587
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdAt", [], "any", false, false, false, 587), "d/m/Y H:i"), "html", null, true);
+                yield "</small>
+                                </td>
+                                <td>
+                                    <div class=\"fw-bold small\">";
+                // line 590
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "stockBatch", [], "any", false, false, false, 590), "product", [], "any", false, false, false, 590), "name", [], "any", false, false, false, 590)), "truncate", [35], "method", false, false, false, 590), "html", null, true);
+                yield "</div>
+                                    <small class=\"text-muted\">";
+                // line 591
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "stockBatch", [], "any", false, false, false, 591), "product", [], "any", false, false, false, 591), "barcode", [], "any", false, false, false, 591), "html", null, true);
+                yield "</small>
+                                </td>
+                                <td><code class=\"small\">";
+                // line 593
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "stockBatch", [], "any", false, false, false, 593), "batchNumber", [], "any", false, false, false, 593)), "truncate", [20], "method", false, false, false, 593), "html", null, true);
+                yield "</code></td>
+                                <td class=\"text-end fw-bold\">";
+                // line 594
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "quantity", [], "any", false, false, false, 594), 0, ",", " "), "html", null, true);
+                yield "</td>
+                                <td>
+                                    <div class=\"route-badges\">
+                                        <span class=\"badge badge-source\">
+                                            <i class=\"fas fa-warehouse me-1\"></i>
+                                            ";
+                // line 599
+                yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "sourceLocation", [], "any", false, false, false, 599)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "sourceLocation", [], "any", false, false, false, 599), "displayName", [], "any", false, false, false, 599)), "truncate", [20], "method", false, false, false, 599), "html", null, true)) : ("Non défini"));
+                yield "
+                                        </span>
+                                        <i class=\"fas fa-arrow-right route-arrow-icon\"></i>
+                                        <span class=\"badge badge-dest\">
+                                            <i class=\"fas fa-map-marker-alt me-1\"></i>
+                                            ";
+                // line 604
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "destinationLocation", [], "any", false, false, false, 604), "displayName", [], "any", false, false, false, 604)), "truncate", [20], "method", false, false, false, 604), "html", null, true);
+                yield "
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class=\"badge ";
+                // line 609
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "statusBadgeClass", [], "any", false, false, false, 609), "html", null, true);
+                yield " badge-status\">
+                                        <i class=\"fas ";
+                // line 610
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "statusIcon", [], "any", false, false, false, 610), "html", null, true);
+                yield " me-1\"></i>
+                                        ";
+                // line 611
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "statusLabel", [], "any", false, false, false, 611), "html", null, true);
+                yield "
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class=\"user-cell\">
+                                        ";
+                // line 616
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 616), "photo", [], "any", false, false, false, 616)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 617
+                    yield "                                            <img src=\"";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 617), "photo", [], "any", false, false, false, 617))), "html", null, true);
+                    yield "\" 
+                                                 alt=\"";
+                    // line 618
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 618), "fullName", [], "any", false, false, false, 618), "html", null, true);
+                    yield "\"
+                                                 class=\"user-avatar\"
+                                                 onerror=\"this.style.display='none'; this.nextElementSibling.style.display='flex';\">
+                                            <div class=\"user-avatar-placeholder\" style=\"display: none;\">
+                                                <i class=\"fas fa-users\"></i>
+                                            </div>
+                                        ";
+                } else {
+                    // line 625
+                    yield "                                            <div class=\"user-avatar-placeholder\">
+                                                <i class=\"fas fa-users\"></i>
+                                            </div>
+                                        ";
+                }
+                // line 629
+                yield "                                        <div class=\"user-info\">
+                                            <span class=\"user-name\">";
+                // line 630
+                yield ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 630), "fullName", [], "any", false, false, false, 630)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 630), "fullName", [], "any", false, false, false, 630), "html", null, true)) : ("Utilisateur"));
+                yield "</span>
+                                            <span class=\"user-email\">";
+                // line 631
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 631), "email", [], "any", false, false, false, 631), "html", null, true);
+                yield "</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class=\"text-center pe-3\">
+                                    <div class=\"btn-group\" role=\"group\">
+                                        ";
+                // line 638
+                yield "                                        <a href=\"";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 638)]), "html", null, true);
+                yield "\" 
+                                           class=\"btn btn-sm btn-outline-primary\" 
+                                           title=\"Voir le détail\">
+                                            <i class=\"fas fa-eye\"></i>
+                                        </a>
+
+                                        ";
+                // line 645
+                yield "                                        ";
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "status", [], "any", false, false, false, 645) == "pending")) {
+                    // line 646
+                    yield "                                            <button type=\"button\" 
+                                                    class=\"btn btn-sm btn-outline-success start-transfer-btn\" 
+                                                    data-id=\"";
+                    // line 648
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 648), "html", null, true);
+                    yield "\" 
+                                                    data-number=\"";
+                    // line 649
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "transferNumber", [], "any", false, false, false, 649), "html", null, true);
+                    yield "\" 
+                                                    data-token=\"";
+                    // line 650
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("start-transfer-" . CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 650))), "html", null, true);
+                    yield "\"
+                                                    title=\"Expédier\">
+                                                <i class=\"fas fa-truck\"></i>
+                                            </button>
+                                        ";
+                }
+                // line 655
+                yield "
+                                        ";
+                // line 657
+                yield "                                        ";
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "status", [], "any", false, false, false, 657) == "in_transit")) {
+                    // line 658
+                    yield "                                            <a href=\"";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_receive", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 658)]), "html", null, true);
+                    yield "\" 
+                                               class=\"btn btn-sm btn-outline-info\" 
+                                               title=\"Réceptionner\">
+                                                <i class=\"fas fa-check-circle\"></i>
+                                            </a>
+                                        ";
+                }
+                // line 664
+                yield "
+                                        ";
+                // line 666
+                yield "                                        ";
+                if (CoreExtension::inFilter(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "status", [], "any", false, false, false, 666), ["pending", "in_transit"])) {
+                    // line 667
+                    yield "                                            <button type=\"button\" 
+                                                    class=\"btn btn-sm btn-outline-danger cancel-transfer-btn\" 
+                                                    data-id=\"";
+                    // line 669
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 669), "html", null, true);
+                    yield "\" 
+                                                    data-number=\"";
+                    // line 670
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "transferNumber", [], "any", false, false, false, 670), "html", null, true);
+                    yield "\" 
+                                                    data-token=\"";
+                    // line 671
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("cancel-transfer-" . CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 671))), "html", null, true);
+                    yield "\"
+                                                    title=\"Annuler\">
+                                                <i class=\"fas fa-ban\"></i>
+                                            </button>
+                                        ";
+                }
+                // line 676
+                yield "                                    </div>
+                                </td>
+                            </tr>
+                        ";
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_key'], $context['transfer'], $context['_parent']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 680
+            yield "                    </tbody>
+                </table>
+            </div>
+
+            ";
+            // line 687
+            yield "            <div class=\"card-body p-2 transfer-cards-mobile\">
+                ";
+            // line 688
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable(($context["transfers"] ?? null));
+            foreach ($context['_seq'] as $context["_key"] => $context["transfer"]) {
+                // line 689
+                yield "                    ";
+                $context["statusClass"] = (((CoreExtension::getAttribute($this->env, $this->source,                 // line 690
+$context["transfer"], "status", [], "any", false, false, false, 690) == "pending")) ? ("status-pending") : ((((CoreExtension::getAttribute($this->env, $this->source,                 // line 691
+$context["transfer"], "status", [], "any", false, false, false, 691) == "in_transit")) ? ("status-in-transit") : ((((CoreExtension::getAttribute($this->env, $this->source,                 // line 692
+$context["transfer"], "status", [], "any", false, false, false, 692) == "completed")) ? ("status-completed") : ("status-cancelled"))))));
+                // line 694
+                yield "                    <div class=\"transfer-card-mobile ";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(($context["statusClass"] ?? null), "html", null, true);
+                yield "\">
+                        <!-- En-tête -->
+                        <div class=\"mobile-header\">
+                            <div>
+                                <div class=\"mobile-number\">";
+                // line 698
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "transferNumber", [], "any", false, false, false, 698), "html", null, true);
+                yield "</div>
+                                <div class=\"mobile-date\">
+                                    <i class=\"far fa-calendar-alt me-1\"></i>";
+                // line 700
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdAt", [], "any", false, false, false, 700), "d/m/Y H:i"), "html", null, true);
+                yield "
+                                </div>
+                            </div>
+                            <div>
+                                <span class=\"badge ";
+                // line 704
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "statusBadgeClass", [], "any", false, false, false, 704), "html", null, true);
+                yield " badge-status\">
+                                    <i class=\"fas ";
+                // line 705
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "statusIcon", [], "any", false, false, false, 705), "html", null, true);
+                yield " me-1\"></i>
+                                    ";
+                // line 706
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "statusLabel", [], "any", false, false, false, 706), "html", null, true);
+                yield "
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Détails -->
+                        <div class=\"mobile-rows\">
+                            <div class=\"mobile-row\">
+                                <span class=\"mobile-row-label\">
+                                    <i class=\"fas fa-box\"></i> Produit
+                                </span>
+                                <span class=\"mobile-row-value\">";
+                // line 717
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "stockBatch", [], "any", false, false, false, 717), "product", [], "any", false, false, false, 717), "name", [], "any", false, false, false, 717)), "truncate", [25], "method", false, false, false, 717), "html", null, true);
+                yield "</span>
+                            </div>
+                            <div class=\"mobile-row\">
+                                <span class=\"mobile-row-label\">
+                                    <i class=\"fas fa-barcode\"></i> N° lot
+                                </span>
+                                <span class=\"mobile-row-value\">
+                                    <code class=\"small\">";
+                // line 724
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "stockBatch", [], "any", false, false, false, 724), "batchNumber", [], "any", false, false, false, 724)), "truncate", [18], "method", false, false, false, 724), "html", null, true);
+                yield "</code>
+                                </span>
+                            </div>
+                            <div class=\"mobile-row\">
+                                <span class=\"mobile-row-label\">
+                                    <i class=\"fas fa-hashtag\"></i> Quantité
+                                </span>
+                                <span class=\"mobile-row-value\">";
+                // line 731
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "quantity", [], "any", false, false, false, 731), 0, ",", " "), "html", null, true);
+                yield " unités</span>
+                            </div>
+                        </div>
+
+                        <!-- Trajet -->
+                        <div class=\"mobile-route\">
+                            <div class=\"route-point from\">
+                                <i class=\"fas fa-warehouse mt-1\"></i>
+                                <span><strong>De :</strong> ";
+                // line 739
+                yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "sourceLocation", [], "any", false, false, false, 739)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "sourceLocation", [], "any", false, false, false, 739), "displayName", [], "any", false, false, false, 739), "html", null, true)) : ("Non défini"));
+                yield "</span>
+                            </div>
+                            <div class=\"route-arrow\">
+                                <i class=\"fas fa-arrow-down\"></i>
+                            </div>
+                            <div class=\"route-point to\">
+                                <i class=\"fas fa-map-marker-alt mt-1\"></i>
+                                <span><strong>Vers :</strong> ";
+                // line 746
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "destinationLocation", [], "any", false, false, false, 746), "displayName", [], "any", false, false, false, 746), "html", null, true);
+                yield "</span>
+                            </div>
+                        </div>
+
+                        <!-- Créé par (avec avatar) -->
+                        <div class=\"mobile-user\">
+                            ";
+                // line 752
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 752), "photo", [], "any", false, false, false, 752)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 753
+                    yield "                                <img src=\"";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/users/" . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 753), "photo", [], "any", false, false, false, 753))), "html", null, true);
+                    yield "\" 
+                                     alt=\"";
+                    // line 754
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 754), "fullName", [], "any", false, false, false, 754), "html", null, true);
+                    yield "\"
+                                     class=\"user-avatar\"
+                                     onerror=\"this.style.display='none'; this.nextElementSibling.style.display='flex';\">
+                                <div class=\"user-avatar-placeholder\" style=\"display: none;\">
+                                    <i class=\"fas fa-users\"></i>
+                                </div>
+                            ";
+                } else {
+                    // line 761
+                    yield "                                <div class=\"user-avatar-placeholder\">
+                                    <i class=\"fas fa-users\"></i>
+                                </div>
+                            ";
+                }
+                // line 765
+                yield "                            <div class=\"user-info\">
+                                <span class=\"user-name\">";
+                // line 766
+                yield ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 766), "fullName", [], "any", false, false, false, 766)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 766), "fullName", [], "any", false, false, false, 766), "html", null, true)) : ("Utilisateur"));
+                yield "</span>
+                                <span class=\"user-email\">";
+                // line 767
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "createdBy", [], "any", false, false, false, 767), "email", [], "any", false, false, false, 767), "html", null, true);
+                yield "</span>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class=\"mobile-actions\">
+                            <a href=\"";
+                // line 773
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 773)]), "html", null, true);
+                yield "\" 
+                               class=\"btn btn-outline-primary\">
+                                <i class=\"fas fa-eye me-1\"></i> Voir
+                            </a>
+
+                            ";
+                // line 778
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "status", [], "any", false, false, false, 778) == "pending")) {
+                    // line 779
+                    yield "                                <button type=\"button\" 
+                                        class=\"btn btn-success start-transfer-btn\" 
+                                        data-id=\"";
+                    // line 781
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 781), "html", null, true);
+                    yield "\" 
+                                        data-number=\"";
+                    // line 782
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "transferNumber", [], "any", false, false, false, 782), "html", null, true);
+                    yield "\"
+                                        data-token=\"";
+                    // line 783
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("start-transfer-" . CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 783))), "html", null, true);
+                    yield "\">
+                                    <i class=\"fas fa-truck me-1\"></i> Expédier
+                                </button>
+                            ";
+                }
+                // line 787
+                yield "
+                            ";
+                // line 788
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "status", [], "any", false, false, false, 788) == "in_transit")) {
+                    // line 789
+                    yield "                                <a href=\"";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_receive", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 789)]), "html", null, true);
+                    yield "\" 
+                                   class=\"btn btn-info text-white\">
+                                    <i class=\"fas fa-check-circle me-1\"></i> Réceptionner
+                                </a>
+                            ";
+                }
+                // line 794
+                yield "
+                            ";
+                // line 795
+                if (CoreExtension::inFilter(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "status", [], "any", false, false, false, 795), ["pending", "in_transit"])) {
+                    // line 796
+                    yield "                                <button type=\"button\" 
+                                        class=\"btn btn-outline-danger cancel-transfer-btn\" 
+                                        data-id=\"";
+                    // line 798
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 798), "html", null, true);
+                    yield "\" 
+                                        data-number=\"";
+                    // line 799
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "transferNumber", [], "any", false, false, false, 799), "html", null, true);
+                    yield "\"
+                                        data-token=\"";
+                    // line 800
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("cancel-transfer-" . CoreExtension::getAttribute($this->env, $this->source, $context["transfer"], "id", [], "any", false, false, false, 800))), "html", null, true);
+                    yield "\">
+                                    <i class=\"fas fa-ban me-1\"></i> Annuler
+                                </button>
+                            ";
+                }
+                // line 804
+                yield "                        </div>
+                    </div>
+                ";
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_key'], $context['transfer'], $context['_parent']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 807
+            yield "            </div>
+        ";
+        } else {
+            // line 809
+            yield "            ";
+            // line 810
+            yield "            <div class=\"card-body text-center py-5\">
+                <i class=\"fas fa-exchange-alt fa-3x text-muted mb-3 opacity-50\"></i>
+                <p class=\"text-muted mb-0\">Aucun transfert trouvé</p>
+                <p class=\"text-muted small mb-3\">Modifiez vos filtres ou créez un nouveau transfert</p>
+                <a href=\"";
+            // line 814
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_transfer_new");
+            yield "\" class=\"btn btn-primary\">
+                    <i class=\"fas fa-plus me-1\"></i> Créer un transfert
+                </a>
+            </div>
+        ";
+        }
+        // line 819
+        yield "    </div>
+</div>
+
+<!-- ==========================================
+     MODAL CONFIRMATION DÉPART (EXPÉDITION)
+========================================== -->
+<div class=\"modal fade\" id=\"startTransferModal\" tabindex=\"-1\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header bg-success text-white\">
+                <h5 class=\"modal-title\">
+                    <i class=\"fas fa-truck me-2\"></i> Confirmer le départ
+                </h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body\">
+                <p>Êtes-vous sûr de vouloir expédier le transfert <strong id=\"startTransferNumber\">—</strong> ?</p>
+                <div class=\"alert alert-warning mb-0\">
+                    <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                    Le stock sera <strong>déduit</strong> de l'emplacement source.
+                </div>
+            </div>
+            <div class=\"modal-footer\">
+                <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">
+                    <i class=\"fas fa-times me-1\"></i> Annuler
+                </button>
+                <form id=\"startTransferForm\" method=\"post\">
+                    <input type=\"hidden\" name=\"_token\" id=\"startTransferToken\" value=\"\">
+                    <button type=\"submit\" class=\"btn btn-success\">
+                        <i class=\"fas fa-check me-1\"></i> Confirmer le départ
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     MODAL CONFIRMATION ANNULATION
+========================================== -->
+<div class=\"modal fade\" id=\"cancelTransferModal\" tabindex=\"-1\">
+    <div class=\"modal-dialog modal-dialog-centered\">
+        <div class=\"modal-content\">
+            <div class=\"modal-header bg-danger text-white\">
+                <h5 class=\"modal-title\">
+                    <i class=\"fas fa-ban me-2\"></i> Annuler le transfert
+                </h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <form method=\"post\" id=\"cancelTransferForm\">
+                <div class=\"modal-body\">
+                    <p>Annuler le transfert <strong id=\"cancelTransferNumber\">—</strong> ?</p>
+                    <div class=\"mb-3\">
+                        <label class=\"form-label fw-bold\">Raison de l'annulation</label>
+                        <textarea name=\"reason\" class=\"form-control\" rows=\"3\" required placeholder=\"Expliquez pourquoi vous annulez ce transfert...\"></textarea>
+                    </div>
+                    <div class=\"alert alert-warning mb-0\">
+                        <i class=\"fas fa-exclamation-triangle me-2\"></i>
+                        Cette action est <strong>irréversible</strong>.
+                    </div>
+                </div>
+                <div class=\"modal-footer\">
+                    <input type=\"hidden\" name=\"_token\" id=\"cancelTransferToken\" value=\"\">
+                    <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">
+                        <i class=\"fas fa-arrow-left me-1\"></i> Retour
+                    </button>
+                    <button type=\"submit\" class=\"btn btn-danger\">
+                        <i class=\"fas fa-ban me-1\"></i> Confirmer l'annulation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+";
+        yield from [];
+    }
+
+    // line 895
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_javascripts(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        // line 896
+        yield from $this->yieldParentBlock("javascripts", $context, $blocks);
+        yield "
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // ============================================
+    // MODAL EXPÉDITION
+    // ============================================
+    const startModalEl = document.getElementById('startTransferModal');
+    const startModal = new bootstrap.Modal(startModalEl);
+    const startTransferNumber = document.getElementById('startTransferNumber');
+    const startTransferForm = document.getElementById('startTransferForm');
+    const startTransferToken = document.getElementById('startTransferToken');
+
+    document.querySelectorAll('.start-transfer-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const number = this.dataset.number;
+            const token = this.dataset.token;
+
+            startTransferNumber.textContent = number;
+            startTransferForm.action = '/stock/transfer/' + id + '/start';
+            startTransferToken.value = token;
+
+            startModal.show();
+        });
+    });
+
+    // ============================================
+    // MODAL ANNULATION
+    // ============================================
+    const cancelModalEl = document.getElementById('cancelTransferModal');
+    const cancelModal = new bootstrap.Modal(cancelModalEl);
+    const cancelTransferNumber = document.getElementById('cancelTransferNumber');
+    const cancelTransferForm = document.getElementById('cancelTransferForm');
+    const cancelTransferToken = document.getElementById('cancelTransferToken');
+
+    document.querySelectorAll('.cancel-transfer-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const number = this.dataset.number;
+            const token = this.dataset.token;
+
+            cancelTransferNumber.textContent = number;
+            cancelTransferForm.action = '/stock/transfer/' + id + '/cancel';
+            cancelTransferToken.value = token;
+
+            cancelModal.show();
+        });
+    });
+
+});
+</script>
+";
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "stock/transfer/index.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isTraitable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  1245 => 896,  1238 => 895,  1159 => 819,  1151 => 814,  1145 => 810,  1143 => 809,  1139 => 807,  1131 => 804,  1124 => 800,  1120 => 799,  1116 => 798,  1112 => 796,  1110 => 795,  1107 => 794,  1098 => 789,  1096 => 788,  1093 => 787,  1086 => 783,  1082 => 782,  1078 => 781,  1074 => 779,  1072 => 778,  1064 => 773,  1055 => 767,  1051 => 766,  1048 => 765,  1042 => 761,  1032 => 754,  1027 => 753,  1025 => 752,  1016 => 746,  1006 => 739,  995 => 731,  985 => 724,  975 => 717,  961 => 706,  957 => 705,  953 => 704,  946 => 700,  941 => 698,  933 => 694,  931 => 692,  930 => 691,  929 => 690,  927 => 689,  923 => 688,  920 => 687,  914 => 680,  905 => 676,  897 => 671,  893 => 670,  889 => 669,  885 => 667,  882 => 666,  879 => 664,  869 => 658,  866 => 657,  863 => 655,  855 => 650,  851 => 649,  847 => 648,  843 => 646,  840 => 645,  830 => 638,  821 => 631,  817 => 630,  814 => 629,  808 => 625,  798 => 618,  793 => 617,  791 => 616,  783 => 611,  779 => 610,  775 => 609,  767 => 604,  759 => 599,  751 => 594,  747 => 593,  742 => 591,  738 => 590,  732 => 587,  728 => 586,  724 => 584,  720 => 583,  703 => 568,  701 => 565,  699 => 564,  693 => 561,  677 => 547,  669 => 543,  667 => 542,  658 => 536,  651 => 532,  643 => 527,  639 => 526,  635 => 525,  631 => 524,  600 => 496,  591 => 490,  576 => 478,  567 => 472,  552 => 460,  543 => 454,  528 => 442,  519 => 436,  505 => 425,  482 => 405,  470 => 395,  463 => 394,  72 => 7,  65 => 6,  54 => 4,  43 => 2,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("", "stock/transfer/index.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\stock\\transfer\\index.html.twig");
+    }
+}

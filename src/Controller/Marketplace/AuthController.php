@@ -1,5 +1,4 @@
 <?php
-
 // src/Controller/Marketplace/AuthController.php
 
 namespace App\Controller\Marketplace;
@@ -39,18 +38,7 @@ class AuthController extends AbstractController
             // ✅ CRÉER LE PANIER SI INEXISTANT AVANT LA REDIRECTION
             $this->ensureCartExists($user, $entityManager);
             
-            // ✅ Si l'utilisateur doit changer son mot de passe
-            if ($user->isMustChangePassword()) {
-                $this->addFlash('warning', '🔒 Pour des raisons de sécurité, vous devez changer votre mot de passe temporaire avant de continuer.');
-                return $this->redirectToRoute('marketplace_change_password');
-            }
-            
             return $this->redirectToRoute('marketplace_home');
-        }
-
-        // ✅ Vérifier si l'utilisateur vient d'être redirigé pour changement de mot de passe
-        if ($request->query->has('force_change_password')) {
-            $this->addFlash('warning', '🔒 Pour des raisons de sécurité, vous devez changer votre mot de passe temporaire avant de continuer.');
         }
 
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -86,16 +74,22 @@ class AuthController extends AbstractController
                 return $this->redirectToRoute('marketplace_register');
             }
 
-            $randomPassword = $this->generateRandomPassword();
-            $hashedPassword = $passwordHasher->hashPassword($customer, $randomPassword);
+            // ✅ L'utilisateur CHOISIT son mot de passe
+            $plainPassword = $form->get('plainPassword')->getData();
+            $hashedPassword = $passwordHasher->hashPassword($customer, $plainPassword);
             $customer->setPassword($hashedPassword);
             
             $customer->setCreatedAt(new \DateTimeImmutable());
             $customer->setRoles(['ROLE_CUSTOMER']);
+            
+            // ✅ Le compte n'est PAS actif tant que l'email n'est pas vérifié
             $customer->setIsActive(false);
             $customer->setIsVerified(false);
-            $customer->setMustChangePassword(true);
             
+            // ✅ Pas de changement de mot de passe obligatoire (il l'a choisi)
+            $customer->setMustChangePassword(false);
+            
+            // ✅ Générer le token de vérification
             $verificationToken = $customer->generateVerificationToken();
 
             // ✅ Créer le panier
@@ -103,20 +97,24 @@ class AuthController extends AbstractController
             $cart->setCustomer($customer);
             $customer->setCart($cart);
 
-            // ✅ Persister dans le bon ordre
+            // ✅ Persister
             $entityManager->persist($cart);
             $entityManager->persist($customer);
             $entityManager->flush();
 
-            $this->logger->info('✅ Compte et panier créés avec succès', [
+            $this->logger->info('✅ Compte customer créé', [
                 'customer_id' => $customer->getId(),
                 'email' => $customer->getEmail(),
-                'cart_id' => $cart->getId()
             ]);
 
-            $this->sendVerificationEmail($customer, $verificationToken, $randomPassword, $mailer);
+            // ✅ Envoyer l'email de vérification (SANS mot de passe)
+            $this->sendVerificationEmail($customer, $verificationToken, $mailer);
 
-            $this->addFlash('success', 'Un email de vérification vous a été envoyé. Veuillez cliquer sur le lien pour activer votre compte.');
+            $this->addFlash('success', 
+                'Inscription réussie ! Un email de vérification vous a été envoyé à ' 
+                . $customer->getEmail() 
+                . '. Cliquez sur le lien pour activer votre compte.'
+            );
 
             return $this->redirectToRoute('marketplace_login');
         }
@@ -142,13 +140,22 @@ class AuthController extends AbstractController
             return $this->redirectToRoute('marketplace_register');
         }
 
-        $customer->activateAccount();
+        // ✅ ACTIVER LE COMPTE
+        $customer->setIsActive(true);      // ← Compte actif
+        $customer->setIsVerified(true);    // ← Email vérifié
+        $customer->setMustChangePassword(false);  // ← Pas de changement obligatoire
+        $customer->setVerificationToken(null);     // ← Nettoyer le token
+        $customer->setVerificationTokenExpiresAt(null);
+        
         $entityManager->flush();
 
         // ✅ Vérifier et créer le panier si inexistant
         $this->ensureCartExists($customer, $entityManager);
 
-        $this->addFlash('success', '✅ Votre compte a été activé avec succès ! Vous pouvez maintenant vous connecter avec le mot de passe reçu par email.');
+        $this->addFlash('success', 
+            '✅ Votre compte a été activé avec succès ! ' 
+            . 'Vous pouvez maintenant vous connecter avec votre email et mot de passe.'
+        );
 
         return $this->redirectToRoute('marketplace_login');
     }
@@ -163,8 +170,7 @@ class AuthController extends AbstractController
     public function resendVerification(
         string $email,
         EntityManagerInterface $entityManager,
-        MailerInterface $mailer,
-        UserPasswordHasherInterface $passwordHasher
+        MailerInterface $mailer
     ): Response {
         $customer = $entityManager->getRepository(Customer::class)
             ->findOneBy(['email' => $email]);
@@ -179,16 +185,15 @@ class AuthController extends AbstractController
             return $this->redirectToRoute('marketplace_login');
         }
 
-        $newPassword = $this->generateRandomPassword();
-        $hashedPassword = $passwordHasher->hashPassword($customer, $newPassword);
-        $customer->setPassword($hashedPassword);
-        
+        // ✅ NE PAS régénérer le mot de passe (l'utilisateur l'a choisi à l'inscription)
+        // On génère juste un nouveau token de vérification
         $verificationToken = $customer->generateVerificationToken();
         $entityManager->flush();
 
-        $this->sendVerificationEmail($customer, $verificationToken, $newPassword, $mailer);
+        // ✅ Envoyer l'email (SANS mot de passe)
+        $this->sendVerificationEmail($customer, $verificationToken, $mailer);
 
-        $this->addFlash('success', 'Un nouvel email de vérification a été envoyé avec un nouveau mot de passe.');
+        $this->addFlash('success', 'Un nouvel email de vérification vous a été envoyé.');
         return $this->redirectToRoute('marketplace_login');
     }
 
@@ -225,36 +230,22 @@ class AuthController extends AbstractController
         }
     }
 
-    private function generateRandomPassword(int $length = 12): string
+    private function sendVerificationEmail(Customer $customer, string $token, MailerInterface $mailer): void
     {
-        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
-        $password = '';
-        $charsLength = strlen($chars) - 1;
-        
-        for ($i = 0; $i < $length; $i++) {
-            $password .= $chars[random_int(0, $charsLength)];
-        }
-        
-        if (!preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/\d/', $password)) {
-            return $this->generateRandomPassword($length);
-        }
-        
-        return $password;
-    }
-
-    private function sendVerificationEmail(Customer $customer, string $token, string $randomPassword, MailerInterface $mailer): void
-    {
-        $verificationUrl = $this->generateUrl('marketplace_verify_email', ['token' => $token], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
+        $verificationUrl = $this->generateUrl(
+            'marketplace_verify_email', 
+            ['token' => $token], 
+            \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL
+        );
 
         $email = (new TemplatedEmail())
             ->from(new Address('no-reply@hmamarket.com', 'HMA Market'))
             ->to($customer->getEmail())
-            ->subject('Vérification de votre compte - HMA Market')
+            ->subject('Vérifiez votre compte - HMA Market')
             ->htmlTemplate('emails/customer/verification.html.twig')
             ->context([
                 'customer' => $customer,
                 'verificationUrl' => $verificationUrl,
-                'randomPassword' => $randomPassword,
             ]);
 
         $mailer->send($email);

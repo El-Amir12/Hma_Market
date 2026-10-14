@@ -39,7 +39,7 @@ class ProductType extends AbstractType
     {
         $hmaService = $options['hma_service'];
         $companyType = $hmaService ? $hmaService->getType() : 'retail';
-        $canEditStock = $options['can_edit_stock'] ?? false;
+        $isNew = $options['is_new'] ?? true;  // ✅ Nouvelle option
 
         $builder
             ->add('name', TextType::class, [
@@ -109,27 +109,11 @@ class ProductType extends AbstractType
             ]);
         }
 
-        // Champ stock_quantity avec condition d'affichage
-        $stockAttr = ['placeholder' => '0', 'class' => 'form-control', 'min' => 0];
-        
-        if (!$canEditStock) {
-            $stockAttr['readonly'] = 'readonly';
-            $stockAttr['class'] .= ' bg-light';
-            $stockHelp = '⚠️ Le stock est géré automatiquement via les achats et les ventes. Seul un administrateur peut modifier cette valeur manuellement.';
-        } else {
-            $stockHelp = 'Modifiez le stock initial. Cette action sera tracée dans l\'historique.';
-        }
+        // ✅ SUPPRESSION : On ne gère plus stock_quantity dans le formulaire
+        // Il sera synchronisé automatiquement à partir des lots
 
+        // Stock minimum d'alerte (conservé)
         $builder
-            ->add('stock_quantity', IntegerType::class, [
-                'label' => 'Stock initial *',
-                'attr' => $stockAttr,
-                'constraints' => [
-                    new NotBlank(['message' => 'La quantité est obligatoire']),
-                    new PositiveOrZero(['message' => 'La quantité doit être positive ou zéro'])
-                ],
-                'help' => $stockHelp
-            ])
             ->add('min_quantity', IntegerType::class, [
                 'label' => 'Stock minimum (alerte)',
                 'required' => false,
@@ -201,7 +185,6 @@ class ProductType extends AbstractType
                     'required' => false,
                     'attr' => ['class' => 'form-check-input']
                 ])
-                // ✅ AJOUT : Visibilité sur le marketplace
                 ->add('company_public', CheckboxType::class, [
                     'label' => 'Visible sur le marketplace',
                     'required' => false,
@@ -211,10 +194,14 @@ class ProductType extends AbstractType
         }
 
         // Définir la valeur par défaut "pièce" pour l'unité
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($isNew) {
             $product = $event->getData();
             if ($product && !$product->getUnit()) {
                 $product->setUnit('pièce');
+            }
+            // ✅ S'assurer que stock_quantity = 0 à la création
+            if ($product && $isNew && $product->getStockQuantity() === null) {
+                $product->setStockQuantity(0);
             }
         });
 
@@ -251,6 +238,7 @@ class ProductType extends AbstractType
             'data_class' => Product::class,
             'hma_service' => null,
             'can_edit_stock' => false,
+            'is_new' => true,  // ✅ Nouvelle option
         ]);
     }
 }

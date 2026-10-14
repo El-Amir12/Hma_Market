@@ -1,0 +1,889 @@
+{# templates/stock/inventory/add_products.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajout de produits - {{ inventory.inventoryNumber }} - HMA Market{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+/* ============================================
+   VARIABLES
+   ============================================ */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* ============================================
+   ÉTAPES
+   ============================================ */
+.steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding: 0 0.5rem;
+}
+
+.step {
+    text-align: center;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    background: #e9ecef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.4rem;
+    font-weight: 700;
+    color: #6c757d;
+    font-size: 0.9rem;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.step.active .step-circle {
+    background: var(--primary-gradient);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.step.completed .step-circle {
+    background: var(--success-gradient);
+    color: white;
+}
+
+.step-label {
+    font-size: 0.7rem;
+    color: #6c757d;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.step.active .step-label {
+    color: #667eea;
+    font-weight: 700;
+}
+
+.step.completed .step-label {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.steps-line {
+    position: absolute;
+    top: 20px;
+    left: 12%;
+    right: 12%;
+    height: 2px;
+    background: #e9ecef;
+    z-index: 0;
+}
+
+/* ============================================
+   CARTE INVENTAIRE
+   ============================================ */
+.inventory-info {
+    background: var(--primary-gradient);
+    color: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.25);
+}
+
+.inventory-info::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -15%;
+    width: 250px;
+    height: 250px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.inventory-info h3 {
+    margin-bottom: 0.5rem;
+    font-weight: 800;
+    position: relative;
+    z-index: 1;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.inventory-info .badges-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.inventory-info .badge {
+    background: rgba(255, 255, 255, 0.22) !important;
+    color: white !important;
+    font-weight: 600;
+    padding: 0.4rem 0.85rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.inventory-info .stat-box {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 14px;
+    padding: 0.85rem 1.25rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.25);
+    text-align: center;
+    display: inline-block;
+    min-width: 120px;
+}
+
+.inventory-info .stat-box h2 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1;
+}
+
+.inventory-info .stat-box small {
+    font-size: 0.7rem;
+    opacity: 0.9;
+    display: block;
+    margin-top: 0.15rem;
+}
+
+/* ============================================
+   CARTES DE MÉTHODE
+   ============================================ */
+.method-card {
+    background: white;
+    border-radius: 18px;
+    border: 2px solid #e9ecef;
+    padding: 1.75rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.method-card .method-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.method-card .method-icon.primary { background: var(--primary-gradient); }
+.method-card .method-icon.success { background: var(--success-gradient); }
+
+.method-card h5 {
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    text-align: center;
+    color: #1e293b;
+}
+
+.method-card p.method-description {
+    color: #64748b;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+}
+
+.method-card .method-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.method-card .method-footer {
+    margin-top: auto;
+}
+
+/* ============================================
+   SÉPARATEUR
+   ============================================ */
+.separator-or {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    gap: 1rem;
+}
+
+.separator-or::before,
+.separator-or::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #e9ecef, transparent);
+}
+
+.separator-or span {
+    background: white;
+    color: #64748b;
+    font-weight: 700;
+    padding: 0.4rem 1.25rem;
+    border-radius: 2rem;
+    border: 2px solid #e9ecef;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+/* ============================================
+   COMPTEUR
+   ============================================ */
+.selected-counter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+    border: 2px solid #c7d2fe;
+    border-radius: 12px;
+    padding: 0.65rem 1rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.selected-counter.has-selection {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    border-color: #6ee7b7;
+}
+
+.selected-counter .counter-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #4338ca;
+}
+
+.selected-counter.has-selection .counter-label {
+    color: #065f46;
+}
+
+.selected-counter .counter-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 0.6rem;
+    background: #4338ca;
+    color: white;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.selected-counter.has-selection .counter-value {
+    background: #059669;
+}
+
+.selected-counter .counter-value.pulse {
+    animation: pulse-counter 0.4s ease;
+}
+
+@keyframes pulse-counter {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* ============================================
+   LISTE PRODUITS AVEC CHECKBOX RÉELLE
+   ============================================ */
+.products-list-wrapper {
+    max-height: 380px;
+    overflow-y: auto;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    background: white;
+    margin-bottom: 0.75rem;
+}
+
+.products-search {
+    padding: 0.65rem;
+    border-bottom: 1px solid #f1f5f9;
+    position: sticky;
+    top: 0;
+    background: #f8fafc;
+    z-index: 2;
+}
+
+.products-search input {
+    width: 100%;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+    font-size: 0.88rem;
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 0.65rem center;
+}
+
+.products-search input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+}
+
+.product-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.85rem;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.product-row:hover {
+    background: #f8fafc;
+}
+
+.product-row.selected {
+    background: #eef2ff;
+}
+
+.product-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    cursor: pointer;
+    accent-color: #667eea;
+    margin: 0;
+}
+
+.product-row .row-icon {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    background: var(--primary-gradient);
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+}
+
+.product-row .row-details {
+    min-width: 0;
+    flex: 1;
+}
+
+.product-row .row-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #1e293b;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-row .row-barcode {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    font-family: 'Courier New', monospace;
+}
+
+.product-row .row-stock {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    background: #f1f5f9;
+    color: #475569;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.products-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   BOUTONS
+   ============================================ */
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e9ecef;
+    margin-top: 1.25rem;
+}
+
+.btn-action {
+    padding: 0.65rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-action:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.btn-primary.btn-action {
+    background: var(--primary-gradient);
+    border: none;
+    min-width: 180px;
+    color: white;
+}
+
+.btn-primary.btn-action:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn-outline-secondary.btn-action {
+    min-width: 120px;
+}
+
+.btn-add-all {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 0.85rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 12px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-add-all:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.45);
+    color: white;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 767.98px) {
+    .container-fluid {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    .steps { padding: 0; margin-bottom: 1.25rem; }
+    .step-circle { width: 34px; height: 34px; font-size: 0.8rem; border-width: 2px; }
+    .step-label { font-size: 0.62rem; }
+    .steps-line { top: 17px; }
+
+    .inventory-info { padding: 1.15rem; border-radius: 14px; margin-bottom: 1rem; }
+    .inventory-info h3 { font-size: 1.05rem; }
+    .inventory-info .badges-row { gap: 0.35rem; margin-top: 0.75rem; }
+    .inventory-info .badge { font-size: 0.68rem; padding: 0.3rem 0.65rem; }
+    .inventory-info .stat-box { min-width: auto; padding: 0.65rem 1rem; width: 100%; }
+    .inventory-info .stat-box h2 { font-size: 1.4rem; }
+
+    .method-card { padding: 1.15rem; border-radius: 14px; }
+    .method-card .method-icon { width: 50px; height: 50px; font-size: 1.25rem; }
+    .method-card h5 { font-size: 1rem; }
+    .method-card p.method-description { font-size: 0.8rem; margin-bottom: 1rem; }
+
+    .separator-or { margin: 1rem 0; }
+    .separator-or span { font-size: 0.72rem; padding: 0.35rem 1rem; }
+
+    .action-buttons { flex-direction: column-reverse; align-items: stretch; gap: 0.5rem; }
+    .btn-action { width: 100%; padding: 0.65rem 1rem; font-size: 0.88rem; min-width: auto !important; }
+    .btn-add-all { padding: 0.75rem 1.25rem; font-size: 0.9rem; }
+
+    .products-list-wrapper { max-height: 300px; }
+    .product-row { padding: 0.55rem 0.7rem; gap: 0.6rem; }
+    .product-row .row-icon { width: 28px; height: 28px; min-width: 28px; font-size: 0.75rem; }
+    .product-row .row-stock { font-size: 0.68rem; padding: 0.2rem 0.4rem; }
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-3 px-md-4 py-3">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-3 mb-md-4 flex-wrap gap-2">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item small">
+                        <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
+                            <i class="fas fa-tachometer-alt me-1"></i>
+                            <span class="d-none d-sm-inline">Tableau de bord</span>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item small">
+                        <a href="{{ path('app_stock_inventory_index') }}" class="text-decoration-none">
+                            <i class="fas fa-clipboard-list me-1"></i>
+                            <span class="d-none d-sm-inline">Inventaires</span>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active small">Ajout</li>
+                </ol>
+            </nav>
+            <h1 class="h4 mb-0 fw-bold">
+                <i class="fas fa-boxes text-primary me-2"></i>
+                Ajouter des produits
+            </h1>
+        </div>
+        <div>
+            <a href="{{ path('app_stock_inventory_index') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-left me-1"></i> Retour
+            </a>
+        </div>
+    </div>
+
+    <!-- Étapes -->
+    <div class="steps">
+        <div class="step completed">
+            <div class="step-circle"><i class="fas fa-check"></i></div>
+            <div class="step-label">Création</div>
+        </div>
+        <div class="step active">
+            <div class="step-circle">2</div>
+            <div class="step-label">Ajout</div>
+        </div>
+        <div class="step">
+            <div class="step-circle">3</div>
+            <div class="step-label">Comptage</div>
+        </div>
+        <div class="step">
+            <div class="step-circle">4</div>
+            <div class="step-label">Validation</div>
+        </div>
+        <div class="steps-line"></div>
+    </div>
+
+    <!-- Info de l'inventaire -->
+    <div class="inventory-info">
+        <div class="row align-items-center g-3">
+            <div class="col-12 col-md-8">
+                <h3>
+                    <i class="fas fa-clipboard-list"></i>
+                    {{ inventory.inventoryNumber }}
+                </h3>
+                <div class="badges-row">
+                    <span class="badge">
+                        <i class="fas fa-calendar"></i>
+                        {{ inventory.inventoryDate|date('d/m/Y') }}
+                    </span>
+                    {% if inventory.location %}
+                        <span class="badge">
+                            <i class="fas fa-map-marker-alt"></i>
+                            {{ inventory.location.name }}
+                        </span>
+                    {% else %}
+                        <span class="badge">
+                            <i class="fas fa-globe"></i>
+                            Tous les emplacements
+                        </span>
+                    {% endif %}
+                    <span class="badge">
+                        <i class="fas fa-info-circle"></i>
+                        {{ inventory.statusLabel }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 text-md-end">
+                <div class="stat-box">
+                    <h2>{{ inventory.items|length }}</h2>
+                    <small>Produit(s) ajouté(s)</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Information -->
+    <div class="alert alert-info d-flex align-items-start mb-3 mb-md-4 border-0 shadow-sm" role="alert">
+        <i class="fas fa-lightbulb fa-lg me-3 mt-1 text-warning"></i>
+        <div>
+            <strong class="d-block mb-1">Deux méthodes disponibles :</strong>
+            <small class="d-block">
+                Choisissez la <strong>méthode rapide</strong> pour tout ajouter, ou la <strong>sélection manuelle</strong> pour cocher précisément les produits à compter.
+            </small>
+        </div>
+    </div>
+
+    {# ==========================================
+         FORMULAIRE UNIQUE
+    =========================================== #}
+    <form method="post" id="addProductsForm" novalidate>
+
+        <div class="row g-3 g-md-4">
+
+            <!-- MÉTHODE 1 : Tous les produits -->
+            <div class="col-12 col-lg-5">
+                <div class="method-card">
+                    <div class="method-icon primary">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h5>Méthode rapide</h5>
+                    <p class="method-description">
+                        Ajouter automatiquement <strong>tous les produits actifs</strong> 
+                        de votre entreprise à cet inventaire.
+                    </p>
+
+                    <div class="method-body">
+                        <button type="submit" 
+                                name="add_all" 
+                                value="1" 
+                                class="btn-add-all"
+                                onclick="return confirm('Ajouter TOUS les produits actifs à cet inventaire ?')">
+                            <i class="fas fa-plus-circle"></i>
+                            Ajouter tous les produits
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Séparateur OU -->
+            <div class="col-12 col-lg-2">
+                <div class="separator-or h-100">
+                    <span>OU</span>
+                </div>
+            </div>
+
+            <!-- MÉTHODE 2 : Sélection manuelle avec vraies checkboxes -->
+            <div class="col-12 col-lg-5">
+                <div class="method-card">
+                    <div class="method-icon success">
+                        <i class="fas fa-hand-pointer"></i>
+                    </div>
+                    <h5>Sélection manuelle</h5>
+                    <p class="method-description">
+                        Recherchez et cochez les produits que vous souhaitez compter.
+                    </p>
+
+                    <div class="method-body">
+
+                        {# ✅ Compteur dynamique #}
+                        <div class="selected-counter" id="selectedCounter">
+                            <span class="counter-label">
+                                <i class="fas fa-check-square"></i>
+                                <span>Produits sélectionnés</span>
+                            </span>
+                            <span class="counter-value" id="selectedCount">0</span>
+                        </div>
+
+                        {# ✅ Liste des produits avec vraies checkboxes #}
+                        <div class="products-list-wrapper">
+                            <div class="products-search">
+                                <input type="text" 
+                                       id="productSearchInput" 
+                                       placeholder="Rechercher un produit..."
+                                       autocomplete="off">
+                            </div>
+
+                            <div id="productsListContainer">
+                                {% if products is defined and products|length > 0 %}
+                                    {% for product in products %}
+                                        <label class="product-row" data-product-id="{{ product.id }}">
+                                            <input type="checkbox" 
+                                                   name="products[]" 
+                                                   value="{{ product.id }}"
+                                                   class="product-checkbox-input">
+                                            <div class="row-icon">
+                                                <i class="fas fa-box"></i>
+                                            </div>
+                                            <div class="row-details">
+                                                <span class="row-name">{{ product.name }}</span>
+                                                {% if product.barcode %}
+                                                    <span class="row-barcode">{{ product.barcode }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <span class="row-stock">
+                                                <i class="fas fa-cubes me-1"></i>
+                                                {{ product.stockQuantity|default(0) }}
+                                                {{ product.unit ?: 'u' }}
+                                            </span>
+                                        </label>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="products-empty">
+                                        <i class="fas fa-box-open fa-2x mb-2"></i>
+                                        <p class="mb-0">Aucun produit disponible</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="method-footer">
+                            <div class="action-buttons">
+                                <a href="{{ path('app_stock_inventory_index') }}" class="btn btn-outline-secondary btn-action">
+                                    <i class="fas fa-times"></i>
+                                    <span>Annuler</span>
+                                </a>
+                                <button type="submit" 
+                                        name="add_manual" 
+                                        value="1" 
+                                        class="btn btn-primary btn-action"
+                                        id="submitManualBtn"
+                                        disabled>
+                                    <span>Ajouter</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const counterEl = document.getElementById('selectedCount');
+    const counterWrapper = document.getElementById('selectedCounter');
+    const submitBtn = document.getElementById('submitManualBtn');
+    const checkboxes = document.querySelectorAll('.product-checkbox-input');
+    const rows = document.querySelectorAll('.product-row');
+    const searchInput = document.getElementById('productSearchInput');
+    const form = document.getElementById('addProductsForm');
+
+    // ============================================
+    // METTRE À JOUR LE COMPTEUR
+    // ============================================
+    function updateCounter() {
+        const checked = document.querySelectorAll('.product-checkbox-input:checked');
+        const count = checked.length;
+
+        // Texte
+        if (counterEl) counterEl.textContent = count;
+
+        // Animation pulse
+        if (counterEl) {
+            counterEl.classList.remove('pulse');
+            void counterEl.offsetWidth;
+            counterEl.classList.add('pulse');
+        }
+
+        // État visuel (vert si > 0)
+        if (counterWrapper) {
+            counterWrapper.classList.toggle('has-selection', count > 0);
+        }
+
+        // Activer/désactiver le bouton
+        if (submitBtn) {
+            submitBtn.disabled = count === 0;
+        }
+    }
+
+    // ============================================
+    // GESTION DU CLIC SUR UNE LIGNE
+    // ============================================
+    rows.forEach(row => {
+        // Clic sur la ligne (sauf si c'est déjà le checkbox)
+        row.addEventListener('click', function(e) {
+            if (e.target.tagName === 'INPUT') return;
+
+            const checkbox = row.querySelector('.product-checkbox-input');
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                row.classList.toggle('selected', checkbox.checked);
+                updateCounter();
+            }
+        });
+    });
+
+    // Gestion directe du checkbox
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const row = this.closest('.product-row');
+            if (row) {
+                row.classList.toggle('selected', this.checked);
+            }
+            updateCounter();
+        });
+    });
+
+    // ============================================
+    // RECHERCHE EN TEMPS RÉEL
+    // ============================================
+    searchInput?.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+
+        rows.forEach(row => {
+            const name = row.querySelector('.row-name')?.textContent.toLowerCase() || '';
+            const barcode = row.querySelector('.row-barcode')?.textContent.toLowerCase() || '';
+
+            const match = !query || name.includes(query) || barcode.includes(query);
+            row.style.display = match ? 'flex' : 'none';
+        });
+    });
+
+    // ============================================
+    // FEEDBACK AU SUBMIT
+    // ============================================
+    form?.addEventListener('submit', function(e) {
+        const submitter = e.submitter;
+
+        if (submitter && submitter.name === 'add_manual') {
+            const checked = document.querySelectorAll('.product-checkbox-input:checked');
+            if (checked.length === 0) {
+                e.preventDefault();
+                alert('Veuillez cocher au moins un produit.');
+                return false;
+            }
+
+            submitter.disabled = true;
+            submitter.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Ajout...';
+        }
+    });
+
+    // Init
+    updateCounter();
+});
+</script>
+{% endblock %}

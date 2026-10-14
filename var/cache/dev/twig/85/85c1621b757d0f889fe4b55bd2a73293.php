@@ -101,8 +101,10 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
         // line 7
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
-<link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
 <style>
+    /* ============================================
+       STAT CARDS
+       ============================================ */
     .stat-card {
         transition: transform 0.2s, box-shadow 0.2s;
         border-radius: 1rem;
@@ -114,28 +116,30 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
         box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
     .stat-card .stat-value {
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: bold;
         margin-bottom: 0;
+        line-height: 1.1;
     }
     .stat-card .stat-label {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         font-weight: 600;
     }
     .stat-card .stat-sub {
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         margin-top: 0.25rem;
-        opacity: 0.8;
+        opacity: 0.85;
     }
     .stat-icon {
-        width: 50px;
-        height: 50px;
+        width: 46px;
+        height: 46px;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 1rem;
+        flex-shrink: 0;
     }
     .card-bg-success {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
@@ -169,7 +173,221 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
     .card-bg-danger .text-muted,
     .card-bg-primary .text-muted,
     .card-bg-info .text-muted {
-        color: rgba(255,255,255,0.8) !important;
+        color: rgba(255,255,255,0.85) !important;
+    }
+
+    /* ============================================
+       TABLEAU
+       ============================================ */
+    .table-adjustments td {
+        vertical-align: middle;
+    }
+    .badge-type {
+        font-size: 0.72rem;
+        padding: 0.35rem 0.6rem;
+        font-weight: 600;
+    }
+    .reason-text {
+        max-width: 200px;
+        display: inline-block;
+        word-break: break-word;
+    }
+
+    /* ============================================
+       BOUTONS D'ACTION
+       ============================================ */
+    .btn-icon-sm {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+    }
+
+    /* ============================================
+       CARTES MOBILE (à la place du tableau)
+       ============================================ */
+    .adjustment-card-mobile {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        position: relative;
+        transition: box-shadow 0.2s;
+    }
+    .adjustment-card-mobile:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .adjustment-card-mobile::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 12px 0 0 12px;
+    }
+    .adjustment-card-mobile.type-in::before {
+        background: #10b981;
+    }
+    .adjustment-card-mobile.type-out::before {
+        background: #ef4444;
+    }
+
+    .adjustment-card-mobile .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px dashed #e9ecef;
+    }
+    .adjustment-card-mobile .mobile-header-left {
+        flex-grow: 1;
+        min-width: 0;
+    }
+    .adjustment-card-mobile .mobile-date {
+        font-size: 0.72rem;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-bottom: 0.35rem;
+    }
+    .adjustment-card-mobile .mobile-product {
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 0.92rem;
+        line-height: 1.3;
+        margin-bottom: 0.15rem;
+    }
+    .adjustment-card-mobile .mobile-barcode {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        font-family: 'Courier New', monospace;
+    }
+
+    .adjustment-card-mobile .mobile-qty {
+        flex-shrink: 0;
+        text-align: right;
+        padding: 0.25rem 0.5rem;
+        border-radius: 8px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        line-height: 1.1;
+        min-width: 70px;
+    }
+    .adjustment-card-mobile.type-in .mobile-qty {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    .adjustment-card-mobile.type-out .mobile-qty {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .adjustment-card-mobile .mobile-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .adjustment-card-mobile .mobile-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+    }
+    .adjustment-card-mobile .mobile-row-label {
+        color: #64748b;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .adjustment-card-mobile .mobile-row-value {
+        color: #1e293b;
+        font-weight: 600;
+        text-align: right;
+        word-break: break-word;
+    }
+    .adjustment-card-mobile .mobile-reason {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 0.55rem 0.75rem;
+        font-size: 0.78rem;
+        color: #475569;
+        margin-top: 0.5rem;
+        border-left: 3px solid #cbd5e1;
+    }
+
+    .adjustment-card-mobile .mobile-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px dashed #e9ecef;
+    }
+    .adjustment-card-mobile .mobile-actions .btn {
+        flex: 1;
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+
+        .page-header-flex {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 1rem;
+        }
+        .page-header-flex .btn-primary {
+            width: 100%;
+            justify-content: center;
+        }
+        h1.h3 {
+            font-size: 1.15rem;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.4rem;
+        }
+        .stat-card .stat-label {
+            font-size: 0.65rem;
+        }
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+        }
+        .stat-icon i {
+            font-size: 1.3rem !important;
+        }
+
+        .filter-form .col-md-3 {
+            width: 100%;
+        }
+
+        .table-responsive {
+            display: none;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .adjustment-cards-mobile {
+            display: none;
+        }
     }
 </style>
 ";
@@ -182,7 +400,7 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
         yield from [];
     }
 
-    // line 81
+    // line 299
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -195,23 +413,27 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 82
-        yield "<div class=\"container-fluid px-4\">
-    <!-- En-tête -->
-    <div class=\"d-flex justify-content-between align-items-center mb-4\">
+        // line 300
+        yield "<div class=\"container-fluid px-2 px-md-4 py-3\">
+
+    <!-- ==========================================
+         EN-TÊTE
+    ========================================== -->
+    <div class=\"d-flex justify-content-between align-items-center mb-4 page-header-flex flex-wrap gap-3\">
         <div>
             <nav aria-label=\"breadcrumb\">
-                <ol class=\"breadcrumb\">
-                    <li class=\"breadcrumb-item\">
+                <ol class=\"breadcrumb mb-1\">
+                    <li class=\"breadcrumb-item small\">
                         <a href=\"";
-        // line 89
+        // line 310
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_dashboard");
         yield "\" class=\"text-decoration-none\">
-                            <i class=\"fas fa-tachometer-alt me-1\"></i> Tableau de bord
+                            <i class=\"fas fa-tachometer-alt me-1\"></i>
+                            <span class=\"d-none d-sm-inline\">Tableau de bord</span>
                         </a>
                     </li>
-                    <li class=\"breadcrumb-item active\">
-                        <i class=\"fas fa-calculator me-1\"></i> Ajustements de stock
+                    <li class=\"breadcrumb-item active small\">
+                        <i class=\"fas fa-calculator me-1\"></i> Ajustements
                     </li>
                 </ol>
             </nav>
@@ -219,14 +441,14 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
                 <i class=\"fas fa-calculator text-primary me-2\"></i>
                 Ajustements de stock
             </h1>
-            <p class=\"text-muted mt-2\">
+            <p class=\"text-muted mt-2 mb-0 small d-none d-md-block\">
                 <i class=\"fas fa-info-circle me-1\"></i>
                 Gérez les entrées et sorties manuelles de stock (casse, perte, surplus, etc.)
             </p>
         </div>
         <div>
             <a href=\"";
-        // line 108
+        // line 330
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_adjustment_new");
         yield "\" class=\"btn btn-primary\">
                 <i class=\"fas fa-plus me-1\"></i> Nouvel ajustement
@@ -234,21 +456,23 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
         </div>
     </div>
 
-    <!-- Cartes statistiques -->
-    <div class=\"row g-3 mb-4\">
-        <div class=\"col-md-3\">
+    <!-- ==========================================
+         STATISTIQUES
+    ========================================== -->
+    <div class=\"row g-2 g-md-3 mb-4\">
+        <div class=\"col-6 col-md-3\">
             <div class=\"card stat-card card-bg-success shadow-sm\">
-                <div class=\"card-body\">
+                <div class=\"card-body p-2 p-md-3\">
                     <div class=\"d-flex align-items-center justify-content-between\">
                         <div class=\"flex-grow-1\">
-                            <div class=\"stat-label\">Entrées (+) </div>
+                            <div class=\"stat-label\">Entrées (+)</div>
                             <div class=\"stat-value\">";
-        // line 122
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 122, $this->source); })()), "total_in", [], "any", false, false, false, 122), 0, ",", " "), "html", null, true);
+        // line 346
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total_in", [], "any", true, true, false, 346)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 346, $this->source); })()), "total_in", [], "any", false, false, false, 346), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</div>
                             <div class=\"stat-sub\">";
-        // line 123
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 123, $this->source); })()), "count_in", [], "any", false, false, false, 123), "html", null, true);
+        // line 347
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "count_in", [], "any", true, true, false, 347)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 347, $this->source); })()), "count_in", [], "any", false, false, false, 347), 0)) : (0)), "html", null, true);
         yield " mouvement(s)</div>
                         </div>
                         <div class=\"stat-icon\">
@@ -258,19 +482,19 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
                 </div>
             </div>
         </div>
-        <div class=\"col-md-3\">
+        <div class=\"col-6 col-md-3\">
             <div class=\"card stat-card card-bg-danger shadow-sm\">
-                <div class=\"card-body\">
+                <div class=\"card-body p-2 p-md-3\">
                     <div class=\"d-flex align-items-center justify-content-between\">
                         <div class=\"flex-grow-1\">
                             <div class=\"stat-label\">Sorties (-)</div>
                             <div class=\"stat-value\">";
-        // line 138
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 138, $this->source); })()), "total_out", [], "any", false, false, false, 138), 0, ",", " "), "html", null, true);
+        // line 362
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total_out", [], "any", true, true, false, 362)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 362, $this->source); })()), "total_out", [], "any", false, false, false, 362), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</div>
                             <div class=\"stat-sub\">";
-        // line 139
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 139, $this->source); })()), "count_out", [], "any", false, false, false, 139), "html", null, true);
+        // line 363
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "count_out", [], "any", true, true, false, 363)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 363, $this->source); })()), "count_out", [], "any", false, false, false, 363), 0)) : (0)), "html", null, true);
         yield " mouvement(s)</div>
                         </div>
                         <div class=\"stat-icon\">
@@ -280,17 +504,17 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
                 </div>
             </div>
         </div>
-        <div class=\"col-md-3\">
+        <div class=\"col-6 col-md-3\">
             <div class=\"card stat-card card-bg-primary shadow-sm\">
-                <div class=\"card-body\">
+                <div class=\"card-body p-2 p-md-3\">
                     <div class=\"d-flex align-items-center justify-content-between\">
                         <div class=\"flex-grow-1\">
-                            <div class=\"stat-label\">Total mouvements</div>
+                            <div class=\"stat-label\">Mouvements</div>
                             <div class=\"stat-value\">";
-        // line 154
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 154, $this->source); })()), "total_movements", [], "any", false, false, false, 154), 0, ",", " "), "html", null, true);
+        // line 378
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total_movements", [], "any", true, true, false, 378)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 378, $this->source); })()), "total_movements", [], "any", false, false, false, 378), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</div>
-                            <div class=\"stat-sub\">ajustements effectués</div>
+                            <div class=\"stat-sub\">ajustements</div>
                         </div>
                         <div class=\"stat-icon\">
                             <i class=\"fas fa-chart-line fa-2x\"></i>
@@ -299,15 +523,15 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
                 </div>
             </div>
         </div>
-        <div class=\"col-md-3\">
+        <div class=\"col-6 col-md-3\">
             <div class=\"card stat-card card-bg-info shadow-sm\">
-                <div class=\"card-body\">
+                <div class=\"card-body p-2 p-md-3\">
                     <div class=\"d-flex align-items-center justify-content-between\">
                         <div class=\"flex-grow-1\">
-                            <div class=\"stat-label\">Quantité totale</div>
+                            <div class=\"stat-label\">Quantité</div>
                             <div class=\"stat-value\">";
-        // line 170
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 170, $this->source); })()), "total_quantity", [], "any", false, false, false, 170), 0, ",", " "), "html", null, true);
+        // line 394
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(((CoreExtension::getAttribute($this->env, $this->source, ($context["stats"] ?? null), "total_quantity", [], "any", true, true, false, 394)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["stats"]) || array_key_exists("stats", $context) ? $context["stats"] : (function () { throw new RuntimeError('Variable "stats" does not exist.', 394, $this->source); })()), "total_quantity", [], "any", false, false, false, 394), 0)) : (0)), 0, ",", " "), "html", null, true);
         yield "</div>
                             <div class=\"stat-sub\">unités concernées</div>
                         </div>
@@ -320,214 +544,412 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
         </div>
     </div>
 
-    <!-- Filtres -->
+    <!-- ==========================================
+         FILTRES
+    ========================================== -->
     <div class=\"card border-0 shadow-sm mb-4\">
-        <div class=\"card-header bg-white py-3\">
-            <h5 class=\"mb-0 fw-semibold\">
+        <div class=\"card-header bg-white py-2 py-md-3\">
+            <h5 class=\"mb-0 fw-semibold small\">
                 <i class=\"fas fa-filter me-2 text-primary\"></i> Filtres
             </h5>
         </div>
-        <div class=\"card-body\">
-            <form method=\"get\" class=\"row g-3\">
-                <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold small\">Type</label>
-                    <select name=\"type\" class=\"form-select\">
+        <div class=\"card-body p-2 p-md-3\">
+            <form method=\"get\" class=\"row g-2 g-md-3 filter-form\">
+                <div class=\"col-12 col-md-3\">
+                    <label class=\"form-label fw-bold small mb-1\">Type</label>
+                    <select name=\"type\" class=\"form-select form-select-sm\">
                         <option value=\"\">Tous</option>
                         <option value=\"in\" ";
-        // line 195
-        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 195, $this->source); })()), "type", [], "any", false, false, false, 195) == "in")) ? ("selected") : (""));
-        yield ">Entrées (+) </option>
+        // line 421
+        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 421, $this->source); })()), "type", [], "any", false, false, false, 421) == "in")) ? ("selected") : (""));
+        yield ">Entrées (+)</option>
                         <option value=\"out\" ";
-        // line 196
-        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 196, $this->source); })()), "type", [], "any", false, false, false, 196) == "out")) ? ("selected") : (""));
+        // line 422
+        yield (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 422, $this->source); })()), "type", [], "any", false, false, false, 422) == "out")) ? ("selected") : (""));
         yield ">Sorties (-)</option>
                     </select>
                 </div>
-                <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold small\">Date du</label>
-                    <input type=\"date\" name=\"date_from\" class=\"form-control\" value=\"";
-        // line 201
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 201, $this->source); })()), "date_from", [], "any", false, false, false, 201), "html", null, true);
+                <div class=\"col-6 col-md-3\">
+                    <label class=\"form-label fw-bold small mb-1\">Date du</label>
+                    <input type=\"date\" name=\"date_from\" class=\"form-control form-control-sm\" value=\"";
+        // line 427
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 427, $this->source); })()), "date_from", [], "any", false, false, false, 427), "html", null, true);
         yield "\">
                 </div>
-                <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold small\">Date au</label>
-                    <input type=\"date\" name=\"date_to\" class=\"form-control\" value=\"";
-        // line 205
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 205, $this->source); })()), "date_to", [], "any", false, false, false, 205), "html", null, true);
+                <div class=\"col-6 col-md-3\">
+                    <label class=\"form-label fw-bold small mb-1\">Date au</label>
+                    <input type=\"date\" name=\"date_to\" class=\"form-control form-control-sm\" value=\"";
+        // line 431
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 431, $this->source); })()), "date_to", [], "any", false, false, false, 431), "html", null, true);
         yield "\">
                 </div>
-                <div class=\"col-md-3 d-flex align-items-end\">
-                    <button type=\"submit\" class=\"btn btn-primary w-100\">
+                <div class=\"col-12 col-md-3 d-flex align-items-end gap-2\">
+                    <button type=\"submit\" class=\"btn btn-primary btn-sm flex-grow-1\">
                         <i class=\"fas fa-search me-1\"></i> Filtrer
                     </button>
-                </div>
+                    ";
+        // line 437
+        if (((CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 437, $this->source); })()), "type", [], "any", false, false, false, 437) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 437, $this->source); })()), "date_from", [], "any", false, false, false, 437)) || CoreExtension::getAttribute($this->env, $this->source, (isset($context["filters"]) || array_key_exists("filters", $context) ? $context["filters"] : (function () { throw new RuntimeError('Variable "filters" does not exist.', 437, $this->source); })()), "date_to", [], "any", false, false, false, 437))) {
+            // line 438
+            yield "                        <a href=\"";
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_adjustment_index");
+            yield "\" class=\"btn btn-outline-secondary btn-sm\" title=\"Effacer les filtres\">
+                            <i class=\"fas fa-undo\"></i>
+                        </a>
+                    ";
+        }
+        // line 442
+        yield "                </div>
             </form>
         </div>
     </div>
 
-    <!-- Tableau des ajustements -->
+    <!-- ==========================================
+         LISTE DES AJUSTEMENTS
+    ========================================== -->
     <div class=\"card border-0 shadow-sm\">
-        <div class=\"card-header bg-white py-3 d-flex justify-content-between align-items-center\">
-            <h5 class=\"mb-0 fw-semibold\">
+        <div class=\"card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center\">
+            <h5 class=\"mb-0 fw-semibold small\">
                 <i class=\"fas fa-list me-2 text-primary\"></i>
                 Liste des ajustements
             </h5>
             <span class=\"badge bg-secondary\">";
-        // line 223
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["adjustments"]) || array_key_exists("adjustments", $context) ? $context["adjustments"] : (function () { throw new RuntimeError('Variable "adjustments" does not exist.', 223, $this->source); })())), "html", null, true);
+        // line 456
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["adjustments"]) || array_key_exists("adjustments", $context) ? $context["adjustments"] : (function () { throw new RuntimeError('Variable "adjustments" does not exist.', 456, $this->source); })())), "html", null, true);
         yield " résultat(s)</span>
         </div>
-        <div class=\"card-body p-0\">
-            <div class=\"table-responsive\">
-                <table class=\"table table-hover align-middle mb-0\">
+
+        ";
+        // line 459
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["adjustments"]) || array_key_exists("adjustments", $context) ? $context["adjustments"] : (function () { throw new RuntimeError('Variable "adjustments" does not exist.', 459, $this->source); })())) > 0)) {
+            // line 460
+            yield "            ";
+            // line 463
+            yield "            <div class=\"card-body p-0 table-responsive d-none d-md-block\">
+                <table class=\"table table-hover align-middle mb-0 table-adjustments\">
                     <thead class=\"table-light\">
                         <tr>
-                            <th>Date</th>
+                            <th class=\"ps-3\">Date</th>
                             <th>Type</th>
                             <th>Produit</th>
                             <th>N° lot</th>
                             <th class=\"text-end\">Quantité</th>
                             <th>Raison</th>
                             <th>Utilisateur</th>
-                            <th>Justificatif</th>
-                            <th class=\"text-center\">Actions</th>
+                            <th class=\"text-center\">Justificatif</th>
+                            <th class=\"text-center pe-3\">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         ";
-        // line 242
-        $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["adjustments"]) || array_key_exists("adjustments", $context) ? $context["adjustments"] : (function () { throw new RuntimeError('Variable "adjustments" does not exist.', 242, $this->source); })()));
-        $context['_iterated'] = false;
-        foreach ($context['_seq'] as $context["_key"] => $context["adjustment"]) {
-            // line 243
-            yield "                            <tr>
-                                <td class=\"align-middle\">
-                                    <div class=\"fw-bold\">";
-            // line 245
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdAt", [], "any", false, false, false, 245), "d/m/Y"), "html", null, true);
-            yield "</div>
+            // line 479
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["adjustments"]) || array_key_exists("adjustments", $context) ? $context["adjustments"] : (function () { throw new RuntimeError('Variable "adjustments" does not exist.', 479, $this->source); })()));
+            foreach ($context['_seq'] as $context["_key"] => $context["adjustment"]) {
+                // line 480
+                yield "                            <tr>
+                                <td class=\"ps-3\">
+                                    <div class=\"fw-bold small\">";
+                // line 482
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdAt", [], "any", false, false, false, 482), "d/m/Y"), "html", null, true);
+                yield "</div>
                                     <small class=\"text-muted\">";
-            // line 246
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdAt", [], "any", false, false, false, 246), "H:i"), "html", null, true);
-            yield "</small>
-                                </div>
-                                <td class=\"align-middle\">
+                // line 483
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdAt", [], "any", false, false, false, 483), "H:i"), "html", null, true);
+                yield "</small>
+                                </td>
+                                <td>
                                     <span class=\"badge ";
-            // line 249
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "typeBadgeClass", [], "any", false, false, false, 249), "html", null, true);
-            yield "\">
+                // line 486
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "typeBadgeClass", [], "any", false, false, false, 486), "html", null, true);
+                yield " badge-type\">
                                         <i class=\"";
-            // line 250
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "typeIcon", [], "any", false, false, false, 250), "html", null, true);
-            yield " me-1\"></i>
+                // line 487
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "typeIcon", [], "any", false, false, false, 487), "html", null, true);
+                yield " me-1\"></i>
                                         ";
-            // line 251
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "typeLabel", [], "any", false, false, false, 251), "html", null, true);
-            yield "
+                // line 488
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "typeLabel", [], "any", false, false, false, 488), "html", null, true);
+                yield "
                                     </span>
-                                </div>
-                                <td class=\"align-middle\">
-                                    <div class=\"fw-bold\">";
-            // line 255
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "stockBatch", [], "any", false, false, false, 255), "product", [], "any", false, false, false, 255), "name", [], "any", false, false, false, 255)), "truncate", [35], "method", false, false, false, 255), "html", null, true);
-            yield "</div>
+                                </td>
+                                <td>
+                                    <div class=\"fw-bold small\">";
+                // line 492
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "stockBatch", [], "any", false, false, false, 492), "product", [], "any", false, false, false, 492), "name", [], "any", false, false, false, 492)), "truncate", [35], "method", false, false, false, 492), "html", null, true);
+                yield "</div>
                                     <small class=\"text-muted\">";
-            // line 256
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "stockBatch", [], "any", false, false, false, 256), "product", [], "any", false, false, false, 256), "barcode", [], "any", false, false, false, 256), "html", null, true);
-            yield "</small>
-                                </div>
-                                <td class=\"align-middle\">
+                // line 493
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "stockBatch", [], "any", false, false, false, 493), "product", [], "any", false, false, false, 493), "barcode", [], "any", false, false, false, 493), "html", null, true);
+                yield "</small>
+                                </td>
+                                <td>
                                     <code class=\"small\">";
-            // line 259
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "stockBatch", [], "any", false, false, false, 259), "batchNumber", [], "any", false, false, false, 259), "html", null, true);
-            yield "</code>
-                                </div>
-                                <td class=\"align-middle text-end\">
+                // line 496
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "stockBatch", [], "any", false, false, false, 496), "batchNumber", [], "any", false, false, false, 496)), "truncate", [20], "method", false, false, false, 496), "html", null, true);
+                yield "</code>
+                                </td>
+                                <td class=\"text-end\">
                                     <span class=\"fw-bold ";
-            // line 262
-            yield (((CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "type", [], "any", false, false, false, 262) == "in")) ? ("text-success") : ("text-danger"));
-            yield "\">
+                // line 499
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "type", [], "any", false, false, false, 499) == "in")) ? ("text-success") : ("text-danger"));
+                yield "\">
                                         ";
-            // line 263
-            yield (((CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "type", [], "any", false, false, false, 263) == "in")) ? ("+") : ("-"));
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "quantity", [], "any", false, false, false, 263), 0, ",", " "), "html", null, true);
-            yield "
+                // line 500
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "type", [], "any", false, false, false, 500) == "in")) ? ("+") : ("-"));
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "quantity", [], "any", false, false, false, 500), 0, ",", " "), "html", null, true);
+                yield "
                                     </span>
-                                </div>
-                                <td class=\"align-middle\">
-                                    <small>";
-            // line 267
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "reason", [], "any", false, false, false, 267)), "truncate", [45], "method", false, false, false, 267), "html", null, true);
-            yield "</small>
-                                </div>
-                                <td class=\"align-middle\">
+                                </td>
+                                <td>
+                                    <small class=\"text-muted\">";
+                // line 504
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "reason", [], "any", false, false, false, 504)), "truncate", [45], "method", false, false, false, 504), "html", null, true);
+                yield "</small>
+                                </td>
+                                <td>
                                     <div class=\"d-flex align-items-center gap-2\">
                                         <i class=\"fas fa-user-circle text-muted\"></i>
                                         <small>";
-            // line 272
-            yield ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdBy", [], "any", false, false, false, 272), "fullName", [], "any", false, false, false, 272)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdBy", [], "any", false, false, false, 272), "fullName", [], "any", false, false, false, 272), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdBy", [], "any", false, false, false, 272), "email", [], "any", false, false, false, 272), "html", null, true)));
-            yield "</small>
+                // line 509
+                yield ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdBy", [], "any", false, false, false, 509), "fullName", [], "any", false, false, false, 509)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdBy", [], "any", false, false, false, 509), "fullName", [], "any", false, false, false, 509), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdBy", [], "any", false, false, false, 509), "email", [], "any", false, false, false, 509)), "truncate", [20], "method", false, false, false, 509), "html", null, true)));
+                yield "</small>
                                     </div>
-                                </div>
-                                <td class=\"align-middle text-center\">
+                                </td>
+                                <td class=\"text-center\">
                                     ";
-            // line 276
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "justificationFile", [], "any", false, false, false, 276)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 277
-                yield "                                        <a href=\"";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl(("uploads/" . CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "justificationFile", [], "any", false, false, false, 277))), "html", null, true);
-                yield "\" target=\"_blank\" class=\"btn btn-sm btn-outline-info\" title=\"Voir le justificatif\">
-                                            <i class=\"fas fa-file me-1\"></i> Voir
-                                        </a>
+                // line 514
+                yield "                                    ";
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "justificationFile", [], "any", false, false, false, 514)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 515
+                    yield "                                        ";
+                    $context["parts"] = Twig\Extension\CoreExtension::split($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "justificationFile", [], "any", false, false, false, 515), "/");
+                    // line 516
+                    yield "                                        ";
+                    if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["parts"]) || array_key_exists("parts", $context) ? $context["parts"] : (function () { throw new RuntimeError('Variable "parts" does not exist.', 516, $this->source); })())) >= 3)) {
+                        // line 517
+                        yield "                                            ";
+                        $context["filename"] = Twig\Extension\CoreExtension::join(Twig\Extension\CoreExtension::slice($this->env->getCharset(), (isset($context["parts"]) || array_key_exists("parts", $context) ? $context["parts"] : (function () { throw new RuntimeError('Variable "parts" does not exist.', 517, $this->source); })()), 2), "/");
+                        // line 518
+                        yield "                                            <a href=\"";
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_serve_upload", ["folder" => CoreExtension::getAttribute($this->env, $this->source,                         // line 519
+(isset($context["parts"]) || array_key_exists("parts", $context) ? $context["parts"] : (function () { throw new RuntimeError('Variable "parts" does not exist.', 519, $this->source); })()), 0, [], "array", false, false, false, 519), "companyId" => CoreExtension::getAttribute($this->env, $this->source,                         // line 520
+(isset($context["parts"]) || array_key_exists("parts", $context) ? $context["parts"] : (function () { throw new RuntimeError('Variable "parts" does not exist.', 520, $this->source); })()), 1, [], "array", false, false, false, 520), "filename" =>                         // line 521
+(isset($context["filename"]) || array_key_exists("filename", $context) ? $context["filename"] : (function () { throw new RuntimeError('Variable "filename" does not exist.', 521, $this->source); })())]), "html", null, true);
+                        // line 522
+                        yield "\" 
+                                               target=\"_blank\" 
+                                               class=\"btn btn-sm btn-outline-info btn-icon-sm\" 
+                                               title=\"Voir le justificatif\">
+                                                <i class=\"fas fa-paperclip\"></i>
+                                            </a>
+                                        ";
+                    } else {
+                        // line 529
+                        yield "                                            <span class=\"text-muted small\">—</span>
+                                        ";
+                    }
+                    // line 531
+                    yield "                                    ";
+                } else {
+                    // line 532
+                    yield "                                        <span class=\"text-muted small\">—</span>
                                     ";
-            } else {
-                // line 281
-                yield "                                        <span class=\"text-muted\">—</span>
-                                    ";
-            }
-            // line 283
-            yield "                                </td>
-                                <td class=\"align-middle text-center\">
+                }
+                // line 534
+                yield "                                </td>
+                                <td class=\"text-center pe-3\">
                                     <a href=\"";
-            // line 285
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_adjustment_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "id", [], "any", false, false, false, 285)]), "html", null, true);
-            yield "\" class=\"btn btn-sm btn-outline-primary\" title=\"Voir le détail\">
+                // line 536
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_adjustment_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "id", [], "any", false, false, false, 536)]), "html", null, true);
+                yield "\" 
+                                       class=\"btn btn-sm btn-outline-primary btn-icon-sm\" 
+                                       title=\"Voir le détail\">
                                         <i class=\"fas fa-eye\"></i>
                                     </a>
                                 </td>
                             </tr>
                         ";
-            $context['_iterated'] = true;
-        }
-        // line 290
-        if (!$context['_iterated']) {
-            // line 291
-            yield "                            <tr>
-                                <td colspan=\"9\" class=\"text-center py-5\">
-                                    <i class=\"fas fa-calculator fa-3x text-muted mb-3 opacity-50\"></i>
-                                    <p class=\"text-muted mb-0\">Aucun ajustement trouvé</p>
-                                    <p class=\"text-muted small mb-3\">Modifiez vos filtres ou créez un nouvel ajustement</p>
-                                    <a href=\"";
-            // line 296
-            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_adjustment_new");
-            yield "\" class=\"btn btn-primary\">
-                                        <i class=\"fas fa-plus me-1\"></i> Créer un ajustement
-                                    </a>
-                                </td>
-                            </tr>
-                        ";
-        }
-        $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_key'], $context['adjustment'], $context['_parent'], $context['_iterated']);
-        $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 302
-        yield "                    </tbody>
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_key'], $context['adjustment'], $context['_parent']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 544
+            yield "                    </tbody>
                 </table>
             </div>
-        </div>
-    </div>
+
+            ";
+            // line 551
+            yield "            <div class=\"card-body p-2 adjustment-cards-mobile\">
+                ";
+            // line 552
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["adjustments"]) || array_key_exists("adjustments", $context) ? $context["adjustments"] : (function () { throw new RuntimeError('Variable "adjustments" does not exist.', 552, $this->source); })()));
+            foreach ($context['_seq'] as $context["_key"] => $context["adjustment"]) {
+                // line 553
+                yield "                    <div class=\"adjustment-card-mobile type-";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "type", [], "any", false, false, false, 553), "html", null, true);
+                yield "\">
+                        <div class=\"mobile-header\">
+                            <div class=\"mobile-header-left\">
+                                <div class=\"mobile-date\">
+                                    <i class=\"far fa-calendar-alt\"></i>
+                                    ";
+                // line 558
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdAt", [], "any", false, false, false, 558), "d/m/Y"), "html", null, true);
+                yield " · ";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdAt", [], "any", false, false, false, 558), "H:i"), "html", null, true);
+                yield "
+                                </div>
+                                <div class=\"mobile-product\">
+                                    ";
+                // line 561
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "stockBatch", [], "any", false, false, false, 561), "product", [], "any", false, false, false, 561), "name", [], "any", false, false, false, 561)), "truncate", [35], "method", false, false, false, 561), "html", null, true);
+                yield "
+                                </div>
+                                <div class=\"mobile-barcode\">
+                                    ";
+                // line 564
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "stockBatch", [], "any", false, false, false, 564), "product", [], "any", false, false, false, 564), "barcode", [], "any", false, false, false, 564), "html", null, true);
+                yield "
+                                </div>
+                            </div>
+                            <div class=\"mobile-qty\">
+                                ";
+                // line 568
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "type", [], "any", false, false, false, 568) == "in")) ? ("+") : ("-"));
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "quantity", [], "any", false, false, false, 568), 0, ",", " "), "html", null, true);
+                yield "
+                            </div>
+                        </div>
+
+                        <div class=\"mobile-rows\">
+                            <div class=\"mobile-row\">
+                                <span class=\"mobile-row-label\">
+                                    <i class=\"fas fa-tag\"></i> Type
+                                </span>
+                                <span class=\"mobile-row-value\">
+                                    <span class=\"badge ";
+                // line 578
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "typeBadgeClass", [], "any", false, false, false, 578), "html", null, true);
+                yield " badge-type\">
+                                        <i class=\"";
+                // line 579
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "typeIcon", [], "any", false, false, false, 579), "html", null, true);
+                yield " me-1\"></i>
+                                        ";
+                // line 580
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "typeLabel", [], "any", false, false, false, 580), "html", null, true);
+                yield "
+                                    </span>
+                                </span>
+                            </div>
+                            <div class=\"mobile-row\">
+                                <span class=\"mobile-row-label\">
+                                    <i class=\"fas fa-barcode\"></i> N° lot
+                                </span>
+                                <span class=\"mobile-row-value\">
+                                    <code class=\"small\">";
+                // line 589
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "stockBatch", [], "any", false, false, false, 589), "batchNumber", [], "any", false, false, false, 589)), "truncate", [20], "method", false, false, false, 589), "html", null, true);
+                yield "</code>
+                                </span>
+                            </div>
+                            <div class=\"mobile-row\">
+                                <span class=\"mobile-row-label\">
+                                    <i class=\"fas fa-user\"></i> Utilisateur
+                                </span>
+                                <span class=\"mobile-row-value\">
+                                    ";
+                // line 597
+                yield ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdBy", [], "any", false, false, false, 597), "fullName", [], "any", false, false, false, 597)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdBy", [], "any", false, false, false, 597), "fullName", [], "any", false, false, false, 597), "html", null, true)) : ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "createdBy", [], "any", false, false, false, 597), "email", [], "any", false, false, false, 597)), "truncate", [20], "method", false, false, false, 597), "html", null, true)));
+                yield "
+                                </span>
+                            </div>
+                        </div>
+
+                        ";
+                // line 602
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "reason", [], "any", false, false, false, 602)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 603
+                    yield "                            <div class=\"mobile-reason\">
+                                <i class=\"fas fa-comment me-1\"></i>
+                                ";
+                    // line 605
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $this->extensions['Twig\Extra\String\StringExtension']->createUnicodeString(CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "reason", [], "any", false, false, false, 605)), "truncate", [100], "method", false, false, false, 605), "html", null, true);
+                    yield "
+                            </div>
+                        ";
+                }
+                // line 608
+                yield "
+                        <div class=\"mobile-actions\">
+                            <a href=\"";
+                // line 610
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_adjustment_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "id", [], "any", false, false, false, 610)]), "html", null, true);
+                yield "\" 
+                               class=\"btn btn-outline-primary\">
+                                <i class=\"fas fa-eye me-1\"></i> Voir
+                            </a>
+                            ";
+                // line 615
+                yield "                            ";
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "justificationFile", [], "any", false, false, false, 615)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 616
+                    yield "                                ";
+                    $context["parts"] = Twig\Extension\CoreExtension::split($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, $context["adjustment"], "justificationFile", [], "any", false, false, false, 616), "/");
+                    // line 617
+                    yield "                                ";
+                    if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["parts"]) || array_key_exists("parts", $context) ? $context["parts"] : (function () { throw new RuntimeError('Variable "parts" does not exist.', 617, $this->source); })())) >= 3)) {
+                        // line 618
+                        yield "                                    ";
+                        $context["filename"] = Twig\Extension\CoreExtension::join(Twig\Extension\CoreExtension::slice($this->env->getCharset(), (isset($context["parts"]) || array_key_exists("parts", $context) ? $context["parts"] : (function () { throw new RuntimeError('Variable "parts" does not exist.', 618, $this->source); })()), 2), "/");
+                        // line 619
+                        yield "                                    <a href=\"";
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_serve_upload", ["folder" => CoreExtension::getAttribute($this->env, $this->source,                         // line 620
+(isset($context["parts"]) || array_key_exists("parts", $context) ? $context["parts"] : (function () { throw new RuntimeError('Variable "parts" does not exist.', 620, $this->source); })()), 0, [], "array", false, false, false, 620), "companyId" => CoreExtension::getAttribute($this->env, $this->source,                         // line 621
+(isset($context["parts"]) || array_key_exists("parts", $context) ? $context["parts"] : (function () { throw new RuntimeError('Variable "parts" does not exist.', 621, $this->source); })()), 1, [], "array", false, false, false, 621), "filename" =>                         // line 622
+(isset($context["filename"]) || array_key_exists("filename", $context) ? $context["filename"] : (function () { throw new RuntimeError('Variable "filename" does not exist.', 622, $this->source); })())]), "html", null, true);
+                        // line 623
+                        yield "\" 
+                                       target=\"_blank\" 
+                                       class=\"btn btn-outline-info\">
+                                        <i class=\"fas fa-paperclip me-1\"></i> Justif.
+                                    </a>
+                                ";
+                    }
+                    // line 629
+                    yield "                            ";
+                }
+                // line 630
+                yield "                        </div>
+                    </div>
+                ";
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_key'], $context['adjustment'], $context['_parent']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 633
+            yield "            </div>
+        ";
+        } else {
+            // line 635
+            yield "            <div class=\"card-body text-center py-5\">
+                <i class=\"fas fa-calculator fa-3x text-muted mb-3 opacity-50\"></i>
+                <p class=\"text-muted mb-0\">Aucun ajustement trouvé</p>
+                <p class=\"text-muted small mb-3\">Modifiez vos filtres ou créez un nouvel ajustement</p>
+                <a href=\"";
+            // line 639
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_stock_adjustment_new");
+            yield "\" class=\"btn btn-primary\">
+                    <i class=\"fas fa-plus me-1\"></i> Créer un ajustement
+                </a>
+            </div>
+        ";
+        }
+        // line 644
+        yield "    </div>
 </div>
 ";
         
@@ -539,7 +961,7 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
         yield from [];
     }
 
-    // line 310
+    // line 648
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -552,11 +974,9 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 311
+        // line 649
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
-<script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
-<script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js\"></script>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -588,7 +1008,7 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  556 => 311,  543 => 310,  526 => 302,  514 => 296,  507 => 291,  505 => 290,  495 => 285,  491 => 283,  487 => 281,  479 => 277,  477 => 276,  470 => 272,  462 => 267,  454 => 263,  450 => 262,  444 => 259,  438 => 256,  434 => 255,  427 => 251,  423 => 250,  419 => 249,  413 => 246,  409 => 245,  405 => 243,  400 => 242,  378 => 223,  357 => 205,  350 => 201,  342 => 196,  338 => 195,  310 => 170,  291 => 154,  273 => 139,  269 => 138,  251 => 123,  247 => 122,  230 => 108,  208 => 89,  199 => 82,  186 => 81,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  978 => 649,  965 => 648,  952 => 644,  944 => 639,  938 => 635,  934 => 633,  926 => 630,  923 => 629,  915 => 623,  913 => 622,  912 => 621,  911 => 620,  909 => 619,  906 => 618,  903 => 617,  900 => 616,  897 => 615,  890 => 610,  886 => 608,  880 => 605,  876 => 603,  874 => 602,  866 => 597,  855 => 589,  843 => 580,  839 => 579,  835 => 578,  821 => 568,  814 => 564,  808 => 561,  800 => 558,  791 => 553,  787 => 552,  784 => 551,  778 => 544,  764 => 536,  760 => 534,  756 => 532,  753 => 531,  749 => 529,  740 => 522,  738 => 521,  737 => 520,  736 => 519,  734 => 518,  731 => 517,  728 => 516,  725 => 515,  722 => 514,  715 => 509,  707 => 504,  699 => 500,  695 => 499,  689 => 496,  683 => 493,  679 => 492,  672 => 488,  668 => 487,  664 => 486,  658 => 483,  654 => 482,  650 => 480,  646 => 479,  628 => 463,  626 => 460,  624 => 459,  618 => 456,  602 => 442,  594 => 438,  592 => 437,  583 => 431,  576 => 427,  568 => 422,  564 => 421,  534 => 394,  515 => 378,  497 => 363,  493 => 362,  475 => 347,  471 => 346,  452 => 330,  429 => 310,  417 => 300,  404 => 299,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -600,8 +1020,10 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
 
 {% block stylesheets %}
 {{ parent() }}
-<link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
 <style>
+    /* ============================================
+       STAT CARDS
+       ============================================ */
     .stat-card {
         transition: transform 0.2s, box-shadow 0.2s;
         border-radius: 1rem;
@@ -613,28 +1035,30 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
         box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
     .stat-card .stat-value {
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: bold;
         margin-bottom: 0;
+        line-height: 1.1;
     }
     .stat-card .stat-label {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         font-weight: 600;
     }
     .stat-card .stat-sub {
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         margin-top: 0.25rem;
-        opacity: 0.8;
+        opacity: 0.85;
     }
     .stat-icon {
-        width: 50px;
-        height: 50px;
+        width: 46px;
+        height: 46px;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 1rem;
+        flex-shrink: 0;
     }
     .card-bg-success {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
@@ -668,25 +1092,243 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
     .card-bg-danger .text-muted,
     .card-bg-primary .text-muted,
     .card-bg-info .text-muted {
-        color: rgba(255,255,255,0.8) !important;
+        color: rgba(255,255,255,0.85) !important;
+    }
+
+    /* ============================================
+       TABLEAU
+       ============================================ */
+    .table-adjustments td {
+        vertical-align: middle;
+    }
+    .badge-type {
+        font-size: 0.72rem;
+        padding: 0.35rem 0.6rem;
+        font-weight: 600;
+    }
+    .reason-text {
+        max-width: 200px;
+        display: inline-block;
+        word-break: break-word;
+    }
+
+    /* ============================================
+       BOUTONS D'ACTION
+       ============================================ */
+    .btn-icon-sm {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+    }
+
+    /* ============================================
+       CARTES MOBILE (à la place du tableau)
+       ============================================ */
+    .adjustment-card-mobile {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        position: relative;
+        transition: box-shadow 0.2s;
+    }
+    .adjustment-card-mobile:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .adjustment-card-mobile::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 12px 0 0 12px;
+    }
+    .adjustment-card-mobile.type-in::before {
+        background: #10b981;
+    }
+    .adjustment-card-mobile.type-out::before {
+        background: #ef4444;
+    }
+
+    .adjustment-card-mobile .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px dashed #e9ecef;
+    }
+    .adjustment-card-mobile .mobile-header-left {
+        flex-grow: 1;
+        min-width: 0;
+    }
+    .adjustment-card-mobile .mobile-date {
+        font-size: 0.72rem;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-bottom: 0.35rem;
+    }
+    .adjustment-card-mobile .mobile-product {
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 0.92rem;
+        line-height: 1.3;
+        margin-bottom: 0.15rem;
+    }
+    .adjustment-card-mobile .mobile-barcode {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        font-family: 'Courier New', monospace;
+    }
+
+    .adjustment-card-mobile .mobile-qty {
+        flex-shrink: 0;
+        text-align: right;
+        padding: 0.25rem 0.5rem;
+        border-radius: 8px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        line-height: 1.1;
+        min-width: 70px;
+    }
+    .adjustment-card-mobile.type-in .mobile-qty {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    .adjustment-card-mobile.type-out .mobile-qty {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .adjustment-card-mobile .mobile-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .adjustment-card-mobile .mobile-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+    }
+    .adjustment-card-mobile .mobile-row-label {
+        color: #64748b;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .adjustment-card-mobile .mobile-row-value {
+        color: #1e293b;
+        font-weight: 600;
+        text-align: right;
+        word-break: break-word;
+    }
+    .adjustment-card-mobile .mobile-reason {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 0.55rem 0.75rem;
+        font-size: 0.78rem;
+        color: #475569;
+        margin-top: 0.5rem;
+        border-left: 3px solid #cbd5e1;
+    }
+
+    .adjustment-card-mobile .mobile-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px dashed #e9ecef;
+    }
+    .adjustment-card-mobile .mobile-actions .btn {
+        flex: 1;
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+
+        .page-header-flex {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 1rem;
+        }
+        .page-header-flex .btn-primary {
+            width: 100%;
+            justify-content: center;
+        }
+        h1.h3 {
+            font-size: 1.15rem;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.4rem;
+        }
+        .stat-card .stat-label {
+            font-size: 0.65rem;
+        }
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+        }
+        .stat-icon i {
+            font-size: 1.3rem !important;
+        }
+
+        .filter-form .col-md-3 {
+            width: 100%;
+        }
+
+        .table-responsive {
+            display: none;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .adjustment-cards-mobile {
+            display: none;
+        }
     }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class=\"container-fluid px-4\">
-    <!-- En-tête -->
-    <div class=\"d-flex justify-content-between align-items-center mb-4\">
+<div class=\"container-fluid px-2 px-md-4 py-3\">
+
+    <!-- ==========================================
+         EN-TÊTE
+    ========================================== -->
+    <div class=\"d-flex justify-content-between align-items-center mb-4 page-header-flex flex-wrap gap-3\">
         <div>
             <nav aria-label=\"breadcrumb\">
-                <ol class=\"breadcrumb\">
-                    <li class=\"breadcrumb-item\">
+                <ol class=\"breadcrumb mb-1\">
+                    <li class=\"breadcrumb-item small\">
                         <a href=\"{{ path('app_dashboard') }}\" class=\"text-decoration-none\">
-                            <i class=\"fas fa-tachometer-alt me-1\"></i> Tableau de bord
+                            <i class=\"fas fa-tachometer-alt me-1\"></i>
+                            <span class=\"d-none d-sm-inline\">Tableau de bord</span>
                         </a>
                     </li>
-                    <li class=\"breadcrumb-item active\">
-                        <i class=\"fas fa-calculator me-1\"></i> Ajustements de stock
+                    <li class=\"breadcrumb-item active small\">
+                        <i class=\"fas fa-calculator me-1\"></i> Ajustements
                     </li>
                 </ol>
             </nav>
@@ -694,7 +1336,7 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
                 <i class=\"fas fa-calculator text-primary me-2\"></i>
                 Ajustements de stock
             </h1>
-            <p class=\"text-muted mt-2\">
+            <p class=\"text-muted mt-2 mb-0 small d-none d-md-block\">
                 <i class=\"fas fa-info-circle me-1\"></i>
                 Gérez les entrées et sorties manuelles de stock (casse, perte, surplus, etc.)
             </p>
@@ -706,16 +1348,18 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
         </div>
     </div>
 
-    <!-- Cartes statistiques -->
-    <div class=\"row g-3 mb-4\">
-        <div class=\"col-md-3\">
+    <!-- ==========================================
+         STATISTIQUES
+    ========================================== -->
+    <div class=\"row g-2 g-md-3 mb-4\">
+        <div class=\"col-6 col-md-3\">
             <div class=\"card stat-card card-bg-success shadow-sm\">
-                <div class=\"card-body\">
+                <div class=\"card-body p-2 p-md-3\">
                     <div class=\"d-flex align-items-center justify-content-between\">
                         <div class=\"flex-grow-1\">
-                            <div class=\"stat-label\">Entrées (+) </div>
-                            <div class=\"stat-value\">{{ stats.total_in|number_format(0, ',', ' ') }}</div>
-                            <div class=\"stat-sub\">{{ stats.count_in }} mouvement(s)</div>
+                            <div class=\"stat-label\">Entrées (+)</div>
+                            <div class=\"stat-value\">{{ stats.total_in|default(0)|number_format(0, ',', ' ') }}</div>
+                            <div class=\"stat-sub\">{{ stats.count_in|default(0) }} mouvement(s)</div>
                         </div>
                         <div class=\"stat-icon\">
                             <i class=\"fas fa-plus-circle fa-2x\"></i>
@@ -724,14 +1368,14 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
                 </div>
             </div>
         </div>
-        <div class=\"col-md-3\">
+        <div class=\"col-6 col-md-3\">
             <div class=\"card stat-card card-bg-danger shadow-sm\">
-                <div class=\"card-body\">
+                <div class=\"card-body p-2 p-md-3\">
                     <div class=\"d-flex align-items-center justify-content-between\">
                         <div class=\"flex-grow-1\">
                             <div class=\"stat-label\">Sorties (-)</div>
-                            <div class=\"stat-value\">{{ stats.total_out|number_format(0, ',', ' ') }}</div>
-                            <div class=\"stat-sub\">{{ stats.count_out }} mouvement(s)</div>
+                            <div class=\"stat-value\">{{ stats.total_out|default(0)|number_format(0, ',', ' ') }}</div>
+                            <div class=\"stat-sub\">{{ stats.count_out|default(0) }} mouvement(s)</div>
                         </div>
                         <div class=\"stat-icon\">
                             <i class=\"fas fa-minus-circle fa-2x\"></i>
@@ -740,14 +1384,14 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
                 </div>
             </div>
         </div>
-        <div class=\"col-md-3\">
+        <div class=\"col-6 col-md-3\">
             <div class=\"card stat-card card-bg-primary shadow-sm\">
-                <div class=\"card-body\">
+                <div class=\"card-body p-2 p-md-3\">
                     <div class=\"d-flex align-items-center justify-content-between\">
                         <div class=\"flex-grow-1\">
-                            <div class=\"stat-label\">Total mouvements</div>
-                            <div class=\"stat-value\">{{ stats.total_movements|number_format(0, ',', ' ') }}</div>
-                            <div class=\"stat-sub\">ajustements effectués</div>
+                            <div class=\"stat-label\">Mouvements</div>
+                            <div class=\"stat-value\">{{ stats.total_movements|default(0)|number_format(0, ',', ' ') }}</div>
+                            <div class=\"stat-sub\">ajustements</div>
                         </div>
                         <div class=\"stat-icon\">
                             <i class=\"fas fa-chart-line fa-2x\"></i>
@@ -756,13 +1400,13 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
                 </div>
             </div>
         </div>
-        <div class=\"col-md-3\">
+        <div class=\"col-6 col-md-3\">
             <div class=\"card stat-card card-bg-info shadow-sm\">
-                <div class=\"card-body\">
+                <div class=\"card-body p-2 p-md-3\">
                     <div class=\"d-flex align-items-center justify-content-between\">
                         <div class=\"flex-grow-1\">
-                            <div class=\"stat-label\">Quantité totale</div>
-                            <div class=\"stat-value\">{{ stats.total_quantity|number_format(0, ',', ' ') }}</div>
+                            <div class=\"stat-label\">Quantité</div>
+                            <div class=\"stat-value\">{{ stats.total_quantity|default(0)|number_format(0, ',', ' ') }}</div>
                             <div class=\"stat-sub\">unités concernées</div>
                         </div>
                         <div class=\"stat-icon\">
@@ -774,122 +1418,140 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
         </div>
     </div>
 
-    <!-- Filtres -->
+    <!-- ==========================================
+         FILTRES
+    ========================================== -->
     <div class=\"card border-0 shadow-sm mb-4\">
-        <div class=\"card-header bg-white py-3\">
-            <h5 class=\"mb-0 fw-semibold\">
+        <div class=\"card-header bg-white py-2 py-md-3\">
+            <h5 class=\"mb-0 fw-semibold small\">
                 <i class=\"fas fa-filter me-2 text-primary\"></i> Filtres
             </h5>
         </div>
-        <div class=\"card-body\">
-            <form method=\"get\" class=\"row g-3\">
-                <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold small\">Type</label>
-                    <select name=\"type\" class=\"form-select\">
+        <div class=\"card-body p-2 p-md-3\">
+            <form method=\"get\" class=\"row g-2 g-md-3 filter-form\">
+                <div class=\"col-12 col-md-3\">
+                    <label class=\"form-label fw-bold small mb-1\">Type</label>
+                    <select name=\"type\" class=\"form-select form-select-sm\">
                         <option value=\"\">Tous</option>
-                        <option value=\"in\" {{ filters.type == 'in' ? 'selected' }}>Entrées (+) </option>
+                        <option value=\"in\" {{ filters.type == 'in' ? 'selected' }}>Entrées (+)</option>
                         <option value=\"out\" {{ filters.type == 'out' ? 'selected' }}>Sorties (-)</option>
                     </select>
                 </div>
-                <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold small\">Date du</label>
-                    <input type=\"date\" name=\"date_from\" class=\"form-control\" value=\"{{ filters.date_from }}\">
+                <div class=\"col-6 col-md-3\">
+                    <label class=\"form-label fw-bold small mb-1\">Date du</label>
+                    <input type=\"date\" name=\"date_from\" class=\"form-control form-control-sm\" value=\"{{ filters.date_from }}\">
                 </div>
-                <div class=\"col-md-3\">
-                    <label class=\"form-label fw-bold small\">Date au</label>
-                    <input type=\"date\" name=\"date_to\" class=\"form-control\" value=\"{{ filters.date_to }}\">
+                <div class=\"col-6 col-md-3\">
+                    <label class=\"form-label fw-bold small mb-1\">Date au</label>
+                    <input type=\"date\" name=\"date_to\" class=\"form-control form-control-sm\" value=\"{{ filters.date_to }}\">
                 </div>
-                <div class=\"col-md-3 d-flex align-items-end\">
-                    <button type=\"submit\" class=\"btn btn-primary w-100\">
+                <div class=\"col-12 col-md-3 d-flex align-items-end gap-2\">
+                    <button type=\"submit\" class=\"btn btn-primary btn-sm flex-grow-1\">
                         <i class=\"fas fa-search me-1\"></i> Filtrer
                     </button>
+                    {% if filters.type or filters.date_from or filters.date_to %}
+                        <a href=\"{{ path('app_stock_adjustment_index') }}\" class=\"btn btn-outline-secondary btn-sm\" title=\"Effacer les filtres\">
+                            <i class=\"fas fa-undo\"></i>
+                        </a>
+                    {% endif %}
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Tableau des ajustements -->
+    <!-- ==========================================
+         LISTE DES AJUSTEMENTS
+    ========================================== -->
     <div class=\"card border-0 shadow-sm\">
-        <div class=\"card-header bg-white py-3 d-flex justify-content-between align-items-center\">
-            <h5 class=\"mb-0 fw-semibold\">
+        <div class=\"card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center\">
+            <h5 class=\"mb-0 fw-semibold small\">
                 <i class=\"fas fa-list me-2 text-primary\"></i>
                 Liste des ajustements
             </h5>
             <span class=\"badge bg-secondary\">{{ adjustments|length }} résultat(s)</span>
         </div>
-        <div class=\"card-body p-0\">
-            <div class=\"table-responsive\">
-                <table class=\"table table-hover align-middle mb-0\">
+
+        {% if adjustments|length > 0 %}
+            {# ============================================
+               VUE TABLEAU (desktop)
+            ============================================ #}
+            <div class=\"card-body p-0 table-responsive d-none d-md-block\">
+                <table class=\"table table-hover align-middle mb-0 table-adjustments\">
                     <thead class=\"table-light\">
                         <tr>
-                            <th>Date</th>
+                            <th class=\"ps-3\">Date</th>
                             <th>Type</th>
                             <th>Produit</th>
                             <th>N° lot</th>
                             <th class=\"text-end\">Quantité</th>
                             <th>Raison</th>
                             <th>Utilisateur</th>
-                            <th>Justificatif</th>
-                            <th class=\"text-center\">Actions</th>
+                            <th class=\"text-center\">Justificatif</th>
+                            <th class=\"text-center pe-3\">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for adjustment in adjustments %}
                             <tr>
-                                <td class=\"align-middle\">
-                                    <div class=\"fw-bold\">{{ adjustment.createdAt|date('d/m/Y') }}</div>
+                                <td class=\"ps-3\">
+                                    <div class=\"fw-bold small\">{{ adjustment.createdAt|date('d/m/Y') }}</div>
                                     <small class=\"text-muted\">{{ adjustment.createdAt|date('H:i') }}</small>
-                                </div>
-                                <td class=\"align-middle\">
-                                    <span class=\"badge {{ adjustment.typeBadgeClass }}\">
+                                </td>
+                                <td>
+                                    <span class=\"badge {{ adjustment.typeBadgeClass }} badge-type\">
                                         <i class=\"{{ adjustment.typeIcon }} me-1\"></i>
                                         {{ adjustment.typeLabel }}
                                     </span>
-                                </div>
-                                <td class=\"align-middle\">
-                                    <div class=\"fw-bold\">{{ adjustment.stockBatch.product.name|u.truncate(35) }}</div>
+                                </td>
+                                <td>
+                                    <div class=\"fw-bold small\">{{ adjustment.stockBatch.product.name|u.truncate(35) }}</div>
                                     <small class=\"text-muted\">{{ adjustment.stockBatch.product.barcode }}</small>
-                                </div>
-                                <td class=\"align-middle\">
-                                    <code class=\"small\">{{ adjustment.stockBatch.batchNumber }}</code>
-                                </div>
-                                <td class=\"align-middle text-end\">
+                                </td>
+                                <td>
+                                    <code class=\"small\">{{ adjustment.stockBatch.batchNumber|u.truncate(20) }}</code>
+                                </td>
+                                <td class=\"text-end\">
                                     <span class=\"fw-bold {{ adjustment.type == 'in' ? 'text-success' : 'text-danger' }}\">
                                         {{ adjustment.type == 'in' ? '+' : '-' }}{{ adjustment.quantity|number_format(0, ',', ' ') }}
                                     </span>
-                                </div>
-                                <td class=\"align-middle\">
-                                    <small>{{ adjustment.reason|u.truncate(45) }}</small>
-                                </div>
-                                <td class=\"align-middle\">
+                                </td>
+                                <td>
+                                    <small class=\"text-muted\">{{ adjustment.reason|u.truncate(45) }}</small>
+                                </td>
+                                <td>
                                     <div class=\"d-flex align-items-center gap-2\">
                                         <i class=\"fas fa-user-circle text-muted\"></i>
-                                        <small>{{ adjustment.createdBy.fullName ?: adjustment.createdBy.email }}</small>
+                                        <small>{{ adjustment.createdBy.fullName ?: adjustment.createdBy.email|u.truncate(20) }}</small>
                                     </div>
-                                </div>
-                                <td class=\"align-middle text-center\">
+                                </td>
+                                <td class=\"text-center\">
+                                    {# ✅ Justificatif via la route app_serve_upload #}
                                     {% if adjustment.justificationFile %}
-                                        <a href=\"{{ asset('uploads/' ~ adjustment.justificationFile) }}\" target=\"_blank\" class=\"btn btn-sm btn-outline-info\" title=\"Voir le justificatif\">
-                                            <i class=\"fas fa-file me-1\"></i> Voir
-                                        </a>
+                                        {% set parts = adjustment.justificationFile|split('/') %}
+                                        {% if parts|length >= 3 %}
+                                            {% set filename = parts|slice(2)|join('/') %}
+                                            <a href=\"{{ path('app_serve_upload', {
+                                                folder: parts[0],
+                                                companyId: parts[1],
+                                                filename: filename
+                                            }) }}\" 
+                                               target=\"_blank\" 
+                                               class=\"btn btn-sm btn-outline-info btn-icon-sm\" 
+                                               title=\"Voir le justificatif\">
+                                                <i class=\"fas fa-paperclip\"></i>
+                                            </a>
+                                        {% else %}
+                                            <span class=\"text-muted small\">—</span>
+                                        {% endif %}
                                     {% else %}
-                                        <span class=\"text-muted\">—</span>
+                                        <span class=\"text-muted small\">—</span>
                                     {% endif %}
                                 </td>
-                                <td class=\"align-middle text-center\">
-                                    <a href=\"{{ path('app_stock_adjustment_show', {'id': adjustment.id}) }}\" class=\"btn btn-sm btn-outline-primary\" title=\"Voir le détail\">
+                                <td class=\"text-center pe-3\">
+                                    <a href=\"{{ path('app_stock_adjustment_show', {'id': adjustment.id}) }}\" 
+                                       class=\"btn btn-sm btn-outline-primary btn-icon-sm\" 
+                                       title=\"Voir le détail\">
                                         <i class=\"fas fa-eye\"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan=\"9\" class=\"text-center py-5\">
-                                    <i class=\"fas fa-calculator fa-3x text-muted mb-3 opacity-50\"></i>
-                                    <p class=\"text-muted mb-0\">Aucun ajustement trouvé</p>
-                                    <p class=\"text-muted small mb-3\">Modifiez vos filtres ou créez un nouvel ajustement</p>
-                                    <a href=\"{{ path('app_stock_adjustment_new') }}\" class=\"btn btn-primary\">
-                                        <i class=\"fas fa-plus me-1\"></i> Créer un ajustement
                                     </a>
                                 </td>
                             </tr>
@@ -897,15 +1559,109 @@ class __TwigTemplate_859450c26435df3226269e637434de50 extends Template
                     </tbody>
                 </table>
             </div>
-        </div>
+
+            {# ============================================
+               VUE CARTES (mobile)
+            ============================================ #}
+            <div class=\"card-body p-2 adjustment-cards-mobile\">
+                {% for adjustment in adjustments %}
+                    <div class=\"adjustment-card-mobile type-{{ adjustment.type }}\">
+                        <div class=\"mobile-header\">
+                            <div class=\"mobile-header-left\">
+                                <div class=\"mobile-date\">
+                                    <i class=\"far fa-calendar-alt\"></i>
+                                    {{ adjustment.createdAt|date('d/m/Y') }} · {{ adjustment.createdAt|date('H:i') }}
+                                </div>
+                                <div class=\"mobile-product\">
+                                    {{ adjustment.stockBatch.product.name|u.truncate(35) }}
+                                </div>
+                                <div class=\"mobile-barcode\">
+                                    {{ adjustment.stockBatch.product.barcode }}
+                                </div>
+                            </div>
+                            <div class=\"mobile-qty\">
+                                {{ adjustment.type == 'in' ? '+' : '-' }}{{ adjustment.quantity|number_format(0, ',', ' ') }}
+                            </div>
+                        </div>
+
+                        <div class=\"mobile-rows\">
+                            <div class=\"mobile-row\">
+                                <span class=\"mobile-row-label\">
+                                    <i class=\"fas fa-tag\"></i> Type
+                                </span>
+                                <span class=\"mobile-row-value\">
+                                    <span class=\"badge {{ adjustment.typeBadgeClass }} badge-type\">
+                                        <i class=\"{{ adjustment.typeIcon }} me-1\"></i>
+                                        {{ adjustment.typeLabel }}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class=\"mobile-row\">
+                                <span class=\"mobile-row-label\">
+                                    <i class=\"fas fa-barcode\"></i> N° lot
+                                </span>
+                                <span class=\"mobile-row-value\">
+                                    <code class=\"small\">{{ adjustment.stockBatch.batchNumber|u.truncate(20) }}</code>
+                                </span>
+                            </div>
+                            <div class=\"mobile-row\">
+                                <span class=\"mobile-row-label\">
+                                    <i class=\"fas fa-user\"></i> Utilisateur
+                                </span>
+                                <span class=\"mobile-row-value\">
+                                    {{ adjustment.createdBy.fullName ?: adjustment.createdBy.email|u.truncate(20) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        {% if adjustment.reason %}
+                            <div class=\"mobile-reason\">
+                                <i class=\"fas fa-comment me-1\"></i>
+                                {{ adjustment.reason|u.truncate(100) }}
+                            </div>
+                        {% endif %}
+
+                        <div class=\"mobile-actions\">
+                            <a href=\"{{ path('app_stock_adjustment_show', {'id': adjustment.id}) }}\" 
+                               class=\"btn btn-outline-primary\">
+                                <i class=\"fas fa-eye me-1\"></i> Voir
+                            </a>
+                            {# ✅ Justificatif via la route app_serve_upload #}
+                            {% if adjustment.justificationFile %}
+                                {% set parts = adjustment.justificationFile|split('/') %}
+                                {% if parts|length >= 3 %}
+                                    {% set filename = parts|slice(2)|join('/') %}
+                                    <a href=\"{{ path('app_serve_upload', {
+                                        folder: parts[0],
+                                        companyId: parts[1],
+                                        filename: filename
+                                    }) }}\" 
+                                       target=\"_blank\" 
+                                       class=\"btn btn-outline-info\">
+                                        <i class=\"fas fa-paperclip me-1\"></i> Justif.
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class=\"card-body text-center py-5\">
+                <i class=\"fas fa-calculator fa-3x text-muted mb-3 opacity-50\"></i>
+                <p class=\"text-muted mb-0\">Aucun ajustement trouvé</p>
+                <p class=\"text-muted small mb-3\">Modifiez vos filtres ou créez un nouvel ajustement</p>
+                <a href=\"{{ path('app_stock_adjustment_new') }}\" class=\"btn btn-primary\">
+                    <i class=\"fas fa-plus me-1\"></i> Créer un ajustement
+                </a>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
-<script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
-<script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js\"></script>
 {% endblock %}", "stock/adjustment/index.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\stock\\adjustment\\index.html.twig");
     }
 }

@@ -9,7 +9,7 @@ use App\Entity\Supplier;
 use App\Entity\User;
 use App\Entity\Location;
 use App\Entity\StockBatch;
-use App\Entity\PurchaseItem;  
+use App\Entity\PurchaseItem;
 use App\Form\PurchaseConfirmationType;
 use App\Form\PurchaseType;
 use App\Form\ReceivePurchaseType;
@@ -45,11 +45,10 @@ class PurchaseController extends AbstractController
      */
     private function sendJsonResponse($data, int $status = 200): JsonResponse
     {
-        // Nettoyer tous les buffers de sortie
         while (ob_get_level() > 0) {
             ob_end_clean();
         }
-        
+
         return $this->json($data, $status);
     }
 
@@ -78,7 +77,6 @@ class PurchaseController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
         $limit = 15;
 
-        // Filtrer les fournisseurs par entreprise
         $suppliers = $this->em->getRepository(Supplier::class)
             ->findBy(['hma_service' => $hmaService, 'is_active' => true]);
 
@@ -105,27 +103,26 @@ class PurchaseController extends AbstractController
     {
         $form = $this->createForm(PurchaseType::class);
         $form->handleRequest($request);
-        
+
         /** @var User $user */
         $user = $this->getUser();
         $hmaService = $user->getHmaService();
-        
-        // Filtrer les fournisseurs actifs et avec abonnement actif
+
         $suppliers = $this->em->getRepository(Supplier::class)
             ->findBy([
-                'hma_service' => $hmaService, 
+                'hma_service' => $hmaService,
                 'is_active' => true,
-                'subscription_active' => true
+                'subscription_active' => true,
             ]);
-        
+
         $cart = $this->purchaseFlowService->getCart();
         $cartTotal = $this->purchaseFlowService->getCartTotal();
-        
+
         return $this->render('purchase/cart.html.twig', [
             'cart' => $cart,
             'cart_total' => $cartTotal,
             'form' => $form->createView(),
-            'suppliers' => $suppliers
+            'suppliers' => $suppliers,
         ]);
     }
 
@@ -137,7 +134,7 @@ class PurchaseController extends AbstractController
     {
         try {
             $cart = $this->purchaseFlowService->getCart();
-            $items = array_map(function($item) {
+            $items = array_map(function ($item) {
                 return [
                     'product_id' => $item['product_id'],
                     'product_name' => $item['product_name'],
@@ -151,11 +148,11 @@ class PurchaseController extends AbstractController
                 ];
             }, $cart);
             $cartTotal = $this->purchaseFlowService->getCartTotal();
-            
+
             return $this->sendJsonResponse([
                 'items' => $items,
                 'total' => $cartTotal,
-                'count' => count($items)
+                'count' => count($items),
             ]);
         } catch (\Exception $e) {
             $this->logger->error('Erreur cartData', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
@@ -172,29 +169,29 @@ class PurchaseController extends AbstractController
         $productId = $request->request->get('product_id');
         $quantity = (int) $request->request->get('quantity', 1);
         $unitPrice = (float) $request->request->get('unit_price');
-        
+
         $product = $this->em->getRepository(Product::class)->find($productId);
-        
+
         if (!$product) {
             return $this->sendJsonResponse(['error' => 'Produit non trouvé'], 404);
         }
-        
+
         if (!$product->isActive() || !$product->isSubscriptionActive()) {
             return $this->sendJsonResponse(['error' => 'Ce produit n\'est pas disponible'], 403);
         }
-        
+
         if (!$unitPrice || $unitPrice <= 0) {
             $unitPrice = (float) $product->getPurchasePrice();
         }
-        
+
         try {
             $cartItem = $this->purchaseFlowService->addProductToCart($product, $quantity, $unitPrice);
-            
+
             return $this->sendJsonResponse([
                 'success' => true,
                 'cart_item' => $cartItem,
                 'cart_total' => $this->purchaseFlowService->getCartTotal(),
-                'cart_count' => count($this->purchaseFlowService->getCart())
+                'cart_count' => count($this->purchaseFlowService->getCart()),
             ]);
         } catch (\Exception $e) {
             $this->logger->error('Erreur addProduct', ['error' => $e->getMessage()]);
@@ -214,7 +211,7 @@ class PurchaseController extends AbstractController
                 return $this->sendJsonResponse([
                     'success' => true,
                     'cart_total' => $this->purchaseFlowService->getCartTotal(),
-                    'cart_count' => count($this->purchaseFlowService->getCart())
+                    'cart_count' => count($this->purchaseFlowService->getCart()),
                 ]);
             }
             return $this->sendJsonResponse(['error' => 'Produit non trouvé dans le panier'], 404);
@@ -231,13 +228,13 @@ class PurchaseController extends AbstractController
     public function updateQuantity(int $productId, Request $request): JsonResponse
     {
         $quantity = (int) $request->request->get('quantity', 1);
-        
+
         try {
             $result = $this->purchaseFlowService->updateCartQuantity($productId, $quantity);
             if ($result) {
                 return $this->sendJsonResponse([
                     'success' => true,
-                    'cart_total' => $this->purchaseFlowService->getCartTotal()
+                    'cart_total' => $this->purchaseFlowService->getCartTotal(),
                 ]);
             }
             return $this->sendJsonResponse(['error' => 'Erreur lors de la mise à jour'], 400);
@@ -249,57 +246,79 @@ class PurchaseController extends AbstractController
 
     /**
      * Confirmer la commande (AJAX)
+     *
+     * ✅ Le fournisseur est désormais OPTIONNEL.
+     * Une entreprise peut enregistrer une commande sans fournisseur (achat interne).
      */
     #[Route('/confirm', name: 'purchase_confirm', methods: ['POST'])]
     public function confirm(Request $request): JsonResponse
     {
         $cart = $this->purchaseFlowService->getCart();
-        
+
         if (empty($cart)) {
             return $this->sendJsonResponse(['error' => 'Le panier est vide'], 400);
         }
-        
+
+        // ✅ Récupérer le fournisseur s'il est fourni (sinon null)
         $supplierId = $request->request->get('supplier_id');
-        $supplier = $this->em->getRepository(Supplier::class)->find($supplierId);
-        
-        if (!$supplier) {
-            return $this->sendJsonResponse(['error' => 'Fournisseur non trouvé'], 400);
+        $supplier = null;
+
+        if ($supplierId !== null && $supplierId !== '') {
+            $supplier = $this->em->getRepository(Supplier::class)->find($supplierId);
+
+            if (!$supplier) {
+                return $this->sendJsonResponse(['error' => 'Fournisseur non trouvé'], 400);
+            }
+
+            if (!$supplier->isActive()) {
+                return $this->sendJsonResponse(['error' => 'Ce fournisseur est désactivé'], 400);
+            }
+
+            if (!$supplier->isSubscriptionActive()) {
+                return $this->sendJsonResponse([
+                    'error' => 'L\'abonnement de ce fournisseur n\'est pas actif. Contactez l\'administrateur.'
+                ], 400);
+            }
+
+            /** @var User $user */
+            $user = $this->getUser();
+            $hmaService = $user->getHmaService();
+
+            if ($supplier->getHmaService()->getId() !== $hmaService->getId()) {
+                return $this->sendJsonResponse(['error' => 'Fournisseur non autorisé pour cette entreprise'], 403);
+            }
         }
-        
-        if (!$supplier->isActive()) {
-            return $this->sendJsonResponse(['error' => 'Ce fournisseur est désactivé'], 400);
-        }
-        
-        if (!$supplier->isSubscriptionActive()) {
-            return $this->sendJsonResponse(['error' => 'L\'abonnement de ce fournisseur n\'est pas actif. Contactez l\'administrateur.'], 400);
-        }
-        
+
         /** @var User $user */
         $user = $this->getUser();
         $hmaService = $user->getHmaService();
-        
-        if ($supplier->getHmaService()->getId() !== $hmaService->getId()) {
-            return $this->sendJsonResponse(['error' => 'Fournisseur non autorisé pour cette entreprise'], 403);
-        }
-        
+
         $notes = $request->request->get('notes');
         $bonCommande = $request->request->get('bon_commande');
-        
+
+        // Notifications : uniquement pertinentes s'il y a un fournisseur
         $notificationOptions = [
             'notify_by_email' => $request->request->get('notify_by_email') === '1',
             'notify_by_whatsapp' => $request->request->get('notify_by_whatsapp') === '1',
             'send_image' => $request->request->get('send_image') === '1',
-            'confirmation_message' => $request->request->get('confirmation_message')
+            'confirmation_message' => $request->request->get('confirmation_message'),
         ];
-        
+
         try {
             $purchase = $this->purchaseFlowService->createPurchase($user, $hmaService);
+
+            // ✅ confirmPurchase accepte désormais null comme fournisseur
             $this->purchaseFlowService->confirmPurchase($purchase, $supplier, $notes, $notificationOptions);
-            
+
+            $message = $supplier !== null
+                ? 'Commande confirmée avec succès et fournisseur notifié.'
+                : 'Achat interne enregistré avec succès (sans fournisseur).';
+
             return $this->sendJsonResponse([
                 'success' => true,
-                'message' => 'Commande confirmée avec succès',
-                'redirect_url' => $this->generateUrl('purchase_show', ['id' => $purchase->getId()])
+                'message' => $message,
+                'has_supplier' => $supplier !== null,
+                'redirect_url' => $this->generateUrl('purchase_show', ['id' => $purchase->getId()]),
             ]);
         } catch (\Exception $e) {
             $this->logger->error('Erreur confirm', ['error' => $e->getMessage()]);
@@ -312,8 +331,8 @@ class PurchaseController extends AbstractController
      */
     #[Route('/receive/{id}', name: 'purchase_receive', methods: ['GET', 'POST'])]
     public function receive(
-        Request $request, 
-        Purchase $purchase, 
+        Request $request,
+        Purchase $purchase,
         LocationRepository $locationRepository,
         SupplierCreditNoteService $creditNoteService
     ): Response {
@@ -321,21 +340,21 @@ class PurchaseController extends AbstractController
             $this->addFlash('error', 'Seules les commandes confirmées peuvent être réceptionnées');
             return $this->redirectToRoute('purchase_index');
         }
-        
+
         $hmaService = $purchase->getHmaService();
         $locations = $locationRepository->findActiveByHmaService($hmaService);
-        
+
         if ($request->isMethod('POST')) {
             $session = $request->getSession();
             $pendingIssues = $session->get('pending_issues', []);
-            
+
             $batchData = [];
             $valid = true;
-            
+
             foreach ($purchase->getPurchaseItems() as $item) {
                 $product = $item->getProduct();
                 $itemId = $item->getId();
-                
+
                 $issueForItem = null;
                 foreach ($pendingIssues as $issue) {
                     if (($issue['batch_id'] ?? null) == $itemId) {
@@ -348,17 +367,19 @@ class PurchaseController extends AbstractController
                     'batch_number' => $request->request->get('batch_number_' . $itemId),
                     'manufacturing_date' => $request->request->get('manufacturing_date_' . $itemId),
                     'expiry_date' => $request->request->get('expiry_date_' . $itemId),
-                    'received_quantity' => (int)$request->request->get('received_quantity_' . $itemId, 0),
-                    'received_price' => (float)$request->request->get('received_price_' . $itemId, 0),
+                    'received_quantity' => (int) $request->request->get('received_quantity_' . $itemId, 0),
+                    'received_price' => (float) $request->request->get('received_price_' . $itemId, 0),
                     'remove' => $request->request->get('remove_' . $itemId),
                     'location_id' => $request->request->get('location_id_' . $itemId),
                     'issue' => $issueForItem,
                 ];
-                
+
                 if ($product->hasExpiryDate()) {
-                    if (empty($batchData[$itemId]['batch_number']) ||
+                    if (
+                        empty($batchData[$itemId]['batch_number']) ||
                         empty($batchData[$itemId]['manufacturing_date']) ||
-                        empty($batchData[$itemId]['expiry_date'])) {
+                        empty($batchData[$itemId]['expiry_date'])
+                    ) {
                         $valid = false;
                         $this->addFlash('error', 'Veuillez remplir tous les champs de lot pour le produit : ' . $product->getName());
                     }
@@ -369,7 +390,7 @@ class PurchaseController extends AbstractController
                     $valid = false;
                     $this->addFlash('error', 'La quantité reçue doit être positive ou nulle pour le produit : ' . $product->getName());
                 }
-                
+
                 if ($issueForItem && ($issueForItem['affected_quantity'] ?? 0) > $receivedQty) {
                     $valid = false;
                     $this->addFlash('error', sprintf(
@@ -380,25 +401,25 @@ class PurchaseController extends AbstractController
                     ));
                 }
             }
-            
+
             if ($valid) {
                 try {
                     /** @var User $user */
                     $user = $this->getUser();
-                    
+
                     $result = $this->processReceptionWithIssues($purchase, $batchData, $user, $creditNoteService);
-                    
+
                     $processedIssueIds = [];
                     foreach ($batchData as $data) {
                         if ($data['issue'] && isset($data['issue']['batch_id'])) {
                             $processedIssueIds[] = $data['issue']['batch_id'];
                         }
                     }
-                    $remainingIssues = array_filter($pendingIssues, function($issue) use ($processedIssueIds) {
+                    $remainingIssues = array_filter($pendingIssues, function ($issue) use ($processedIssueIds) {
                         return !in_array($issue['batch_id'] ?? null, $processedIssueIds);
                     });
                     $session->set('pending_issues', array_values($remainingIssues));
-                    
+
                     $this->addFlash('success', 'Commande réceptionnée avec succès. ' . $result['message']);
                     return $this->redirectToRoute('purchase_show', ['id' => $purchase->getId()]);
                 } catch (\Exception $e) {
@@ -407,17 +428,19 @@ class PurchaseController extends AbstractController
                 }
             }
         }
-        
+
         return $this->render('purchase/receive.html.twig', [
             'purchase' => $purchase,
             'locations' => $locations,
         ]);
     }
-    
+
     /**
      * Traite la réception avec création des lots, des avoirs, du reçu
-     * ✅ CORRIGÉ : NE PAS modifier stock_quantity
-     * ✅ CORRIGÉ : Recharger le produit pour éviter les erreurs de cascade
+     *
+     * ✅ CORRECTION : Utilise StockSyncService pour mettre à jour stock_quantity
+     * à partir de la somme des lots actifs (au lieu de ne rien faire ou de
+     * modifier manuellement stock_quantity).
      */
     private function processReceptionWithIssues(
         Purchase $purchase,
@@ -429,54 +452,56 @@ class PurchaseController extends AbstractController
         if (!$managedUser) {
             throw new \Exception('Utilisateur non trouvé en base de données');
         }
-        
+
         $createdCreditNotes = [];
         $totalProblematicItems = 0;
-        
+
+        // ✅ Collecter les IDs produits touchés pour la synchro post-flush
+        $touchedProductIds = [];
+
         foreach ($purchase->getPurchaseItems() as $item) {
             $itemId = $item->getId();
-            
+
             if (!isset($batchData[$itemId])) {
                 continue;
             }
-            
+
             $data = $batchData[$itemId];
-            
+
             if ($data['remove']) {
                 continue;
             }
-            
+
             $product = $item->getProduct();
-            
-            // ✅ RECHARGER le produit pour s'assurer qu'il est géré par l'EntityManager
+
+            // ✅ Recharger le produit pour s'assurer qu'il est géré par l'EntityManager
             $managedProduct = $this->em->getRepository(Product::class)->find($product->getId());
             if (!$managedProduct) {
                 throw new \Exception(sprintf('Produit "%s" non trouvé en base de données', $product->getName()));
             }
-            
+
             $receivedQuantity = $data['received_quantity'];
-            $receivedPrice = $data['received_price'] > 0 ? $data['received_price'] : (float)$item->getUnitPrice();
+            $receivedPrice = $data['received_price'] > 0 ? $data['received_price'] : (float) $item->getUnitPrice();
             $batchNumber = $data['batch_number'] ?: 'LOT-' . $purchase->getPurchaseNumber() . '-' . $itemId;
             $issue = $data['issue'] ?? null;
-            
-            $problematicQuantity = $issue ? (int)($issue['affected_quantity'] ?? 0) : 0;
-            
-            // ✅ CORRECTION: NE PAS soustraire les produits problématiques
-            // On met TOUTE la quantité reçue en stock
+
+            $problematicQuantity = $issue ? (int) ($issue['affected_quantity'] ?? 0) : 0;
+
+            // ✅ On met TOUTE la quantité reçue en stock
             $goodQuantity = $receivedQuantity;
-            
+
             // ✅ Création du lot
             $stockBatch = new StockBatch();
             $stockBatch->setBatchNumber($batchNumber);
             $stockBatch->setProduct($managedProduct);
-            $stockBatch->setUnitPrice((string)$receivedPrice);
+            $stockBatch->setUnitPrice((string) $receivedPrice);
             $stockBatch->setInitialQuantity($receivedQuantity);
             $stockBatch->setCurrentQuantity($goodQuantity);
             $stockBatch->setIsActive(true);
             $stockBatch->setHmaService($purchase->getHmaService());
             $stockBatch->setCreatedAt(new \DateTime());
             $stockBatch->setPurchaseItemId($itemId);
-            
+
             if ($managedProduct->hasExpiryDate()) {
                 if (!empty($data['manufacturing_date'])) {
                     $manufacturingDate = new \DateTime($data['manufacturing_date']);
@@ -490,27 +515,27 @@ class PurchaseController extends AbstractController
                 }
                 $this->em->persist($item);
             }
-            
+
             if (!empty($data['location_id'])) {
                 $location = $this->em->getRepository(Location::class)->find($data['location_id']);
                 if ($location) {
                     $stockBatch->setLocationEntity($location);
                 }
             }
-            
+
             $this->em->persist($stockBatch);
-            
+
             // ✅ Créer l'avoir avec stock_action = 'reduce'
             if ($issue && $problematicQuantity > 0) {
                 $attachments = $issue['attachments'] ?? null;
-                
+
                 $creditNote = $creditNoteService->createCreditNote(
                     $stockBatch,
                     $purchase,
                     $purchase->getSupplier(),
                     $issue['issue_type'],
                     $issue['description'],
-                    (float)($issue['declared_amount'] ?? 0),
+                    (float) ($issue['declared_amount'] ?? 0),
                     $issue['priority'] ?? 'medium',
                     $attachments,
                     $managedUser,
@@ -518,23 +543,23 @@ class PurchaseController extends AbstractController
                     $problematicQuantity,
                     SupplierCreditNoteService::STOCK_ACTION_REDUCE
                 );
-                
+
                 $stockBatch->setHasIssue(true);
                 $stockBatch->setSupplierCreditNoteId($creditNote->getId());
                 $stockBatch->setIssueStatus($creditNote->getStatus());
                 $stockBatch->setIssuePriority($creditNote->getPriority());
                 $stockBatch->setIssueDeclaredAmount($creditNote->getDeclaredAmount());
                 $stockBatch->setIssueReportedAt(new \DateTime());
-                
+
                 $createdCreditNotes[] = $creditNote;
                 $totalProblematicItems += $problematicQuantity;
             }
-            
-            // ✅ CRÉATION DU MOUVEMENT DE STOCK
+
+            // ✅ Création du mouvement de stock
             $movement = new \App\Entity\StockMovement();
             $movement->setMovementType('purchase_in');
             $movement->setQuantity($receivedQuantity);
-            $movement->setUnitPrice((string)$receivedPrice);
+            $movement->setUnitPrice((string) $receivedPrice);
             $movement->setProduct($managedProduct);
             $movement->setStockBatch($stockBatch);
             $movement->setPurchaseItem($item);
@@ -544,28 +569,62 @@ class PurchaseController extends AbstractController
             $movement->setNotes('Réception commande ' . $purchase->getPurchaseNumber());
             $movement->setReferenceId($purchase->getId());
             $this->em->persist($movement);
-            
-            // ❌ SUPPRIMÉ : NE PAS mettre à jour stock_quantity
-            // ✅ stock_quantity reste inchangé
-            
+
+            // ✅ Collecter l'ID produit pour la synchro post-flush
+            if ($managedProduct->getId()) {
+                $touchedProductIds[$managedProduct->getId()] = true;
+            }
+
             // ✅ Mettre à jour la relation PurchaseItem avec le produit géré
             $item->setProduct($managedProduct);
             $this->em->persist($item);
-            
-            $this->logger->info('Lot créé pour réception (stock_quantity inchangé)', [
+
+            $this->logger->info('Lot créé pour réception', [
                 'product_id' => $managedProduct->getId(),
                 'product_name' => $managedProduct->getName(),
                 'received_quantity' => $receivedQuantity,
-                'stock_quantity' => $managedProduct->getStockQuantity(),
-                'batch_number' => $batchNumber
+                'batch_number' => $batchNumber,
             ]);
         }
-        
+
         // ✅ Mise à jour du statut de la commande
         $purchase->setStatus(Purchase::STATUS_RECEIVED);
         $purchase->setReceivedAt(new \DateTimeImmutable());
         $this->em->persist($purchase);
-        
+
+        // ✅ 1er FLUSH : persiste tous les lots et mouvements
+        $this->em->flush();
+
+        // ✅ 2e ÉTAPE : synchroniser Product.stock_quantity = somme des lots actifs
+        // On utilise le service dédié qui recharge les lots frais depuis la DB.
+        foreach (array_keys($touchedProductIds) as $productId) {
+            try {
+                $product = $this->em->getRepository(Product::class)->find($productId);
+                if ($product) {
+                    // Recharger le produit pour avoir une collection de lots fraîche
+                    $this->em->refresh($product);
+
+                    // Utiliser StockSyncService (injecté via PurchaseFlowService)
+                    // On peut aussi l'injecter directement si besoin.
+                    $syncService = $this->container->get(\App\Service\StockSyncService::class);
+                    $syncResult = $syncService->syncProductStock($product);
+
+                    $this->logger->info('Stock synchronisé après réception', [
+                        'product_id' => $product->getId(),
+                        'product_name' => $product->getName(),
+                        'old_stock' => $syncResult['old_stock_quantity'],
+                        'new_stock' => $syncResult['new_stock_quantity'],
+                        'batches_count' => $syncResult['active_batches_count'],
+                    ]);
+                }
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur sync stock après réception', [
+                    'product_id' => $productId,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
         // ✅ Génération du reçu
         try {
             $recuPath = $this->pdfGenerator->generatePurchaseReceipt($purchase);
@@ -576,32 +635,38 @@ class PurchaseController extends AbstractController
         } catch (\Exception $e) {
             $this->logger->error('Erreur lors de la génération du reçu', ['error' => $e->getMessage()]);
         }
-        
+
         $this->em->flush();
-        
-        // ✅ Envoi de la notification
-        try {
-            $this->purchaseFlowService->getNotificationService()->sendPurchaseReceivedConfirmation($purchase, $createdCreditNotes);
-            $this->logger->info('Confirmation de réception envoyée au fournisseur', [
+
+        // ✅ Envoi de la notification (uniquement si fournisseur)
+        if ($purchase->getSupplier() !== null) {
+            try {
+                $this->purchaseFlowService->getNotificationService()->sendPurchaseReceivedConfirmation($purchase, $createdCreditNotes);
+                $this->logger->info('Confirmation de réception envoyée au fournisseur', [
+                    'purchase_id' => $purchase->getId(),
+                    'supplier' => $purchase->getSupplier()?->getName(),
+                    'nb_credits_notes' => count($createdCreditNotes),
+                ]);
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors de l\'envoi de la confirmation de réception', [
+                    'purchase_id' => $purchase->getId(),
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        } else {
+            $this->logger->info('Achat sans fournisseur : notification ignorée', [
                 'purchase_id' => $purchase->getId(),
-                'supplier' => $purchase->getSupplier()?->getName(),
-                'nb_credits_notes' => count($createdCreditNotes)
-            ]);
-        } catch (\Exception $e) {
-            $this->logger->error('Erreur lors de l\'envoi de la confirmation de réception', [
-                'purchase_id' => $purchase->getId(),
-                'error' => $e->getMessage()
             ]);
         }
-        
-        $message = count($createdCreditNotes) > 0 
+
+        $message = count($createdCreditNotes) > 0
             ? sprintf('%d avoir(s) créé(s) pour %d produit(s) problématique(s). Le(s) fournisseur(s) ont été notifié(s).', count($createdCreditNotes), $totalProblematicItems)
             : 'Aucun problème signalé.';
-        
+
         return [
             'message' => $message,
             'credit_notes' => $createdCreditNotes,
-            'problematic_count' => $totalProblematicItems
+            'problematic_count' => $totalProblematicItems,
         ];
     }
 
@@ -634,7 +699,7 @@ class PurchaseController extends AbstractController
             $managedUser = $em->getReference(User::class, $user->getId());
             $this->purchaseFlowService->cancelPurchase($purchase, $reason, $managedUser);
 
-            $this->addFlash('success', 'Commande annulée avec succès. Le fournisseur a été notifié.');
+            $this->addFlash('success', 'Commande annulée avec succès.');
         } catch (\Exception $e) {
             $this->addFlash('error', 'Erreur lors de l\'annulation : ' . $e->getMessage());
         }
@@ -648,22 +713,21 @@ class PurchaseController extends AbstractController
     #[Route('/search-products', name: 'purchase_search_products', methods: ['GET'])]
     public function searchProducts(Request $request): JsonResponse
     {
-        // Nettoyer les buffers avant tout
         while (ob_get_level() > 0) {
             ob_end_clean();
         }
-        
+
         try {
             $query = $request->query->get('q', '');
-            
+
             /** @var User $user */
             $user = $this->getUser();
             $hmaService = $user->getHmaService();
-            
+
             if (!$hmaService) {
                 return $this->sendJsonResponse(['error' => 'Aucune entreprise associée'], 400);
             }
-            
+
             $products = $this->em->getRepository(Product::class)
                 ->createQueryBuilder('p')
                 ->where('p.hma_service = :hmaService')
@@ -675,7 +739,7 @@ class PurchaseController extends AbstractController
                 ->setMaxResults(20)
                 ->getQuery()
                 ->getResult();
-            
+
             $results = [];
             foreach ($products as $product) {
                 $results[] = [
@@ -685,35 +749,53 @@ class PurchaseController extends AbstractController
                     'purchase_price' => $product->getPurchasePrice(),
                     'image' => $product->getImage(),
                     'has_expiry_date' => $product->hasExpiryDate(),
-                    'unit' => $product->getUnit()
+                    'unit' => $product->getUnit(),
                 ];
             }
-            
-            // Encoder manuellement pour déboguer
+
             $json = json_encode($results);
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new \Exception('Erreur JSON: ' . json_last_error_msg());
             }
-            
+
             return $this->sendJsonResponse($results);
-            
         } catch (\Exception $e) {
             $this->logger->error('Erreur searchProducts', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
             return $this->sendJsonResponse(['error' => $e->getMessage()], 500);
         }
     }
 
     /**
-     * Afficher une commande
-     */
+    * Afficher une commande
+    */
     #[Route('/{id}', name: 'purchase_show', methods: ['GET'])]
     public function show(Purchase $purchase): Response
     {
+        // ✅ Charger les avoirs ACTUELS pour chaque item de la commande
+        // (au lieu d'utiliser stockBatch.issueStatus qui reste figé)
+        $creditNotesByItemId = [];
+
+        foreach ($purchase->getPurchaseItems() as $item) {
+            // Récupérer le StockBatch lié à ce PurchaseItem
+            $stockBatch = $this->em->getRepository(StockBatch::class)
+                ->findOneBy(['purchaseItemId' => $item->getId()]);
+
+            if ($stockBatch && $stockBatch->getSupplierCreditNoteId()) {
+                $creditNote = $this->em->getRepository(\App\Entity\SupplierCreditNote::class)
+                    ->find($stockBatch->getSupplierCreditNoteId());
+
+                if ($creditNote) {
+                    $creditNotesByItemId[$item->getId()] = $creditNote;
+                }
+            }
+        }
+
         return $this->render('purchase/show.html.twig', [
-            'purchase' => $purchase
+            'purchase' => $purchase,
+            'creditNotesByItemId' => $creditNotesByItemId,
         ]);
     }
 
@@ -724,7 +806,7 @@ class PurchaseController extends AbstractController
     public function print(Purchase $purchase): Response
     {
         return $this->render('purchase/print.html.twig', [
-            'purchase' => $purchase
+            'purchase' => $purchase,
         ]);
     }
 
@@ -754,7 +836,7 @@ class PurchaseController extends AbstractController
                 return $this->sendJsonResponse([
                     'success' => true,
                     'cart_total' => $this->purchaseFlowService->getCartTotal(),
-                    'cart_item' => $this->purchaseFlowService->getCart()[$productId] ?? null
+                    'cart_item' => $this->purchaseFlowService->getCart()[$productId] ?? null,
                 ]);
             }
             return $this->sendJsonResponse(['error' => 'Produit non trouvé dans le panier'], 404);
@@ -772,65 +854,60 @@ class PurchaseController extends AbstractController
     {
         $batchId = $request->request->get('batch_id');
         $purchaseId = $request->request->get('purchase_id');
-        
+
         if (!$purchaseId && $batchId) {
             $purchaseItem = $this->em->getRepository(PurchaseItem::class)->find($batchId);
             if ($purchaseItem && $purchaseItem->getPurchase()) {
                 $purchaseId = $purchaseItem->getPurchase()->getId();
             }
         }
-        
+
         if (!$purchaseId) {
             $purchaseId = 0;
         }
-        
+
         try {
             $issueType = $request->request->get('issue_type');
             $description = $request->request->get('description');
-            $declaredAmount = (float)$request->request->get('declared_amount', 0);
+            $declaredAmount = (float) $request->request->get('declared_amount', 0);
             $priority = $request->request->get('priority', 'medium');
             $affectedQuantity = $request->request->get('affected_quantity');
             $stockAction = $request->request->get('stock_action', 'none');
             $productName = $request->request->get('product_name');
             $batchNumber = $request->request->get('batch_number');
-            $unitPrice = (float)$request->request->get('unit_price', 0);
-            
-            // Récupérer les pièces jointes existantes
+            $unitPrice = (float) $request->request->get('unit_price', 0);
+
             $existingAttachmentsRaw = $request->request->get('existing_attachments', '');
             $attachments = [];
-            
-            // Décoder le JSON des pièces jointes existantes
+
             if (!empty($existingAttachmentsRaw)) {
                 $decodedAttachments = json_decode($existingAttachmentsRaw, true);
                 if (is_array($decodedAttachments)) {
                     $attachments = $decodedAttachments;
                 }
             }
-            
-            // Traiter les nouveaux fichiers joints
+
             $uploadedFiles = $request->files->get('attachments', []);
-            
-            // Créer le dossier s'il n'existe pas
+
             $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads/credit_notes_attachments';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
-            
+
             foreach ($uploadedFiles as $file) {
                 if ($file && $file->isValid()) {
                     $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                     $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove', $originalFilename);
                     $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
-                    
+
                     $file->move($uploadDir, $newFilename);
                     $attachments[] = $newFilename;
                 }
             }
-            
+
             $session = $request->getSession();
             $pendingIssues = $session->get('pending_issues', []);
-            
-            // Vérifier si un problème existe déjà pour ce batch_id
+
             $existingKey = null;
             foreach ($pendingIssues as $key => $issue) {
                 if ($issue['batch_id'] == $batchId) {
@@ -838,12 +915,11 @@ class PurchaseController extends AbstractController
                     break;
                 }
             }
-            
-            // Calculer le montant déclaré si nécessaire
+
             if ($declaredAmount <= 0 && $affectedQuantity && $unitPrice) {
                 $declaredAmount = $affectedQuantity * $unitPrice;
             }
-            
+
             $newIssue = [
                 'batch_id' => $batchId,
                 'purchase_id' => $purchaseId,
@@ -857,9 +933,9 @@ class PurchaseController extends AbstractController
                 'affected_quantity' => $affectedQuantity,
                 'stock_action' => $stockAction,
                 'attachments' => $attachments,
-                'created_at' => (new \DateTime())->format('Y-m-d H:i:s')
+                'created_at' => (new \DateTime())->format('Y-m-d H:i:s'),
             ];
-            
+
             if ($existingKey !== null) {
                 $pendingIssues[$existingKey] = $newIssue;
                 $message = '✓ Problème mis à jour avec succès !';
@@ -867,16 +943,15 @@ class PurchaseController extends AbstractController
                 $pendingIssues[] = $newIssue;
                 $message = '✓ Problème signalé avec succès !';
             }
-            
+
             $session->set('pending_issues', $pendingIssues);
-            
+
             $this->addFlash('success', $message . ' Vous pourrez finaliser l\'avoir après la réception.');
-            
         } catch (\Exception $e) {
             $this->addFlash('error', 'Erreur: ' . $e->getMessage());
             $this->logger->error('Erreur reportIssueTemp', ['error' => $e->getMessage()]);
         }
-        
+
         return $this->redirectToRoute('purchase_receive', ['id' => $purchaseId]);
     }
 
@@ -885,7 +960,7 @@ class PurchaseController extends AbstractController
     {
         $session = $request->getSession();
         $pendingIssues = $session->get('pending_issues', []);
-        
+
         $purchaseId = null;
         foreach ($pendingIssues as $key => $issue) {
             if ($issue['batch_id'] == $batchId) {
@@ -894,15 +969,15 @@ class PurchaseController extends AbstractController
                 break;
             }
         }
-        
+
         $session->set('pending_issues', array_values($pendingIssues));
-        
+
         if ($purchaseId) {
             $this->addFlash('success', '✓ Problème supprimé avec succès !');
         } else {
             $this->addFlash('warning', 'Aucun problème trouvé à supprimer.');
         }
-        
+
         return $this->redirectToRoute('purchase_receive', ['id' => $purchaseId ?: 0]);
     }
 }

@@ -498,6 +498,32 @@
     .filter-info .text-primary {
         color: var(--primary-color) !important;
     }
+
+    /* ✅ Modal ordonnance personnalisé */
+    #prescriptionConfirmModal .modal-header {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        color: white;
+    }
+    #prescriptionConfirmModal .modal-body {
+        padding: 1.5rem;
+    }
+    #prescriptionConfirmModal .prescription-icon {
+        font-size: 4rem;
+        color: #dc2626;
+        animation: pulse-warning 1.5s infinite;
+    }
+    @keyframes pulse-warning {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    #prescriptionConfirmModal .product-name-highlight {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-weight: 600;
+        color: #991b1b;
+    }
 </style>
 {% endblock %}
 
@@ -747,6 +773,44 @@
     </div>
 </div>
 
+<!-- ✅ NOUVEAU MODAL : Confirmation ordonnance -->
+<div class="modal fade" id="prescriptionConfirmModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-prescription-bottle me-2"></i> Ordonnance requise
+                </h5>
+            </div>
+            <div class="modal-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-file-medical prescription-icon"></i>
+                </div>
+                <h5 class="mb-3">Confirmation obligatoire</h5>
+                <p class="text-muted mb-3">
+                    Ce produit nécessite une <strong>ordonnance médicale</strong>.
+                </p>
+                <div class="product-name-highlight mb-3" id="prescriptionProductName">
+                    <!-- Nom du produit injecté par JS -->
+                </div>
+                <div class="alert alert-warning text-start mb-0">
+                    <i class="fas fa-question-circle me-2"></i>
+                    <strong>Avez-vous demandé et vérifié l'ordonnance du client ?</strong>
+                    <p class="mb-0 small mt-1">En confirmant, vous certifiez avoir demandé l'ordonnance au client.</p>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-danger px-4" id="prescriptionCancelBtn">
+                    <i class="fas fa-times me-2"></i> Non, annuler
+                </button>
+                <button type="button" class="btn btn-danger px-4" id="prescriptionConfirmBtn">
+                    <span class="btn-text"><i class="fas fa-check me-2"></i> Oui, j'ai l'ordonnance</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="editItemModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -942,7 +1006,7 @@ const URLs = {
     updateQuantity: "{{ path('sale_update_quantity', {'type': 'product', 'id': 'ID_PLACEHOLDER'}) }}",
     removeItem: "{{ path('sale_remove_item', {'type': 'product', 'id': 'ID_PLACEHOLDER'}) }}",
     clearCart: "{{ path('sale_clear_cart') }}",
-    searchCustomer: "{{ path('retail_sale_search_customer') }}" // ✅ CORRIGÉ
+    searchCustomer: "{{ path('retail_sale_search_customer') }}"
 };
 
 let state = {
@@ -953,7 +1017,9 @@ let state = {
     pendingRemoveId: null,
     pendingRemoveType: null,
     isProcessing: false,
-    audioContext: null
+    audioContext: null,
+    // ✅ NOUVEAU : pour gérer la confirmation ordonnance
+    prescriptionCallback: null
 };
 
 // ==================== GESTION DU SON ====================
@@ -1124,7 +1190,7 @@ function escapeHtml(text) {
 }
 
 function showToast(type, message) {
-    const toastHtml = `<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999"><div class="toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0" role="alert" data-bs-autohide="true" data-bs-delay="3000"><div class="d-flex"><div class="toast-body"><i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i> ${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div></div>`;
+    const toastHtml = `<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999"><div class="toast align-items-center text-white bg-${type === 'success' ? 'success' : type === 'info' ? 'info' : 'danger'} border-0" role="alert" data-bs-autohide="true" data-bs-delay="3000"><div class="d-flex"><div class="toast-body"><i class="fas fa-${type === 'success' ? 'check-circle' : type === 'info' ? 'info-circle' : 'exclamation-triangle'} me-2"></i> ${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div></div>`;
     const container = document.createElement('div');
     container.innerHTML = toastHtml;
     document.body.appendChild(container);
@@ -1135,6 +1201,42 @@ function showToast(type, message) {
         setTimeout(() => container.remove(), 3500);
     }
 }
+
+// ==================== ✅ NOUVELLE FONCTION : CONFIRMATION ORDONNANCE ====================
+function askPrescriptionConfirmation(productName, onConfirm) {
+    // Stocker le callback
+    state.prescriptionCallback = onConfirm;
+    
+    // Mettre à jour le nom du produit dans le modal
+    const nameElement = document.getElementById('prescriptionProductName');
+    if (nameElement) {
+        nameElement.innerHTML = `<i class="fas fa-capsules me-2"></i> ${escapeHtml(productName)}`;
+    }
+    
+    // Afficher le modal
+    const modal = new bootstrap.Modal(document.getElementById('prescriptionConfirmModal'));
+    modal.show();
+}
+
+// Gestion des boutons du modal ordonnance
+document.getElementById('prescriptionCancelBtn')?.addEventListener('click', function() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('prescriptionConfirmModal'));
+    if (modal) modal.hide();
+    state.prescriptionCallback = null;
+    showToast('warning', 'Ajout annulé. Veuillez demander l\'ordonnance au client.');
+});
+
+document.getElementById('prescriptionConfirmBtn')?.addEventListener('click', function() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('prescriptionConfirmModal'));
+    if (modal) modal.hide();
+    
+    // Exécuter le callback si présent
+    if (typeof state.prescriptionCallback === 'function') {
+        const callback = state.prescriptionCallback;
+        state.prescriptionCallback = null;
+        callback();
+    }
+});
 
 // ==================== GESTION DU PANIER ====================
 async function refreshCart() {
@@ -1439,17 +1541,30 @@ async function searchByBarcode(barcode) {
         
         const product = products[0];
         
+        // ✅ CORRECTION : Utiliser le modal de confirmation pour les produits sous ordonnance
         if (product.prescription_required) {
-            const confirmAdd = confirm(`⚠️ ORDONNANCE REQUISE !\n\nLe produit "${product.name}" nécessite une ordonnance.\n\nAvez-vous bien demandé l'ordonnance au client ?`);
-            if (!confirmAdd) {
-                showToast('warning', 'Veuillez demander l\'ordonnance avant d\'ajouter ce produit');
-                DOM.barcodeInput.value = '';
-                DOM.barcodeInput.focus();
-                setSimpleButtonLoading(DOM.scanBarcodeBtn, false);
-                return;
-            }
+            askPrescriptionConfirmation(product.name, async () => {
+                await addProductToCartFromBarcode(product);
+            });
+            // Ne pas continuer ici, le callback s'en chargera
+            setSimpleButtonLoading(DOM.scanBarcodeBtn, false);
+            return;
         }
         
+        // Pas d'ordonnance : ajout direct
+        await addProductToCartFromBarcode(product);
+        
+    } catch (error) {
+        console.error('Erreur scan:', error);
+        showToast('error', 'Erreur lors du scan du code-barres');
+    } finally {
+        setSimpleButtonLoading(DOM.scanBarcodeBtn, false);
+    }
+}
+
+// ✅ Fonction utilitaire pour l'ajout au panier depuis le scan
+async function addProductToCartFromBarcode(product) {
+    try {
         const formData = new FormData();
         formData.append('quantity', 1);
         const addUrl = URLs.addToCart.replace('ID_PLACEHOLDER', product.id);
@@ -1461,8 +1576,10 @@ async function searchByBarcode(barcode) {
             AudioManager.playBarcodeBeep();
             await refreshCart();
             showToast('success', `${product.name} ajouté au panier`);
-            DOM.barcodeInput.value = '';
-            DOM.barcodeInput.focus();
+            if (DOM.barcodeInput) {
+                DOM.barcodeInput.value = '';
+                DOM.barcodeInput.focus();
+            }
             
             const cartPanel = document.querySelector('.cart-panel');
             if (cartPanel) {
@@ -1473,10 +1590,8 @@ async function searchByBarcode(barcode) {
             showToast('error', addData.error || 'Erreur lors de l\'ajout');
         }
     } catch (error) {
-        console.error('Erreur scan:', error);
-        showToast('error', 'Erreur lors du scan du code-barres');
-    } finally {
-        setSimpleButtonLoading(DOM.scanBarcodeBtn, false);
+        console.error('Erreur ajout scan:', error);
+        showToast('error', 'Erreur lors de l\'ajout au panier');
     }
 }
 
@@ -1498,29 +1613,40 @@ if (DOM.scanBarcodeBtn) {
 // ==================== AJOUT AU PANIER ====================
 document.getElementById('confirmAddBtn')?.addEventListener('click', async () => {
     if (!state.currentProduct) return;
-    setButtonLoading(document.getElementById('confirmAddBtn'), true);
     
     const quantity = parseInt(document.getElementById('productQuantity').value) || 1;
+    const product = state.currentProduct;
     
-    if (state.currentProduct.prescription_required) {
-        const confirmAdd = confirm(`⚠️ ORDONNANCE REQUISE !\n\nLe produit "${state.currentProduct.name}" nécessite une ordonnance.\n\nAvez-vous bien demandé l'ordonnance au client ?`);
-        if (!confirmAdd) {
-            showToast('warning', 'Veuillez demander l\'ordonnance avant d\'ajouter ce produit');
-            setButtonLoading(document.getElementById('confirmAddBtn'), false);
-            bootstrap.Modal.getInstance(document.getElementById('addProductModal'))?.hide();
-            return;
-        }
+    // ✅ CORRECTION : Utiliser le modal de confirmation pour les produits sous ordonnance
+    if (product.prescription_required) {
+        // Fermer le modal d'ajout
+        bootstrap.Modal.getInstance(document.getElementById('addProductModal'))?.hide();
+        
+        askPrescriptionConfirmation(product.name, async () => {
+            await confirmAddToCart(product, quantity);
+        });
+    } else {
+        // Pas d'ordonnance : ajout direct
+        await confirmAddToCart(product, quantity);
     }
+});
+
+// ✅ Fonction utilitaire pour ajouter au panier après confirmation
+async function confirmAddToCart(product, quantity) {
+    const confirmAddBtn = document.getElementById('confirmAddBtn');
+    setButtonLoading(confirmAddBtn, true);
     
     const formData = new FormData();
     formData.append('quantity', quantity);
-    const url = URLs.addToCart.replace('ID_PLACEHOLDER', state.currentProduct.id);
+    const url = URLs.addToCart.replace('ID_PLACEHOLDER', product.id);
     
     try {
         const response = await fetch(url, { method: 'POST', body: formData });
         const data = await response.json();
         if (data.success) {
-            bootstrap.Modal.getInstance(document.getElementById('addProductModal'))?.hide();
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+            if (modal) modal.hide();
+            
             await refreshCart();
             AudioManager.playAddToCart();
             
@@ -1530,16 +1656,17 @@ document.getElementById('confirmAddBtn')?.addEventListener('click', async () => 
             DOM.resultsContainer.innerHTML = '<div class="text-center text-muted py-5"><i class="fas fa-search fs-1"></i><p class="mt-2">Recherchez un produit pour commencer</p><p class="small">ou scannez un code-barres</p></div>';
             document.getElementById('resultCount').textContent = '0';
             
-            showToast('success', `${state.currentProduct.name} (x${quantity}) ajouté`);
+            showToast('success', `${product.name} (x${quantity}) ajouté`);
         } else {
-            showToast('error', data.error);
+            showToast('error', data.error || 'Erreur lors de l\'ajout');
         }
     } catch (error) {
+        console.error('Erreur ajout panier:', error);
         showToast('error', 'Erreur lors de l\'ajout');
     } finally {
-        setButtonLoading(document.getElementById('confirmAddBtn'), false);
+        setButtonLoading(confirmAddBtn, false);
     }
-});
+}
 
 // ==================== ÉVÉNEMENTS PANIER ====================
 function attachCartEvents() {
@@ -1672,7 +1799,7 @@ if (DOM.confirmClearCartBtn) {
     });
 }
 
-// ==================== RECHERCHE CLIENT (CORRIGÉE) ====================
+// ==================== RECHERCHE CLIENT ====================
 if (DOM.customerPhone && DOM.checkCustomerBtn) {
     async function searchCustomer() {
         const phone = DOM.customerPhone.value.trim();
@@ -1708,11 +1835,9 @@ if (DOM.customerPhone && DOM.checkCustomerBtn) {
                 const stats = data.stats || {};
                 const recentOrders = data.recent_orders || [];
                 
-                // Remplir les champs
                 DOM.customerName.value = customer.full_name || '';
                 DOM.customerName.disabled = true;
                 
-                // Afficher les informations du client
                 let infoHtml = `
                     <div class="alert alert-success mt-2">
                         <div class="d-flex justify-content-between align-items-start">
@@ -1732,7 +1857,6 @@ if (DOM.customerPhone && DOM.checkCustomerBtn) {
                     </div>
                 `;
                 
-                // Statistiques
                 if (stats.total_orders > 0) {
                     infoHtml += `
                         <div class="alert alert-info mt-2">
@@ -1754,7 +1878,6 @@ if (DOM.customerPhone && DOM.checkCustomerBtn) {
                     `;
                 }
                 
-                // Dernières commandes
                 if (recentOrders.length > 0) {
                     infoHtml += `
                         <div class="mt-2">
@@ -1778,7 +1901,6 @@ if (DOM.customerPhone && DOM.checkCustomerBtn) {
                 
                 DOM.nameHint.innerHTML = infoHtml;
                 
-                // Bouton pour débloquer la modification du nom
                 const unlockBtn = document.createElement('button');
                 unlockBtn.type = 'button';
                 unlockBtn.className = 'btn btn-sm btn-link text-warning mt-1';
@@ -1794,7 +1916,6 @@ if (DOM.customerPhone && DOM.checkCustomerBtn) {
                 showToast('success', 'Client trouvé !');
                 
             } else {
-                // Client non trouvé
                 DOM.customerName.value = '';
                 DOM.customerName.disabled = false;
                 DOM.nameHint.innerHTML = `
@@ -1817,13 +1938,11 @@ if (DOM.customerPhone && DOM.checkCustomerBtn) {
         }
     }
     
-    // Événements
     DOM.checkCustomerBtn.addEventListener('click', searchCustomer);
     DOM.customerPhone.addEventListener('keypress', (e) => { 
         if (e.key === 'Enter') searchCustomer(); 
     });
     
-    // Recherche automatique après saisie (debounced)
     let searchTimeout = null;
     DOM.customerPhone.addEventListener('input', () => {
         clearTimeout(searchTimeout);
@@ -1861,7 +1980,6 @@ if (DOM.searchInput) {
 
 // ==================== OUVERTURE MODALE ENCAISSEMENT ====================
 function openCheckoutModal() {
-    // Réinitialiser les champs
     if (DOM.customerPhone) {
         DOM.customerPhone.value = '';
         DOM.customerPhone.classList.remove('is-valid', 'is-invalid');

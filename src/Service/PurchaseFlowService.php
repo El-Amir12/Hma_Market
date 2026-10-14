@@ -23,7 +23,7 @@ class PurchaseFlowService
 {
     private array $cart = [];
     private SessionInterface $session;
-    
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private NotificationService $notificationService,
@@ -31,9 +31,10 @@ class PurchaseFlowService
         private LoggerInterface $logger,
         private Security $security,
         RequestStack $requestStack,
-        private string $bonCommandeDirectory,   
-        private string $recuAchatDirectory,    
-        private InvoicePdfGenerator $pdfGenerator
+        private string $bonCommandeDirectory,
+        private string $recuAchatDirectory,
+        private InvoicePdfGenerator $pdfGenerator,
+        private StockSyncService $stockSyncService,
     ) {
         $this->session = $requestStack->getSession();
         $this->cart = $this->session->get('purchase_cart', []);
@@ -48,28 +49,28 @@ class PurchaseFlowService
         if (!$managedUser) {
             throw new \Exception('Utilisateur non trouvé en base de données');
         }
-        
+
         $managedHmaService = $this->entityManager->getRepository(HmaService::class)->find($hmaService->getId());
         if (!$managedHmaService) {
             throw new \Exception('Entreprise non trouvée en base de données');
         }
-        
+
         $purchase = new Purchase();
         $purchase->setUser($managedUser);
         $purchase->setHmaService($managedHmaService);
         $purchase->setStatus(Purchase::STATUS_DRAFT);
         $purchase->setPurchaseNumber($this->generatePurchaseNumber($managedHmaService));
         $purchase->setCreatedAt(new \DateTimeImmutable());
-        
+
         $this->entityManager->persist($purchase);
         $this->entityManager->flush();
-        
+
         $this->logger->info('Nouvelle commande d\'achat créée', [
             'purchase_id' => $purchase->getId(),
             'user_id' => $managedUser->getId(),
-            'number' => $purchase->getPurchaseNumber()
+            'number' => $purchase->getPurchaseNumber(),
         ]);
-        
+
         return $purchase;
     }
 
@@ -79,7 +80,7 @@ class PurchaseFlowService
     public function addProductToCart(Product $product, int $quantity, float $unitPrice, ?string $batchNumber = null): array
     {
         $cartKey = $product->getId();
-        
+
         if (isset($this->cart[$cartKey])) {
             $this->cart[$cartKey]['quantity'] += $quantity;
         } else {
@@ -93,18 +94,18 @@ class PurchaseFlowService
                 'unit_price' => $unitPrice,
                 'total_price' => $quantity * $unitPrice,
                 'has_expiry_date' => $product->hasExpiryDate(),
-                'batch_number' => $batchNumber
+                'batch_number' => $batchNumber,
             ];
         }
-        
+
         $this->cart[$cartKey]['total_price'] = $this->cart[$cartKey]['quantity'] * $this->cart[$cartKey]['unit_price'];
         $this->saveCart();
-        
+
         $this->logger->info('Produit ajouté au panier', [
             'product_id' => $product->getId(),
-            'quantity' => $quantity
+            'quantity' => $quantity,
         ]);
-        
+
         return $this->cart[$cartKey];
     }
 
@@ -119,7 +120,7 @@ class PurchaseFlowService
             $this->logger->info('Produit supprimé du panier', ['product_id' => $productId]);
             return true;
         }
-        
+
         return false;
     }
 
@@ -134,7 +135,7 @@ class PurchaseFlowService
             $this->saveCart();
             return true;
         }
-        
+
         return false;
     }
 
@@ -184,30 +185,40 @@ class PurchaseFlowService
     }
 
     /**
-     * Confirme la commande et envoie les notifications
+     * Confirme la commande et envoie les notifications.
+     *
+     * ✅ Le fournisseur est OPTIONNEL : une entreprise peut enregistrer
+     * une commande sans fournisseur (achat interne, dépense diverse...).
      */
-    public function confirmPurchase(Purchase $purchase, Supplier $supplier, ?string $notes = null, array $notificationOptions = []): void
-    {
+    public function confirmPurchase(
+        Purchase $purchase,
+        ?Supplier $supplier = null,
+        ?string $notes = null,
+        array $notificationOptions = []
+    ): void {
         if ($purchase->getStatus() !== Purchase::STATUS_DRAFT) {
             throw new \Exception('Seules les commandes en brouillon peuvent être confirmées');
         }
-        
+
         if (empty($this->cart)) {
             throw new \Exception('Le panier est vide');
         }
-        
-        if (!$supplier->isActive()) {
-            throw new \Exception('Le fournisseur n\'est pas actif');
+
+        // ✅ Validation du fournisseur UNIQUEMENT s'il est fourni
+        if ($supplier !== null) {
+            if (!$supplier->isActive()) {
+                throw new \Exception('Le fournisseur n\'est pas actif');
+            }
+
+            if (!$supplier->isSubscriptionActive()) {
+                throw new \Exception('L\'abonnement du fournisseur n\'est pas actif');
+            }
+
+            if ($supplier->getHmaService()->getId() !== $purchase->getHmaService()->getId()) {
+                throw new \Exception('Fournisseur non autorisé pour cette entreprise');
+            }
         }
-        
-        if (!$supplier->isSubscriptionActive()) {
-            throw new \Exception('L\'abonnement du fournisseur n\'est pas actif');
-        }
-        
-        if ($supplier->getHmaService()->getId() !== $purchase->getHmaService()->getId()) {
-            throw new \Exception('Fournisseur non autorisé pour cette entreprise');
-        }
-        
+
         $purchase->setSupplier($supplier);
         $purchase->setNotes($notes);
         $purchase->setStatus(Purchase::STATUS_CONFIRMED);
@@ -218,7 +229,7 @@ class PurchaseFlowService
             if (!$product) {
                 continue;
             }
-            
+
             $purchaseItem = new PurchaseItem();
             $purchaseItem->setPurchase($purchase);
             $purchaseItem->setProduct($product);
@@ -227,27 +238,37 @@ class PurchaseFlowService
             $purchaseItem->setTotalPrice((string) $cartItem['total_price']);
             $purchaseItem->setBatchNumber($cartItem['batch_number'] ?? $this->generateBatchNumber($product));
             $purchaseItem->setCreatedAt(new \DateTime());
-            
+
             $purchase->addPurchaseItem($purchaseItem);
             $this->entityManager->persist($purchaseItem);
         }
-        
+
         $purchase->calculateTotalAmount();
         $this->entityManager->flush();
-        
+
+        // Génération du bon de commande (possible même sans fournisseur)
         $bonCommandePath = $this->pdfGenerator->generatePurchaseOrder($purchase);
         if ($bonCommandePath) {
             $purchase->setBonCommande($bonCommandePath);
             $this->entityManager->flush();
         }
-        
-        $this->notificationService->sendPurchaseConfirmation($purchase, $notificationOptions);
+
+        // ✅ Notification envoyée uniquement si un fournisseur existe
+        if ($supplier !== null) {
+            $this->notificationService->sendPurchaseConfirmation($purchase, $notificationOptions);
+        } else {
+            $this->logger->info('Achat sans fournisseur : notification ignorée', [
+                'purchase_id' => $purchase->getId(),
+            ]);
+        }
+
         $this->clearCart();
-        
+
         $this->logger->info('Commande confirmée', [
             'purchase_id' => $purchase->getId(),
-            'supplier_id' => $supplier->getId(),
-            'total' => $purchase->getTotalAmount()
+            'supplier_id' => $supplier?->getId(),
+            'has_supplier' => $supplier !== null,
+            'total' => $purchase->getTotalAmount(),
         ]);
     }
 
@@ -259,27 +280,35 @@ class PurchaseFlowService
         if (!$purchase->canCancel()) {
             throw new \Exception('Cette commande ne peut pas être annulée');
         }
-        
+
         $purchase->setStatus(Purchase::STATUS_CANCELLED);
         $purchase->setCancellationReason($reason);
         $purchase->setCancelledAt(new \DateTimeImmutable());
         $purchase->setCancelledBy($cancelledBy);
-        
+
         $this->entityManager->flush();
-        
-        $this->notificationService->sendPurchaseCancellation($purchase, $reason);
-        
+
+        // ✅ Notification uniquement si un fournisseur existe
+        if ($purchase->getSupplier() !== null) {
+            $this->notificationService->sendPurchaseCancellation($purchase, $reason);
+        }
+
         $this->logger->info('Commande annulée', [
             'purchase_id' => $purchase->getId(),
             'reason' => $reason,
-            'cancelled_by' => $cancelledBy->getId()
+            'cancelled_by' => $cancelledBy->getId(),
         ]);
     }
 
     /**
-     * Réceptionne une commande et crée les lots
-     * ✅ CORRIGÉ : NE PAS modifier stock_quantity
-     * ✅ CORRIGÉ : Détacher le produit pour éviter les mises à jour automatiques
+     * Réceptionne une commande et crée les lots.
+     *
+     * ✅ ÉTAPES :
+     * 1. Créer les StockBatch (lots) et StockMovement
+     * 2. FLUSH pour persister les lots en DB
+     * 3. REFRESH chaque produit pour charger la collection stockBatches fraîche
+     * 4. SYNCHRONISER Product.stock_quantity via StockSyncService
+     * 5. COMMIT
      */
     public function receivePurchase(Purchase $purchase, array $batchData): void
     {
@@ -290,20 +319,22 @@ class PurchaseFlowService
         $this->entityManager->beginTransaction();
 
         try {
-            $processedProducts = []; // Pour suivre les produits déjà traités
+            $touchedProductIds = [];
 
             foreach ($purchase->getPurchaseItems() as $item) {
                 $product = $item->getProduct();
                 $data = $batchData[$item->getId()] ?? [];
 
+                // Suppression de l'item
                 if (!empty($data['remove']) && $data['remove'] == 1) {
                     $purchase->removePurchaseItem($item);
                     $this->entityManager->remove($item);
                     continue;
                 }
 
-                $receivedQuantity = isset($data['received_quantity']) && is_numeric($data['received_quantity']) 
-                    ? (int)$data['received_quantity'] 
+                // Quantité reçue
+                $receivedQuantity = isset($data['received_quantity']) && is_numeric($data['received_quantity'])
+                    ? (int) $data['received_quantity']
                     : $item->getQuantity();
 
                 if ($receivedQuantity <= 0) {
@@ -312,19 +343,22 @@ class PurchaseFlowService
                     continue;
                 }
 
-                $receivedPrice = isset($data['received_price']) && is_numeric($data['received_price']) 
-                    ? (float)$data['received_price'] 
-                    : (float)$item->getUnitPrice();
+                // Prix reçu
+                $receivedPrice = isset($data['received_price']) && is_numeric($data['received_price'])
+                    ? (float) $data['received_price']
+                    : (float) $item->getUnitPrice();
 
                 $item->setQuantity($receivedQuantity);
-                $item->setUnitPrice((string)$receivedPrice);
-                $item->setTotalPrice(bcmul((string)$receivedPrice, (string)$receivedQuantity, 2));
-                
+                $item->setUnitPrice((string) $receivedPrice);
+                $item->setTotalPrice(bcmul((string) $receivedPrice, (string) $receivedQuantity, 2));
+
+                // Localisation
                 $location = null;
                 if (!empty($data['location_id'])) {
                     $location = $this->entityManager->getRepository(Location::class)->find($data['location_id']);
                 }
-                
+
+                // Dates d'expiration
                 if ($product->hasExpiryDate()) {
                     if (empty($data['batch_number']) || empty($data['manufacturing_date']) || empty($data['expiry_date'])) {
                         throw new \Exception(sprintf('Données de lot manquantes pour le produit "%s"', $product->getName()));
@@ -335,6 +369,7 @@ class PurchaseFlowService
 
                 $this->entityManager->persist($item);
 
+                // Numéro de lot
                 $batchNumber = $data['batch_number'] ?? $item->getBatchNumber();
                 if (empty($batchNumber)) {
                     $batchNumber = $this->generateBatchNumber($product);
@@ -345,13 +380,13 @@ class PurchaseFlowService
                 $stockBatch->setBatchNumber($batchNumber);
                 $stockBatch->setInitialQuantity($receivedQuantity);
                 $stockBatch->setCurrentQuantity($receivedQuantity);
-                $stockBatch->setUnitPrice((string)$receivedPrice);
+                $stockBatch->setUnitPrice((string) $receivedPrice);
                 $stockBatch->setProduct($product);
                 $stockBatch->setPurchaseItemId($item->getId());
                 $stockBatch->setHmaService($purchase->getHmaService());
                 $stockBatch->setIsActive(true);
                 $stockBatch->setCreatedAt(new \DateTime());
-                
+
                 if ($location) {
                     $stockBatch->setLocationEntity($location);
                     $stockBatch->setLocation($location->getDisplayName());
@@ -368,7 +403,7 @@ class PurchaseFlowService
                 $movement = new StockMovement();
                 $movement->setMovementType('purchase_in');
                 $movement->setQuantity($receivedQuantity);
-                $movement->setUnitPrice((string)$receivedPrice);
+                $movement->setUnitPrice((string) $receivedPrice);
                 $movement->setProduct($product);
                 $movement->setStockBatch($stockBatch);
                 $movement->setPurchaseItem($item);
@@ -380,36 +415,16 @@ class PurchaseFlowService
 
                 $this->entityManager->persist($movement);
 
-                // ❌ SUPPRIMÉ : $product->setStockQuantity($product->getStockQuantity() + $receivedQuantity);
-                // ✅ stock_quantity reste inchangé, seul le lot est créé
-                
-                // ✅ AJOUT : Détacher le produit pour éviter les mises à jour automatiques
-                // Cela empêche les Lifecycle Callbacks de modifier stock_quantity
-                if (!in_array($product->getId(), $processedProducts)) {
-                    $this->entityManager->detach($product);
-                    $processedProducts[] = $product->getId();
+                if ($product && $product->getId()) {
+                    $touchedProductIds[$product->getId()] = true;
                 }
-                
-                $this->logger->info('Lot créé pour réception', [
-                    'product_id' => $product->getId(),
-                    'product_name' => $product->getName(),
-                    'quantity' => $receivedQuantity,
-                    'batch_number' => $batchNumber
-                ]);
-            }
 
-            // ✅ Recharger le produit pour avoir une instance gérée si nécessaire
-            // pour les opérations ultérieures
-            foreach ($processedProducts as $productId) {
-                $product = $this->entityManager->getRepository(Product::class)->find($productId);
-                if ($product) {
-                    // Le stock_quantity n'est pas modifié
-                    $this->logger->info('Stock quantity après réception', [
-                        'product_id' => $product->getId(),
-                        'product_name' => $product->getName(),
-                        'stock_quantity' => $product->getStockQuantity()
-                    ]);
-                }
+                $this->logger->info('Lot créé pour réception', [
+                    'product_id' => $product?->getId(),
+                    'product_name' => $product?->getName(),
+                    'quantity' => $receivedQuantity,
+                    'batch_number' => $batchNumber,
+                ]);
             }
 
             $purchase->calculateTotalAmount();
@@ -417,26 +432,54 @@ class PurchaseFlowService
             $purchase->setReceivedAt(new \DateTimeImmutable());
 
             $this->entityManager->flush();
+
+            // ✅ Synchronisation du stock produit (avec refresh obligatoire)
+            foreach (array_keys($touchedProductIds) as $productId) {
+                $product = $this->entityManager->getRepository(Product::class)->find($productId);
+                if (!$product) {
+                    continue;
+                }
+
+                $this->entityManager->refresh($product);
+                $syncResult = $this->stockSyncService->syncProductStock($product);
+
+                $this->logger->info('Stock synchronisé après réception', [
+                    'product_id' => $product->getId(),
+                    'product_name' => $product->getName(),
+                    'old_stock' => $syncResult['old_stock_quantity'],
+                    'new_stock' => $syncResult['new_stock_quantity'],
+                    'active_batches' => $syncResult['active_batches_count'],
+                    'batches_total' => $syncResult['batches_total_quantity'],
+                ]);
+            }
+
             $this->entityManager->commit();
 
+            // Génération du PDF de réception
             $recuPath = $this->pdfGenerator->generatePurchaseReceipt($purchase);
             if ($recuPath) {
                 $purchase->setRecuAchat($recuPath);
                 $this->entityManager->flush();
             }
 
-            $this->notificationService->sendPurchaseReceivedConfirmation($purchase);
+            // ✅ Notification uniquement si fournisseur
+            if ($purchase->getSupplier() !== null) {
+                $this->notificationService->sendPurchaseReceivedConfirmation($purchase);
+            }
 
             $this->logger->info('Commande réceptionnée avec succès', [
                 'purchase_id' => $purchase->getId(),
-                'items_count' => count($purchase->getPurchaseItems())
+                'items_count' => count($purchase->getPurchaseItems()),
+                'products_synced' => count($touchedProductIds),
+                'has_supplier' => $purchase->getSupplier() !== null,
             ]);
 
         } catch (\Exception $e) {
             $this->entityManager->rollback();
             $this->logger->error('Erreur lors de la réception de la commande', [
                 'purchase_id' => $purchase->getId(),
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
             throw $e;
         }
@@ -451,14 +494,14 @@ class PurchaseFlowService
         $year = $date->format('Y');
         $month = $date->format('m');
         $day = $date->format('d');
-        
+
         $count = $this->entityManager->getRepository(Purchase::class)->count([
             'hma_service' => $hmaService,
-            'created_at' => new \DateTimeImmutable('today')
+            'created_at' => new \DateTimeImmutable('today'),
         ]);
-        
+
         $sequence = str_pad($count + 1, 4, '0', STR_PAD_LEFT);
-        
+
         return sprintf('ACH-%s%s%s-%s', $year, $month, $day, $sequence);
     }
 
@@ -469,7 +512,7 @@ class PurchaseFlowService
     {
         $date = new \DateTime();
         $random = str_pad(random_int(1, 99999), 5, '0', STR_PAD_LEFT);
-        
+
         return sprintf(
             'LOT-%s-%s-%s',
             $date->format('Ymd'),
@@ -514,53 +557,24 @@ class PurchaseFlowService
      */
     public function sendPurchaseReceivedConfirmation(Purchase $purchase): void
     {
+        if ($purchase->getSupplier() === null) {
+            $this->logger->info('Aucun fournisseur : confirmation de réception ignorée', [
+                'purchase_id' => $purchase->getId(),
+            ]);
+            return;
+        }
+
         try {
             $this->notificationService->sendPurchaseReceivedConfirmation($purchase);
             $this->logger->info('Confirmation de réception envoyée', [
                 'purchase_id' => $purchase->getId(),
-                'supplier' => $purchase->getSupplier()?->getName()
+                'supplier' => $purchase->getSupplier()?->getName(),
             ]);
         } catch (\Exception $e) {
             $this->logger->error('Erreur lors de l\'envoi de la confirmation de réception', [
                 'purchase_id' => $purchase->getId(),
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-        }
-    }
-
-    /**
-     * Met à jour le stock d'un produit à partir des lots
-     * ✅ Nouvelle méthode pour recalculer stock_quantity si nécessaire
-     */
-    public function updateProductStockFromBatches(Product $product): void
-    {
-        $totalStock = 0;
-        foreach ($product->getStockBatches() as $batch) {
-            if ($batch->isActive() && $batch->getCurrentQuantity() > 0) {
-                $totalStock += $batch->getCurrentQuantity();
-            }
-        }
-        $product->setStockQuantity($totalStock);
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
-    }
-
-    /**
-     * Synchronise le stock de tous les produits d'une commande
-     * ✅ Nouvelle méthode pour recalculer tous les stocks après réception
-     */
-    public function syncStockAfterReceipt(Purchase $purchase): void
-    {
-        foreach ($purchase->getPurchaseItems() as $item) {
-            $product = $item->getProduct();
-            if ($product) {
-                $this->updateProductStockFromBatches($product);
-                $this->logger->info('Stock synchronisé pour le produit', [
-                    'product_id' => $product->getId(),
-                    'product_name' => $product->getName(),
-                    'new_stock' => $product->getStockQuantity()
-                ]);
-            }
         }
     }
 }

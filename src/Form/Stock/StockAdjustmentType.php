@@ -9,10 +9,12 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;   // ✅ AJOUT
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Choice;         // ✅ AJOUT
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
@@ -22,9 +24,18 @@ class StockAdjustmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // ❌ SUPPRIMER le champ 'type' car il est géré par les cartes JavaScript
-            // ->add('type', ChoiceType::class, [...])
-
+            // ✅ AJOUT : champ type (rempli par JS via les cartes)
+            ->add('type', HiddenType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez sélectionner un type d\'ajustement.']),
+                    new Choice([
+                        'choices' => ['in', 'out'],
+                        'message' => 'Type d\'ajustement invalide.',
+                    ]),
+                ],
+                'attr' => ['id' => 'stock_adjustment_type'],
+            ])
             ->add('stock_batch', EntityType::class, [
                 'label' => 'Lot concerné',
                 'class' => StockBatch::class,
@@ -33,20 +44,42 @@ class StockAdjustmentType extends AbstractType
                         ->innerJoin('sb.product', 'p')
                         ->addSelect('p')
                         ->where('sb.hma_service = :hmaService')
+                        ->andWhere('sb.is_active = true')
+                        ->andWhere('sb.current_quantity > 0')
                         ->setParameter('hmaService', $options['hma_service'])
                         ->orderBy('p.name', 'ASC')
                         ->addOrderBy('sb.batch_number', 'ASC');
-                    
+
                     return $qb;
                 },
                 'choice_label' => function (StockBatch $batch) {
                     return sprintf(
-                        '%s - %s (Stock: %d unités, Prix: %s)',
+                        '%s - %s (Stock: %d)',
                         $batch->getProduct()->getName(),
                         $batch->getBatchNumber(),
-                        $batch->getCurrentQuantity(),
-                        number_format((float)$batch->getUnitPrice(), 0, ',', ' ') . ' FCFA'
+                        $batch->getCurrentQuantity()
                     );
+                },
+                'choice_attr' => function (StockBatch $batch) {
+                    $product = $batch->getProduct();
+                    $image = $product && $product->getImage() && $product->getImage() !== 'default-product.png'
+                        ? '/uploads/products/' . $product->getImage()
+                        : '';
+
+                    return [
+                        'data-batch-number' => $batch->getBatchNumber(),
+                        'data-product-name' => $product ? $product->getName() : '',
+                        'data-product-image' => $image,
+                        'data-product-barcode' => $product ? $product->getBarcode() : '',
+                        'data-current-quantity' => $batch->getCurrentQuantity(),
+                        'data-initial-quantity' => $batch->getInitialQuantity(),
+                        'data-unit' => $product ? ($product->getUnit() ?? 'unité') : 'unité',
+                        'data-unit-price' => $batch->getUnitPrice() ?? '0',
+                        'data-expiry-date' => $batch->getExpiryDate() ? $batch->getExpiryDate()->format('d/m/Y') : '',
+                        'data-location' => $batch->getLocationEntity()
+                            ? $batch->getLocationEntity()->getDisplayName()
+                            : ($batch->getLocation() ?? ''),
+                    ];
                 },
                 'placeholder' => '-- Sélectionner un lot --',
                 'required' => true,
@@ -76,7 +109,6 @@ class StockAdjustmentType extends AbstractType
                     'class' => 'form-control',
                     'placeholder' => 'Expliquez pourquoi cet ajustement est nécessaire...'
                 ],
-                'help' => 'Cette raison sera visible dans l\'historique et les notifications.'
             ])
             ->add('justification_file', FileType::class, [
                 'label' => 'Justificatif (optionnel)',
@@ -97,7 +129,6 @@ class StockAdjustmentType extends AbstractType
                     'accept' => 'image/jpeg,image/png,image/gif,application/pdf',
                     'class' => 'form-control'
                 ],
-                'help' => 'Formats acceptés : JPG, PNG, GIF, PDF (max 5Mo)'
             ]);
     }
 
@@ -107,7 +138,7 @@ class StockAdjustmentType extends AbstractType
             'data_class' => StockAdjustment::class,
             'hma_service' => null,
         ]);
-        
+
         $resolver->setAllowedTypes('hma_service', ['App\Entity\HmaService', 'null']);
     }
 }

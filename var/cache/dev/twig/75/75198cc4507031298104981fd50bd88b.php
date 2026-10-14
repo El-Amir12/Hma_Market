@@ -352,6 +352,56 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
         margin-bottom: 0;
     }
 
+    /* ✅ Styles pour les champs mot de passe */
+    .password-field-wrapper {
+        position: relative;
+    }
+
+    .password-field-wrapper .form-control {
+        padding-right: 3rem;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.25rem;
+        transition: color 0.2s;
+    }
+
+    .password-toggle:hover {
+        color: var(--primary-color);
+    }
+
+    .password-strength {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .password-strength .bar {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 0.25rem;
+    }
+
+    .password-strength .bar-item {
+        flex: 1;
+        height: 4px;
+        background: #e5e7eb;
+        border-radius: 2px;
+        transition: background 0.3s;
+    }
+
+    .password-strength .bar-item.active.weak { background: #ef4444; }
+    .password-strength .bar-item.active.medium { background: #f59e0b; }
+    .password-strength .bar-item.active.strong { background: #10b981; }
+
     @media (max-width: 768px) {
         .register-card .card-body {
             padding: 1.5rem;
@@ -394,7 +444,7 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
         yield from [];
     }
 
-    // line 293
+    // line 343
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -407,7 +457,7 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 294
+        // line 344
         yield "<div class=\"register-container\">
     <div class=\"row justify-content-center\">
         <div class=\"col-md-10 col-lg-8 col-xl-7\">
@@ -424,22 +474,22 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
                 <!-- Body -->
                 <div class=\"card-body\">
                     ";
-        // line 310
+        // line 360
         yield "                    ";
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 310, $this->source); })()), "flashes", [], "any", false, false, false, 310));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 360, $this->source); })()), "flashes", [], "any", false, false, false, 360));
         foreach ($context['_seq'] as $context["label"] => $context["messages"]) {
-            // line 311
+            // line 361
             yield "                        ";
             $context['_parent'] = $context;
             $context['_seq'] = CoreExtension::ensureTraversable($context["messages"]);
             foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
-                // line 312
+                // line 362
                 yield "                            <div class=\"alert-custom alert-";
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["label"], "html", null, true);
                 yield " alert-dismissible fade show\" role=\"alert\">
                                 <i class=\"fas fa-";
-                // line 313
+                // line 363
                 if (($context["label"] == "success")) {
                     yield "check-circle";
                 } elseif (($context["label"] == "danger")) {
@@ -451,7 +501,7 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
                 }
                 yield "\"></i>
                                 ";
-                // line 314
+                // line 364
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["message"], "html", null, true);
                 yield "
                                 <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>
@@ -461,19 +511,19 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 318
+            // line 368
             yield "                    ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['label'], $context['messages'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 319
+        // line 369
         yield "
                     ";
-        // line 321
+        // line 371
         yield "                    ";
-        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 321, $this->source); })()), "user", [], "any", false, false, false, 321) && CoreExtension::inFilter("ROLE_ADMIN", CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 321, $this->source); })()), "user", [], "any", false, false, false, 321), "roles", [], "any", false, false, false, 321)))) {
-            // line 322
+        if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 371, $this->source); })()), "user", [], "any", false, false, false, 371) && CoreExtension::inFilter("ROLE_ADMIN", CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 371, $this->source); })()), "user", [], "any", false, false, false, 371), "roles", [], "any", false, false, false, 371)))) {
+            // line 372
             yield "                        <div class=\"alert-custom alert-info\">
                             <i class=\"fas fa-info-circle\"></i>
                             <strong>Information :</strong> La Marketplace est indépendante de Hma Market.
@@ -481,119 +531,46 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
                         </div>
                     ";
         }
-        // line 328
+        // line 378
         yield "
                     ";
-        // line 330
+        // line 380
         yield "                    <div class=\"info-box\">
                         <div class=\"d-flex align-items-start\">
                             <i class=\"fas fa-info-circle fa-lg mt-1\"></i>
                             <div>
                                 <h6>Comment ça fonctionne ?</h6>
                                 <p>
-                                    Après votre inscription, vous recevrez un email de vérification avec un 
-                                    <strong>mot de passe temporaire</strong>. Cliquez sur le lien pour activer 
-                                    votre compte, puis connectez-vous avec le mot de passe reçu.
+                                    Après votre inscription, vous recevrez un email de vérification. 
+                                    Cliquez sur le lien pour activer votre compte, puis connectez-vous 
+                                    avec votre email et le mot de passe que vous avez choisi.
                                 </p>
                             </div>
                         </div>
                     </div>
 
                     ";
-        // line 345
+        // line 395
         yield "                    ";
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 345, $this->source); })()), 'form_start', ["attr" => ["id" => "registerForm", "novalidate" => "novalidate"]]);
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 395, $this->source); })()), 'form_start', ["attr" => ["id" => "registerForm", "novalidate" => "novalidate"]]);
         yield "
 
                     <div class=\"row\">
                         ";
-        // line 349
+        // line 399
         yield "                        <div class=\"col-12 form-group\">
                             ";
-        // line 350
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 350, $this->source); })()), "full_name", [], "any", false, false, false, 350), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Nom complet *"]);
-        yield "
-                            ";
-        // line 351
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 351, $this->source); })()), "full_name", [], "any", false, false, false, 351), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Votre nom complet", "autocomplete" => "name"]]);
-        // line 357
-        yield "
-                            ";
-        // line 358
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 358, $this->source); })()), "full_name", [], "any", false, false, false, 358), 'errors');
-        yield "
-                        </div>
-
-                        ";
-        // line 362
-        yield "                        <div class=\"col-12 form-group\">
-                            ";
-        // line 363
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 363, $this->source); })()), "email", [], "any", false, false, false, 363), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Email *"]);
-        yield "
-                            ";
-        // line 364
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 364, $this->source); })()), "email", [], "any", false, false, false, 364), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "votre@email.com", "autocomplete" => "email"]]);
-        // line 370
-        yield "
-                            <div class=\"form-text\">Nous ne partagerons jamais votre email.</div>
-                            ";
-        // line 372
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 372, $this->source); })()), "email", [], "any", false, false, false, 372), 'errors');
-        yield "
-                        </div>
-
-                        ";
-        // line 376
-        yield "                        <div class=\"col-md-6 form-group\">
-                            ";
-        // line 377
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 377, $this->source); })()), "phone", [], "any", false, false, false, 377), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Téléphone"]);
-        yield "
-                            ";
-        // line 378
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 378, $this->source); })()), "phone", [], "any", false, false, false, 378), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "+229 01 56 13 92 00"]]);
-        // line 383
-        yield "
-                            ";
-        // line 384
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 384, $this->source); })()), "phone", [], "any", false, false, false, 384), 'errors');
-        yield "
-                        </div>
-
-                        ";
-        // line 388
-        yield "                        <div class=\"col-md-6 form-group\">
-                            ";
-        // line 389
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 389, $this->source); })()), "city", [], "any", false, false, false, 389), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Ville"]);
-        yield "
-                            ";
-        // line 390
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 390, $this->source); })()), "city", [], "any", false, false, false, 390), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Votre ville"]]);
-        // line 395
-        yield "
-                            ";
-        // line 396
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 396, $this->source); })()), "city", [], "any", false, false, false, 396), 'errors');
-        yield "
-                        </div>
-
-                        ";
         // line 400
-        yield "                        <div class=\"col-12 form-group\">
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 400, $this->source); })()), "full_name", [], "any", false, false, false, 400), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Nom complet *"]);
+        yield "
                             ";
         // line 401
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 401, $this->source); })()), "address", [], "any", false, false, false, 401), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Adresse"]);
-        yield "
-                            ";
-        // line 402
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 402, $this->source); })()), "address", [], "any", false, false, false, 402), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Votre adresse complète"]]);
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 401, $this->source); })()), "full_name", [], "any", false, false, false, 401), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Votre nom complet", "autocomplete" => "name"]]);
         // line 407
         yield "
                             ";
         // line 408
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 408, $this->source); })()), "address", [], "any", false, false, false, 408), 'errors');
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 408, $this->source); })()), "full_name", [], "any", false, false, false, 408), 'errors');
         yield "
                         </div>
 
@@ -602,30 +579,155 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
         yield "                        <div class=\"col-12 form-group\">
                             ";
         // line 413
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 413, $this->source); })()), "country", [], "any", false, false, false, 413), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Pays"]);
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 413, $this->source); })()), "email", [], "any", false, false, false, 413), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Email *"]);
         yield "
                             ";
         // line 414
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 414, $this->source); })()), "country", [], "any", false, false, false, 414), 'widget', ["attr" => ["class" => "form-select select2-country", "data-placeholder" => "Sélectionnez votre pays"]]);
-        // line 419
-        yield "
-                            ";
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 414, $this->source); })()), "email", [], "any", false, false, false, 414), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "votre@email.com", "autocomplete" => "email"]]);
         // line 420
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 420, $this->source); })()), "country", [], "any", false, false, false, 420), 'errors');
+        yield "
+                            <div class=\"form-text\">Nous ne partagerons jamais votre email.</div>
+                            ";
+        // line 422
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 422, $this->source); })()), "email", [], "any", false, false, false, 422), 'errors');
         yield "
                         </div>
 
                         ";
-        // line 424
-        yield "
-                        ";
         // line 426
+        yield "                        <div class=\"col-md-6 form-group\">
+                            ";
+        // line 427
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 427, $this->source); })()), "phone", [], "any", false, false, false, 427), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Téléphone"]);
+        yield "
+                            ";
+        // line 428
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 428, $this->source); })()), "phone", [], "any", false, false, false, 428), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "+229 01 56 13 92 00"]]);
+        // line 433
+        yield "
+                            ";
+        // line 434
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 434, $this->source); })()), "phone", [], "any", false, false, false, 434), 'errors');
+        yield "
+                        </div>
+
+                        ";
+        // line 438
+        yield "                        <div class=\"col-md-6 form-group\">
+                            ";
+        // line 439
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 439, $this->source); })()), "city", [], "any", false, false, false, 439), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Ville"]);
+        yield "
+                            ";
+        // line 440
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 440, $this->source); })()), "city", [], "any", false, false, false, 440), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Votre ville"]]);
+        // line 445
+        yield "
+                            ";
+        // line 446
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 446, $this->source); })()), "city", [], "any", false, false, false, 446), 'errors');
+        yield "
+                        </div>
+
+                        ";
+        // line 450
+        yield "                        <div class=\"col-12 form-group\">
+                            ";
+        // line 451
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 451, $this->source); })()), "address", [], "any", false, false, false, 451), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Adresse"]);
+        yield "
+                            ";
+        // line 452
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 452, $this->source); })()), "address", [], "any", false, false, false, 452), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Votre adresse complète"]]);
+        // line 457
+        yield "
+                            ";
+        // line 458
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 458, $this->source); })()), "address", [], "any", false, false, false, 458), 'errors');
+        yield "
+                        </div>
+
+                        ";
+        // line 462
+        yield "                        <div class=\"col-12 form-group\">
+                            ";
+        // line 463
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 463, $this->source); })()), "country", [], "any", false, false, false, 463), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Pays"]);
+        yield "
+                            ";
+        // line 464
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 464, $this->source); })()), "country", [], "any", false, false, false, 464), 'widget', ["attr" => ["class" => "form-select select2-country", "data-placeholder" => "Sélectionnez votre pays"]]);
+        // line 469
+        yield "
+                            ";
+        // line 470
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 470, $this->source); })()), "country", [], "any", false, false, false, 470), 'errors');
+        yield "
+                        </div>
+
+                        ";
+        // line 474
+        yield "                        <div class=\"col-md-6 form-group\">
+                            ";
+        // line 475
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 475, $this->source); })()), "plainPassword", [], "any", false, false, false, 475), "first", [], "any", false, false, false, 475), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Mot de passe *"]);
+        yield "
+                            <div class=\"password-field-wrapper\">
+                                ";
+        // line 477
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 477, $this->source); })()), "plainPassword", [], "any", false, false, false, 477), "first", [], "any", false, false, false, 477), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Minimum 8 caractères", "autocomplete" => "new-password", "id" => "plainPassword_first"]]);
+        // line 484
+        yield "
+                                <button type=\"button\" class=\"password-toggle\" onclick=\"togglePassword('plainPassword_first', this)\">
+                                    <i class=\"fas fa-eye\"></i>
+                                </button>
+                            </div>
+                            <div class=\"password-strength\" id=\"passwordStrength\">
+                                <div class=\"bar\">
+                                    <div class=\"bar-item\" id=\"bar1\"></div>
+                                    <div class=\"bar-item\" id=\"bar2\"></div>
+                                    <div class=\"bar-item\" id=\"bar3\"></div>
+                                    <div class=\"bar-item\" id=\"bar4\"></div>
+                                </div>
+                                <div class=\"text-muted\" id=\"strengthText\">Force du mot de passe</div>
+                            </div>
+                            ";
+        // line 498
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 498, $this->source); })()), "plainPassword", [], "any", false, false, false, 498), "first", [], "any", false, false, false, 498), 'errors');
+        yield "
+                        </div>
+
+                        ";
+        // line 502
+        yield "                        <div class=\"col-md-6 form-group\">
+                            ";
+        // line 503
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 503, $this->source); })()), "plainPassword", [], "any", false, false, false, 503), "second", [], "any", false, false, false, 503), 'label', ["label_attr" => ["class" => "form-label"], "label" => "Confirmer le mot de passe *"]);
+        yield "
+                            <div class=\"password-field-wrapper\">
+                                ";
+        // line 505
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 505, $this->source); })()), "plainPassword", [], "any", false, false, false, 505), "second", [], "any", false, false, false, 505), 'widget', ["attr" => ["class" => "form-control", "placeholder" => "Répétez le mot de passe", "autocomplete" => "new-password", "id" => "plainPassword_second"]]);
+        // line 512
+        yield "
+                                <button type=\"button\" class=\"password-toggle\" onclick=\"togglePassword('plainPassword_second', this)\">
+                                    <i class=\"fas fa-eye\"></i>
+                                </button>
+                            </div>
+                            ";
+        // line 517
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 517, $this->source); })()), "plainPassword", [], "any", false, false, false, 517), "second", [], "any", false, false, false, 517), 'errors');
+        yield "
+                        </div>
+
+                        ";
+        // line 521
         yield "                        <div class=\"col-12 form-group\">
                             <div class=\"terms-check\">
                                 ";
-        // line 428
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 428, $this->source); })()), "terms", [], "any", false, false, false, 428), 'widget', ["attr" => ["class" => "form-check-input", "id" => "terms"]]);
-        // line 433
+        // line 523
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 523, $this->source); })()), "terms", [], "any", false, false, false, 523), 'widget', ["attr" => ["class" => "form-check-input", "id" => "terms"]]);
+        // line 528
         yield "
                                 <label class=\"form-check-label\" for=\"terms\">
                                     J'accepte les 
@@ -636,13 +738,13 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
                                 </label>
                             </div>
                             ";
-        // line 442
-        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 442, $this->source); })()), "terms", [], "any", false, false, false, 442), 'errors');
+        // line 537
+        yield $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBlock(CoreExtension::getAttribute($this->env, $this->source, (isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 537, $this->source); })()), "terms", [], "any", false, false, false, 537), 'errors');
         yield "
                         </div>
 
                         ";
-        // line 446
+        // line 541
         yield "                        <div class=\"col-12 form-group mt-2\">
                             <button type=\"submit\" class=\"btn-register\" id=\"registerBtn\">
                                 <i class=\"fas fa-user-plus me-2\"></i>S'inscrire
@@ -651,31 +753,26 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
                     </div>
 
                     ";
-        // line 453
-        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 453, $this->source); })()), 'form_end');
+        // line 548
+        yield         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["registrationForm"]) || array_key_exists("registrationForm", $context) ? $context["registrationForm"] : (function () { throw new RuntimeError('Variable "registrationForm" does not exist.', 548, $this->source); })()), 'form_end');
         yield "
 
                     ";
-        // line 456
+        // line 551
         yield "                    <div class=\"divider\">
                         <span>ou</span>
                     </div>
 
                     ";
-        // line 461
+        // line 556
         yield "                    <div class=\"login-link\">
                         Vous avez déjà un compte client ?
                         <a href=\"";
-        // line 463
+        // line 558
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("marketplace_login");
         yield "\">Connectez-vous</a>
                     </div>
-
-                    ";
-        // line 467
-        yield "                    ";
-        // line 468
-        yield "                </div>
+                </div>
             </div>
         </div>
     </div>
@@ -690,7 +787,7 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
         yield from [];
     }
 
-    // line 475
+    // line 567
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -703,7 +800,7 @@ class __TwigTemplate_9607516adfe7968324e95d400ed7f5f3 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 476
+        // line 568
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>
@@ -726,17 +823,113 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         form.addEventListener('submit', function(e) {
             const terms = document.getElementById('terms');
+            const password = document.getElementById('plainPassword_first');
+            const passwordConfirm = document.getElementById('plainPassword_second');
 
+            let valid = true;
+
+            // Vérifier les conditions générales
             if (!terms.checked) {
                 e.preventDefault();
                 terms.classList.add('is-invalid');
                 terms.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                valid = false;
             } else {
                 terms.classList.remove('is-invalid');
+            }
+
+            // Vérifier la force du mot de passe
+            if (password && password.value.length < 8) {
+                e.preventDefault();
+                password.classList.add('is-invalid');
+                valid = false;
+            }
+
+            // Vérifier que les mots de passe correspondent
+            if (password && passwordConfirm && password.value !== passwordConfirm.value) {
+                e.preventDefault();
+                passwordConfirm.classList.add('is-invalid');
+                valid = false;
+            }
+
+            // Désactiver le bouton si tout est valide pour éviter double soumission
+            if (valid) {
+                const btn = document.getElementById('registerBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class=\"fas fa-spinner fa-spin me-2\"></i>Inscription...';
+            }
+        });
+    }
+
+    // ==================== PASSWORD STRENGTH ====================
+    const passwordInput = document.getElementById('plainPassword_first');
+    if (passwordInput) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+
+            // Critères
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\\d/.test(password)) strength++;
+            if (/[^a-zA-Z\\d]/.test(password)) strength++;
+
+            // Mettre à jour les barres
+            const bars = [
+                document.getElementById('bar1'),
+                document.getElementById('bar2'),
+                document.getElementById('bar3'),
+                document.getElementById('bar4')
+            ];
+
+            const strengthText = document.getElementById('strengthText');
+            let strengthLevel = '';
+            let activeClass = '';
+
+            if (strength <= 1) {
+                strengthLevel = 'Faible';
+                activeClass = 'weak';
+            } else if (strength === 2) {
+                strengthLevel = 'Moyen';
+                activeClass = 'medium';
+            } else if (strength >= 3) {
+                strengthLevel = 'Fort';
+                activeClass = 'strong';
+            }
+
+            bars.forEach((bar, index) => {
+                bar.classList.remove('active', 'weak', 'medium', 'strong');
+                if (index < strength) {
+                    bar.classList.add('active', activeClass);
+                }
+            });
+
+            if (password.length > 0) {
+                strengthText.textContent = 'Force : ' + strengthLevel;
+                strengthText.className = 'text-' + (activeClass === 'strong' ? 'success' : (activeClass === 'medium' ? 'warning' : 'danger'));
+            } else {
+                strengthText.textContent = 'Force du mot de passe';
+                strengthText.className = 'text-muted';
             }
         });
     }
 });
+
+// ==================== TOGGLE PASSWORD VISIBILITY ====================
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
 </script>
 ";
         
@@ -769,7 +962,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  707 => 476,  694 => 475,  678 => 468,  676 => 467,  670 => 463,  666 => 461,  660 => 456,  655 => 453,  646 => 446,  640 => 442,  629 => 433,  627 => 428,  623 => 426,  620 => 424,  614 => 420,  611 => 419,  609 => 414,  605 => 413,  602 => 412,  596 => 408,  593 => 407,  591 => 402,  587 => 401,  584 => 400,  578 => 396,  575 => 395,  573 => 390,  569 => 389,  566 => 388,  560 => 384,  557 => 383,  555 => 378,  551 => 377,  548 => 376,  542 => 372,  538 => 370,  536 => 364,  532 => 363,  529 => 362,  523 => 358,  520 => 357,  518 => 351,  514 => 350,  511 => 349,  504 => 345,  488 => 330,  485 => 328,  477 => 322,  474 => 321,  471 => 319,  465 => 318,  455 => 314,  443 => 313,  438 => 312,  433 => 311,  428 => 310,  411 => 294,  398 => 293,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
+        return array (  804 => 568,  791 => 567,  772 => 558,  768 => 556,  762 => 551,  757 => 548,  748 => 541,  742 => 537,  731 => 528,  729 => 523,  725 => 521,  719 => 517,  712 => 512,  710 => 505,  705 => 503,  702 => 502,  696 => 498,  680 => 484,  678 => 477,  673 => 475,  670 => 474,  664 => 470,  661 => 469,  659 => 464,  655 => 463,  652 => 462,  646 => 458,  643 => 457,  641 => 452,  637 => 451,  634 => 450,  628 => 446,  625 => 445,  623 => 440,  619 => 439,  616 => 438,  610 => 434,  607 => 433,  605 => 428,  601 => 427,  598 => 426,  592 => 422,  588 => 420,  586 => 414,  582 => 413,  579 => 412,  573 => 408,  570 => 407,  568 => 401,  564 => 400,  561 => 399,  554 => 395,  538 => 380,  535 => 378,  527 => 372,  524 => 371,  521 => 369,  515 => 368,  505 => 364,  493 => 363,  488 => 362,  483 => 361,  478 => 360,  461 => 344,  448 => 343,  102 => 7,  89 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -1032,6 +1225,56 @@ document.addEventListener('DOMContentLoaded', function() {
         margin-bottom: 0;
     }
 
+    /* ✅ Styles pour les champs mot de passe */
+    .password-field-wrapper {
+        position: relative;
+    }
+
+    .password-field-wrapper .form-control {
+        padding-right: 3rem;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.25rem;
+        transition: color 0.2s;
+    }
+
+    .password-toggle:hover {
+        color: var(--primary-color);
+    }
+
+    .password-strength {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .password-strength .bar {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 0.25rem;
+    }
+
+    .password-strength .bar-item {
+        flex: 1;
+        height: 4px;
+        background: #e5e7eb;
+        border-radius: 2px;
+        transition: background 0.3s;
+    }
+
+    .password-strength .bar-item.active.weak { background: #ef4444; }
+    .password-strength .bar-item.active.medium { background: #f59e0b; }
+    .password-strength .bar-item.active.strong { background: #10b981; }
+
     @media (max-width: 768px) {
         .register-card .card-body {
             padding: 1.5rem;
@@ -1102,16 +1345,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     {% endif %}
 
-                    {# ✅ Info box - Explication du processus #}
+                    {# ✅ Info box - Explication du processus mis à jour #}
                     <div class=\"info-box\">
                         <div class=\"d-flex align-items-start\">
                             <i class=\"fas fa-info-circle fa-lg mt-1\"></i>
                             <div>
                                 <h6>Comment ça fonctionne ?</h6>
                                 <p>
-                                    Après votre inscription, vous recevrez un email de vérification avec un 
-                                    <strong>mot de passe temporaire</strong>. Cliquez sur le lien pour activer 
-                                    votre compte, puis connectez-vous avec le mot de passe reçu.
+                                    Après votre inscription, vous recevrez un email de vérification. 
+                                    Cliquez sur le lien pour activer votre compte, puis connectez-vous 
+                                    avec votre email et le mot de passe que vous avez choisi.
                                 </p>
                             </div>
                         </div>
@@ -1196,7 +1439,52 @@ document.addEventListener('DOMContentLoaded', function() {
                             {{ form_errors(registrationForm.country) }}
                         </div>
 
-                        {# ✅ NOTE : Les champs de mot de passe sont supprimés car générés automatiquement #}
+                        {# ✅ NOUVEAU : Champ mot de passe #}
+                        <div class=\"col-md-6 form-group\">
+                            {{ form_label(registrationForm.plainPassword.first, 'Mot de passe *', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class=\"password-field-wrapper\">
+                                {{ form_widget(registrationForm.plainPassword.first, {
+                                    'attr': {
+                                        'class': 'form-control',
+                                        'placeholder': 'Minimum 8 caractères',
+                                        'autocomplete': 'new-password',
+                                        'id': 'plainPassword_first'
+                                    }
+                                }) }}
+                                <button type=\"button\" class=\"password-toggle\" onclick=\"togglePassword('plainPassword_first', this)\">
+                                    <i class=\"fas fa-eye\"></i>
+                                </button>
+                            </div>
+                            <div class=\"password-strength\" id=\"passwordStrength\">
+                                <div class=\"bar\">
+                                    <div class=\"bar-item\" id=\"bar1\"></div>
+                                    <div class=\"bar-item\" id=\"bar2\"></div>
+                                    <div class=\"bar-item\" id=\"bar3\"></div>
+                                    <div class=\"bar-item\" id=\"bar4\"></div>
+                                </div>
+                                <div class=\"text-muted\" id=\"strengthText\">Force du mot de passe</div>
+                            </div>
+                            {{ form_errors(registrationForm.plainPassword.first) }}
+                        </div>
+
+                        {# ✅ NOUVEAU : Confirmation mot de passe #}
+                        <div class=\"col-md-6 form-group\">
+                            {{ form_label(registrationForm.plainPassword.second, 'Confirmer le mot de passe *', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class=\"password-field-wrapper\">
+                                {{ form_widget(registrationForm.plainPassword.second, {
+                                    'attr': {
+                                        'class': 'form-control',
+                                        'placeholder': 'Répétez le mot de passe',
+                                        'autocomplete': 'new-password',
+                                        'id': 'plainPassword_second'
+                                    }
+                                }) }}
+                                <button type=\"button\" class=\"password-toggle\" onclick=\"togglePassword('plainPassword_second', this)\">
+                                    <i class=\"fas fa-eye\"></i>
+                                </button>
+                            </div>
+                            {{ form_errors(registrationForm.plainPassword.second) }}
+                        </div>
 
                         {# Conditions #}
                         <div class=\"col-12 form-group\">
@@ -1238,9 +1526,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         Vous avez déjà un compte client ?
                         <a href=\"{{ path('marketplace_login') }}\">Connectez-vous</a>
                     </div>
-
-                    {# ✅ Message si l'utilisateur vient de s'inscrire (via flash) #}
-                    {# Le message de vérification est déjà géré par les flash messages ci-dessus #}
                 </div>
             </div>
         </div>
@@ -1270,17 +1555,113 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         form.addEventListener('submit', function(e) {
             const terms = document.getElementById('terms');
+            const password = document.getElementById('plainPassword_first');
+            const passwordConfirm = document.getElementById('plainPassword_second');
 
+            let valid = true;
+
+            // Vérifier les conditions générales
             if (!terms.checked) {
                 e.preventDefault();
                 terms.classList.add('is-invalid');
                 terms.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                valid = false;
             } else {
                 terms.classList.remove('is-invalid');
+            }
+
+            // Vérifier la force du mot de passe
+            if (password && password.value.length < 8) {
+                e.preventDefault();
+                password.classList.add('is-invalid');
+                valid = false;
+            }
+
+            // Vérifier que les mots de passe correspondent
+            if (password && passwordConfirm && password.value !== passwordConfirm.value) {
+                e.preventDefault();
+                passwordConfirm.classList.add('is-invalid');
+                valid = false;
+            }
+
+            // Désactiver le bouton si tout est valide pour éviter double soumission
+            if (valid) {
+                const btn = document.getElementById('registerBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class=\"fas fa-spinner fa-spin me-2\"></i>Inscription...';
+            }
+        });
+    }
+
+    // ==================== PASSWORD STRENGTH ====================
+    const passwordInput = document.getElementById('plainPassword_first');
+    if (passwordInput) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+
+            // Critères
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\\d/.test(password)) strength++;
+            if (/[^a-zA-Z\\d]/.test(password)) strength++;
+
+            // Mettre à jour les barres
+            const bars = [
+                document.getElementById('bar1'),
+                document.getElementById('bar2'),
+                document.getElementById('bar3'),
+                document.getElementById('bar4')
+            ];
+
+            const strengthText = document.getElementById('strengthText');
+            let strengthLevel = '';
+            let activeClass = '';
+
+            if (strength <= 1) {
+                strengthLevel = 'Faible';
+                activeClass = 'weak';
+            } else if (strength === 2) {
+                strengthLevel = 'Moyen';
+                activeClass = 'medium';
+            } else if (strength >= 3) {
+                strengthLevel = 'Fort';
+                activeClass = 'strong';
+            }
+
+            bars.forEach((bar, index) => {
+                bar.classList.remove('active', 'weak', 'medium', 'strong');
+                if (index < strength) {
+                    bar.classList.add('active', activeClass);
+                }
+            });
+
+            if (password.length > 0) {
+                strengthText.textContent = 'Force : ' + strengthLevel;
+                strengthText.className = 'text-' + (activeClass === 'strong' ? 'success' : (activeClass === 'medium' ? 'warning' : 'danger'));
+            } else {
+                strengthText.textContent = 'Force du mot de passe';
+                strengthText.className = 'text-muted';
             }
         });
     }
 });
+
+// ==================== TOGGLE PASSWORD VISIBILITY ====================
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
 </script>
 {% endblock %}", "marketplace/auth/register.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\marketplace\\auth\\register.html.twig");
     }

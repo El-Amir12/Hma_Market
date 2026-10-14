@@ -444,7 +444,6 @@ class __TwigTemplate_dbb5fcc4c1f026f9e27ce17a90ec50a1 extends Template
                 <table class=\"table table-hover align-middle mb-0 table-sm table-md\">
                     <thead class=\"table-light\">
                         <tr>
-                            <th>ID</th>
                             <th>Date</th>
                             <th>Total</th>
                             <th>Statut</th>
@@ -452,33 +451,29 @@ class __TwigTemplate_dbb5fcc4c1f026f9e27ce17a90ec50a1 extends Template
                     </thead>
                     <tbody>
                         ";
-            // line 233
+            // line 232
             $context['_parent'] = $context;
-            $context['_seq'] = CoreExtension::ensureTraversable(Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 233, $this->source); })()), "purchases", [], "any", false, false, false, 233), 0, 5));
+            $context['_seq'] = CoreExtension::ensureTraversable(Twig\Extension\CoreExtension::slice($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 232, $this->source); })()), "purchases", [], "any", false, false, false, 232), 0, 5));
             foreach ($context['_seq'] as $context["_key"] => $context["purchase"]) {
-                // line 234
+                // line 233
                 yield "                        <tr>
-                            <td>#";
-                // line 235
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "id", [], "any", false, false, false, 235), "html", null, true);
-                yield "</td>
                             ";
-                // line 237
+                // line 235
                 yield "                            <td>";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(((CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "purchaseDate", [], "any", true, true, false, 237)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "purchaseDate", [], "any", false, false, false, 237), CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "createdAt", [], "any", false, false, false, 237))) : (CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "createdAt", [], "any", false, false, false, 237))), "d/m/Y"), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(((CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "purchaseDate", [], "any", true, true, false, 235)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "purchaseDate", [], "any", false, false, false, 235), CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "createdAt", [], "any", false, false, false, 235))) : (CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "createdAt", [], "any", false, false, false, 235))), "d/m/Y"), "html", null, true);
                 yield "</td>
                             <td>";
-                // line 238
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "totalAmount", [], "any", false, false, false, 238), 0, ",", " "), "html", null, true);
+                // line 236
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "totalAmount", [], "any", false, false, false, 236), 0, ",", " "), "html", null, true);
                 yield " FCFA</td>
                             <td>
                                 <span class=\"badge bg-";
-                // line 240
-                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "status", [], "any", false, false, false, 240) == "received")) ? ("success") : ("warning"));
+                // line 238
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "status", [], "any", false, false, false, 238) == "received")) ? ("success") : ("warning"));
                 yield "\">
                                     ";
-                // line 241
-                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "status", [], "any", false, false, false, 241) == "received")) ? ("Reçu") : ("En attente"));
+                // line 239
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["purchase"], "status", [], "any", false, false, false, 239) == "received")) ? ("Reçu") : ("En attente"));
                 yield "
                                 </span>
                             </td>
@@ -488,7 +483,7 @@ class __TwigTemplate_dbb5fcc4c1f026f9e27ce17a90ec50a1 extends Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['purchase'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 246
+            // line 244
             yield "                    </tbody>
                 </table>
             </div>
@@ -496,7 +491,7 @@ class __TwigTemplate_dbb5fcc4c1f026f9e27ce17a90ec50a1 extends Template
     </div>
     ";
         }
-        // line 252
+        // line 250
         yield "</div>
 
 <!-- Modals -->
@@ -525,9 +520,9 @@ class __TwigTemplate_dbb5fcc4c1f026f9e27ce17a90ec50a1 extends Template
 
 <!-- Modal suppression -->
 ";
-        // line 279
-        if (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 279, $this->source); })()), "purchases", [], "any", false, false, false, 279)) == 0) && $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN"))) {
-            // line 280
+        // line 277
+        if (((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 277, $this->source); })()), "purchases", [], "any", false, false, false, 277)) == 0) && $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN"))) {
+            // line 278
             yield "<div class=\"modal fade\" id=\"deleteSupplierModal\" tabindex=\"-1\">
     <div class=\"modal-dialog modal-dialog-centered modal-sm\">
         <div class=\"modal-content border-0 shadow\">
@@ -538,20 +533,20 @@ class __TwigTemplate_dbb5fcc4c1f026f9e27ce17a90ec50a1 extends Template
             <div class=\"modal-body text-center py-3 py-md-4\">
                 <i class=\"fas fa-trash-alt fa-3x text-danger mb-3\"></i>
                 <h5 class=\"fs-6\">Supprimer ";
-            // line 289
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 289, $this->source); })()), "name", [], "any", false, false, false, 289), "html", null, true);
+            // line 287
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 287, $this->source); })()), "name", [], "any", false, false, false, 287), "html", null, true);
             yield " ?</h5>
                 <p class=\"text-muted small\">Cette action est irréversible.</p>
             </div>
             <div class=\"modal-footer border-0 justify-content-center py-2 py-md-3\">
                 <button type=\"button\" class=\"btn btn-outline-secondary btn-sm px-3\" data-bs-dismiss=\"modal\">Annuler</button>
                 <form action=\"";
-            // line 294
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_supplier_delete", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 294, $this->source); })()), "id", [], "any", false, false, false, 294)]), "html", null, true);
+            // line 292
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_supplier_delete", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 292, $this->source); })()), "id", [], "any", false, false, false, 292)]), "html", null, true);
             yield "\" method=\"post\" class=\"d-inline\">
                     <input type=\"hidden\" name=\"_token\" value=\"";
-            // line 295
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 295, $this->source); })()), "id", [], "any", false, false, false, 295))), "html", null, true);
+            // line 293
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, (isset($context["supplier"]) || array_key_exists("supplier", $context) ? $context["supplier"] : (function () { throw new RuntimeError('Variable "supplier" does not exist.', 293, $this->source); })()), "id", [], "any", false, false, false, 293))), "html", null, true);
             yield "\">
                     <button type=\"submit\" class=\"btn btn-danger btn-sm px-3\">Supprimer</button>
                 </form>
@@ -570,7 +565,7 @@ class __TwigTemplate_dbb5fcc4c1f026f9e27ce17a90ec50a1 extends Template
         yield from [];
     }
 
-    // line 305
+    // line 303
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -583,7 +578,7 @@ class __TwigTemplate_dbb5fcc4c1f026f9e27ce17a90ec50a1 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 306
+        // line 304
         yield from $this->yieldParentBlock("javascripts", $context, $blocks);
         yield "
 <script>
@@ -618,7 +613,7 @@ document.addEventListener('DOMContentLoaded', function() {
         yield from [];
     }
 
-    // line 331
+    // line 329
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -631,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 332
+        // line 330
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
 <style>
@@ -759,7 +754,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  635 => 332,  622 => 331,  587 => 306,  574 => 305,  554 => 295,  550 => 294,  542 => 289,  531 => 280,  529 => 279,  500 => 252,  492 => 246,  481 => 241,  477 => 240,  472 => 238,  467 => 237,  463 => 235,  460 => 234,  456 => 233,  436 => 215,  434 => 214,  420 => 204,  414 => 201,  410 => 200,  406 => 199,  402 => 198,  398 => 197,  394 => 196,  390 => 195,  387 => 194,  385 => 193,  379 => 190,  364 => 177,  360 => 175,  356 => 173,  354 => 172,  350 => 170,  344 => 167,  340 => 165,  338 => 164,  333 => 162,  324 => 156,  319 => 154,  315 => 153,  307 => 148,  283 => 127,  267 => 114,  245 => 95,  241 => 94,  224 => 80,  208 => 67,  186 => 47,  176 => 43,  173 => 42,  169 => 41,  166 => 40,  156 => 36,  153 => 35,  149 => 34,  143 => 30,  137 => 26,  135 => 25,  129 => 22,  122 => 18,  115 => 14,  111 => 13,  103 => 7,  90 => 6,  66 => 4,  43 => 2,);
+        return array (  630 => 330,  617 => 329,  582 => 304,  569 => 303,  549 => 293,  545 => 292,  537 => 287,  526 => 278,  524 => 277,  495 => 250,  487 => 244,  476 => 239,  472 => 238,  467 => 236,  462 => 235,  459 => 233,  455 => 232,  436 => 215,  434 => 214,  420 => 204,  414 => 201,  410 => 200,  406 => 199,  402 => 198,  398 => 197,  394 => 196,  390 => 195,  387 => 194,  385 => 193,  379 => 190,  364 => 177,  360 => 175,  356 => 173,  354 => 172,  350 => 170,  344 => 167,  340 => 165,  338 => 164,  333 => 162,  324 => 156,  319 => 154,  315 => 153,  307 => 148,  283 => 127,  267 => 114,  245 => 95,  241 => 94,  224 => 80,  208 => 67,  186 => 47,  176 => 43,  173 => 42,  169 => 41,  166 => 40,  156 => 36,  153 => 35,  149 => 34,  143 => 30,  137 => 26,  135 => 25,  129 => 22,  122 => 18,  115 => 14,  111 => 13,  103 => 7,  90 => 6,  66 => 4,  43 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -989,7 +984,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <table class=\"table table-hover align-middle mb-0 table-sm table-md\">
                     <thead class=\"table-light\">
                         <tr>
-                            <th>ID</th>
                             <th>Date</th>
                             <th>Total</th>
                             <th>Statut</th>
@@ -998,7 +992,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <tbody>
                         {% for purchase in supplier.purchases|slice(0,5) %}
                         <tr>
-                            <td>#{{ purchase.id }}</td>
                             {# ✅ CORRECTION: utiliser purchase_date (avec underscore) #}
                             <td>{{ purchase.purchaseDate|default(purchase.createdAt)|date('d/m/Y') }}</td>
                             <td>{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</td>

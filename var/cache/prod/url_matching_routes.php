@@ -8,6 +8,7 @@
 return [
     false, // $matchHost
     [ // $staticRoutes
+        '/resend-activation' => [[['_route' => 'app_resend_activation', '_controller' => 'App\\Controller\\AccountActivationController::resend'], null, ['POST' => 0], null, false, false, null]],
         '/admin/category' => [[['_route' => 'app_admin_category_index', '_controller' => 'App\\Controller\\Admin\\CategoryController::index'], null, ['GET' => 0], null, false, false, null]],
         '/admin/category/new' => [[['_route' => 'app_admin_category_new', '_controller' => 'App\\Controller\\Admin\\CategoryController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/admin/category-recipe' => [[['_route' => 'app_admin_category_recipe_index', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::index'], null, ['GET' => 0], null, false, false, null]],
@@ -56,8 +57,9 @@ return [
         '/company/analysis' => [[['_route' => 'company_analysis_index', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::index'], null, ['GET' => 0], null, true, false, null]],
         '/company/analysis/new' => [[['_route' => 'company_analysis_new', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/company/settings' => [[['_route' => 'app_company_settings_index', '_controller' => 'App\\Controller\\Company\\CompanySettingsController::index'], null, ['GET' => 0, 'POST' => 1], null, true, false, null]],
-        '/marketplace/forgot-password' => [[['_route' => 'marketplace_forgot_password', '_controller' => 'App\\Controller\\Customer\\ResetPasswordController::request'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        '/marketplace/check-email' => [[['_route' => 'marketplace_check_email', '_controller' => 'App\\Controller\\Customer\\ResetPasswordController::checkEmail'], null, null, null, false, false, null]],
+        '/company/settings/guard-periods' => [[['_route' => 'app_company_settings_guard_periods', '_controller' => 'App\\Controller\\Company\\CompanySettingsController::saveGuardPeriods'], null, ['POST' => 0], null, false, false, null]],
+        '/toggle-visibility' => [[['_route' => 'app_dashboard_toggle_visibility', '_controller' => 'App\\Controller\\DashboardController::toggleVisibility'], null, ['POST' => 0], null, false, false, null]],
+        '/guard-periods' => [[['_route' => 'app_dashboard_guard_periods', '_controller' => 'App\\Controller\\DashboardController::saveGuardPeriods'], null, ['POST' => 0], null, false, false, null]],
         '/dashboard/company/details' => [[['_route' => 'app_dashboard_hmaservice_details', '_controller' => 'App\\Controller\\Dashboard\\HmaServiceProfileController::showDetails'], null, ['GET' => 0], null, false, false, null]],
         '/dashboard/company/edit' => [[['_route' => 'app_dashboard_hmaservice_edit', '_controller' => 'App\\Controller\\Dashboard\\HmaServiceProfileController::editProfile'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/dashboard/company/delete-logo' => [[['_route' => 'app_dashboard_hmaservice_delete_logo', '_controller' => 'App\\Controller\\Dashboard\\HmaServiceProfileController::deleteLogo'], null, ['POST' => 0], null, false, false, null]],
@@ -73,12 +75,18 @@ return [
         '/marketplace/logout' => [[['_route' => 'marketplace_logout', '_controller' => 'App\\Controller\\Marketplace\\AuthController::logout'], null, null, null, false, false, null]],
         '/marketplace/cart' => [[['_route' => 'marketplace_cart', '_controller' => 'App\\Controller\\Marketplace\\CartController::index'], null, null, null, true, false, null]],
         '/marketplace/cart/clear' => [[['_route' => 'marketplace_cart_clear', '_controller' => 'App\\Controller\\Marketplace\\CartController::clear'], null, ['POST' => 0], null, false, false, null]],
+        '/marketplace/cart/checkout' => [[['_route' => 'marketplace_cart_checkout', '_controller' => 'App\\Controller\\Marketplace\\CartController::checkout'], null, ['POST' => 0], null, false, false, null]],
+        '/marketplace/cart/payment/callback' => [[['_route' => 'marketplace_payment_callback', '_controller' => 'App\\Controller\\Marketplace\\CartController::paymentCallback'], null, null, null, false, false, null]],
         '/marketplace/favorites' => [[['_route' => 'marketplace_favorites', '_controller' => 'App\\Controller\\Marketplace\\FavoriteController::index'], null, null, null, false, false, null]],
+        '/marketplace/forgot-password' => [[['_route' => 'marketplace_forgot_password', '_controller' => 'App\\Controller\\Marketplace\\ForgotPasswordController::forgotPassword'], null, null, null, false, false, null]],
+        '/marketplace/check-email' => [[['_route' => 'marketplace_check_email', '_controller' => 'App\\Controller\\Marketplace\\ForgotPasswordController::checkEmail'], null, null, null, false, false, null]],
         '/marketplace' => [[['_route' => 'marketplace_home', '_controller' => 'App\\Controller\\Marketplace\\HomeController::index'], null, null, null, false, false, null]],
         '/marketplace/favorite/toggle' => [[['_route' => 'marketplace_favorite_toggle', '_controller' => 'App\\Controller\\Marketplace\\HomeController::toggleFavorite'], null, ['POST' => 0], null, false, false, null]],
         '/marketplace/favorites/count' => [[['_route' => 'marketplace_favorites_count', '_controller' => 'App\\Controller\\Marketplace\\HomeController::getFavoritesCount'], null, ['GET' => 0], null, false, false, null]],
         '/marketplace/cart/count' => [[['_route' => 'marketplace_cart_count', '_controller' => 'App\\Controller\\Marketplace\\HomeController::getCartCount'], null, ['GET' => 0], null, false, false, null]],
+        '/marketplace/cart/items' => [[['_route' => 'marketplace_cart_items', '_controller' => 'App\\Controller\\Marketplace\\HomeController::getCartItems'], null, ['GET' => 0], null, false, false, null]],
         '/marketplace/cart/add' => [[['_route' => 'marketplace_cart_add', '_controller' => 'App\\Controller\\Marketplace\\HomeController::addToCart'], null, ['POST' => 0], null, false, false, null]],
+        '/marketplace/cart/status' => [[['_route' => 'marketplace_cart_status', '_controller' => 'App\\Controller\\Marketplace\\HomeController::getCartStatus'], null, ['GET' => 0], null, false, false, null]],
         '/customer/orders' => [[['_route' => 'customer_orders', '_controller' => 'App\\Controller\\Marketplace\\OrderController::index'], null, null, null, true, false, null]],
         '/customer/pharmacies/search' => [[['_route' => 'customer_pharmacy_search', '_controller' => 'App\\Controller\\Marketplace\\PharmacyController::search'], null, null, null, false, false, null]],
         '/marketplace/pharmacies/search' => [[['_route' => 'marketplace_pharmacy_search', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::search'], null, null, null, false, false, null]],
@@ -86,11 +94,13 @@ return [
         '/marketplace/pharmacies/api/cities' => [[['_route' => 'api_pharmacy_cities', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::getCities'], null, null, null, false, false, null]],
         '/marketplace/pharmacies/api/pharmacies' => [[['_route' => 'api_pharmacies', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::getPharmacies'], null, null, null, false, false, null]],
         '/marketplace/pharmacies/api/products' => [[['_route' => 'api_products', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::getProducts'], null, null, null, false, false, null]],
-        '/marketplace/products' => [[['_route' => 'marketplace_products', '_controller' => 'App\\Controller\\Marketplace\\ProductController::index'], null, null, null, true, false, null]],
+        '/marketplace/products' => [[['_route' => 'marketplace_products', '_controller' => 'App\\Controller\\Marketplace\\ProductController::list'], null, ['GET' => 0], null, false, false, null]],
         '/marketplace/profile' => [[['_route' => 'marketplace_profile', '_controller' => 'App\\Controller\\Marketplace\\ProfileController::index'], null, null, null, true, false, null]],
         '/marketplace/profile/edit' => [[['_route' => 'marketplace_profile_edit', '_controller' => 'App\\Controller\\Marketplace\\ProfileController::edit'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/marketplace/profile/change-password' => [[['_route' => 'marketplace_change_password', '_controller' => 'App\\Controller\\Marketplace\\ProfileController::changePassword'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/marketplace/profile/orders' => [[['_route' => 'marketplace_orders', '_controller' => 'App\\Controller\\Marketplace\\ProfileController::orders'], null, null, null, false, false, null]],
+        '/marketplace/profile/orders/search' => [[['_route' => 'marketplace_orders_search', '_controller' => 'App\\Controller\\Marketplace\\ProfileController::searchOrders'], null, ['GET' => 0], null, false, false, null]],
+        '/marketplace/profile/stats/data' => [[['_route' => 'marketplace_profile_stats_data', '_controller' => 'App\\Controller\\Marketplace\\ProfileController::getStatsData'], null, ['GET' => 0], null, false, false, null]],
         '/conditions-generales' => [[['_route' => 'page_terms', '_controller' => 'App\\Controller\\PageController::terms'], null, null, null, false, false, null]],
         '/politique-confidentialite' => [[['_route' => 'page_privacy', '_controller' => 'App\\Controller\\PageController::privacy'], null, null, null, false, false, null]],
         '/payment/callback' => [
@@ -133,10 +143,12 @@ return [
         '/orders' => [[['_route' => 'app_orders_index', '_controller' => 'App\\Controller\\Sale\\OrderController::index'], null, ['GET' => 0], null, true, false, null]],
         '/orders/api/search-customer' => [[['_route' => 'api_search_customer', '_controller' => 'App\\Controller\\Sale\\OrderController::searchCustomer'], null, ['GET' => 0], null, false, false, null]],
         '/sale/restaurant/search' => [[['_route' => 'restaurant_sale_search', '_controller' => 'App\\Controller\\Sale\\RestaurantSaleController::search'], null, ['GET' => 0], null, false, false, null]],
+        '/sale/restaurant/search-customer' => [[['_route' => 'restaurant_sale_search_customer', '_controller' => 'App\\Controller\\Sale\\RestaurantSaleController::searchCustomer'], null, ['GET' => 0], null, false, false, null]],
         '/sale/restaurant' => [[['_route' => 'restaurant_sale_index', '_controller' => 'App\\Controller\\Sale\\RestaurantSaleController::index'], null, ['GET' => 0], null, true, false, null]],
-        '/sale/restaurant/daily-stats' => [[['_route' => 'api_daily_stats', '_controller' => 'App\\Controller\\Sale\\RestaurantSaleController::getDailyStatsApi'], null, ['GET' => 0], null, false, false, null]],
+        '/sale/restaurant/daily-stats' => [[['_route' => 'restaurant_daily_stats', '_controller' => 'App\\Controller\\Sale\\RestaurantSaleController::getDailyStatsApi'], null, ['GET' => 0], null, false, false, null]],
         '/sale/retail/search' => [[['_route' => 'retail_sale_search', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::search'], null, ['GET' => 0], null, false, false, null]],
         '/sale/retail' => [[['_route' => 'retail_sale_index', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::index'], null, ['GET' => 0], null, true, false, null]],
+        '/sale/retail/search-customer' => [[['_route' => 'retail_sale_search_customer', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::searchCustomer'], null, ['GET' => 0], null, false, false, null]],
         '/sale/retail/daily-stats' => [[['_route' => 'retail_daily_stats', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::getDailyStatsApi'], null, ['GET' => 0], null, false, false, null]],
         '/sale/retail/sale/cart' => [[['_route' => 'sale_cart', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::cart'], null, ['GET' => 0], null, false, false, null]],
         '/sale/retail/sale/cart-data' => [[['_route' => 'sale_cart_data', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::cartData'], null, ['GET' => 0], null, false, false, null]],
@@ -154,6 +166,12 @@ return [
         '/subscription/callback' => [[['_route' => 'app_subscription_callback', '_controller' => 'App\\Controller\\SubscriptionController::callback'], null, null, null, false, false, null]],
         '/super-admin/analysis-prices' => [[['_route' => 'super_admin_analysis_price_index', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisPriceController::index'], null, ['GET' => 0], null, true, false, null]],
         '/super-admin/analysis-prices/new' => [[['_route' => 'super_admin_analysis_price_new', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisPriceController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/super-admin/analysis-requests' => [[['_route' => 'app_super_admin_analysis_request_index', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisRequestController::index'], null, ['GET' => 0], null, true, false, null]],
+        '/super-admin/analysis-requests/data' => [[['_route' => 'app_super_admin_analysis_request_data', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisRequestController::getData'], null, ['GET' => 0], null, false, false, null]],
+        '/super-admin/analysis-requests/export' => [[['_route' => 'app_super_admin_analysis_request_export', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisRequestController::export'], null, ['GET' => 0], null, false, false, null]],
+        '/super-admin/analysis-statistics' => [[['_route' => 'app_super_admin_analysis_statistics_index', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisStatisticsController::index'], null, ['GET' => 0], null, true, false, null]],
+        '/super-admin/analysis-statistics/data' => [[['_route' => 'app_super_admin_analysis_statistics_data', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisStatisticsController::getData'], null, ['GET' => 0], null, false, false, null]],
+        '/super-admin/analysis-statistics/export' => [[['_route' => 'app_super_admin_analysis_statistics_export', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisStatisticsController::export'], null, ['GET' => 0], null, false, false, null]],
         '/super-admin/analysis' => [[['_route' => 'super_admin_analysis_index', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::index'], null, null, null, true, false, null]],
         '/super-admin/analysis/company/search' => [[['_route' => 'super_admin_analysis_search_company', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::searchCompany'], null, ['GET' => 0], null, false, false, null]],
         '/super-admin/hma-service' => [[['_route' => 'app_super_admin_hma_service_index', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::index'], null, ['GET' => 0], null, true, false, null]],
@@ -181,573 +199,615 @@ return [
     ],
     [ // $regexpList
         0 => '{^(?'
-                .'|/admin/(?'
-                    .'|p(?'
-                        .'|urchase/(?'
-                            .'|cart/receive/([^/]++)(*:53)'
-                            .'|item/([^/]++)(?'
-                                .'|(*:76)'
-                                .'|/edit(*:88)'
-                                .'|(*:95)'
-                            .')'
-                        .')'
-                        .'|ayment/([^/]++)(*:119)'
-                        .'|ro(?'
-                            .'|duct/(?'
-                                .'|([^/]++)(?'
-                                    .'|(*:151)'
-                                    .'|/(?'
-                                        .'|edit(*:167)'
-                                        .'|toggle\\-status(*:189)'
-                                        .'|delete\\-image(*:210)'
-                                    .')'
-                                    .'|(*:219)'
-                                .')'
-                                .'|api/([^/]++)/details(*:248)'
-                                .'|check/barcode/([^/]++)(*:278)'
-                                .'|([^/]++)/(?'
-                                    .'|stock\\-batches(*:312)'
-                                    .'|print\\-(?'
-                                        .'|barcode(*:337)'
-                                        .'|sheet(*:350)'
-                                    .')'
+                .'|/a(?'
+                    .'|ctivate/([^/]++)(*:28)'
+                    .'|dmin/(?'
+                        .'|p(?'
+                            .'|urchase/(?'
+                                .'|cart/receive/([^/]++)(*:79)'
+                                .'|item/([^/]++)(?'
+                                    .'|(*:102)'
+                                    .'|/edit(*:115)'
+                                    .'|(*:123)'
                                 .')'
                             .')'
-                            .'|motion/(?'
-                                .'|categories/([^/]++)(?'
-                                    .'|(*:393)'
-                                    .'|/delete(*:408)'
-                                .')'
-                                .'|products/([^/]++)(?'
-                                    .'|(*:437)'
-                                    .'|/delete(*:452)'
-                                .')'
-                                .'|([^/]++)(?'
-                                    .'|(*:472)'
-                                    .'|/(?'
-                                        .'|edit(*:488)'
-                                        .'|delete\\-image(*:509)'
-                                        .'|toggle\\-status(*:531)'
-                                    .')'
-                                    .'|(*:540)'
-                                .')'
-                                .'|product/([^/]++)/promotions(*:576)'
-                                .'|category/([^/]++)/promotions(*:612)'
-                            .')'
-                        .')'
-                    .')'
-                    .'|category(?'
-                        .'|/([^/]++)(?'
-                            .'|(*:646)'
-                            .'|/(?'
-                                .'|edit(*:662)'
-                                .'|toggle\\-status(*:684)'
-                                .'|activate\\-from\\-quota(*:713)'
-                                .'|delete\\-image(*:734)'
-                                .'|products(*:750)'
-                            .')'
-                            .'|(*:759)'
-                        .')'
-                        .'|\\-recipe/([^/]++)(?'
-                            .'|(*:788)'
-                            .'|/(?'
-                                .'|edit(*:804)'
-                                .'|toggle\\-status(*:826)'
-                                .'|activate\\-from\\-quota(*:855)'
-                                .'|delete\\-image(*:876)'
-                                .'|recipes(*:891)'
-                                .'|promotions(*:909)'
-                            .')'
-                            .'|(*:918)'
-                        .')'
-                    .')'
-                    .'|location/([^/]++)/(?'
-                        .'|show(*:953)'
-                        .'|edit(*:965)'
-                        .'|toggle(*:979)'
-                        .'|delete(*:993)'
-                    .')'
-                    .'|re(?'
-                        .'|cipe/([^/]++)(?'
-                            .'|(*:1023)'
-                            .'|/(?'
-                                .'|edit(*:1040)'
-                                .'|toggle\\-status(*:1063)'
-                                .'|delete\\-image(*:1085)'
-                            .')'
-                            .'|(*:1095)'
-                        .')'
-                        .'|staurant/promotion/(?'
-                            .'|categories/([^/]++)(?'
-                                .'|(*:1149)'
-                                .'|/delete(*:1165)'
-                            .')'
-                            .'|recipes/([^/]++)(?'
-                                .'|(*:1194)'
-                                .'|/delete(*:1210)'
-                            .')'
-                            .'|([^/]++)(?'
-                                .'|(*:1231)'
-                                .'|/(?'
-                                    .'|edit(*:1248)'
-                                    .'|delete\\-image(*:1270)'
-                                    .'|toggle\\-status(*:1293)'
-                                .')'
-                                .'|(*:1303)'
-                            .')'
-                            .'|recipe/([^/]++)/promotions(*:1339)'
-                            .'|category\\-recipe/([^/]++)/promotions(*:1384)'
-                        .')'
-                    .')'
-                    .'|s(?'
-                        .'|tock\\-(?'
-                            .'|batch/(?'
-                                .'|product/([^/]++)(*:1433)'
-                                .'|([^/]++)/(?'
-                                    .'|show(*:1458)'
-                                    .'|edit(*:1471)'
-                                    .'|toggle(*:1486)'
-                                    .'|delete(*:1501)'
-                                    .'|print(*:1515)'
-                                .')'
-                            .')'
-                            .'|movement/([^/]++)/show(*:1548)'
-                        .')'
-                        .'|u(?'
-                            .'|bscription/([^/]++)(*:1581)'
-                            .'|pplier(?'
-                                .'|/([^/]++)(?'
-                                    .'|(*:1611)'
-                                    .'|/(?'
-                                        .'|edit(*:1628)'
-                                        .'|toggle\\-status(*:1651)'
-                                    .')'
-                                    .'|(*:1661)'
-                                .')'
-                                .'|\\-credit\\-note/(?'
-                                    .'|new/([^/]++)(*:1701)'
+                            .'|ayment/([^/]++)(*:148)'
+                            .'|ro(?'
+                                .'|duct/(?'
                                     .'|([^/]++)(?'
-                                        .'|(*:1721)'
+                                        .'|(*:180)'
                                         .'|/(?'
-                                            .'|resolve(*:1741)'
-                                            .'|apply\\-stock\\-action(*:1770)'
+                                            .'|edit(*:196)'
+                                            .'|toggle\\-status(*:218)'
+                                            .'|delete\\-image(*:239)'
+                                        .')'
+                                        .'|(*:248)'
+                                    .')'
+                                    .'|api/([^/]++)/details(*:277)'
+                                    .'|check/barcode/([^/]++)(*:307)'
+                                    .'|([^/]++)/(?'
+                                        .'|stock\\-(?'
+                                            .'|batches(*:344)'
+                                            .'|movements(*:361)'
+                                        .')'
+                                        .'|print\\-(?'
+                                            .'|barcode(*:387)'
+                                            .'|sheet(*:400)'
                                         .')'
                                     .')'
-                                    .'|print\\-multiple(*:1796)'
-                                    .'|new\\-direct(*:1816)'
+                                .')'
+                                .'|motion/(?'
+                                    .'|categories/([^/]++)(?'
+                                        .'|(*:443)'
+                                        .'|/delete(*:458)'
+                                    .')'
+                                    .'|products/([^/]++)(?'
+                                        .'|(*:487)'
+                                        .'|/delete(*:502)'
+                                    .')'
+                                    .'|([^/]++)(?'
+                                        .'|(*:522)'
+                                        .'|/(?'
+                                            .'|edit(*:538)'
+                                            .'|delete\\-image(*:559)'
+                                            .'|toggle\\-status(*:581)'
+                                        .')'
+                                        .'|(*:590)'
+                                    .')'
+                                    .'|product/([^/]++)/promotions(*:626)'
+                                    .'|category/([^/]++)/promotions(*:662)'
                                 .')'
                             .')'
                         .')'
-                    .')'
-                    .'|type\\-promotion/([^/]++)(?'
-                        .'|/(?'
-                            .'|edit(*:1864)'
-                            .'|toggle\\-status(*:1887)'
-                            .'|delete(*:1902)'
+                        .'|category(?'
+                            .'|/([^/]++)(?'
+                                .'|(*:696)'
+                                .'|/(?'
+                                    .'|edit(*:712)'
+                                    .'|toggle\\-status(*:734)'
+                                    .'|activate\\-from\\-quota(*:763)'
+                                    .'|delete\\-image(*:784)'
+                                    .'|products(*:800)'
+                                .')'
+                                .'|(*:809)'
+                            .')'
+                            .'|\\-recipe/([^/]++)(?'
+                                .'|(*:838)'
+                                .'|/(?'
+                                    .'|edit(*:854)'
+                                    .'|toggle\\-status(*:876)'
+                                    .'|activate\\-from\\-quota(*:905)'
+                                    .'|delete\\-image(*:926)'
+                                    .'|recipes(*:941)'
+                                    .'|promotions(*:959)'
+                                .')'
+                                .'|(*:968)'
+                            .')'
                         .')'
-                        .'|(*:1912)'
-                    .')'
-                    .'|user/([^/]++)(?'
-                        .'|(*:1938)'
-                        .'|/(?'
-                            .'|edit(*:1955)'
-                            .'|delete\\-photo(*:1977)'
+                        .'|location/([^/]++)/(?'
+                            .'|show(*:1003)'
+                            .'|edit(*:1016)'
+                            .'|toggle(*:1031)'
+                            .'|delete(*:1046)'
                         .')'
-                        .'|(*:1987)'
+                        .'|re(?'
+                            .'|cipe/([^/]++)(?'
+                                .'|(*:1077)'
+                                .'|/(?'
+                                    .'|edit(*:1094)'
+                                    .'|toggle\\-status(*:1117)'
+                                    .'|delete\\-image(*:1139)'
+                                .')'
+                                .'|(*:1149)'
+                            .')'
+                            .'|staurant/promotion/(?'
+                                .'|categories/([^/]++)(?'
+                                    .'|(*:1203)'
+                                    .'|/delete(*:1219)'
+                                .')'
+                                .'|recipes/([^/]++)(?'
+                                    .'|(*:1248)'
+                                    .'|/delete(*:1264)'
+                                .')'
+                                .'|([^/]++)(?'
+                                    .'|(*:1285)'
+                                    .'|/(?'
+                                        .'|edit(*:1302)'
+                                        .'|delete\\-image(*:1324)'
+                                        .'|toggle\\-status(*:1347)'
+                                    .')'
+                                    .'|(*:1357)'
+                                .')'
+                                .'|recipe/([^/]++)/promotions(*:1393)'
+                                .'|category\\-recipe/([^/]++)/promotions(*:1438)'
+                            .')'
+                        .')'
+                        .'|s(?'
+                            .'|tock\\-(?'
+                                .'|batch/(?'
+                                    .'|product/([^/]++)(*:1487)'
+                                    .'|([^/]++)/(?'
+                                        .'|show(*:1512)'
+                                        .'|edit(*:1525)'
+                                        .'|toggle(*:1540)'
+                                        .'|delete(*:1555)'
+                                        .'|print(*:1569)'
+                                    .')'
+                                .')'
+                                .'|movement/([^/]++)/show(*:1602)'
+                            .')'
+                            .'|u(?'
+                                .'|bscription/([^/]++)(*:1635)'
+                                .'|pplier(?'
+                                    .'|/([^/]++)(?'
+                                        .'|(*:1665)'
+                                        .'|/(?'
+                                            .'|edit(*:1682)'
+                                            .'|toggle\\-status(*:1705)'
+                                        .')'
+                                        .'|(*:1715)'
+                                    .')'
+                                    .'|\\-credit\\-note/(?'
+                                        .'|new/([^/]++)(*:1755)'
+                                        .'|([^/]++)(?'
+                                            .'|(*:1775)'
+                                            .'|/(?'
+                                                .'|resolve(*:1795)'
+                                                .'|apply\\-stock\\-action(*:1824)'
+                                            .')'
+                                        .')'
+                                        .'|print\\-multiple(*:1850)'
+                                        .'|new\\-direct(*:1870)'
+                                    .')'
+                                .')'
+                            .')'
+                        .')'
+                        .'|type\\-promotion/([^/]++)(?'
+                            .'|/(?'
+                                .'|edit(*:1918)'
+                                .'|toggle\\-status(*:1941)'
+                                .'|delete(*:1956)'
+                            .')'
+                            .'|(*:1966)'
+                        .')'
+                        .'|user/([^/]++)(?'
+                            .'|(*:1992)'
+                            .'|/(?'
+                                .'|edit(*:2009)'
+                                .'|delete\\-photo(*:2031)'
+                            .')'
+                            .'|(*:2041)'
+                        .')'
                     .')'
                 .')'
                 .'|/c(?'
                     .'|ompany/analysis/([^/]++)(?'
-                        .'|(*:2030)'
+                        .'|(*:2085)'
                         .'|/download(?'
                             .'|\\-(?'
-                                .'|final(*:2061)'
-                                .'|raw(*:2073)'
+                                .'|final(*:2116)'
+                                .'|raw(*:2128)'
                             .')'
-                            .'|(*:2083)'
+                            .'|(*:2138)'
                         .')'
                     .')'
                     .'|ustomer/(?'
-                        .'|category/([^/]++)(*:2122)'
-                        .'|orders/([^/]++)(*:2146)'
+                        .'|category/([^/]++)(*:2177)'
+                        .'|orders/([^/]++)(*:2201)'
                     .')'
                 .')'
+                .'|/uploads/(?'
+                    .'|([a-zA-Z0-9_\\-]+)/([0-9]+)/(.+)(*:2255)'
+                    .'|([a-zA-Z0-9_\\-]+)/(.+)(*:2286)'
+                .')'
                 .'|/ma(?'
+                    .'|nager/team/([^/]++)(?'
+                        .'|(*:2324)'
+                        .'|/edit(*:2338)'
+                    .')'
                     .'|rketplace/(?'
+                        .'|verify\\-email/([^/]++)(*:2383)'
                         .'|rese(?'
-                            .'|t\\-password/([^/]++)(*:2203)'
-                            .'|nd\\-verification/([^/]++)(*:2237)'
+                            .'|nd\\-verification/([^/]++)(*:2424)'
+                            .'|t\\-password/([^/]++)(*:2453)'
                         .')'
-                        .'|verify\\-email/([^/]++)(*:2269)'
                         .'|cart/(?'
-                            .'|update/([^/]++)(*:2301)'
-                            .'|remove/([^/]++)(*:2325)'
+                            .'|update/([^/]++)(*:2486)'
+                            .'|remove/([^/]++)(*:2510)'
+                            .'|payment/status(?:/([^/]++))?(*:2547)'
                         .')'
-                        .'|favorite/check/([^/]++)(*:2358)'
+                        .'|favorite/check/([^/]++)(*:2580)'
                         .'|p(?'
                             .'|harmacies/api/pharmacy/([^/]++)/(?'
-                                .'|categories(*:2416)'
-                                .'|forms(*:2430)'
+                                .'|categories(*:2638)'
+                                .'|forms(*:2652)'
                             .')'
-                            .'|roducts/(?'
-                                .'|([^/]++)(*:2459)'
-                                .'|detail/([^/]++)(*:2483)'
-                                .'|([^/]++)/([^/]++)(*:2509)'
+                            .'|ro(?'
+                                .'|duct/([^/]++)(?'
+                                    .'|(*:2683)'
+                                    .'|/rat(?'
+                                        .'|e(*:2700)'
+                                        .'|ings(*:2713)'
+                                    .')'
+                                .')'
+                                .'|file/order/(?'
+                                    .'|([^/]++)(*:2746)'
+                                    .'|status/([^/]++)(*:2770)'
+                                .')'
                             .')'
                         .')'
-                    .')'
-                    .'|nager/team/([^/]++)(?'
-                        .'|(*:2543)'
-                        .'|/edit(*:2557)'
                     .')'
                 .')'
                 .'|/p(?'
                     .'|ayment/(?'
-                        .'|success/([^/]++)(*:2599)'
-                        .'|already\\-processed/([^/]++)(*:2635)'
+                        .'|success/([^/]++)(*:2815)'
+                        .'|already\\-processed/([^/]++)(*:2851)'
                     .')'
-                    .'|rint/ticket/([^/]++)/([^/]++)(*:2674)'
+                    .'|rint/ticket/([^/]++)/([^/]++)(*:2890)'
                     .'|urchase/(?'
                         .'|re(?'
-                            .'|move\\-product/([^/]++)(*:2721)'
-                            .'|ceive/([^/]++)(*:2744)'
+                            .'|move\\-product/([^/]++)(*:2937)'
+                            .'|ceive/([^/]++)(*:2960)'
                         .')'
-                        .'|update\\-quantity/([^/]++)(*:2779)'
-                        .'|cancel/([^/]++)(*:2803)'
+                        .'|update\\-quantity/([^/]++)(*:2995)'
+                        .'|cancel/([^/]++)(*:3019)'
                         .'|([^/]++)(?'
-                            .'|(*:2823)'
-                            .'|/print(*:2838)'
+                            .'|(*:3039)'
+                            .'|/print(*:3054)'
                         .')'
-                        .'|update\\-item/([^/]++)(*:2869)'
-                        .'|report\\-issue\\-temp(*:2897)'
-                        .'|delete\\-issue\\-temp/([^/]++)(*:2934)'
+                        .'|update\\-item/([^/]++)(*:3085)'
+                        .'|report\\-issue\\-temp(*:3113)'
+                        .'|delete\\-issue\\-temp/([^/]++)(*:3150)'
                     .')'
                 .')'
                 .'|/re(?'
-                    .'|set\\-password/([^/]++)(*:2973)'
+                    .'|set\\-password/([^/]++)(*:3189)'
                     .'|turns/(?'
-                        .'|new/([^/]++)(*:3003)'
+                        .'|new/([^/]++)(*:3219)'
                         .'|([^/]++)(?'
                             .'|/(?'
-                                .'|edit(*:3031)'
-                                .'|approve(*:3047)'
-                                .'|complete(*:3064)'
-                                .'|reject(*:3079)'
+                                .'|edit(*:3247)'
+                                .'|approve(*:3263)'
+                                .'|complete(*:3280)'
+                                .'|reject(*:3295)'
                             .')'
-                            .'|(*:3089)'
+                            .'|(*:3305)'
                         .')'
-                        .'|api/order\\-items/([^/]++)(*:3124)'
+                        .'|api/order\\-items/([^/]++)(*:3340)'
                         .'|print\\-(?'
-                            .'|receipt/([^/]++)(*:3159)'
-                            .'|multiple\\-receipts(*:3186)'
+                            .'|receipt/([^/]++)(*:3375)'
+                            .'|multiple\\-receipts(*:3402)'
                         .')'
                     .')'
                 .')'
                 .'|/orders/(?'
                     .'|([^/]++)(?'
                         .'|/(?'
-                            .'|toggle(*:3230)'
-                            .'|delete(*:3245)'
-                            .'|receipt\\-content(*:3270)'
+                            .'|toggle(*:3446)'
+                            .'|delete(*:3461)'
+                            .'|receipt\\-content(*:3486)'
                         .')'
-                        .'|(*:3280)'
+                        .'|(*:3496)'
                     .')'
-                    .'|receipts\\-content(*:3307)'
+                    .'|receipts\\-content(*:3523)'
+                    .'|daily\\-stats(*:3544)'
                     .'|c(?'
-                        .'|heck\\-can\\-sell(*:3335)'
-                        .'|ontact\\-admin(*:3357)'
+                        .'|heck\\-can\\-sell(*:3572)'
+                        .'|ontact\\-admin(*:3594)'
                     .')'
                     .'|([^/]++)/(?'
-                        .'|print(*:3384)'
-                        .'|download\\-pdf(*:3406)'
+                        .'|print(*:3621)'
+                        .'|update\\-status(*:3644)'
+                        .'|download\\-pdf(*:3666)'
                     .')'
                 .')'
                 .'|/s(?'
                     .'|ale/retail/sale/(?'
-                        .'|add\\-product/([^/]++)(*:3462)'
+                        .'|add\\-product/([^/]++)(*:3722)'
                         .'|update\\-(?'
-                            .'|quantity/([^/]++)/([^/]++)(*:3508)'
-                            .'|notes/([^/]++)/([^/]++)(*:3540)'
+                            .'|quantity/([^/]++)/([^/]++)(*:3768)'
+                            .'|notes/([^/]++)/([^/]++)(*:3800)'
                         .')'
                         .'|re(?'
-                            .'|move\\-item/([^/]++)/([^/]++)(*:3583)'
-                            .'|ceipt/([^/]++)(*:3606)'
+                            .'|move\\-item/([^/]++)/([^/]++)(*:3843)'
+                            .'|ceipt/([^/]++)(*:3866)'
                         .')'
                     .')'
                     .'|tock/(?'
                         .'|inventory/([^/]++)(?'
                             .'|/(?'
-                                .'|add\\-products(*:3663)'
+                                .'|add\\-products(*:3923)'
+                                .'|item/([^/]++)/remove(*:3952)'
                                 .'|c(?'
-                                    .'|ount(*:3680)'
-                                    .'|ancel(*:3694)'
+                                    .'|ount(*:3969)'
+                                    .'|ancel(*:3983)'
                                 .')'
-                                .'|validate(*:3712)'
+                                .'|validate(*:4001)'
                             .')'
-                            .'|(*:3722)'
+                            .'|(*:4011)'
                         .')'
-                        .'|adjustment/([^/]++)(*:3751)'
+                        .'|adjustment/([^/]++)(*:4040)'
                         .'|transfer/([^/]++)(?'
                             .'|/(?'
-                                .'|start(*:3789)'
-                                .'|receive(*:3805)'
-                                .'|cancel(*:3820)'
+                                .'|start(*:4078)'
+                                .'|receive(*:4094)'
+                                .'|cancel(*:4109)'
+                                .'|print(*:4123)'
                             .')'
-                            .'|(*:3830)'
+                            .'|(*:4133)'
                         .')'
                     .')'
                     .'|u(?'
-                        .'|bscription/success/([^/]++)(*:3872)'
+                        .'|bscription/success/([^/]++)(*:4175)'
                         .'|p(?'
                             .'|er\\-admin/(?'
                                 .'|analysis(?'
-                                    .'|\\-prices/([^/]++)(?'
-                                        .'|(*:3929)'
-                                        .'|/(?'
-                                            .'|edit(*:3946)'
-                                            .'|toggle(*:3961)'
-                                            .'|delete(*:3976)'
+                                    .'|\\-(?'
+                                        .'|prices/([^/]++)(?'
+                                            .'|(*:4235)'
+                                            .'|/(?'
+                                                .'|edit(*:4252)'
+                                                .'|toggle(*:4267)'
+                                                .'|delete(*:4282)'
+                                            .')'
                                         .')'
+                                        .'|requests/([^/]++)/show(*:4315)'
                                     .')'
                                     .'|/(?'
-                                        .'|company/([^/]++)/stats(*:4013)'
-                                        .'|new/([^/]++)(*:4034)'
+                                        .'|company/([^/]++)/stats(*:4351)'
+                                        .'|new/([^/]++)(*:4372)'
                                         .'|([^/]++)(?'
-                                            .'|(*:4054)'
+                                            .'|(*:4392)'
                                             .'|/(?'
-                                                .'|generate\\-raw(*:4080)'
-                                                .'|upload\\-report(*:4103)'
+                                                .'|generate\\-raw(*:4418)'
+                                                .'|upload\\-report(*:4441)'
                                                 .'|re(?'
-                                                    .'|place\\-report(*:4130)'
-                                                    .'|try(*:4142)'
+                                                    .'|place\\-report(*:4468)'
+                                                    .'|try(*:4480)'
                                                 .')'
                                                 .'|download\\-(?'
-                                                    .'|final(*:4170)'
-                                                    .'|raw(*:4182)'
+                                                    .'|final(*:4508)'
+                                                    .'|raw(*:4520)'
                                                 .')'
-                                                .'|payment\\-link(*:4205)'
-                                                .'|send\\-payment\\-link(*:4233)'
-                                                .'|force\\-to\\-paid(*:4257)'
-                                                .'|cancel(*:4272)'
+                                                .'|payment\\-link(*:4543)'
+                                                .'|send\\-payment\\-link(*:4571)'
+                                                .'|force\\-to\\-paid(*:4595)'
+                                                .'|cancel(*:4610)'
                                             .')'
                                         .')'
                                     .')'
                                 .')'
                                 .'|hma\\-service/(?'
                                     .'|([^/]++)(?'
-                                        .'|(*:4312)'
+                                        .'|(*:4650)'
                                         .'|/(?'
-                                            .'|edit(*:4329)'
-                                            .'|toggle\\-status(*:4352)'
-                                            .'|delete(*:4367)'
-                                            .'|subscriptions(*:4389)'
+                                            .'|edit(*:4667)'
+                                            .'|toggle\\-status(*:4690)'
+                                            .'|delete(*:4705)'
+                                            .'|subscriptions(*:4727)'
                                         .')'
                                     .')'
-                                    .'|export/([^/]++)(*:4415)'
+                                    .'|export/([^/]++)(*:4753)'
                                 .')'
-                                .'|payment/([^/]++)(*:4441)'
+                                .'|payment/([^/]++)(*:4779)'
                                 .'|subscription(?'
-                                    .'|/([^/]++)(*:4474)'
+                                    .'|/(?'
+                                        .'|([^/]++)(*:4815)'
+                                        .'|export/([^/]++)/([^/]++)(*:4848)'
+                                    .')'
                                     .'|\\-plans/([^/]++)(?'
-                                        .'|(*:4502)'
+                                        .'|(*:4877)'
                                         .'|/(?'
-                                            .'|edit(*:4519)'
-                                            .'|toggle(*:4534)'
+                                            .'|edit(*:4894)'
+                                            .'|toggle(*:4909)'
                                         .')'
-                                        .'|(*:4544)'
+                                        .'|(*:4919)'
                                     .')'
                                 .')'
                             .')'
-                            .'|plier/credit\\-note/respond/([^/]++)(*:4591)'
+                            .'|plier/credit\\-note/respond/([^/]++)(*:4966)'
                         .')'
                     .')'
                 .')'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
-        53 => [[['_route' => 'admin_purchase_cart_receive', '_controller' => 'App\\Controller\\Admin\\CartController::receiveCart'], ['id'], ['GET' => 0], null, false, true, null]],
-        76 => [[['_route' => 'app_admin_purchase_item_show', '_controller' => 'App\\Controller\\Admin\\PurchaseItemController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        88 => [[['_route' => 'app_admin_purchase_item_edit', '_controller' => 'App\\Controller\\Admin\\PurchaseItemController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        95 => [[['_route' => 'app_admin_purchase_item_delete', '_controller' => 'App\\Controller\\Admin\\PurchaseItemController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        119 => [[['_route' => 'admin_payment_show', '_controller' => 'App\\Controller\\Admin\\PaymentController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        151 => [[['_route' => 'app_admin_product_show', '_controller' => 'App\\Controller\\Admin\\ProductController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        167 => [[['_route' => 'app_admin_product_edit', '_controller' => 'App\\Controller\\Admin\\ProductController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        189 => [[['_route' => 'app_admin_product_toggle_status', '_controller' => 'App\\Controller\\Admin\\ProductController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
-        210 => [[['_route' => 'app_admin_product_delete_image', '_controller' => 'App\\Controller\\Admin\\ProductController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
-        219 => [[['_route' => 'app_admin_product_delete', '_controller' => 'App\\Controller\\Admin\\ProductController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        248 => [[['_route' => 'app_admin_product_api_details', '_controller' => 'App\\Controller\\Admin\\ProductController::apiDetails'], ['id'], ['GET' => 0], null, false, false, null]],
-        278 => [[['_route' => 'app_admin_product_check_barcode', '_controller' => 'App\\Controller\\Admin\\ProductController::checkBarcode'], ['barcode'], ['GET' => 0], null, false, true, null]],
-        312 => [[['_route' => 'app_admin_product_stock_batches', '_controller' => 'App\\Controller\\Admin\\ProductController::stockBatches'], ['id'], ['GET' => 0], null, false, false, null]],
-        337 => [[['_route' => 'app_admin_product_print_barcode', '_controller' => 'App\\Controller\\Admin\\ProductController::printBarcode'], ['id'], ['GET' => 0], null, false, false, null]],
-        350 => [[['_route' => 'app_admin_product_print_sheet', '_controller' => 'App\\Controller\\Admin\\ProductController::printSheet'], ['id'], ['GET' => 0], null, false, false, null]],
-        393 => [[['_route' => 'app_admin_promotion_category_show', '_controller' => 'App\\Controller\\Admin\\PromotionController::categoryShow'], ['id'], ['GET' => 0], null, false, true, null]],
-        408 => [[['_route' => 'app_admin_promotion_category_delete', '_controller' => 'App\\Controller\\Admin\\PromotionController::categoryDelete'], ['id'], ['POST' => 0], null, false, false, null]],
-        437 => [[['_route' => 'app_admin_promotion_product_show', '_controller' => 'App\\Controller\\Admin\\PromotionController::productShow'], ['id'], ['GET' => 0], null, false, true, null]],
-        452 => [[['_route' => 'app_admin_promotion_product_delete', '_controller' => 'App\\Controller\\Admin\\PromotionController::productDelete'], ['id'], ['POST' => 0], null, false, false, null]],
-        472 => [[['_route' => 'app_admin_promotion_show', '_controller' => 'App\\Controller\\Admin\\PromotionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        488 => [[['_route' => 'app_admin_promotion_edit', '_controller' => 'App\\Controller\\Admin\\PromotionController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        509 => [[['_route' => 'app_admin_promotion_delete_image', '_controller' => 'App\\Controller\\Admin\\PromotionController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
-        531 => [[['_route' => 'app_admin_promotion_toggle_status', '_controller' => 'App\\Controller\\Admin\\PromotionController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
-        540 => [[['_route' => 'app_admin_promotion_delete', '_controller' => 'App\\Controller\\Admin\\PromotionController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        576 => [[['_route' => 'app_admin_product_promotions', '_controller' => 'App\\Controller\\Admin\\PromotionController::productPromotions'], ['id'], ['GET' => 0], null, false, false, null]],
-        612 => [[['_route' => 'app_admin_category_promotions', '_controller' => 'App\\Controller\\Admin\\PromotionController::categoryPromotions'], ['id'], ['GET' => 0], null, false, false, null]],
-        646 => [[['_route' => 'app_admin_category_show', '_controller' => 'App\\Controller\\Admin\\CategoryController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        662 => [[['_route' => 'app_admin_category_edit', '_controller' => 'App\\Controller\\Admin\\CategoryController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        684 => [[['_route' => 'app_admin_category_toggle_status', '_controller' => 'App\\Controller\\Admin\\CategoryController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
-        713 => [[['_route' => 'app_admin_category_activate_from_quota', '_controller' => 'App\\Controller\\Admin\\CategoryController::activateFromQuota'], ['id'], ['POST' => 0], null, false, false, null]],
-        734 => [[['_route' => 'app_admin_category_delete_image', '_controller' => 'App\\Controller\\Admin\\CategoryController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
-        750 => [[['_route' => 'app_admin_category_products', '_controller' => 'App\\Controller\\Admin\\CategoryController::products'], ['id'], ['GET' => 0], null, false, false, null]],
-        759 => [[['_route' => 'app_admin_category_delete', '_controller' => 'App\\Controller\\Admin\\CategoryController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        788 => [[['_route' => 'app_admin_category_recipe_show', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        804 => [[['_route' => 'app_admin_category_recipe_edit', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        826 => [[['_route' => 'app_admin_category_recipe_toggle_status', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
-        855 => [[['_route' => 'app_admin_category_recipe_activate_from_quota', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::activateFromQuota'], ['id'], ['POST' => 0], null, false, false, null]],
-        876 => [[['_route' => 'app_admin_category_recipe_delete_image', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
-        891 => [[['_route' => 'app_admin_category_recipe_recipes', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::recipes'], ['id'], ['GET' => 0], null, false, false, null]],
-        909 => [[['_route' => 'app_admin_category_recipe_promotions', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::promotions'], ['id'], ['GET' => 0], null, false, false, null]],
-        918 => [[['_route' => 'app_admin_category_recipe_delete', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        953 => [[['_route' => 'app_admin_location_show', '_controller' => 'App\\Controller\\Admin\\LocationController::show'], ['id'], ['GET' => 0], null, false, false, null]],
-        965 => [[['_route' => 'app_admin_location_edit', '_controller' => 'App\\Controller\\Admin\\LocationController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        979 => [[['_route' => 'app_admin_location_toggle', '_controller' => 'App\\Controller\\Admin\\LocationController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
-        993 => [[['_route' => 'app_admin_location_delete', '_controller' => 'App\\Controller\\Admin\\LocationController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        1023 => [[['_route' => 'app_admin_recipe_show', '_controller' => 'App\\Controller\\Admin\\RecipeController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1040 => [[['_route' => 'app_admin_recipe_edit', '_controller' => 'App\\Controller\\Admin\\RecipeController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1063 => [[['_route' => 'app_admin_recipe_toggle_status', '_controller' => 'App\\Controller\\Admin\\RecipeController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
-        1085 => [[['_route' => 'app_admin_recipe_delete_image', '_controller' => 'App\\Controller\\Admin\\RecipeController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
-        1095 => [[['_route' => 'app_admin_recipe_delete', '_controller' => 'App\\Controller\\Admin\\RecipeController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        1149 => [[['_route' => 'app_restaurant_promotion_category_show', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::categoryShow'], ['id'], ['GET' => 0], null, false, true, null]],
-        1165 => [[['_route' => 'app_restaurant_promotion_category_delete', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::categoryDelete'], ['id'], ['POST' => 0], null, false, false, null]],
-        1194 => [[['_route' => 'app_restaurant_promotion_recipe_show', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::recipeShow'], ['id'], ['GET' => 0], null, false, true, null]],
-        1210 => [[['_route' => 'app_restaurant_promotion_recipe_delete', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::recipeDelete'], ['id'], ['POST' => 0], null, false, false, null]],
-        1231 => [[['_route' => 'app_restaurant_promotion_show', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1248 => [[['_route' => 'app_restaurant_promotion_edit', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1270 => [[['_route' => 'app_restaurant_promotion_delete_image', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
-        1293 => [[['_route' => 'app_restaurant_promotion_toggle_status', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
-        1303 => [[['_route' => 'app_restaurant_promotion_delete', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        1339 => [[['_route' => 'app_restaurant_recipe_promotions', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::recipePromotions'], ['id'], ['GET' => 0], null, false, false, null]],
-        1384 => [[['_route' => 'app_restaurant_category_recipe_promotions', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::categoryRecipePromotions'], ['id'], ['GET' => 0], null, false, false, null]],
-        1433 => [[['_route' => 'app_admin_stock_batch_index', '_controller' => 'App\\Controller\\Admin\\StockBatchController::index'], ['productId'], ['GET' => 0], null, false, true, null]],
-        1458 => [[['_route' => 'app_admin_stock_batch_show', '_controller' => 'App\\Controller\\Admin\\StockBatchController::show'], ['id'], ['GET' => 0], null, false, false, null]],
-        1471 => [[['_route' => 'app_admin_stock_batch_edit', '_controller' => 'App\\Controller\\Admin\\StockBatchController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1486 => [[['_route' => 'app_admin_stock_batch_toggle', '_controller' => 'App\\Controller\\Admin\\StockBatchController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
-        1501 => [[['_route' => 'app_admin_stock_batch_delete', '_controller' => 'App\\Controller\\Admin\\StockBatchController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        1515 => [[['_route' => 'app_admin_stock_batch_print', '_controller' => 'App\\Controller\\Admin\\StockBatchController::print'], ['id'], ['GET' => 0], null, false, false, null]],
-        1548 => [[['_route' => 'app_admin_stock_movement_show', '_controller' => 'App\\Controller\\Admin\\StockMovementController::show'], ['id'], ['GET' => 0], null, false, false, null]],
-        1581 => [[['_route' => 'admin_subscription_show', '_controller' => 'App\\Controller\\Admin\\SubscriptionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1611 => [[['_route' => 'app_admin_supplier_show', '_controller' => 'App\\Controller\\Admin\\SupplierController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1628 => [[['_route' => 'app_admin_supplier_edit', '_controller' => 'App\\Controller\\Admin\\SupplierController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1651 => [[['_route' => 'app_admin_supplier_toggle_status', '_controller' => 'App\\Controller\\Admin\\SupplierController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
-        1661 => [[['_route' => 'app_admin_supplier_delete', '_controller' => 'App\\Controller\\Admin\\SupplierController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        1701 => [[['_route' => 'app_supplier_credit_note_new', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::new'], ['batchId'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        1721 => [[['_route' => 'app_supplier_credit_note_show', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1741 => [[['_route' => 'app_supplier_credit_note_resolve', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::resolve'], ['id'], ['POST' => 0], null, false, false, null]],
-        1770 => [[['_route' => 'app_supplier_credit_note_apply_stock_action', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::applyStockAction'], ['id'], ['POST' => 0], null, false, false, null]],
-        1796 => [[['_route' => 'app_supplier_credit_note_print_multiple', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::printMultiple'], [], ['GET' => 0], null, false, false, null]],
-        1816 => [[['_route' => 'app_supplier_credit_note_new_direct', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::newDirect'], [], ['POST' => 0], null, false, false, null]],
-        1864 => [[['_route' => 'app_admin_type_promotion_edit', '_controller' => 'App\\Controller\\Admin\\TypePromotionController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1887 => [[['_route' => 'app_admin_type_promotion_toggle_status', '_controller' => 'App\\Controller\\Admin\\TypePromotionController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
-        1902 => [[['_route' => 'app_admin_type_promotion_delete', '_controller' => 'App\\Controller\\Admin\\TypePromotionController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        1912 => [[['_route' => 'app_admin_type_promotion_show', '_controller' => 'App\\Controller\\Admin\\TypePromotionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1938 => [[['_route' => 'app_user_show', '_controller' => 'App\\Controller\\Admin\\UserController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1955 => [[['_route' => 'app_user_edit', '_controller' => 'App\\Controller\\Admin\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1977 => [[['_route' => 'app_user_delete_photo', '_controller' => 'App\\Controller\\Admin\\UserController::deletePhoto'], ['id'], ['POST' => 0], null, false, false, null]],
-        1987 => [[['_route' => 'app_user_delete', '_controller' => 'App\\Controller\\Admin\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        2030 => [[['_route' => 'company_analysis_show', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        2061 => [[['_route' => 'company_analysis_download_final', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::downloadFinal'], ['id'], ['GET' => 0], null, false, false, null]],
-        2073 => [[['_route' => 'company_analysis_download_raw', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::downloadRaw'], ['id'], ['GET' => 0], null, false, false, null]],
-        2083 => [[['_route' => 'company_analysis_download', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::download'], ['id'], ['GET' => 0], null, false, false, null]],
-        2122 => [[['_route' => 'marketplace_category', '_controller' => 'App\\Controller\\Marketplace\\CategoryController::show'], ['slug'], null, null, false, true, null]],
-        2146 => [[['_route' => 'customer_order_show', '_controller' => 'App\\Controller\\Marketplace\\OrderController::show'], ['id'], null, null, false, true, null]],
-        2203 => [[['_route' => 'marketplace_reset_password', '_controller' => 'App\\Controller\\Customer\\ResetPasswordController::reset'], ['token'], null, null, false, true, null]],
-        2237 => [[['_route' => 'marketplace_resend_verification', '_controller' => 'App\\Controller\\Marketplace\\AuthController::resendVerification'], ['email'], null, null, false, true, null]],
-        2269 => [[['_route' => 'marketplace_verify_email', '_controller' => 'App\\Controller\\Marketplace\\AuthController::verifyEmail'], ['token'], null, null, false, true, null]],
-        2301 => [[['_route' => 'marketplace_cart_update', '_controller' => 'App\\Controller\\Marketplace\\CartController::update'], ['id'], ['POST' => 0], null, false, true, null]],
-        2325 => [[['_route' => 'marketplace_cart_remove', '_controller' => 'App\\Controller\\Marketplace\\CartController::remove'], ['id'], ['POST' => 0], null, false, true, null]],
-        2358 => [[['_route' => 'marketplace_favorite_check', '_controller' => 'App\\Controller\\Marketplace\\FavoriteController::check'], ['productId'], ['GET' => 0], null, false, true, null]],
-        2416 => [[['_route' => 'api_pharmacy_categories', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::getPharmacyCategories'], ['id'], null, null, false, false, null]],
-        2430 => [[['_route' => 'api_pharmacy_forms', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::getPharmacyForms'], ['id'], null, null, false, false, null]],
-        2459 => [[['_route' => 'marketplace_product_show', '_controller' => 'App\\Controller\\Marketplace\\ProductController::show'], ['id'], null, null, false, true, null]],
-        2483 => [[['_route' => 'marketplace_product_detail', '_controller' => 'App\\Controller\\Marketplace\\ProductController::detail'], ['id'], null, null, false, true, null]],
-        2509 => [[['_route' => 'marketplace_product_detail_slug', '_controller' => 'App\\Controller\\Marketplace\\ProductController::showWithSlug'], ['id', 'slug'], null, null, false, true, null]],
-        2543 => [[['_route' => 'app_manager_team_show', '_controller' => 'App\\Controller\\Manager\\TeamController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        2557 => [[['_route' => 'app_manager_team_edit', '_controller' => 'App\\Controller\\Manager\\TeamController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        2599 => [[['_route' => 'payment_success_with_id', '_controller' => 'App\\Controller\\PaymentController::successWithId'], ['id'], ['GET' => 0], null, false, true, null]],
-        2635 => [[['_route' => 'payment_already_processed', '_controller' => 'App\\Controller\\PaymentController::alreadyProcessed'], ['id'], ['GET' => 0], null, false, true, null]],
-        2674 => [[['_route' => 'print_ticket', '_controller' => 'App\\Controller\\PrintController::printTicket'], ['id', 'type'], ['GET' => 0], null, false, true, null]],
-        2721 => [[['_route' => 'purchase_remove_product', '_controller' => 'App\\Controller\\PurchaseController::removeProduct'], ['productId'], ['DELETE' => 0], null, false, true, null]],
-        2744 => [[['_route' => 'purchase_receive', '_controller' => 'App\\Controller\\PurchaseController::receive'], ['id'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        2779 => [[['_route' => 'purchase_update_quantity', '_controller' => 'App\\Controller\\PurchaseController::updateQuantity'], ['productId'], ['PUT' => 0], null, false, true, null]],
-        2803 => [[['_route' => 'purchase_cancel', '_controller' => 'App\\Controller\\PurchaseController::cancel'], ['id'], ['POST' => 0], null, false, true, null]],
-        2823 => [[['_route' => 'purchase_show', '_controller' => 'App\\Controller\\PurchaseController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        2838 => [[['_route' => 'purchase_print', '_controller' => 'App\\Controller\\PurchaseController::print'], ['id'], ['GET' => 0], null, false, false, null]],
-        2869 => [[['_route' => 'purchase_update_item', '_controller' => 'App\\Controller\\PurchaseController::updateCartItem'], ['productId'], ['PUT' => 0], null, false, true, null]],
-        2897 => [[['_route' => 'purchase_report_issue_temp', '_controller' => 'App\\Controller\\PurchaseController::reportIssueTemp'], [], ['POST' => 0], null, false, false, null]],
-        2934 => [[['_route' => 'purchase_delete_issue_temp', '_controller' => 'App\\Controller\\PurchaseController::deleteIssueTemp'], ['batchId'], ['POST' => 0], null, false, true, null]],
-        2973 => [[['_route' => 'app_reset_password', '_controller' => 'App\\Controller\\ResetPasswordController::reset'], ['token'], null, null, false, true, null]],
-        3003 => [[['_route' => 'returns_new', '_controller' => 'App\\Controller\\Return\\ReturnController::new'], ['orderId'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        3031 => [[['_route' => 'returns_edit', '_controller' => 'App\\Controller\\Return\\ReturnController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        3047 => [[['_route' => 'returns_approve', '_controller' => 'App\\Controller\\Return\\ReturnController::approve'], ['id'], ['POST' => 0], null, false, false, null]],
-        3064 => [[['_route' => 'returns_complete', '_controller' => 'App\\Controller\\Return\\ReturnController::complete'], ['id'], ['POST' => 0], null, false, false, null]],
-        3079 => [[['_route' => 'returns_reject', '_controller' => 'App\\Controller\\Return\\ReturnController::reject'], ['id'], ['POST' => 0], null, false, false, null]],
-        3089 => [[['_route' => 'returns_show', '_controller' => 'App\\Controller\\Return\\ReturnController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        3124 => [[['_route' => 'returns_api_order_items', '_controller' => 'App\\Controller\\Return\\ReturnController::getOrderItems'], ['orderId'], ['GET' => 0], null, false, true, null]],
-        3159 => [[['_route' => 'returns_print_receipt', '_controller' => 'App\\Controller\\Return\\ReturnController::printReceipt'], ['id'], ['GET' => 0], null, false, true, null]],
-        3186 => [[['_route' => 'returns_print_multiple_receipts', '_controller' => 'App\\Controller\\Return\\ReturnController::printMultipleReceipts'], [], ['POST' => 0], null, false, false, null]],
-        3230 => [[['_route' => 'app_orders_toggle', '_controller' => 'App\\Controller\\Sale\\OrderController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
-        3245 => [[['_route' => 'app_orders_delete', '_controller' => 'App\\Controller\\Sale\\OrderController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        3270 => [[['_route' => 'app_orders_receipt_content', '_controller' => 'App\\Controller\\Sale\\OrderController::receiptContent'], ['id'], ['GET' => 0], null, false, false, null]],
-        3280 => [[['_route' => 'app_orders_show', '_controller' => 'App\\Controller\\Sale\\OrderController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        3307 => [[['_route' => 'app_orders_receipts_content', '_controller' => 'App\\Controller\\Sale\\OrderController::receiptsContent'], [], ['GET' => 0], null, false, false, null]],
-        3335 => [[['_route' => 'api_check_can_sell', '_controller' => 'App\\Controller\\Sale\\OrderController::checkCanSell'], [], ['GET' => 0], null, false, false, null]],
-        3357 => [[['_route' => 'app_orders_contact_admin', '_controller' => 'App\\Controller\\Sale\\OrderController::contactAdmin'], [], ['GET' => 0], null, false, false, null]],
-        3384 => [[['_route' => 'app_orders_print', '_controller' => 'App\\Controller\\Sale\\OrderController::printReceipt'], ['id'], ['GET' => 0], null, false, false, null]],
-        3406 => [[['_route' => 'app_orders_download_pdf', '_controller' => 'App\\Controller\\Sale\\OrderController::downloadPdf'], ['id'], ['GET' => 0], null, false, false, null]],
-        3462 => [[['_route' => 'sale_add_product', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::addProduct'], ['id'], ['POST' => 0], null, false, true, null]],
-        3508 => [[['_route' => 'sale_update_quantity', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::updateQuantity'], ['type', 'id'], ['PUT' => 0], null, false, true, null]],
-        3540 => [[['_route' => 'sale_update_notes', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::updateNotes'], ['type', 'id'], ['PUT' => 0], null, false, true, null]],
-        3583 => [[['_route' => 'sale_remove_item', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::removeItem'], ['type', 'id'], ['DELETE' => 0], null, false, true, null]],
-        3606 => [[['_route' => 'sale_receipt', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::receipt'], ['id'], ['GET' => 0], null, false, true, null]],
-        3663 => [[['_route' => 'app_stock_inventory_add_products', '_controller' => 'App\\Controller\\Stock\\InventoryController::addProducts'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        3680 => [[['_route' => 'app_stock_inventory_count', '_controller' => 'App\\Controller\\Stock\\InventoryController::count'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        3694 => [[['_route' => 'app_stock_inventory_cancel', '_controller' => 'App\\Controller\\Stock\\InventoryController::cancel'], ['id'], ['POST' => 0], null, false, false, null]],
-        3712 => [[['_route' => 'app_stock_inventory_validate', '_controller' => 'App\\Controller\\Stock\\InventoryController::validate'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        3722 => [[['_route' => 'app_stock_inventory_show', '_controller' => 'App\\Controller\\Stock\\InventoryController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        3751 => [[['_route' => 'app_stock_adjustment_show', '_controller' => 'App\\Controller\\Stock\\StockAdjustmentController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        3789 => [[['_route' => 'app_stock_transfer_start', '_controller' => 'App\\Controller\\Stock\\StockTransferController::start'], ['id'], ['POST' => 0], null, false, false, null]],
-        3805 => [[['_route' => 'app_stock_transfer_receive', '_controller' => 'App\\Controller\\Stock\\StockTransferController::receive'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        3820 => [[['_route' => 'app_stock_transfer_cancel', '_controller' => 'App\\Controller\\Stock\\StockTransferController::cancel'], ['id'], ['POST' => 0], null, false, false, null]],
-        3830 => [[['_route' => 'app_stock_transfer_show', '_controller' => 'App\\Controller\\Stock\\StockTransferController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        3872 => [[['_route' => 'app_subscription_success', '_controller' => 'App\\Controller\\SubscriptionController::success'], ['id'], null, null, false, true, null]],
-        3929 => [[['_route' => 'super_admin_analysis_price_show', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisPriceController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        3946 => [[['_route' => 'super_admin_analysis_price_edit', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisPriceController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        3961 => [[['_route' => 'super_admin_analysis_price_toggle', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisPriceController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
-        3976 => [[['_route' => 'super_admin_analysis_price_delete', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisPriceController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        4013 => [[['_route' => 'super_admin_analysis_company_stats', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::companyStats'], ['id'], ['GET' => 0], null, false, false, null]],
-        4034 => [[['_route' => 'super_admin_analysis_new', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::new'], ['companyId'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        4054 => [[['_route' => 'super_admin_analysis_show', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        4080 => [[['_route' => 'super_admin_analysis_generate_raw', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::generateRawData'], ['id'], ['POST' => 0], null, false, false, null]],
-        4103 => [[['_route' => 'super_admin_analysis_upload_report', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::uploadFinalReport'], ['id'], ['POST' => 0], null, false, false, null]],
-        4130 => [[['_route' => 'super_admin_analysis_replace_report', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::replaceFinalReport'], ['id'], ['POST' => 0], null, false, false, null]],
-        4142 => [[['_route' => 'super_admin_analysis_retry', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::retry'], ['id'], ['POST' => 0], null, false, false, null]],
-        4170 => [[['_route' => 'super_admin_analysis_download_final', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::downloadFinalReport'], ['id'], ['GET' => 0], null, false, false, null]],
-        4182 => [[['_route' => 'super_admin_analysis_download_raw', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::downloadRawData'], ['id'], ['GET' => 0], null, false, false, null]],
-        4205 => [[['_route' => 'super_admin_analysis_payment_link', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::getPaymentLink'], ['id'], ['GET' => 0], null, false, false, null]],
-        4233 => [[['_route' => 'super_admin_analysis_send_payment_link', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::sendPaymentLink'], ['id'], ['POST' => 0], null, false, false, null]],
-        4257 => [[['_route' => 'super_admin_analysis_force_to_paid', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::forceToPaid'], ['id'], ['POST' => 0], null, false, false, null]],
-        4272 => [[['_route' => 'super_admin_analysis_cancel', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::cancel'], ['id'], ['POST' => 0], null, false, false, null]],
-        4312 => [[['_route' => 'app_super_admin_hma_service_show', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        4329 => [[['_route' => 'app_super_admin_hma_service_edit', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        4352 => [[['_route' => 'app_super_admin_hma_service_toggle', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
-        4367 => [[['_route' => 'app_super_admin_hma_service_delete', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        4389 => [[['_route' => 'app_super_admin_hma_service_subscriptions', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::subscriptions'], ['id'], ['GET' => 0], null, false, false, null]],
-        4415 => [[['_route' => 'app_super_admin_hma_service_export', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::export'], ['format'], ['GET' => 0], null, false, true, null]],
-        4441 => [[['_route' => 'super_admin_payment_show', '_controller' => 'App\\Controller\\SuperAdmin\\PaymentController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        4474 => [[['_route' => 'super_admin_subscription_show', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        4502 => [[['_route' => 'app_super_admin_subscription_plan_show', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        4519 => [[['_route' => 'app_super_admin_subscription_plan_edit', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        4534 => [[['_route' => 'app_super_admin_subscription_plan_toggle', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
-        4544 => [[['_route' => 'app_super_admin_subscription_plan_delete', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        4591 => [
+        28 => [[['_route' => 'app_activate_account', '_controller' => 'App\\Controller\\AccountActivationController::activate'], ['token'], null, null, false, true, null]],
+        79 => [[['_route' => 'admin_purchase_cart_receive', '_controller' => 'App\\Controller\\Admin\\CartController::receiveCart'], ['id'], ['GET' => 0], null, false, true, null]],
+        102 => [[['_route' => 'app_admin_purchase_item_show', '_controller' => 'App\\Controller\\Admin\\PurchaseItemController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        115 => [[['_route' => 'app_admin_purchase_item_edit', '_controller' => 'App\\Controller\\Admin\\PurchaseItemController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        123 => [[['_route' => 'app_admin_purchase_item_delete', '_controller' => 'App\\Controller\\Admin\\PurchaseItemController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        148 => [[['_route' => 'admin_payment_show', '_controller' => 'App\\Controller\\Admin\\PaymentController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        180 => [[['_route' => 'app_admin_product_show', '_controller' => 'App\\Controller\\Admin\\ProductController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        196 => [[['_route' => 'app_admin_product_edit', '_controller' => 'App\\Controller\\Admin\\ProductController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        218 => [[['_route' => 'app_admin_product_toggle_status', '_controller' => 'App\\Controller\\Admin\\ProductController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
+        239 => [[['_route' => 'app_admin_product_delete_image', '_controller' => 'App\\Controller\\Admin\\ProductController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
+        248 => [[['_route' => 'app_admin_product_delete', '_controller' => 'App\\Controller\\Admin\\ProductController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        277 => [[['_route' => 'app_admin_product_api_details', '_controller' => 'App\\Controller\\Admin\\ProductController::apiDetails'], ['id'], ['GET' => 0], null, false, false, null]],
+        307 => [[['_route' => 'app_admin_product_check_barcode', '_controller' => 'App\\Controller\\Admin\\ProductController::checkBarcode'], ['barcode'], ['GET' => 0], null, false, true, null]],
+        344 => [[['_route' => 'app_admin_product_stock_batches', '_controller' => 'App\\Controller\\Admin\\ProductController::stockBatches'], ['id'], ['GET' => 0], null, false, false, null]],
+        361 => [[['_route' => 'app_admin_product_stock_movements', '_controller' => 'App\\Controller\\Admin\\ProductController::stockMovements'], ['id'], ['GET' => 0], null, false, false, null]],
+        387 => [[['_route' => 'app_admin_product_print_barcode', '_controller' => 'App\\Controller\\Admin\\ProductController::printBarcode'], ['id'], ['GET' => 0], null, false, false, null]],
+        400 => [[['_route' => 'app_admin_product_print_sheet', '_controller' => 'App\\Controller\\Admin\\ProductController::printSheet'], ['id'], ['GET' => 0], null, false, false, null]],
+        443 => [[['_route' => 'app_admin_promotion_category_show', '_controller' => 'App\\Controller\\Admin\\PromotionController::categoryShow'], ['id'], ['GET' => 0], null, false, true, null]],
+        458 => [[['_route' => 'app_admin_promotion_category_delete', '_controller' => 'App\\Controller\\Admin\\PromotionController::categoryDelete'], ['id'], ['POST' => 0], null, false, false, null]],
+        487 => [[['_route' => 'app_admin_promotion_product_show', '_controller' => 'App\\Controller\\Admin\\PromotionController::productShow'], ['id'], ['GET' => 0], null, false, true, null]],
+        502 => [[['_route' => 'app_admin_promotion_product_delete', '_controller' => 'App\\Controller\\Admin\\PromotionController::productDelete'], ['id'], ['POST' => 0], null, false, false, null]],
+        522 => [[['_route' => 'app_admin_promotion_show', '_controller' => 'App\\Controller\\Admin\\PromotionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        538 => [[['_route' => 'app_admin_promotion_edit', '_controller' => 'App\\Controller\\Admin\\PromotionController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        559 => [[['_route' => 'app_admin_promotion_delete_image', '_controller' => 'App\\Controller\\Admin\\PromotionController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
+        581 => [[['_route' => 'app_admin_promotion_toggle_status', '_controller' => 'App\\Controller\\Admin\\PromotionController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
+        590 => [[['_route' => 'app_admin_promotion_delete', '_controller' => 'App\\Controller\\Admin\\PromotionController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        626 => [[['_route' => 'app_admin_product_promotions', '_controller' => 'App\\Controller\\Admin\\PromotionController::productPromotions'], ['id'], ['GET' => 0], null, false, false, null]],
+        662 => [[['_route' => 'app_admin_category_promotions', '_controller' => 'App\\Controller\\Admin\\PromotionController::categoryPromotions'], ['id'], ['GET' => 0], null, false, false, null]],
+        696 => [[['_route' => 'app_admin_category_show', '_controller' => 'App\\Controller\\Admin\\CategoryController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        712 => [[['_route' => 'app_admin_category_edit', '_controller' => 'App\\Controller\\Admin\\CategoryController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        734 => [[['_route' => 'app_admin_category_toggle_status', '_controller' => 'App\\Controller\\Admin\\CategoryController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
+        763 => [[['_route' => 'app_admin_category_activate_from_quota', '_controller' => 'App\\Controller\\Admin\\CategoryController::activateFromQuota'], ['id'], ['POST' => 0], null, false, false, null]],
+        784 => [[['_route' => 'app_admin_category_delete_image', '_controller' => 'App\\Controller\\Admin\\CategoryController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
+        800 => [[['_route' => 'app_admin_category_products', '_controller' => 'App\\Controller\\Admin\\CategoryController::products'], ['id'], ['GET' => 0], null, false, false, null]],
+        809 => [[['_route' => 'app_admin_category_delete', '_controller' => 'App\\Controller\\Admin\\CategoryController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        838 => [[['_route' => 'app_admin_category_recipe_show', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        854 => [[['_route' => 'app_admin_category_recipe_edit', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        876 => [[['_route' => 'app_admin_category_recipe_toggle_status', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
+        905 => [[['_route' => 'app_admin_category_recipe_activate_from_quota', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::activateFromQuota'], ['id'], ['POST' => 0], null, false, false, null]],
+        926 => [[['_route' => 'app_admin_category_recipe_delete_image', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
+        941 => [[['_route' => 'app_admin_category_recipe_recipes', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::recipes'], ['id'], ['GET' => 0], null, false, false, null]],
+        959 => [[['_route' => 'app_admin_category_recipe_promotions', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::promotions'], ['id'], ['GET' => 0], null, false, false, null]],
+        968 => [[['_route' => 'app_admin_category_recipe_delete', '_controller' => 'App\\Controller\\Admin\\CategoryRecipeController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        1003 => [[['_route' => 'app_admin_location_show', '_controller' => 'App\\Controller\\Admin\\LocationController::show'], ['id'], ['GET' => 0], null, false, false, null]],
+        1016 => [[['_route' => 'app_admin_location_edit', '_controller' => 'App\\Controller\\Admin\\LocationController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1031 => [[['_route' => 'app_admin_location_toggle', '_controller' => 'App\\Controller\\Admin\\LocationController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
+        1046 => [[['_route' => 'app_admin_location_delete', '_controller' => 'App\\Controller\\Admin\\LocationController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        1077 => [[['_route' => 'app_admin_recipe_show', '_controller' => 'App\\Controller\\Admin\\RecipeController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1094 => [[['_route' => 'app_admin_recipe_edit', '_controller' => 'App\\Controller\\Admin\\RecipeController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1117 => [[['_route' => 'app_admin_recipe_toggle_status', '_controller' => 'App\\Controller\\Admin\\RecipeController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
+        1139 => [[['_route' => 'app_admin_recipe_delete_image', '_controller' => 'App\\Controller\\Admin\\RecipeController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
+        1149 => [[['_route' => 'app_admin_recipe_delete', '_controller' => 'App\\Controller\\Admin\\RecipeController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        1203 => [[['_route' => 'app_restaurant_promotion_category_show', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::categoryShow'], ['id'], ['GET' => 0], null, false, true, null]],
+        1219 => [[['_route' => 'app_restaurant_promotion_category_delete', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::categoryDelete'], ['id'], ['POST' => 0], null, false, false, null]],
+        1248 => [[['_route' => 'app_restaurant_promotion_recipe_show', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::recipeShow'], ['id'], ['GET' => 0], null, false, true, null]],
+        1264 => [[['_route' => 'app_restaurant_promotion_recipe_delete', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::recipeDelete'], ['id'], ['POST' => 0], null, false, false, null]],
+        1285 => [[['_route' => 'app_restaurant_promotion_show', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1302 => [[['_route' => 'app_restaurant_promotion_edit', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1324 => [[['_route' => 'app_restaurant_promotion_delete_image', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
+        1347 => [[['_route' => 'app_restaurant_promotion_toggle_status', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
+        1357 => [[['_route' => 'app_restaurant_promotion_delete', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        1393 => [[['_route' => 'app_restaurant_recipe_promotions', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::recipePromotions'], ['id'], ['GET' => 0], null, false, false, null]],
+        1438 => [[['_route' => 'app_restaurant_category_recipe_promotions', '_controller' => 'App\\Controller\\Admin\\RestaurantPromotionController::categoryRecipePromotions'], ['id'], ['GET' => 0], null, false, false, null]],
+        1487 => [[['_route' => 'app_admin_stock_batch_index', '_controller' => 'App\\Controller\\Admin\\StockBatchController::index'], ['productId'], ['GET' => 0], null, false, true, null]],
+        1512 => [[['_route' => 'app_admin_stock_batch_show', '_controller' => 'App\\Controller\\Admin\\StockBatchController::show'], ['id'], ['GET' => 0], null, false, false, null]],
+        1525 => [[['_route' => 'app_admin_stock_batch_edit', '_controller' => 'App\\Controller\\Admin\\StockBatchController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1540 => [[['_route' => 'app_admin_stock_batch_toggle', '_controller' => 'App\\Controller\\Admin\\StockBatchController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
+        1555 => [[['_route' => 'app_admin_stock_batch_delete', '_controller' => 'App\\Controller\\Admin\\StockBatchController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        1569 => [[['_route' => 'app_admin_stock_batch_print', '_controller' => 'App\\Controller\\Admin\\StockBatchController::print'], ['id'], ['GET' => 0], null, false, false, null]],
+        1602 => [[['_route' => 'app_admin_stock_movement_show', '_controller' => 'App\\Controller\\Admin\\StockMovementController::show'], ['id'], ['GET' => 0], null, false, false, null]],
+        1635 => [[['_route' => 'admin_subscription_show', '_controller' => 'App\\Controller\\Admin\\SubscriptionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1665 => [[['_route' => 'app_admin_supplier_show', '_controller' => 'App\\Controller\\Admin\\SupplierController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1682 => [[['_route' => 'app_admin_supplier_edit', '_controller' => 'App\\Controller\\Admin\\SupplierController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1705 => [[['_route' => 'app_admin_supplier_toggle_status', '_controller' => 'App\\Controller\\Admin\\SupplierController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
+        1715 => [[['_route' => 'app_admin_supplier_delete', '_controller' => 'App\\Controller\\Admin\\SupplierController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        1755 => [[['_route' => 'app_supplier_credit_note_new', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::new'], ['batchId'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        1775 => [[['_route' => 'app_supplier_credit_note_show', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1795 => [[['_route' => 'app_supplier_credit_note_resolve', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::resolve'], ['id'], ['POST' => 0], null, false, false, null]],
+        1824 => [[['_route' => 'app_supplier_credit_note_apply_stock_action', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::applyStockAction'], ['id'], ['POST' => 0], null, false, false, null]],
+        1850 => [[['_route' => 'app_supplier_credit_note_print_multiple', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::printMultiple'], [], ['GET' => 0], null, false, false, null]],
+        1870 => [[['_route' => 'app_supplier_credit_note_new_direct', '_controller' => 'App\\Controller\\Admin\\SupplierCreditNoteController::newDirect'], [], ['POST' => 0], null, false, false, null]],
+        1918 => [[['_route' => 'app_admin_type_promotion_edit', '_controller' => 'App\\Controller\\Admin\\TypePromotionController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1941 => [[['_route' => 'app_admin_type_promotion_toggle_status', '_controller' => 'App\\Controller\\Admin\\TypePromotionController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
+        1956 => [[['_route' => 'app_admin_type_promotion_delete', '_controller' => 'App\\Controller\\Admin\\TypePromotionController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        1966 => [[['_route' => 'app_admin_type_promotion_show', '_controller' => 'App\\Controller\\Admin\\TypePromotionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1992 => [[['_route' => 'app_user_show', '_controller' => 'App\\Controller\\Admin\\UserController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        2009 => [[['_route' => 'app_user_edit', '_controller' => 'App\\Controller\\Admin\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2031 => [[['_route' => 'app_user_delete_photo', '_controller' => 'App\\Controller\\Admin\\UserController::deletePhoto'], ['id'], ['POST' => 0], null, false, false, null]],
+        2041 => [[['_route' => 'app_user_delete', '_controller' => 'App\\Controller\\Admin\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        2085 => [[['_route' => 'company_analysis_show', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        2116 => [[['_route' => 'company_analysis_download_final', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::downloadFinal'], ['id'], ['GET' => 0], null, false, false, null]],
+        2128 => [[['_route' => 'company_analysis_download_raw', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::downloadRaw'], ['id'], ['GET' => 0], null, false, false, null]],
+        2138 => [[['_route' => 'company_analysis_download', '_controller' => 'App\\Controller\\Company\\CompanyAnalysisController::download'], ['id'], ['GET' => 0], null, false, false, null]],
+        2177 => [[['_route' => 'marketplace_category', '_controller' => 'App\\Controller\\Marketplace\\CategoryController::show'], ['slug'], null, null, false, true, null]],
+        2201 => [[['_route' => 'customer_order_show', '_controller' => 'App\\Controller\\Marketplace\\OrderController::show'], ['id'], null, null, false, true, null]],
+        2255 => [[['_route' => 'app_serve_upload', '_controller' => 'App\\Controller\\FileServeController::serveUploadedFile'], ['folder', 'companyId', 'filename'], ['GET' => 0], null, false, true, null]],
+        2286 => [[['_route' => 'app_serve_upload_simple', '_controller' => 'App\\Controller\\FileServeController::serveSimpleUploadedFile'], ['folder', 'filename'], ['GET' => 0], null, false, true, null]],
+        2324 => [[['_route' => 'app_manager_team_show', '_controller' => 'App\\Controller\\Manager\\TeamController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        2338 => [[['_route' => 'app_manager_team_edit', '_controller' => 'App\\Controller\\Manager\\TeamController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2383 => [[['_route' => 'marketplace_verify_email', '_controller' => 'App\\Controller\\Marketplace\\AuthController::verifyEmail'], ['token'], null, null, false, true, null]],
+        2424 => [[['_route' => 'marketplace_resend_verification', '_controller' => 'App\\Controller\\Marketplace\\AuthController::resendVerification'], ['email'], null, null, false, true, null]],
+        2453 => [[['_route' => 'marketplace_reset_password', '_controller' => 'App\\Controller\\Marketplace\\ForgotPasswordController::resetPassword'], ['token'], null, null, false, true, null]],
+        2486 => [[['_route' => 'marketplace_cart_update', '_controller' => 'App\\Controller\\Marketplace\\CartController::update'], ['id'], ['POST' => 0], null, false, true, null]],
+        2510 => [[['_route' => 'marketplace_cart_remove', '_controller' => 'App\\Controller\\Marketplace\\CartController::remove'], ['id'], ['POST' => 0], null, false, true, null]],
+        2547 => [[['_route' => 'marketplace_payment_status', 'transaction_id' => null, '_controller' => 'App\\Controller\\Marketplace\\CartController::paymentStatus'], ['transaction_id'], null, null, false, true, null]],
+        2580 => [[['_route' => 'marketplace_favorite_check', '_controller' => 'App\\Controller\\Marketplace\\FavoriteController::check'], ['productId'], ['GET' => 0], null, false, true, null]],
+        2638 => [[['_route' => 'api_pharmacy_categories', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::getPharmacyCategories'], ['id'], null, null, false, false, null]],
+        2652 => [[['_route' => 'api_pharmacy_forms', '_controller' => 'App\\Controller\\Marketplace\\PharmacySearchController::getPharmacyForms'], ['id'], null, null, false, false, null]],
+        2683 => [[['_route' => 'marketplace_product_show', '_controller' => 'App\\Controller\\Marketplace\\ProductController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        2700 => [[['_route' => 'marketplace_product_rate', '_controller' => 'App\\Controller\\Marketplace\\ProductController::rateProduct'], ['id'], ['POST' => 0], null, false, false, null]],
+        2713 => [[['_route' => 'marketplace_product_ratings', '_controller' => 'App\\Controller\\Marketplace\\ProductController::getRatings'], ['id'], ['GET' => 0], null, false, false, null]],
+        2746 => [[['_route' => 'marketplace_order_detail', '_controller' => 'App\\Controller\\Marketplace\\ProfileController::orderDetail'], ['id'], null, null, false, true, null]],
+        2770 => [[['_route' => 'marketplace_order_status', '_controller' => 'App\\Controller\\Marketplace\\ProfileController::updateOrderStatus'], ['id'], ['POST' => 0], null, false, true, null]],
+        2815 => [[['_route' => 'payment_success_with_id', '_controller' => 'App\\Controller\\PaymentController::successWithId'], ['id'], ['GET' => 0], null, false, true, null]],
+        2851 => [[['_route' => 'payment_already_processed', '_controller' => 'App\\Controller\\PaymentController::alreadyProcessed'], ['id'], ['GET' => 0], null, false, true, null]],
+        2890 => [[['_route' => 'print_ticket', '_controller' => 'App\\Controller\\PrintController::printTicket'], ['id', 'type'], ['GET' => 0], null, false, true, null]],
+        2937 => [[['_route' => 'purchase_remove_product', '_controller' => 'App\\Controller\\PurchaseController::removeProduct'], ['productId'], ['DELETE' => 0], null, false, true, null]],
+        2960 => [[['_route' => 'purchase_receive', '_controller' => 'App\\Controller\\PurchaseController::receive'], ['id'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        2995 => [[['_route' => 'purchase_update_quantity', '_controller' => 'App\\Controller\\PurchaseController::updateQuantity'], ['productId'], ['PUT' => 0], null, false, true, null]],
+        3019 => [[['_route' => 'purchase_cancel', '_controller' => 'App\\Controller\\PurchaseController::cancel'], ['id'], ['POST' => 0], null, false, true, null]],
+        3039 => [[['_route' => 'purchase_show', '_controller' => 'App\\Controller\\PurchaseController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        3054 => [[['_route' => 'purchase_print', '_controller' => 'App\\Controller\\PurchaseController::print'], ['id'], ['GET' => 0], null, false, false, null]],
+        3085 => [[['_route' => 'purchase_update_item', '_controller' => 'App\\Controller\\PurchaseController::updateCartItem'], ['productId'], ['PUT' => 0], null, false, true, null]],
+        3113 => [[['_route' => 'purchase_report_issue_temp', '_controller' => 'App\\Controller\\PurchaseController::reportIssueTemp'], [], ['POST' => 0], null, false, false, null]],
+        3150 => [[['_route' => 'purchase_delete_issue_temp', '_controller' => 'App\\Controller\\PurchaseController::deleteIssueTemp'], ['batchId'], ['POST' => 0], null, false, true, null]],
+        3189 => [[['_route' => 'app_reset_password', '_controller' => 'App\\Controller\\ResetPasswordController::reset'], ['token'], null, null, false, true, null]],
+        3219 => [[['_route' => 'returns_new', '_controller' => 'App\\Controller\\Return\\ReturnController::new'], ['orderId'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        3247 => [[['_route' => 'returns_edit', '_controller' => 'App\\Controller\\Return\\ReturnController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        3263 => [[['_route' => 'returns_approve', '_controller' => 'App\\Controller\\Return\\ReturnController::approve'], ['id'], ['POST' => 0], null, false, false, null]],
+        3280 => [[['_route' => 'returns_complete', '_controller' => 'App\\Controller\\Return\\ReturnController::complete'], ['id'], ['POST' => 0], null, false, false, null]],
+        3295 => [[['_route' => 'returns_reject', '_controller' => 'App\\Controller\\Return\\ReturnController::reject'], ['id'], ['POST' => 0], null, false, false, null]],
+        3305 => [[['_route' => 'returns_show', '_controller' => 'App\\Controller\\Return\\ReturnController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        3340 => [[['_route' => 'returns_api_order_items', '_controller' => 'App\\Controller\\Return\\ReturnController::getOrderItems'], ['orderId'], ['GET' => 0], null, false, true, null]],
+        3375 => [[['_route' => 'returns_print_receipt', '_controller' => 'App\\Controller\\Return\\ReturnController::printReceipt'], ['id'], ['GET' => 0], null, false, true, null]],
+        3402 => [[['_route' => 'returns_print_multiple_receipts', '_controller' => 'App\\Controller\\Return\\ReturnController::printMultipleReceipts'], [], ['POST' => 0], null, false, false, null]],
+        3446 => [[['_route' => 'app_orders_toggle', '_controller' => 'App\\Controller\\Sale\\OrderController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
+        3461 => [[['_route' => 'app_orders_delete', '_controller' => 'App\\Controller\\Sale\\OrderController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        3486 => [[['_route' => 'app_orders_receipt_content', '_controller' => 'App\\Controller\\Sale\\OrderController::receiptContent'], ['id'], ['GET' => 0], null, false, false, null]],
+        3496 => [[['_route' => 'app_orders_show', '_controller' => 'App\\Controller\\Sale\\OrderController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        3523 => [[['_route' => 'app_orders_receipts_content', '_controller' => 'App\\Controller\\Sale\\OrderController::receiptsContent'], [], ['GET' => 0], null, false, false, null]],
+        3544 => [[['_route' => 'api_daily_stats', '_controller' => 'App\\Controller\\Sale\\OrderController::getDailyStats'], [], ['GET' => 0], null, false, false, null]],
+        3572 => [[['_route' => 'api_check_can_sell', '_controller' => 'App\\Controller\\Sale\\OrderController::checkCanSell'], [], ['GET' => 0], null, false, false, null]],
+        3594 => [[['_route' => 'app_orders_contact_admin', '_controller' => 'App\\Controller\\Sale\\OrderController::contactAdmin'], [], ['GET' => 0], null, false, false, null]],
+        3621 => [[['_route' => 'app_orders_print', '_controller' => 'App\\Controller\\Sale\\OrderController::printReceipt'], ['id'], ['GET' => 0], null, false, false, null]],
+        3644 => [[['_route' => 'app_orders_update_status', '_controller' => 'App\\Controller\\Sale\\OrderController::updateStatus'], ['id'], ['POST' => 0], null, false, false, null]],
+        3666 => [[['_route' => 'app_orders_download_pdf', '_controller' => 'App\\Controller\\Sale\\OrderController::downloadPdf'], ['id'], ['GET' => 0], null, false, false, null]],
+        3722 => [[['_route' => 'sale_add_product', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::addProduct'], ['id'], ['POST' => 0], null, false, true, null]],
+        3768 => [[['_route' => 'sale_update_quantity', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::updateQuantity'], ['type', 'id'], ['PUT' => 0], null, false, true, null]],
+        3800 => [[['_route' => 'sale_update_notes', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::updateNotes'], ['type', 'id'], ['PUT' => 0], null, false, true, null]],
+        3843 => [[['_route' => 'sale_remove_item', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::removeItem'], ['type', 'id'], ['DELETE' => 0], null, false, true, null]],
+        3866 => [[['_route' => 'sale_receipt', '_controller' => 'App\\Controller\\Sale\\RetailSaleController::receipt'], ['id'], ['GET' => 0], null, false, true, null]],
+        3923 => [[['_route' => 'app_stock_inventory_add_products', '_controller' => 'App\\Controller\\Stock\\InventoryController::addProducts'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        3952 => [[['_route' => 'app_stock_inventory_remove_item', '_controller' => 'App\\Controller\\Stock\\InventoryController::removeItem'], ['inventoryId', 'itemId'], ['POST' => 0], null, false, false, null]],
+        3969 => [[['_route' => 'app_stock_inventory_count', '_controller' => 'App\\Controller\\Stock\\InventoryController::count'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        3983 => [[['_route' => 'app_stock_inventory_cancel', '_controller' => 'App\\Controller\\Stock\\InventoryController::cancel'], ['id'], ['POST' => 0], null, false, false, null]],
+        4001 => [[['_route' => 'app_stock_inventory_validate', '_controller' => 'App\\Controller\\Stock\\InventoryController::validate'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        4011 => [[['_route' => 'app_stock_inventory_show', '_controller' => 'App\\Controller\\Stock\\InventoryController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        4040 => [[['_route' => 'app_stock_adjustment_show', '_controller' => 'App\\Controller\\Stock\\StockAdjustmentController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        4078 => [[['_route' => 'app_stock_transfer_start', '_controller' => 'App\\Controller\\Stock\\StockTransferController::start'], ['id'], ['POST' => 0], null, false, false, null]],
+        4094 => [[['_route' => 'app_stock_transfer_receive', '_controller' => 'App\\Controller\\Stock\\StockTransferController::receive'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        4109 => [[['_route' => 'app_stock_transfer_cancel', '_controller' => 'App\\Controller\\Stock\\StockTransferController::cancel'], ['id'], ['POST' => 0], null, false, false, null]],
+        4123 => [[['_route' => 'app_stock_transfer_print', '_controller' => 'App\\Controller\\Stock\\StockTransferController::print'], ['id'], ['GET' => 0], null, false, false, null]],
+        4133 => [[['_route' => 'app_stock_transfer_show', '_controller' => 'App\\Controller\\Stock\\StockTransferController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        4175 => [[['_route' => 'app_subscription_success', '_controller' => 'App\\Controller\\SubscriptionController::success'], ['id'], null, null, false, true, null]],
+        4235 => [[['_route' => 'super_admin_analysis_price_show', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisPriceController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        4252 => [[['_route' => 'super_admin_analysis_price_edit', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisPriceController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        4267 => [[['_route' => 'super_admin_analysis_price_toggle', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisPriceController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
+        4282 => [[['_route' => 'super_admin_analysis_price_delete', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisPriceController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        4315 => [[['_route' => 'app_super_admin_analysis_request_show', '_controller' => 'App\\Controller\\SuperAdmin\\AnalysisRequestController::show'], ['id'], ['GET' => 0], null, false, false, null]],
+        4351 => [[['_route' => 'super_admin_analysis_company_stats', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::companyStats'], ['id'], ['GET' => 0], null, false, false, null]],
+        4372 => [[['_route' => 'super_admin_analysis_new', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::new'], ['companyId'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        4392 => [[['_route' => 'super_admin_analysis_show', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        4418 => [[['_route' => 'super_admin_analysis_generate_raw', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::generateRawData'], ['id'], ['POST' => 0], null, false, false, null]],
+        4441 => [[['_route' => 'super_admin_analysis_upload_report', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::uploadFinalReport'], ['id'], ['POST' => 0], null, false, false, null]],
+        4468 => [[['_route' => 'super_admin_analysis_replace_report', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::replaceFinalReport'], ['id'], ['POST' => 0], null, false, false, null]],
+        4480 => [[['_route' => 'super_admin_analysis_retry', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::retry'], ['id'], ['POST' => 0], null, false, false, null]],
+        4508 => [[['_route' => 'super_admin_analysis_download_final', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::downloadFinalReport'], ['id'], ['GET' => 0], null, false, false, null]],
+        4520 => [[['_route' => 'super_admin_analysis_download_raw', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::downloadRawData'], ['id'], ['GET' => 0], null, false, false, null]],
+        4543 => [[['_route' => 'super_admin_analysis_payment_link', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::getPaymentLink'], ['id'], ['GET' => 0], null, false, false, null]],
+        4571 => [[['_route' => 'super_admin_analysis_send_payment_link', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::sendPaymentLink'], ['id'], ['POST' => 0], null, false, false, null]],
+        4595 => [[['_route' => 'super_admin_analysis_force_to_paid', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::forceToPaid'], ['id'], ['POST' => 0], null, false, false, null]],
+        4610 => [[['_route' => 'super_admin_analysis_cancel', '_controller' => 'App\\Controller\\SuperAdmin\\CompanyAnalysisController::cancel'], ['id'], ['POST' => 0], null, false, false, null]],
+        4650 => [[['_route' => 'app_super_admin_hma_service_show', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        4667 => [[['_route' => 'app_super_admin_hma_service_edit', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        4690 => [[['_route' => 'app_super_admin_hma_service_toggle', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::toggleStatus'], ['id'], ['POST' => 0], null, false, false, null]],
+        4705 => [[['_route' => 'app_super_admin_hma_service_delete', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        4727 => [[['_route' => 'app_super_admin_hma_service_subscriptions', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::subscriptions'], ['id'], ['GET' => 0], null, false, false, null]],
+        4753 => [[['_route' => 'app_super_admin_hma_service_export', '_controller' => 'App\\Controller\\SuperAdmin\\HmaServiceController::export'], ['format'], ['GET' => 0], null, false, true, null]],
+        4779 => [[['_route' => 'super_admin_payment_show', '_controller' => 'App\\Controller\\SuperAdmin\\PaymentController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        4815 => [[['_route' => 'super_admin_subscription_show', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        4848 => [[['_route' => 'super_admin_subscription_export', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionController::export'], ['company', 'format'], ['GET' => 0], null, false, true, null]],
+        4877 => [[['_route' => 'app_super_admin_subscription_plan_show', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        4894 => [[['_route' => 'app_super_admin_subscription_plan_edit', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        4909 => [[['_route' => 'app_super_admin_subscription_plan_toggle', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
+        4919 => [[['_route' => 'app_super_admin_subscription_plan_delete', '_controller' => 'App\\Controller\\SuperAdmin\\SubscriptionPlanController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        4966 => [
             [['_route' => 'supplier_credit_note_respond', '_controller' => 'App\\Controller\\SupplierCreditNoteResponseController::respond'], ['token'], ['GET' => 0, 'POST' => 1], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

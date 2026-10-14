@@ -1,17 +1,19 @@
 <?php
+// src/Controller/Admin/ProductController.php
 
 namespace App\Controller\Admin;
 
 use App\Entity\HmaService;
 use App\Entity\Product;
 use App\Entity\User;
-use App\Entity\stockMovement;
+use App\Entity\StockMovement;
 use App\Entity\Promotion;
 use App\Form\ProductType;
 use App\Service\UniqueNameValidator;
+use App\Service\StockSyncService;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
-use App\Service\UnitConverter; 
+use App\Service\UnitConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,15 +31,29 @@ final class ProductController extends AbstractController
     public function __construct(
         private readonly SluggerInterface $slugger,
         private readonly UnitConverter $unitConverter,
-        private readonly UniqueNameValidator $uniqueNameValidator
+        private readonly UniqueNameValidator $uniqueNameValidator,
+        private readonly StockSyncService $stockSyncService
     ) {}
 
+    /**
+     * ✅ Récupère l'entreprise associée à l'utilisateur connecté.
+     * Gère les 2 cas : User OU HmaService connecté.
+     */
     private function getCurrentHmaService(): ?HmaService
     {
         $user = $this->getUser();
         if (!$user) return null;
-        if ($user instanceof HmaService) return $user;
-        if ($user instanceof \App\Entity\User) return $user->getHmaService();
+        
+        // Cas 1 : c'est un User
+        if ($user instanceof \App\Entity\User) {
+            return $user->getHmaService();
+        }
+        
+        // Cas 2 : c'est un HmaService
+        if ($user instanceof HmaService) {
+            return $user;
+        }
+        
         return null;
     }
 
@@ -82,181 +98,75 @@ final class ProductController extends AbstractController
         $prescriptionRequired = $request->query->get('prescription_required', '');
         $promotionId = $request->query->getInt('promotion', 0);
         $unit = $request->query->get('unit', '');
-        $visibility = $request->query->get('visibility', ''); // ✅ Nouveau paramètre
+        $visibility = $request->query->get('visibility', '');
 
-        // Récupérer les promotions de l'entreprise pour le select
         $promotions = $entityManager->getRepository(Promotion::class)->findBy(
             ['hma_service' => $hmaService, 'is_active' => true],
             ['name' => 'ASC']
         );
 
         $categories = $categoryRepository->findHierarchicalCategoriesWithCount();
-
-        // Récupérer les unités supportées
         $units = $productRepository->findDistinctUnits($hmaService);
 
         $paginator = $productRepository->findFilteredPaginated(
-            $hmaService,
-            $categoryId,
-            $status,
-            $expiryType,
-            $subscriptionStatus,
-            $dosage,
-            $form,
-            $prescriptionRequired,
-            $search,
-            $page,
-            $limit,
-            $promotionId > 0 ? $promotionId : null,
-            $unit,
-            $visibility // ✅ Ajout du paramètre visibilité
+            $hmaService, $categoryId, $status, $expiryType, $subscriptionStatus,
+            $dosage, $form, $prescriptionRequired, $search, $page, $limit,
+            $promotionId > 0 ? $promotionId : null, $unit, $visibility
         );
 
         $totalFiltered = $productRepository->countFiltered(
-            $hmaService,
-            $categoryId,
-            $status,
-            $expiryType,
-            $subscriptionStatus,
-            $dosage,
-            $form,
-            $prescriptionRequired,
-            $search,
-            $promotionId > 0 ? $promotionId : null,
-            $unit,
-            $visibility
+            $hmaService, $categoryId, $status, $expiryType, $subscriptionStatus,
+            $dosage, $form, $prescriptionRequired, $search,
+            $promotionId > 0 ? $promotionId : null, $unit, $visibility
         );
         $activeFiltered = $productRepository->countFiltered(
-            $hmaService,
-            $categoryId,
-            'active',
-            $expiryType,
-            $subscriptionStatus,
-            $dosage,
-            $form,
-            $prescriptionRequired,
-            $search,
-            $promotionId > 0 ? $promotionId : null,
-            $unit,
-            $visibility
+            $hmaService, $categoryId, 'active', $expiryType, $subscriptionStatus,
+            $dosage, $form, $prescriptionRequired, $search,
+            $promotionId > 0 ? $promotionId : null, $unit, $visibility
         );
         $inactiveFiltered = $productRepository->countFiltered(
-            $hmaService,
-            $categoryId,
-            'inactive',
-            $expiryType,
-            $subscriptionStatus,
-            $dosage,
-            $form,
-            $prescriptionRequired,
-            $search,
-            $promotionId > 0 ? $promotionId : null,
-            $unit,
-            $visibility
+            $hmaService, $categoryId, 'inactive', $expiryType, $subscriptionStatus,
+            $dosage, $form, $prescriptionRequired, $search,
+            $promotionId > 0 ? $promotionId : null, $unit, $visibility
         );
         $lowStockFiltered = $productRepository->countFiltered(
-            $hmaService,
-            $categoryId,
-            'low-stock',
-            $expiryType,
-            $subscriptionStatus,
-            $dosage,
-            $form,
-            $prescriptionRequired,
-            $search,
-            $promotionId > 0 ? $promotionId : null,
-            $unit,
-            $visibility
+            $hmaService, $categoryId, 'low-stock', $expiryType, $subscriptionStatus,
+            $dosage, $form, $prescriptionRequired, $search,
+            $promotionId > 0 ? $promotionId : null, $unit, $visibility
         );
         $perishableFiltered = $productRepository->countFiltered(
-            $hmaService,
-            $categoryId,
-            '',
-            'perishable',
-            $subscriptionStatus,
-            $dosage,
-            $form,
-            $prescriptionRequired,
-            $search,
-            $promotionId > 0 ? $promotionId : null,
-            $unit,
-            $visibility
+            $hmaService, $categoryId, '', 'perishable', $subscriptionStatus,
+            $dosage, $form, $prescriptionRequired, $search,
+            $promotionId > 0 ? $promotionId : null, $unit, $visibility
         );
         $nonPerishableFiltered = $productRepository->countFiltered(
-            $hmaService,
-            $categoryId,
-            '',
-            'non-perishable',
-            $subscriptionStatus,
-            $dosage,
-            $form,
-            $prescriptionRequired,
-            $search,
-            $promotionId > 0 ? $promotionId : null,
-            $unit,
-            $visibility
+            $hmaService, $categoryId, '', 'non-perishable', $subscriptionStatus,
+            $dosage, $form, $prescriptionRequired, $search,
+            $promotionId > 0 ? $promotionId : null, $unit, $visibility
         );
-
         $subscriptionActiveFiltered = $productRepository->countFiltered(
-            $hmaService,
-            $categoryId,
-            $status,
-            $expiryType,
-            'active',
-            $dosage,
-            $form,
-            $prescriptionRequired,
-            $search,
-            $promotionId > 0 ? $promotionId : null,
-            $unit,
-            $visibility
+            $hmaService, $categoryId, $status, $expiryType, 'active',
+            $dosage, $form, $prescriptionRequired, $search,
+            $promotionId > 0 ? $promotionId : null, $unit, $visibility
         );
         $subscriptionInactiveFiltered = $productRepository->countFiltered(
-            $hmaService,
-            $categoryId,
-            $status,
-            $expiryType,
-            'inactive',
-            $dosage,
-            $form,
-            $prescriptionRequired,
-            $search,
-            $promotionId > 0 ? $promotionId : null,
-            $unit,
-            $visibility
+            $hmaService, $categoryId, $status, $expiryType, 'inactive',
+            $dosage, $form, $prescriptionRequired, $search,
+            $promotionId > 0 ? $promotionId : null, $unit, $visibility
         );
 
-        // ✅ Statistiques de visibilité (pour les pharmacies)
         $visibleFiltered = 0;
         $hiddenFiltered = 0;
         if ($companyType === 'pharmacy') {
             $visibleFiltered = $productRepository->countFiltered(
-                $hmaService,
-                $categoryId,
-                $status,
-                $expiryType,
-                $subscriptionStatus,
-                $dosage,
-                $form,
-                $prescriptionRequired,
-                $search,
-                $promotionId > 0 ? $promotionId : null,
-                $unit,
-                'visible'
+                $hmaService, $categoryId, $status, $expiryType, $subscriptionStatus,
+                $dosage, $form, $prescriptionRequired, $search,
+                $promotionId > 0 ? $promotionId : null, $unit, 'visible'
             );
             $hiddenFiltered = $productRepository->countFiltered(
-                $hmaService,
-                $categoryId,
-                $status,
-                $expiryType,
-                $subscriptionStatus,
-                $dosage,
-                $form,
-                $prescriptionRequired,
-                $search,
-                $promotionId > 0 ? $promotionId : null,
-                $unit,
-                'hidden'
+                $hmaService, $categoryId, $status, $expiryType, $subscriptionStatus,
+                $dosage, $form, $prescriptionRequired, $search,
+                $promotionId > 0 ? $promotionId : null, $unit, 'hidden'
             );
         }
 
@@ -279,7 +189,7 @@ final class ProductController extends AbstractController
             'selectedStatus' => $status,
             'selectedExpiryType' => $expiryType,
             'selectedSubscriptionStatus' => $subscriptionStatus,
-            'selectedVisibility' => $visibility, // ✅ Passage du filtre de visibilité
+            'selectedVisibility' => $visibility,
             'dosage' => $dosage,
             'form' => $form,
             'prescriptionRequired' => $prescriptionRequired,
@@ -292,8 +202,8 @@ final class ProductController extends AbstractController
             'nonPerishableFiltered' => $nonPerishableFiltered,
             'subscriptionActiveFiltered' => $subscriptionActiveFiltered,
             'subscriptionInactiveFiltered' => $subscriptionInactiveFiltered,
-            'visibleFiltered' => $visibleFiltered, // ✅ Pour les pharmacies
-            'hiddenFiltered' => $hiddenFiltered,   // ✅ Pour les pharmacies
+            'visibleFiltered' => $visibleFiltered,
+            'hiddenFiltered' => $hiddenFiltered,
             'activeCount' => $activeCount,
             'quota' => $quota === PHP_INT_MAX ? 'Illimité' : $quota,
             'quotaReached' => $quotaReached,
@@ -311,30 +221,40 @@ final class ProductController extends AbstractController
     {
         $this->checkAccess();
 
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-        if (!$user) {
-            throw new AccessDeniedException('Utilisateur non connecté.');
-        }
-
-        // Recharger l'utilisateur depuis l'entity manager pour garantir qu'il est géré
-        $user = $entityManager->getRepository(\App\Entity\User::class)->find($user->getId());
-        if (!$user) {
-            throw new AccessDeniedException('Utilisateur introuvable.');
-        }
-
-        $hmaService = $user->getHmaService();
+        // ✅ Utilise getCurrentHmaService() qui gère les 2 cas
+        $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw new AccessDeniedException('Aucun service associé à votre compte.');
         }
 
-        // Recharger le service (optionnel, mais sécurise)
+        // ✅ Recharger le service pour être sûr qu'il est managé
         $hmaService = $entityManager->getRepository(HmaService::class)->find($hmaService->getId());
         if (!$hmaService) {
             throw new AccessDeniedException('Service introuvable.');
         }
 
-        // Vérification du quota
+        // ✅ Récupérer un User managé pour la relation
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedException('Utilisateur non connecté.');
+        }
+        
+        // Si c'est déjà un User, le recharger
+        if ($user instanceof \App\Entity\User) {
+            $user = $entityManager->getRepository(\App\Entity\User::class)->find($user->getId());
+        } else {
+            // Si c'est un HmaService connecté, chercher le User owner
+            $user = $entityManager->getRepository(\App\Entity\User::class)->findOneBy([
+                'hma_service_id' => $hmaService->getId(),
+                'is_hma_owner' => true
+            ]);
+        }
+        
+        if (!$user) {
+            throw new AccessDeniedException('Propriétaire de l\'entreprise introuvable.');
+        }
+
         $activeCount = $entityManager->getRepository(Product::class)->countActive($hmaService);
         $limits = $hmaService->getCurrentLimits();
         $quota = $limits['max_products'] ?? PHP_INT_MAX;
@@ -348,16 +268,17 @@ final class ProductController extends AbstractController
                 ->setHmaService($hmaService)
                 ->setCreatedAt(new \DateTime())
                 ->setImage(self::DEFAULT_PRODUCT_IMAGE)
-                ->setBarcode($this->generateBarcode());
+                ->setBarcode($this->generateBarcode())
+                ->setStockQuantity(0);  // ✅ Stock initial = 0
 
         $form = $this->createForm(ProductType::class, $product, [
             'hma_service' => $hmaService,
+            'is_new' => true,
         ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // ✅ Vérification de l'unicité du nom
             $validation = $this->uniqueNameValidator->validate($product, Product::class, 'produit', $hmaService->getId());
 
             if (!$validation['valid']) {
@@ -367,11 +288,10 @@ final class ProductController extends AbstractController
                     'product' => $product
                 ]);
             }
-            // Slug
+            
             $slug = $this->slugger->slug($product->getName())->lower();
             $product->setSlug($slug);
 
-            // Gestion de l'image
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
@@ -382,7 +302,7 @@ final class ProductController extends AbstractController
             $entityManager->persist($product);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Produit créé avec succès.');
+            $this->addFlash('success', 'Produit créé avec succès. Le stock sera mis à jour automatiquement après vos premiers mouvements de stock.');
             return $this->redirectToRoute('app_admin_product_index');
         }
 
@@ -403,9 +323,12 @@ final class ProductController extends AbstractController
         }
         $this->checkOwnership($product, $hmaService);
         
+        // ✅ Synchroniser avant affichage
+        $this->stockSyncService->syncProductStock($product);
+        
         return $this->render('admin/product/show.html.twig', [
             'product' => $product,
-            'currentStock' => $product->getCurrentStock(), 
+            'currentStock' => $product->getStockQuantity(),
             'companyType' => $hmaService->getType(),
         ]);
     }
@@ -415,68 +338,25 @@ final class ProductController extends AbstractController
     {
         $this->checkAccess();
 
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-        if (!$user) {
-            throw new AccessDeniedException('Utilisateur non connecté.');
-        }
-
-        $hmaService = $user->getHmaService();
+        // ✅ Utilise getCurrentHmaService()
+        $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw new AccessDeniedException('Aucun service associé.');
         }
 
         $this->checkOwnership($product, $hmaService);
-        
-        // Vérifier si l'utilisateur peut modifier le stock (seul l'admin)
-        $canEditStock = $this->isGranted('ROLE_ADMIN');
-        
-        // Sauvegarder l'ancienne valeur du stock pour traçabilité
-        $oldStockQuantity = $product->getStockQuantity();
-        $oldUpdatedBy = $product->getLastStockUpdatedBy();
-        $oldUpdatedAt = $product->getLastStockUpdatedAt();
 
         $oldImage = $product->getImage();
         
         $form = $this->createForm(ProductType::class, $product, [
             'hma_service' => $hmaService,
-            'can_edit_stock' => $canEditStock,
+            'is_new' => false,
+            'can_edit_stock' => false,
         ]);
         
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Vérifier si le stock a changé
-            $newStockQuantity = $product->getStockQuantity();
-            
-            if ($oldStockQuantity != $newStockQuantity) {
-                // Seul l'admin peut modifier le stock
-                if (!$canEditStock) {
-                    $this->addFlash('error', 'Seul un administrateur peut modifier le stock manuellement. Contactez votre administrateur.');
-                    // Restaurer l'ancienne valeur
-                    $product->setStockQuantity($oldStockQuantity);
-                } else {
-                    // 🔥 CORRECTION : Récupérer l'utilisateur géré par Doctrine
-                    $managedUser = $entityManager->getRepository(\App\Entity\User::class)->find($user->getId());
-                    
-                    // Enregistrer la traçabilité avec l'utilisateur géré
-                    $product->setLastStockUpdatedBy($managedUser);
-                    $product->setLastStockUpdatedAt(new \DateTime());
-                    
-                    $difference = $newStockQuantity - $oldStockQuantity;
-                    $this->addFlash('info', sprintf(
-                        'Stock modifié manuellement : %+d %s. Cette action a été enregistrée.',
-                        $difference,
-                        $product->getUnit() ?? 'pièce(s)'
-                    ));
-                }
-            } else {
-                // Restaurer les anciennes valeurs de traçabilité si le stock n'a pas changé
-                $product->setLastStockUpdatedBy($oldUpdatedBy);
-                $product->setLastStockUpdatedAt($oldUpdatedAt);
-            }
-            
-            // ✅ Vérification de l'unicité du nom
             $validation = $this->uniqueNameValidator->validate($product, Product::class, 'produit', $hmaService->getId());
 
             if (!$validation['valid']) {
@@ -485,15 +365,12 @@ final class ProductController extends AbstractController
                     'product' => $product,
                     'form' => $form,
                     'companyType' => $hmaService->getType(),
-                    'canEditStock' => $canEditStock,
                 ]);
             }
             
-            // Mettre à jour le slug si le nom a changé
             $newSlug = $this->slugger->slug($product->getName())->lower();
             $product->setSlug($newSlug);
 
-            // Gestion de l'image
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 if ($oldImage && $oldImage !== self::DEFAULT_PRODUCT_IMAGE) {
@@ -510,6 +387,9 @@ final class ProductController extends AbstractController
             $product->setUpdatedAt(new \DateTime());
             $entityManager->flush();
 
+            // ✅ Synchroniser après modification
+            $this->stockSyncService->syncProductStock($product);
+
             $this->addFlash('success', 'Produit modifié avec succès.');
             return $this->redirectToRoute('app_admin_product_show', ['id' => $product->getId()]);
         }
@@ -518,7 +398,6 @@ final class ProductController extends AbstractController
             'product' => $product,
             'form' => $form,
             'companyType' => $hmaService->getType(),
-            'canEditStock' => $canEditStock,
         ]);
     }
 
@@ -527,23 +406,18 @@ final class ProductController extends AbstractController
     {
         $this->checkAccess();
 
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-        if (!$user) {
-            throw new AccessDeniedException('Utilisateur non connecté.');
-        }
-        $hmaService = $user->getHmaService();
+        // ✅ Utilise getCurrentHmaService()
+        $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw new AccessDeniedException('Aucun service associé.');
         }
+        
         $this->checkOwnership($product, $hmaService);
 
-        // Vérification du token CSRF (avec l'ID du produit)
         if (!$this->isCsrfTokenValid('toggle-status' . $product->getId(), $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide');
         }
 
-        // Inverser le statut
         $product->setIsActive(!$product->isActive());
         $product->setUpdatedAt(new \DateTime());
         $entityManager->flush();
@@ -551,7 +425,6 @@ final class ProductController extends AbstractController
         $status = $product->isActive() ? 'activé' : 'désactivé';
         $this->addFlash('success', "Produit {$status} avec succès.");
 
-        // Redirection vers la page de détail du produit
         return $this->redirectToRoute('app_admin_product_show', ['id' => $product->getId()]);
     }
 
@@ -560,13 +433,8 @@ final class ProductController extends AbstractController
     {
         $this->checkAccess();
 
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-        if (!$user) {
-            throw new AccessDeniedException('Utilisateur non connecté.');
-        }
-
-        $hmaService = $user->getHmaService();
+        // ✅ Utilise getCurrentHmaService()
+        $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw new AccessDeniedException('Aucun service associé.');
         }
@@ -600,13 +468,8 @@ final class ProductController extends AbstractController
             throw new AccessDeniedException('Seul l\'admin peut supprimer.');
         }
 
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-        if (!$user) {
-            throw new AccessDeniedException('Utilisateur non connecté.');
-        }
-
-        $hmaService = $user->getHmaService();
+        // ✅ Utilise getCurrentHmaService()
+        $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw new AccessDeniedException('Aucun service associé.');
         }
@@ -637,18 +500,16 @@ final class ProductController extends AbstractController
     {
         $this->checkAccess();
 
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-        if (!$user) {
-            throw new AccessDeniedException('Utilisateur non connecté.');
-        }
-
-        $hmaService = $user->getHmaService();
+        // ✅ Utilise getCurrentHmaService()
+        $hmaService = $this->getCurrentHmaService();
         if (!$hmaService) {
             throw new AccessDeniedException('Aucun service associé.');
         }
 
         $this->checkOwnership($product, $hmaService);
+
+        // ✅ Synchroniser avant renvoi
+        $this->stockSyncService->syncProductStock($product);
 
         return $this->json([
             'id' => $product->getId(),
@@ -764,7 +625,6 @@ final class ProductController extends AbstractController
         }
         $this->checkOwnership($product, $hmaService);
 
-        // Récupérer les paramètres de filtre
         $page = $request->query->getInt('page', 1);
         $limit = 15;
         $movementType = $request->query->get('movement_type', '');
@@ -773,7 +633,6 @@ final class ProductController extends AbstractController
         $sort = $request->query->get('sort', 'created_at');
         $direction = $request->query->get('direction', 'desc');
 
-        // Construire la requête
         $qb = $entityManager->createQueryBuilder()
             ->select('sm')
             ->from(StockMovement::class, 'sm')
@@ -782,7 +641,6 @@ final class ProductController extends AbstractController
             ->setParameter('product', $product)
             ->setParameter('hmaService', $hmaService);
 
-        // Filtre par type de mouvement
         if ($movementType) {
             if (str_starts_with($movementType, 'all_')) {
                 $category = substr($movementType, 4);
@@ -804,7 +662,6 @@ final class ProductController extends AbstractController
             }
         }
 
-        // Filtre par dates
         if ($dateFrom) {
             $qb->andWhere('sm.created_at >= :dateFrom')
                 ->setParameter('dateFrom', new \DateTime($dateFrom . ' 00:00:00'));
@@ -814,20 +671,15 @@ final class ProductController extends AbstractController
                 ->setParameter('dateTo', new \DateTime($dateTo . ' 23:59:59'));
         }
 
-        // Tri
         $qb->orderBy('sm.' . $sort, $direction);
 
-        // Pagination
         $totalItems = count($qb->getQuery()->getResult());
         $totalPages = ceil($totalItems / $limit);
         $offset = ($page - 1) * $limit;
 
-        $qb->setFirstResult($offset)
-            ->setMaxResults($limit);
-
+        $qb->setFirstResult($offset)->setMaxResults($limit);
         $movements = $qb->getQuery()->getResult();
 
-        // Statistiques
         $stats = [
             'total_movements' => $totalItems,
             'total_in' => $entityManager->createQueryBuilder()
@@ -854,7 +706,6 @@ final class ProductController extends AbstractController
                 ->getSingleScalarResult() ?? 0,
         ];
 
-        // Statistiques par type
         $movementTypeStats = [];
         $types = ['purchase_in', 'sale_out', 'adjustment_in', 'adjustment_out', 'return_in', 'return_out', 'transfer_in', 'transfer_out'];
         foreach ($types as $type) {
@@ -872,44 +723,22 @@ final class ProductController extends AbstractController
             $movementTypeStats[$type] = $count;
         }
 
-        // Récupérer les utilisateurs pour le filtre
         $users = $entityManager->getRepository(User::class)
             ->findBy(['hma_service_id' => $hmaService]);
 
-        // Hiérarchie des mouvements pour le filtre
         $movementHierarchy = [
-            'Achats' => [
-                'children' => [
-                    'purchase_in' => ['label' => 'Achat', 'icon' => 'fas fa-shopping-cart']
-                ]
-            ],
-            'Ventes' => [
-                'children' => [
-                    'sale_out' => ['label' => 'Vente', 'icon' => 'fas fa-tag']
-                ]
-            ],
-            'Ajustements' => [
-                'children' => [
-                    'adjustment_in' => ['label' => 'Ajustement (+)', 'icon' => 'fas fa-plus-circle'],
-                    'adjustment_out' => ['label' => 'Ajustement (-)', 'icon' => 'fas fa-minus-circle']
-                ]
-            ],
-            'Retours clients' => [
-                'children' => [
-                    'return_in' => ['label' => 'Retour client', 'icon' => 'fas fa-undo-alt']
-                ]
-            ],
-            'Retours fournisseurs' => [
-                'children' => [
-                    'return_out' => ['label' => 'Retour fournisseur', 'icon' => 'fas fa-truck-loading']
-                ]
-            ],
-            'Transferts' => [
-                'children' => [
-                    'transfer_in' => ['label' => 'Transfert entrant', 'icon' => 'fas fa-arrow-right'],
-                    'transfer_out' => ['label' => 'Transfert sortant', 'icon' => 'fas fa-arrow-left']
-                ]
-            ]
+            'Achats' => ['children' => ['purchase_in' => ['label' => 'Achat', 'icon' => 'fas fa-shopping-cart']]],
+            'Ventes' => ['children' => ['sale_out' => ['label' => 'Vente', 'icon' => 'fas fa-tag']]],
+            'Ajustements' => ['children' => [
+                'adjustment_in' => ['label' => 'Ajustement (+)', 'icon' => 'fas fa-plus-circle'],
+                'adjustment_out' => ['label' => 'Ajustement (-)', 'icon' => 'fas fa-minus-circle']
+            ]],
+            'Retours clients' => ['children' => ['return_in' => ['label' => 'Retour client', 'icon' => 'fas fa-undo-alt']]],
+            'Retours fournisseurs' => ['children' => ['return_out' => ['label' => 'Retour fournisseur', 'icon' => 'fas fa-truck-loading']]],
+            'Transferts' => ['children' => [
+                'transfer_in' => ['label' => 'Transfert entrant', 'icon' => 'fas fa-arrow-right'],
+                'transfer_out' => ['label' => 'Transfert sortant', 'icon' => 'fas fa-arrow-left']
+            ]]
         ];
 
         return $this->render('admin/product/stock_movements.html.twig', [
