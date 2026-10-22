@@ -136,7 +136,16 @@ final class SupplierController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($supplier);
+
+            // ✅ CORRECTION : synchronise le compteur HmaService (supplierCount +1)
+            $hmaService->addSupplier($supplier);
+
             $entityManager->flush();
+
+            // ✅ CORRECTION : recalcule le compteur après flush (valeur définitive)
+            $hmaService->refreshCounter('suppliers');
+            $entityManager->flush();
+
             $this->addFlash('success', 'Fournisseur créé avec succès.');
             return $this->redirectToRoute('app_admin_supplier_index');
         }
@@ -171,6 +180,11 @@ final class SupplierController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $supplier->setUpdatedAt(new \DateTime());
             $entityManager->flush();
+
+            // ✅ CORRECTION : recalcule le compteur (peut changer si subscription_active a été modifié)
+            $hmaService->refreshCounter('suppliers');
+            $entityManager->flush();
+
             $this->addFlash('success', 'Fournisseur modifié avec succès.');
             return $this->redirectToRoute('app_admin_supplier_show', ['id' => $supplier->getId()]);
         }
@@ -196,6 +210,10 @@ final class SupplierController extends AbstractController
         $supplier->setUpdatedAt(new \DateTime());
         $entityManager->flush();
 
+        // ✅ CORRECTION : si isSubscriptionActive dépend de isActive, le compteur change
+        $hmaService->refreshCounter('suppliers');
+        $entityManager->flush();
+
         $status = $supplier->isActive() ? 'activé' : 'désactivé';
         $this->addFlash('success', "Fournisseur {$status} avec succès.");
         return $this->redirectToRoute('app_admin_supplier_index');
@@ -216,8 +234,17 @@ final class SupplierController extends AbstractController
                 $this->addFlash('error', 'Impossible de supprimer ce fournisseur (lié à des achats).');
                 return $this->redirectToRoute('app_admin_supplier_index');
             }
+
+            // ✅ CORRECTION : retire de la collection HmaService (supplierCount -1)
+            $hmaService->removeSupplier($supplier);
+
             $entityManager->remove($supplier);
             $entityManager->flush();
+
+            // ✅ CORRECTION : recalcule après suppression définitive
+            $hmaService->refreshCounter('suppliers');
+            $entityManager->flush();
+
             $this->addFlash('success', 'Fournisseur supprimé.');
         }
         return $this->redirectToRoute('app_admin_supplier_index');

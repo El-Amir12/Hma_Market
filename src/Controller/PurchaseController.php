@@ -20,6 +20,7 @@ use App\Repository\SupplierRepository;
 use App\Service\SupplierCreditNoteService;
 use App\Service\PurchaseFlowService;
 use App\Service\InvoicePdfGenerator;
+use App\Service\StockSyncService;   // ✅ AJOUT
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,7 +37,8 @@ class PurchaseController extends AbstractController
         private EntityManagerInterface $em,
         private PurchaseFlowService $purchaseFlowService,
         private LoggerInterface $logger,
-        private InvoicePdfGenerator $pdfGenerator
+        private InvoicePdfGenerator $pdfGenerator,
+        private StockSyncService $stockSyncService,   // ✅ AJOUT
     ) {
     }
 
@@ -438,9 +440,18 @@ class PurchaseController extends AbstractController
     /**
      * Traite la réception avec création des lots, des avoirs, du reçu
      *
-     * ✅ CORRECTION : Utilise StockSyncService pour mettre à jour stock_quantity
-     * à partir de la somme des lots actifs (au lieu de ne rien faire ou de
-     * modifier manuellement stock_quantity).
+     * ✅ CORRECTION : Utilise StockSyncService::syncProductStockAndFlush() pour
+     * garantir la persistance de Product.stock_quantity en base.
+     *
+     * ⚠️ AVANT : on appelait syncProductStock() (sans flush) → les modifications
+     * restaient en mémoire et étaient perdues (notamment à cause du refresh()
+     * et du flush() ultérieur qui ne portait que sur $purchase).
+     *
+     * ✅ MAINTENANT :
+     *   1. Persist de tous les lots + mouvements
+     *   2. flush() #1 → les lots sont en DB
+     *   3. Pour chaque produit touché : refresh() PUIS syncProductStockAndFlush()
+     *      → stock_quantity recalculé et immédiatement persisté (flush #2)
      */
     private function processReceptionWithIssues(
         Purchase $purchase,
@@ -593,34 +604,37 @@ class PurchaseController extends AbstractController
         $this->em->persist($purchase);
 
         // ✅ 1er FLUSH : persiste tous les lots et mouvements
+        //    (indispensable pour que StockSyncService puisse les lire depuis la DB)
         $this->em->flush();
 
         // ✅ 2e ÉTAPE : synchroniser Product.stock_quantity = somme des lots actifs
-        // On utilise le service dédié qui recharge les lots frais depuis la DB.
+        //    ⚠️ CORRECTION : on utilise syncProductStockAndFlush() (et non syncProductStock())
+        //    pour garantir la persistance immédiate en base.
         foreach (array_keys($touchedProductIds) as $productId) {
             try {
                 $product = $this->em->getRepository(Product::class)->find($productId);
-                if ($product) {
-                    // Recharger le produit pour avoir une collection de lots fraîche
-                    $this->em->refresh($product);
-
-                    // Utiliser StockSyncService (injecté via PurchaseFlowService)
-                    // On peut aussi l'injecter directement si besoin.
-                    $syncService = $this->container->get(\App\Service\StockSyncService::class);
-                    $syncResult = $syncService->syncProductStock($product);
-
-                    $this->logger->info('Stock synchronisé après réception', [
-                        'product_id' => $product->getId(),
-                        'product_name' => $product->getName(),
-                        'old_stock' => $syncResult['old_stock_quantity'],
-                        'new_stock' => $syncResult['new_stock_quantity'],
-                        'batches_count' => $syncResult['active_batches_count'],
-                    ]);
+                if (!$product) {
+                    continue;
                 }
+
+                // Recharger le produit pour avoir une collection de lots fraîche
+                // (les lots viennent d'être flushés au-dessus)
+                $this->em->refresh($product);
+
+                // ✅ CORRECTION CRITIQUE : syncProductStockAndFlush() et non syncProductStock()
+                $syncResult = $this->stockSyncService->syncProductStockAndFlush($product);
+
+                $this->logger->info('Stock synchronisé après réception', [
+                    'product_id' => $product->getId(),
+                    'product_name' => $product->getName(),
+                    'old_stock' => $syncResult['old_stock_quantity'],
+                    'new_stock' => $syncResult['new_stock_quantity'],
+                ]);
             } catch (\Exception $e) {
                 $this->logger->error('Erreur sync stock après réception', [
                     'product_id' => $productId,
                     'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
                 ]);
             }
         }
@@ -636,6 +650,8 @@ class PurchaseController extends AbstractController
             $this->logger->error('Erreur lors de la génération du reçu', ['error' => $e->getMessage()]);
         }
 
+        // ✅ Flush final : persiste le chemin du reçu sur Purchase
+        //    (les stocks sont déjà flushés par syncProductStockAndFlush ci-dessus)
         $this->em->flush();
 
         // ✅ Envoi de la notification (uniquement si fournisseur)

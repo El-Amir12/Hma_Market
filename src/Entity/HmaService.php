@@ -43,7 +43,7 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             'max_categories' => 15,
             'max_suppliers' => 5,
             'max_recipes' => 15,
-            'max_categories_recipes' => 2,
+            'max_categories_recipes' => 20,
             'features' => ['basic_inventory', 'basic_reports']
         ],
         self::PLAN_BASIC => [
@@ -1754,6 +1754,55 @@ class HmaService implements UserInterface, PasswordAuthenticatedUserInterface
             return true;
         }
         return false;
+    }
+
+    // ==================== ✅ MÉTHODES DE RAFRAÎCHISSEMENT CIBLÉ ====================
+
+    /**
+     * ✅ Recalcule UN SEUL compteur à la volée depuis la collection.
+     * Utile pour corriger juste ce qu'on a modifié, sans recalculer les 6.
+     *
+     * @param string $type Un des types : 'products', 'categories', 'orders',
+     *                     'users', 'suppliers', 'recipes'
+     * @return int La nouvelle valeur du compteur
+     */
+    public function refreshCounter(string $type): int
+    {
+        $value = match ($type) {
+            'products'   => $this->products->filter(fn(Product $p) => $p->isSubscriptionActive() !== false)->count(),
+            'categories' => $this->categories->filter(fn(Category $c) => $c->isSubscriptionActive() !== false)->count(),
+            'orders'     => $this->orders->count(),
+            'users'      => $this->users->filter(fn(User $u) => $u->isSubscriptionActive() !== false)->count(),
+            'suppliers'  => $this->suppliers->filter(fn(Supplier $s) => $s->isSubscriptionActive() !== false)->count(),
+            'recipes'    => $this->recipes->filter(fn(Recipe $r) => $r->isSubscriptionActive() !== false)->count(),
+            default      => throw new \InvalidArgumentException("Type de compteur inconnu : {$type}"),
+        };
+
+        // Mettre à jour la propriété correspondante
+        match ($type) {
+            'products'   => $this->productCount   = $value,
+            'categories' => $this->categoryCount  = $value,
+            'orders'     => $this->orderCount     = $value,
+            'users'      => $this->userCount      = $value,
+            'suppliers'  => $this->supplierCount  = $value,
+            'recipes'    => $this->recipeCount    = $value,
+        };
+
+        return $value;
+    }
+
+    /**
+     * ✅ Recalcule TOUS les compteurs à la volée.
+     * Utile pour les commandes de maintenance ou après des opérations en masse.
+     */
+    public function refreshCounters(): void
+    {
+        $this->refreshCounter('products');
+        $this->refreshCounter('categories');
+        $this->refreshCounter('orders');
+        $this->refreshCounter('users');
+        $this->refreshCounter('suppliers');
+        $this->refreshCounter('recipes');
     }
 
 }

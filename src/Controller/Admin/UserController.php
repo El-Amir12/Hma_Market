@@ -227,16 +227,14 @@ class UserController extends AbstractController
             
             // ✅ Vérification des quotas pour le rôle choisi
             $role = $form->get('roles')->getData();
-            $hmaService = $user->getHmaService(); // Récupérer l'entreprise associée
+            $hmaService = $user->getHmaService();
             if (!$isSuperAdmin && !User::canBeCreatedBy($currentUser, $role, $this->userRepository, $hmaService)) {
-                // ✅ Ajout du message flash
                 $this->addFlash('error', sprintf(
                     'Quota atteint pour le rôle %s. Maximum %d utilisateur(s) autorisé(s).',
                     User::getRoleLabelStatic($role),
                     $hmaService->getCurrentLimits()['max_users_per_role']
                 ));
                 
-                // Renvoie le formulaire avec l'indicateur de quota atteint
                 return $this->render('admin/user/new.html.twig', [
                     'target_user' => $user,
                     'form' => $form->createView(),
@@ -274,7 +272,21 @@ class UserController extends AbstractController
             );
 
             $this->entityManager->persist($user);
+
+            // ✅ CORRECTION : synchronise le compteur HmaService (userCount +1)
+            //    Uniquement si on a un hmaService (cas admin entreprise, pas super admin)
+            if ($hmaService instanceof HmaService && !$isSuperAdmin) {
+                $hmaService->addUser($user);
+            }
+
             $this->entityManager->flush();
+
+            // ✅ CORRECTION : recalcule le compteur avec la valeur définitive
+            //    (après flush, isSubscriptionActive() est bien persisté)
+            if ($hmaService instanceof HmaService && !$isSuperAdmin) {
+                $hmaService->refreshCounter('users');
+                $this->entityManager->flush();
+            }
 
             // Envoyer l'email de bienvenue
             try {
@@ -309,9 +321,7 @@ class UserController extends AbstractController
             throw $this->createAccessDeniedException('Type d\'utilisateur non valide.');
         }
         
-        // ✅ Vérification ROBUSTE
         if ($this->isGranted('ROLE_SUPER_ADMIN') || $currentUser->isSuperAdmin()) {
-            // Super admin peut tout voir
             return $this->render('admin/user/show.html.twig', [
                 'target_user' => $user,
                 'is_super_admin' => true,
@@ -319,7 +329,6 @@ class UserController extends AbstractController
             ]);
         }
         
-        // ✅ Pour les autres, on vérifie l'accès
         if (!$user->isEditableBy($currentUser)) {
             throw $this->createAccessDeniedException('Vous n\'avez pas accès à cet utilisateur.');
         }
@@ -341,7 +350,6 @@ class UserController extends AbstractController
             throw $this->createAccessDeniedException('Type d\'utilisateur non valide.');
         }
         
-        // Vérifier que l'utilisateur connecté a le droit de modifier cet utilisateur
         if (!$user->isEditableBy($currentUser)) {
             throw $this->createAccessDeniedException('Vous n\'avez pas le droit de modifier cet utilisateur.');
         }
@@ -364,10 +372,8 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             
-            // Récupérer le nouveau rôle depuis le formulaire
             $newRole = $form->get('roles')->getData();
             
-            // Vérifier les quotas uniquement si le rôle change
             if ($newRole !== $oldRole) {
                 if (!$user->canBeEditedBy($currentUser, $newRole, $this->userRepository)) {
                     $this->addFlash('error', 'Modification non autorisée : limite atteinte pour ce rôle.');
@@ -378,7 +384,6 @@ class UserController extends AbstractController
             // Gérer l'upload de la photo
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
-                // Supprimer l'ancienne photo si elle existe
                 if ($oldPhoto) {
                     $oldPhotoPath = $this->getParameter('uploads_directory').'/users/'.$oldPhoto;
                     if (file_exists($oldPhotoPath)) {
@@ -404,6 +409,13 @@ class UserController extends AbstractController
             // Sauvegarder les modifications
             $this->entityManager->flush();
 
+            // ✅ CORRECTION : recalcule le compteur (peut changer si rôle/isSubscriptionActive change)
+            $hmaService = $user->getHmaService();
+            if ($hmaService instanceof HmaService) {
+                $hmaService->refreshCounter('users');
+                $this->entityManager->flush();
+            }
+
             $this->addFlash('success', 'Utilisateur mis à jour avec succès.');
 
             return $this->redirectToRoute('app_user_index');
@@ -423,14 +435,13 @@ class UserController extends AbstractController
     #[Route('/{id}/delete-photo', name: 'app_user_delete_photo', methods: ['POST'])]
     public function deletePhoto(Request $request, User $user): Response
     {
-       $this->checkAdminAccess($request);
+        $this->checkAdminAccess($request);
         
         $currentUser = $this->getUser();
         if (!$currentUser instanceof User) {
             throw $this->createAccessDeniedException('Type d\'utilisateur non valide.');
         }
         
-        // ✅ Vérification : peut-il modifier CET utilisateur ?
         if (!$user->isEditableBy($currentUser)) {
             throw $this->createAccessDeniedException('Vous n\'avez pas le droit de modifier cet utilisateur.');
         }
@@ -462,7 +473,6 @@ class UserController extends AbstractController
             throw $this->createAccessDeniedException('Type d\'utilisateur non valide.');
         }
         
-        // ✅ Vérification : peut-il supprimer CET utilisateur ?
         if (!$user->canBeDeletedBy($currentUser)) {
             throw $this->createAccessDeniedException('Vous n\'avez pas le droit de supprimer cet utilisateur.');
         }
@@ -476,14 +486,27 @@ class UserController extends AbstractController
                 }
             }
 
+            // ✅ CORRECTION : synchronise le compteur HmaService (userCount -1)
+            $hmaService = $user->getHmaService();
+            if ($hmaService instanceof HmaService) {
+                $hmaService->removeUser($user);
+            }
+
             $this->entityManager->remove($user);
             $this->entityManager->flush();
+            
+            // ✅ CORRECTION : recalcule après suppression définitive
+            if ($hmaService instanceof HmaService) {
+                $hmaService->refreshCounter('users');
+                $this->entityManager->flush();
+            }
             
             $this->addFlash('success', 'Utilisateur supprimé avec succès.');
         }
 
         return $this->redirectToRoute('app_user_index');
     }
+
     /**
      * Envoyer un email de bienvenue avec le mot de passe temporaire
      */
@@ -500,7 +523,7 @@ class UserController extends AbstractController
                 'user' => $user,
                 'company_name' => $companyName,
                 'temporary_password' => $temporaryPassword,
-                'login_url' => $this->generateUrl('app_login', [], 0), // 0 = relative URL
+                'login_url' => $this->generateUrl('app_login', [], 0),
             ]);
 
         $this->mailer->send($email);

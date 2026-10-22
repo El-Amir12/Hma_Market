@@ -311,6 +311,10 @@ class OrderController extends AbstractController
             $order->setIsActive(!$order->isActive());
             $em->flush();
             
+            // ✅ CORRECTION : si isSubscriptionActive dépend de isActive, le compteur change
+            $hmaService->refreshCounter('orders');
+            $em->flush();
+            
             $status = $order->isActive() ? 'réactivée' : 'désactivée';
             $this->addFlash('success', "Vente {$status} avec succès.");
         }
@@ -333,7 +337,14 @@ class OrderController extends AbstractController
         }
         
         if ($this->isCsrfTokenValid('delete_order', $request->request->get('_token'))) {
+            // ✅ CORRECTION : retire de la collection HmaService (orderCount -1)
+            $hmaService->removeOrder($order);
+            
             $em->remove($order);
+            $em->flush();
+            
+            // ✅ CORRECTION : recalcule après suppression définitive
+            $hmaService->refreshCounter('orders');
             $em->flush();
             
             $this->addFlash('success', 'Vente supprimée avec succès.');
@@ -710,14 +721,12 @@ class OrderController extends AbstractController
         
         $newStatus = $request->request->get('status');
         
-        // ✅ Utiliser les constantes et méthodes de l'entité
         $availableStatuses = array_keys(Order::getStatusLabels());
         if (!in_array($newStatus, $availableStatuses)) {
             $this->addFlash('error', 'Statut invalide.');
             return $this->redirectToRoute('app_orders_show', ['id' => $order->getId()]);
         }
         
-        // ✅ Vérifier si on peut modifier le statut
         if ($order->getStatus() === Order::STATUS_COMPLETED && $newStatus === Order::STATUS_PENDING) {
             $this->addFlash('error', 'Impossible de passer une commande terminée en "En attente".');
             return $this->redirectToRoute('app_orders_show', ['id' => $order->getId()]);
@@ -730,25 +739,21 @@ class OrderController extends AbstractController
         
         $oldStatus = $order->getStatus();
         
-        // ✅ Mettre à jour le statut
         $order->setStatus($newStatus);
         $order->setUpdatedAt(new \DateTime());
         
-        // ✅ Si le statut passe à 'completed', le paiement est considéré comme payé
         if ($newStatus === Order::STATUS_COMPLETED) {
             $order->setPaymentStatus('paid');
         }
         
         $em->flush();
         
-        // ✅ Récupérer l'utilisateur connecté pour déterminer le rôle
         $currentUser = $this->getUser();
         $isAdmin = $currentUser && (
             in_array('ROLE_SUPER_ADMIN', $currentUser->getRoles()) || 
             in_array('ROLE_ADMIN', $currentUser->getRoles())
         );
         
-        // ✅ Envoyer l'email si changement et si email client existe
         if ($order->getCustomerEmail() && $oldStatus !== $newStatus) {
             $this->sendStatusUpdateEmail($order, $oldStatus, $newStatus, $mailer, $twig, $isAdmin);
         }
@@ -778,7 +783,6 @@ class OrderController extends AbstractController
             $fromEmail = $_ENV['MAILER_FROM_EMAIL'] ?? 'noreply@hma-marketplace.com';
             $fromName = $_ENV['MAILER_FROM_NAME'] ?? 'HMA Market';
 
-            // ✅ Template POUR LE CLIENT
             $customerHtml = $twig->render('emails/order_status_update_customer.html.twig', [
                 'order' => $order,
                 'oldStatus' => $oldStatus,
@@ -789,7 +793,6 @@ class OrderController extends AbstractController
                 'appUrl' => $appUrl,
             ]);
 
-            // ✅ Template POUR LE SUPER ADMIN
             $adminHtml = $twig->render('emails/order_status_update_admin.html.twig', [
                 'order' => $order,
                 'oldStatus' => $oldStatus,
@@ -800,7 +803,6 @@ class OrderController extends AbstractController
                 'appUrl' => $appUrl,
             ]);
 
-            // ✅ Email au client
             if (!empty($order->getCustomerEmail())) {
                 $clientEmail = (new Email())
                     ->from(new \Symfony\Component\Mime\Address($fromEmail, $fromName))
@@ -817,7 +819,6 @@ class OrderController extends AbstractController
                 ]);
             }
 
-            // ✅ Email au super admin
             $superAdminEmail = $_ENV['SUPER_ADMIN_EMAIL'] ?? $_ENV['ADMIN_EMAIL'] ?? 'admin@hma-marketplace.com';
             $adminEmail = (new Email())
                 ->from(new \Symfony\Component\Mime\Address($fromEmail, $fromName))

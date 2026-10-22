@@ -12,67 +12,76 @@ echo.
 cd /d "C:\wamp64\www\Mes projets en Symfony\hma_market"
 
 :: ============================================
-:: 1. NETTOYAGE DES INSCRIPTIONS INCOMPLÈTES
+:: 1. NETTOYAGES (indépendants)
 :: ============================================
 echo [%date% %time%] 🧹 Nettoyage des clients incomplets (soft + hard delete)...
 php bin/console app:clean-incomplete-customers --no-interaction
 if %errorlevel% neq 0 echo ⚠️ Erreur lors du nettoyage des clients
 
-:: ============================================
-:: 2. NETTOYAGE DES INSCRIPTIONS HMA SERVICE
-:: ============================================
 echo [%date% %time%] 🧹 Nettoyage des inscriptions HmaService incomplètes...
 php bin/console app:clean-incomplete-registrations --no-interaction
 if %errorlevel% neq 0 echo ⚠️ Erreur lors du nettoyage des HmaService
 
+echo [%date% %time%] 🧹 Nettoyage des demandes d'analyse expirées...
+php bin/console app:clean-expired-analysis --no-interaction
+if %errorlevel% neq 0 echo ⚠️ Erreur lors du nettoyage des analyses
+
 :: ============================================
-:: 3. GESTION DES UTILISATEURS
+:: 2. GESTION DES UTILISATEURS
 :: ============================================
 echo [%date% %time%] 🔓 Déblocage des comptes utilisateurs expirés...
 php bin/console app:unlock-locked-users --no-interaction
 if %errorlevel% neq 0 echo ⚠️ Erreur lors du déblocage
 
 :: ============================================
-:: 4. GESTION DES ABONNEMENTS
+:: 3. GESTION DES ABONNEMENTS (ordre critique)
 :: ============================================
-:: ✅ Vérification des abonnements expirés (avec statistiques détaillées)
-echo [%date% %time%] 🔍 Vérification des abonnements expirés...
-php bin/console app:check-expired-subscriptions
+:: 3.1 Rafraîchir statuts + basculer en freemium les expirés
+echo [%date% %time%] 🔍 Vérification des abonnements expirés (refresh + downgrade)...
+php bin/console app:check-expired-subscriptions --no-interaction
 if %errorlevel% neq 0 echo ⚠️ Erreur lors de la vérification
 
-:: ✅ Vérification du statut public de toutes les entreprises
-echo [%date% %time%] 📊 Vérification du statut public des entreprises...
-php bin/console app:check-public-status --no-interaction
-if %errorlevel% neq 0 echo ⚠️ Erreur lors de la vérification du statut
-
-echo [%date% %time%] 📧 Envoi des rappels d'expiration...
-php bin/console app:send-expiration-reminders
-if %errorlevel% neq 0 echo ⚠️ Erreur lors de l'envoi
-
-:: ============================================
-:: 5. QUOTAS ET LIMITES
-:: ============================================
-:: ✅ Application des quotas pour toutes les entreprises
-echo [%date% %time%] ⚙️ Application des quotas...
+:: 3.2 Appliquer les quotas (dépend du plan mis à jour ci-dessus)
+echo [%date% %time%] ⚙️ Application des quotas entreprises...
 php bin/console app:enforce-quotas --no-interaction
 if %errorlevel% neq 0 echo ⚠️ Erreur lors de l'application des quotas
 
-:: ✅ Application des quotas utilisateurs
 echo [%date% %time%] 👥 Application des quotas utilisateurs...
 php bin/console app:enforce-user-quotas --no-interaction
 if %errorlevel% neq 0 echo ⚠️ Erreur lors de l'application des quotas utilisateurs
 
 :: ============================================
-:: 6. GESTION DU STOCK
+:: 4. RAPPELS D'EXPIRATION (après mise à jour des plans)
+:: ============================================
+echo [%date% %time%] 📧 Envoi des rappels d'expiration (avec proposition d'upgrade)...
+php bin/console app:send-expiration-reminders
+if %errorlevel% neq 0 echo ⚠️ Erreur lors de l'envoi des rappels
+
+:: ============================================
+:: 5. RECALCUL DES COMPTEURS
+:: ============================================
+echo [%date% %time%] 🔄 Recalcul des compteurs HmaService...
+php bin/console app:recalculate-counters --no-interaction
+if %errorlevel% neq 0 echo ⚠️ Erreur lors du recalcul des compteurs
+
+:: ============================================
+:: 6. MAINTENANCE STOCK
 :: ============================================
 echo [%date% %time%] 🔄 Maintenance du stock...
 php bin/console app:stock:maintenance --no-interaction
 if %errorlevel% neq 0 echo ⚠️ Erreur lors de la maintenance du stock
 
 :: ============================================
-:: 7. NETTOYAGE FINAL
+:: 7. INFORMATIF (statut public)
 :: ============================================
-echo [%date% %time%] 🧹 Nettoyage des fichiers temporaires...
+echo [%date% %time%] 📊 Vérification du statut public des entreprises...
+php bin/console app:check-public-status --no-interaction
+if %errorlevel% neq 0 echo ⚠️ Erreur lors de la vérification du statut
+
+:: ============================================
+:: 8. NETTOYAGE FINAL
+:: ============================================
+echo [%date% %time%] 🧹 Nettoyage du cache...
 php bin/console cache:clear --env=prod --no-interaction 2>nul
 
 echo.

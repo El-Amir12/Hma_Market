@@ -9,41 +9,48 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style>
+/* ============================================
+   CARTES CATÉGORIES
+   ============================================ */
 .category-card {
     transition: transform 0.2s, box-shadow 0.2s;
-    border-radius: 15px;
+    border: 1px solid transparent;
+    border-radius: 12px;
     overflow: hidden;
 }
 .category-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+    border-color: #dee2e6;
 }
-
-.category-image-wrapper {
-    height: 130px;
+.category-image-container {
+    position: relative;
+    height: 160px;
     overflow: hidden;
+    border-radius: 8px 8px 0 0;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
-
 .category-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s;
 }
-
 .category-card:hover .category-image {
     transform: scale(1.05);
 }
-
-.category-placeholder {
+.category-image-placeholder {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
+/* ============================================
+   STATISTIQUES
+   ============================================ */
 .stat-item {
     transition: transform 0.2s;
 }
@@ -52,54 +59,46 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* ============================================
+   BADGES
+   ============================================ */
 .category-badges {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 .category-badges .badge {
     font-size: 9px;
     padding: 3px 6px;
 }
 
-/* ✅ Styles Select2 */
+/* ============================================
+   SELECT2
+   ============================================ */
 .select2-container--bootstrap-5 .select2-selection {
-    height: 38px !important;
-    padding: 0 !important;
-}
-.select2-container--bootstrap-5 .select2-selection--single {
     height: 38px !important;
     border-radius: 8px !important;
     background-color: #fff !important;
     border-color: #dee2e6 !important;
+}
+.select2-container--bootstrap-5 .select2-selection--single {
+    height: 38px !important;
     display: flex !important;
     align-items: center !important;
 }
 .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-    line-height: normal !important;
-    padding: 8px 12px !important;
+    line-height: 36px !important;
+    padding-left: 12px !important;
     color: #212529 !important;
-    display: block !important;
 }
 .select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
     height: 36px !important;
-    position: absolute !important;
-    top: 1px !important;
-    right: 5px !important;
 }
 .select2-container--bootstrap-5 .select2-dropdown {
     border-color: #e9ecef !important;
     border-radius: 8px !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-}
-.select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field {
-    padding: 8px 12px !important;
-    border-radius: 6px !important;
-    border-color: #e9ecef !important;
-}
-.select2-container--bootstrap-5 .select2-results__option {
-    padding: 8px 12px !important;
 }
 .select2-container--bootstrap-5 .select2-results__option--selected {
     background-color: #0463f1 !important;
@@ -109,33 +108,29 @@
     background-color: #e9ecef !important;
     color: #0463f1 !important;
 }
-.form-select.bg-light.border-0 {
-    height: 38px;
-    padding: 8px 12px;
+
+/* ============================================
+   BOUTONS ACTIONS
+   ============================================ */
+.action-buttons-row {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: auto;
+    flex-wrap: wrap;
+}
+.action-buttons-row .btn {
+    flex: 1 1 calc(50% - 0.125rem);
+    font-size: 0.7rem;
+    padding: 0.25rem 0.4rem;
 }
 
-/* ✅ RESPONSIVE - 2 CARTES PAR LIGNE SUR MOBILE */
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media (max-width: 992px) {
     .container-fluid {
         padding-left: 0.75rem !important;
         padding-right: 0.75rem !important;
-    }
-    
-    .d-flex.justify-content-between.align-items-center {
-        flex-direction: column;
-        align-items: flex-start !important;
-        gap: 0.75rem !important;
-        width: 100%;
-    }
-    
-    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 {
-        flex-wrap: wrap;
-        width: 100%;
-    }
-    
-    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 .card {
-        flex: 1 1 auto;
-        min-width: 150px;
     }
     
     .stat-item .h3 {
@@ -149,28 +144,22 @@
         padding-right: 0.5rem !important;
     }
     
-    .d-flex.justify-content-between.align-items-center {
-        flex-direction: column;
+    /* En-tête */
+    .page-header {
+        flex-direction: column !important;
         align-items: flex-start !important;
-        gap: 0.5rem !important;
+        gap: 0.75rem !important;
         width: 100%;
     }
     
-    .d-flex.justify-content-between.align-items-center > div:first-child {
+    .page-header .header-actions {
         width: 100%;
-    }
-    
-    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 {
         flex-direction: column;
-        width: 100%;
+        gap: 0.5rem;
     }
     
-    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 .card {
-        width: 100%;
-        min-width: unset;
-    }
-    
-    .d-flex.justify-content-between.align-items-center .d-flex.align-items-center.gap-3 .btn {
+    .page-header .header-actions .btn,
+    .page-header .header-actions .card {
         width: 100%;
     }
     
@@ -182,8 +171,9 @@
         font-size: 0.7rem;
     }
     
-    /* ✅ Statistiques : 2 par ligne sur mobile */
-    .row.g-2 .col-6 {
+    /* Statistiques : 2 par ligne */
+    .row.g-2.mb-2 > .col-6,
+    .row.g-2 > .col-6 {
         flex: 0 0 50%;
         max-width: 50%;
         padding-left: 0.25rem;
@@ -204,25 +194,19 @@
         padding: 0.5rem !important;
     }
     
-    /* ✅ Filtres : tous les champs en colonne sur mobile */
-    .row.g-2.g-sm-3 .col-6,
-    .row.g-2.g-sm-3 .col-12 {
+    /* Filtres en colonne */
+    .row.g-2.g-sm-3 > [class*="col-"] {
         flex: 0 0 100%;
         max-width: 100%;
         margin-bottom: 0.5rem;
     }
     
-    .row.g-2.g-sm-3 .col-lg-3 .input-group {
-        width: 100%;
-    }
-    
-    /* ✅ FORCER 2 CARTES PAR LIGNE SUR MOBILE */
-    .row.g-2.g-sm-3 .col-6 {
+    /* ✅ 2 CARTES PAR LIGNE SUR MOBILE */
+    .row.g-2.g-sm-3 > .col-6 {
         flex: 0 0 50%;
         max-width: 50%;
         padding-left: 0.25rem;
         padding-right: 0.25rem;
-        margin-bottom: 0.5rem;
     }
     
     .category-card .card-title {
@@ -232,7 +216,7 @@
         font-size: 0.65rem;
     }
     
-    .category-image-wrapper {
+    .category-image-container {
         height: 120px;
     }
     
@@ -253,35 +237,37 @@
         display: none;
     }
     
-    .category-card .d-flex.justify-content-between.align-items-center.mb-3 {
-        flex-direction: column;
-        gap: 0.25rem;
+    .action-buttons-row {
+        gap: 0.15rem;
     }
-    .category-card .d-flex.justify-content-between.align-items-center.mb-3 > div {
-        width: 100%;
-        min-width: unset !important;
-    }
-    
-    .d-flex.gap-2.mt-auto {
-        flex-wrap: wrap;
-    }
-    .d-flex.gap-2.mt-auto .btn {
-        flex: 1 1 calc(50% - 0.25rem);
-        font-size: 0.55rem;
-        padding: 0.15rem 0.2rem;
+    .action-buttons-row .btn {
+        flex: 1 1 100%;
+        font-size: 0.6rem;
+        padding: 0.2rem 0.3rem;
     }
     
     .dropdown-menu {
-        font-size: 0.8rem;
+        font-size: 0.85rem;
     }
     
-    .card-header .d-flex.gap-1.gap-sm-2 {
-        flex-wrap: wrap;
-        width: 100%;
+    /* ✅ AMÉLIORER VISIBILITÉ BOUTON SUPPRIMER DANS LE MENU BURGER */
+    .dropdown-menu .delete-category-btn {
+        color: #dc3545 !important;
+        font-weight: 600;
+        padding: 0.6rem 1rem;
+        border-radius: 0.25rem;
+        margin: 0.125rem 0.5rem 0.25rem;
+        background-color: #fff5f5;
     }
-    .card-header .d-flex.gap-1.gap-sm-2 .btn {
-        flex: 1 1 auto;
-        min-width: calc(33% - 0.25rem);
+    .dropdown-menu .delete-category-btn:hover {
+        background-color: #dc3545 !important;
+        color: white !important;
+    }
+    .dropdown-menu .delete-category-btn i {
+        color: #dc3545;
+    }
+    .dropdown-menu .delete-category-btn:hover i {
+        color: white;
     }
 }
 
@@ -304,8 +290,8 @@
         padding: 0.35rem !important;
     }
     
-    /* ✅ FORCER 2 CARTES PAR LIGNE SUR TRÈS PETIT ÉCRAN */
-    .row.g-2.g-sm-3 .col-6 {
+    /* 2 CARTES PAR LIGNE */
+    .row.g-2.g-sm-3 > .col-6 {
         flex: 0 0 50%;
         max-width: 50%;
         padding-left: 0.15rem;
@@ -313,12 +299,12 @@
         margin-bottom: 0.35rem;
     }
     
-    .category-image-wrapper {
+    .category-image-container {
         height: 90px;
     }
     
     .category-card .card-title {
-        font-size: 0.65rem;
+        font-size: 0.7rem;
         line-height: 1.2;
     }
     .category-card .card-title small {
@@ -327,12 +313,6 @@
     
     .category-card .card-body {
         padding: 0.35rem !important;
-    }
-    
-    .category-card .card-text {
-        font-size: 0.55rem !important;
-        margin-bottom: 0.25rem !important;
-        line-height: 1.2;
     }
     
     .category-card .text-muted.small {
@@ -345,41 +325,37 @@
         border-radius: 2px;
     }
     
-    .d-flex.gap-2.mt-auto .btn {
+    .action-buttons-row .btn {
         flex: 1 1 100%;
-        font-size: 0.45rem;
-        padding: 0.1rem 0.15rem;
+        font-size: 0.5rem;
+        padding: 0.15rem 0.2rem;
     }
     
     .category-card .dropdown .btn-sm {
-        font-size: 0.5rem;
-        padding: 0.1rem 0.2rem;
-    }
-    
-    .card-header .d-flex.gap-1.gap-sm-2 .btn {
-        flex: 1 1 100%;
         font-size: 0.55rem;
-        padding: 0.15rem 0.3rem;
+        padding: 0.1rem 0.2rem;
     }
     
     .pagination .page-link {
         font-size: 0.65rem;
         padding: 0.25rem 0.5rem;
     }
-    
-    .modal .btn-lg {
-        font-size: 0.75rem;
-        padding: 0.35rem 0.6rem;
-    }
-    
-    .category-card .d-flex.justify-content-between.align-items-center.mb-2.gap-1 {
-        flex-direction: row !important;
-        flex-wrap: wrap;
-    }
-    .category-card .d-flex.justify-content-between.align-items-center.mb-2.gap-1 > div {
-        flex: 1 1 calc(50% - 0.25rem);
-        min-width: unset !important;
-    }
+}
+
+/* ============================================
+   AMÉLIORATION BOUTON SUPPRIMER (TOUS ÉCRANS)
+   ============================================ */
+.delete-category-btn {
+    color: #dc3545 !important;
+    font-weight: 500;
+}
+.delete-category-btn:hover,
+.delete-category-btn:focus {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+.delete-category-btn i {
+    color: inherit;
 }
 
 /* Désactiver hover sur mobile */
@@ -396,20 +372,23 @@
 
 {% block body %}
 <div class="container-fluid px-4">
-    <!-- En-tête avec quota et bouton d'ajout -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-        <div class="w-100 w-md-auto">
-            <h1 class="h3 mb-0 text-gray-800">
-                <i class="fas fa-tags me-2"></i><span class="d-none d-sm-inline">Gestion des catégories</span>
+    <!-- ============================================
+         EN-TÊTE
+         ============================================ -->
+    <div class="page-header d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800 fw-bold">
+                <i class="fas fa-tags me-2"></i>
+                <span class="d-none d-sm-inline">Gestion des catégories</span>
                 <span class="d-inline d-sm-none">Catégories</span>
             </h1>
-            <p class="text-muted d-none d-sm-block">Organisez vos produits par catégories et sous-catégories</p>
+            <p class="text-muted mb-0 d-none d-sm-block">Organisez vos produits par catégories et sous-catégories</p>
         </div>
-        
-        <div class="d-flex align-items-center gap-3 flex-wrap w-100 w-md-auto">
-            <!-- Indicateur de quota -->
-            <div class="card bg-light p-2 p-sm-3 flex-grow-1 flex-md-grow-0 w-100 w-md-auto">
-                <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+
+        <div class="header-actions d-flex align-items-center gap-3 flex-wrap">
+            <!-- Quota -->
+            <div class="card bg-light p-2 p-sm-3">
+                <div class="d-flex align-items-center">
                     <div class="me-2 me-sm-3">
                         <span class="badge bg-primary p-2">
                             <i class="fas fa-chart-line"></i>
@@ -423,34 +402,14 @@
                                 <i class="fas fa-infinity text-info ms-1"></i>
                             {% endif %}
                         </h5>
-                        {% if quotaReached %}
-                            <small class="text-danger d-none d-sm-block">Quota atteint</small>
-                        {% endif %}
                     </div>
                 </div>
             </div>
 
-            {# Affichage du nombre de catégories en attente #}
-            {% if subscriptionInactiveCount > 0 %}
-            <div class="card bg-light p-2 p-sm-3 flex-grow-1 flex-md-grow-0 w-100 w-md-auto">
-                <div class="d-flex align-items-center justify-content-center justify-content-md-start">
-                    <div class="me-2 me-sm-3">
-                        <span class="badge bg-warning p-2">
-                            <i class="fas fa-clock"></i>
-                        </span>
-                    </div>
-                    <div>
-                        <small class="text-muted d-none d-sm-block">En attente</small>
-                        <h5 class="mb-0">{{ subscriptionInactiveCount }}</h5>
-                        <small class="d-none d-sm-block">désactivées par quota</small>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {# Bouton Nouvelle Catégorie #}
-            <a href="#" id="newCategoryBtn" class="btn btn-primary btn-sm flex-grow-1 flex-md-grow-0 w-100 w-md-auto">
-                <i class="fas fa-plus-circle me-1"></i> <span class="d-none d-sm-inline">Nouvelle Catégorie</span>
+            <!-- Bouton Nouvelle -->
+            <a href="#" id="newCategoryBtn" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus-circle me-1"></i>
+                <span class="d-none d-sm-inline">Nouvelle Catégorie</span>
                 <span class="d-inline d-sm-none">Nouvelle</span>
             </a>
         </div>
@@ -479,7 +438,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     {% endfor %}
-    
     {% for message in app.flashes('error') %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
@@ -487,15 +445,17 @@
         </div>
     {% endfor %}
 
-    <!-- Container des statistiques dynamiques -->
-    <div class="card shadow mb-4">
+    <!-- ============================================
+         STATISTIQUES
+         ============================================ -->
+    <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-white py-2 py-sm-3">
             <h5 class="mb-0 small">
-                <i class="fas fa-chart-pie me-2"></i><span class="d-none d-sm-inline">Statistiques selon les filtres</span>
+                <i class="fas fa-chart-pie me-2 text-primary"></i>
+                <span class="d-none d-sm-inline">Statistiques selon les filtres</span>
             </h5>
         </div>
         <div class="card-body p-2 p-sm-3">
-            <!-- Première ligne : 4 cartes -->
             <div class="row g-2 mb-2">
                 <div class="col-6 col-md-3">
                     <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
@@ -543,9 +503,7 @@
                 </div>
             </div>
             
-            <!-- ✅ Deuxième ligne : 3 cartes - CORRIGÉ POUR MOBILE -->
             <div class="row g-2">
-                {# Carte Sous-catégories #}
                 <div class="col-6 col-md-4">
                     <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
@@ -557,26 +515,22 @@
                         </div>
                     </div>
                 </div>
-                
-                {# Carte Abonnement actif #}
                 <div class="col-6 col-md-4">
                     <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-info text-uppercase small fw-bold d-block">Abonnement actif</span>
+                                <span class="text-info text-uppercase small fw-bold d-block">Abon. actif</span>
                                 <h3 class="mb-0 text-info">{{ subscriptionActiveFiltered }}</h3>
                             </div>
                             <i class="fas fa-database fa-2x text-info opacity-50"></i>
                         </div>
                     </div>
                 </div>
-                
-                {# ✅ Carte Abonnement inactif - PLEINE LARGEUR SUR MOBILE #}
                 <div class="col-12 col-md-4">
                     <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-secondary text-uppercase small fw-bold d-block">Abonnement inactif</span>
+                                <span class="text-secondary text-uppercase small fw-bold d-block">Abon. inactif</span>
                                 <h3 class="mb-0 text-secondary">{{ subscriptionInactiveFiltered }}</h3>
                             </div>
                             <i class="fas fa-clock fa-2x text-secondary opacity-50"></i>
@@ -585,10 +539,9 @@
                 </div>
             </div>
             
-            {# ✅ Statistiques de visibilité (uniquement pour les pharmacies) #}
             {% if companyType == 'pharmacy' %}
             <div class="row g-2 mt-2 pt-2 border-top">
-                <div class="col-6 col-md-6">
+                <div class="col-6">
                     <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -599,7 +552,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-md-6">
+                <div class="col-6">
                     <div class="stat-item p-2 p-sm-3 bg-light rounded h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -615,40 +568,41 @@
         </div>
     </div>
 
-    <!-- Formulaire de filtres -->
-    <div class="card shadow mb-4">
+    <!-- ============================================
+         FILTRES
+         ============================================ -->
+    <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-white py-2 py-sm-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h5 class="mb-0 small">
-                <i class="fas fa-filter me-2"></i><span class="d-none d-sm-inline">Filtres</span>
+                <i class="fas fa-filter me-2 text-primary"></i>
+                <span class="d-none d-sm-inline">Filtres</span>
             </h5>
-            <div class="d-flex gap-1 gap-sm-2 flex-wrap w-100 w-md-auto">
-                <button type="submit" form="filter-form" class="btn btn-primary btn-sm flex-grow-1 flex-md-grow-0">
-                    <i class="fas fa-filter me-1"></i> <span class="d-none d-sm-inline">Filtrer</span>
-                </button>
-                <a href="{{ path('app_admin_category_index') }}" class="btn btn-outline-secondary btn-sm flex-grow-1 flex-md-grow-0">
-                    <i class="fas fa-undo me-1"></i> <span class="d-none d-sm-inline">Effacer</span>
+            {# ✅ BOUTONS FILTRER + EFFACER EN HAUT À DROITE #}
+            <div class="d-flex gap-1 gap-sm-2 flex-wrap">
+                <a href="{{ path('app_admin_category_index') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-undo me-1"></i>
+                    <span class="d-none d-sm-inline">Effacer</span>
                 </a>
+                <button type="submit" form="filter-form" class="btn btn-primary btn-sm">
+                    <i class="fas fa-search me-1"></i>
+                    <span class="d-none d-sm-inline">Filtrer</span>
+                </button>
             </div>
         </div>
-        <div class="card-body p-2 p-sm-3">
-            <form method="get" id="filter-form" class="row g-2 g-sm-3">
-                {# ✅ CAS RESTAURANT : TOUS LES CHAMPS EN PLEINE LARGEUR SUR MOBILE #}
+        <div class="card-body bg-white p-2 p-sm-3">
+            <form method="get" id="filter-form">
+                {# CAS RESTAURANT #}
                 {% if companyType == 'restaurant' %}
+                <div class="row g-2 g-sm-3">
                     <div class="col-12 col-sm-6 col-lg-3">
-                        <label for="search_restaurant" class="form-label fw-bold small mb-1">
+                        <label for="search_restaurant" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-search text-primary me-1"></i>Rechercher
                         </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="fas fa-search text-muted"></i>
-                            </span>
-                            <input type="text" name="search" id="search_restaurant" value="{{ search }}" 
-                                class="form-control form-control-sm border-start-0" placeholder="Nom, description...">
-                        </div>
+                        <input type="text" name="search" id="search_restaurant" value="{{ search }}" 
+                            class="form-control form-control-sm" placeholder="Nom, description...">
                     </div>
-                    
-                    <div class="col-12 col-sm-6 col-lg-3">
-                        <label for="status_restaurant" class="form-label fw-bold small mb-1">
+                    <div class="col-6 col-sm-6 col-lg-3">
+                        <label for="status_restaurant" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-toggle-on text-success me-1"></i>Statut
                         </label>
                         <select name="status" id="status_restaurant" class="form-select form-select-sm">
@@ -657,9 +611,8 @@
                             <option value="inactive" {{ status == 'inactive' ? 'selected' : '' }}>Inactives</option>
                         </select>
                     </div>
-                    
-                    <div class="col-12 col-sm-6 col-lg-3">
-                        <label for="type_restaurant" class="form-label fw-bold small mb-1">
+                    <div class="col-6 col-sm-6 col-lg-3">
+                        <label for="type_restaurant" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-sitemap text-info me-1"></i>Type
                         </label>
                         <select name="type" id="type_restaurant" class="form-select form-select-sm">
@@ -668,9 +621,8 @@
                             <option value="sub" {{ type == 'sub' ? 'selected' : '' }}>Sous-catégories</option>
                         </select>
                     </div>
-                    
-                    <div class="col-12 col-sm-6 col-lg-3">
-                        <label for="sub_status_restaurant" class="form-label fw-bold small mb-1">
+                    <div class="col-6 col-sm-6 col-lg-3">
+                        <label for="sub_status_restaurant" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-credit-card text-warning me-1"></i>Abonnement
                         </label>
                         <select name="sub_status" id="sub_status_restaurant" class="form-select form-select-sm">
@@ -679,24 +631,20 @@
                             <option value="inactive" {{ subStatus == 'inactive' ? 'selected' : '' }}>Inactif</option>
                         </select>
                     </div>
+                </div>
 
-                {# ✅ CAS PHARMACIE : 2 lignes de 3 filtres #}
+                {# CAS PHARMACIE #}
                 {% elseif companyType == 'pharmacy' %}
+                <div class="row g-2 g-sm-3">
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <label for="search_pharmacy" class="form-label fw-bold small mb-1">
+                        <label for="search_pharmacy" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-search text-primary me-1"></i>Rechercher
                         </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="fas fa-search text-muted"></i>
-                            </span>
-                            <input type="text" name="search" id="search_pharmacy" value="{{ search }}" 
-                                class="form-control form-control-sm border-start-0" placeholder="Nom, description...">
-                        </div>
+                        <input type="text" name="search" id="search_pharmacy" value="{{ search }}" 
+                            class="form-control form-control-sm" placeholder="Nom, description...">
                     </div>
-                    
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <label for="status_pharmacy" class="form-label fw-bold small mb-1">
+                    <div class="col-6 col-sm-6 col-lg-4">
+                        <label for="status_pharmacy" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-toggle-on text-success me-1"></i>Statut
                         </label>
                         <select name="status" id="status_pharmacy" class="form-select form-select-sm">
@@ -705,9 +653,8 @@
                             <option value="inactive" {{ status == 'inactive' ? 'selected' : '' }}>Inactives</option>
                         </select>
                     </div>
-                    
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <label for="type_pharmacy" class="form-label fw-bold small mb-1">
+                    <div class="col-6 col-sm-6 col-lg-4">
+                        <label for="type_pharmacy" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-sitemap text-info me-1"></i>Type
                         </label>
                         <select name="type" id="type_pharmacy" class="form-select form-select-sm">
@@ -716,9 +663,8 @@
                             <option value="sub" {{ type == 'sub' ? 'selected' : '' }}>Sous-catégories</option>
                         </select>
                     </div>
-                    
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <label for="sub_status_pharmacy" class="form-label fw-bold small mb-1">
+                    <div class="col-6 col-sm-6 col-lg-4">
+                        <label for="sub_status_pharmacy" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-credit-card text-warning me-1"></i>Abonnement
                         </label>
                         <select name="sub_status" id="sub_status_pharmacy" class="form-select form-select-sm">
@@ -727,9 +673,8 @@
                             <option value="inactive" {{ subStatus == 'inactive' ? 'selected' : '' }}>Inactif</option>
                         </select>
                     </div>
-                    
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <label for="visibility" class="form-label fw-bold small mb-1">
+                    <div class="col-6 col-sm-6 col-lg-4">
+                        <label for="visibility" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-eye text-info me-1"></i>Visibilité
                         </label>
                         <select name="visibility" id="visibility" class="form-select form-select-sm">
@@ -738,12 +683,11 @@
                             <option value="hidden" {{ visibility == 'hidden' ? 'selected' : '' }}>Masquées</option>
                         </select>
                     </div>
-                    
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <label for="promotion_pharmacy" class="form-label fw-bold small mb-1">
+                        <label for="promotion_pharmacy" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-tags text-danger me-1"></i>Promotion
                         </label>
-                        <select name="promotion" id="promotion_pharmacy" class="form-select form-select-sm" style="width: 100%;">
+                        <select name="promotion" id="promotion_pharmacy" class="form-select form-select-sm">
                             <option value="0">🎯 Toutes les promotions</option>
                             {% for promotion in promotions %}
                                 <option value="{{ promotion.id }}" {{ selectedPromotion == promotion.id ? 'selected' : '' }}>
@@ -757,24 +701,20 @@
                             {% endfor %}
                         </select>
                     </div>
+                </div>
 
-                {# ✅ CAS AUTRES (market, retail, etc.) : 5 filtres #}
+                {# CAS AUTRES #}
                 {% else %}
+                <div class="row g-2 g-sm-3">
                     <div class="col-12 col-sm-6 col-lg-3">
-                        <label for="search_other" class="form-label fw-bold small mb-1">
+                        <label for="search_other" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-search text-primary me-1"></i>Rechercher
                         </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="fas fa-search text-muted"></i>
-                            </span>
-                            <input type="text" name="search" id="search_other" value="{{ search }}" 
-                                class="form-control form-control-sm border-start-0" placeholder="Nom, description...">
-                        </div>
+                        <input type="text" name="search" id="search_other" value="{{ search }}" 
+                            class="form-control form-control-sm" placeholder="Nom, description...">
                     </div>
-                    
-                    <div class="col-12 col-sm-6 col-lg-2">
-                        <label for="status_other" class="form-label fw-bold small mb-1">
+                    <div class="col-6 col-sm-6 col-lg-2">
+                        <label for="status_other" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-toggle-on text-success me-1"></i>Statut
                         </label>
                         <select name="status" id="status_other" class="form-select form-select-sm">
@@ -783,9 +723,8 @@
                             <option value="inactive" {{ status == 'inactive' ? 'selected' : '' }}>Inactives</option>
                         </select>
                     </div>
-                    
-                    <div class="col-12 col-sm-6 col-lg-2">
-                        <label for="type_other" class="form-label fw-bold small mb-1">
+                    <div class="col-6 col-sm-6 col-lg-2">
+                        <label for="type_other" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-sitemap text-info me-1"></i>Type
                         </label>
                         <select name="type" id="type_other" class="form-select form-select-sm">
@@ -794,9 +733,8 @@
                             <option value="sub" {{ type == 'sub' ? 'selected' : '' }}>Sous-catégories</option>
                         </select>
                     </div>
-                    
-                    <div class="col-12 col-sm-6 col-lg-2">
-                        <label for="sub_status_other" class="form-label fw-bold small mb-1">
+                    <div class="col-6 col-sm-6 col-lg-2">
+                        <label for="sub_status_other" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-credit-card text-warning me-1"></i>Abonnement
                         </label>
                         <select name="sub_status" id="sub_status_other" class="form-select form-select-sm">
@@ -805,12 +743,11 @@
                             <option value="inactive" {{ subStatus == 'inactive' ? 'selected' : '' }}>Inactif</option>
                         </select>
                     </div>
-                    
                     <div class="col-12 col-sm-6 col-lg-3">
-                        <label for="promotion_other" class="form-label fw-bold small mb-1">
+                        <label for="promotion_other" class="form-label fw-semibold small mb-1">
                             <i class="fas fa-tags text-danger me-1"></i>Promotion
                         </label>
-                        <select name="promotion" id="promotion_other" class="form-select form-select-sm" style="width: 100%;">
+                        <select name="promotion" id="promotion_other" class="form-select form-select-sm">
                             <option value="0">🎯 Toutes les promotions</option>
                             {% for promotion in promotions %}
                                 <option value="{{ promotion.id }}" {{ selectedPromotion == promotion.id ? 'selected' : '' }}>
@@ -824,12 +761,13 @@
                             {% endfor %}
                         </select>
                     </div>
+                </div>
                 {% endif %}
             </form>
         </div>
     </div>
 
-    {# Message informatif quand on filtre par abonnement inactif #}
+    {# Messages informatifs #}
     {% if subStatus == 'inactive' and subscriptionInactiveFiltered > 0 %}
         <div class="alert alert-info mb-4 small">
             <i class="fas fa-info-circle me-2"></i>
@@ -837,7 +775,6 @@
         </div>
     {% endif %}
 
-    {# Message filtre visibilité (pour les pharmacies) #}
     {% if companyType == 'pharmacy' and visibility != 'all' %}
         <div class="alert alert-info mb-4 small">
             <i class="fas fa-info-circle me-2"></i>
@@ -849,32 +786,36 @@
         </div>
     {% endif %}
 
-    <!-- ✅ Grille de cartes - 2 par ligne sur mobile -->
+    <!-- ============================================
+         GRILLE CATÉGORIES
+         ============================================ -->
     <div class="row g-2 g-sm-3">
         {% for category in categories %}
         <div class="col-6 col-md-4 col-lg-3 col-xl-3">
-            <div class="category-card card h-100 border-0 shadow-sm overflow-hidden {{ not category.subscriptionActive ? 'border-warning' : '' }}">
+            <div class="card category-card h-100 shadow-sm {{ not category.subscriptionActive ? 'border-warning' : '' }}">
                 <!-- Image -->
-                <div class="category-image-wrapper">
+                <div class="category-image-container">
                     {% if category.image %}
                         <img src="{{ asset('uploads/categories/' ~ category.image) }}" 
                             alt="{{ category.name }}"
                             class="category-image">
                     {% else %}
-                        <div class="category-placeholder">
-                            <i class="fas fa-tags fa-3x fa-sm-4x text-muted"></i>
+                        <div class="category-image-placeholder">
+                            <i class="fas fa-tags fa-3x text-muted"></i>
                         </div>
                     {% endif %}
                 </div>
 
                 <!-- Contenu -->
                 <div class="card-body d-flex flex-column p-2 p-sm-3">
-                    <!-- Titre avec bouton burger -->
+                    <!-- Titre + Menu burger -->
                     <div class="d-flex justify-content-between align-items-start mb-1">
                         <h5 class="card-title text-truncate mb-0 small" title="{{ category.name }}">
-                            {{ category.name|u.truncate(16) }}
+                            {{ category.name|u.truncate(18) }}
                             {% if category.parent %}
-                                <br><small class="text-muted"><i class="fas fa-level-up-alt me-1"></i>{{ category.parent.name|u.truncate(12) }}</small>
+                                <br><small class="text-muted">
+                                    <i class="fas fa-level-up-alt me-1"></i>{{ category.parent.name|u.truncate(12) }}
+                                </small>
                             {% endif %}
                         </h5>
                         <div class="dropdown ms-1 flex-shrink-0">
@@ -912,13 +853,15 @@
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     {% if is_granted('ROLE_ADMIN') %}
-                                        <button type="button" class="dropdown-item text-danger delete-category-btn"
+                                        {# ✅ BOUTON SUPPRIMER BIEN VISIBLE (rouge + fond) #}
+                                        <button type="button" 
+                                                class="dropdown-item delete-category-btn"
                                                 data-category-id="{{ category.id }}"
                                                 data-category-name="{{ category.name }}"
                                                 data-has-products="{{ category.products|length > 0 ? 'true' : 'false' }}"
                                                 data-has-children="{{ category.children|length > 0 ? 'true' : 'false' }}"
                                                 data-token="{{ csrf_token('delete' ~ category.id) }}">
-                                            <i class="fas fa-trash me-2"></i> Supprimer
+                                            <i class="fas fa-trash me-2"></i> <strong>Supprimer</strong>
                                         </button>
                                     {% endif %}
                                 </li>
@@ -927,14 +870,14 @@
                     </div>
 
                     <!-- Description -->
-                    <p class="card-text text-muted small mb-2 d-none d-sm-block">
+                    <p class="text-muted small mb-2 d-none d-sm-block">
                         {{ category.description|default('Aucune description')|u.truncate(60, '...') }}
                     </p>
-                    <p class="card-text text-muted small mb-2 d-block d-sm-none">
+                    <p class="text-muted small mb-2 d-block d-sm-none">
                         {{ category.description|default('Aucune description')|u.truncate(35, '...') }}
                     </p>
-                    
-                    <!-- ✅ Badges -->
+
+                    <!-- Badges -->
                     <div class="category-badges">
                         {% if not category.subscriptionActive %}
                             <span class="badge bg-warning text-dark">
@@ -954,44 +897,47 @@
                                 <i class="fas fa-database fa-xs me-1"></i> Quota
                             </span>
                         {% endif %}
-                        {# ✅ Badge de visibilité (pour les pharmacies) #}
                         {% if companyType == 'pharmacy' %}
                             {% if category.companyPublic %}
-                                <span class="badge bg-primary">
+                                <span class="badge bg-primary d-none d-sm-inline">
                                     <i class="fas fa-eye fa-xs me-1"></i> Visible
                                 </span>
                             {% else %}
-                                <span class="badge bg-secondary">
+                                <span class="badge bg-secondary d-none d-sm-inline">
                                     <i class="fas fa-eye-slash fa-xs me-1"></i> Masquée
                                 </span>
                             {% endif %}
                         {% endif %}
                     </div>
 
-                    <!-- Compteurs Produits & Sous-catégories -->
-                    <div class="d-flex justify-content-between align-items-center mb-2 gap-1">
-                        <div class="text-center px-1 py-1 bg-light rounded flex-fill" style="font-size: 0.7rem;">
-                            <i class="fas fa-box text-primary me-1"></i>
-                            <span class="fw-bold">{{ category.products|length }}</span>
-                            <small class="text-muted d-block" style="font-size: 0.55rem;">Produits</small>
+                    <!-- Compteurs -->
+                    <div class="row g-0 mb-2">
+                        <div class="col-6">
+                            <small class="text-muted d-block">Produits</small>
+                            <span class="fw-bold text-primary small">
+                                <i class="fas fa-box me-1"></i>{{ category.products|length }}
+                            </span>
                         </div>
-                        <div class="text-center px-1 py-1 bg-light rounded flex-fill" style="font-size: 0.7rem;">
-                            <i class="fas fa-sitemap text-info me-1"></i>
-                            <span class="fw-bold">{{ category.children|length }}</span>
-                            <small class="text-muted d-block" style="font-size: 0.55rem;">sous-catég.</small>
+                        <div class="col-6 text-end">
+                            <small class="text-muted d-block">Sous-cat.</small>
+                            <span class="fw-bold text-info small">
+                                <i class="fas fa-sitemap me-1"></i>{{ category.children|length }}
+                            </span>
                         </div>
                     </div>
 
-                    <!-- Boutons d'action secondaires -->
-                    <div class="d-flex gap-1 mt-auto flex-wrap">
+                    <!-- Boutons d'action -->
+                    <div class="action-buttons-row">
                         <a href="{{ path('app_admin_category_products', {'id': category.id}) }}" 
-                           class="btn btn-sm btn-outline-info flex-fill" style="font-size: 0.6rem;">
-                            <i class="fas fa-list"></i> <span class="d-none d-sm-inline">Produits</span>
+                           class="btn btn-sm btn-outline-info" title="Produits">
+                            <i class="fas fa-list"></i>
+                            <span class="d-none d-sm-inline">Produits</span>
                         </a>
                         {% if companyType != 'restaurant' %}
                         <a href="{{ path('app_admin_category_promotions', {'id': category.id}) }}" 
-                           class="btn btn-sm btn-outline-warning flex-fill" style="font-size: 0.6rem;">
-                            <i class="fas fa-percent me-1"></i> <span class="d-none d-sm-inline">Promotions</span>
+                           class="btn btn-sm btn-outline-warning" title="Promotions">
+                            <i class="fas fa-percent"></i>
+                            <span class="d-none d-sm-inline">Promos</span>
                         </a>
                         {% endif %}
                     </div>
@@ -1004,7 +950,7 @@
                 <div class="card-body text-center py-5">
                     <i class="fas fa-tags fa-4x text-muted mb-3"></i>
                     <h4 class="text-muted">Aucune catégorie trouvée</h4>
-                    <a href="{{ path('app_admin_category_index') }}" class="btn btn-outline-primary">
+                    <a href="{{ path('app_admin_category_index') }}" class="btn btn-outline-primary mt-3">
                         <i class="fas fa-undo me-1"></i> Réinitialiser les filtres
                     </a>
                 </div>
@@ -1015,25 +961,21 @@
 
     <!-- Pagination -->
     {% if totalPages > 1 %}
-    <div class="row mt-4">
-        <div class="col-12">
-            <nav aria-label="Pagination">
-                <ul class="pagination justify-content-center flex-wrap">
-                    {% for i in 1..totalPages %}
-                        <li class="page-item {{ i == currentPage ? 'active' }}">
-                            <a class="page-link" href="{{ path('app_admin_category_index', app.request.query.all|merge({'page': i})) }}">{{ i }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </nav>
-        </div>
-    </div>
+    <nav aria-label="Pagination" class="mt-4">
+        <ul class="pagination justify-content-center flex-wrap">
+            {% for i in 1..totalPages %}
+                <li class="page-item {{ i == currentPage ? 'active' }}">
+                    <a class="page-link" href="{{ path('app_admin_category_index', app.request.query.all|merge({'page': i})) }}">{{ i }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
     {% endif %}
 </div>
 
 {# ==================== MODALES ==================== #}
 
-{# Modale pour quota atteint #}
+{# Modale quota atteint #}
 <div class="modal fade" id="quotaReachedModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -1060,7 +1002,7 @@
     </div>
 </div>
 
-{# Modale pour toggle #}
+{# Modale toggle #}
 <div class="modal fade" id="toggleCategoryModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -1118,43 +1060,35 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/fr.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ========== Initialisation Select2 pour la promotion ==========
-    if (document.getElementById('promotion_pharmacy')) {
-        $('#promotion_pharmacy').select2({
-            theme: 'bootstrap-5',
-            language: 'fr',
-            placeholder: '🎯 Sélectionnez une promotion',
-            allowClear: true,
-            width: '100%',
-            dropdownParent: $('#promotion_pharmacy').parent()
-        });
-    }
-    if (document.getElementById('promotion_other')) {
-        $('#promotion_other').select2({
-            theme: 'bootstrap-5',
-            language: 'fr',
-            placeholder: '🎯 Sélectionnez une promotion',
-            allowClear: true,
-            width: '100%',
-            dropdownParent: $('#promotion_other').parent()
-        });
-    }
+    // ========== Select2 ==========
+    ['promotion_pharmacy', 'promotion_other'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            $(el).select2({
+                theme: 'bootstrap-5',
+                language: 'fr',
+                placeholder: '🎯 Sélectionnez une promotion',
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $(el).parent()
+            });
+        }
+    });
 
-    // ========== 1. Gestion du bouton "Nouvelle Catégorie" ==========
+    // ========== Bouton Nouvelle Catégorie ==========
     const newCategoryBtn = document.getElementById('newCategoryBtn');
     if (newCategoryBtn) {
         newCategoryBtn.addEventListener('click', function(e) {
             e.preventDefault();
             {% if quotaReached %}
-                const quotaModal = new bootstrap.Modal(document.getElementById('quotaReachedModal'));
-                quotaModal.show();
+                new bootstrap.Modal(document.getElementById('quotaReachedModal')).show();
             {% else %}
                 window.location.href = "{{ path('app_admin_category_new') }}";
             {% endif %}
         });
     }
 
-    // ========== 2. Modale pour toggle ==========
+    // ========== Modale toggle ==========
     const toggleModal = new bootstrap.Modal(document.getElementById('toggleCategoryModal'));
     const toggleForm = document.getElementById('toggleCategoryForm');
     const toggleToken = document.getElementById('toggleCategoryToken');
@@ -1174,7 +1108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ========== 3. Gestion de la suppression ==========
+    // ========== Modale suppression ==========
     const deleteModal = new bootstrap.Modal(document.getElementById('deleteCategoryModal'));
     const deleteForm = document.getElementById('deleteCategoryForm');
     const deleteToken = document.getElementById('deleteCategoryToken');
@@ -1232,7 +1166,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Nettoyer le modal à la fermeture
     deleteModal._element.addEventListener('hidden.bs.modal', function() {
         deleteConfirmBtn.disabled = false;
         deleteModalContent.innerHTML = '';

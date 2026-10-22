@@ -62,7 +62,7 @@ final class CategoryController extends AbstractController
             throw new AccessDeniedException('Aucun service associé à votre compte.');
         }
 
-        $companyType = $hmaService->getType(); // ✅ Récupération du type
+        $companyType = $hmaService->getType();
 
         $page = $request->query->getInt('page', 1);
         $limit = 12;
@@ -73,7 +73,6 @@ final class CategoryController extends AbstractController
         $promotionId = $request->query->getInt('promotion', 0);
         $visibility = $request->query->get('visibility', 'all'); 
 
-        // Récupérer les promotions
         $promotions = [];
         if ($companyType !== 'restaurant') {
             $promotions = $promotionRepository->findActiveForProductCategories($hmaService);
@@ -82,7 +81,7 @@ final class CategoryController extends AbstractController
         $paginator = $categoryRepository->findFilteredPaginated(
             $hmaService, $status, $type, $subStatus, $search, $page, $limit, 
             $promotionId > 0 ? $promotionId : null,
-            $visibility // ✅ Passage du filtre de visibilité
+            $visibility
         );
 
         $totalFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null, $visibility);
@@ -93,7 +92,6 @@ final class CategoryController extends AbstractController
         $subscriptionActiveFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, 'active', $search, $promotionId > 0 ? $promotionId : null, $visibility);
         $subscriptionInactiveFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, 'inactive', $search, $promotionId > 0 ? $promotionId : null, $visibility);
 
-        // ✅ Statistiques de visibilité (pour les pharmacies)
         $visibleFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null, 'visible');
         $hiddenFiltered = $categoryRepository->countFiltered($hmaService, $status, $type, $subStatus, $search, $promotionId > 0 ? $promotionId : null, 'hidden');
 
@@ -116,7 +114,7 @@ final class CategoryController extends AbstractController
             'status' => $status,
             'type' => $type,
             'subStatus' => $subStatus,
-            'visibility' => $visibility, // ✅ Passage du filtre de visibilité
+            'visibility' => $visibility,
             'totalItems' => $totalItems,
             'totalFiltered' => $totalFiltered,
             'activeFiltered' => $activeFiltered,
@@ -125,8 +123,8 @@ final class CategoryController extends AbstractController
             'subFiltered' => $subFiltered,
             'subscriptionActiveFiltered' => $subscriptionActiveFiltered,
             'subscriptionInactiveFiltered' => $subscriptionInactiveFiltered,
-            'visibleFiltered' => $visibleFiltered, // ✅ Pour les pharmacies
-            'hiddenFiltered' => $hiddenFiltered,   // ✅ Pour les pharmacies
+            'visibleFiltered' => $visibleFiltered,
+            'hiddenFiltered' => $hiddenFiltered,
             'activeCount' => $activeCount,
             'quota' => $quota === PHP_INT_MAX ? 'Illimité' : $quota,
             'quotaReached' => $quotaReached,
@@ -168,7 +166,7 @@ final class CategoryController extends AbstractController
             throw new AccessDeniedException('Service introuvable.');
         }
 
-        $companyType = $hmaService->getType(); // ✅ Récupération du type
+        $companyType = $hmaService->getType();
 
         $activeCount = $entityManager->getRepository(Category::class)->countActive($hmaService);
         $quota = $hmaService->getMaxCategories();
@@ -213,6 +211,10 @@ final class CategoryController extends AbstractController
             }
 
             $entityManager->persist($category);
+
+            // ✅ CORRECTION : synchronise le compteur HmaService (categoryCount +1)
+            $hmaService->addCategory($category);
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Catégorie créée avec succès.');
@@ -222,7 +224,7 @@ final class CategoryController extends AbstractController
         return $this->render('admin/category/new.html.twig', [
             'category' => $category,
             'form' => $form,
-            'companyType' => $companyType // ✅ Passage de la variable
+            'companyType' => $companyType
         ]);
     }
 
@@ -244,7 +246,7 @@ final class CategoryController extends AbstractController
         if (!$hmaService) throw new AccessDeniedException('Aucun service associé.');
         $this->checkOwnership($category, $hmaService);
 
-        $companyType = $hmaService->getType(); // ✅ Récupération du type
+        $companyType = $hmaService->getType();
 
         $user = $this->getUser();
         if (!$user) {
@@ -266,7 +268,7 @@ final class CategoryController extends AbstractController
                 return $this->render('admin/category/edit.html.twig', [
                     'category' => $category,
                     'form' => $form,
-                    'companyType' => $companyType // ✅ Passage de la variable
+                    'companyType' => $companyType
                 ]);
             }
 
@@ -286,6 +288,11 @@ final class CategoryController extends AbstractController
 
             $category->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
+
+            // ✅ CORRECTION : recalcule le compteur (peut changer si subscription_active a été modifié)
+            $hmaService->refreshCounter('categories');
+            $entityManager->flush();
+
             $this->addFlash('success', 'Catégorie modifiée avec succès.');
             return $this->redirectToRoute('app_admin_category_show', ['id' => $category->getId()]);
         }
@@ -293,7 +300,7 @@ final class CategoryController extends AbstractController
         return $this->render('admin/category/edit.html.twig', [
             'category' => $category,
             'form' => $form,
-            'companyType' => $companyType // ✅ Passage de la variable
+            'companyType' => $companyType
         ]);
     }
 
@@ -310,6 +317,10 @@ final class CategoryController extends AbstractController
 
         $category->setIsActive(!$category->isActive());
         $category->setUpdatedAt(new \DateTimeImmutable());
+        $entityManager->flush();
+
+        // ✅ CORRECTION : si isSubscriptionActive dépend de isActive, le compteur change
+        $hmaService->refreshCounter('categories');
         $entityManager->flush();
 
         $status = $category->isActive() ? 'activée' : 'désactivée';
@@ -342,6 +353,10 @@ final class CategoryController extends AbstractController
 
         $category->setSubscriptionActive(true);
         $category->setIsActive(true);
+        $entityManager->flush();
+
+        // ✅ CORRECTION : le nombre de catégories "abonnement actif" change
+        $hmaService->refreshCounter('categories');
         $entityManager->flush();
 
         $this->addFlash('success', 'Catégorie activée avec succès.');
@@ -409,6 +424,9 @@ final class CategoryController extends AbstractController
                 $path = $this->getParameter('categories_directory').'/'.$image;
                 if (file_exists($path)) unlink($path);
             }
+
+            // ✅ CORRECTION : synchronise le compteur HmaService (categoryCount -1)
+            $hmaService->removeCategory($category);
 
             // 4. Supprimer la catégorie
             $entityManager->remove($category);

@@ -1,10 +1,274 @@
+{# templates/admin/category/edit.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Modifier {{ category.name }} - HMA Market{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<style>
+/* ========== ANIMATIONS ========== */
+.slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+}
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+.float-up {
+    animation: floatUp 3s ease-in-out infinite;
+}
+@keyframes floatUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.btn-hover-scale {
+    transition: all 0.2s ease;
+}
+.btn-hover-scale:hover {
+    transform: scale(1.05);
+}
+.breadcrumb {
+    background-color: transparent;
+    padding-left: 0;
+}
+.breadcrumb-item a {
+    color: #667eea;
+    transition: color 0.2s ease;
+}
+.breadcrumb-item a:hover {
+    color: #0463f1;
+    text-decoration: underline;
+}
+.breadcrumb-item.active {
+    color: #6c757d;
+}
+.bg-gradient-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #eef0f3 100%);
+}
+
+/* ========== STYLES DU FORMULAIRE (_form.html.twig) ========== */
+.card-hover {
+    transition: all 0.3s ease;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #eef0f3;
+}
+.card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.10) !important;
+}
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
+}
+.form-floating > label {
+    padding-left: 2.5rem;
+    font-size: 0.85rem;
+}
+.form-floating > .form-control,
+.form-floating > .form-select {
+    height: calc(3.2rem + 2px);
+    line-height: 1.25;
+    padding: 0.8rem 0.75rem 0.4rem 2.5rem;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    border: 2px solid #e6e9ef;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-floating > .form-control:focus,
+.form-floating > .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+}
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select:focus ~ label,
+.form-floating > .form-select:not([value=""]):not(:placeholder-shown) ~ label {
+    transform: scale(.85) translateY(-0.7rem) translateX(0.15rem);
+    color: #667eea;
+    font-size: 0.75rem;
+}
+.select2-container--bootstrap-5 .select2-selection {
+    border: 2px solid #e6e9ef;
+    border-radius: 10px !important;
+    min-height: calc(3.2rem + 2px);
+    padding: 0.8rem 0.75rem 0.4rem 2.5rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    line-height: 1.5;
+    padding-left: 0;
+    font-size: 0.9rem;
+}
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
+    height: 100% !important;
+}
+.form-switch .form-check-input {
+    width: 2.8em;
+    height: 1.5em;
+    cursor: pointer;
+    margin-top: 0.2rem;
+}
+.form-check-input:checked {
+    background-color: #198754;
+    border-color: #198754;
+}
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+.btn-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(23, 162, 184, 0.4);
+}
+.profile-preview {
+    transition: all 0.3s ease;
+}
+.profile-preview:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ========== FOOTER D'ACTIONS ========== */
+.form-actions-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: #f8f9fa;
+    border-top: 1px solid #eef0f3;
+    padding: 1rem 1.5rem;
+    border-radius: 0 0 14px 14px;
+}
+.form-actions-footer .actions-left,
+.form-actions-footer .actions-right {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.form-actions-footer .actions-right {
+    margin-left: auto;
+}
+.form-actions-footer .btn {
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (min-width: 577px) and (max-width: 991.98px) {
+    .card-body { padding: 1.25rem !important; }
+    .profile-preview,
+    .category-placeholder {
+        width: 140px !important;
+        height: 140px !important;
+    }
+}
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    .card-body { padding: 0.85rem !important; }
+    .card-header { padding: 0.6rem 0.85rem !important; }
+
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: calc(3rem + 2px);
+        padding: 0.6rem 0.5rem 0.3rem 2rem;
+        font-size: 0.85rem;
+    }
+    .form-floating > label {
+        padding-left: 2rem;
+        font-size: 0.8rem;
+    }
+    .select2-container--bootstrap-5 .select2-selection {
+        min-height: calc(3rem + 2px);
+        padding: 0.6rem 0.5rem 0.3rem 2rem;
+    }
+    .profile-preview,
+    .category-placeholder {
+        width: 110px !important;
+        height: 110px !important;
+    }
+    .category-placeholder i { font-size: 2.5rem !important; }
+
+    /* Boutons superposés */
+    .form-actions-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        padding: 0.85rem;
+    }
+    .form-actions-footer .actions-left,
+    .form-actions-footer .actions-right {
+        width: 100%;
+        margin-left: 0;
+        gap: 0.5rem;
+    }
+    .form-actions-footer .btn {
+        flex: 1 1 100%;
+        width: 100%;
+        padding: 0.55rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .card-hover:hover,
+    .btn-primary:hover,
+    .btn-info:hover,
+    .profile-preview:hover {
+        transform: none !important;
+        box-shadow: inherit !important;
+    }
+
+    /* En-tête responsive */
+    .d-flex.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.75rem;
+    }
+    h1.h3 { font-size: 1.15rem !important; }
+    .breadcrumb { font-size: 0.75rem; }
+}
+@media (max-width: 480px) {
+    .container-fluid {
+        padding-left: 0.25rem !important;
+        padding-right: 0.25rem !important;
+    }
+    .card-body { padding: 0.65rem !important; }
+    .card-header { padding: 0.5rem 0.65rem !important; font-size: 0.85rem; }
+    .profile-preview,
+    .category-placeholder {
+        width: 90px !important;
+        height: 90px !important;
+    }
+    .category-placeholder i { font-size: 2rem !important; }
+    .form-actions-footer .btn { font-size: 0.8rem; padding: 0.5rem 0.6rem; }
+}
+</style>
+{% endblock %}
+
 {% block body %}
 <div class="container-fluid px-4">
-    <!-- En-tête avec navigation -->
+    <!-- ============================================
+         EN-TÊTE
+         ============================================ -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <nav aria-label="breadcrumb">
@@ -22,9 +286,9 @@
                     <li class="breadcrumb-item active" aria-current="page">Modifier</li>
                 </ol>
             </nav>
-            
-            <div class="d-flex align-items-center">
-                <a href="{{ path('app_admin_category_index') }}" class="btn btn-outline-secondary me-3 btn-hover-scale">
+
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <a href="{{ path('app_admin_category_index') }}" class="btn btn-outline-secondary btn-hover-scale">
                     <i class="fas fa-arrow-left me-1"></i> Retour
                 </a>
                 <h1 class="h3 mb-0 text-gray-800 slide-in-left">
@@ -33,19 +297,20 @@
             </div>
             <p class="text-muted mt-2">Mettez à jour les informations de la catégorie</p>
         </div>
-        <div class="float-up">
+        <div class="float-up d-none d-md-block">
             <i class="fas fa-folder-edit fa-3x text-warning opacity-75"></i>
         </div>
     </div>
 
-    <!-- Alertes flash -->
+    <!-- ============================================
+         ALERTES FLASH
+         ============================================ -->
     {% for message in app.flashes('success') %}
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle me-2"></i> {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     {% endfor %}
-    
     {% for message in app.flashes('error') %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
@@ -53,7 +318,9 @@
         </div>
     {% endfor %}
 
-    <!-- Informations rapides sur la catégorie -->
+    <!-- ============================================
+         INFOS RAPIDES
+         ============================================ -->
     <div class="row mb-4">
         <div class="col-lg-8 mx-auto">
             <div class="card border-0 bg-gradient-light shadow-sm">
@@ -72,11 +339,11 @@
                         {% endif %}
                         <div>
                             <h5 class="mb-1">{{ category.name }}</h5>
-                            <div class="d-flex align-items-center">
-                                <span class="badge me-2 {{ category.isActive ? 'bg-success' : 'bg-danger' }}">
+                            <div class="d-flex align-items-center flex-wrap gap-1">
+                                <span class="badge {{ category.isActive ? 'bg-success' : 'bg-danger' }}">
                                     {{ category.isActive ? 'Active' : 'Inactive' }}
                                 </span>
-                                <span class="badge bg-info me-2">
+                                <span class="badge bg-info">
                                     {{ category.products|length }} produits
                                 </span>
                                 <span class="badge bg-secondary">
@@ -90,10 +357,19 @@
         </div>
     </div>
 
-    <!-- Formulaire -->
-    {{ include('admin/category/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    <!-- ============================================
+         FORMULAIRE (partial)
+         ============================================ -->
+    {{ include('admin/category/_form.html.twig', {
+        'form': form,
+        'category': category,
+        'companyType': companyType,
+        'button_label': 'Mettre à jour'
+    }) }}
 
-    <!-- Section suppression (optionnelle) -->
+    <!-- ============================================
+         ZONE DE DANGER (suppression)
+         ============================================ -->
     {% if category.products|length == 0 and category.children|length == 0 %}
     <div class="row mt-4">
         <div class="col-lg-8 mx-auto">
@@ -120,7 +396,7 @@
         </div>
     </div>
 
-    <!-- Modal de suppression -->
+    <!-- Modal suppression -->
     <div class="modal fade" id="deleteCategoryModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -159,53 +435,89 @@
     </div>
     {% endif %}
 </div>
-
-{% block stylesheets %}
-<style>
-.slide-in-left {
-    animation: slideInLeft 0.5s ease-out;
-}
-
-@keyframes slideInLeft {
-    from { transform: translateX(-20px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-.float-up {
-    animation: floatUp 3s ease-in-out infinite;
-}
-
-@keyframes floatUp {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.btn-hover-scale {
-    transition: all 0.2s ease;
-}
-
-.btn-hover-scale:hover {
-    transform: scale(1.05);
-}
-
-.breadcrumb {
-    background-color: transparent;
-    padding-left: 0;
-}
-
-.breadcrumb-item a {
-    color: #667eea;
-    transition: color 0.2s ease;
-}
-
-.breadcrumb-item a:hover {
-    color: #0463f1;
-    text-decoration: underline;
-}
-
-.breadcrumb-item.active {
-    color: #6c757d;
-}
-</style>
 {% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+function previewCategoryImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        const preview = document.querySelector('.profile-preview') || 
+                       document.querySelector('.category-placeholder');
+        
+        reader.onload = function(e) {
+            if (preview && preview.classList.contains('category-placeholder')) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'img-fluid rounded shadow-lg profile-preview';
+                img.style = 'width: 150px; height: 150px; object-fit: cover; border: 4px solid #f8f9fa;';
+                preview.parentNode.replaceChild(img, preview);
+            } else if (preview) {
+                preview.src = e.target.result;
+            }
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // ========== Select2 pour catégorie parente ==========
+    const categorySelect = document.querySelector('.select2-category');
+    if (categorySelect && typeof $ !== 'undefined') {
+        $(categorySelect).select2({
+            theme: 'bootstrap-5',
+            placeholder: 'Rechercher une catégorie parente...',
+            allowClear: true,
+            width: '100%',
+            dropdownAutoWidth: true,
+            language: {
+                noResults: function() { return 'Aucune catégorie trouvée'; }
+            }
+        });
+    }
+
+    // ========== Switch statut ==========
+    const activeSwitch = document.getElementById('{{ form.is_active.vars.id }}');
+    const statusBadge = document.getElementById('status-badge');
+    const statusLabel = document.getElementById('status-label');
+    if (activeSwitch && statusBadge && statusLabel) {
+        activeSwitch.addEventListener('change', function() {
+            const isActive = this.checked;
+            statusBadge.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
+            statusBadge.className = isActive ? 'badge bg-success' : 'badge bg-danger';
+            statusLabel.textContent = isActive ? 'Catégorie active' : 'Catégorie inactive';
+        });
+    }
+
+    // ========== Switch visibilité (pharmacie) ==========
+    {% if companyType == 'pharmacy' %}
+    const visibilitySwitch = document.getElementById('{{ form.company_public.vars.id }}');
+    const visibilityBadge = document.getElementById('visibility-badge');
+    const visibilityLabel = document.getElementById('visibility-label');
+    if (visibilitySwitch && visibilityBadge && visibilityLabel) {
+        visibilitySwitch.addEventListener('change', function() {
+            const isVisible = this.checked;
+            visibilityBadge.textContent = isVisible ? 'VISIBLE' : 'MASQUÉE';
+            visibilityBadge.className = isVisible ? 'badge bg-success' : 'badge bg-secondary';
+            visibilityLabel.textContent = isVisible ? 'Visible sur le marketplace' : 'Masquée sur le marketplace';
+        });
+    }
+    {% endif %}
+
+    // ========== Validation Bootstrap ==========
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});
+</script>
 {% endblock %}

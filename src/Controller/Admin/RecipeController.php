@@ -80,10 +80,8 @@ final class RecipeController extends AbstractController
         $subscriptionStatus = $request->query->get('subscription_status', '');
         $promotionId = $request->query->getInt('promotion', 0);
 
-        // Récupérer les catégories pour le select
         $categoriesForSelect = $categoryRepository->getCategoriesForSelect($hmaService);
         
-        // 🔥 Récupérer UNIQUEMENT les promotions qui concernent les recettes
         $promotions = $promotionRepository->findActiveForRecipes($hmaService);
 
         $paginator = $recipeRepository->findFilteredPaginated(
@@ -187,7 +185,6 @@ final class RecipeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // ✅ Vérification de l'unicité du nom
             $validation = $this->uniqueNameValidator->validate($recipe, Recipe::class, 'recette', $hmaService->getId());
 
             if (!$validation['valid']) {
@@ -214,6 +211,14 @@ final class RecipeController extends AbstractController
             }
 
             $entityManager->persist($recipe);
+
+            // ✅ CORRECTION : synchronise le compteur HmaService (recipeCount +1)
+            $hmaService->addRecipe($recipe);
+
+            $entityManager->flush();
+
+            // ✅ CORRECTION : recalcule le compteur après flush (valeur définitive)
+            $hmaService->refreshCounter('recipes');
             $entityManager->flush();
 
             $this->addFlash('success', 'Plat créé avec succès.');
@@ -238,9 +243,8 @@ final class RecipeController extends AbstractController
         $this->checkOwnership($recipe, $hmaService);
 
         $page = $request->query->getInt('page', 1);
-        $limit = 10; // nombre d’ingrédients par page
+        $limit = 10;
 
-        // Requête paginée pour les ingrédients
         $qb = $entityManager->createQueryBuilder()
             ->select('ri')
             ->from(RecipeItem::class, 'ri')
@@ -264,6 +268,7 @@ final class RecipeController extends AbstractController
             'companyType' => $hmaService->getType(),
         ]);
     }
+
     #[Route('/{id}/edit', name: 'app_admin_recipe_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Recipe $recipe, EntityManagerInterface $entityManager): Response
     {
@@ -279,7 +284,6 @@ final class RecipeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // ✅ Vérification de l'unicité du nom
             $validation = $this->uniqueNameValidator->validate($recipe, Recipe::class, 'recette', $hmaService->getId());
 
             if (!$validation['valid']) {
@@ -314,6 +318,10 @@ final class RecipeController extends AbstractController
             $recipe->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
 
+            // ✅ CORRECTION : recalcule le compteur (peut changer si subscription_active a été modifié)
+            $hmaService->refreshCounter('recipes');
+            $entityManager->flush();
+
             $this->addFlash('success', 'Plat modifié avec succès.');
             return $this->redirectToRoute('app_admin_recipe_show', ['id' => $recipe->getId()]);
         }
@@ -341,6 +349,10 @@ final class RecipeController extends AbstractController
 
         $recipe->setIsActive(!$recipe->isActive());
         $recipe->setUpdatedAt(new \DateTimeImmutable());
+        $entityManager->flush();
+
+        // ✅ CORRECTION : si isSubscriptionActive dépend de isActive, le compteur change
+        $hmaService->refreshCounter('recipes');
         $entityManager->flush();
 
         $status = $recipe->isActive() ? 'activé' : 'désactivé';
@@ -399,8 +411,17 @@ final class RecipeController extends AbstractController
                     unlink($path);
                 }
             }
+
+            // ✅ CORRECTION : retire de la collection HmaService (recipeCount -1)
+            $hmaService->removeRecipe($recipe);
+
             $entityManager->remove($recipe);
             $entityManager->flush();
+
+            // ✅ CORRECTION : recalcule après suppression définitive
+            $hmaService->refreshCounter('recipes');
+            $entityManager->flush();
+
             $this->addFlash('success', 'Plat supprimé.');
         }
         return $this->redirectToRoute('app_admin_recipe_index');

@@ -122,8 +122,6 @@ class Product
     #[ORM\Column(options: ['default' => false])]
     private bool $is_public = false;
 
-    
-
     /**
      * @var Collection<int, PromotionProduct>
      */
@@ -270,17 +268,6 @@ class Product
     public function hasExpiryDate(): bool
     {
         return $this->has_expiry_date ?? false;
-    }
-
-    public function getExpiryDate(): ?\DateTimeInterface
-    {
-        return $this->has_expiry_date;
-    }
-
-    public function setExpiryDate(?\DateTimeInterface $expiry_date): static
-    {
-        $this->has_expiry_date = $expiry_date;
-        return $this;
     }
 
     public function isActive(): ?bool
@@ -605,40 +592,39 @@ class Product
     // ==================== MÉTHODES DE STOCK ====================
 
     /**
-     * Calcule le stock actuel total
+     * ✅ Stock actuel = valeur synchronisée par StockSyncService
+     *    (source de vérité unique : ne PAS additionner avec les batches)
+     *
+     * Note : `stock_quantity` est maintenu à jour par
+     *        StockSyncService::syncProductStock() qui calcule
+     *        la somme des batches actifs non périmés.
      */
     public function getCurrentStock(): int
     {
-        $totalStock = $this->stock_quantity ?? 0;
-        
-        foreach ($this->getStockBatches() as $batch) {
-            if (($batch->isActive() === null || $batch->isActive() === true) && $batch->getCurrentQuantity() > 0) {
-                $totalStock += $batch->getCurrentQuantity();
-            }
-        }
-        
-        return $totalStock;
+        return $this->stock_quantity ?? 0;
     }
 
     /**
-     * Calcule le stock en ne comptant que les lots
+     * ✅ Recalcule le stock depuis les lots actifs (utile pour diagnostics / audit)
+     *    NE PAS utiliser pour l'affichage courant → utiliser getCurrentStock().
      */
     public function getStockFromBatches(): int
     {
         $totalStock = 0;
-        
-        foreach ($this->getStockBatches() as $batch) {
-            if (($batch->isActive() === null || $batch->isActive() === true) && $batch->getCurrentQuantity() > 0) {
+
+        foreach ($this->stockBatches as $batch) {
+            if (($batch->isActive() === null || $batch->isActive() === true)
+                && $batch->getCurrentQuantity() > 0) {
                 $totalStock += $batch->getCurrentQuantity();
             }
         }
-        
+
         return $totalStock;
     }
 
     public function isLowStock(): bool
     {
-        return $this->getCurrentStock() <= $this->min_quantity;
+        return $this->getCurrentStock() <= ($this->min_quantity ?? 0);
     }
 
     public function getStockStatus(): string

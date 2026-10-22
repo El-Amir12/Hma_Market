@@ -284,39 +284,39 @@ class __TwigTemplate_b85d313094b6dc3a43cd51afe47d033e extends Template
                 </div>
             </div>
             
-            <!-- Footer avec boutons d'action -->
-            <div class=\"card-footer bg-light py-2 py-md-3\">
-                <div class=\"d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 gap-sm-3\">
+            <!-- ============================================
+                 FOOTER ACTIONS
+                 ============================================ -->
+            <div class=\"form-actions-footer\">
+                <div class=\"actions-left order-2 order-md-1\">
                     <a href=\"";
-        // line 176
+        // line 178
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_recipe_index");
-        yield "\" class=\"btn btn-outline-secondary w-100 w-sm-auto order-2 order-sm-1 btn-sm\">
+        yield "\" class=\"btn btn-outline-secondary\">
                         <i class=\"fas fa-times me-2\"></i> Annuler
                     </a>
-                    
-                    <div class=\"d-flex gap-2 w-100 w-sm-auto order-1 order-sm-2\">
-                        <button type=\"submit\" class=\"btn btn-primary flex-fill flex-sm-grow-0 btn-sm\">
-                            <i class=\"fas fa-save me-2\"></i> 
-                            ";
-        // line 183
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("button_label", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["button_label"]) || array_key_exists("button_label", $context) ? $context["button_label"] : (function () { throw new RuntimeError('Variable "button_label" does not exist.', 183, $this->source); })()), "Enregistrer")) : ("Enregistrer")), "html", null, true);
-        yield "
-                        </button>
-                        
-                        ";
-        // line 186
-        if ((CoreExtension::getAttribute($this->env, $this->source, ($context["category"] ?? null), "id", [], "any", true, true, false, 186) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 186, $this->source); })()), "id", [], "any", false, false, false, 186)))) {
-            // line 187
-            yield "                            <a href=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_recipe_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 187, $this->source); })()), "id", [], "any", false, false, false, 187)]), "html", null, true);
-            yield "\" class=\"btn btn-info flex-fill flex-sm-grow-0 btn-sm\">
-                                <i class=\"fas fa-eye me-2\"></i> Voir
-                            </a>
-                        ";
-        }
-        // line 191
-        yield "                    </div>
                 </div>
+                <div class=\"actions-right order-1 order-md-2\">
+                    <button type=\"submit\" class=\"btn btn-primary\">
+                        <i class=\"fas fa-save me-2\"></i>
+                        ";
+        // line 185
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("button_label", $context)) ? (Twig\Extension\CoreExtension::default((isset($context["button_label"]) || array_key_exists("button_label", $context) ? $context["button_label"] : (function () { throw new RuntimeError('Variable "button_label" does not exist.', 185, $this->source); })()), "Enregistrer")) : ("Enregistrer")), "html", null, true);
+        yield "
+                    </button>
+                    ";
+        // line 187
+        if ((CoreExtension::getAttribute($this->env, $this->source, ($context["category"] ?? null), "id", [], "any", true, true, false, 187) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 187, $this->source); })()), "id", [], "any", false, false, false, 187)))) {
+            // line 188
+            yield "                        <a href=\"";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_category_recipe_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["category"]) || array_key_exists("category", $context) ? $context["category"] : (function () { throw new RuntimeError('Variable "category" does not exist.', 188, $this->source); })()), "id", [], "any", false, false, false, 188)]), "html", null, true);
+            yield "\" class=\"btn btn-info\">
+                            <i class=\"fas fa-eye me-2\"></i> Voir
+                        </a>
+                    ";
+        }
+        // line 192
+        yield "                </div>
             </div>
         </div>
     </div>
@@ -342,7 +342,7 @@ class __TwigTemplate_b85d313094b6dc3a43cd51afe47d033e extends Template
             </div>
             <div class=\"modal-body text-center py-3 py-md-4\">
                 <div class=\"mb-3 mb-md-4\">
-                    <i class=\"fas fa-trash-alt fa-3x fa-md-4 text-danger mb-3\"></i>
+                    <i class=\"fas fa-trash-alt fa-3x text-danger mb-3\"></i>
                     <h5 class=\"fs-6\">Êtes-vous sûr de vouloir supprimer cette image ?</h5>
                     <p class=\"text-muted small\">Cette action ne peut pas être annulée.</p>
                 </div>
@@ -381,287 +381,6 @@ class __TwigTemplate_b85d313094b6dc3a43cd51afe47d033e extends Template
 </div>
 ";
         }
-        // line 238
-        yield "
-<script>
-function previewCategoryImage(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        const preview = document.querySelector('.profile-preview') || 
-                       document.querySelector('.category-placeholder');
-        
-        reader.onload = function(e) {
-            if (preview && preview.classList.contains('category-placeholder')) {
-                // Remplacer le placeholder par une image
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.className = 'img-fluid rounded shadow-lg profile-preview';
-                img.style = 'width: 150px; height: 150px; object-fit: cover; border: 4px solid #f8f9fa;';
-                preview.parentNode.replaceChild(img, preview);
-            } else if (preview) {
-                // Mettre à jour l'image existante
-                preview.src = e.target.result;
-            }
-        };
-        
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-// Initialiser Select2 pour les catégories parentes
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialiser Select2
-    const categorySelect = document.getElementById('category_recipe_parent_select');
-    if (categorySelect && typeof \$ !== 'undefined') {
-        // Détruire l'instance existante si elle existe
-        if (\$(categorySelect).data('select2')) {
-            \$(categorySelect).select2('destroy');
-        }
-        \$(categorySelect).select2({
-            theme: \"bootstrap-5\",
-            language: \"fr\",
-            width: \"100%\",
-            placeholder: \"Rechercher une catégorie parente...\",
-            allowClear: true,
-            minimumInputLength: 0,
-            dropdownAutoWidth: true,
-            dropdownParent: \$('.card-body')
-        });
-    }
-
-    // Validation Bootstrap
-    const forms = document.querySelectorAll('.needs-validation');
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-        }, false);
-    });
-});
-</script>
-
-<link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
-<link href=\"https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css\" rel=\"stylesheet\" />
-<style>
-.card-hover {
-    transition: all 0.3s ease;
-    border-radius: 12px;
-    overflow: hidden;
-}
-.card-hover:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
-}
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
-}
-.form-floating > label {
-    padding-left: 2.5rem;
-    font-size: 0.85rem;
-}
-.form-floating > .form-control,
-.form-floating > .form-select {
-    height: calc(3.2rem + 2px);
-    line-height: 1.25;
-    padding: 0.8rem 0.75rem 0.4rem 2.5rem;
-    font-size: 0.9rem;
-}
-.form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label,
-.form-floating > .form-select:focus ~ label,
-.form-floating > .form-select:not([value=\"\"]):not(:placeholder-shown) ~ label {
-    transform: scale(.85) translateY(-0.7rem) translateX(0.15rem);
-    color: #667eea;
-    font-size: 0.75rem;
-}
-.form-floating > .form-control,
-.form-floating > .form-select {
-    border-radius: 8px;
-    border: 2px solid #e0e0e0;
-}
-.form-floating > .form-control:focus,
-.form-floating > .form-select:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.2);
-}
-.select2-container--bootstrap-5 .select2-selection {
-    border: 2px solid #e0e0e0;
-    border-radius: 8px !important;
-    min-height: calc(3.2rem + 2px);
-    padding: 0.8rem 0.75rem 0.4rem 2.5rem;
-}
-.select2-container--bootstrap-5 .select2-selection:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.2);
-}
-.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-    line-height: 1.5;
-    padding-left: 0;
-    font-size: 0.9rem;
-}
-.form-check-input:checked {
-    background-color: #667eea;
-    border-color: #667eea;
-}
-.form-switch .form-check-input {
-    width: 2.8em;
-    height: 1.5em;
-    margin-top: 0.2rem;
-}
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
-    border: none;
-    transition: all 0.3s ease;
-}
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-}
-.btn-info {
-    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-    border: none;
-}
-.btn-outline-secondary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.profile-preview {
-    transition: all 0.3s ease;
-}
-.profile-preview:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-.file-upload-wrapper {
-    position: relative;
-}
-.file-upload-wrapper input[type=\"file\"] {
-    opacity: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    font-size: 0.85rem;
-}
-.modal-content {
-    border-radius: 12px;
-    border: none;
-}
-.badge {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-}
-
-/* ✅ RESPONSIVE */
-@media (max-width: 576px) {
-    .container-fluid {
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
-    }
-    
-    .card-body {
-        padding: 0.75rem !important;
-    }
-    
-    .card-header {
-        padding: 0.5rem 0.75rem !important;
-    }
-    
-    .form-floating > .form-control,
-    .form-floating > .form-select {
-        height: calc(3rem + 2px);
-        padding: 0.6rem 0.5rem 0.3rem 2rem;
-        font-size: 0.85rem;
-    }
-    
-    .form-floating > label {
-        padding-left: 2rem;
-        font-size: 0.8rem;
-    }
-    
-    .form-floating > .form-control:focus ~ label,
-    .form-floating > .form-control:not(:placeholder-shown) ~ label,
-    .form-floating > .form-select:focus ~ label,
-    .form-floating > .form-select:not([value=\"\"]):not(:placeholder-shown) ~ label {
-        transform: scale(.85) translateY(-0.6rem) translateX(0.1rem);
-        font-size: 0.7rem;
-    }
-    
-    .select2-container--bootstrap-5 .select2-selection {
-        min-height: calc(3rem + 2px);
-        padding: 0.6rem 0.5rem 0.3rem 2rem;
-    }
-    
-    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-        font-size: 0.85rem;
-    }
-    
-    .btn-sm {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-    }
-    
-    .profile-preview,
-    .category-placeholder {
-        width: 120px !important;
-        height: 120px !important;
-    }
-    
-    .category-placeholder i {
-        font-size: 3rem !important;
-    }
-    
-    .badge {
-        font-size: 0.6rem;
-        padding: 0.15rem 0.3rem;
-    }
-    
-    .small {
-        font-size: 0.7rem !important;
-    }
-    
-    .modal .modal-body {
-        padding: 0.75rem !important;
-    }
-    
-    .modal .modal-footer {
-        padding: 0.5rem !important;
-    }
-    
-    .modal .modal-header {
-        padding: 0.5rem 0.75rem !important;
-    }
-}
-
-@media (min-width: 577px) and (max-width: 768px) {
-    .card-body {
-        padding: 1rem !important;
-    }
-    
-    .profile-preview,
-    .category-placeholder {
-        width: 140px !important;
-        height: 140px !important;
-    }
-}
-
-/* Désactiver hover sur mobile */
-@media (max-width: 768px) {
-    .card-hover:hover {
-        transform: none !important;
-    }
-    .btn-primary:hover {
-        transform: none !important;
-    }
-    .profile-preview:hover {
-        transform: none !important;
-    }
-}
-</style>";
         
         $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
 
@@ -692,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getDebugInfo(): array
     {
-        return array (  385 => 238,  372 => 228,  368 => 227,  356 => 218,  352 => 217,  334 => 201,  332 => 200,  326 => 197,  318 => 191,  310 => 187,  308 => 186,  302 => 183,  292 => 176,  275 => 162,  271 => 161,  265 => 158,  261 => 157,  258 => 156,  256 => 153,  233 => 133,  226 => 129,  223 => 128,  221 => 124,  209 => 115,  202 => 111,  199 => 110,  197 => 106,  185 => 97,  178 => 93,  175 => 92,  173 => 88,  164 => 81,  160 => 79,  156 => 77,  154 => 76,  137 => 62,  132 => 60,  123 => 54,  115 => 48,  113 => 44,  106 => 39,  99 => 34,  95 => 32,  84 => 23,  82 => 22,  76 => 19,  72 => 18,  69 => 17,  67 => 16,  51 => 3,  48 => 2,);
+        return array (  372 => 228,  368 => 227,  356 => 218,  352 => 217,  334 => 201,  332 => 200,  326 => 197,  319 => 192,  311 => 188,  309 => 187,  304 => 185,  294 => 178,  275 => 162,  271 => 161,  265 => 158,  261 => 157,  258 => 156,  256 => 153,  233 => 133,  226 => 129,  223 => 128,  221 => 124,  209 => 115,  202 => 111,  199 => 110,  197 => 106,  185 => 97,  178 => 93,  175 => 92,  173 => 88,  164 => 81,  160 => 79,  156 => 77,  154 => 76,  137 => 62,  132 => 60,  123 => 54,  115 => 48,  113 => 44,  106 => 39,  99 => 34,  95 => 32,  84 => 23,  82 => 22,  76 => 19,  72 => 18,  69 => 17,  67 => 16,  51 => 3,  48 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -869,25 +588,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
             
-            <!-- Footer avec boutons d'action -->
-            <div class=\"card-footer bg-light py-2 py-md-3\">
-                <div class=\"d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 gap-sm-3\">
-                    <a href=\"{{ path('app_admin_category_recipe_index') }}\" class=\"btn btn-outline-secondary w-100 w-sm-auto order-2 order-sm-1 btn-sm\">
+            <!-- ============================================
+                 FOOTER ACTIONS
+                 ============================================ -->
+            <div class=\"form-actions-footer\">
+                <div class=\"actions-left order-2 order-md-1\">
+                    <a href=\"{{ path('app_admin_category_recipe_index') }}\" class=\"btn btn-outline-secondary\">
                         <i class=\"fas fa-times me-2\"></i> Annuler
                     </a>
-                    
-                    <div class=\"d-flex gap-2 w-100 w-sm-auto order-1 order-sm-2\">
-                        <button type=\"submit\" class=\"btn btn-primary flex-fill flex-sm-grow-0 btn-sm\">
-                            <i class=\"fas fa-save me-2\"></i> 
-                            {{ button_label|default('Enregistrer') }}
-                        </button>
-                        
-                        {% if category.id is defined and category.id is not null %}
-                            <a href=\"{{ path('app_admin_category_recipe_show', {'id': category.id}) }}\" class=\"btn btn-info flex-fill flex-sm-grow-0 btn-sm\">
-                                <i class=\"fas fa-eye me-2\"></i> Voir
-                            </a>
-                        {% endif %}
-                    </div>
+                </div>
+                <div class=\"actions-right order-1 order-md-2\">
+                    <button type=\"submit\" class=\"btn btn-primary\">
+                        <i class=\"fas fa-save me-2\"></i>
+                        {{ button_label|default('Enregistrer') }}
+                    </button>
+                    {% if category.id is defined and category.id is not null %}
+                        <a href=\"{{ path('app_admin_category_recipe_show', {'id': category.id}) }}\" class=\"btn btn-info\">
+                            <i class=\"fas fa-eye me-2\"></i> Voir
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -908,7 +627,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class=\"modal-body text-center py-3 py-md-4\">
                 <div class=\"mb-3 mb-md-4\">
-                    <i class=\"fas fa-trash-alt fa-3x fa-md-4 text-danger mb-3\"></i>
+                    <i class=\"fas fa-trash-alt fa-3x text-danger mb-3\"></i>
                     <h5 class=\"fs-6\">Êtes-vous sûr de vouloir supprimer cette image ?</h5>
                     <p class=\"text-muted small\">Cette action ne peut pas être annulée.</p>
                 </div>
@@ -933,286 +652,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </div>
-{% endif %}
-
-<script>
-function previewCategoryImage(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        const preview = document.querySelector('.profile-preview') || 
-                       document.querySelector('.category-placeholder');
-        
-        reader.onload = function(e) {
-            if (preview && preview.classList.contains('category-placeholder')) {
-                // Remplacer le placeholder par une image
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.className = 'img-fluid rounded shadow-lg profile-preview';
-                img.style = 'width: 150px; height: 150px; object-fit: cover; border: 4px solid #f8f9fa;';
-                preview.parentNode.replaceChild(img, preview);
-            } else if (preview) {
-                // Mettre à jour l'image existante
-                preview.src = e.target.result;
-            }
-        };
-        
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-// Initialiser Select2 pour les catégories parentes
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialiser Select2
-    const categorySelect = document.getElementById('category_recipe_parent_select');
-    if (categorySelect && typeof \$ !== 'undefined') {
-        // Détruire l'instance existante si elle existe
-        if (\$(categorySelect).data('select2')) {
-            \$(categorySelect).select2('destroy');
-        }
-        \$(categorySelect).select2({
-            theme: \"bootstrap-5\",
-            language: \"fr\",
-            width: \"100%\",
-            placeholder: \"Rechercher une catégorie parente...\",
-            allowClear: true,
-            minimumInputLength: 0,
-            dropdownAutoWidth: true,
-            dropdownParent: \$('.card-body')
-        });
-    }
-
-    // Validation Bootstrap
-    const forms = document.querySelectorAll('.needs-validation');
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-        }, false);
-    });
-});
-</script>
-
-<link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />
-<link href=\"https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css\" rel=\"stylesheet\" />
-<style>
-.card-hover {
-    transition: all 0.3s ease;
-    border-radius: 12px;
-    overflow: hidden;
-}
-.card-hover:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
-}
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%) !important;
-}
-.form-floating > label {
-    padding-left: 2.5rem;
-    font-size: 0.85rem;
-}
-.form-floating > .form-control,
-.form-floating > .form-select {
-    height: calc(3.2rem + 2px);
-    line-height: 1.25;
-    padding: 0.8rem 0.75rem 0.4rem 2.5rem;
-    font-size: 0.9rem;
-}
-.form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label,
-.form-floating > .form-select:focus ~ label,
-.form-floating > .form-select:not([value=\"\"]):not(:placeholder-shown) ~ label {
-    transform: scale(.85) translateY(-0.7rem) translateX(0.15rem);
-    color: #667eea;
-    font-size: 0.75rem;
-}
-.form-floating > .form-control,
-.form-floating > .form-select {
-    border-radius: 8px;
-    border: 2px solid #e0e0e0;
-}
-.form-floating > .form-control:focus,
-.form-floating > .form-select:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.2);
-}
-.select2-container--bootstrap-5 .select2-selection {
-    border: 2px solid #e0e0e0;
-    border-radius: 8px !important;
-    min-height: calc(3.2rem + 2px);
-    padding: 0.8rem 0.75rem 0.4rem 2.5rem;
-}
-.select2-container--bootstrap-5 .select2-selection:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.2);
-}
-.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-    line-height: 1.5;
-    padding-left: 0;
-    font-size: 0.9rem;
-}
-.form-check-input:checked {
-    background-color: #667eea;
-    border-color: #667eea;
-}
-.form-switch .form-check-input {
-    width: 2.8em;
-    height: 1.5em;
-    margin-top: 0.2rem;
-}
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #0463f1 100%);
-    border: none;
-    transition: all 0.3s ease;
-}
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-}
-.btn-info {
-    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-    border: none;
-}
-.btn-outline-secondary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.profile-preview {
-    transition: all 0.3s ease;
-}
-.profile-preview:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-.file-upload-wrapper {
-    position: relative;
-}
-.file-upload-wrapper input[type=\"file\"] {
-    opacity: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    font-size: 0.85rem;
-}
-.modal-content {
-    border-radius: 12px;
-    border: none;
-}
-.badge {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-}
-
-/* ✅ RESPONSIVE */
-@media (max-width: 576px) {
-    .container-fluid {
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
-    }
-    
-    .card-body {
-        padding: 0.75rem !important;
-    }
-    
-    .card-header {
-        padding: 0.5rem 0.75rem !important;
-    }
-    
-    .form-floating > .form-control,
-    .form-floating > .form-select {
-        height: calc(3rem + 2px);
-        padding: 0.6rem 0.5rem 0.3rem 2rem;
-        font-size: 0.85rem;
-    }
-    
-    .form-floating > label {
-        padding-left: 2rem;
-        font-size: 0.8rem;
-    }
-    
-    .form-floating > .form-control:focus ~ label,
-    .form-floating > .form-control:not(:placeholder-shown) ~ label,
-    .form-floating > .form-select:focus ~ label,
-    .form-floating > .form-select:not([value=\"\"]):not(:placeholder-shown) ~ label {
-        transform: scale(.85) translateY(-0.6rem) translateX(0.1rem);
-        font-size: 0.7rem;
-    }
-    
-    .select2-container--bootstrap-5 .select2-selection {
-        min-height: calc(3rem + 2px);
-        padding: 0.6rem 0.5rem 0.3rem 2rem;
-    }
-    
-    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-        font-size: 0.85rem;
-    }
-    
-    .btn-sm {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-    }
-    
-    .profile-preview,
-    .category-placeholder {
-        width: 120px !important;
-        height: 120px !important;
-    }
-    
-    .category-placeholder i {
-        font-size: 3rem !important;
-    }
-    
-    .badge {
-        font-size: 0.6rem;
-        padding: 0.15rem 0.3rem;
-    }
-    
-    .small {
-        font-size: 0.7rem !important;
-    }
-    
-    .modal .modal-body {
-        padding: 0.75rem !important;
-    }
-    
-    .modal .modal-footer {
-        padding: 0.5rem !important;
-    }
-    
-    .modal .modal-header {
-        padding: 0.5rem 0.75rem !important;
-    }
-}
-
-@media (min-width: 577px) and (max-width: 768px) {
-    .card-body {
-        padding: 1rem !important;
-    }
-    
-    .profile-preview,
-    .category-placeholder {
-        width: 140px !important;
-        height: 140px !important;
-    }
-}
-
-/* Désactiver hover sur mobile */
-@media (max-width: 768px) {
-    .card-hover:hover {
-        transform: none !important;
-    }
-    .btn-primary:hover {
-        transform: none !important;
-    }
-    .profile-preview:hover {
-        transform: none !important;
-    }
-}
-</style>", "admin/category_recipe/_form.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\category_recipe\\_form.html.twig");
+{% endif %}", "admin/category_recipe/_form.html.twig", "C:\\wamp64\\www\\Mes projets en Symfony\\hma_market\\templates\\admin\\category_recipe\\_form.html.twig");
     }
 }

@@ -300,6 +300,10 @@ final class ProductController extends AbstractController
             }
 
             $entityManager->persist($product);
+
+            // ✅ CORRECTION : synchronise le compteur HmaService (productCount +1)
+            $hmaService->addProduct($product);
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Produit créé avec succès. Le stock sera mis à jour automatiquement après vos premiers mouvements de stock.');
@@ -390,6 +394,10 @@ final class ProductController extends AbstractController
             // ✅ Synchroniser après modification
             $this->stockSyncService->syncProductStock($product);
 
+            // ✅ CORRECTION : recalcule le compteur (peut changer si subscription_active a été modifié)
+            $hmaService->refreshCounter('products');
+            $entityManager->flush();
+
             $this->addFlash('success', 'Produit modifié avec succès.');
             return $this->redirectToRoute('app_admin_product_show', ['id' => $product->getId()]);
         }
@@ -420,6 +428,10 @@ final class ProductController extends AbstractController
 
         $product->setIsActive(!$product->isActive());
         $product->setUpdatedAt(new \DateTime());
+        $entityManager->flush();
+
+        // ✅ CORRECTION : si isSubscriptionActive dépend de isActive, le compteur change
+        $hmaService->refreshCounter('products');
         $entityManager->flush();
 
         $status = $product->isActive() ? 'activé' : 'désactivé';
@@ -488,6 +500,10 @@ final class ProductController extends AbstractController
                     unlink($path);
                 }
             }
+
+            // ✅ CORRECTION : synchronise le compteur HmaService (productCount -1)
+            $hmaService->removeProduct($product);
+
             $entityManager->remove($product);
             $entityManager->flush();
             $this->addFlash('success', 'Produit supprimé.');

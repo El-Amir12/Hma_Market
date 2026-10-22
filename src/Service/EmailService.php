@@ -49,10 +49,10 @@ class EmailService
         $this->supportEmail = $supportEmail;
     }
 
-    /**
-     * ✅ Envoie l'email de bienvenue AVEC le lien d'activation.
-     * L'utilisateur DOIT cliquer sur ce lien pour activer son compte.
-     */
+    // ==================================================================
+    // 1. EMAILS D'INSCRIPTION / ACTIVATION
+    // ==================================================================
+
     public function sendWelcomeEmail(HmaService $hmaService, User $owner, string $activationToken): bool
     {
         $subject = "Bienvenue sur {$this->appName} - Activez votre compte";
@@ -100,10 +100,6 @@ class EmailService
         }
     }
 
-    /**
-     * ✅ NOUVELLE MÉTHODE : Envoyé quand le owner active son entreprise
-     * (à sa 1ère connexion après inscription).
-     */
     public function sendCompanyActivationEmail(HmaService $hmaService, User $owner): bool
     {
         $subject = "Votre compte {$this->appName} est activé !";
@@ -143,10 +139,6 @@ class EmailService
         }
     }
 
-    /**
-     * ✅ NOTIFICATION AU SUPER ADMIN - À L'ACTIVATION UNIQUEMENT
-     * AVEC LIEN VERS LA PAGE SHOW DE L'ENTREPRISE
-     */
     public function sendSuperAdminActivationNotification(HmaService $hmaService, string $subscriptionNumber): bool
     {
         $subject = "✅ Nouvelle entreprise activée : {$hmaService->getCompanyName()}";
@@ -156,11 +148,9 @@ class EmailService
         }
         
         try {
-            // ✅ Vérifier que l'email admin est configuré
             if (empty($this->adminEmail)) {
                 $this->logger->error('Admin email is not configured');
                 
-                // En développement, utiliser un fallback
                 if (!$this->isProduction) {
                     $this->adminEmail = 'admin@example.com';
                     $this->logger->warning('Using fallback admin email: admin@example.com');
@@ -169,14 +159,12 @@ class EmailService
                 }
             }
 
-            // ✅ GÉNÉRER LE LIEN VERS LA PAGE SHOW DE L'ENTREPRISE
             $companyShowUrl = $this->urlGenerator->generate(
                 'app_super_admin_hma_service_show', 
                 ['id' => $hmaService->getId()], 
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
 
-            // ✅ GARDER LE LIEN VERS LA LISTE POUR RÉFÉRENCE
             $companyListUrl = $this->urlGenerator->generate(
                 'app_super_admin_hma_service_index', 
                 [], 
@@ -194,9 +182,7 @@ class EmailService
                     'app_name' => $this->appName,
                     'activation_date' => new \DateTime(),
                     'is_production' => $this->isProduction,
-                    // ✅ ANCIEN LIEN (gardé pour référence)
                     'admin_url' => $companyListUrl,
-                    // ✅ NOUVEAU LIEN VERS LA PAGE SHOW
                     'company_show_url' => $companyShowUrl,
                 ]);
 
@@ -214,7 +200,6 @@ class EmailService
                 'error' => $e->getMessage()
             ]);
             
-            // En développement, on simule le succès
             if (!$this->isProduction) {
                 $this->logger->warning('Super admin notification non envoyée (mode dev)');
                 return true;
@@ -224,10 +209,6 @@ class EmailService
     }
 
     /**
-     * ⚠️ DÉPRÉCIÉ : Conservée pour rétrocompatibilité uniquement.
-     * N'est plus appelée dans le nouveau flux (le mot de passe n'est plus
-     * généré aléatoirement, il est choisi par l'utilisateur à l'inscription).
-     * 
      * @deprecated Utiliser sendWelcomeEmail(HmaService, User) à la place
      */
     public function sendOwnerCredentials(HmaService $hmaService, User $ownerUser, string $plainPassword, string $subscriptionNumber): bool
@@ -312,20 +293,17 @@ class EmailService
     }
     
     /**
-     * ❌ DÉPRÉCIÉ : À SUPPRIMER
-     * Cette méthode ne doit plus être utilisée
+     * @deprecated Ne doit plus être utilisée
      */
     public function sendAdminNotification(HmaService $hmaService): bool
     {
         $this->logger->warning('DEPRECATED: sendAdminNotification called');
-        return true; // Ne fait rien
+        return true;
     }
 
-    private function getGlobalLogoUrl(): string
-    {
-        $baseUrl = rtrim($this->appUrl, '/');
-        return $baseUrl . '/uploads/logos/logo.png';
-    }
+    // ==================================================================
+    // 2. EMAILS D'ABONNEMENT
+    // ==================================================================
 
     public function sendSubscriptionConfirmationToUsers(HmaService $service, Subscription $subscription): int
     {
@@ -406,21 +384,129 @@ class EmailService
         }
     }
 
-    public function sendExpirationReminder(User $user, HmaService $company): void
+    /**
+     * ✅ NOUVELLE MÉTHODE : Rappel d'expiration ADAPTÉ au plan actuel.
+     *
+     * - FREEMIUM  → suggère de passer en BASIC ou PREMIUM
+     * - BASIC     → suggère de passer en PREMIUM
+     * - PREMIUM   → propose le renouvellement
+     * - TRIAL     → suggère de choisir un plan payant
+     *
+     * Le message s'adapte également au nombre de jours restants :
+     * - days_left > 3  : rappel doux
+     * - days_left <= 3 : rappel urgent
+     * - days_left <= 0 : abonnement expiré, relance
+     */
+    public function sendExpirationReminderWithUpgrade(User $user, HmaService $company): bool
     {
-        $email = (new TemplatedEmail())
-            ->from(new Address('no-reply@hmamarket.com', 'HMA Market'))
-            ->to($user->getEmail())
-            ->subject('Votre abonnement expire bientôt')
-            ->htmlTemplate('emails/subscription_expiration_reminder.html.twig')
-            ->context([
-                'user' => $user,
-                'company' => $company,
-                'expiration_date' => $company->getSubscriptionEndsAt(),
-                'renewal_url' => $this->urlGenerator->generate('app_subscription_plans', [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ]);
+        $currentPlan = $company->getCurrentPlan();
+        $expirationDate = $company->getSubscriptionEndsAt();
 
-        $this->mailer->send($email);
+        // Calcul du nombre de jours restants (négatif si expiré)
+        $daysLeft = 0;
+        if ($expirationDate !== null) {
+            $now = new \DateTime();
+            $diff = $now->diff($expirationDate);
+            $daysLeft = $diff->invert === 1 ? -(int) $diff->days : (int) $diff->days;
+        }
+
+        // ✅ Déterminer le plan recommandé, le message et les bénéfices
+        [$recommendedPlan, $upgradeMessage, $benefits] = match ($currentPlan) {
+            HmaService::PLAN_TRIAL => [
+                'basic',
+                'Votre période d\'essai se termine bientôt. Choisissez votre plan pour continuer à profiter de toutes les fonctionnalités.',
+                [
+                    'Conservation de tous vos produits et catégories',
+                    'Accès aux rapports avancés',
+                    'Support prioritaire',
+                    'Aucune interruption de service',
+                ]
+            ],
+            HmaService::PLAN_FREEMIUM => [
+                'basic',
+                'Passez à BASIC pour bénéficier de plus de produits, de catégories et de fonctionnalités avancées.',
+                [
+                    'Jusqu\'à 200 produits (au lieu de 50)',
+                    'Jusqu\'à 20 catégories (au lieu de 15)',
+                    'Accès à l\'API et aux rapports avancés',
+                    'Support étendu',
+                ]
+            ],
+            HmaService::PLAN_BASIC => [
+                'premium',
+                'Passez à PREMIUM pour des limites illimitées et un support prioritaire.',
+                [
+                    'Produits et catégories illimités',
+                    'Domaine personnalisé',
+                    'White label',
+                    'Support prioritaire 24/7',
+                ]
+            ],
+            HmaService::PLAN_PREMIUM => [
+                'premium',
+                'Votre abonnement PREMIUM se termine bientôt. Renouvelez pour continuer à profiter de tous les avantages.',
+                [
+                    'Continuité de service sans interruption',
+                    'Conservation de votre domaine personnalisé',
+                    'Support prioritaire',
+                ]
+            ],
+            default => ['basic', 'Choisissez un plan pour continuer.', []],
+        };
+
+        // ✅ Sujet adapté au contexte
+        $subject = match (true) {
+            $daysLeft <= 0 => "⚠️ Votre abonnement a expiré - Renouvelez maintenant",
+            $daysLeft <= 3 => "🔔 Urgent : votre abonnement expire dans {$daysLeft} jour(s)",
+            default        => "🔔 Votre abonnement {$currentPlan} expire bientôt",
+        };
+
+        if (!$this->isProduction) {
+            $subject = "[DEV] " . $subject;
+        }
+
+        try {
+            $email = (new TemplatedEmail())
+                ->from(new Address($this->fromEmail, $this->fromName))
+                ->to($user->getEmail())
+                ->subject($subject)
+                ->htmlTemplate('emails/subscription_expiration_upgrade.html.twig')
+                ->context([
+                    'user' => $user,
+                    'company' => $company,
+                    'current_plan' => $currentPlan,
+                    'current_plan_label' => $company->getCurrentPlanLabel(),
+                    'recommended_plan' => $recommendedPlan,
+                    'upgrade_message' => $upgradeMessage,
+                    'benefits' => $benefits,
+                    'expiration_date' => $expirationDate,
+                    'days_left' => $daysLeft,
+                    'plans_url' => $this->urlGenerator->generate(
+                        'app_subscription_plans',
+                        [],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
+                    'support_email' => $this->supportEmail,
+                    'app_name' => $this->appName,
+                    'global_logo_url' => $this->getGlobalLogoUrl(),
+                    'is_production' => $this->isProduction,
+                ]);
+
+            $this->mailer->send($email);
+            $this->logger->info('Expiration reminder sent', [
+                'user' => $user->getEmail(),
+                'current_plan' => $currentPlan,
+                'recommended_plan' => $recommendedPlan,
+                'days_left' => $daysLeft,
+            ]);
+            return true;
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to send expiration reminder: ' . $e->getMessage(), [
+                'user' => $user->getEmail(),
+                'company' => $company->getCompanyName(),
+            ]);
+            return !$this->isProduction;
+        }
     }
 
     /**
@@ -455,5 +541,15 @@ class EmailService
             $this->logger->error('Erreur envoi email désactivation: ' . $e->getMessage());
             return !$this->isProduction;
         }
+    }
+
+    // ==================================================================
+    // 3. UTILITAIRES PRIVÉS
+    // ==================================================================
+
+    private function getGlobalLogoUrl(): string
+    {
+        $baseUrl = rtrim($this->appUrl, '/');
+        return $baseUrl . '/uploads/logos/logo.png';
     }
 }

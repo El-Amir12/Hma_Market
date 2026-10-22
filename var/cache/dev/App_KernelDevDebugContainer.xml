@@ -531,6 +531,17 @@
         <argument>Génère un rapport de ventes Excel (à implémenter)</argument>
       </call>
     </service>
+    <service id="App\Command\RecalculateHmaCountersCommand" class="App\Command\RecalculateHmaCountersCommand" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setName">
+        <argument>app:recalculate-counters</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Recalcule les compteurs de toutes les HmaService.</argument>
+      </call>
+    </service>
     <service id="App\Command\SendExpirationRemindersCommand" class="App\Command\SendExpirationRemindersCommand" autowire="true" autoconfigure="true">
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
@@ -538,6 +549,9 @@
       <argument type="service" id="App\Service\EmailService"/>
       <call method="setName">
         <argument>app:send-expiration-reminders</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Envoie des rappels d'expiration adaptés au plan actuel (admin + manager).</argument>
       </call>
     </service>
     <service id="App\Command\SendSubscriptionRemindersCommand" class="App\Command\SendSubscriptionRemindersCommand" autowire="true" autoconfigure="true">
@@ -992,6 +1006,7 @@
       <argument type="service" id="App\Service\PurchaseFlowService"/>
       <argument type="service" id="monolog.logger"/>
       <argument type="service" id="App\Service\InvoicePdfGenerator"/>
+      <argument type="service" id="App\Service\StockSyncService"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.siKanuc.App\Controller\PurchaseController"/>
       </call>
@@ -10794,6 +10809,8 @@
     <service id=".abstract.instanceof.App\Command\EnforceUserQuotasCommand" class="App\Command\EnforceUserQuotasCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\GenerateSalesReportCommand" class="App\Command\GenerateSalesReportCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\GenerateSalesReportCommand" class="App\Command\GenerateSalesReportCommand" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\RecalculateHmaCountersCommand" class="App\Command\RecalculateHmaCountersCommand" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\RecalculateHmaCountersCommand" class="App\Command\RecalculateHmaCountersCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\SendExpirationRemindersCommand" class="App\Command\SendExpirationRemindersCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\SendExpirationRemindersCommand" class="App\Command\SendExpirationRemindersCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\SendSubscriptionRemindersCommand" class="App\Command\SendSubscriptionRemindersCommand" autowire="true" abstract="true"/>
@@ -15234,6 +15251,20 @@
       <argument>false</argument>
       <argument type="service_closure" id="App\Command\GenerateSalesReportCommand"/>
     </service>
+    <service id=".App\Command\RecalculateHmaCountersCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>app:recalculate-counters</argument>
+      <argument type="collection"/>
+      <argument>Recalcule les compteurs de toutes les HmaService.</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="App\Command\RecalculateHmaCountersCommand"/>
+    </service>
+    <service id=".App\Command\SendExpirationRemindersCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>app:send-expiration-reminders</argument>
+      <argument type="collection"/>
+      <argument>Envoie des rappels d'expiration adaptés au plan actuel (admin + manager).</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="App\Command\SendExpirationRemindersCommand"/>
+    </service>
     <service id=".App\Command\SendSubscriptionRemindersCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>app:send-subscription-reminders</argument>
       <argument type="collection"/>
@@ -15941,7 +15972,7 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.JjFwOZK"/>
+      <argument type="service" id=".service_locator.ACtIKiq"/>
       <argument type="collection">
         <argument key="app:check-expired-subscriptions">App\Command\CheckExpiredSubscriptionsCommand</argument>
         <argument key="app:check-public-status">App\Command\CheckPublicStatusCommand</argument>
@@ -15953,6 +15984,7 @@
         <argument key="app:enforce-quotas">App\Command\EnforceQuotasCommand</argument>
         <argument key="app:enforce-user-quotas">App\Command\EnforceUserQuotasCommand</argument>
         <argument key="app:generate-sales-report">App\Command\GenerateSalesReportCommand</argument>
+        <argument key="app:recalculate-counters">App\Command\RecalculateHmaCountersCommand</argument>
         <argument key="app:send-expiration-reminders">App\Command\SendExpirationRemindersCommand</argument>
         <argument key="app:send-subscription-reminders">App\Command\SendSubscriptionRemindersCommand</argument>
         <argument key="app:stock:maintenance">App\Command\StockMaintenanceCommand</argument>
@@ -16080,7 +16112,7 @@
         <argument key="make:webhook">maker.auto_command.make_webhook</argument>
       </argument>
     </service>
-    <service id=".service_locator.JjFwOZK" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.ACtIKiq" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Command\CheckExpiredSubscriptionsCommand" type="service_closure" id=".App\Command\CheckExpiredSubscriptionsCommand.lazy"/>
@@ -16093,7 +16125,8 @@
         <argument key="App\Command\EnforceQuotasCommand" type="service_closure" id=".App\Command\EnforceQuotasCommand.lazy"/>
         <argument key="App\Command\EnforceUserQuotasCommand" type="service_closure" id=".App\Command\EnforceUserQuotasCommand.lazy"/>
         <argument key="App\Command\GenerateSalesReportCommand" type="service_closure" id=".App\Command\GenerateSalesReportCommand.lazy"/>
-        <argument key="App\Command\SendExpirationRemindersCommand" type="service_closure" id="App\Command\SendExpirationRemindersCommand"/>
+        <argument key="App\Command\RecalculateHmaCountersCommand" type="service_closure" id=".App\Command\RecalculateHmaCountersCommand.lazy"/>
+        <argument key="App\Command\SendExpirationRemindersCommand" type="service_closure" id=".App\Command\SendExpirationRemindersCommand.lazy"/>
         <argument key="App\Command\SendSubscriptionRemindersCommand" type="service_closure" id=".App\Command\SendSubscriptionRemindersCommand.lazy"/>
         <argument key="App\Command\StockMaintenanceCommand" type="service_closure" id="App\Command\StockMaintenanceCommand"/>
         <argument key="App\Command\TestEmailCommand" type="service_closure" id="App\Command\TestEmailCommand"/>

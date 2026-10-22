@@ -7,17 +7,37 @@
 {{ parent() }}
 <style>
     /* ============================================
+       VARIABLES GLOBALES
+       ============================================ */
+    :root {
+        --purchase-primary: #0463f1;
+        --purchase-primary-dark: #0346b8;
+        --purchase-success: #10b981;
+        --purchase-warning: #f59e0b;
+        --purchase-danger: #ef4444;
+        --purchase-info: #3b82f6;
+        --purchase-gray-50: #f9fafb;
+        --purchase-gray-100: #f3f4f6;
+        --purchase-gray-200: #e5e7eb;
+        --purchase-gray-500: #6b7280;
+        --purchase-gray-700: #374151;
+        --purchase-gray-900: #111827;
+        --purchase-radius: 1rem;
+        --purchase-radius-sm: 0.5rem;
+    }
+
+    /* ============================================
        CARTES STATISTIQUES
        ============================================ */
     .stat-card {
-        border-radius: 1rem;
+        border-radius: var(--purchase-radius);
         transition: all 0.3s ease;
         border: none;
         overflow: hidden;
     }
     .stat-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
     }
 
     /* ============================================
@@ -31,7 +51,7 @@
         position: relative;
         padding-left: 3.5rem;
         padding-bottom: 1.75rem;
-        border-left: 2px solid #e9ecef;
+        border-left: 2px solid var(--purchase-gray-200);
         margin-left: 1.25rem;
     }
     .timeline-item:last-child {
@@ -49,7 +69,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         z-index: 1;
         transition: all 0.3s ease;
     }
@@ -58,7 +78,7 @@
     }
     .timeline-item:hover .timeline-icon {
         transform: scale(1.1);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
     .timeline-content {
         padding-top: 0.25rem;
@@ -72,11 +92,13 @@
         padding: 0.4rem 1rem;
         border-radius: 2rem;
         font-weight: 500;
+        white-space: nowrap;
     }
     .btn-pdf {
         padding: 0.4rem 1rem;
         font-size: 0.85rem;
-        border-radius: 0.5rem;
+        border-radius: var(--purchase-radius-sm);
+        white-space: nowrap;
     }
     .badge-issue {
         background-color: #fef3c7;
@@ -88,11 +110,9 @@
         display: inline-flex;
         align-items: center;
         gap: 0.25rem;
+        white-space: nowrap;
     }
-    .badge-issue.status-recovered {
-        background-color: #d1fae5;
-        color: #065f46;
-    }
+    .badge-issue.status-recovered,
     .badge-issue.status-resolved {
         background-color: #d1fae5;
         color: #065f46;
@@ -109,6 +129,7 @@
         padding: 0.2rem 0.5rem;
         font-size: 0.7rem;
         border-radius: 0.375rem;
+        white-space: nowrap;
     }
 
     /* ============================================
@@ -126,7 +147,7 @@
         flex-shrink: 0;
         overflow: hidden;
         border: 3px solid #fff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
     .user-avatar-lg img {
         width: 100%;
@@ -145,7 +166,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 0.6rem 0;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid var(--purchase-gray-100);
         gap: 0.5rem;
         flex-wrap: wrap;
     }
@@ -153,13 +174,13 @@
         border-bottom: none;
     }
     .info-label {
-        color: #6b7280;
+        color: var(--purchase-gray-500);
         font-size: 0.85rem;
         font-weight: 500;
     }
     .info-value {
         font-weight: 600;
-        color: #1f2937;
+        color: var(--purchase-gray-900);
         text-align: right;
         word-break: break-word;
     }
@@ -171,7 +192,7 @@
         width: 45px;
         height: 45px;
         object-fit: cover;
-        border-radius: 0.5rem;
+        border-radius: var(--purchase-radius-sm);
         flex-shrink: 0;
     }
 
@@ -179,13 +200,13 @@
        EMAIL CLIQUABLE
        ============================================ */
     .email-link {
-        color: #0463f1;
+        color: var(--purchase-primary);
         text-decoration: none;
         transition: all 0.2s ease;
         word-break: break-all;
     }
     .email-link:hover {
-        color: #0346b8;
+        color: var(--purchase-primary-dark);
         text-decoration: underline;
     }
     .email-link i {
@@ -195,12 +216,149 @@
     }
 
     /* ============================================
+       CARTES PRODUITS MOBILE (remplace le tableau)
+       ============================================ */
+    .product-card-mobile {
+        border: 1px solid var(--purchase-gray-200);
+        border-radius: var(--purchase-radius-sm);
+        padding: 0.85rem;
+        margin-bottom: 0.75rem;
+        background: white;
+        transition: all 0.2s ease;
+    }
+    .product-card-mobile:last-child {
+        margin-bottom: 0;
+    }
+    .product-card-mobile:hover {
+        border-color: var(--purchase-primary);
+        box-shadow: 0 4px 12px rgba(4, 99, 241, 0.08);
+    }
+    .product-card-mobile .product-header {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
+    }
+    .product-card-mobile .product-info {
+        flex: 1;
+        min-width: 0;
+    }
+    .product-card-mobile .product-name {
+        font-weight: 600;
+        color: var(--purchase-gray-900);
+        font-size: 0.95rem;
+        word-break: break-word;
+        line-height: 1.3;
+    }
+    .product-card-mobile .product-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem 1rem;
+        padding-top: 0.75rem;
+        border-top: 1px dashed var(--purchase-gray-200);
+        font-size: 0.85rem;
+    }
+    .product-card-mobile .meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+    }
+    .product-card-mobile .meta-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: var(--purchase-gray-500);
+        font-weight: 500;
+    }
+    .product-card-mobile .meta-value {
+        font-weight: 600;
+        color: var(--purchase-gray-900);
+        word-break: break-word;
+    }
+    .product-card-mobile .meta-value.total {
+        color: var(--purchase-primary);
+    }
+    .product-card-mobile .product-footer {
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--purchase-gray-100);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    /* ============================================
+       EN-TÊTE ACTIONS MOBILE
+       ============================================ */
+    .action-buttons-desktop {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    .action-buttons-mobile {
+        display: none;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    .action-buttons-mobile .btn {
+        flex: 1 1 calc(50% - 0.25rem);
+        min-width: 0;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    /* ============================================
+       TABS MOBILE POUR LES CARTES
+       ============================================ */
+    .mobile-card-tabs {
+        display: none;
+        border-bottom: 1px solid var(--purchase-gray-200);
+        margin-bottom: 1rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .mobile-card-tabs::-webkit-scrollbar {
+        display: none;
+    }
+    .mobile-card-tabs .tab-btn {
+        padding: 0.65rem 1rem;
+        border: none;
+        background: transparent;
+        color: var(--purchase-gray-500);
+        font-weight: 500;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s ease;
+    }
+    .mobile-card-tabs .tab-btn.active {
+        color: var(--purchase-primary);
+        border-bottom-color: var(--purchase-primary);
+    }
+
+    /* ============================================
        RESPONSIVE MOBILE
        ============================================ */
+    @media (max-width: 991.98px) {
+        .table-responsive {
+            display: none;
+        }
+        .products-mobile-container {
+            display: block !important;
+        }
+    }
+
     @media (max-width: 768px) {
+        /* Timeline */
         .timeline-item {
             padding-left: 2.75rem;
             margin-left: 0.75rem;
+            padding-bottom: 1.5rem;
         }
         .timeline-icon {
             width: 2.2rem;
@@ -210,50 +368,120 @@
         .timeline-icon i {
             font-size: 0.9rem;
         }
-
-        .table th, .table td {
-            padding: 0.75rem;
-            font-size: 0.85rem;
+        .timeline-content .fs-6 {
+            font-size: 0.9rem !important;
         }
 
+        /* Avatars */
         .user-avatar-lg {
             width: 55px;
             height: 55px;
         }
 
+        /* Boutons */
         .btn-pdf {
             padding: 0.35rem 0.75rem;
             font-size: 0.78rem;
         }
 
+        /* Info rows */
         .info-row {
             flex-direction: column;
             align-items: flex-start;
+            padding: 0.5rem 0;
         }
         .info-value {
             text-align: left;
+            width: 100%;
         }
 
+        /* Titres */
         h1.h2 {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
+            line-height: 1.3;
+        }
+        .fs-2 {
+            font-size: 1.3rem !important;
         }
 
-        .fs-2 {
-            font-size: 1.4rem !important;
+        /* En-tête actions : passer en mode mobile */
+        .action-buttons-desktop {
+            display: none;
+        }
+        .action-buttons-mobile {
+            display: flex;
+        }
+
+        /* Cartes statistiques : masquer l'onglet actif */
+        .mobile-card-tabs {
+            display: flex;
+        }
+
+        /* Container cartes : afficher une seule carte à la fois */
+        .cards-stack-mobile .col-12 {
+            display: none;
+        }
+        .cards-stack-mobile .col-12.active {
+            display: block;
+            animation: fadeInUp 0.3s ease-out both;
+        }
+
+        /* Cartes statistiques */
+        .stat-card:hover {
+            transform: none;
+        }
+
+        /* BREADCRUMB */
+        .breadcrumb {
+            font-size: 0.78rem;
+            flex-wrap: wrap;
+        }
+        .breadcrumb-item {
+            word-break: break-word;
         }
     }
 
     @media (max-width: 480px) {
-        .d-flex.gap-2.flex-wrap {
-            width: 100%;
-        }
-        .d-flex.gap-2.flex-wrap .btn {
-            flex: 1 1 auto;
-            min-width: 0;
+        .container-fluid {
+            padding-left: 0.65rem;
+            padding-right: 0.65rem;
         }
         .timeline-item {
             padding-left: 2.5rem;
             margin-left: 0.5rem;
+        }
+        .timeline-icon {
+            width: 2rem;
+            height: 2rem;
+            left: -1rem;
+        }
+        .timeline-icon i {
+            font-size: 0.8rem;
+        }
+        .user-avatar-lg {
+            width: 48px;
+            height: 48px;
+        }
+        .user-avatar-lg i {
+            font-size: 1.2rem !important;
+        }
+        .product-card-mobile .product-meta {
+            grid-template-columns: 1fr;
+        }
+        .badge-status {
+            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+        }
+        h1.h2 {
+            font-size: 1rem;
+        }
+        .btn-pdf {
+            font-size: 0.72rem;
+            padding: 0.3rem 0.6rem;
+        }
+        .timeline-content .d-flex {
+            flex-direction: column;
+            align-items: flex-start !important;
         }
     }
 
@@ -267,26 +495,24 @@
     .animated-card {
         animation: fadeInUp 0.4s ease-out both;
     }
-
-    @media (max-width: 768px) {
-        .stat-card:hover {
-            transform: none;
-        }
-    }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="container-fluid py-4">
     <div class="animated-card">
-        <!-- EN-TÊTE -->
+        <!-- ==============================
+             EN-TÊTE
+             ============================== -->
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-            <div>
+            <div class="w-100">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-2">
                         <li class="breadcrumb-item">
                             <a href="{{ path('app_dashboard') }}" class="text-decoration-none">
-                                <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
+                                <i class="fas fa-tachometer-alt me-1"></i>
+                                <span class="d-none d-sm-inline">Tableau de bord</span>
+                                <span class="d-inline d-sm-none">Accueil</span>
                             </a>
                         </li>
                         <li class="breadcrumb-item">
@@ -299,14 +525,18 @@
                 </nav>
                 <h1 class="h2 mb-0 fw-bold">
                     <i class="fas fa-receipt text-primary me-2"></i>
-                    Commande {{ purchase.purchaseNumber }}
+                    <span class="d-none d-sm-inline">Commande</span>
+                    <span class="d-inline d-sm-none">Cmd</span>
+                    {{ purchase.purchaseNumber }}
                 </h1>
                 <p class="text-muted mt-1 mb-0">
                     <i class="fas fa-calendar-alt me-1"></i>
                     Créée le {{ purchase.createdAt|date('d/m/Y à H:i') }}
                 </p>
             </div>
-            <div class="d-flex gap-2 flex-wrap">
+
+            {# ========== ACTIONS DESKTOP ========== #}
+            <div class="action-buttons-desktop">
                 {% if purchase.bonCommande %}
                     <a href="{{ asset('uploads/bons-commande/' ~ purchase.bonCommande) }}" target="_blank" class="btn btn-outline-primary btn-pdf">
                         <i class="fas fa-file-pdf me-1"></i> Bon de commande
@@ -332,12 +562,57 @@
                     <i class="fas fa-arrow-left me-1"></i> Retour
                 </a>
             </div>
+
+            {# ========== ACTIONS MOBILE ========== #}
+            <div class="action-buttons-mobile">
+                {% if purchase.bonCommande %}
+                    <a href="{{ asset('uploads/bons-commande/' ~ purchase.bonCommande) }}" target="_blank" class="btn btn-outline-primary btn-pdf">
+                        <i class="fas fa-file-pdf me-1"></i> Bon
+                    </a>
+                {% endif %}
+                {% if purchase.recuAchat %}
+                    <a href="{{ asset('uploads/recus-achat/' ~ purchase.recuAchat) }}" target="_blank" class="btn btn-outline-success btn-pdf">
+                        <i class="fas fa-file-pdf me-1"></i> Reçu
+                    </a>
+                {% endif %}
+                <a href="{{ path('purchase_print', {id: purchase.id}) }}" class="btn btn-outline-secondary btn-pdf" target="_blank">
+                    <i class="fas fa-print me-1"></i> Imprimer
+                </a>
+                {% if purchase.status == 'confirmed' %}
+                    <a href="{{ path('purchase_receive', {id: purchase.id}) }}" class="btn btn-success btn-pdf">
+                        <i class="fas fa-box-open me-1"></i> Réception
+                    </a>
+                    <button type="button" class="btn btn-outline-danger btn-pdf" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                        <i class="fas fa-ban me-1"></i> Annuler
+                    </button>
+                {% endif %}
+                <a href="{{ path('purchase_index') }}" class="btn btn-outline-secondary btn-pdf">
+                    <i class="fas fa-arrow-left me-1"></i> Retour
+                </a>
+            </div>
         </div>
 
-        <!-- CARTES PRINCIPALES -->
-        <div class="row g-4 mb-4">
+        <!-- ==============================
+             TABS MOBILE (navigation entre les 3 cartes)
+             ============================== -->
+        <div class="mobile-card-tabs">
+            <button type="button" class="tab-btn active" data-tab="general">
+                <i class="fas fa-info-circle me-1"></i> Général
+            </button>
+            <button type="button" class="tab-btn" data-tab="supplier">
+                <i class="fas fa-truck me-1"></i> Fournisseur
+            </button>
+            <button type="button" class="tab-btn" data-tab="creator">
+                <i class="fas fa-user-circle me-1"></i> Créateur
+            </button>
+        </div>
+
+        <!-- ==============================
+             CARTES PRINCIPALES
+             ============================== -->
+        <div class="row g-4 mb-4 cards-stack-mobile">
             <!-- Informations générales -->
-            <div class="col-12 col-md-6 col-lg-4">
+            <div class="col-12 col-md-6 col-lg-4 active" data-card="general">
                 <div class="card stat-card shadow-sm h-100">
                     <div class="card-header bg-white py-3 border-0">
                         <h5 class="mb-0 fw-semibold">
@@ -386,7 +661,7 @@
             </div>
 
             <!-- Fournisseur (optionnel) -->
-            <div class="col-12 col-md-6 col-lg-4">
+            <div class="col-12 col-md-6 col-lg-4" data-card="supplier">
                 <div class="card stat-card shadow-sm h-100">
                     <div class="card-header bg-white py-3 border-0">
                         <h5 class="mb-0 fw-semibold">
@@ -442,7 +717,7 @@
             </div>
 
             <!-- Créateur -->
-            <div class="col-12 col-md-12 col-lg-4">
+            <div class="col-12 col-md-12 col-lg-4" data-card="creator">
                 <div class="card stat-card shadow-sm h-100">
                     <div class="card-header bg-white py-3 border-0">
                         <h5 class="mb-0 fw-semibold">
@@ -484,7 +759,7 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                             <span class="text-muted">Total commande</span>
                             <span class="fs-2 fw-bold text-primary">{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</span>
                         </div>
@@ -497,7 +772,9 @@
             </div>
         </div>
 
-        <!-- HISTORIQUE DES STATUTS -->
+        <!-- ==============================
+             HISTORIQUE DES STATUTS
+             ============================== -->
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-white py-3">
                 <h5 class="mb-0 fw-semibold">
@@ -521,7 +798,7 @@
                                     </small>
                                 </div>
 
-                                <div class="d-flex align-items-center gap-2 mt-2">
+                                <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
                                     {% if event.by %}
                                         <div class="user-avatar-sm" style="width: 32px; height: 32px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
                                             {% if event.by.photo %}
@@ -542,7 +819,7 @@
                                                 <a href="mailto:{{ event.by.email }}?subject=À propos de la commande {{ purchase.purchaseNumber }}" 
                                                    class="email-link small"
                                                    title="Envoyer un email à {{ event.by.fullName }}">
-                                                    <i class="fas fa-envelope me-1"></i>{{ event.by.email }}
+                                                    <i class="fas fa-envelope me-1"></i><span class="d-none d-sm-inline">{{ event.by.email }}</span>
                                                 </a>
                                             {% endif %}
                                         </div>
@@ -565,31 +842,34 @@
             </div>
         </div>
 
-        <!-- PRODUITS COMMANDÉS -->
+        <!-- ==============================
+             PRODUITS COMMANDÉS
+             ============================== -->
         <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <h5 class="mb-0 fw-semibold">
                     <i class="fas fa-boxes me-2 text-primary"></i>Produits commandés
                 </h5>
+                <span class="badge bg-primary">{{ purchase.purchaseItems|length }} article(s)</span>
             </div>
+
+            {# ====== VUE TABLEAU (Desktop / Tablet) ====== #}
             <div class="table-responsive">
                 <table class="table table-hover mb-0 align-middle">
                     <thead class="table-light">
                         <tr>
                             <th style="width: 30%">Produit</th>
                             <th style="width: 12%" class="d-none d-md-table-cell">Code-barres</th>
-                            <th style="width: 8%" class="text-center">Quantité</th>
-                            <th style="width: 12%" class="text-end">Prix unitaire</th>
+                            <th style="width: 8%" class="text-center">Qté</th>
+                            <th style="width: 12%" class="text-end">P.U.</th>
                             <th style="width: 12%" class="text-end">Total</th>
                             <th style="width: 13%" class="d-none d-lg-table-cell">Lot</th>
                             <th style="width: 13%">Problème</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {# ✅ UNE SEULE BOUCLE (avant il y en avait deux imbriquées) #}
                         {% for item in purchase.purchaseItems %}
                             {% set creditNote = creditNotesByItemId[item.id] ?? null %}
-
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -628,7 +908,6 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {# ✅ Utilisation du VRAI statut actuel de l'avoir #}
                                     {% if creditNote %}
                                         {% set statusClass = 'status-' ~ (creditNote.status|lower) %}
                                         <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -669,6 +948,98 @@
                     </tfoot>
                 </table>
             </div>
+
+            {# ====== VUE CARTES MOBILE ====== #}
+            <div class="products-mobile-container p-3" style="display: none;">
+                {% for item in purchase.purchaseItems %}
+                    {% set creditNote = creditNotesByItemId[item.id] ?? null %}
+                    <div class="product-card-mobile">
+                        <div class="product-header">
+                            {% if item.product.image and item.product.image != 'default-product.png' %}
+                                <img src="{{ asset('uploads/products/' ~ item.product.image) }}" 
+                                     alt="{{ item.product.name }}"
+                                     class="table-product-img">
+                            {% else %}
+                                <div class="table-product-img bg-light d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-box text-secondary"></i>
+                                </div>
+                            {% endif %}
+                            <div class="product-info">
+                                <div class="product-name">{{ item.product.name }}</div>
+                                <div class="mt-1 d-flex flex-wrap gap-1">
+                                    {% if item.product.barcode %}
+                                        <code class="small">{{ item.product.barcode }}</code>
+                                    {% endif %}
+                                    {% if item.product.hasExpiryDate %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-calendar-alt me-1"></i>Périssable
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Quantité</span>
+                                <span class="meta-value">{{ item.quantity }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Prix unitaire</span>
+                                <span class="meta-value">{{ item.unitPrice|number_format(0, ',', ' ') }} FCFA</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Total ligne</span>
+                                <span class="meta-value total">{{ item.totalPrice|number_format(0, ',', ' ') }} FCFA</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Lot</span>
+                                <span class="meta-value">
+                                    {% if item.batchNumber %}
+                                        <span class="badge bg-secondary">{{ item.batchNumber }}</span>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="product-footer">
+                            {% if creditNote %}
+                                {% set statusClass = 'status-' ~ (creditNote.status|lower) %}
+                                <span class="badge-issue {{ statusClass }}">
+                                    {% if creditNote.status in ['recovered', 'resolved'] %}
+                                        <i class="fas fa-check-circle"></i>
+                                    {% elseif creditNote.status == 'pending' %}
+                                        <i class="fas fa-clock"></i>
+                                    {% elseif creditNote.status == 'rejected' %}
+                                        <i class="fas fa-times-circle"></i>
+                                    {% else %}
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    {% endif %}
+                                    {{ creditNote.status|replace({'_': ' '})|capitalize }}
+                                </span>
+                                <a href="{{ path('app_supplier_credit_note_show', {'id': creditNote.id}) }}" 
+                                   class="btn btn-sm btn-outline-danger btn-view-issue"
+                                   target="_blank">
+                                    <i class="fas fa-eye me-1"></i> Voir l'avoir
+                                </a>
+                            {% else %}
+                                <span class="text-muted small">
+                                    <i class="fas fa-check-circle text-success me-1"></i>Aucun problème
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="mt-3 p-3 rounded" style="background: var(--purchase-gray-50); border: 1px solid var(--purchase-gray-200);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Total général</span>
+                        <span class="fs-4 fw-bold text-primary">{{ purchase.totalAmount|number_format(0, ',', ' ') }} FCFA</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         {% if purchase.notes %}
@@ -686,7 +1057,9 @@
     </div>
 </div>
 
-<!-- Modal annulation -->
+<!-- ==============================
+     MODAL ANNULATION
+     ============================== -->
 <div class="modal fade" id="cancelModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -737,11 +1110,95 @@
 {{ parent() }}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // ============================================
+        // 1. ANIMATION DES CARTES
+        // ============================================
         const cards = document.querySelectorAll('.stat-card');
         cards.forEach((card, index) => {
             card.style.animationDelay = (index * 0.1) + 's';
             card.classList.add('animated-card');
         });
+
+        // ============================================
+        // 2. TABS MOBILE POUR LES CARTES
+        // ============================================
+        const tabButtons = document.querySelectorAll('.mobile-card-tabs .tab-btn');
+        const cardColumns = document.querySelectorAll('.cards-stack-mobile > [data-card]');
+
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const targetTab = this.dataset.tab;
+
+                // Mettre à jour l'état actif des boutons
+                tabButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Afficher la carte correspondante
+                cardColumns.forEach(col => {
+                    if (col.dataset.card === targetTab) {
+                        col.classList.add('active');
+                    } else {
+                        col.classList.remove('active');
+                    }
+                });
+
+                // Scroll doux vers le haut des cartes (utile sur mobile)
+                if (window.innerWidth <= 768) {
+                    const cardsRow = document.querySelector('.cards-stack-mobile');
+                    if (cardsRow) {
+                        const yOffset = cardsRow.getBoundingClientRect().top + window.pageYOffset - 80;
+                        window.scrollTo({ top: yOffset, behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        // ============================================
+        // 3. GESTION RESPONSIVE : forcer une carte active au chargement
+        // ============================================
+        function setResponsiveCardDisplay() {
+            const isMobile = window.innerWidth <= 768;
+            const cardsRow = document.querySelector('.cards-stack-mobile');
+            const tabs = document.querySelector('.mobile-card-tabs');
+
+            if (isMobile) {
+                // En mobile : afficher uniquement la carte active
+                if (tabs) tabs.style.display = 'flex';
+                let hasActive = false;
+                cardColumns.forEach(col => {
+                    if (col.classList.contains('active')) hasActive = true;
+                });
+                // Si aucune carte n'est active, activer la première
+                if (!hasActive && cardColumns.length > 0) {
+                    cardColumns[0].classList.add('active');
+                    if (tabButtons.length > 0) tabButtons[0].classList.add('active');
+                }
+            } else {
+                // En desktop : toutes les cartes sont visibles
+                if (tabs) tabs.style.display = 'none';
+                cardColumns.forEach(col => col.classList.remove('active'));
+            }
+        }
+
+        setResponsiveCardDisplay();
+
+        // Réagir au redimensionnement (debounce léger)
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(setResponsiveCardDisplay, 200);
+        });
+
+        // ============================================
+        // 4. FOCUS AUTOMATIQUE SUR LE TEXTAREA D'ANNULATION
+        // ============================================
+        const cancelModal = document.getElementById('cancelModal');
+        if (cancelModal) {
+            cancelModal.addEventListener('shown.bs.modal', function() {
+                const textarea = document.getElementById('cancelReason');
+                if (textarea) textarea.focus();
+            });
+        }
     });
 </script>
 {% endblock %}
