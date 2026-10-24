@@ -39,7 +39,7 @@ class ProductType extends AbstractType
     {
         $hmaService = $options['hma_service'];
         $companyType = $hmaService ? $hmaService->getType() : 'retail';
-        $isNew = $options['is_new'] ?? true;  // ✅ Nouvelle option
+        $isNew = $options['is_new'] ?? true;
 
         $builder
             ->add('name', TextType::class, [
@@ -78,6 +78,7 @@ class ProductType extends AbstractType
                 'choices' => $this->buildUnitChoices(),
                 'placeholder' => '-- Choisir une unité --',
                 'required' => false,
+                'empty_data' => 'pièce',   // ✅ valeur par défaut si vide
                 'attr' => ['class' => 'form-select select2-unit']
             ])
             ->add('description', TextareaType::class, [
@@ -109,14 +110,12 @@ class ProductType extends AbstractType
             ]);
         }
 
-        // ✅ SUPPRESSION : On ne gère plus stock_quantity dans le formulaire
-        // Il sera synchronisé automatiquement à partir des lots
-
-        // Stock minimum d'alerte (conservé)
+        // ✅ CORRECTION CRITIQUE : empty_data sur min_quantity
         $builder
             ->add('min_quantity', IntegerType::class, [
                 'label' => 'Stock minimum (alerte)',
                 'required' => false,
+                'empty_data' => '0',   // 🔑 Empêche null d'arriver au setter
                 'attr' => ['placeholder' => '0', 'class' => 'form-control', 'min' => 0],
                 'constraints' => [new PositiveOrZero(['message' => 'La quantité minimale doit être positive ou zéro'])]
             ])
@@ -177,7 +176,6 @@ class ProductType extends AbstractType
                 'attr' => ['placeholder' => 'Ex: comprimé, sirop', 'class' => 'form-control']
             ]);
 
-        // ✅ Champs spécifiques aux pharmacies
         if ($companyType === 'pharmacy') {
             $builder
                 ->add('prescription_required', CheckboxType::class, [
@@ -193,25 +191,48 @@ class ProductType extends AbstractType
                 ]);
         }
 
-        // Définir la valeur par défaut "pièce" pour l'unité
+        // ✅ PRE_SET_DATA : initialise les valeurs par défaut côté entité
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($isNew) {
+            /** @var Product|null $product */
             $product = $event->getData();
-            if ($product && !$product->getUnit()) {
+            if (!$product) return;
+
+            // Unité par défaut
+            if (!$product->getUnit()) {
                 $product->setUnit('pièce');
             }
-            // ✅ S'assurer que stock_quantity = 0 à la création
-            if ($product && $isNew && $product->getStockQuantity() === null) {
+
+            // S'assurer que les valeurs non-nullables sont initialisées
+            if ($product->getStockQuantity() === null) {
                 $product->setStockQuantity(0);
+            }
+            if ($product->getMinQuantity() === null) {
+                $product->setMinQuantity(0);
+            }
+            if ($product->getHasExpiryDate() === null) {
+                $product->setHasExpiryDate(false);
+            }
+            if ($product->isActive() === null) {
+                $product->setIsActive(true);
             }
         });
 
-        // Si l'utilisateur envoie un champ unité vide, le remplacer par "pièce"
+        // ✅ PRE_SUBMIT : filet de sécurité — force les valeurs dans le POST
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
-            if (isset($data['unit']) && (empty($data['unit']) || $data['unit'] === '')) {
-                $data['unit'] = 'pièce';
-                $event->setData($data);
+            if (!is_array($data)) return;
+
+            // Forcer min_quantity à 0 si absent/vide
+            if (!isset($data['min_quantity']) || $data['min_quantity'] === '' || $data['min_quantity'] === null) {
+                $data['min_quantity'] = 0;
             }
+
+            // Forcer unit à "pièce" si absent/vide
+            if (empty($data['unit'])) {
+                $data['unit'] = 'pièce';
+            }
+
+            $event->setData($data);
         });
     }
 
@@ -238,7 +259,7 @@ class ProductType extends AbstractType
             'data_class' => Product::class,
             'hma_service' => null,
             'can_edit_stock' => false,
-            'is_new' => true,  // ✅ Nouvelle option
+            'is_new' => true,
         ]);
     }
 }

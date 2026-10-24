@@ -40,20 +40,24 @@ class Product
     #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
     private ?string $purchase_price = null;
 
-    #[ORM\Column]
-    private ?int $stock_quantity = null;
+    // ✅ CORRECTION : int non-nullable, défaut 0
+    #[ORM\Column(options: ['default' => 0])]
+    private int $stock_quantity = 0;
 
-    #[ORM\Column]
-    private ?int $min_quantity = null;
+    // ✅ CORRECTION : int non-nullable, défaut 0
+    #[ORM\Column(options: ['default' => 0])]
+    private int $min_quantity = 0;
 
     #[ORM\Column(length: 255, nullable: true)]  
     private ?string $image = null;
 
-    #[ORM\Column]
-    private ?bool $has_expiry_date = null;
+    // ✅ CORRECTION : bool non-nullable, défaut false
+    #[ORM\Column(options: ['default' => false])]
+    private bool $has_expiry_date = false;
 
+    // ✅ CORRECTION : bool non-nullable, défaut true
     #[ORM\Column(options: ['default' => true])]
-    private ?bool $is_active = null;
+    private bool $is_active = true;
 
     #[ORM\Column]
     private ?\DateTime $created_at = null;
@@ -141,10 +145,16 @@ class Product
         $this->stockMovements = new ArrayCollection();
         $this->promotionProducts = new ArrayCollection();
         $this->ratings = new ArrayCollection();
+
+        // ✅ CORRECTION : tous les scalaires initialisés
+        $this->stock_quantity = 0;
+        $this->min_quantity = 0;
+        $this->has_expiry_date = false;
         $this->is_active = true;
         $this->is_storable = false;
         $this->is_public = false;
         $this->subscription_active = true;
+        $this->company_public = true;
         $this->created_at = new \DateTime();
     }
 
@@ -221,7 +231,8 @@ class Product
         return $this;
     }
 
-    public function getStockQuantity(): ?int
+    // ✅ CORRECTION : retourne int (jamais null)
+    public function getStockQuantity(): int
     {
         return $this->stock_quantity;
     }
@@ -232,7 +243,8 @@ class Product
         return $this;
     }
 
-    public function getMinQuantity(): ?int
+    // ✅ CORRECTION : retourne int (jamais null)
+    public function getMinQuantity(): int
     {
         return $this->min_quantity;
     }
@@ -254,12 +266,13 @@ class Product
         return $this;
     }
 
-    public function getHasExpiryDate(): ?bool
+    // ✅ CORRECTION : retourne bool (jamais null)
+    public function getHasExpiryDate(): bool
     {
         return $this->has_expiry_date;
     }
 
-    public function setHasExpiryDate(?bool $has_expiry_date): static
+    public function setHasExpiryDate(bool $has_expiry_date): static
     {
         $this->has_expiry_date = $has_expiry_date;
         return $this;
@@ -267,10 +280,11 @@ class Product
 
     public function hasExpiryDate(): bool
     {
-        return $this->has_expiry_date ?? false;
+        return $this->has_expiry_date;
     }
 
-    public function isActive(): ?bool
+    // ✅ CORRECTION : retourne bool (jamais null)
+    public function isActive(): bool
     {
         return $this->is_active;
     }
@@ -594,19 +608,14 @@ class Product
     /**
      * ✅ Stock actuel = valeur synchronisée par StockSyncService
      *    (source de vérité unique : ne PAS additionner avec les batches)
-     *
-     * Note : `stock_quantity` est maintenu à jour par
-     *        StockSyncService::syncProductStock() qui calcule
-     *        la somme des batches actifs non périmés.
      */
     public function getCurrentStock(): int
     {
-        return $this->stock_quantity ?? 0;
+        return $this->stock_quantity;
     }
 
     /**
      * ✅ Recalcule le stock depuis les lots actifs (utile pour diagnostics / audit)
-     *    NE PAS utiliser pour l'affichage courant → utiliser getCurrentStock().
      */
     public function getStockFromBatches(): int
     {
@@ -624,7 +633,7 @@ class Product
 
     public function isLowStock(): bool
     {
-        return $this->getCurrentStock() <= ($this->min_quantity ?? 0);
+        return $this->getCurrentStock() <= $this->min_quantity;
     }
 
     public function getStockStatus(): string
