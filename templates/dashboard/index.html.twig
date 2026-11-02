@@ -341,11 +341,12 @@
     
     /* ============================================
        COMPANY INFO
+       4 colonnes sur desktop → 12 éléments = 3 lignes
        ============================================ */
     .info-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
     }
     
     .info-item {
@@ -354,6 +355,7 @@
         border-radius: 8px;
         border-left: 4px solid var(--primary-color);
         transition: all 0.3s ease;
+        min-width: 0;
     }
     
     .info-item:hover {
@@ -494,6 +496,11 @@
         .welcome-greeting {
             font-size: 1.6rem;
         }
+
+        /* Info grid → 2 colonnes sur tablette */
+        .info-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
 
     /* ============================================
@@ -561,7 +568,7 @@
             font-size: 1.15rem;
         }
 
-        /* Info grid */
+        /* Info grid → 1 colonne sur mobile */
         .info-grid {
             grid-template-columns: 1fr;
             gap: 0.75rem;
@@ -1059,6 +1066,7 @@
 
                 <!-- ============================================
                      COMPANY INFORMATION (OWNER UNIQUEMENT)
+                     Grille de 4 colonnes → 12 éléments = 3 lignes
                      ============================================ -->
                 {% if app.user.isHmaOwner is defined and app.user.isHmaOwner and app.user.hmaServiceId is not null %}
                 <div class="row mt-3">
@@ -1069,45 +1077,60 @@
                                     <i class="bi bi-building text-primary me-2"></i>
                                     Informations de l'Entreprise
                                 </h5>
-                                
+
                                 {% set hmaService = app.user.hmaServiceId %}
-                                
+                                {% set now = date() %}
+
+                                {# ============================================
+                                   CALCUL FIABLE DE LA PÉRIODE D'ESSAI
+                                   ============================================ #}
+                                {% set isInTrial = hmaService.trialEndsAt is not null and hmaService.trialEndsAt > now %}
+                                {% set trialDaysRemaining = 0 %}
+                                {% if hmaService.trialEndsAt is not null %}
+                                    {% set trialDaysRemaining = now.diff(hmaService.trialEndsAt).days %}
+                                    {% if hmaService.trialEndsAt < now %}
+                                        {% set trialDaysRemaining = 0 %}
+                                    {% endif %}
+                                {% endif %}
+
                                 <div class="info-grid">
+                                    {# --- Ligne 1 : Identité (4 éléments) --- #}
                                     <div class="info-item">
                                         <div class="info-label">Nom de l'entreprise</div>
                                         <p class="info-value">{{ hmaService.companyName ?? 'Non spécifié' }}</p>
                                     </div>
-                                    
+
                                     <div class="info-item">
                                         <div class="info-label">Email de contact</div>
                                         <p class="info-value">{{ hmaService.email ?? app.user.email }}</p>
                                     </div>
-                                    
+
                                     <div class="info-item">
                                         <div class="info-label">Téléphone</div>
                                         <p class="info-value">{{ hmaService.phone ?? 'Non spécifié' }}</p>
                                     </div>
-                                    
+
                                     <div class="info-item">
                                         <div class="info-label">Numéro d'abonnement</div>
                                         <p class="info-value">{{ hmaService.subscriptionNumber ?? 'N/A' }}</p>
                                     </div>
-                                    
+
+                                    {# --- Ligne 2 : Localisation (4 éléments) --- #}
                                     <div class="info-item">
                                         <div class="info-label">Adresse</div>
                                         <p class="info-value">{{ hmaService.address ?? 'Non spécifiée' }}</p>
                                     </div>
-                                    
+
                                     <div class="info-item">
                                         <div class="info-label">Ville</div>
                                         <p class="info-value">{{ hmaService.city ?? 'Non spécifiée' }}</p>
                                     </div>
-                                    
+
                                     <div class="info-item">
                                         <div class="info-label">Pays</div>
                                         <p class="info-value">{{ hmaService.country ?? 'Non spécifié' }}</p>
                                     </div>
-                                    
+
                                     <div class="info-item">
                                         <div class="info-label">📍 Coordonnées GPS</div>
                                         <p class="info-value">
@@ -1125,35 +1148,39 @@
                                             {% endif %}
                                         </p>
                                     </div>
-                                    
+
+                                    {# --- Ligne 3 : Abonnement & statut (4 éléments) --- #}
                                     <div class="info-item">
                                         <div class="info-label">Période d'essai</div>
                                         <p class="info-value">
-                                            {% if hmaService.trialEndsAt %}
-                                                {% set now = date() %}
-                                                {% set trialEnds = hmaService.trialEndsAt %}
-                                                {% set daysRemaining = trialEnds.diff(now).days %}
-                                                
-                                                {% if daysRemaining > 0 %}
-                                                    <span class="badge-status badge-trial">
-                                                        <i class="bi bi-clock me-1"></i>
-                                                        {{ daysRemaining }} jours restants
-                                                    </span>
-                                                {% else %}
-                                                    <span class="badge-status badge-expired">
-                                                        <i class="bi bi-x-circle me-1"></i>
-                                                        Terminée
-                                                    </span>
-                                                {% endif %}
-                                            {% else %}
+                                            {% if hmaService.trialEndsAt is null %}
+                                                {# Pas de date de fin d'essai → essai illimité / désactivé #}
                                                 <span class="badge-status badge-active">
                                                     <i class="bi bi-check-circle me-1"></i>
                                                     Actif
                                                 </span>
+                                            {% elseif isInTrial %}
+                                                {# Essai en cours #}
+                                                <span class="badge-status badge-trial">
+                                                    <i class="bi bi-clock me-1"></i>
+                                                    {{ trialDaysRemaining }} jour{{ trialDaysRemaining > 1 ? 's' : '' }} restant{{ trialDaysRemaining > 1 ? 's' : '' }}
+                                                </span>
+                                                <small class="d-block text-muted mt-1">
+                                                    Fin le {{ hmaService.trialEndsAt|date('d/m/Y') }}
+                                                </small>
+                                            {% else %}
+                                                {# Essai terminé #}
+                                                <span class="badge-status badge-expired">
+                                                    <i class="bi bi-x-circle me-1"></i>
+                                                    Terminée
+                                                </span>
+                                                <small class="d-block text-muted mt-1">
+                                                    Le {{ hmaService.trialEndsAt|date('d/m/Y') }}
+                                                </small>
                                             {% endif %}
                                         </p>
                                     </div>
-                                    
+
                                     <div class="info-item">
                                         <div class="info-label">Statut</div>
                                         <p class="info-value">
@@ -1170,7 +1197,35 @@
                                             {% endif %}
                                         </p>
                                     </div>
-                                    
+
+                                    <div class="info-item">
+                                        <div class="info-label">Plan actuel</div>
+                                        <p class="info-value">
+                                            {% set currentPlan = hmaService.getCurrentPlan() %}
+                                            {% if currentPlan == 'trial' %}
+                                                <span class="badge-status badge-trial">
+                                                    <i class="bi bi-hourglass-split me-1"></i>
+                                                    {{ hmaService.getCurrentPlanLabel() }}
+                                                </span>
+                                            {% elseif currentPlan == 'premium' %}
+                                                <span class="badge-status badge-active">
+                                                    <i class="bi bi-stars me-1"></i>
+                                                    {{ hmaService.getCurrentPlanLabel() }}
+                                                </span>
+                                            {% elseif currentPlan == 'basic' %}
+                                                <span class="badge-status badge-trial">
+                                                    <i class="bi bi-rocket me-1"></i>
+                                                    {{ hmaService.getCurrentPlanLabel() }}
+                                                </span>
+                                            {% else %}
+                                                <span class="badge-status">
+                                                    <i class="bi bi-gift me-1"></i>
+                                                    {{ hmaService.getCurrentPlanLabel() }}
+                                                </span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+
                                     <div class="info-item">
                                         <div class="info-label">Date de création</div>
                                         <p class="info-value">
@@ -1182,7 +1237,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                
+
                                 <div class="mt-4 pt-3 border-top d-flex flex-wrap gap-2">
                                     <a href="{{ path('app_dashboard_hmaservice_edit') }}" class="btn btn-outline-primary btn-sm">
                                         <i class="bi bi-pencil me-1"></i>
