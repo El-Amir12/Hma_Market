@@ -1,17 +1,14 @@
 {
-  "builds": [
-    {
-      "src": "Dockerfile.vercel",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "public"
-      }
+  "services": {
+    "app": {
+      "runtime": "container",
+      "entrypoint": "Dockerfile.vercel"
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "Dockerfile.vercel"
+      "source": "/(.*)",
+      "destination": "/app"
     }
   ]
 }
