@@ -1,0 +1,16 @@
+# Caddyfile
+{
+    frankenphp
+}
+
+# Le port est fourni par Vercel via la variable d'environnement PORT
+:{$PORT:80} {
+    # Activer la compression pour de meilleures performances
+    encode zstd br gzip
+
+    # Servir les fichiers statiques depuis le dossier public de Symfony
+    root * /app/public
+
+    # Exécuter PHP via FrankenPHP
+    php_server
+}

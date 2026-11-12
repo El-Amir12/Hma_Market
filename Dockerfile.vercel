@@ -1,0 +1,36 @@
+# Dockerfile.vercel
+FROM dunglas/frankenphp:1-php8.3
+
+# Installer les extensions PHP nécessaires
+# Ajustez selon votre composer.json (pdo_pgsql, pdo_mysql, etc.)
+RUN install-php-extensions \
+    pdo_pgsql \
+    pdo_mysql \
+    intl \
+    opcache \
+    zip \
+    apcu \
+    gd \
+    mbstring
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers de dépendances en premier pour profiter du cache Docker
+COPY composer.json composer.lock symfony.lock ./
+
+# Installer les dépendances de production sans les scripts
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-progress --no-interaction
+
+# Copier le reste de l'application
+COPY . .
+
+# Optimiser l'autoloader et exécuter les scripts de Composer
+RUN composer dump-autoload --optimize --classmap-authoritative --no-dev
+
+# Vider et préchauffer le cache de production
+RUN php bin/console cache:clear --env=prod --no-debug && \
+    php bin/console cache:warmup --env=prod --no-debug
+
+# Exposer le port (Vercel s'en occupe, mais c'est une bonne pratique)
+EXPOSE 80
