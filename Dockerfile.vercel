@@ -25,12 +25,16 @@ RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-pr
 # Copier le reste de l'application
 COPY . .
 
-# Optimiser l'autoloader et exécuter les scripts de Composer
+# Optimiser l'autoloader
 RUN composer dump-autoload --optimize --classmap-authoritative --no-dev
 
-# Vider et préchauffer le cache de production
-RUN php bin/console cache:clear --env=prod --no-debug && \
-    php bin/console cache:warmup --env=prod --no-debug
+# Créer les dossiers var et s'assurer qu'ils sont accessibles en écriture
+RUN mkdir -p var/cache var/log && chmod -R 775 var
+
+# ⚠️ Le cache Symfony NE DOIT PAS être généré ici (cache:clear / cache:warmup).
+# Il sera généré automatiquement au premier démarrage du conteneur,
+# quand toutes les variables d'environnement de Vercel seront disponibles
+# (APP_SECRET, DATABASE_URL, etc.), évitant tout échec au build.
 
 # Exposer le port
 EXPOSE 80
