@@ -11,6 +11,10 @@
     # Servir les fichiers statiques depuis le dossier public de Symfony
     root * /app/public
 
+    # Si le fichier demandé n'existe pas, transmettre la requête à index.php
+    # (indispensable pour que le routeur Symfony fonctionne)
+    try_files {path} index.php
+
     # Exécuter PHP via FrankenPHP
     php_server
 }
