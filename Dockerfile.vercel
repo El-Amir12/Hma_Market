@@ -1,8 +1,7 @@
 # Dockerfile.vercel
 FROM dunglas/frankenphp:1-php8.3
 
-# Installer les extensions PHP nécessaires
-# Ajustez selon votre composer.json (pdo_pgsql, pdo_mysql, etc.)
+# Installer les extensions PHP nécessaires + Composer
 RUN install-php-extensions \
     pdo_pgsql \
     pdo_mysql \
@@ -11,7 +10,8 @@ RUN install-php-extensions \
     zip \
     apcu \
     gd \
-    mbstring
+    mbstring \
+    @composer
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -32,5 +32,5 @@ RUN composer dump-autoload --optimize --classmap-authoritative --no-dev
 RUN php bin/console cache:clear --env=prod --no-debug && \
     php bin/console cache:warmup --env=prod --no-debug
 
-# Exposer le port (Vercel s'en occupe, mais c'est une bonne pratique)
+# Exposer le port
 EXPOSE 80
