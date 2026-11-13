@@ -1,5 +1,13 @@
+# config/packages/framework.yaml
 framework:
     secret: '%env(APP_SECRET)%'
+
+    # ============================================
+    # Configuration pour reverse proxy (Vercel)
+    # Indispensable pour éviter les boucles de redirection HTTPS
+    # ============================================
+    trusted_proxies: 'private_ranges'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port']
 
     serializer:
         enabled: true
