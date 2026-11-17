@@ -22,7 +22,7 @@ COPY composer.json composer.lock symfony.lock ./
 # Installer les dépendances de production sans les scripts
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-progress --no-interaction
 
-# Copier le reste de l'application
+# Copier le reste de l'application (.env.local est exclu par .dockerignore)
 COPY . .
 
 # Optimiser l'autoloader
@@ -31,17 +31,10 @@ RUN composer dump-autoload --optimize --classmap-authoritative --no-dev
 # Créer les dossiers var et s'assurer qu'ils sont accessibles en écriture
 RUN mkdir -p var/cache var/log && chmod -R 775 var
 
-# Vider et préchauffer le cache de production
-# APP_SECRET et DATABASE_URL sont fournis comme valeurs temporaires pour le build.
-# Ils seront écrasés par les variables d'environnement de Vercel à l'exécution.
-RUN APP_ENV=prod \
-    APP_SECRET=build-time-secret \
-    DATABASE_URL="postgresql://user:pass@localhost:5432/db?serverVersion=15" \
-    php bin/console cache:clear --env=prod --no-debug && \
-    APP_ENV=prod \
-    APP_SECRET=build-time-secret \
-    DATABASE_URL="postgresql://user:pass@localhost:5432/db?serverVersion=15" \
-    php bin/console cache:warmup --env=prod --no-debug
+# ⚠️ NE PAS exécuter cache:clear ni cache:warmup ici.
+# Symfony générera son cache au premier démarrage du conteneur,
+# avec les variables d'environnement de Vercel (APP_SECRET, DATABASE_URL).
+# Cela évite l'erreur FormatException liée aux .env locaux.
 
 # Exposer le port
 EXPOSE 80
