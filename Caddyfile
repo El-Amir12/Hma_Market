@@ -5,8 +5,10 @@
 :{$PORT:80} {
     encode zstd br gzip
     root * /app/public
-    
-    php_server {
-        try_files {path} index.php
-    }
+
+    # Routage : si le fichier n'existe pas, on passe la requête à index.php
+    try_files {path} /index.php?{query}
+
+    # Exécution PHP via FrankenPHP
+    php_server
 }
