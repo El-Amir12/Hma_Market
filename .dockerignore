@@ -1,32 +1,13 @@
-# Git
 .git
 .gitignore
-.gitattributes
-
-# Fichiers d'environnement locaux (NE JAMAIS copier dans l'image)
 .env
 .env.local
 .env.*.local
-
-# Dépendances (recréées par composer install dans le Dockerfile)
-node_modules
-vendor/
-
-# Dossiers générés par Symfony (recréés dans le Dockerfile)
 var/
-
-# Tests et outils de dev
+vendor/
+node_modules/
 tests/
-.phpunit.result.cache
-.php-cs-fixer.cache
-.php-cs-fixer.dist.php
-
-# Docker local
-docker-compose.yml
-docker-compose.override.yml
-
-# Documentation et IDE
+phpunit.xml.dist
 README.md
-*.md
-.idea
-.vscode
+docker-compose.yml
+Dockerfile

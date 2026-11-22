@@ -1,14 +1,15 @@
 {
+    # Configuration globale pour FrankenPHP
     frankenphp
 }
 
 :{$PORT:80} {
-    encode zstd br gzip
+    # Racine du site pointant vers le dossier public de Symfony
     root * /app/public
 
-    # Routage : si le fichier n'existe pas, on passe la requête à index.php
-    try_files {path} /index.php?{query}
+    # Activation de la compression pour les performances
+    encode zstd br gzip
 
-    # Exécution PHP via FrankenPHP
+    # Exécution des scripts PHP via FrankenPHP
     php_server
 }
