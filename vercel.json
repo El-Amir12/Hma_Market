@@ -1,17 +1,16 @@
 {
-  "builds": [
-    {
-      "src": "Dockerfile.vercel",
-      "use": "@vercel/static-build",
-      "config": {
-        "zeroConfig": true
-      }
+  "services": {
+    "app": {
+      "runtime": "container",
+      "entrypoint": "Dockerfile.vercel"
     }
-  ],
+  },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/"
+      "destination": {
+        "service": "app"
+      }
     }
   ]
 }
