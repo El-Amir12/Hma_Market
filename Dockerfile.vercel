@@ -1,29 +1,27 @@
 FROM dunglas/frankenphp:php8.3
 
-# Installation des extensions PHP nécessaires (ex: pdo_pgsql pour PostgreSQL)
-# Adaptez cette liste selon votre base de données (pdo_mysql, etc.)
+# Copier le binaire Composer depuis l'image officielle Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Installer les extensions PHP nécessaires (ajuster selon la base de données)
 RUN install-php-extensions pdo_pgsql intl opcache
 
-# Définition du répertoire de travail
 WORKDIR /app
 
-# Copie des fichiers de dépendances pour profiter du cache Docker
+# Copier les fichiers de dépendances pour profiter du cache Docker
 COPY composer.json composer.lock symfony.lock ./
 
-# Installation des dépendances de production
-# --no-scripts évite d'exécuter des scripts qui pourraient échouer sans la base de données
+# Installer les dépendances de production
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
-# Copie du reste de l'application
+# Copier le reste de l'application
 COPY . .
 
-# Génération de l'autoloader optimisé et échauffement du cache
+# Générer l'autoloader optimisé et préchauffer le cache
 RUN composer dump-autoload --optimize --no-dev \
     && php bin/console cache:clear --env=prod --no-debug \
     && php bin/console cache:warmup --env=prod --no-debug
 
-# Exposition du port par défaut (Vercel utilisera la variable PORT)
 EXPOSE 80
 
-# Commande de démarrage via FrankenPHP
 CMD ["frankenphp", "php-server", "--root", "public/", "--listen", ":${PORT:-80}"]
