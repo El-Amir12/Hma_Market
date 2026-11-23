@@ -1,28 +1,40 @@
-FROM dunglas/frankenphp:php8.3
+# Dockerfile.vercel
+FROM dunglas/frankenphp:1-php8.3
 
-# Copier le binaire Composer depuis l'image officielle Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Installer les extensions PHP nécessaires + Composer
+RUN install-php-extensions \
+    pdo_pgsql \
+    pdo_mysql \
+    intl \
+    opcache \
+    zip \
+    apcu \
+    gd \
+    mbstring \
+    @composer
 
-# Installer les extensions PHP nécessaires
-# gd est requis par composer.json ; ajoutez/retirez selon vos besoins
-RUN install-php-extensions pdo_pgsql intl opcache gd zip exif
-
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers de dépendances pour profiter du cache Docker
+# Copier les fichiers de dépendances en premier pour profiter du cache Docker
 COPY composer.json composer.lock symfony.lock ./
 
-# Installer les dépendances de production
-RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
+# Installer les dépendances de production sans les scripts
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-progress --no-interaction
 
-# Copier le reste de l'application
+# Copier le reste de l'application (.env.local est exclu par .dockerignore)
 COPY . .
 
-# Générer l'autoloader optimisé et préchauffer le cache
-RUN composer dump-autoload --optimize --no-dev \
-    && php bin/console cache:clear --env=prod --no-debug \
-    && php bin/console cache:warmup --env=prod --no-debug
+# Optimiser l'autoloader
+RUN composer dump-autoload --optimize --classmap-authoritative --no-dev
 
+# Créer les dossiers var et s'assurer qu'ils sont accessibles en écriture
+RUN mkdir -p var/cache var/log && chmod -R 775 var
+
+# ⚠️ NE PAS exécuter cache:clear ni cache:warmup ici.
+# Symfony générera son cache au premier démarrage du conteneur,
+# avec les variables d'environnement de Vercel (APP_SECRET, DATABASE_URL).
+# Cela évite l'erreur FormatException liée aux .env locaux.
+
+# Exposer le port
 EXPOSE 80
-
-CMD ["frankenphp", "php-server", "--root", "public/", "--listen", ":${PORT:-80}"]

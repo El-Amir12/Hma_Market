@@ -3,10 +3,12 @@ framework:
     secret: '%env(APP_SECRET)%'
 
     # ============================================
-    # Configuration pour reverse proxy (Vercel)
-    # Indispensable pour éviter les boucles de redirection HTTPS
+    # Configuration du proxy inverse (Vercel)
     # ============================================
-    trusted_proxies: 'private_ranges'
+    # Vercel utilise en interne des adresses de la plage privée, mais pour éviter les problèmes
+    # liés à la version de Symfony, il est recommandé de spécifier explicitement la plage privée
+    # ou d'utiliser une variable d'environnement pour le contrôle.
+    trusted_proxies: '127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16'
     trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port']
 
     serializer:
@@ -14,11 +16,9 @@ framework:
     property_info:
         enabled: true
     
-    # Désactiver CSRF au niveau framework
     csrf_protection:
         enabled: true
     
-    # Configuration sessions (garder simple)
     session:
         handler_id: null
         cookie_secure: auto
