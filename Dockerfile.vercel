@@ -3,8 +3,9 @@ FROM dunglas/frankenphp:php8.3
 # Copier le binaire Composer depuis l'image officielle Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Installer les extensions PHP nécessaires (ajuster selon la base de données)
-RUN install-php-extensions pdo_pgsql intl opcache
+# Installer les extensions PHP nécessaires
+# gd est requis par composer.json ; ajoutez/retirez selon vos besoins
+RUN install-php-extensions pdo_pgsql intl opcache gd zip exif
 
 WORKDIR /app
 
